@@ -101,12 +101,38 @@ class __FilterablePBsListState extends State<_FilterablePBsList> {
                           ),
                         ))),
           ),
-        Expanded(
-          child: _UserBenchmarksList(
-            benchmarks: sortedBenchmarks,
-            selectBenchmark: widget.selectBenchmark,
-          ),
-        ),
+        sortedBenchmarks.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    Row(
+                      children: const [
+                        Expanded(
+                          child: MyText(
+                            'Track all of your perfomance achievements here! Max lifts, sprints, AMRAPS...set up your own definition and then easily add top scores along with videos of your performances as you get better.',
+                            textAlign: TextAlign.center,
+                            maxLines: 6,
+                            lineHeight: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    SecondaryButton(
+                      prefixIconData: CupertinoIcons.plus,
+                      onPressed: () =>
+                          context.navigateTo(PersonalBestCreatorRoute()),
+                      text: 'Create a Personal Best Tracker',
+                    ),
+                  ],
+                ))
+            : Expanded(
+                child: _UserBenchmarksList(
+                  benchmarks: sortedBenchmarks,
+                  selectBenchmark: widget.selectBenchmark,
+                ),
+              ),
       ],
     );
   }
@@ -120,22 +146,18 @@ class _UserBenchmarksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return benchmarks.isEmpty
-        ? const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: MyText('No PBs to display...')))
-        : ListView.builder(
-            shrinkWrap: true,
-            itemCount: benchmarks.length,
-            itemBuilder: (c, i) => GestureDetector(
-                  key: Key(benchmarks[i].id),
-                  onTap: () => selectBenchmark(benchmarks[i].id),
-                  child: SizeFadeIn(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: PersonalBestCard(userBenchmark: benchmarks[i]),
-                    ),
-                  ),
-                ));
+    return ListView.builder(
+        shrinkWrap: true,
+        itemCount: benchmarks.length,
+        itemBuilder: (c, i) => GestureDetector(
+              key: Key(benchmarks[i].id),
+              onTap: () => selectBenchmark(benchmarks[i].id),
+              child: SizeFadeIn(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: PersonalBestCard(userBenchmark: benchmarks[i]),
+                ),
+              ),
+            ));
   }
 }

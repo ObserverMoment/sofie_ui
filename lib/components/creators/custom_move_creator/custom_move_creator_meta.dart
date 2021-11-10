@@ -3,7 +3,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/info_pages/custom_move_valid_rep_types_info.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/video/better_player_video_player.dart';
+import 'package:sofie_ui/components/media/video/better_player_video_player_archived.dart';
 import 'package:sofie_ui/components/media/video/video_uploader.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
@@ -72,19 +72,21 @@ class CustomMoveCreatorMeta extends StatelessWidget {
               ],
             ),
           ),
-          if (move.demoVideoUri != null)
-            FadeIn(
-              child: UserInputContainer(
-                child: SizedBox(
-                    height: 200,
-                    child: BetterPlayerVideoPlayerWrapper(
-                      key: Key(move.demoVideoUri!),
-                      uri: move.demoVideoUri!,
-                      autoLoop: true,
-                      autoPlay: false,
-                    )),
-              ),
-            ),
+
+          /// TODO
+          // if (move.demoVideoUri != null)
+          //   FadeIn(
+          //     child: UserInputContainer(
+          //       child: SizedBox(
+          //           height: 200,
+          //           child: BetterPlayerVideoPlayerWrapper(
+          //             key: Key(move.demoVideoUri!),
+          //             uri: move.demoVideoUri!,
+          //             autoLoop: true,
+          //             autoPlay: false,
+          //           )),
+          //     ),
+          //   ),
           UserInputContainer(
             child: EditableTextFieldRow(
               title: 'Name',

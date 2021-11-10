@@ -120,7 +120,7 @@ class _VideoUploaderState extends State<VideoUploader> {
               if (hasVideo)
                 BottomSheetMenuItem(
                   text: 'Watch video',
-                  onPressed: () => VideoSetupManager.openFullScreenBetterPlayer(
+                  onPressed: () => VideoSetupManager.openFullScreenVideoPlayer(
                       context: context,
                       videoUri: widget.videoUri!,
                       videoThumbUri: widget.videoThumbUri,

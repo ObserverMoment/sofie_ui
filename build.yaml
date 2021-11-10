@@ -1,0 +1,22 @@
+targets:
+  $default:
+    sources:
+      - lib/**
+      - graphql/**
+      - schema.graphql
+    builders:
+      artemis:
+        options:
+          fragments_glob: graphql/fragments/**.graphql
+          scalar_mapping:
+            - custom_parser_import: 'package:sofie_ui/coercers.dart'
+              graphql_type: DateTime
+              dart_type: DateTime
+            - custom_parser_import: 'package:sofie_ui/coercers.dart'
+              graphql_type: JSON
+              dart_type: Map
+          schema_mapping:
+            - schema: schema.graphql
+              queries_glob: graphql/operations/**/**.graphql
+              output: lib/generated/api/graphql_api.dart
+              naming_scheme: simple

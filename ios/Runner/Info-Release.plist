@@ -18,10 +18,38 @@
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>
 		<string>????</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<string>com.quarksoup.sofie</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>sofie</string>
+				</array>
+			</dict>
+		</array>
 		<key>CFBundleVersion</key>
 		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<key>ITSAppUsesNonExemptEncryption</key>
+		<false/>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<true/>
+			<key>NSAllowsArbitraryLoadsForMedia</key>
+			<true/>
+		</dict>
+		<key>NSCameraUsageDescription</key>
+		<string>Access is required to allow you to upload media</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Access is required for recording voice notes and using voice commands</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Access is required to allow you to upload media</string>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
 		<key>UIMainStoryboardFile</key>
@@ -42,41 +70,6 @@
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
 		<key>UIViewControllerBasedStatusBarAppearance</key>
-		<false/>
-		<!-- https://pub.dev/packages/uni_links -->
-		<key>CFBundleURLTypes</key>
-		<array>
-			<dict>
-				<key>CFBundleTypeRole</key>
-				<string>Editor</string>
-				<key>CFBundleURLName</key>
-				<string>com.quarksoup.sofie</string>
-				<key>CFBundleURLSchemes</key>
-				<array>
-					<string>sofie</string>
-				</array>
-			</dict>
-		</array>
-		<!-- https://pub.dev/packages/video_player#installation - used by stream chat -->
-		<key>NSAppTransportSecurity</key>
-		<dict>
-			<key>NSAllowsArbitraryLoads</key>
-			<true/>
-			<key>NSAllowsArbitraryLoadsForMedia</key>
-			<true/>
-		</dict>
-		<!-- https://github.com/miguelpruivo/flutter_file_picker/wiki/Setup 
-		<key>NSAppleMusicUsageDescription</key>
-		<string>Access is required to allow you to upload media</string>
-		-->
-		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Access is required to allow you to upload media</string>
-		<key>NSCameraUsageDescription</key>
-		<string>Access is required to allow you to upload media</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>Access is required for recording voice notes and using voice commands</string>
-		<!-- No encryption declaration required -->
-		<key>ITSAppUsesNonExemptEncryption</key>
 		<false/>
 	</dict>
 </plist>

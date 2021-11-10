@@ -107,7 +107,7 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
               if (Utils.textNotNull(workoutSection.introVideoUri))
                 _ActionIconButton(
                   label: 'Intro Video',
-                  onPressed: () => VideoSetupManager.openFullScreenBetterPlayer(
+                  onPressed: () => VideoSetupManager.openFullScreenVideoPlayer(
                       context: context,
                       videoUri: workoutSection.introVideoUri!,
                       videoThumbUri: workoutSection.introVideoThumbUri!,
@@ -118,7 +118,7 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
               if (Utils.textNotNull(workoutSection.classVideoUri))
                 _ActionIconButton(
                   label: 'Class Video',
-                  onPressed: () => VideoSetupManager.openFullScreenBetterPlayer(
+                  onPressed: () => VideoSetupManager.openFullScreenVideoPlayer(
                       context: context,
                       videoUri: workoutSection.classVideoUri!,
                       videoThumbUri: workoutSection.classVideoThumbUri!,

@@ -154,7 +154,7 @@ class TimelinePostCard extends StatelessWidget {
                       child: MyText(
                         activity.extraData?['caption'] as String? ?? '',
                         lineHeight: 1.4,
-                        maxLines: 3,
+                        maxLines: 6,
                       ),
                     ),
                   // There are no type checks on the getStream side so we need to defend against anything weird being in this field.

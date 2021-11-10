@@ -340,13 +340,13 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         onPressed: () => context.navigateTo(
                                             LoggedWorkoutCreatorRoute(
                                                 workout: workout))),
-                                    if (Utils
-                                        .textNotNull(workout.introVideoUri))
+                                    if (Utils.textNotNull(
+                                        workout.introVideoUri))
                                       _ActionIconButton(
                                           icon: const Icon(CupertinoIcons.tv),
                                           label: 'Video',
                                           onPressed: () => VideoSetupManager
-                                              .openFullScreenBetterPlayer(
+                                              .openFullScreenVideoPlayer(
                                                   context: context,
                                                   videoUri:
                                                       workout.introVideoUri!,

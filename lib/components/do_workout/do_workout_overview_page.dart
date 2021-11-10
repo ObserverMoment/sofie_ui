@@ -157,7 +157,7 @@ class _WorkoutIntroSummaryCard extends StatelessWidget {
                         iconData: CupertinoIcons.tv,
                         label: 'Intro Video',
                         onPressed: () =>
-                            VideoSetupManager.openFullScreenBetterPlayer(
+                            VideoSetupManager.openFullScreenVideoPlayer(
                                 context: context,
                                 videoUri: workout.introVideoUri!,
                                 videoThumbUri: workout.introVideoThumbUri,
@@ -456,7 +456,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
                       iconData: CupertinoIcons.tv,
                       label: 'Intro Video',
                       onPressed: () =>
-                          VideoSetupManager.openFullScreenBetterPlayer(
+                          VideoSetupManager.openFullScreenVideoPlayer(
                               context: context,
                               videoUri: workoutSection.introVideoUri!,
                               videoThumbUri: workoutSection.introVideoThumbUri,

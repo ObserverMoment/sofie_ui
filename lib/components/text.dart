@@ -71,7 +71,7 @@ class MyText extends StatelessWidget {
             height: lineHeight,
             fontSize: _fontSizeMap[size],
             color: subtext
-                ? context.theme.primary.withOpacity(0.65)
+                ? context.theme.primary.withOpacity(0.75)
                 : color ?? context.theme.primary));
   }
 }
@@ -342,7 +342,7 @@ class InfoPageText extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyText(
       text,
-      maxLines: 10,
+      maxLines: 30,
       lineHeight: 1.5,
     );
   }

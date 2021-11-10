@@ -13,9 +13,8 @@ dependencies:
   another_flushbar: ^1.10.24
   artemis: ^7.2.6-beta
   async: ^2.8.1
-  audio_session: ^0.1.6+1
   auto_route: ^3.0.4
-  better_player: ^0.0.79
+  # better_player: ^0.0.76
   carousel_slider: ^4.0.0
   collection: ^1.15.0
   cupertino_icons: ^1.0.3
@@ -50,7 +49,7 @@ dependencies:
   infinite_scroll_pagination: ^3.0.1+1
   intl: ^0.17.0
   json_annotation: ^4.1.0
-  just_audio: ^0.9.13
+  just_audio: ^0.9.17
   logger: ^1.1.0
   meta: ^1.7.0
   modal_bottom_sheet: ^2.0.0

@@ -32,7 +32,7 @@ class VideoThumbnailPlayer extends StatelessWidget {
         if (videoUri == null) {
           return;
         } else {
-          await VideoSetupManager.openFullScreenBetterPlayer(
+          await VideoSetupManager.openFullScreenVideoPlayer(
               context: context,
               videoUri: videoUri!,
               videoThumbUri: videoThumbUri,
