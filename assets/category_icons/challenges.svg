@@ -1,0 +1,13 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g>
+    <rect x="149.1" y="419.39" width="216.24" height="56.77" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+    <polyline points="294.31 285.51 294.31 381.54 316.57 419.39 196.35 419.39 218.61 381.54 218.61 286.81" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+    <g>
+      <path d="M103.28,54.76H51.13c52.67,137.44,20.93,141.88,78,170.71l15.53,7.83" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+      <path d="M408.72,54.76h52.15c-52.67,137.44-20.93,141.88-78,170.71l-15.53,7.83" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+      <path d="M389.4,172.9c-7,38.32-26.69,74-58,97.17-22.62,16.7-49,26.56-74.91,26.56-22.27,0-45.12-7.23-65.65-19.81-36.95-22.66-60.61-61.92-68-104.63l-11-63.39c-.5-3.8-1.08-8.18-1.75-13.25l-9-59.71h311l-9.61,63.78c-.45,3.4-.85,6.44-1.21,9.18Z" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+    </g>
+    <line x1="256.46" y1="296.63" x2="256.46" y2="325.56" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+    <line x1="120.44" y1="476.16" x2="393.99" y2="476.16" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+  </g>
+</svg>

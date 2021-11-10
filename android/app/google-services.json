@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "727235225541",
+    "project_id": "spotmefitness-users",
+    "storage_bucket": "spotmefitness-users.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727235225541:android:d3f3bbed344c61e4414dac",
+        "android_client_info": {
+          "package_name": "com.quarksoup.sofie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727235225541-du1vhevfl811vcdsajuhglqv51jcqcrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaxtwcwi5ikB-92JhdB1_ajrpuzH7AUPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727235225541-du1vhevfl811vcdsajuhglqv51jcqcrg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "727235225541-8bdt73ko2sp9251959h3c90l3b7d8cqp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quarksoup.spotmefitness"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727235225541:android:da3d58e80a896a31414dac",
+        "android_client_info": {
+          "package_name": "com.quarksoup.spotmefitness"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727235225541-du1vhevfl811vcdsajuhglqv51jcqcrg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaxtwcwi5ikB-92JhdB1_ajrpuzH7AUPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727235225541-du1vhevfl811vcdsajuhglqv51jcqcrg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "727235225541-8bdt73ko2sp9251959h3c90l3b7d8cqp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.quarksoup.spotmefitness"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

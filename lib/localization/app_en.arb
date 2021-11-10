@@ -1,0 +1,6 @@
+{
+  "appTitle": "sofie_ui",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}

@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.sofie">
+    <!-- Flutter needs it to communicate with the running application
+         to allow setting breakpoints, to provide hot reload, etc.
+    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- https://flutter.dev/docs/release/breaking-changes/network-policy-ios-android#allowing-cleartext-connection-for-debug-builds-->
+    <!-- https://firebase.flutter.dev/docs/installation/android#enabling-use-of-firebase-emulator-suite -->
+    <application android:usesCleartextTraffic="true"/>
+</manifest>

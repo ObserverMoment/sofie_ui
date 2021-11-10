@@ -1,0 +1,15 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g>
+    <circle cx="256" cy="325.05" r="121.81" transform="translate(-104.35 121.72) rotate(-22.34)" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+    <polygon points="285.92 339.48 296.73 385.08 294.49 386.53 256 363.99 217.51 386.53 215.27 385.08 225.95 339.48 191.29 311.4 192.21 309.03 240.18 304.81 254.81 263.56 257.19 263.56 271.82 304.81 319.79 309.03 320.71 311.4 285.92 339.48" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+    <g>
+      <polyline points="207.65 213.21 127.42 162.97 127.42 28.19 384.58 28.19 384.58 162.97 304.36 213.21" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+      <line x1="93.94" y1="28.19" x2="418.06" y2="28.19" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+      <g>
+        <line x1="209.19" y1="29.08" x2="209.19" y2="212.55" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+        <line x1="302.81" y1="29.08" x2="302.81" y2="212.55" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11"/>
+      </g>
+    </g>
+    <path d="M374,224.21a156.61,156.61,0,1,1-234.76-1.32" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="11" stroke-dasharray="11.16"/>
+  </g>
+</svg>
