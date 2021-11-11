@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/media/video/video_players.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -115,15 +116,13 @@ class MoveDetails extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                /// TODO
-                // if (move.demoVideoUri != null)
-                //   SizedBox(
-                //       height: 220,
-                //       child: BetterPlayerVideoPlayerWrapper(
-                //         uri: move.demoVideoUri!,
-                //         autoLoop: true,
-                //         autoPlay: false,
-                //       )),
+                if (move.demoVideoUri != null)
+                  SizedBox(
+                      height: 230,
+                      child: LandscapeInlineVideoPlayer(
+                        videoUri: move.demoVideoUri!,
+                        title: move.name,
+                      )),
                 if (Utils.textNotNull(move.description))
                   Padding(
                     padding: const EdgeInsets.all(12.0),

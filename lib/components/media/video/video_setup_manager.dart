@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/custom_page_transitions.dart';
-import 'package:sofie_ui/components/media/video/better_player_video_player_archived.dart';
-import 'package:sofie_ui/components/media/video/video_controls_overlay.dart';
 import 'package:sofie_ui/components/media/video/video_players.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:video_player/video_player.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class VideoSetupManager {
   static Future<VideoInfoEntity> getVideoInfo(
@@ -39,6 +36,7 @@ class VideoSetupManager {
       {required String uri, // Uploadcare file ID.
       bool mixWithOthers = false,
       bool autoLoop = false,
+      bool autoPlay = false,
       bool muted = false,
       Duration? startAt}) async {
     final videoInfo = await getVideoInfo(videoUri: uri);
@@ -55,6 +53,10 @@ class VideoSetupManager {
     }
 
     await controller.initialize();
+
+    if (autoPlay) {
+      await controller.play();
+    }
 
     return controller;
   }
@@ -94,6 +96,8 @@ class VideoSetupManager {
     bool autoPlay = false,
     bool autoLoop = false,
     Duration? startAt,
+    final String? title,
+    final String? subtitle,
   }) async {
     final controller = await initializeVideoPlayer(
         uri: videoUri, autoLoop: autoLoop, startAt: startAt);
@@ -107,14 +111,21 @@ class VideoSetupManager {
           await Navigator.of(context).push(PortraitVideoEmergingPageRoute(
               page: PortraitFullScreenVideoPlayer(
         controller: controller,
+        title: title,
+        subitle: subtitle,
       )));
     } else {
       positionOnExit =
           await Navigator.of(context).push(LandscapeVideoRotatingPageRoute(
               page: LandscapeFullScreenVideoPlayer(
         controller: controller,
+        title: title,
+        subitle: subtitle,
       )));
     }
+
+    /// Dispose of the controller once user is finished.
+    await controller.dispose();
 
     return positionOnExit ?? Duration.zero;
   }

@@ -206,16 +206,12 @@ class __MainUIState extends State<_MainUI> {
                 duration: kStandardAnimationDuration,
                 child: uploadingMedia
                     ? Container(
-                        height: 46,
+                        height: 44,
                         alignment: Alignment.centerLeft,
                         child: Row(
                           children: const [
-                            SizedBox(width: 8),
+                            SizedBox(width: 16),
                             MyText('Uploading media, please wait...'),
-                            SizedBox(width: 8),
-                            LoadingDots(
-                              size: 12,
-                            )
                           ],
                         ))
                     : MyTabBarNav(

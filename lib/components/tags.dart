@@ -328,7 +328,7 @@ class LoggedWorkoutSectionSummaryTag extends StatelessWidget {
       return [
         Padding(
           padding: const EdgeInsets.only(left: 4.0),
-          child: _text(Duration(seconds: time).compactDisplay()),
+          child: _text(Duration(seconds: time).compactDisplay),
         )
       ];
     } else if (section.workoutSectionType.isScored) {
@@ -336,13 +336,13 @@ class LoggedWorkoutSectionSummaryTag extends StatelessWidget {
         const SizedBox(width: 4),
         _text('${_repsScore ?? 0} reps'),
         _text(' in '),
-        _text(Duration(seconds: time).compactDisplay())
+        _text(Duration(seconds: time).compactDisplay)
       ];
     } else {
       return [
         const SizedBox(width: 4),
         _text('for '),
-        _text(Duration(seconds: time).compactDisplay())
+        _text(Duration(seconds: time).compactDisplay)
       ];
     }
   }

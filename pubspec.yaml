@@ -14,7 +14,6 @@ dependencies:
   artemis: ^7.2.6-beta
   async: ^2.8.1
   auto_route: ^3.0.4
-  # better_player: ^0.0.76
   carousel_slider: ^4.0.0
   collection: ^1.15.0
   cupertino_icons: ^1.0.3

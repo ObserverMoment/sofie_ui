@@ -104,8 +104,7 @@ class WorkoutSectionVideoPlayerLandscape extends StatefulWidget {
 }
 
 class _WorkoutSectionVideoPlayerLandscapeState
-    extends State<WorkoutSectionVideoPlayerLandscape>
-    with SingleTickerProviderStateMixin {
+    extends State<WorkoutSectionVideoPlayerLandscape> {
   @override
   void initState() {
     super.initState();

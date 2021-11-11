@@ -112,7 +112,8 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
                       videoUri: workoutSection.introVideoUri!,
                       videoThumbUri: workoutSection.introVideoThumbUri!,
                       autoPlay: true,
-                      autoLoop: true),
+                      autoLoop: true,
+                      title: workoutSection.nameOrTypeForDisplay),
                   icon: const Icon(CupertinoIcons.tv),
                 ),
               if (Utils.textNotNull(workoutSection.classVideoUri))
@@ -123,7 +124,8 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
                       videoUri: workoutSection.classVideoUri!,
                       videoThumbUri: workoutSection.classVideoThumbUri!,
                       autoPlay: true,
-                      autoLoop: true),
+                      autoLoop: true,
+                      title: workoutSection.nameOrTypeForDisplay),
                   icon: const Icon(CupertinoIcons.tv),
                 ),
               if (Utils.textNotNull(workoutSection.introAudioUri))

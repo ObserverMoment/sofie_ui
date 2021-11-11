@@ -175,7 +175,7 @@ extension DurationExtension on Duration {
     }
   }
 
-  String compactDisplay() {
+  String get compactDisplay {
     final String _hours =
         inHours != 0 ? '${inHours.toString().padLeft(2, '0')}:' : '';
     final String _minutes =
@@ -187,7 +187,7 @@ extension DurationExtension on Duration {
 }
 
 extension IntExtension on int {
-  String get secondsToTimeDisplay => Duration(seconds: this).compactDisplay();
+  String get secondsToTimeDisplay => Duration(seconds: this).compactDisplay;
 }
 
 extension ListExtension on List {

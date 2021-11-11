@@ -1,19 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoControlsOverlay extends StatefulWidget {
   final VideoPlayerController controller;
   final bool isPortrait;
+  final String? title;
+  final String? subtitle;
   final void Function()? exitFullScreen;
   const VideoControlsOverlay(
       {Key? key,
       required this.controller,
       this.exitFullScreen,
-      required this.isPortrait})
+      required this.isPortrait,
+      this.title,
+      this.subtitle})
       : super(key: key);
 
   @override
@@ -22,7 +28,7 @@ class VideoControlsOverlay extends StatefulWidget {
 
 class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
   _VideoControlsOverlayState() {
-    listener = () {
+    _listener = () {
       if (!mounted) {
         return;
       }
@@ -30,99 +36,327 @@ class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
     };
   }
 
-  late VoidCallback listener;
+  late VoidCallback _listener;
+  late Duration _duration;
+
+  VideoPlayerController get controller => widget.controller;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(listener);
+    _duration = widget.controller.value.duration;
+    controller.addListener(_listener);
   }
 
+  /// [value] must be 0 <-> 1
+  void _handleScrub(double value) {
+    controller.seekTo(_duration * value);
+  }
+
+  /// This is how [video_player] does it internally.
   @override
   void deactivate() {
-    widget.controller.removeListener(listener);
+    controller.removeListener(_listener);
     super.deactivate();
   }
 
   @override
   Widget build(BuildContext context) {
-    final isPlaying = widget.controller.value.isPlaying;
+    final isPlaying = controller.value.isPlaying;
+    final position = controller.value.position;
     return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Stack(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              AnimatedSwitcher(
-                duration: kStandardAnimationDuration,
-                child: GestureDetector(
-                  onTap: widget.exitFullScreen?.call ?? context.pop,
-                  behavior: HitTestBehavior.opaque,
-                  child: Padding(
+          AnimatedSwitcher(
+            duration: kStandardAnimationDuration,
+            child: isPlaying
+                ? GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: controller.pause,
+                    child: const SizedBox.expand())
+                : Padding(
                     padding: widget.isPortrait
-                        ? const EdgeInsets.all(24)
-                        : const EdgeInsets.symmetric(
-                            vertical: 0, horizontal: 32),
-                    child: SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: isPlaying
-                          ? null
-                          : const Icon(CupertinoIcons.clear_circled_solid,
-                              color: Styles.white, size: 40),
+                        ? const EdgeInsets.all(8.0)
+                        : EdgeInsets.zero,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: widget.isPortrait
+                              ? const EdgeInsets.only(
+                                  left: 16, right: 8, top: 4, bottom: 4)
+                              : const EdgeInsets.only(left: 80.0, right: 40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (widget.title != null ||
+                                  widget.subtitle != null)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (widget.title != null)
+                                      MyHeaderText(
+                                        widget.title!,
+                                        color: Styles.white,
+                                        textAlign: TextAlign.center,
+                                        size: FONTSIZE.four,
+                                        lineHeight: 1.2,
+                                      ),
+                                    if (widget.subtitle != null)
+                                      MyHeaderText(
+                                        widget.subtitle!,
+                                        color: Styles.white.withOpacity(0.8),
+                                        textAlign: TextAlign.center,
+                                        size: FONTSIZE.two,
+                                        lineHeight: 1.4,
+                                      )
+                                  ],
+                                )
+                              else
+                                Container(),
+                              CupertinoButton(
+                                onPressed:
+                                    widget.exitFullScreen?.call ?? context.pop,
+                                child: const Icon(
+                                    CupertinoIcons.fullscreen_exit,
+                                    size: 30,
+                                    color: Styles.white),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: controller.play,
+                            child: const SizedBox(
+                              height: 100,
+                              width: double.infinity,
+                              child: AnimatedSwitcher(
+                                duration: kStandardAnimationDuration,
+                                child: Icon(
+                                  CupertinoIcons.play_fill,
+                                  color: Styles.white,
+                                  size: 60,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: widget.isPortrait
+                              ? EdgeInsets.zero
+                              : const EdgeInsets.symmetric(horizontal: 50.0),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        MyText(
+                                            controller
+                                                .value.position.compactDisplay,
+                                            color: Styles.white),
+                                        const MyText(' / ',
+                                            color: Styles.white),
+                                        MyText(
+                                            controller
+                                                .value.duration.compactDisplay,
+                                            color: Styles.white,
+                                            subtext: true),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Material(
+                                color: Colors.transparent,
+                                child: SliderTheme(
+                                  data: const SliderThemeData(
+                                    trackHeight: 2,
+                                    thumbShape: RoundSliderThumbShape(
+                                        enabledThumbRadius: 8),
+                                  ),
+                                  child: Slider(
+                                    value: position.inMilliseconds /
+                                        _duration.inMilliseconds,
+                                    onChanged: _handleScrub,
+                                    activeColor: Styles.white,
+                                    inactiveColor: Styles.greyTwo,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () {
-                if (isPlaying) {
-                  widget.controller.pause();
-                } else {
-                  widget.controller.play();
-                }
-              },
-              child: SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: AnimatedSwitcher(
-                  duration: kStandardAnimationDuration,
-                  child: isPlaying
-                      ? null
-                      : const Icon(
-                          CupertinoIcons.play_fill,
-                          color: Styles.white,
-                          size: 60,
-                        ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: widget.isPortrait
-                ? const EdgeInsets.all(24.0)
-                : const EdgeInsets.symmetric(vertical: 8, horizontal: 64),
-            child: SizedBox(
-              height: 10,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: VideoProgressIndicator(
-                  widget.controller,
-                  padding: EdgeInsets.zero,
-                  colors: const VideoProgressColors(playedColor: Styles.white),
-                  allowScrubbing: true,
-                ),
-              ),
-            ),
-          ),
+          )
         ],
       ),
+    );
+  }
+}
+
+/// Smaller more compact version of the [VideoControlsOverlay].
+/// Always landscape (see YouTube), never full screen.
+/// Requires [enterFullScreen]
+class InlineVideoControlsOverlay extends StatefulWidget {
+  final VideoPlayerController controller;
+  final String? title;
+  final String? subtitle;
+  final VoidCallback enterFullScreen;
+  const InlineVideoControlsOverlay(
+      {Key? key,
+      required this.controller,
+      this.title,
+      this.subtitle,
+      required this.enterFullScreen})
+      : super(key: key);
+
+  @override
+  _InlineVideoControlsOverlayState createState() =>
+      _InlineVideoControlsOverlayState();
+}
+
+class _InlineVideoControlsOverlayState
+    extends State<InlineVideoControlsOverlay> {
+  _InlineVideoControlsOverlayState() {
+    _listener = () {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    };
+  }
+
+  late VoidCallback _listener;
+  late Duration _duration;
+
+  VideoPlayerController get controller => widget.controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _duration = widget.controller.value.duration;
+    controller.addListener(_listener);
+  }
+
+  /// [value] must be 0 <-> 1
+  void _handleScrub(double value) {
+    controller.seekTo(_duration * value);
+  }
+
+  /// This is how [video_player] does it internally.
+  @override
+  void deactivate() {
+    controller.removeListener(_listener);
+    super.deactivate();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isPlaying = controller.value.isPlaying;
+    final position = controller.value.position;
+    return Stack(
+      children: [
+        AnimatedSwitcher(
+          duration: kStandardAnimationDuration,
+          child: isPlaying
+              ? GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: controller.pause,
+                  child: const SizedBox.expand())
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 8.0, left: 16, right: 8, bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              MyText(
+                                controller.value.position.compactDisplay,
+                                color: Styles.white,
+                                size: FONTSIZE.two,
+                                weight: FontWeight.bold,
+                              ),
+                              const MyText(
+                                ' / ',
+                                color: Styles.white,
+                                size: FONTSIZE.two,
+                              ),
+                              MyText(
+                                controller.value.duration.compactDisplay,
+                                color: Styles.white,
+                                subtext: true,
+                                size: FONTSIZE.two,
+                              ),
+                            ],
+                          ),
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: widget.enterFullScreen,
+                            child: const Icon(CupertinoIcons.fullscreen,
+                                color: Styles.white),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: controller.play,
+                        child: const SizedBox(
+                          height: 100,
+                          width: double.infinity,
+                          child: AnimatedSwitcher(
+                            duration: kStandardAnimationDuration,
+                            child: Icon(
+                              CupertinoIcons.play_fill,
+                              color: Styles.white,
+                              size: 50,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: SliderTheme(
+                          data: const SliderThemeData(
+                            trackHeight: 1.5,
+                            thumbShape:
+                                RoundSliderThumbShape(enabledThumbRadius: 7),
+                          ),
+                          child: Slider(
+                            value: position.inMilliseconds /
+                                _duration.inMilliseconds,
+                            onChanged: _handleScrub,
+                            activeColor: Styles.white,
+                            inactiveColor: Styles.greyTwo,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        )
+      ],
     );
   }
 }
