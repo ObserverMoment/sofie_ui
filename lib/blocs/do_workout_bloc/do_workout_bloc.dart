@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:just_audio/just_audio.dart';
@@ -58,7 +59,10 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   int countdownToStartSeconds = 3;
 
+  AudioSession? _session;
+
   /// Sound effects.
+
   AudioPlayer beepsPlayer = AudioPlayer();
   AudioPlayer toneCompleteFxPlayer = AudioPlayer();
 
@@ -83,8 +87,8 @@ class DoWorkoutBloc extends ChangeNotifier {
         .map((wSection) => _mapSectionTypeToControllerType(wSection))
         .toList();
 
-    _initVideoControllers()
-        .then((_) => _initAudioPlayers().then((_) => _initWakelock()));
+    _initVideoControllers().then((_) => _initAudioPlayers()
+        .then((_) => _setupAudioSession().then((_) => _initWakelock())));
   }
 
   /// Constructor async helper ///
@@ -123,6 +127,33 @@ class DoWorkoutBloc extends ChangeNotifier {
         return null;
       }
     }).toList());
+
+    notifyListeners();
+  }
+
+  Future<void> _setupAudioSession() async {
+    _session = await AudioSession.instance;
+
+    /// https://pub.dev/packages/audio_session
+    /// Set up the audio session. The beeps and FX should duck other sources, not stop them.
+    /// TODO: need to handle the section audio with different settings.
+    /// Section.classAudio should pause other sources.
+    /// And internal FX should duck Section.classAudio.
+    await _session!.configure(const AudioSessionConfiguration(
+      avAudioSessionCategory: AVAudioSessionCategory.playback,
+      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
+      avAudioSessionMode: AVAudioSessionMode.defaultMode,
+      avAudioSessionRouteSharingPolicy:
+          AVAudioSessionRouteSharingPolicy.defaultPolicy,
+      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
+      androidAudioAttributes: AndroidAudioAttributes(
+        contentType: AndroidAudioContentType.movie,
+        flags: AndroidAudioFlags.none,
+        usage: AndroidAudioUsage.game,
+      ),
+      androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
+      androidWillPauseWhenDucked: false,
+    ));
 
     audioInitSuccess = true;
     notifyListeners();
@@ -286,21 +317,28 @@ class DoWorkoutBloc extends ChangeNotifier {
     Vibrate.feedback(FeedbackType.light);
     await beepsPlayer.setAsset(_beepOneAsset);
     await beepsPlayer.seek(Duration.zero);
-    beepsPlayer.play();
+    await beepsPlayer.play();
   }
 
   Future<void> playBeepTwo() async {
     Vibrate.feedback(FeedbackType.light);
     await beepsPlayer.setAsset(_beepTwoAsset);
     await beepsPlayer.seek(Duration.zero);
-    beepsPlayer.play();
+    await beepsPlayer.play();
+
+    /// Only setting this in beepTwo as the sequence for round ends is 1, 1, 1, 2
+    /// We want to duck other sources while this is happening and then stop ducking.
+    await _session!.setActive(false);
   }
 
   Future<void> playToneComplete() async {
     Vibrate.feedback(FeedbackType.light);
     await toneCompleteFxPlayer.setAsset(_toneCompleteAsset);
     await toneCompleteFxPlayer.seek(Duration.zero);
-    toneCompleteFxPlayer.play();
+    await toneCompleteFxPlayer.play();
+
+    /// Session is complete so stop ducking other audiio sources.
+    await _session!.setActive(false);
   }
 
   //////////////////////////////////////////////////////////////////
