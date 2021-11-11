@@ -284,7 +284,7 @@ class MiniDurationPickerDisplay extends StatelessWidget {
             )),
         child: ContentBox(
           backgroundColor: context.theme.background,
-          child: MyText(duration.compactDisplay()),
+          child: MyText(duration.compactDisplay),
         ));
   }
 }

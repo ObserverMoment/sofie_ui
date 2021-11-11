@@ -90,11 +90,11 @@ class MyButton extends StatelessWidget {
                     children: [
                       if (prefix != null) prefix!,
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: MyText(
                           text.toUpperCase(),
                           color: contentColor,
-                          lineHeight: 0.9,
+                          lineHeight: 1,
                         ),
                       ),
                       if (suffix != null) suffix!
@@ -925,8 +925,12 @@ class InfoPopupButton extends StatelessWidget {
           rootNavigator: true,
           fullscreenDialog: true,
           child: CupertinoPageScaffold(
-            navigationBar:
-                withoutNavBar ? null : MyNavBar(middle: NavBarTitle(pageTitle)),
+            navigationBar: withoutNavBar
+                ? null
+                : MyNavBar(
+                    customLeading: NavBarChevronDownButton(
+                        () => context.pop(rootNavigator: true)),
+                    middle: NavBarTitle(pageTitle)),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),

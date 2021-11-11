@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/info_pages/custom_move_valid_rep_types_info.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/video/better_player_video_player.dart';
 import 'package:sofie_ui/components/media/video/video_uploader.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
@@ -12,6 +10,9 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/services/uploadcare.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class CustomMoveCreatorMeta extends StatelessWidget {
   final Move move;
@@ -48,8 +49,18 @@ class CustomMoveCreatorMeta extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const MyText(
-                  'Demo Video',
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    MyText(
+                      'Demo Video',
+                    ),
+                    MyText(
+                      '(Aspect must be Landscape)',
+                      size: FONTSIZE.two,
+                      subtext: true,
+                    ),
+                  ],
                 ),
                 VideoUploader(
                     videoUri: move.demoVideoUri,
@@ -63,28 +74,28 @@ class CustomMoveCreatorMeta extends StatelessWidget {
                       });
                     },
                     removeVideo: () {
-                      updateMove({
-                        'demoVideoUri': null,
-                        'demoVideoThumbUri': null,
-                      });
-                      context.showToast(message: 'Video removed');
+                      UploadcareService().deleteFiles(
+                          fileIds: [
+                            move.demoVideoUri!,
+                            move.demoVideoThumbUri!
+                          ],
+                          onComplete: () {
+                            updateMove({
+                              'demoVideoUri': null,
+                              'demoVideoThumbUri': null,
+                            });
+                            context.showToast(message: 'Video removed');
+                          },
+                          onFail: (e) {
+                            printLog(e.toString());
+                            context.showToast(
+                                message: 'Sorry, there was a problem.',
+                                toastType: ToastType.destructive);
+                          });
                     }),
               ],
             ),
           ),
-          if (move.demoVideoUri != null)
-            FadeIn(
-              child: UserInputContainer(
-                child: SizedBox(
-                    height: 200,
-                    child: BetterPlayerVideoPlayerWrapper(
-                      key: Key(move.demoVideoUri!),
-                      uri: move.demoVideoUri!,
-                      autoLoop: true,
-                      autoPlay: false,
-                    )),
-              ),
-            ),
           UserInputContainer(
             child: EditableTextFieldRow(
               title: 'Name',

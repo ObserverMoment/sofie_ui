@@ -81,7 +81,7 @@ class WorkoutPlanMeta extends StatelessWidget {
               _ActionIconButton(
                   icon: const Icon(CupertinoIcons.tv),
                   label: 'Video',
-                  onPressed: () => VideoSetupManager.openFullScreenBetterPlayer(
+                  onPressed: () => VideoSetupManager.openFullScreenVideoPlayer(
                       context: context,
                       videoUri: workoutPlan.introVideoUri!,
                       videoThumbUri: workoutPlan.introVideoThumbUri!,

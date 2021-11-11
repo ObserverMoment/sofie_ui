@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sofie">
+    package="com.quarksoup.sofie">
     
     <!-- https://pub.dev/packages/permission_handler -->
     <!-- Full list of options at https://github.com/Baseflow/flutter-permission-handler/blob/develop/permission_handler/example/android/app/src/main/AndroidManifest.xml -->

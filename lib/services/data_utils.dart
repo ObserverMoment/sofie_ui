@@ -116,7 +116,7 @@ class DataUtils {
         return '${entry.score.stringMyDouble()}${benchmark.loadUnit.display}';
       case BenchmarkType.fastesttime:
       case BenchmarkType.unbrokentime:
-        return Duration(seconds: entry.score.round()).compactDisplay();
+        return Duration(seconds: entry.score.round()).compactDisplay;
       case BenchmarkType.amrap:
       case BenchmarkType.unbrokenreps:
         return '${entry.score.stringMyDouble()} reps';

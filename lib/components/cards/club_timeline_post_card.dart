@@ -67,7 +67,7 @@ class ClubTimelinePostCard extends StatelessWidget {
                       child: MyText(
                         postData.caption!,
                         lineHeight: 1.4,
-                        maxLines: 3,
+                        maxLines: 6,
                       ),
                     ),
                   if (postData.tags.isNotEmpty)

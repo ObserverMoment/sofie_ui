@@ -127,10 +127,17 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: MyHeaderText(
-                    'Use Equipment?',
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      MyHeaderText(
+                        'Bodyweight Only?',
+                      ),
+                      SizedBox(height: 6),
+                      MyText('(No Equipment)')
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),

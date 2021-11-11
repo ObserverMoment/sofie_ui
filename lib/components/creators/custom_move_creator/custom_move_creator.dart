@@ -13,6 +13,7 @@ import 'package:sofie_ui/components/user_input/selectors/move_type_selector.dart
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Updates everything to DB when user saves and closes.
@@ -111,11 +112,31 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
     setState(() => _loading = false);
   }
 
+  Future<void> _handleCancel() async {
+    if (_formIsDirty) {
+      context.showConfirmDialog(
+          title: 'Leave without Saving?',
+          onConfirm: () async {
+            /// Cleanup any demo video which was uploaded.
+            if (_activeMove?.demoVideoUri != null) {
+              await UploadcareService().deleteFiles(fileIds: [
+                _activeMove!.demoVideoUri!,
+                _activeMove!.demoVideoThumbUri!
+              ]);
+            }
+
+            context.pop();
+          });
+    } else {
+      context.pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-          customLeading: NavBarCancelButton(context.pop),
+          customLeading: NavBarCancelButton(_handleCancel),
           middle: NavBarTitle(widget.move == null ? 'New Move' : 'Edit Move'),
           trailing: _formIsDirty
               ? FadeIn(
@@ -143,7 +164,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: MyTabBarNav(
-                    titles: const ['Meta', 'Equipment', 'Body'],
+                    titles: const ['Info', 'Equipment', 'Body'],
                     handleTabChange: _changeTab,
                     activeTabIndex: _activeTabIndex),
               ),

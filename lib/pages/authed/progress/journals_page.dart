@@ -46,19 +46,32 @@ class JournalsPage extends StatelessWidget {
               ),
             ),
             child: journals.isEmpty
-                ? Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Center(
+                ? Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: const [
+                            Expanded(
+                              child: MyText(
+                                'Reflect on your progress, take notes and set goals with Journals. You can create multiple journals if you need to, for different aspects of your journey.',
+                                textAlign: TextAlign.center,
+                                maxLines: 6,
+                                lineHeight: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+                        Center(
                           child: SecondaryButton(
                               prefixIconData: CupertinoIcons.add,
-                              text: 'New Journal',
+                              text: 'Create Your First Journal',
                               onPressed: () => context
                                   .navigateTo(ProgressJournalCreatorRoute())),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )
                 : ListView.builder(
                     shrinkWrap: true,

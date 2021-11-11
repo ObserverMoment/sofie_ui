@@ -204,10 +204,10 @@ class _FullAudioPlayerState extends State<FullAudioPlayer> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        MyText(snapshot.data!.compactDisplay(),
+                                        MyText(snapshot.data!.compactDisplay,
                                             size: FONTSIZE.two),
                                         MyText(
-                                            '- ${(_totalDuration - snapshot.data!).compactDisplay()}',
+                                            '- ${(_totalDuration - snapshot.data!).compactDisplay}',
                                             size: FONTSIZE.two),
                                       ],
                                     ),

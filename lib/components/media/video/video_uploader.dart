@@ -43,7 +43,7 @@ class VideoUploader extends StatefulWidget {
 class _VideoUploaderState extends State<VideoUploader> {
   bool _uploading = false;
   bool _processing = false;
-  double _uploadProgress = 0;
+  double _uploadProgress = 0.0;
 
   Future<void> _pickVideo(ImageSource source) async {
     try {
@@ -68,23 +68,24 @@ class _VideoUploaderState extends State<VideoUploader> {
     } on Exception catch (e) {
       printLog(e.toString());
       context.showToast(message: 'Video not selected');
-    } finally {
       setState(() => _uploading = false);
     }
   }
 
   Future<void> _uploadFile(File _file) async {
+    setState(() => _uploading = true);
     widget.onUploadStart?.call();
     try {
-      setState(() => _uploading = true);
       await GetIt.I<UploadcareService>().uploadVideo(
           file: SharedFile(_file),
           onProgress: (progress) =>
               setState(() => _uploadProgress = progress.value),
-          onUploaded: () => setState(() {
-                _uploading = false;
-                _processing = true;
-              }),
+          onUploaded: () {
+            setState(() {
+              _uploading = false;
+              _processing = true;
+            });
+          },
           onComplete: (videoUri, videoThumbUri) {
             _resetState();
             widget.onUploadSuccess(videoUri, videoThumbUri);
@@ -120,7 +121,7 @@ class _VideoUploaderState extends State<VideoUploader> {
               if (hasVideo)
                 BottomSheetMenuItem(
                   text: 'Watch video',
-                  onPressed: () => VideoSetupManager.openFullScreenBetterPlayer(
+                  onPressed: () => VideoSetupManager.openFullScreenVideoPlayer(
                       context: context,
                       videoUri: widget.videoUri!,
                       videoThumbUri: widget.videoThumbUri,
@@ -159,8 +160,8 @@ class _VideoUploaderState extends State<VideoUploader> {
           duration: const Duration(milliseconds: 400),
           child: _uploading
               ? LinearProgressIndicator(
-                  width: widget.displaySize.width * 0.8,
-                  height: 3,
+                  width: widget.displaySize.width * 0.95,
+                  height: 10,
                   progress: _uploadProgress,
                 )
               : _processing

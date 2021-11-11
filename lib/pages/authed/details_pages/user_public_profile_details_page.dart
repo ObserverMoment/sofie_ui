@@ -199,7 +199,7 @@ class _UserPublicProfileDetailsPageState
                                             .introVideoThumbUri))
                                           GestureDetector(
                                             onTap: () => VideoSetupManager
-                                                .openFullScreenBetterPlayer(
+                                                .openFullScreenVideoPlayer(
                                                     context: context,
                                                     videoUri: userPublicProfile
                                                         .introVideoUri!,

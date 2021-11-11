@@ -305,25 +305,26 @@ class _BodyTransformationPageState extends State<BodyTransformationPage> {
                     ),
                   if (data.bodyTransformationPhotos.isEmpty)
                     Padding(
-                      padding: const EdgeInsets.all(32),
+                      padding: const EdgeInsets.all(24),
                       child: Column(
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: const [
-                              MyText('Not photos yet...'),
+                              Expanded(
+                                child: MyText(
+                                  'Track your body health and aesthetics here. View your progress over time and monitor physical aspects such as body weight and fat percentage.',
+                                  textAlign: TextAlign.center,
+                                  maxLines: 6,
+                                  lineHeight: 1.4,
+                                ),
+                              ),
                             ],
                           ),
-                          const SizedBox(height: 20),
-                          ContentBox(
-                            child: BorderButton(
-                                withBorder: false,
-                                mini: true,
-                                prefix: const Icon(
-                                    CupertinoIcons.photo_on_rectangle),
-                                text: 'Add Your First Photo',
-                                onPressed: _openImagePickerModal),
-                          ),
+                          const SizedBox(height: 24),
+                          SecondaryButton(
+                              prefixIconData: CupertinoIcons.photo_on_rectangle,
+                              text: 'Add Your First Photo',
+                              onPressed: _openImagePickerModal),
                         ],
                       ),
                     )

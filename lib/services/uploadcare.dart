@@ -145,6 +145,10 @@ class UploadcareService {
       final ProcessedVideoResult processedUris =
           await encodeVideoAndGenerateThumb(originalFileId);
 
+      // Check when the video is ready for use before continuing.
+      await Utils.waitWhile(() => checkFileIsReady(processedUris.videoUri),
+          pollInterval: const Duration(seconds: 2), maxAttempts: 20);
+
       onComplete(processedUris.videoUri, processedUris.videoThumbUri);
     } on CancelUploadException catch (e) {
       printLog('User cancelled upload');
