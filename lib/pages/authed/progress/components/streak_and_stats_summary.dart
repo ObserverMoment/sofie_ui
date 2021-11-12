@@ -32,11 +32,13 @@ class StreakAndStatsSummary extends StatelessWidget {
 
           final minutesWorked =
               data.userLoggedWorkouts.fold<int>(0, (acum, nextLog) {
-            return acum +
-                nextLog.loggedWorkoutSections.fold<int>(0, (acum, nextSection) {
-                  return acum + nextSection.timeTakenSeconds;
-                });
-          });
+                    return acum +
+                        nextLog.loggedWorkoutSections.fold<int>(0,
+                            (acum, nextSection) {
+                          return acum + nextSection.timeTakenSeconds;
+                        });
+                  }) ~/
+                  60;
 
           return Card(
             height: _cardHeight,

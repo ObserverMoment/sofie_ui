@@ -454,8 +454,7 @@ class _ProfileWorkSummaryStats extends StatelessWidget {
 
     return QueryObserver<LifetimeLogStatsSummary$Query,
             LifetimeLogStatsSummaryArguments>(
-        key: Key(
-            'UserPublicProfileDetailsPage - ${query.operationName}-$userId'),
+        key: Key('_ProfileWorkSummaryStats - ${query.operationName}-$userId'),
         query: query,
         fetchPolicy: QueryFetchPolicy.networkOnly,
         loadingIndicator: const LoadingDots(

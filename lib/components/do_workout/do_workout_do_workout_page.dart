@@ -11,13 +11,40 @@ import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
-class DoWorkoutDoWorkoutPage extends StatelessWidget {
+/// This widget is watching app state to check when it is moved into the background by the user.
+/// When moved into the background we pause the workout.
+/// When moved back into the foreground we resume the workout or prompt the user to resume manually (TBD).
+class DoWorkoutDoWorkoutPage extends StatefulWidget {
   const DoWorkoutDoWorkoutPage({
     Key? key,
   }) : super(key: key);
 
-  void _navigateToSection(
-      BuildContext context, int sectionIndex, int numWorkoutSections) {
+  @override
+  State<DoWorkoutDoWorkoutPage> createState() => _DoWorkoutDoWorkoutPageState();
+}
+
+class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
+    with WidgetsBindingObserver {
+  int? _activeSectionIndex;
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused && _activeSectionIndex != null) {
+      context.read<DoWorkoutBloc>().pauseSection(_activeSectionIndex!);
+    } else if (state == AppLifecycleState.resumed &&
+        _activeSectionIndex != null) {
+      context.read<DoWorkoutBloc>().playSection(_activeSectionIndex!);
+    }
+  }
+
+  /// Navigating to a section is equivalent to making it "active"
+  void _navigateToSection(int sectionIndex, int numWorkoutSections) {
     final _bloc = context.read<DoWorkoutBloc>();
     Navigator.push(
       context,
@@ -31,9 +58,10 @@ class DoWorkoutDoWorkoutPage extends StatelessWidget {
         ),
       ),
     );
+    _activeSectionIndex = sectionIndex;
   }
 
-  Future<void> _generateLog(BuildContext context) async {
+  Future<void> _generateLog() async {
     final loggedWorkout = context.read<DoWorkoutBloc>().generateLog();
     final scheduledWorkout = context.read<DoWorkoutBloc>().scheduledWorkout;
 
@@ -67,7 +95,7 @@ class DoWorkoutDoWorkoutPage extends StatelessWidget {
         });
   }
 
-  void _handleExitRequest(BuildContext context) {
+  void _handleExitRequest() {
     context.showConfirmDialog(
         title: 'Exit Workout',
         message: 'Nothing will be saved. OK?',
@@ -76,14 +104,20 @@ class DoWorkoutDoWorkoutPage extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final numWorkoutSections = context.select<DoWorkoutBloc, int>(
         (b) => b.activeWorkout.workoutSections.length);
 
     return DoWorkoutOverview(
-        handleExitRequest: () => _handleExitRequest(context),
+        handleExitRequest: () => _handleExitRequest(),
         navigateToSectionPage: (sectionIndex) =>
-            _navigateToSection(context, sectionIndex, numWorkoutSections),
-        generateLog: () => _generateLog(context));
+            _navigateToSection(sectionIndex, numWorkoutSections),
+        generateLog: () => _generateLog());
   }
 }
