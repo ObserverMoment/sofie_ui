@@ -17,6 +17,7 @@ import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class LoggedWorkoutsPage extends StatelessWidget {
@@ -30,6 +31,7 @@ class LoggedWorkoutsPage extends StatelessWidget {
         key: Key('LoggedWorkoutsPage - ${query.operationName}'),
         query: query,
         loadingIndicator: const ShimmerListPage(),
+        fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
           final logs = data.userLoggedWorkouts
               .sortedBy<DateTime>((l) => l.completedOn)
