@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/amrap_section_controller.dart';
@@ -28,6 +27,10 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   /// After any pre-start adjustments. Use this during.
   late Workout activeWorkout;
+
+  /// Updated when user triggers playSection(int index).
+  /// i.e. the section that they are doing.
+  int? _activeSection;
 
   /// List of timers - one for each workoutSection.
   /// Sorted by sortPosition. Index [0] == sortPosition of [0] etc.
@@ -62,14 +65,14 @@ class DoWorkoutBloc extends ChangeNotifier {
   AudioSession? _session;
 
   /// Sound effects.
+  AudioPlayer beepOnePlayer = AudioPlayer();
+  AudioPlayer beepTwoPlayer = AudioPlayer();
+  AudioPlayer toneCompletePlayer = AudioPlayer();
 
-  AudioPlayer beepsPlayer = AudioPlayer();
-  AudioPlayer toneCompleteFxPlayer = AudioPlayer();
-
-  String get _beepOneAsset => 'assets/audio/do_workout/bell_ding_duo.mp3';
-  String get _beepTwoAsset => 'assets/audio/do_workout/bell_digi_hi.mp3';
+  String get _beepOneAsset => 'assets/audio/do_workout/chime_bell_note.mp3';
+  String get _beepTwoAsset => 'assets/audio/do_workout/chime_chirp.mp3';
   String get _toneCompleteAsset =>
-      'assets/audio/do_workout/completed_chord_down.mp3';
+      'assets/audio/do_workout/chime_clickbell_octave_lo.mp3';
 
   DoWorkoutBloc({
     required this.originalWorkout,
@@ -116,6 +119,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   /// Constructor async helper ///
   Future<void> _initAudioPlayers() async {
+    /// Init any classAudio players required.
     _audioPlayers =
         await Future.wait(activeWorkout.workoutSections.map((section) async {
       if (Utils.textNotNull(section.classAudioUri)) {
@@ -128,6 +132,10 @@ class DoWorkoutBloc extends ChangeNotifier {
       }
     }).toList());
 
+    /// Init FX players.
+    await beepOnePlayer.setAsset(_beepOneAsset);
+    await beepTwoPlayer.setAsset(_beepTwoAsset);
+    await toneCompletePlayer.setAsset(_toneCompleteAsset);
     notifyListeners();
   }
 
@@ -260,11 +268,14 @@ class DoWorkoutBloc extends ChangeNotifier {
   }
 
   Future<void> playSection(int index) async {
-    getControllerForSection(index).sectionHasStarted = true;
-    getStopWatchTimerForSection(index).onExecute.add(StopWatchExecute.start);
-    await getVideoControllerForSection(index)?.play();
-    getAudioPlayerForSection(index)?.play();
-    notifyListeners();
+    if (!getControllerForSection(index).sectionComplete) {
+      _activeSection = index;
+      getControllerForSection(index).sectionHasStarted = true;
+      getStopWatchTimerForSection(index).onExecute.add(StopWatchExecute.start);
+      await getVideoControllerForSection(index)?.play();
+      getAudioPlayerForSection(index)?.play();
+      notifyListeners();
+    }
   }
 
   Future<void> pauseSection(int index) async {
@@ -314,31 +325,48 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   ///// Sound FX Methods ////
   Future<void> playBeepOne() async {
-    Vibrate.feedback(FeedbackType.light);
-    await beepsPlayer.setAsset(_beepOneAsset);
-    await beepsPlayer.seek(Duration.zero);
-    await beepsPlayer.play();
+    await beepOnePlayer.seek(Duration.zero);
+    beepOnePlayer.play();
   }
 
+  /// New round starts
   Future<void> playBeepTwo() async {
-    Vibrate.feedback(FeedbackType.light);
-    await beepsPlayer.setAsset(_beepTwoAsset);
-    await beepsPlayer.seek(Duration.zero);
-    await beepsPlayer.play();
+    await beepTwoPlayer.seek(Duration.zero);
+    await beepTwoPlayer.play();
 
-    /// Only setting this in beepTwo as the sequence for round ends is 1, 1, 1, 2
-    /// We want to duck other sources while this is happening and then stop ducking.
-    await _session!.setActive(false);
+    deactivateAudioSession();
   }
 
+  /// Section completed.
   Future<void> playToneComplete() async {
-    Vibrate.feedback(FeedbackType.light);
-    await toneCompleteFxPlayer.setAsset(_toneCompleteAsset);
-    await toneCompleteFxPlayer.seek(Duration.zero);
-    await toneCompleteFxPlayer.play();
+    await toneCompletePlayer.seek(Duration.zero);
+    await toneCompletePlayer.play();
 
-    /// Session is complete so stop ducking other audiio sources.
-    await _session!.setActive(false);
+    deactivateAudioSession();
+  }
+
+  /// Clear FX audio_players and stop ducking audio sources from other apps.
+  /// It is useful is user is playing music in the background via other app.
+  Future<void> deactivateAudioSession() async {
+    /// This should only happen if no classAudio / videoAudio is active for the currently active section. We assume that the user does not want to hear in app audio / music plus background audio.
+    /// TODO: Testing of the different combinations of media playing / muted etc here is required.
+    bool activeClassVideo = _activeSection != null &&
+        getVideoControllerForSection(_activeSection!) != null &&
+        getVideoControllerForSection(_activeSection!)!.value.volume != 0;
+
+    bool activeClassAudio = _activeSection != null &&
+        getAudioPlayerForSection(_activeSection!) != null &&
+        getAudioPlayerForSection(_activeSection!)!.volume != 0;
+
+    if (!activeClassVideo && !activeClassAudio) {
+      await beepOnePlayer.stop();
+      await beepTwoPlayer.stop();
+      await toneCompletePlayer.stop();
+
+      Future.delayed(const Duration(seconds: 1), () {
+        _session!.setActive(false);
+      });
+    }
   }
 
   //////////////////////////////////////////////////////////////////
@@ -541,8 +569,9 @@ class DoWorkoutBloc extends ChangeNotifier {
   @override
   Future<void> dispose() async {
     super.dispose();
-    await beepsPlayer.dispose();
-    await toneCompleteFxPlayer.dispose();
+    await beepOnePlayer.dispose();
+    await beepTwoPlayer.dispose();
+    await toneCompletePlayer.dispose();
     for (final c in _controllers) {
       c.dispose();
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -129,7 +130,10 @@ class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
                         Expanded(
                           child: GestureDetector(
                             behavior: HitTestBehavior.opaque,
-                            onTap: controller.play,
+                            onTap: () async {
+                              Vibrate.feedback(FeedbackType.light);
+                              controller.play();
+                            },
                             child: const SizedBox(
                               height: 100,
                               width: double.infinity,
@@ -318,7 +322,10 @@ class _InlineVideoControlsOverlayState
                     Expanded(
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: controller.play,
+                        onTap: () {
+                          Vibrate.feedback(FeedbackType.light);
+                          controller.play();
+                        },
                         child: const SizedBox(
                           height: 100,
                           width: double.infinity,

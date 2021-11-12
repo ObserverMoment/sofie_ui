@@ -13,10 +13,11 @@ void printLog(String message) {
 abstract class Utils {
   static void unfocusAny() => FocusManager.instance.primaryFocus?.unfocus();
   // https://stackoverflow.com/questions/47776045/is-there-a-good-way-to-write-wait-for-variables-to-change-in-darts-async-meth
-  // Completes the future when async test() return true
-  // Or bails out after maxAttempts with an error.
+  /// Completes the future when async test() return true
+  /// Or bails out after maxAttempts with an error.
+  /// Optional linear backoff as number of attempts increase.
   static Future waitWhile(Future<bool> Function() test,
-      {Duration pollInterval = Duration.zero, int? maxAttempts}) {
+      {int pollIntervalMs = 1000, int backoffMs = 1000, int? maxAttempts}) {
     final completer = Completer();
     int attempt = 0;
     Future<void> check() async {
@@ -28,7 +29,8 @@ abstract class Utils {
           completer.completeError(Exception(
               'waitWhile: Max attempts reached without receiving a valid response'));
         } else {
-          Timer(pollInterval, check);
+          Timer(Duration(milliseconds: pollIntervalMs + (backoffMs * attempt)),
+              check);
         }
       }
     }

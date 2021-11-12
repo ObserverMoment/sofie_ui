@@ -147,7 +147,7 @@ class UploadcareService {
 
       // Check when the video is ready for use before continuing.
       await Utils.waitWhile(() => checkFileIsReady(processedUris.videoUri),
-          pollInterval: const Duration(seconds: 2), maxAttempts: 20);
+          pollIntervalMs: 2000, backoffMs: 1000, maxAttempts: 10);
 
       onComplete(processedUris.videoUri, processedUris.videoThumbUri);
     } on CancelUploadException catch (e) {
