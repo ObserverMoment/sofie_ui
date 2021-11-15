@@ -1,0 +1,14 @@
+query userProgressJournals {
+  userProgressJournals {
+    ...ProgressJournal
+    ProgressJournalEntries {
+      ...ProgressJournalEntry
+    }
+    ProgressJournalGoals {
+      ...ProgressJournalGoal
+      ProgressJournalGoalTags {
+        ...ProgressJournalGoalTag
+      }
+    }
+  }
+}

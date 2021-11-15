@@ -1,0 +1,35 @@
+mutation removeWorkoutFromClub($workoutId: ID!, $clubId: ID!) {
+  removeWorkoutFromClub(workoutId: $workoutId, clubId: $clubId) {
+    ...Club
+    Owner {
+      ...UserSummary
+    }
+    Admins {
+      ...UserSummary
+    }
+    Members {
+      ...UserSummary
+    }
+    ClubInviteTokens {
+      ...ClubInviteToken
+    }
+    JoinClubInvites {
+      ...JoinClubInvite
+      Invited {
+        ...UserSummary
+      }
+    }
+    JoinClubRequests {
+      ...JoinClubRequest
+      Applicant {
+        ...UserSummary
+      }
+    }
+    Workouts {
+      ...WorkoutData
+    }
+    WorkoutPlans {
+      ...WorkoutPlanData
+    }
+  }
+}

@@ -1,0 +1,14 @@
+mutation createCollection($data: CreateCollectionInput!) {
+  createCollection(data: $data) {
+    ...Collection
+    User {
+      ...UserSummary
+    }
+    Workouts {
+      ...WorkoutData
+    }
+    WorkoutPlans {
+      ...WorkoutPlanData
+    }
+  }
+}

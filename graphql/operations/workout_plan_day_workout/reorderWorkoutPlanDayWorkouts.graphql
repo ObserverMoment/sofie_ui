@@ -1,0 +1,6 @@
+mutation reorderWorkoutPlanDayWorkouts($data: [UpdateSortPositionInput!]!) {
+  reorderWorkoutPlanDayWorkouts(data: $data) {
+    id
+    sortPosition
+  }
+}

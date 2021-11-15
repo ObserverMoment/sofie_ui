@@ -1,0 +1,14 @@
+mutation updateCollection($data: UpdateCollectionInput!) {
+  updateCollection(data: $data) {
+    ...Collection
+    User {
+      ...UserSummary
+    }
+    Workouts {
+      ...WorkoutData
+    }
+    WorkoutPlans {
+      ...WorkoutPlanData
+    }
+  }
+}

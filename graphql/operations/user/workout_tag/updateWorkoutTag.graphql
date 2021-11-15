@@ -1,0 +1,5 @@
+mutation updateWorkoutTag($data: UpdateWorkoutTagInput!) {
+  updateWorkoutTag(data: $data) {
+    ...WorkoutTag
+  }
+}

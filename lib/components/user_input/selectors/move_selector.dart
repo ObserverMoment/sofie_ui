@@ -27,6 +27,7 @@ class MoveSelector extends StatefulWidget {
   final Move? move;
   final void Function(Move move) selectMove;
   final VoidCallback onCancel;
+  final String pageTitle;
 
   /// Removes the option to switch to custom moves tab. Also removes filtering option.
   final bool includeCustomMoves;
@@ -37,7 +38,8 @@ class MoveSelector extends StatefulWidget {
       this.move,
       this.includeCustomMoves = true,
       this.showCreateCustomMoveButton = true,
-      required this.onCancel})
+      required this.onCancel,
+      this.pageTitle = 'Select Move'})
       : super(key: key);
 
   @override
@@ -86,8 +88,8 @@ class _MoveSelectorState extends State<MoveSelector> {
         : InfoPopupButton(withoutNavBar: true, infoWidget: MoveDetails(move));
   }
 
-  Widget get _loadingPage => const ShimmerListPage(
-        title: 'Select Move',
+  Widget get _loadingPage => ShimmerListPage(
+        title: widget.pageTitle,
         cardHeight: 70,
       );
 
@@ -121,7 +123,7 @@ class _MoveSelectorState extends State<MoveSelector> {
                       /// Required because in [WorkoutMoveCreator] this [MoveSelecter] sits as a sibling to another widget which also has a [CupertinoNavBar] - which was causing an 'identical hero tags in tree error'.
                       transitionBetweenRoutes: false,
                       leading: NavBarCancelButton(widget.onCancel),
-                      middle: const NavBarTitle('Select Move'),
+                      middle: NavBarTitle(widget.pageTitle),
                       trailing: NavBarTrailingRow(children: [
                         FilterButton(
                           hasActiveFilters: moveFiltersBloc.hasActiveFilters,

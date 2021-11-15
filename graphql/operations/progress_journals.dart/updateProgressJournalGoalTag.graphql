@@ -1,0 +1,7 @@
+mutation updateProgressJournalGoalTag(
+  $data: UpdateProgressJournalGoalTagInput!
+) {
+  updateProgressJournalGoalTag(data: $data) {
+    ...ProgressJournalGoalTag
+  }
+}

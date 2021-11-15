@@ -34,7 +34,9 @@ import 'package:sofie_ui/services/utils.dart';
 
 class WorkoutDetailsPage extends StatefulWidget {
   final String id;
-  const WorkoutDetailsPage({Key? key, @PathParam('id') required this.id})
+  final ScheduledWorkout? scheduledWorkout;
+  const WorkoutDetailsPage(
+      {Key? key, @PathParam('id') required this.id, this.scheduledWorkout})
       : super(key: key);
 
   @override
@@ -296,8 +298,10 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                       ),
                     ),
                     child: StackAndFloatingButton(
-                        onPressed: () => context
-                            .navigateTo(DoWorkoutWrapperRoute(id: widget.id)),
+                        onPressed: () => context.navigateTo(
+                            DoWorkoutWrapperRoute(
+                                id: widget.id,
+                                scheduledWorkout: widget.scheduledWorkout)),
                         pageHasBottomNavBar: false,
                         buttonText: 'Do It',
                         buttonIconData: CupertinoIcons.arrow_right_square,

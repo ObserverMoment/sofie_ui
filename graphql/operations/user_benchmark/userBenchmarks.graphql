@@ -1,0 +1,11 @@
+query userBenchmarks {
+  userBenchmarks {
+    ...UserBenchmark
+    UserBenchmarkEntries {
+      ...UserBenchmarkEntry
+    }
+    UserBenchmarkTags {
+      ...UserBenchmarkTag
+    }
+  }
+}

@@ -1,0 +1,5 @@
+query authedUser {
+  authedUser {
+    ...User
+  }
+}

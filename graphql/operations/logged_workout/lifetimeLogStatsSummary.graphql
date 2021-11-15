@@ -1,0 +1,6 @@
+query lifetimeLogStatsSummary($userId: ID!) {
+  lifetimeLogStatsSummary(userId: $userId) {
+    sessionsLogged
+    minutesWorked
+  }
+}

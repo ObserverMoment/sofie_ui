@@ -1,4 +1,4 @@
-package com.example.sofie
+package com.quarksoup.sofie
 
 import io.flutter.embedding.android.FlutterActivity
 

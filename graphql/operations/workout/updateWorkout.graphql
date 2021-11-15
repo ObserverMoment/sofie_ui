@@ -1,0 +1,12 @@
+# Just fields on the workout itself that can be updated - not descendants.
+mutation updateWorkout($data: UpdateWorkoutInput!) {
+  updateWorkout: updateWorkout(data: $data) {
+    ...Workout
+    WorkoutGoals {
+      ...WorkoutGoal
+    }
+    WorkoutTags {
+      ...WorkoutTag
+    }
+  }
+}

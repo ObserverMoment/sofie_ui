@@ -1,0 +1,89 @@
+fragment User on User {
+  __typename
+  id
+  avatarUri
+  bio
+  birthdate
+  countryCode
+  displayName
+  introVideoUri
+  introVideoThumbUri
+  gender
+  userProfileScope
+}
+
+fragment UserAvatarData on UserAvatarData {
+  __typename
+  id
+  avatarUri
+  displayName
+}
+
+fragment UserBenchmark on UserBenchmark {
+  __typename
+  id
+  createdAt
+  lastEntryAt
+  name
+  description
+  equipmentInfo
+  benchmarkType
+  loadUnit
+}
+
+fragment UserBenchmarkEntry on UserBenchmarkEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  score
+  note
+  videoUri
+  videoThumbUri
+}
+
+fragment UserBenchmarkTag on UserBenchmarkTag {
+  __typename
+  id
+  name
+  description
+}
+
+fragment UserPublicProfile on UserPublicProfile {
+  __typename
+  id
+  userProfileScope
+  avatarUri
+  introVideoUri
+  introVideoThumbUri
+  bio
+  tagline
+  townCity
+  instagramUrl
+  tiktokUrl
+  youtubeUrl
+  snapUrl
+  linkedinUrl
+  countryCode
+  displayName
+}
+
+fragment UserPublicProfileSummary on UserPublicProfileSummary {
+  __typename
+  id
+  avatarUri
+  tagline
+  townCity
+  countryCode
+  displayName
+  numberPublicWorkouts
+  numberPublicPlans
+}
+
+fragment UserSummary on UserSummary {
+  __typename
+  id
+  avatarUri
+  displayName
+  userProfileScope
+}

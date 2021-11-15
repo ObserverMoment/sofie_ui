@@ -5,9 +5,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_uploader.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
-import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/default_object_factory.dart';
@@ -57,11 +55,6 @@ class _ProgressJournalCreatorPageState
   void _updateDescription(String description) => setState(() {
         _formIsDirty = true;
         _activeProgressJournal.description = description;
-      });
-
-  void _updateBodyweightUnit(BodyweightUnit bodyweightUnit) => setState(() {
-        _formIsDirty = true;
-        _activeProgressJournal.bodyweightUnit = bodyweightUnit;
       });
 
   Future<void> _updateCoverImageUri(String coverImageUri) async {
@@ -123,11 +116,11 @@ class _ProgressJournalCreatorPageState
     if (_isEditing) {
       final variables = UpdateProgressJournalArguments(
           data: UpdateProgressJournalInput(
-              id: _activeProgressJournal.id,
-              name: _activeProgressJournal.name,
-              description: _activeProgressJournal.description,
-              coverImageUri: _activeProgressJournal.coverImageUri,
-              bodyweightUnit: _activeProgressJournal.bodyweightUnit));
+        id: _activeProgressJournal.id,
+        name: _activeProgressJournal.name,
+        description: _activeProgressJournal.description,
+        coverImageUri: _activeProgressJournal.coverImageUri,
+      ));
 
       final result = await context.graphQLStore.mutate(
           mutation: UpdateProgressJournalMutation(variables: variables),
@@ -151,10 +144,10 @@ class _ProgressJournalCreatorPageState
     } else {
       final variables = CreateProgressJournalArguments(
           data: CreateProgressJournalInput(
-              name: _activeProgressJournal.name,
-              description: _activeProgressJournal.description,
-              coverImageUri: _activeProgressJournal.coverImageUri,
-              bodyweightUnit: _activeProgressJournal.bodyweightUnit));
+        name: _activeProgressJournal.name,
+        description: _activeProgressJournal.description,
+        coverImageUri: _activeProgressJournal.coverImageUri,
+      ));
 
       final result = await context.graphQLStore.create(
           mutation: CreateProgressJournalMutation(variables: variables),
@@ -241,24 +234,6 @@ class _ProgressJournalCreatorPageState
                   removeImage: (_) => _removeCoverImageUri(),
                   onUploadStart: () => setState(() => _isLoading = true),
                 ),
-              ],
-            ),
-          ),
-          UserInputContainer(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const MyText('Bodyweight Unit'),
-                SlidingSelect<BodyweightUnit>(
-                    value: _activeProgressJournal.bodyweightUnit,
-                    children: {
-                      for (final v in BodyweightUnit.values
-                          .where((v) => v != BodyweightUnit.artemisUnknown))
-                        v: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: MyText(v.display.toUpperCase()))
-                    },
-                    updateValue: _updateBodyweightUnit),
               ],
             ),
           ),

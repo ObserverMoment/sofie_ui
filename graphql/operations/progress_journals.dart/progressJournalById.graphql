@@ -1,0 +1,14 @@
+query progressJournalById($id: ID!) {
+  progressJournalById(id: $id) {
+    ...ProgressJournal
+    ProgressJournalEntries {
+      ...ProgressJournalEntry
+    }
+    ProgressJournalGoals {
+      ...ProgressJournalGoal
+      ProgressJournalGoalTags {
+        ...ProgressJournalGoalTag
+      }
+    }
+  }
+}

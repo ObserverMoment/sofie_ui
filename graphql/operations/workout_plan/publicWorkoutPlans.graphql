@@ -1,0 +1,10 @@
+# Put args in alphabetical order to ensure correct key generation in store.
+query publicWorkoutPlans(
+  $cursor: ID
+  $filters: WorkoutPlanFiltersInput
+  $take: Int
+) {
+  publicWorkoutPlans(cursor: $cursor, filters: $filters, take: $take) {
+    ...WorkoutPlanData
+  }
+}

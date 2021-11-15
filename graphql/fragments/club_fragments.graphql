@@ -1,0 +1,51 @@
+fragment Club on Club {
+  __typename
+  id
+  createdAt
+  name
+  description
+  location
+  coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  contentAccessScope
+}
+
+fragment ClubSummary on ClubSummary {
+  __typename
+  id
+  name
+  description
+  coverImageUri
+  location
+}
+
+fragment ClubInviteToken on ClubInviteToken {
+  __typename
+  id
+  createdAt
+  name
+  active
+  # How many times can this token be used.
+  # 0 means unlimited.
+  inviteLimit
+  # Only updated by the sever when user joins via this token.
+  joinedUserIds
+}
+
+fragment JoinClubInvite on JoinClubInvite {
+  __typename
+  id
+  createdAt
+  respondedAt
+  status
+}
+
+fragment JoinClubRequest on JoinClubRequest {
+  __typename
+  id
+  createdAt
+  respondedAt
+  status
+}

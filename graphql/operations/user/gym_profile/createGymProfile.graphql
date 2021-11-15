@@ -1,0 +1,8 @@
+mutation createGymProfile($data: CreateGymProfileInput!) {
+  createGymProfile(data: $data) {
+    ...GymProfile
+    Equipments {
+      ...Equipment
+    }
+  }
+}

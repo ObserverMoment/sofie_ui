@@ -1,0 +1,14 @@
+mutation updateProgressJournal($data: UpdateProgressJournalInput!) {
+  updateProgressJournal(data: $data) {
+    ...ProgressJournal
+    ProgressJournalEntries {
+      ...ProgressJournalEntry
+    }
+    ProgressJournalGoals {
+      ...ProgressJournalGoal
+      ProgressJournalGoalTags {
+        ...ProgressJournalGoalTag
+      }
+    }
+  }
+}

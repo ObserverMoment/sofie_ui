@@ -43,8 +43,7 @@ class ProgressPage extends StatelessWidget {
                 CategoryLinkTile(
                   label: 'Body Tracking',
                   assetImagePath: 'body_transform.svg',
-                  onTap: () =>
-                      context.navigateTo(const BodyTransformationRoute()),
+                  onTap: () => context.navigateTo(const BodyTrackingRoute()),
                 ),
                 CategoryLinkTile(
                   label: 'Workout Logs & History',

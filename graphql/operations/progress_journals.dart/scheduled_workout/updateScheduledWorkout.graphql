@@ -1,0 +1,16 @@
+mutation updateScheduledWorkout($data: UpdateScheduledWorkoutInput!) {
+  updateScheduledWorkout(data: $data) {
+    ...ScheduledWorkout
+    Workout {
+      ...WorkoutData
+    }
+    GymProfile {
+      ...GymProfile
+      Equipments {
+        ...Equipment
+      }
+    }
+    loggedWorkoutId
+    workoutPlanEnrolmentId
+  }
+}

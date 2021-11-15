@@ -1,0 +1,16 @@
+mutation createScheduledWorkout($data: CreateScheduledWorkoutInput!) {
+  createScheduledWorkout(data: $data) {
+    ...ScheduledWorkout
+    Workout {
+      ...WorkoutData
+    }
+    GymProfile {
+      ...GymProfile
+      Equipments {
+        ...Equipment
+      }
+    }
+    loggedWorkoutId
+    workoutPlanEnrolmentId
+  }
+}

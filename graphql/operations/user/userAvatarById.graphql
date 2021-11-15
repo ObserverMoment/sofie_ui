@@ -1,0 +1,5 @@
+query userAvatarById($id: ID!) {
+  userAvatarById(id: $id) {
+    ...UserAvatarData
+  }
+}

@@ -1,0 +1,3 @@
+mutation userJoinPublicClub($clubId: ID!) {
+  userJoinPublicClub(clubId: $clubId)
+}

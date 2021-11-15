@@ -1,0 +1,5 @@
+mutation archiveWorkoutPlanById($id: ID!) {
+  archivedWorkoutPlan: archiveWorkoutPlanById(id: $id) {
+    ...ArchivedWorkoutPlan
+  }
+}

@@ -37,22 +37,21 @@ import 'package:sofie_ui/pages/authed/discover/discover_clubs_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_community_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_page.dart';
 import 'package:sofie_ui/pages/authed/home/home_page.dart';
-import 'package:sofie_ui/pages/authed/home/your_challenges.dart';
+import 'package:sofie_ui/pages/authed/home/your_awards.dart';
 import 'package:sofie_ui/pages/authed/home/your_clubs.dart';
 import 'package:sofie_ui/pages/authed/home/your_collections.dart';
-import 'package:sofie_ui/pages/authed/home/your_events.dart';
+import 'package:sofie_ui/pages/authed/home/your_gym_profiles.dart';
+import 'package:sofie_ui/pages/authed/home/your_moves_library.dart';
+import 'package:sofie_ui/pages/authed/home/your_throwdowns.dart';
 import 'package:sofie_ui/pages/authed/home/your_plans/your_plans.dart';
 import 'package:sofie_ui/pages/authed/home/your_schedule.dart';
 import 'package:sofie_ui/pages/authed/home/your_workouts/your_workouts.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
 import 'package:sofie_ui/pages/authed/main_tabs_page.dart';
 import 'package:sofie_ui/pages/authed/profile/archive_page.dart';
-import 'package:sofie_ui/pages/authed/profile/custom_moves_page.dart';
-import 'package:sofie_ui/pages/authed/profile/gym_profiles.dart';
-import 'package:sofie_ui/pages/authed/profile/personal_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
-import 'package:sofie_ui/pages/authed/progress/body_transformation_page.dart';
+import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
 import 'package:sofie_ui/pages/authed/progress/journals_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_bests_page.dart';
@@ -98,13 +97,16 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
                 page: EmptyRouterPage,
                 children: [
                   AutoRoute(path: '', page: HomePage),
+                  AutoRoute(path: 'your-awards', page: YourAwardsPage),
+                  AutoRoute(path: 'your-clubs', page: YourClubsPage),
                   AutoRoute(
                       path: 'your-collections', page: YourCollectionsPage),
-                  AutoRoute(path: 'your-challenges', page: YourChallengesPage),
-                  AutoRoute(path: 'your-clubs', page: YourClubsPage),
-                  AutoRoute(path: 'your-events', page: YourEventsPage),
+                  AutoRoute(
+                      path: 'your-gym-profiles', page: YourGymProfilesPage),
+                  AutoRoute(path: 'your-moves', page: YourMovesLibraryPage),
                   AutoRoute(path: 'your-plans', page: YourPlansPage),
                   AutoRoute(path: 'your-schedule', page: YourSchedulePage),
+                  AutoRoute(path: 'your-throwdowns', page: YourThrowdownsPage),
                   AutoRoute(path: 'your-workouts', page: YourWorkoutsPage),
                   RedirectRoute(path: '*', redirectTo: '')
                 ]),
@@ -116,18 +118,11 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
                   AutoRoute(initial: true, path: '', page: ProgressPage),
                   AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
                   AutoRoute(path: 'journals', page: JournalsPage),
-                  AutoRoute(
-                      path: 'transformation', page: BodyTransformationPage),
+                  AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
                   AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
                   RedirectRoute(path: '*', redirectTo: '')
                 ]),
-            AutoRoute(path: 'profile', page: ProfilePage, children: [
-              AutoRoute(path: 'personal', page: ProfilePersonalPage),
-              AutoRoute(path: 'gym-profiles', page: ProfileGymProfilesPage),
-              AutoRoute(path: 'custom-moves', page: ProfileCustomMovesPage),
-              // The below is commented out because otherwise this route intercepts named pushes to 'profile/:userId'. Do not re-instate unless you change the name of route for users public profiles.
-              // RedirectRoute(path: '*', redirectTo: 'personal')
-            ]),
+            AutoRoute(path: 'profile', page: ProfilePage),
           ]),
           // These pages are 'stand-alone'. They push on top of the underlying main tabs UI / stacks and so go into full screen.
           // They can be pushed to from anywhere and are also pages that would want to be linkable. E.g. when sharing a workout details page with a group or another user.

@@ -1,0 +1,8 @@
+mutation createWorkoutPlanReview($data: CreateWorkoutPlanReviewInput!) {
+  createWorkoutPlanReview(data: $data) {
+    ...WorkoutPlanReview
+    User {
+      ...UserSummary
+    }
+  }
+}

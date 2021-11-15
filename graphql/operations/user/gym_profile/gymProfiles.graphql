@@ -1,0 +1,8 @@
+query gymProfiles {
+  gymProfiles {
+    ...GymProfile
+    Equipments {
+      ...Equipment
+    }
+  }
+}

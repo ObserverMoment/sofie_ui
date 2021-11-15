@@ -1,0 +1,36 @@
+mutation createLoggedWorkout($data: CreateLoggedWorkoutInput!) {
+  createLoggedWorkout(data: $data) {
+    ...LoggedWorkout
+    GymProfile {
+      ...GymProfile
+      Equipments {
+        ...Equipment
+      }
+    }
+    WorkoutGoals {
+      ...WorkoutGoal
+    }
+    LoggedWorkoutSections {
+      ...LoggedWorkoutSection
+      WorkoutSectionType {
+        ...WorkoutSectionType
+      }
+      BodyAreas {
+        ...BodyArea
+      }
+      MoveTypes {
+        ...MoveType
+      }
+      loggedWorkoutSectionData {
+        rounds {
+          timeTakenSeconds
+          sets {
+            rounds
+            timeTakenSeconds
+            moves
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+mutation deleteBodyTrackingEntryById($id: ID!) {
+  deleteBodyTrackingEntryById(id: $id)
+}

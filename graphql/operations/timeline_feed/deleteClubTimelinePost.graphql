@@ -1,0 +1,3 @@
+mutation deleteClubTimelinePost($activityId: ID!) {
+  deleteClubTimelinePost(activityId: $activityId)
+}

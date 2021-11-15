@@ -1,0 +1,3 @@
+mutation deleteWorkoutTagById($id: ID!) {
+  deleteWorkoutTagById(id: $id)
+}

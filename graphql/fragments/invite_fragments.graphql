@@ -1,0 +1,9 @@
+fragment InviteTokenError on InviteTokenError {
+  __typename
+  message
+}
+
+fragment ClubInviteTokenData on ClubInviteTokenData {
+  __typename
+  token
+}

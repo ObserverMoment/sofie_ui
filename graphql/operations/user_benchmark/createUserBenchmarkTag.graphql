@@ -1,0 +1,5 @@
+mutation createUserBenchmarkTag($data: CreateUserBenchmarkTagInput!) {
+  createUserBenchmarkTag(data: $data) {
+    ...UserBenchmarkTag
+  }
+}

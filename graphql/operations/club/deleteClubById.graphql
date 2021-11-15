@@ -1,0 +1,3 @@
+mutation deleteClubById($id: ID!) {
+  deleteClubById(id: $id)
+}

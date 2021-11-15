@@ -1,0 +1,14 @@
+mutation createProgressJournal($data: CreateProgressJournalInput!) {
+  createProgressJournal(data: $data) {
+    ...ProgressJournal
+    ProgressJournalEntries {
+      ...ProgressJournalEntry
+    }
+    ProgressJournalGoals {
+      ...ProgressJournalGoal
+      ProgressJournalGoalTags {
+        ...ProgressJournalGoalTag
+      }
+    }
+  }
+}

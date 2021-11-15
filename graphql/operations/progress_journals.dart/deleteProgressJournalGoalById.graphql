@@ -1,0 +1,3 @@
+mutation deleteProgressJournalGoalById($id: ID!) {
+  deleteProgressJournalGoalById(id: $id)
+}

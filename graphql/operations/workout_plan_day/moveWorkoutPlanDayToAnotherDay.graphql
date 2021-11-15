@@ -1,0 +1,13 @@
+mutation moveWorkoutPlanDayToAnotherDay(
+  $data: MoveWorkoutPlanDayToAnotherDayInput!
+) {
+  moveWorkoutPlanDayToAnotherDay(data: $data) {
+    ...WorkoutPlanDay
+    WorkoutPlanDayWorkouts {
+      ...WorkoutPlanDayWorkout
+      Workout {
+        ...WorkoutData
+      }
+    }
+  }
+}

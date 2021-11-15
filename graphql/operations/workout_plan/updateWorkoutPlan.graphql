@@ -1,0 +1,9 @@
+# Just fields on the plan itself that can be updated - not descendants.
+mutation updateWorkoutPlan($data: UpdateWorkoutPlanInput!) {
+  updateWorkoutPlan: updateWorkoutPlan(data: $data) {
+    ...WorkoutPlan
+    WorkoutTags {
+      ...WorkoutTag
+    }
+  }
+}

@@ -1,0 +1,8 @@
+mutation createWorkoutPlanEnrolment($workoutPlanId: ID!) {
+  createWorkoutPlanEnrolment(workoutPlanId: $workoutPlanId) {
+    ...WorkoutPlanEnrolment
+    User {
+      ...UserSummary
+    }
+  }
+}

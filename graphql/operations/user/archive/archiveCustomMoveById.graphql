@@ -1,0 +1,5 @@
+mutation archiveCustomMoveById($id: ID!) {
+  archivedMove: archiveCustomMoveById(id: $id) {
+    ...ArchivedMove
+  }
+}

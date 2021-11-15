@@ -1,0 +1,8 @@
+# The full workout detail data tree, for displaying on a 'workout/:id' page.
+# Also includes the full move data so that you can pop open a move_details page for all the included moves if needed.
+# If it is needed multiple time then we can extract to a fragment.
+query workoutById($id: ID!) {
+  workoutById(id: $id) {
+    ...WorkoutData
+  }
+}

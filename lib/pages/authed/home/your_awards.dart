@@ -2,14 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 
-class YourChallengesPage extends StatelessWidget {
-  const YourChallengesPage({Key? key}) : super(key: key);
+class YourAwardsPage extends StatelessWidget {
+  const YourAwardsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return const MyPageScaffold(
       navigationBar: MyNavBar(
-        middle: NavBarTitle('Challenges'),
+        middle: NavBarTitle('Awards'),
       ),
       child: Center(
         child: MyHeaderText(

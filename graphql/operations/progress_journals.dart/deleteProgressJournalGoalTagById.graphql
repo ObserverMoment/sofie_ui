@@ -1,0 +1,3 @@
+mutation deleteProgressJournalGoalTagById($id: ID!) {
+  deleteProgressJournalGoalTagById(id: $id)
+}

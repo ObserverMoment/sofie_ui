@@ -1,0 +1,16 @@
+fragment LoggedWorkout on LoggedWorkout {
+  __typename
+  id
+  completedOn
+  note
+  name
+}
+
+fragment LoggedWorkoutSection on LoggedWorkoutSection {
+  __typename
+  id
+  name
+  repScore
+  timeTakenSeconds
+  sortPosition
+}

@@ -26,7 +26,9 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
 import 'package:sofie_ui/model/client_only_model.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:auto_route/auto_route.dart';
 
 class DoWorkoutOverview extends StatelessWidget {
   final VoidCallback handleExitRequest;
@@ -222,6 +224,11 @@ class _TopNavBar extends StatelessWidget {
               iconData: CupertinoIcons.text_badge_checkmark,
               label: 'Log It',
               onPressed: generateLog,
+            ),
+            _TopNavBarIcon(
+              iconData: CupertinoIcons.timer,
+              label: 'Timer',
+              onPressed: () => context.navigateTo(const TimersRoute()),
             ),
           ],
         ),

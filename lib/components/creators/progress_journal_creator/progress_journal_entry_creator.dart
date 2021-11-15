@@ -12,10 +12,8 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_uploader.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
-import 'package:sofie_ui/components/user_input/pickers/number_picker.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
@@ -183,12 +181,6 @@ class ProgressJournalEntryCreatorScores extends StatelessWidget {
 
   const ProgressJournalEntryCreatorScores({Key? key}) : super(key: key);
 
-  void _updateBodyweight(BuildContext context, double bodyweight) {
-    context.read<ProgressJournalEntryCreatorBloc>().updateEntry({
-      'bodyweight': bodyweight,
-    });
-  }
-
   void _updateScore(BuildContext context, String key, double score) {
     context.read<ProgressJournalEntryCreatorBloc>().updateEntry({
       key: score,
@@ -221,37 +213,8 @@ class ProgressJournalEntryCreatorScores extends StatelessWidget {
         context.select<ProgressJournalEntryCreatorBloc, ProgressJournalEntry>(
             (b) => b.entry);
 
-    final bodyweight = context.select<ProgressJournalEntryCreatorBloc, double?>(
-        (b) => b.entry.bodyweight);
-
-    final bodyweightUnit =
-        context.select<ProgressJournalEntryCreatorBloc, BodyweightUnit>(
-            (b) => b.parentJournal.bodyweightUnit);
-
     return Column(
       children: [
-        UserInputContainer(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const MyText('Bodyweight'),
-              Row(
-                children: [
-                  NumberPickerDouble(
-                    modalTitle: 'Bodyweight (${bodyweightUnit.display})',
-                    number: bodyweight,
-                    saveValue: (bw) => _updateBodyweight(context, bw),
-                  ),
-                  MyText(
-                    bodyweightUnit.display,
-                    weight: FontWeight.bold,
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(

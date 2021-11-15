@@ -1,0 +1,11 @@
+mutation updateUserBenchmark($data: UpdateUserBenchmarkInput!) {
+  updateUserBenchmark(data: $data) {
+    ...UserBenchmark
+    UserBenchmarkEntries {
+      ...UserBenchmarkEntry
+    }
+    UserBenchmarkTags {
+      ...UserBenchmarkTag
+    }
+  }
+}

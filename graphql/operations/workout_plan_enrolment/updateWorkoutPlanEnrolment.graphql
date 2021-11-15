@@ -1,0 +1,8 @@
+mutation updateWorkoutPlanEnrolment($data: UpdateWorkoutPlanEnrolmentInput!) {
+  updateWorkoutPlanEnrolment(data: $data) {
+    ...WorkoutPlanEnrolment
+    User {
+      ...UserSummary
+    }
+  }
+}

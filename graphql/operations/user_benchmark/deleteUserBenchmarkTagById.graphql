@@ -1,0 +1,3 @@
+mutation deleteUserBenchmarkTagById($id: ID!) {
+  deleteUserBenchmarkTagById(id: $id)
+}

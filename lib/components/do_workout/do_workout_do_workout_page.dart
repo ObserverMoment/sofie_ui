@@ -27,6 +27,10 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
     with WidgetsBindingObserver {
   int? _activeSectionIndex;
 
+  /// If a section is playing when a user puts the app into the background then we pause the section and set this to true.
+  /// When the user re-foregrounds the app, if this is true, we resume (play) the section and set this back to the default of false;
+  bool _sectionPausedInBackground = false;
+
   @override
   initState() {
     super.initState();
@@ -36,17 +40,26 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused && _activeSectionIndex != null) {
-      context.read<DoWorkoutBloc>().pauseSection(_activeSectionIndex!);
+      if (context
+          .read<DoWorkoutBloc>()
+          .getStopWatchTimerForSection(_activeSectionIndex!)
+          .isRunning) {
+        context.read<DoWorkoutBloc>().pauseSection(_activeSectionIndex!);
+        _sectionPausedInBackground = true;
+      }
     } else if (state == AppLifecycleState.resumed &&
-        _activeSectionIndex != null) {
+        _activeSectionIndex != null &&
+        _sectionPausedInBackground) {
       context.read<DoWorkoutBloc>().playSection(_activeSectionIndex!);
+      _sectionPausedInBackground = false;
     }
   }
 
   /// Navigating to a section is equivalent to making it "active"
-  void _navigateToSection(int sectionIndex, int numWorkoutSections) {
+  void _navigateToSection(int sectionIndex, int numWorkoutSections) async {
     final _bloc = context.read<DoWorkoutBloc>();
-    Navigator.push(
+    _activeSectionIndex = sectionIndex;
+    await Navigator.push(
       context,
       CupertinoPageRoute(
         builder: (context) => ChangeNotifierProvider<DoWorkoutBloc>.value(
@@ -58,7 +71,9 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
         ),
       ),
     );
-    _activeSectionIndex = sectionIndex;
+
+    /// Once user has popped the do section page it is no longer active.
+    _activeSectionIndex = null;
   }
 
   Future<void> _generateLog() async {

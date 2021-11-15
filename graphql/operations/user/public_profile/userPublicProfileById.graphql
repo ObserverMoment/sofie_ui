@@ -1,0 +1,11 @@
+query userPublicProfileById($userId: ID!) {
+  userPublicProfileById(userId: $userId) {
+    ...UserPublicProfile
+    Workouts {
+      ...WorkoutData
+    }
+    WorkoutPlans {
+      ...WorkoutPlanData
+    }
+  }
+}

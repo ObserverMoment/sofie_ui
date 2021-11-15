@@ -1,0 +1,5 @@
+mutation duplicateWorkoutById($id: ID!) {
+  duplicateWorkoutById(id: $id) {
+    ...WorkoutData
+  }
+}

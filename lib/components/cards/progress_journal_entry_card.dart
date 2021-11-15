@@ -9,7 +9,6 @@ import 'package:sofie_ui/components/media/audio/audio_thumbnail_player.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -114,10 +113,6 @@ class ProgressJournalEntryCard extends StatelessWidget {
                           weight: FontWeight.bold,
                           subtext: true,
                         ),
-                        if (progressJournalEntry.bodyweight != null)
-                          MyText(
-                            ' - ${progressJournalEntry.bodyweight!.stringMyDouble()} ${parentJournal.bodyweightUnit.display}',
-                          ),
                       ],
                     ),
                   ),

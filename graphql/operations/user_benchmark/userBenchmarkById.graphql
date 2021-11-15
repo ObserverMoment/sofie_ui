@@ -1,0 +1,11 @@
+query userBenchmarkById($id: ID!) {
+  userBenchmarkById(id: $id) {
+    ...UserBenchmark
+    UserBenchmarkEntries {
+      ...UserBenchmarkEntry
+    }
+    UserBenchmarkTags {
+      ...UserBenchmarkTag
+    }
+  }
+}

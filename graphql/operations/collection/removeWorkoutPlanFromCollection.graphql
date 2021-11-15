@@ -1,0 +1,16 @@
+mutation removeWorkoutPlanFromCollection(
+  $data: RemoveWorkoutPlanFromCollectionInput!
+) {
+  removeWorkoutPlanFromCollection(data: $data) {
+    ...Collection
+    User {
+      ...UserSummary
+    }
+    Workouts {
+      ...WorkoutData
+    }
+    WorkoutPlans {
+      ...WorkoutPlanData
+    }
+  }
+}
