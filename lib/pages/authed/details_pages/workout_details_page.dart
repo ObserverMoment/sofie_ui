@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
@@ -376,11 +377,15 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                     /// The heart is appearing smaller than other items for some reason - so manually making it larger and removing gap underneath between text.
                                     CupertinoButton(
                                       padding: EdgeInsets.zero,
-                                      onPressed: () => CollectionManager
-                                          .addOrRemoveObjectFromCollection(
-                                              context, workout,
-                                              alreadyInCollections:
-                                                  collections),
+                                      onPressed: () {
+                                        Vibrate.feedback(
+                                            FeedbackType.selection);
+                                        CollectionManager
+                                            .addOrRemoveObjectFromCollection(
+                                                context, workout,
+                                                alreadyInCollections:
+                                                    collections);
+                                      },
                                       child: Column(
                                         children: [
                                           AnimatedLikeHeart(

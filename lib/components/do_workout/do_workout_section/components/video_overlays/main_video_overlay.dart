@@ -48,6 +48,7 @@ class MainVideoOverlay extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8.0),
           child: NowAndNextMoves(
             workoutSection: workoutSection,
+            qty: 2,
             center: false,
           ),
         ),
@@ -89,16 +90,15 @@ class _CircleTimerDisplay extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         RadialCountdownTimer(
-            size: 70,
+            size: 80,
             value: (1 - (secondsToNextCheckpoint / _currentCheckpointLength))
                 .clamp(0.0, 1.0),
             fullBackground: true,
-            progressColor: Styles.primaryAccent,
-            backgroundColor: Styles.primaryAccent.withOpacity(0.3)),
+            progressColor: Styles.secondaryAccent,
+            backgroundColor: Styles.secondaryAccent.withOpacity(0.3)),
         MyText(
           displayTime,
-          size: FONTSIZE.four,
-          weight: FontWeight.bold,
+          size: FONTSIZE.five,
         ),
       ],
     );
@@ -118,8 +118,8 @@ class _VideoOverlayContainer extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: context.theme.cardBackground.withOpacity(0.4)),
+          borderRadius: BorderRadius.circular(10),
+          color: context.theme.cardBackground.withOpacity(0.3)),
       child: child,
     );
   }

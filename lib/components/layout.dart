@@ -67,6 +67,7 @@ class RoundedBox extends StatelessWidget {
 class CircularBox extends StatelessWidget {
   final Widget child;
   final Color? color;
+  final Gradient? gradient;
   final bool border;
   final EdgeInsets? padding;
   const CircularBox(
@@ -74,7 +75,8 @@ class CircularBox extends StatelessWidget {
       required this.child,
       this.padding = const EdgeInsets.all(6),
       this.color,
-      this.border = false})
+      this.border = false,
+      this.gradient})
       : super(key: key);
 
   @override
@@ -84,6 +86,7 @@ class CircularBox extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       decoration: BoxDecoration(
           color: color,
+          gradient: gradient,
           shape: BoxShape.circle,
           border: border ? Border.all(color: context.theme.primary) : null),
       child: child,

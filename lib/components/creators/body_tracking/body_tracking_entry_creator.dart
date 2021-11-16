@@ -99,9 +99,11 @@ class _BodyTrackingEntryCreatorPageState
               data: UpdateBodyTrackingEntryInput.fromJson(
                   _activeBodyTrackingEntry!.toJson())));
 
-      final result = await context.graphQLStore.create<
-          UpdateBodyTrackingEntry$Mutation,
-          UpdateBodyTrackingEntryArguments>(mutation: mutation);
+      final result = await context.graphQLStore.mutate<
+              UpdateBodyTrackingEntry$Mutation,
+              UpdateBodyTrackingEntryArguments>(
+          mutation: mutation,
+          broadcastQueryIds: [GQLOpNames.bodyTrackingEntries]);
 
       await checkOperationResult(context, result,
           onFail: _handleOnFailAndBackup,
@@ -162,7 +164,7 @@ class _BodyTrackingEntryCreatorPageState
               activeTabIndex: _activeTabIndex),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
               child: IndexedStack(
                 index: _activeTabIndex,
                 children: [
@@ -173,6 +175,8 @@ class _BodyTrackingEntryCreatorPageState
                   _Photos(
                     photoUris: _activeBodyTrackingEntry?.photoUris ?? [],
                     update: _updateBodyTrackingEntry,
+                    onUploadStart: () => setState(() => _uploadingMedia = true),
+                    onUploadEnd: () => setState(() => _uploadingMedia = false),
                   )
                 ],
               ),
@@ -235,12 +239,20 @@ class _Stats extends StatelessWidget {
 
 class _Photos extends StatelessWidget {
   final List<String> photoUris;
+  final VoidCallback onUploadStart;
+  final VoidCallback onUploadEnd;
   final void Function(Map<String, dynamic> data) update;
-  const _Photos({Key? key, required this.photoUris, required this.update})
+  const _Photos(
+      {Key? key,
+      required this.photoUris,
+      required this.update,
+      required this.onUploadStart,
+      required this.onUploadEnd})
       : super(key: key);
 
   /// Remove previous uri and add the new uri
   void _handleImageUpdate(String oldUri, String newUri) {
+    onUploadEnd();
     update({
       'photoUris': [
         ...photoUris.where((u) => u != oldUri),
@@ -250,6 +262,7 @@ class _Photos extends StatelessWidget {
   }
 
   void _handleNewImageUpload(String newUri) {
+    onUploadEnd();
     update({
       'photoUris': [
         ...photoUris,
@@ -259,6 +272,7 @@ class _Photos extends StatelessWidget {
   }
 
   void _handleRemoveImageUpload(String uri) {
+    onUploadEnd();
     update({'photoUris': photoUris.where((u) => u != uri)});
   }
 
@@ -269,11 +283,23 @@ class _Photos extends StatelessWidget {
       crossAxisCount: 2,
       childAspectRatio: 3 / 4,
       children: [
+        FadeIn(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ImageUploader(
+              onUploadStart: onUploadStart,
+              onUploadSuccess: _handleNewImageUpload,
+              removeImage: (_) => {},
+              emptyThumbIcon: CupertinoIcons.add,
+            ),
+          ),
+        ),
         ...photoUris
             .map((uri) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ImageUploader(
                     imageUri: uri,
+                    onUploadStart: onUploadStart,
                     onUploadSuccess: (newUri) =>
                         _handleImageUpdate(uri, newUri),
                     removeImage: _handleRemoveImageUpload,
@@ -281,16 +307,6 @@ class _Photos extends StatelessWidget {
                   ),
                 ))
             .toList(),
-        FadeIn(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ImageUploader(
-              onUploadSuccess: _handleNewImageUpload,
-              removeImage: (_) => {},
-              emptyThumbIcon: CupertinoIcons.add,
-            ),
-          ),
-        )
       ],
     );
   }

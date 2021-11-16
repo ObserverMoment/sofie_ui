@@ -112,7 +112,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
     }
   }
 
-  Widget _sectionCompleteDialog() {
+  Widget _buildSectionCompleteDialog() {
     final bloc = context.read<DoWorkoutBloc>();
     final controller = bloc.getControllerForSection(widget.sectionIndex);
     final timer = bloc.getStopWatchTimerForSection(widget.sectionIndex);
@@ -178,7 +178,9 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
               padding: const EdgeInsets.only(top: 8.0),
               child: PrimaryButton(
                 onPressed: () {
-                  _bloc.resetSection(widget.sectionIndex);
+                  context.showConfirmDialog(
+                      title: 'Reset section?',
+                      onConfirm: () => _bloc.resetSection(widget.sectionIndex));
                 },
                 prefixIconData: CupertinoIcons.refresh_bold,
                 text: 'Reset Section',
@@ -229,24 +231,19 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                 activePageIndex: _activePageIndex,
               ),
 
-              /// Barrier before user starts the section but not when pause / resuming.
-              if (!workoutSection.isScored &&
-                  !hasStarted &&
-                  !_openCompleteModal)
+              /// Render ModalBarrier and StartResumeButton when workout is paused.
+              if (!isRunning && !_openCompleteModal)
                 ModalBarrier(
-                  color: Styles.black.withOpacity(0.2),
+                  color: Styles.black.withOpacity(0.4),
                   dismissible: false,
                 ),
-              if (!workoutSection.isScored && !isRunning && !_openCompleteModal)
-                FadeIn(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      StartResumeButton(
-                        height: 70,
-                        sectionIndex: workoutSection.sortPosition,
-                      ),
-                    ],
+              if (!isRunning && !_openCompleteModal)
+                FadeInUp(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: StartResumeButton(
+                      sectionIndex: workoutSection.sortPosition,
+                    ),
                   ),
                 ),
 
@@ -281,7 +278,9 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                             .pauseSection(widget.sectionIndex);
                                         context.pop();
                                       }),
-                                  if (hasStarted)
+                                  // Don't show reset button for a FreeSession
+                                  if (!workoutSection.isFreeSession &&
+                                      hasStarted)
                                     NavItem(
                                         activeIconData:
                                             CupertinoIcons.refresh_bold,
@@ -292,14 +291,16 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                 ],
                               ),
                       ),
-                      DoWorkoutSectionNav(
-                        activePageIndex: _activePageIndex,
-                        goToPage: _goToPage,
-                        showVideoTab:
-                            Utils.textNotNull(workoutSection.classVideoUri),
-                        showAudioTab: audioController != null,
-                        muteAudio: _muteAudio,
-                        toggleMuteAudio: _toggleMuteAudio,
+                      FadeIn(
+                        child: DoWorkoutSectionNav(
+                          activePageIndex: _activePageIndex,
+                          goToPage: _goToPage,
+                          showVideoTab:
+                              Utils.textNotNull(workoutSection.classVideoUri),
+                          showAudioTab: audioController != null,
+                          muteAudio: _muteAudio,
+                          toggleMuteAudio: _toggleMuteAudio,
+                        ),
                       ),
                     ],
                   ),
@@ -311,7 +312,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                   dismissible: false,
                 ),
               if (_openCompleteModal)
-                SizeFadeIn(child: _sectionCompleteDialog()),
+                FadeInUp(child: _buildSectionCompleteDialog()),
             ],
           );
         });

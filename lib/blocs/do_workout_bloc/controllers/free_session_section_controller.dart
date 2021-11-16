@@ -44,6 +44,10 @@ class FreeSessionSectionController extends WorkoutSectionController
         .toList());
     state.percentComplete =
         completedWorkoutSetIds.length / workoutSection.workoutSets.length;
+
+    /// Broadcast new state.
+    progressStateController.add(state);
+
     notifyListeners();
   }
 
@@ -54,6 +58,10 @@ class FreeSessionSectionController extends WorkoutSectionController
         .toList());
     state.percentComplete =
         completedWorkoutSetIds.length / workoutSection.workoutSets.length;
+
+    /// Broadcast new state.
+    progressStateController.add(state);
+
     notifyListeners();
   }
 

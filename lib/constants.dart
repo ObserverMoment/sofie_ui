@@ -38,6 +38,7 @@ const kImageOverlayOpacity = 0.85;
 
 /// Object Type names for the store.
 /// For use in [__typename:id] normalization and store ops.
+const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
 const kClubTypeName = 'Club';
 const kClubInviteTokenTypeName = 'ClubInviteToken';

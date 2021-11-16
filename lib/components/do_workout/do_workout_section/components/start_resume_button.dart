@@ -3,17 +3,22 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/countdown_animation.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/material_elevation.dart';
 
-class StartResumeButton extends StatelessWidget {
+class StartResumeButton extends StatefulWidget {
   final int sectionIndex;
-  final double height;
-  const StartResumeButton(
-      {Key? key, required this.sectionIndex, required this.height})
+  const StartResumeButton({Key? key, required this.sectionIndex})
       : super(key: key);
+
+  @override
+  State<StartResumeButton> createState() => _StartResumeButtonState();
+}
+
+class _StartResumeButtonState extends State<StartResumeButton> {
+  bool _countdownStarted = false;
 
   /// Runs a countdown animation and THEN starts the workout.
   void _startSectionCountdown(BuildContext context, bool isFreeSession) {
@@ -21,8 +26,10 @@ class StartResumeButton extends StatelessWidget {
     final playSection = bloc.playSection;
 
     if (isFreeSession) {
-      playSection(sectionIndex);
+      playSection(widget.sectionIndex);
     } else {
+      setState(() => _countdownStarted = true);
+
       /// Save refs before pushing route which will have new context which will not have access to [DoWorkoutBloc].
       final countdownToStartSeconds = bloc.countdownToStartSeconds;
 
@@ -35,7 +42,7 @@ class StartResumeButton extends StatelessWidget {
                 bloc: bloc,
                 onCountdownEnd: () {
                   modalContext.pop();
-                  playSection(sectionIndex);
+                  playSection(widget.sectionIndex);
                 },
                 startFromSeconds: countdownToStartSeconds);
           });
@@ -44,39 +51,40 @@ class StartResumeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sectionHasStarted = context.select<DoWorkoutBloc, bool>(
-        (b) => b.getControllerForSection(sectionIndex).sectionHasStarted);
+    final sectionHasStarted = context.select<DoWorkoutBloc, bool>((b) =>
+        b.getControllerForSection(widget.sectionIndex).sectionHasStarted);
 
     /// No countdown required for a free session.
-    final isFreeSession = context.select<DoWorkoutBloc, bool>(
-        (b) => b.activeWorkout.workoutSections[sectionIndex].isFreeSession);
+    final isFreeSession = context.select<DoWorkoutBloc, bool>((b) =>
+        b.activeWorkout.workoutSections[widget.sectionIndex].isFreeSession);
 
     return GestureDetector(
       onTap: () => sectionHasStarted
-          ? context.read<DoWorkoutBloc>().playSection(sectionIndex)
+          ? context.read<DoWorkoutBloc>().playSection(widget.sectionIndex)
           : _startSectionCountdown(context, isFreeSession),
-      child: AnimatedContainer(
-        duration: kStandardAnimationDuration,
-        height: height,
-        decoration: BoxDecoration(
-          gradient: sectionHasStarted
-              ? Styles.secondaryButtonGradient
-              : Styles.primaryAccentGradient,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              CupertinoIcons.play,
-              color: Styles.white,
+      child: _countdownStarted
+          ? null
+          : AnimatedContainer(
+              width: 180,
+              height: 180,
+              alignment: Alignment.center,
+              duration: kStandardAnimationDuration,
+              decoration: BoxDecoration(
+                boxShadow: kElevation[5],
+                shape: BoxShape.circle,
+                gradient: sectionHasStarted
+                    ? Styles.secondaryButtonGradient
+                    : Styles.primaryAccentGradient,
+              ),
+              child: const Padding(
+                padding: EdgeInsets.only(left: 12.0),
+                child: Icon(
+                  CupertinoIcons.play_fill,
+                  color: Styles.white,
+                  size: 70,
+                ),
+              ),
             ),
-            const SizedBox(width: 6),
-            MyText(sectionHasStarted ? 'RESUME' : 'START',
-                color: Styles.white, size: FONTSIZE.five)
-          ],
-        ),
-      ),
     );
   }
 }

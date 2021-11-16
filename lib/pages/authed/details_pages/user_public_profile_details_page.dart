@@ -105,19 +105,8 @@ class _UserPublicProfileDetailsPageState
 
           return MyPageScaffold(
               navigationBar: MyNavBar(
-                middle: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    MyHeaderText(
-                      userPublicProfile.displayName,
-                    ),
-                    if (userPublicProfile.countryCode != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                        child: CountryFlag(userPublicProfile.countryCode!, 24),
-                      ),
-                  ],
+                middle: MyHeaderText(
+                  userPublicProfile.displayName,
                 ),
                 trailing: profileIsPublic
                     ? CupertinoButton(

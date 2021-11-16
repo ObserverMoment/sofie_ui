@@ -348,7 +348,7 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// Clear FX audio_players and stop ducking audio sources from other apps.
   /// It is useful is user is playing music in the background via other app.
   Future<void> deactivateAudioSession() async {
-    /// This should only happen if no classAudio / videoAudio is active for the currently active section. We assume that the user does not want to hear in app audio / music plus background audio.
+    /// This should only happen if no classAudio / videoAudio is active for the currently active section. We assume that the user does not want to prioritize background audio when in app audio is present. However, they should be able to set this.
     /// TODO: Testing of the different combinations of media playing / muted etc here is required.
     bool activeClassVideo = _activeSection != null &&
         getVideoControllerForSection(_activeSection!) != null &&

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
@@ -244,6 +245,8 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
   }
 
   Future<void> _followOtherUser() async {
+    Vibrate.feedback(FeedbackType.selection);
+
     /// Optimistic: Assume succes and revert later if not.
     setState(() => _isFollowing = true);
     try {
