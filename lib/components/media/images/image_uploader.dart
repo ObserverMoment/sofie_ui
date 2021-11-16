@@ -25,6 +25,7 @@ class ImageUploader extends StatefulWidget {
   final void Function(String uploadedUri) onUploadSuccess;
   final VoidCallback? onUploadFail;
   final void Function(String uri) removeImage;
+  final IconData emptyThumbIcon;
   const ImageUploader(
       {Key? key,
       this.imageUri,
@@ -32,7 +33,8 @@ class ImageUploader extends StatefulWidget {
       required this.onUploadSuccess,
       this.onUploadStart,
       required this.removeImage,
-      this.onUploadFail})
+      this.onUploadFail,
+      this.emptyThumbIcon = CupertinoIcons.photo})
       : super(key: key);
 
   @override
@@ -128,7 +130,7 @@ class _ImageUploaderState extends State<ImageUploader> {
               : hasImage
                   ? SizedUploadcareImage(widget.imageUri!)
                   : Icon(
-                      CupertinoIcons.photo,
+                      widget.emptyThumbIcon,
                       size: widget.displaySize.width / 2.5,
                       color: primary.withOpacity(0.3),
                     ),

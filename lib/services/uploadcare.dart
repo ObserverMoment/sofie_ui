@@ -108,6 +108,10 @@ class UploadcareService {
       final String fileId = await _uploadApi.base(file,
           onProgress: onProgress, cancelToken: cancelToken);
 
+      // Check when the file is ready for use before continuing.
+      await Utils.waitWhile(() => checkFileIsReady(fileId),
+          pollIntervalMs: 1000, backoffMs: 500, maxAttempts: 20);
+
       onComplete(fileId);
     } on CancelUploadException catch (e) {
       printLog('User cancelled upload');

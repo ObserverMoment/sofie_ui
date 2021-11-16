@@ -20,6 +20,9 @@ class GQLOpNames {
           .operationName;
 
   /// List type queries where variables are not used.
+  static String get bodyTrackingEntries =>
+      BodyTrackingEntriesQuery().operationName;
+
   static String get userProgressJournalsQuery =>
       UserProgressJournalsQuery().operationName;
 

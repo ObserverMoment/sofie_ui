@@ -1,36 +1,30 @@
-import 'dart:io';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/indicators.dart';
+import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
 import 'package:sofie_ui/components/info_pages/body_tracking_info.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
-import 'package:sofie_ui/components/media/images/image_viewer.dart';
-import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
+import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/services/uploadcare.dart';
-import 'package:timeline_tile/timeline_tile.dart';
-import 'package:uploadcare_flutter/uploadcare_flutter.dart';
+import 'package:auto_route/auto_route.dart';
 
-class BodyTrackingPage extends StatelessWidget {
+class BodyTrackingPage extends StatefulWidget {
   const BodyTrackingPage({Key? key}) : super(key: key);
+
+  @override
+  State<BodyTrackingPage> createState() => _BodyTrackingPageState();
+}
+
+class _BodyTrackingPageState extends State<BodyTrackingPage> {
+  int _activeTabIndex = 0;
+
+  void _updateTabIndex(int i) {
+    setState(() => _activeTabIndex = i);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,38 +49,85 @@ class BodyTrackingPage extends StatelessWidget {
           builder: (data) {
             final entries = data.bodyTrackingEntries;
 
-            return entries.isNotEmpty
-                ? ListView.builder(
-                    itemCount: entries.length,
-                    itemBuilder: (c, i) => const Padding(
-                          padding: EdgeInsets.only(bottom: 8),
-                          child: MyText('Tracking Entry Card'),
-                        ))
-                : Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: const [
-                            Expanded(
-                              child: MyText(
-                                'Track your body health and aesthetics with our body tracking tools! Log your key stats and monitor physical aspects such as body weight and fat percentage. Plus record your physical transformation over time with a chronological photo series.',
-                                textAlign: TextAlign.center,
-                                maxLines: 6,
-                                lineHeight: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                        SecondaryButton(
-                            prefixIconData: CupertinoIcons.add,
-                            text: 'Add Your First Entry',
-                            onPressed: () => {}),
-                      ],
+            return Column(
+              children: [
+                MyTabBarNav(
+                    titles: ['Entries', 'Stats', 'Photos'],
+                    handleTabChange: _updateTabIndex,
+                    activeTabIndex: _activeTabIndex),
+                IndexedStack(
+                  index: _activeTabIndex,
+                  children: [
+                    _Entries(
+                      entries: entries,
                     ),
-                  );
+                    MyText('Stats'),
+                    MyText('Photo Gallery'),
+                  ],
+                )
+              ],
+            );
           }),
+    );
+  }
+}
+
+class _Entries extends StatelessWidget {
+  final List<BodyTrackingEntry> entries;
+  const _Entries({Key? key, required this.entries}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return entries.isNotEmpty
+        ? ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shrinkWrap: true,
+            itemCount: entries.length,
+            itemBuilder: (c, i) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => context.navigateTo(
+                        BodyTrackingEntryCreatorRoute(
+                            bodyTrackingEntry: entries[i])),
+                    child: BodyTrackingEntryCard(
+                      bodyTrackingEntry: entries[i],
+                    ),
+                  ),
+                ))
+        : const _NoEntriesPlaceholder();
+  }
+}
+
+class _NoEntriesPlaceholder extends StatelessWidget {
+  const _NoEntriesPlaceholder({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          Row(
+            children: const [
+              Expanded(
+                child: MyText(
+                  'Track your body health and aesthetics with our body tracking tools! Log your key stats and monitor physical aspects such as body weight and fat percentage. Plus record your physical transformation over time with a chronological photo series.',
+                  textAlign: TextAlign.center,
+                  maxLines: 6,
+                  lineHeight: 1.4,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          SecondaryButton(
+              prefixIconData: CupertinoIcons.add,
+              text: 'Add Your First Entry',
+              onPressed: () =>
+                  context.navigateTo(BodyTrackingEntryCreatorRoute())),
+        ],
+      ),
     );
   }
 }

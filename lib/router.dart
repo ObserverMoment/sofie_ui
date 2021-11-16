@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/components/creators/body_tracking/body_tracking_entry_creator.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
@@ -159,6 +160,8 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
               page: WorkoutPlanEnrolmentDetailsPage),
 
           /// Creator pages. CRUD pages for database models.
+          AutoRoute(
+              path: 'create/body-tracking', page: BodyTrackingEntryCreatorPage),
           AutoRoute(path: 'create/club', page: ClubCreatorPage),
           AutoRoute(path: 'create/collection', page: CollectionCreatorPage),
           AutoRoute(path: 'create/custom-move', page: CustomMoveCreatorPage),
