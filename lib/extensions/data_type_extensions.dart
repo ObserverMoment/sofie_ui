@@ -165,6 +165,7 @@ extension WorkoutSectionExtension on WorkoutSection {
   String get nameOrTypeForDisplay =>
       Utils.textNotNull(name) ? name! : workoutSectionType.name;
 
+  bool get isLifting => workoutSectionType.name == kLiftingName;
   bool get isFreeSession => workoutSectionType.name == kFreeSessionName;
   bool get isAMRAP => workoutSectionType.name == kAMRAPName;
   bool get isForTime => workoutSectionType.name == kForTimeName;
@@ -189,8 +190,8 @@ extension WorkoutSectionExtension on WorkoutSection {
           : null;
 
   /// These section types ignore rounds input - generally it should be forced to be [1] when these sections are being used.
-  bool get roundsInputAllowed =>
-      ![kAMRAPName, kFreeSessionName].contains(workoutSectionType.name);
+  bool get roundsInputAllowed => ![kAMRAPName, kFreeSessionName, kLiftingName]
+      .contains(workoutSectionType.name);
 
   List<BodyArea> get uniqueBodyAreas {
     final Set<BodyArea> sectionBodyAreas =

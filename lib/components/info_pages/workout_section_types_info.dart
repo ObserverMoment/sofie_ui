@@ -13,17 +13,24 @@ class WorkoutSectionTypesInfo extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const MyHeaderText('Free Session'),
-            spacer,
-            const InfoPageText(
-              'Unstructured section of the workout where you can add anything that you like. When doing this section you can also add and remove parts of it in real time. Use this for a standard straight up gym session.',
-            ),
-            spacer,
-            spacer,
             const MyHeaderText('HIIT Circuit'),
             spacer,
             const InfoPageText(
               'High Intensity Interval Training. HIIT Circuits have "stations", and you spend a fixed amount of time doing a move or set of moves at each station before moving onto the next one.',
+            ),
+            spacer,
+            spacer,
+            const MyHeaderText('Lifting'),
+            spacer,
+            const InfoPageText(
+              'Strength training that is usually structured as sets and reps. Do classic style sets such such as 3 x 10, 5 x 5 or pyramids. A great workout type which also allows you to really concentrate on specifics.',
+            ),
+            spacer,
+            spacer,
+            const MyHeaderText('Free Session'),
+            spacer,
+            const InfoPageText(
+              'Unstructured section of the workout where you can add anything that you like. When doing this section you can also add and remove parts of it in real time. Use this for your custom freestyle gym sessions.',
             ),
             spacer,
             spacer,

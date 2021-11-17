@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/lifting_set_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/constants.dart';
@@ -26,6 +27,16 @@ class WorkoutSectionWorkoutSets extends StatelessWidget {
     required this.sectionIndex,
     required this.workoutSectionType,
   }) : super(key: key);
+
+  /// Creator specific for the Lifting workout section type.
+  Future<void> _openLiftingSetCreator(
+    BuildContext context,
+  ) async {
+    await context.push(
+        child: LiftingSetCreator(
+      saveWorkoutMoves: (List<WorkoutMove> workoutMoves) {},
+    ));
+  }
 
   /// When adding a new set the user selects the move etc first, then we create a set to be its parent once they are done.
   Future<void> _openWorkoutMoveCreator(BuildContext context,
@@ -112,6 +123,12 @@ class WorkoutSectionWorkoutSets extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  if (workoutSectionType.name == kLiftingName)
+                    CreateTextIconButton(
+                      text: 'Add Exercise',
+                      loading: creatingSet,
+                      onPressed: () => _openLiftingSetCreator(context),
+                    ),
                   if ([kFreeSessionName, kAMRAPName, kForTimeName]
                       .contains(workoutSectionType.name))
                     CreateTextIconButton(

@@ -85,6 +85,7 @@ const kExcludeFromNormalization = [
 /// WorkoutSectionTypeNames
 const kFreeSessionName = 'Free Session';
 const kHIITCircuitName = 'HIIT Circuit';
+const kLiftingName = 'Lifting';
 const kForTimeName = 'For Time';
 const kEMOMName = 'EMOM';
 const kAMRAPName = 'AMRAP';

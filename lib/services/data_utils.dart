@@ -3,8 +3,23 @@ import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:collection/collection.dart';
 
 class DataUtils {
+  /// Also sorts non bodyweight options alphabetically.
+  static List<Equipment> sortEquipmentsWithBodyWeightFirst(
+      List<Equipment> equipments) {
+    final sortedEquipments = equipments.sortedBy<String>((e) => e.name);
+    final bodyweight = sortedEquipments
+        .firstWhereOrNull((e) => e.id == kBodyweightEquipmentId);
+    return bodyweight == null
+        ? sortedEquipments
+        : [
+            bodyweight,
+            ...sortedEquipments.where((e) => e.id != kBodyweightEquipmentId),
+          ];
+  }
+
   /// Receives any list of bodyAreaMove scores and returns a new list.
   /// Where each body area is represented only once and the score associated with it is calculated as a percentage of the whole list.
   static List<BodyAreaMoveScore> percentageBodyAreaMoveScores(

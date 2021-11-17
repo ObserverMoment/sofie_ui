@@ -24,7 +24,6 @@ import 'package:sofie_ui/services/utils.dart';
 /// The user is required to select a move before moving on to the workoutMove creator.
 /// Unlike some other selectors this runs callback immediately on press.
 class MoveSelector extends StatefulWidget {
-  final Move? move;
   final void Function(Move move) selectMove;
   final VoidCallback onCancel;
   final String pageTitle;
@@ -35,7 +34,6 @@ class MoveSelector extends StatefulWidget {
   const MoveSelector(
       {Key? key,
       required this.selectMove,
-      this.move,
       this.includeCustomMoves = true,
       this.showCreateCustomMoveButton = true,
       required this.onCancel,

@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
 import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/info_pages/body_tracking_info.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';

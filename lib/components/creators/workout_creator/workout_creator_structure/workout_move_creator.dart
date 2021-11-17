@@ -15,6 +15,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// UI will be fixed to these values and will not allow user to adjust them.
@@ -26,7 +27,7 @@ class FixedTimeReps {
 
 /// Handles state internally the user is ready to save it and add it to the section.
 class WorkoutMoveCreator extends StatefulWidget {
-  final String? pageTitle;
+  final String pageTitle;
   final int sortPosition;
   final WorkoutMove? workoutMove;
 
@@ -38,7 +39,7 @@ class WorkoutMoveCreator extends StatefulWidget {
       {Key? key,
       required this.sortPosition,
       required this.saveWorkoutMove,
-      this.pageTitle,
+      this.pageTitle = 'Set',
       this.ignoreReps = false,
       this.fixedTimeReps,
       this.workoutMove})
@@ -72,7 +73,7 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
   void _selectMove(Move move) {
     if (_activeWorkoutMove != null) {
       // Update previous selection.
-      // Fields will need to be reselected by the ueser if not valid for the new move.
+      // Fields will need to be reselected by the user if not valid for the new move.
       _activeWorkoutMove = WorkoutMove()
         ..id = _activeWorkoutMove!.id
         ..sortPosition = widget.sortPosition
@@ -184,31 +185,17 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
     }
   }
 
-  /// Also sorts non bodyweight options alphabetically.
-  List<Equipment> _equipmentsWithBodyWeightFirst(List<Equipment> equipments) {
-    final sortedEquipments = equipments.sortedBy<String>((e) => e.name);
-    final bodyweight = sortedEquipments
-        .firstWhereOrNull((e) => e.id == kBodyweightEquipmentId);
-    return bodyweight == null
-        ? sortedEquipments
-        : [
-            bodyweight,
-            ...sortedEquipments.where((e) => e.id != kBodyweightEquipmentId),
-          ];
-  }
-
   @override
   Widget build(BuildContext context) {
     return IndexedStack(index: _activeTabIndex, children: [
       MoveSelector(
-          move: _activeWorkoutMove?.move,
           selectMove: _selectMove,
           onCancel: () =>
               _activeWorkoutMove?.move == null ? context.pop() : _changeTab(1)),
       MyPageScaffold(
           navigationBar: MyNavBar(
             customLeading: NavBarCancelButton(context.pop),
-            middle: NavBarTitle(widget.pageTitle ?? 'Set'),
+            middle: NavBarTitle(widget.pageTitle),
             trailing: _validToSave()
                 ? FadeIn(
                     child: NavBarSaveButton(
@@ -216,26 +203,23 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                   ))
                 : null,
           ),
-          child: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            children: _activeWorkoutMove == null
-                ? [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        BorderButton(
-                            mini: true,
-                            prefix: Icon(
-                              CupertinoIcons.arrow_left_right_square,
-                              color: context.theme.background,
-                              size: 20,
-                            ),
-                            text: 'Select a move',
-                            onPressed: () => _changeTab(0))
-                      ],
-                    )
-                  ]
-                : [
+          child: _activeWorkoutMove == null
+              ? ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TertiaryButton(
+                              prefixIconData: CupertinoIcons.arrow_left_right,
+                              text: 'Select a move',
+                              onPressed: () => _changeTab(0))
+                        ],
+                      )
+                    ])
+              : ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -244,12 +228,8 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                         const SizedBox(
                           width: 16,
                         ),
-                        BorderButton(
-                            mini: true,
-                            prefix: const Icon(
-                              CupertinoIcons.arrow_left_right,
-                              size: 20,
-                            ),
+                        TertiaryButton(
+                            prefixIconData: CupertinoIcons.arrow_left_right,
                             text: 'Change',
                             onPressed: () => _changeTab(0))
                       ],
@@ -330,7 +310,7 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(12.0),
-                              child: MyText('And select one from...',
+                              child: MyText('Select one from',
                                   color: _activeWorkoutMove?.equipment == null
                                       ? Styles.errorRed
                                       : null,
@@ -340,32 +320,35 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                               alignment: WrapAlignment.center,
                               spacing: 6,
                               runSpacing: 6,
-                              children: _equipmentsWithBodyWeightFirst(
-                                      _activeWorkoutMove!
-                                          .move.selectableEquipments)
-                                  .map((e) => SizedBox(
-                                        height: 86,
-                                        width: 86,
-                                        child: GestureDetector(
-                                            onTap: () => _updateWorkoutMove({
-                                                  'Equipment': e.toJson(),
-                                                }),
-                                            child: EquipmentTile(
-                                                showIcon: true,
-                                                equipment: e,
-                                                withBorder: false,
-                                                fontSize: FONTSIZE.two,
-                                                isSelected: _activeWorkoutMove!
-                                                        .equipment ==
-                                                    e)),
-                                      ))
-                                  .toList(),
+                              children:
+                                  DataUtils.sortEquipmentsWithBodyWeightFirst(
+                                          _activeWorkoutMove!
+                                              .move.selectableEquipments)
+                                      .map((e) => SizedBox(
+                                            height: 86,
+                                            width: 86,
+                                            child: GestureDetector(
+                                                onTap: () =>
+                                                    _updateWorkoutMove({
+                                                      'Equipment': e.toJson(),
+                                                    }),
+                                                child: EquipmentTile(
+                                                    showIcon: true,
+                                                    equipment: e,
+                                                    withBorder: false,
+                                                    fontSize: FONTSIZE.two,
+                                                    isSelected:
+                                                        _activeWorkoutMove!
+                                                                .equipment ==
+                                                            e)),
+                                          ))
+                                      .toList(),
                             ),
                           ],
                         ),
                       ),
                   ],
-          ))
+                ))
     ]);
   }
 }
