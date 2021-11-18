@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_input_modal.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -9,7 +8,6 @@ class NumberPickerInt extends StatelessWidget {
   final int? number;
   final void Function(int value) saveValue;
   final String modalTitle;
-  final Color? contentBoxColor;
   final FONTSIZE fontSize;
   final Widget? prefix;
   final Widget? suffix;
@@ -18,7 +16,6 @@ class NumberPickerInt extends StatelessWidget {
       required this.number,
       required this.saveValue,
       this.modalTitle = 'How many?',
-      this.contentBoxColor,
       this.fontSize = FONTSIZE.nine,
       this.prefix,
       this.suffix})
@@ -61,12 +58,16 @@ class NumberPickerDouble extends StatelessWidget {
   final void Function(double value) saveValue;
   final String modalTitle;
   final FONTSIZE fontSize;
+  final Widget? prefix;
+  final Widget? suffix;
   const NumberPickerDouble(
       {Key? key,
       required this.number,
       required this.saveValue,
       this.modalTitle = 'How many?',
-      this.fontSize = FONTSIZE.nine})
+      this.fontSize = FONTSIZE.nine,
+      this.prefix,
+      this.suffix})
       : super(key: key);
 
   @override
@@ -79,11 +80,23 @@ class NumberPickerDouble extends StatelessWidget {
         saveValue: (v) => saveValue(v),
         title: modalTitle,
       )),
-      child: ContentBox(
-        child: MyText(
-          number == null ? ' - ' : number.toString(),
-          size: fontSize,
-        ),
+      child: Row(
+        children: [
+          if (prefix != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: prefix,
+            ),
+          MyText(
+            number == null ? ' - ' : number!.toStringAsFixed(1),
+            size: fontSize,
+          ),
+          if (suffix != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: suffix,
+            ),
+        ],
       ),
     );
   }

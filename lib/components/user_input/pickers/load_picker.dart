@@ -11,44 +11,44 @@ import 'package:sofie_ui/services/utils.dart';
 
 class LoadPickerDisplay extends StatelessWidget {
   final double loadAmount;
-  final void Function(double loadAmount, LoadUnit loadUnit) updateLoad;
   final LoadUnit loadUnit;
+  final void Function(double loadAmount, LoadUnit loadUnit) updateLoad;
   final bool expandPopup;
+  final FONTSIZE fontSize;
   const LoadPickerDisplay(
       {Key? key,
       required this.loadAmount,
       required this.updateLoad,
       required this.loadUnit,
+      this.fontSize = FONTSIZE.nine,
       this.expandPopup = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.showBottomSheet(
+    return CupertinoButton(
+      padding: const EdgeInsets.all(8),
+      onPressed: () => context.showBottomSheet(
           expand: expandPopup,
           child: LoadPickerModal(
             loadAmount: loadAmount,
             updateLoad: updateLoad,
             loadUnit: loadUnit,
           )),
-      child: ContentBox(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            MyText(
-              loadAmount.stringMyDouble(),
-              size: FONTSIZE.nine,
-            ),
-            const SizedBox(
-              width: 4,
-            ),
-            MyText(
-              loadUnit.display,
-              size: FONTSIZE.five,
-            )
-          ],
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MyText(
+            loadAmount.stringMyDouble(),
+            size: fontSize,
+          ),
+          const SizedBox(
+            width: 4,
+          ),
+          MyText(
+            loadUnit.display,
+          )
+        ],
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
@@ -264,15 +263,17 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                             ),
                           if (_showLoadPicker())
                             FadeIn(
-                              child: LoadPickerDisplay(
-                                expandPopup: true,
-                                loadAmount: _activeWorkoutMove!.loadAmount,
-                                loadUnit: _activeWorkoutMove!.loadUnit,
-                                updateLoad: (loadAmount, loadUnit) =>
-                                    _updateWorkoutMove({
-                                  'loadAmount': loadAmount,
-                                  'loadUnit': loadUnit.apiValue
-                                }),
+                              child: ContentBox(
+                                child: LoadPickerDisplay(
+                                  expandPopup: true,
+                                  loadAmount: _activeWorkoutMove!.loadAmount,
+                                  loadUnit: _activeWorkoutMove!.loadUnit,
+                                  updateLoad: (loadAmount, loadUnit) =>
+                                      _updateWorkoutMove({
+                                    'loadAmount': loadAmount,
+                                    'loadUnit': loadUnit.apiValue
+                                  }),
+                                ),
                               ),
                             ),
                         ],

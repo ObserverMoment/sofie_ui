@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/lifting_set_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/lifting_set_creator/lifting_set_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/constants.dart';
@@ -32,10 +32,18 @@ class WorkoutSectionWorkoutSets extends StatelessWidget {
   Future<void> _openLiftingSetCreator(
     BuildContext context,
   ) async {
-    await context.push(
-        child: LiftingSetCreator(
-      saveWorkoutMoves: (List<WorkoutMove> workoutMoves) {},
-    ));
+    // https://stackoverflow.com/questions/57598029/how-to-pass-provider-with-navigator
+    final bloc = context.read<WorkoutCreatorBloc>();
+    Navigator.push(
+      context,
+      CupertinoPageRoute(
+        builder: (context) => ChangeNotifierProvider<WorkoutCreatorBloc>.value(
+          value: bloc,
+          builder: (context, child) => LiftingSetCreator(
+              key: Key(sectionIndex.toString()), sectionIndex: sectionIndex),
+        ),
+      ),
+    );
   }
 
   /// When adding a new set the user selects the move etc first, then we create a set to be its parent once they are done.

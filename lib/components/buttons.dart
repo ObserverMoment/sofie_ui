@@ -796,7 +796,7 @@ class CreateTextIconButton extends StatelessWidget {
     return loading
         ? [
             const LoadingDots(
-              size: 14,
+              size: 10,
             ),
           ]
         : [

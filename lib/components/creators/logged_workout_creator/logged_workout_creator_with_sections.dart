@@ -162,7 +162,6 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
               ContentBox(
                 backgroundColor: context.theme.background,
                 child: NumberPickerInt(
-                  contentBoxColor: context.theme.background,
                   number: loggedWorkoutSection.repScore,
                   saveValue: (repScore) => context
                       .read<LoggedWorkoutCreatorBloc>()

@@ -283,7 +283,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   /// 2. A new set is created (don't notify listeners)
   /// 3. The new workoutMove is created and added to the set (notify listeners)
   /// A workoutMove must be created within a set - so we need to create the set first. The above flow hides this from the user and makes it seem like they are just doing one action - i.e. selecting a workoutMove.
-  Future<void> createWorkoutSet(int sectionIndex,
+  Future<WorkoutSet?> createWorkoutSet(int sectionIndex,
       {int? duration, bool shouldNotifyListeners = true}) async {
     _backup();
     creatingSet = true;
@@ -310,8 +310,10 @@ class WorkoutCreatorBloc extends ChangeNotifier {
 
     final success = _checkApiResult(result);
 
+    WorkoutSet? newCreatedSet;
+
     if (success) {
-      final newCreatedSet = WorkoutSet.fromJson(
+      newCreatedSet = WorkoutSet.fromJson(
           {...result.data!.createWorkoutSet.toJson(), 'WorkoutMoves': []});
 
       workout.workoutSections[sectionIndex].workoutSets.add(newCreatedSet);
@@ -321,6 +323,8 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     if (shouldNotifyListeners) {
       notifyListeners();
     }
+
+    return newCreatedSet;
   }
 
   Future<void> editWorkoutSet(
