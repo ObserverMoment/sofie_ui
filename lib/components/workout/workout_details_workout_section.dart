@@ -8,6 +8,7 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/workout/lifting_set_display.dart';
 import 'package:sofie_ui/components/workout/workout_set_display.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
@@ -59,13 +60,13 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
             children: [
               WorkoutSectionTypeTag(
                 workoutSection: workoutSection,
-                fontSize: FONTSIZE.four,
+                fontSize: FONTSIZE.five,
                 withBackground: false,
                 elevation: 0,
                 uppercase: true,
                 showMediaIcons: false,
               ),
-              if (!workoutSection.isAMRAP)
+              if (workoutSection.isForTime || workoutSection.isFreeSession)
                 NumberRoundsIcon(
                   rounds: workoutSection.rounds,
                   alignment: Axis.vertical,
@@ -160,11 +161,15 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
               shrinkWrap: true,
               children: sortedSets
                   .map((workoutSet) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: WorkoutSetDisplay(
-                            workoutSet: workoutSet,
-                            workoutSectionType:
-                                workoutSection.workoutSectionType),
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: workoutSection.isLifting
+                            ? LiftingSetDisplay(
+                                workoutSet: workoutSet,
+                              )
+                            : WorkoutSetDisplay(
+                                workoutSet: workoutSet,
+                                workoutSectionType:
+                                    workoutSection.workoutSectionType),
                       ))
                   .toList(),
             ),

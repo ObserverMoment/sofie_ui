@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -66,6 +67,7 @@ class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
     final isPlaying = controller.value.isPlaying;
     final position = controller.value.position;
     return SafeArea(
+      top: widget.isPortrait,
       child: Stack(
         children: [
           AnimatedSwitcher(
@@ -77,24 +79,22 @@ class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
                     child: const SizedBox.expand())
                 : Padding(
                     padding: widget.isPortrait
-                        ? const EdgeInsets.all(8.0)
-                        : EdgeInsets.zero,
+                        ? const EdgeInsets.all(2.0)
+                        : const EdgeInsets.only(bottom: 24.0),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: widget.isPortrait
                               ? const EdgeInsets.only(
-                                  left: 16, right: 8, top: 4, bottom: 4)
-                              : const EdgeInsets.only(left: 80.0, right: 40),
+                                  left: 16, right: 4, bottom: 4)
+                              : const EdgeInsets.only(
+                                  left: 80.0, right: 40, top: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               if (widget.title != null ||
                                   widget.subtitle != null)
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     if (widget.title != null)
                                       MyHeaderText(
@@ -119,10 +119,11 @@ class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
                               CupertinoButton(
                                 onPressed:
                                     widget.exitFullScreen?.call ?? context.pop,
-                                child: const Icon(
-                                    CupertinoIcons.fullscreen_exit,
-                                    size: 30,
-                                    color: Styles.white),
+                                child: CircularBox(
+                                  color: Styles.black.withOpacity(0.15),
+                                  child: const Icon(CupertinoIcons.clear,
+                                      size: 30, color: Styles.white),
+                                ),
                               )
                             ],
                           ),
@@ -151,7 +152,7 @@ class _VideoControlsOverlayState extends State<VideoControlsOverlay> {
                         Padding(
                           padding: widget.isPortrait
                               ? EdgeInsets.zero
-                              : const EdgeInsets.symmetric(horizontal: 50.0),
+                              : const EdgeInsets.symmetric(horizontal: 40.0),
                           child: Column(
                             children: [
                               Padding(

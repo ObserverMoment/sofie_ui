@@ -18,6 +18,10 @@ extension ClubMembersExtension on ClubMembers {
   int get totalMembers => 1 + admins.length + members.length;
 }
 
+extension EquipmentExtension on Equipment {
+  bool get isBodyweight => id == kBodyweightEquipmentId;
+}
+
 extension LoggedWorkoutExtension on LoggedWorkout {
   /// Returns a copy of the LoggedWorkout
   /// with its LoggedWorkoutSections sorted correctly by [sortPosition].
@@ -292,6 +296,8 @@ extension WorkoutSectionTypeExtension on WorkoutSectionType {
   bool get canPyramid => ![kHIITCircuitName, kTabataName].contains(name);
 
   bool get isAMRAP => name == kAMRAPName;
+  bool get isForTime => name == kForTimeName;
+  bool get isLifting => name == kLiftingName;
 
   bool get isScored => [kAMRAPName, kForTimeName].contains(name);
 

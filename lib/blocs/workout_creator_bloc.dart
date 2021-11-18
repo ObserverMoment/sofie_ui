@@ -582,6 +582,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// For batch updates use [editWorkoutMoves]
   Future<void> editWorkoutMove(
       int sectionIndex, int setIndex, WorkoutMove workoutMove) async {
     _backup();
@@ -607,6 +608,45 @@ class WorkoutCreatorBloc extends ChangeNotifier {
           .workoutMoves[workoutMove.sortPosition] = WorkoutMove.fromJson(
         result.data!.updateWorkoutMove.toJson(),
       );
+    }
+
+    notifyListeners();
+  }
+
+  /// Batch update method version of [editWorkoutMove]
+  Future<void> editWorkoutMoves(
+      int sectionIndex, int setIndex, List<WorkoutMove> workoutMoves) async {
+    _backup();
+
+    /// Client.
+    for (final wm in workoutMoves) {
+      workout.workoutSections[sectionIndex].workoutSets[setIndex]
+          .workoutMoves[wm.sortPosition] = wm;
+    }
+
+    notifyListeners();
+
+    /// Api.
+    final input = workoutMoves
+        .map((wm) => UpdateWorkoutMoveInput.fromJson(wm.toJson()))
+        .toList();
+
+    final variables = UpdateWorkoutMovesArguments(data: input);
+
+    final result = await context.graphQLStore.networkOnlyOperation<
+        UpdateWorkoutMoves$Mutation, UpdateWorkoutMovesArguments>(
+      operation: UpdateWorkoutMovesMutation(variables: variables),
+    );
+
+    final success = _checkApiResult(result);
+
+    if (success) {
+      for (final wm in result.data!.updateWorkoutMoves) {
+        workout.workoutSections[sectionIndex].workoutSets[setIndex]
+            .workoutMoves[wm.sortPosition] = WorkoutMove.fromJson(
+          wm.toJson(),
+        );
+      }
     }
 
     notifyListeners();

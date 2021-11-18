@@ -1,0 +1,27 @@
+# Bulk Update WorkoutMoves
+mutation updateWorkoutMoves($data: [UpdateWorkoutMoveInput!]!) {
+  updateWorkoutMoves(data: $data) {
+    ...WorkoutMove
+    Equipment {
+      ...Equipment
+    }
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+  }
+}

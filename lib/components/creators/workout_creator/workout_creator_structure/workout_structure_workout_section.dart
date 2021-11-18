@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -87,7 +86,7 @@ class WorkoutStructureWorkoutSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final data = _getMovesAndEquipments();
 
-    return Card(
+    return ContentBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -98,8 +97,8 @@ class WorkoutStructureWorkoutSection extends StatelessWidget {
               WorkoutSectionTypeTag(
                 withBackground: false,
                 workoutSection: workoutSection,
-                fontSize: FONTSIZE.three,
-                fontColor: Styles.secondaryAccent,
+                fontSize: FONTSIZE.four,
+                showMediaIcons: false,
               ),
               NavBarEllipsisMenu(items: [
                 ContextMenuItem(

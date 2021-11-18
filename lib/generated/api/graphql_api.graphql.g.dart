@@ -5426,6 +5426,20 @@ Map<String, dynamic> _$BodyTrackingEntries$QueryToJson(
           instance.bodyTrackingEntries.map((e) => e.toJson()).toList(),
     };
 
+UpdateWorkoutMoves$Mutation _$UpdateWorkoutMoves$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateWorkoutMoves$Mutation()
+      ..updateWorkoutMoves = (json['updateWorkoutMoves'] as List<dynamic>)
+          .map((e) => WorkoutMove.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UpdateWorkoutMoves$MutationToJson(
+        UpdateWorkoutMoves$Mutation instance) =>
+    <String, dynamic>{
+      'updateWorkoutMoves':
+          instance.updateWorkoutMoves.map((e) => e.toJson()).toList(),
+    };
+
 ClubSummariesByIdArguments _$ClubSummariesByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubSummariesByIdArguments(
@@ -7105,4 +7119,19 @@ Map<String, dynamic> _$DeleteBodyTrackingEntryByIdArgumentsToJson(
         DeleteBodyTrackingEntryByIdArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+UpdateWorkoutMovesArguments _$UpdateWorkoutMovesArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateWorkoutMovesArguments(
+      data: (json['data'] as List<dynamic>)
+          .map(
+              (e) => UpdateWorkoutMoveInput.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$UpdateWorkoutMovesArgumentsToJson(
+        UpdateWorkoutMovesArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.map((e) => e.toJson()).toList(),
     };

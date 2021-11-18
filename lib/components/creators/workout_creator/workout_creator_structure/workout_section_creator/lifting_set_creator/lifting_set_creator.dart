@@ -14,7 +14,6 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +38,6 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
   WorkoutSet? _workoutSet;
   int? _setIndex;
   Move? _activeMove;
-  Equipment? _activeEquipment;
 
   /// 0 = MoveSelector
   /// 1 = Reps etc editor
@@ -70,10 +68,6 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
 
       _activeMove = _workoutSet!.workoutMoves.isNotEmpty
           ? _workoutSet!.workoutMoves[0].move
-          : null;
-
-      _activeEquipment = _workoutSet!.workoutMoves.isNotEmpty
-          ? _workoutSet!.workoutMoves[0].equipment
           : null;
 
       _activeTabIndex = _activeMove == null ? 0 : 1;
@@ -115,14 +109,11 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
   ///
   /// Update all workout moves to have this equipment.
   Future<void> _updateEquipment(Equipment e) async {
-    setState(() {
-      _activeEquipment = e;
-    });
     for (final wm in _workoutSet!.workoutMoves) {
       wm.equipment = e;
-      await _editWorkoutMove(wm);
     }
-    setState(() {});
+    context.read<WorkoutCreatorBloc>().editWorkoutMoves(widget.sectionIndex,
+        _workoutSet!.sortPosition, _workoutSet!.workoutMoves);
   }
 
   Future<void> _editWorkoutMove(WorkoutMove workoutMove) async {
@@ -148,23 +139,26 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
 
     if (_workoutSet != null) {
       /// Update each workoutMove with the new move.
-      for (final wm in _workoutSet!.workoutMoves) {
-        await _editWorkoutMove(WorkoutMove()
-          ..id = wm.id
-          ..sortPosition = wm.sortPosition
-          ..equipment = move.selectableEquipments.contains(wm.equipment)
-              ? wm.equipment
-              : null
-          ..reps = wm.reps
-          ..repType = move.validRepTypes.contains(WorkoutMoveRepType.reps)
-              ? WorkoutMoveRepType.reps
-              : move.validRepTypes.first
-          ..distanceUnit = wm.distanceUnit
-          ..loadUnit = wm.loadUnit
-          ..timeUnit = wm.timeUnit
-          ..loadAmount = move.isLoadAdjustable ? wm.loadAmount : 0
-          ..move = move);
-      }
+      final updatedWorkoutMoves = _workoutSet!.workoutMoves
+          .map((wm) => WorkoutMove()
+            ..id = wm.id
+            ..sortPosition = wm.sortPosition
+            ..equipment = move.selectableEquipments.contains(wm.equipment)
+                ? wm.equipment
+                : null
+            ..reps = wm.reps
+            ..repType = move.validRepTypes.contains(WorkoutMoveRepType.reps)
+                ? WorkoutMoveRepType.reps
+                : move.validRepTypes.first
+            ..distanceUnit = wm.distanceUnit
+            ..loadUnit = wm.loadUnit
+            ..timeUnit = wm.timeUnit
+            ..loadAmount = move.isLoadAdjustable ? wm.loadAmount : 0
+            ..move = move)
+          .toList();
+
+      await context.read<WorkoutCreatorBloc>().editWorkoutMoves(
+          widget.sectionIndex, _workoutSet!.sortPosition, updatedWorkoutMoves);
     } else {
       /// Create a single set and workoutmove.
       _createSetAndAddWorkoutMove(WorkoutMove()
@@ -199,6 +193,8 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
 
     final workoutMoveTemplate =
         sortedWorkoutMoves.isEmpty ? null : sortedWorkoutMoves[0];
+
+    final equipment = workoutMoveTemplate?.equipment;
 
     return IndexedStack(
       index: _activeTabIndex,
@@ -306,8 +302,7 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
                                                       withBorder: false,
                                                       fontSize: FONTSIZE.two,
                                                       isSelected:
-                                                          _activeEquipment ==
-                                                              e),
+                                                          equipment == e),
                                                 )),
                                           ))
                                       .toList(),
@@ -322,7 +317,7 @@ class _LiftingSetCreatorState extends State<LiftingSetCreator> {
                         padding: const EdgeInsets.only(
                             top: 24.0, right: 8.0, bottom: 8, left: 8),
                         child: MyText(
-                          '${workoutMoveTemplate.move.name} with ${_activeEquipment?.name ?? ""}',
+                          '${workoutMoveTemplate.move.name} with ${equipment?.name ?? ""}',
                           size: FONTSIZE.five,
                           textAlign: TextAlign.center,
                         ),
@@ -382,28 +377,56 @@ class _LiftSetWorkoutMoveEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 60,
+      height: 50,
       child: Row(
         children: [
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                MyText(
-                  'Set ${index + 1}',
-                  size: FONTSIZE.two,
-                  subtext: true,
+                Container(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8),
+                  margin: const EdgeInsets.only(right: 16),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          right: BorderSide(
+                              color: context.theme.primary.withOpacity(0.3)))),
+                  child: MyText(
+                    '${index + 1}',
+                    size: FONTSIZE.two,
+                    subtext: true,
+                  ),
                 ),
-                NumberPickerInt(
-                    suffix: const MyText('reps'),
-                    modalTitle: 'Reps',
-                    number: workoutMove.reps.toInt(),
-                    saveValue: _updateReps),
-                LoadPickerDisplay(
-                  loadAmount: workoutMove.loadAmount,
-                  loadUnit: workoutMove.loadUnit,
-                  updateLoad: _updateLoad,
+                Expanded(
+                  flex: 4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      NumberPickerInt(
+                          suffix: const MyText('reps'),
+                          modalTitle: 'Reps',
+                          fontSize: FONTSIZE.eight,
+                          number: workoutMove.reps.round(),
+                          saveValue: _updateReps),
+                    ],
+                  ),
                 ),
+                if (workoutMove.equipment != null &&
+                    !workoutMove.equipment!.isBodyweight)
+                  Expanded(
+                    flex: 4,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        LoadPickerDisplay(
+                          loadAmount: workoutMove.loadAmount,
+                          fontSize: FONTSIZE.eight,
+                          loadUnit: workoutMove.loadUnit,
+                          updateLoad: _updateLoad,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),

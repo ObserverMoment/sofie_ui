@@ -7,10 +7,12 @@ import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/lifting_set_creator/lifting_set_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/lifting_set_creator/workout_lifting_set_display.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/default_object_factory.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -101,13 +103,20 @@ class WorkoutSectionWorkoutSets extends StatelessWidget {
             curve: Curves.easeInOut,
             animation: animation,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: WorkoutSetCreator(
-                  key: Key(
-                      'WorkoutSectionWorkoutSets-$sectionIndex-${item.sortPosition}'),
-                  sectionIndex: sectionIndex,
-                  setIndex: item.sortPosition,
-                  allowReorder: sortedWorkoutSets.length > 1),
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: workoutSectionType.isLifting
+                  ? WorkoutLiftingSetDisplay(
+                      key: Key(
+                          'WorkoutSectionWorkoutSets-$sectionIndex-${item.sortPosition}'),
+                      sectionIndex: sectionIndex,
+                      setIndex: item.sortPosition,
+                      allowReorder: sortedWorkoutSets.length > 1)
+                  : WorkoutSetCreator(
+                      key: Key(
+                          'WorkoutSectionWorkoutSets-$sectionIndex-${item.sortPosition}'),
+                      sectionIndex: sectionIndex,
+                      setIndex: item.sortPosition,
+                      allowReorder: sortedWorkoutSets.length > 1),
             ),
           );
         },
@@ -131,7 +140,7 @@ class WorkoutSectionWorkoutSets extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (workoutSectionType.name == kLiftingName)
+                  if (workoutSectionType.isLifting)
                     CreateTextIconButton(
                       text: 'Add Exercise',
                       loading: creatingSet,

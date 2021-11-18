@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/animated/dragged_item.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_workout_move.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/nav_bar_ellipsis_menu.dart';
@@ -223,7 +223,7 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
     // Don't show reps when user is doing a timed workout and when there is only one move in the set.
     // The user will just do single workout move for as long as workoutSet.duration, so reps are ignored.
     final ignoreReps = !_workoutSectionType.showReps(_workoutSet);
-    return Card(
+    return ContentBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -25,8 +25,8 @@ class WorkoutSetDefinition extends StatelessWidget {
         ? workoutSet.isRestSet
             ? const MyText(
                 'REST',
-                weight: FontWeight.bold,
                 lineHeight: 1,
+                size: FONTSIZE.four,
               )
             : Container()
         : length > 3
