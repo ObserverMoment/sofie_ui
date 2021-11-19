@@ -101,7 +101,8 @@ class WorkoutSectionProgressState {
     sectionData.rounds[currentRoundIndex].sets.add(setData);
   }
 
-  /// For Free Sessions. Run this whenever a set is marked complete or incomplete.
+  /// For Free Sessions and Lifting.
+  /// Run this whenever a set is marked complete or incomplete.
   void updateSectionRoundSetDataFromCompletedSets(
       List<WorkoutSet> completedSets) {
     sectionData.rounds[currentRoundIndex].sets = completedSets

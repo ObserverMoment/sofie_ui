@@ -75,23 +75,6 @@ class DoSectionTemplateLayout extends StatelessWidget {
             ),
           ),
 
-          // Display a 'Finish' button when the user has completed all the specified moves. They can still add more if they want...
-          if (workoutSection.isFreeSession && state.percentComplete >= 1.0)
-            FadeInUp(
-              child: AnimatedSubmitButtonV2(
-                height: startResumeButtonHeight,
-                text: 'Finish',
-                onSubmit: () {
-                  // Pause and return to overview.
-                  context
-                      .read<DoWorkoutBloc>()
-                      .pauseSection(workoutSection.sortPosition);
-                  context.pop();
-                },
-                borderRadius: 0,
-              ),
-            ),
-
           /// The set complete / start / stop button is always at the bottom of this column and is part of the layout for scored workouts.
           if (workoutSection.isScored && isRunning)
             AnimatedSubmitButtonV2(

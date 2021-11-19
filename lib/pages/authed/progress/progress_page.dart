@@ -22,7 +22,7 @@ class ProgressPage extends StatelessWidget {
         children: [
           const StreakAndStatsSummary(),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 2),
             child: GridView.count(
               crossAxisSpacing: 8,
               physics: const NeverScrollableScrollPhysics(),

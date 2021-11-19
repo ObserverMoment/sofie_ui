@@ -133,7 +133,6 @@ class RecentLogDots extends StatelessWidget {
             MyText(
               '${logsByDay.keys.length} days in the last $numDays',
               size: FONTSIZE.two,
-              color: Styles.secondaryAccent,
             ),
           ],
         )

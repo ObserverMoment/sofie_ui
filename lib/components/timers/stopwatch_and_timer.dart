@@ -6,7 +6,6 @@ import 'package:sofie_ui/components/timers/countdown_timer.dart';
 import 'package:sofie_ui/components/timers/stopwatch_with_laps.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 /// Indexed stack widget with bottom navigation bar.
 /// Navigate between [StopwatchWithLaps] and [CountdownTimer]
@@ -67,10 +66,7 @@ class _TimersBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          color: context.theme.primary.withOpacity(0.1),
-        ),
+    return SizedBox(
         height: EnvironmentConfig.bottomNavBarHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -109,7 +105,7 @@ class _TimersNavItem extends StatelessWidget {
       required this.onTap})
       : super(key: key);
 
-  double get iconSize => 22.0;
+  double get iconSize => 26.0;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +129,7 @@ class _TimersNavItem extends StatelessWidget {
                           activeIconData,
                           size: iconSize,
                         ),
-                        const SizedBox(height: 1),
+                        const SizedBox(height: 5),
                         MyText(
                           label,
                           size: FONTSIZE.one,
@@ -148,7 +144,7 @@ class _TimersNavItem extends StatelessWidget {
                           inactiveIconData,
                           size: iconSize,
                         ),
-                        const SizedBox(height: 1),
+                        const SizedBox(height: 5),
                         MyText(
                           label,
                           size: FONTSIZE.one,

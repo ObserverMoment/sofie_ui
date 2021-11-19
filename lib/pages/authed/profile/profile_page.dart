@@ -122,8 +122,8 @@ class ProfilePage extends StatelessWidget {
                                   (v) => v != UserProfileScope.artemisUnknown))
                                 v: MyText(v.display.capitalize)
                             },
-                            updateValue: (scope) => updateUserFields(
-                                context, user.id, 'scope', scope.apiValue)),
+                            updateValue: (scope) => updateUserFields(context,
+                                user.id, 'userProfileScope', scope.apiValue)),
                       ],
                     ),
                     Padding(

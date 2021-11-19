@@ -210,8 +210,9 @@ class TertiaryButton extends StatelessWidget {
   final IconData? suffixIconData;
   final void Function() onPressed;
   final bool disabled;
-  final EdgeInsets? padding;
+  final EdgeInsets padding;
   final Color? textColor;
+  final FONTSIZE fontSize;
   final Color? backgroundColor;
 
   const TertiaryButton(
@@ -221,9 +222,10 @@ class TertiaryButton extends StatelessWidget {
       this.suffixIconData,
       required this.onPressed,
       this.disabled = false,
-      this.padding,
+      this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       this.textColor,
-      this.backgroundColor})
+      this.backgroundColor,
+      this.fontSize = FONTSIZE.two})
       : super(key: key);
 
   @override
@@ -236,7 +238,7 @@ class TertiaryButton extends StatelessWidget {
         onPressed: disabled ? null : onPressed,
         pressedOpacity: 0.9,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          padding: padding,
           decoration: BoxDecoration(
               color: backgroundColor ?? context.theme.cardBackground,
               borderRadius: BorderRadius.circular(kStandardButtonBorderRadius)),
@@ -255,7 +257,7 @@ class TertiaryButton extends StatelessWidget {
                 child: MyText(
                   text.toUpperCase(),
                   color: textColor,
-                  size: FONTSIZE.two,
+                  size: fontSize,
                 ),
               ),
               if (suffixIconData != null)

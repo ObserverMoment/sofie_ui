@@ -6,6 +6,7 @@ import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart'
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/amrap_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/free_session_section_controller.dart';
+import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/timed_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
@@ -13,6 +14,7 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/audio_session_manager.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -140,28 +142,10 @@ class DoWorkoutBloc extends ChangeNotifier {
   }
 
   Future<void> _setupAudioSession() async {
-    _session = await AudioSession.instance;
-
-    /// https://pub.dev/packages/audio_session
-    /// Set up the audio session. The beeps and FX should duck other sources, not stop them.
     /// TODO: need to handle the section audio with different settings.
     /// Section.classAudio should pause other sources.
     /// And internal FX should duck Section.classAudio.
-    await _session!.configure(const AudioSessionConfiguration(
-      avAudioSessionCategory: AVAudioSessionCategory.playback,
-      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
-      avAudioSessionMode: AVAudioSessionMode.defaultMode,
-      avAudioSessionRouteSharingPolicy:
-          AVAudioSessionRouteSharingPolicy.defaultPolicy,
-      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-      androidAudioAttributes: AndroidAudioAttributes(
-        contentType: AndroidAudioContentType.movie,
-        flags: AndroidAudioFlags.none,
-        usage: AndroidAudioUsage.game,
-      ),
-      androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
-      androidWillPauseWhenDucked: false,
-    ));
+    _session = await AudioSessionManager.setupAudioSession();
 
     audioInitSuccess = true;
     notifyListeners();
@@ -210,6 +194,13 @@ class DoWorkoutBloc extends ChangeNotifier {
         );
       case kFreeSessionName:
         return FreeSessionSectionController(
+          workoutSection: workoutSection,
+          stopWatchTimer: _stopWatchTimers[workoutSection.sortPosition],
+          onCompleteSection: () =>
+              _onSectionComplete(workoutSection.sortPosition),
+        );
+      case kLiftingName:
+        return LiftingSectionController(
           workoutSection: workoutSection,
           stopWatchTimer: _stopWatchTimers[workoutSection.sortPosition],
           onCompleteSection: () =>

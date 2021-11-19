@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MyPageScaffold(
+    return CupertinoPageScaffold(
       navigationBar: MyNavBar(
         withoutLeading: true,
         middle: const LeadingNavBarTitle(
@@ -37,75 +37,67 @@ class HomePage extends StatelessWidget {
           ),
         ]),
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 140,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: ComingUpList(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ComingUpList(),
+            GridView.count(
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              padding: EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  top: 8,
+                  bottom: EnvironmentConfig.bottomNavBarHeight + 12),
+              shrinkWrap: true,
+              children: [
+                CategoryLinkTile(
+                  label: 'Workouts',
+                  assetImagePath: 'workouts.svg',
+                  onTap: () => context.navigateTo(const YourWorkoutsRoute()),
                 ),
-              ),
-              GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                padding: EdgeInsets.only(
-                    top: 8, bottom: EnvironmentConfig.bottomNavBarHeight + 12),
-                shrinkWrap: true,
-                children: [
-                  CategoryLinkTile(
-                    label: 'Workouts',
-                    assetImagePath: 'workouts.svg',
-                    onTap: () => context.navigateTo(const YourWorkoutsRoute()),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Plans',
-                    assetImagePath: 'plans.svg',
-                    onTap: () => context.navigateTo(const YourPlansRoute()),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Clubs',
-                    assetImagePath: 'clubs.svg',
-                    onTap: () => context.navigateTo(const YourClubsRoute()),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Collections',
-                    assetImagePath: 'collections.svg',
-                    onTap: () =>
-                        context.navigateTo(const YourCollectionsRoute()),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Gym Profiles',
-                    assetImagePath: 'gym_profiles.svg',
-                    onTap: () =>
-                        context.navigateTo(const YourGymProfilesRoute()),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Move Library',
-                    assetImagePath: 'moves_library.svg',
-                    onTap: () =>
-                        context.navigateTo(const YourMovesLibraryRoute()),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Awards',
-                    assetImagePath: 'events.svg',
-                    onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-                  ),
-                  CategoryLinkTile(
-                    label: 'Throwdowns',
-                    assetImagePath: 'challenges.svg',
-                    onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                CategoryLinkTile(
+                  label: 'Plans',
+                  assetImagePath: 'plans.svg',
+                  onTap: () => context.navigateTo(const YourPlansRoute()),
+                ),
+                CategoryLinkTile(
+                  label: 'Clubs',
+                  assetImagePath: 'clubs.svg',
+                  onTap: () => context.navigateTo(const YourClubsRoute()),
+                ),
+                CategoryLinkTile(
+                  label: 'Collections',
+                  assetImagePath: 'collections.svg',
+                  onTap: () => context.navigateTo(const YourCollectionsRoute()),
+                ),
+                CategoryLinkTile(
+                  label: 'Gym Profiles',
+                  assetImagePath: 'gym_profiles.svg',
+                  onTap: () => context.navigateTo(const YourGymProfilesRoute()),
+                ),
+                CategoryLinkTile(
+                  label: 'Move Library',
+                  assetImagePath: 'moves_library.svg',
+                  onTap: () =>
+                      context.navigateTo(const YourMovesLibraryRoute()),
+                ),
+                CategoryLinkTile(
+                  label: 'Awards',
+                  assetImagePath: 'events.svg',
+                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+                ),
+                CategoryLinkTile(
+                  label: 'Throwdowns',
+                  assetImagePath: 'challenges.svg',
+                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

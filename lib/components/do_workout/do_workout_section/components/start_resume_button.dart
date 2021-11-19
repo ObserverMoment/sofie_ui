@@ -21,11 +21,12 @@ class _StartResumeButtonState extends State<StartResumeButton> {
   bool _countdownStarted = false;
 
   /// Runs a countdown animation and THEN starts the workout.
-  void _startSectionCountdown(BuildContext context, bool isFreeSession) {
+  void _startSectionCountdown(
+      BuildContext context, bool isFreeSessionOrLifting) {
     final bloc = context.read<DoWorkoutBloc>();
     final playSection = bloc.playSection;
 
-    if (isFreeSession) {
+    if (isFreeSessionOrLifting) {
       playSection(widget.sectionIndex);
     } else {
       setState(() => _countdownStarted = true);
@@ -55,13 +56,16 @@ class _StartResumeButtonState extends State<StartResumeButton> {
         b.getControllerForSection(widget.sectionIndex).sectionHasStarted);
 
     /// No countdown required for a free session.
-    final isFreeSession = context.select<DoWorkoutBloc, bool>((b) =>
-        b.activeWorkout.workoutSections[widget.sectionIndex].isFreeSession);
+    final isFreeSessionOrLifting = context.select<DoWorkoutBloc, bool>((b) {
+      return b.activeWorkout.workoutSections[widget.sectionIndex]
+              .isFreeSession ||
+          b.activeWorkout.workoutSections[widget.sectionIndex].isLifting;
+    });
 
     return GestureDetector(
       onTap: () => sectionHasStarted
           ? context.read<DoWorkoutBloc>().playSection(widget.sectionIndex)
-          : _startSectionCountdown(context, isFreeSession),
+          : _startSectionCountdown(context, isFreeSessionOrLifting),
       child: _countdownStarted
           ? null
           : AnimatedContainer(

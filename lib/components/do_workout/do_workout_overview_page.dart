@@ -488,17 +488,18 @@ class _WorkoutSectionSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildSectionFooterButton(
-                  CupertinoIcons.list_bullet,
-                  'View / Modify',
-                  () => context.push(
-                        fullscreenDialog: true,
-                        child: ChangeNotifierProvider<DoWorkoutBloc>.value(
-                          value: bloc,
-                          child: DoWorkoutSectionModifications(
-                              sectionIndex: workoutSection.sortPosition),
-                        ),
-                      )),
+              if (!(workoutSection.isFreeSession || workoutSection.isLifting))
+                _buildSectionFooterButton(
+                    CupertinoIcons.list_bullet,
+                    'Modify',
+                    () => context.push(
+                          fullscreenDialog: true,
+                          child: ChangeNotifierProvider<DoWorkoutBloc>.value(
+                            value: bloc,
+                            child: DoWorkoutSectionModifications(
+                                sectionIndex: workoutSection.sortPosition),
+                          ),
+                        )),
               if (isComplete)
                 _buildSectionFooterButton(
                   CupertinoIcons.refresh_bold,
