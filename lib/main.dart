@@ -29,8 +29,7 @@ Future<void> main() async {
   await Hive.openBox(kSettingsHiveBoxName);
   await Hive.openBox(GraphQLStore.boxName);
 
-  /// Once we have ensured that clean up and garbage collection is working well.
-  /// TODO: Remove this before pushing anything to production.
+  /// TODO: Remove this once we have ensured that clean up and garbage collection is working well.
   await Hive.box(GraphQLStore.boxName).clear();
 
   await Firebase.initializeApp();
@@ -114,7 +113,7 @@ class _AuthRouterState extends State<AuthRouter> {
                   routes: (_) => [
                     // if the user is logged in, they may proceed to the main App
                     if (authState == AuthState.authed && _authedUser != null)
-                      const AuthedRouter()
+                      AuthedRouter(appRouter: _appRouter)
                     // if they are not logged in, bring them to the Login page
                     else if (authState == AuthState.validating ||
                         authState == AuthState.unknown)

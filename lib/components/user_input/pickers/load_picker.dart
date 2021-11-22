@@ -14,41 +14,42 @@ class LoadPickerDisplay extends StatelessWidget {
   final LoadUnit loadUnit;
   final void Function(double loadAmount, LoadUnit loadUnit) updateLoad;
   final bool expandPopup;
-  final FONTSIZE fontSize;
+  final FONTSIZE valueFontSize;
+  final FONTSIZE suffixFontSize;
   const LoadPickerDisplay(
       {Key? key,
       required this.loadAmount,
       required this.updateLoad,
       required this.loadUnit,
-      this.fontSize = FONTSIZE.nine,
+      this.valueFontSize = FONTSIZE.nine,
+      this.suffixFontSize = FONTSIZE.three,
       this.expandPopup = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoButton(
-      padding: const EdgeInsets.all(8),
-      onPressed: () => context.showBottomSheet(
+    return GestureDetector(
+      onTap: () => context.showBottomSheet(
           expand: expandPopup,
           child: LoadPickerModal(
             loadAmount: loadAmount,
             updateLoad: updateLoad,
             loadUnit: loadUnit,
           )),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MyText(
-            loadAmount.stringMyDouble(),
-            size: fontSize,
-          ),
-          const SizedBox(
-            width: 4,
-          ),
-          MyText(
-            loadUnit.display,
-          )
-        ],
+      child: ContentBox(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            MyText(
+              loadAmount.stringMyDouble(),
+              size: valueFontSize,
+            ),
+            const SizedBox(
+              width: 4,
+            ),
+            MyText(loadUnit.display, size: suffixFontSize)
+          ],
+        ),
       ),
     );
   }

@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/workout/lifting_set_display.dart';
+import 'package:sofie_ui/components/workout/lifting_set_display_archived.dart';
 import 'package:sofie_ui/components/workout/workout_set_display.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
@@ -61,7 +61,7 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
                 uppercase: true,
                 showMediaIcons: false,
               ),
-              if (workoutSection.isForTime || workoutSection.isFreeSession)
+              if (workoutSection.rounds > 1)
                 NumberRoundsIcon(
                   rounds: workoutSection.rounds,
                   alignment: Axis.vertical,
@@ -165,14 +165,12 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
               children: sortedSets
                   .map((workoutSet) => Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
-                        child: workoutSection.isLifting
-                            ? LiftingSetDisplay(
-                                workoutSet: workoutSet,
-                              )
-                            : WorkoutSetDisplay(
-                                workoutSet: workoutSet,
-                                workoutSectionType:
-                                    workoutSection.workoutSectionType),
+                        child: WorkoutSetDisplay(
+                            workoutSet: workoutSet,
+                            padding: const EdgeInsets.only(
+                                top: 6, bottom: 4, left: 10, right: 10),
+                            workoutSectionType:
+                                workoutSection.workoutSectionType),
                       ))
                   .toList(),
             ),

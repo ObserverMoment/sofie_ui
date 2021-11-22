@@ -1,14 +1,15 @@
 import 'package:flutter/cupertino.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/free_session_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
+import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-import 'package:sofie_ui/components/user_input/pickers/round_picker.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
 import 'package:sofie_ui/components/workout/workout_move_display.dart';
 import 'package:sofie_ui/constants.dart';
@@ -17,9 +18,11 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 class FreeSessionMovesList extends StatelessWidget {
   final WorkoutSection workoutSection;
+  final WorkoutSectionProgressState state;
   const FreeSessionMovesList({
     Key? key,
     required this.workoutSection,
+    required this.state,
   }) : super(key: key);
 
   void _openCreateWorkoutMove(BuildContext context) {
@@ -49,36 +52,47 @@ class FreeSessionMovesList extends StatelessWidget {
             .watch<FreeSessionSectionController>()
             .completedWorkoutSetIds;
 
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          itemCount: workoutSection.workoutSets.length + 1,
-          itemBuilder: (c, i) {
-            if (i == workoutSection.workoutSets.length) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CreateTextIconButton(
-                    text: 'Add Move',
-                    onPressed: () => _openCreateWorkoutMove(context)),
-              );
-            } else {
-              final setIsMarkedComplete =
-                  completedSetIds.contains(workoutSection.workoutSets[i].id);
+        return Column(
+          children: [
+            const SizedBox(height: 8),
+            LinearPercentIndicator(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              lineHeight: 4,
+              percent: state.percentComplete.clamp(0.0, 1.0),
+              backgroundColor: context.theme.primary.withOpacity(0.07),
+              linearGradient: Styles.primaryAccentGradient,
+              linearStrokeCap: LinearStrokeCap.roundAll,
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                itemCount: workoutSection.workoutSets.length + 1,
+                itemBuilder: (c, i) {
+                  if (i == workoutSection.workoutSets.length) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CreateTextIconButton(
+                          text: 'Add Move',
+                          onPressed: () => _openCreateWorkoutMove(context)),
+                    );
+                  } else {
+                    final setIsMarkedComplete = completedSetIds
+                        .contains(workoutSection.workoutSets[i].id);
 
-              return Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: AnimatedOpacity(
-                  opacity: setIsMarkedComplete ? 0.75 : 1,
-                  duration: kStandardAnimationDuration,
-                  child: _WorkoutSetInFreeSession(
-                    workoutSet: workoutSection.workoutSets[i],
-                    setIsMarkedComplete: setIsMarkedComplete,
-                    freeSessionController: controller,
-                    sectionIndex: workoutSection.sortPosition,
-                  ),
-                ),
-              );
-            }
-          },
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: _WorkoutSetInFreeSession(
+                        workoutSet: workoutSection.workoutSets[i],
+                        setIsMarkedComplete: setIsMarkedComplete,
+                        freeSessionController: controller,
+                        sectionIndex: workoutSection.sortPosition,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -105,12 +119,6 @@ class _WorkoutSetInFreeSession extends StatelessWidget {
     freeSessionController.markWorkoutSetIncomplete(workoutSet);
   }
 
-  void _updateSetRounds(BuildContext context, int rounds) {
-    context
-        .read<DoWorkoutBloc>()
-        .updateWorkoutSetRounds(sectionIndex, workoutSet.sortPosition, rounds);
-  }
-
   void _openEditWorkoutMove(
       BuildContext context, WorkoutMove originalWorkoutMove) {
     context.push(
@@ -129,47 +137,35 @@ class _WorkoutSetInFreeSession extends StatelessWidget {
   Widget build(BuildContext context) {
     final workoutMoves = workoutSet.workoutMoves;
 
-    return Card(
+    return ContentBox(
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    RoundPicker(
-                        rounds: workoutSet.rounds,
-                        saveValue: (rounds) =>
-                            _updateSetRounds(context, rounds),
-                        padding: const EdgeInsets.all(4)),
-                    WorkoutSetDefinition(workoutSet: workoutSet),
-                  ],
-                ),
-                AnimatedSwitcher(
-                  duration: kStandardAnimationDuration,
-                  child: setIsMarkedComplete
-                      ? CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: _handleMarkSetInComplete,
-                          child: const Icon(
-                            CupertinoIcons.checkmark_alt_circle,
-                            size: 34,
-                            color: Styles.primaryAccent,
-                          ),
-                        )
-                      : CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: _handleMarkSetComplete,
-                          child: const Icon(
-                            CupertinoIcons.add_circled,
-                            size: 34,
-                          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              WorkoutSetDefinition(workoutSet: workoutSet),
+              AnimatedSwitcher(
+                duration: kStandardAnimationDuration,
+                child: setIsMarkedComplete
+                    ? CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: _handleMarkSetInComplete,
+                        child: const Icon(
+                          CupertinoIcons.checkmark_alt_circle,
+                          size: 30,
+                          color: Styles.primaryAccent,
                         ),
-                )
-              ],
-            ),
+                      )
+                    : CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: _handleMarkSetComplete,
+                        child: const Icon(
+                          CupertinoIcons.add_circled,
+                          size: 30,
+                        ),
+                      ),
+              )
+            ],
           ),
           ListView.builder(
             shrinkWrap: true,
@@ -209,6 +205,7 @@ class _WorkoutMoveInFreeSession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: isMarkedComplete
           ? null
           : () => openBottomSheetMenu(
@@ -231,7 +228,6 @@ class _WorkoutMoveInFreeSession extends StatelessWidget {
                   ])),
       child: WorkoutMoveDisplay(
         workoutMove,
-        isLast: isLast,
       ),
     );
   }

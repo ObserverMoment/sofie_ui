@@ -1,10 +1,15 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
+import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_section_workout_sets.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -12,11 +17,17 @@ import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_e
 import 'package:sofie_ui/components/user_input/menus/nav_bar_ellipsis_menu.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/components/user_input/pickers/round_picker.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/default_object_factory.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
+import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:json_annotation/json_annotation.dart' as json;
 
 class WorkoutSectionCreator extends StatefulWidget {
   @override
@@ -96,7 +107,44 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
     ));
   }
 
-  void toggleShowFullSetInfo() => _bloc.toggleShowFullSetInfo();
+  /// When adding a new set the user selects the move etc first, then we create a set to be its parent once they are done.
+  Future<void> _openWorkoutMoveCreator(BuildContext context,
+      {bool ignoreReps = false,
+      int? duration,
+      String screenTitle = 'Add Set'}) async {
+    await context.push(
+        child: WorkoutMoveCreator(
+      pageTitle: screenTitle,
+      saveWorkoutMove: (workoutMove) =>
+          _createSetAndAddWorkoutMove(context, workoutMove, duration: duration),
+      sortPosition: 0,
+      ignoreReps: ignoreReps,
+    ));
+  }
+
+  Future<void> _addRestSet(
+      BuildContext context, Move restMove, int seconds) async {
+    final restWorkoutMove = DefaultObjectfactory.defaultRestWorkoutMove(
+        move: restMove,
+        sortPosition: 0,
+        timeAmount: seconds,
+        timeUnit: TimeUnit.seconds);
+
+    await _createSetAndAddWorkoutMove(context, restWorkoutMove,
+        duration: seconds);
+  }
+
+  Future<void> _createSetAndAddWorkoutMove(
+      BuildContext context, WorkoutMove workoutMove,
+      {int? duration}) async {
+    /// Only [shouldNotifyListeners] after creating the workoutMove so that the UI just updates once.
+    await context.read<WorkoutCreatorBloc>().createWorkoutSet(
+        widget.sectionIndex,
+        shouldNotifyListeners: false,
+        duration: duration);
+    await context.read<WorkoutCreatorBloc>().createWorkoutMove(
+        widget.sectionIndex, _sortedWorkoutSets.length, workoutMove);
+  }
 
   Widget _buildTitle() {
     return SizedBox(
@@ -122,8 +170,10 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
 
   @override
   Widget build(BuildContext context) {
-    final _showFullSetInfo =
-        context.select<WorkoutCreatorBloc, bool>((b) => b.showFullSetInfo);
+    final creatingSet =
+        context.select<WorkoutCreatorBloc, bool>((b) => b.creatingSet);
+
+    final workoutSectionType = _workoutSection.workoutSectionType;
 
     return MyPageScaffold(
       navigationBar: MyNavBar(
@@ -156,87 +206,166 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
               iconData: CupertinoIcons.arrow_left_right,
               onTap: () => _openChangeSectionType(_workoutSection),
             ),
-            ContextMenuItem(
-              text: _showFullSetInfo ? 'Compact Display' : 'Full Display',
-              iconData: _showFullSetInfo
-                  ? CupertinoIcons.fullscreen_exit
-                  : CupertinoIcons.fullscreen,
-              onTap: () =>
-                  context.read<WorkoutCreatorBloc>().toggleShowFullSetInfo(),
-            ),
           ],
         ),
       ),
-      child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverList(
-                  delegate: SliverChildListDelegate([
-                if (_workoutSection.name != null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MyHeaderText(
-                      _workoutSection.name!,
-                      size: FONTSIZE.four,
-                    ),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          if (_workoutSection.name != null)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MyHeaderText(
+                _workoutSection.name!,
+                size: FONTSIZE.four,
+              ),
+            ),
+          if (_workoutSection.isTimed)
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              child: MyText(
+                'Total Time: ${_workoutSection.timedSectionDuration.displayString}',
+                size: FONTSIZE.four,
+              ),
+            ),
+          if (Utils.textNotNull(_workoutSection.note))
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: GestureDetector(
+                onTap: _openNoteEditor,
+                child: MyText(
+                  _workoutSection.note!,
+                  maxLines: 3,
+                  textAlign: TextAlign.left,
+                  lineHeight: 1.2,
+                ),
+              ),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (_workoutSection.roundsInputAllowed)
+                  RoundPicker(
+                    rounds: _workoutSection.rounds,
+                    saveValue: (value) =>
+                        _updateWorkoutSection({'rounds': value}),
                   ),
-                if (_workoutSection.isTimed)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8.0),
-                    child: MyText(
-                      'Total Time: ${_workoutSection.timedSectionDuration.displayString}',
-                      size: FONTSIZE.four,
-                    ),
+                if (_workoutSection.isAMRAP)
+                  DurationPickerDisplay(
+                    modalTitle: 'AMRAP Timecap',
+                    duration: Duration(seconds: _workoutSection.timecap),
+                    updateDuration: (duration) =>
+                        _updateWorkoutSection({'timecap': duration.inSeconds}),
                   ),
-                if (Utils.textNotNull(_workoutSection.note))
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 4.0),
-                    child: GestureDetector(
-                      onTap: _openNoteEditor,
-                      child: MyText(
-                        _workoutSection.note!,
-                        maxLines: 3,
-                        textAlign: TextAlign.left,
-                        lineHeight: 1.2,
-                      ),
-                    ),
-                  ),
-                Padding(
+              ],
+            ),
+          ),
+          ImplicitlyAnimatedList<WorkoutSet>(
+            items: _sortedWorkoutSets,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            areItemsTheSame: (a, b) => a.id == b.id,
+            itemBuilder: (context, animation, item, index) {
+              return SizeFadeTransition(
+                sizeFraction: 0.7,
+                curve: Curves.easeInOut,
+                animation: animation,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: WorkoutSetCreator(
+                      key: Key(
+                          'WorkoutSectionWorkoutSets-${widget.sectionIndex}-${item.sortPosition}'),
+                      sectionIndex: widget.sectionIndex,
+                      setIndex: item.sortPosition,
+                      allowReorder: _sortedWorkoutSets.length > 1),
+                ),
+              );
+            },
+          ),
+          QueryObserver<StandardMoves$Query, json.JsonSerializable>(
+              key: Key(
+                  'WorkoutSectionWorkoutSets - ${StandardMovesQuery().operationName}'),
+              query: StandardMovesQuery(),
+              fetchPolicy: QueryFetchPolicy.storeFirst,
+              loadingIndicator: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: LoadingDots(
+                  size: 12,
+                ),
+              ),
+              builder: (data) {
+                /// Need to get the Move [Rest] for use when user taps [+ Add Rest]
+                final restMove =
+                    data.standardMoves.firstWhere((m) => m.id == kRestMoveId);
+
+                return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      if (_workoutSection.roundsInputAllowed)
-                        ContentBox(
-                          child: RoundPicker(
-                            rounds: _workoutSection.rounds,
-                            saveValue: (value) =>
-                                _updateWorkoutSection({'rounds': value}),
+                      if (_workoutSection.isLifting ||
+                          _workoutSection.isFreeSession)
+                        CreateTextIconButton(
+                          text: 'Add Exercise',
+                          loading: creatingSet,
+                          onPressed: () => _openWorkoutMoveCreator(context),
+                        ),
+                      if ([kAMRAPName, kForTimeName]
+                          .contains(workoutSectionType.name))
+                        CreateTextIconButton(
+                          text: 'Add Set',
+                          loading: creatingSet,
+                          onPressed: () => _openWorkoutMoveCreator(context),
+                        ),
+                      if (kHIITCircuitName == workoutSectionType.name)
+                        CreateTextIconButton(
+                          text: 'Add Station',
+                          loading: creatingSet,
+                          onPressed: () => _openWorkoutMoveCreator(context,
+                              duration: 60,
+                              ignoreReps: true,
+                              screenTitle: 'Add Station'),
+                        ),
+                      if (kHIITCircuitName == workoutSectionType.name)
+                        CreateTextIconButton(
+                          text: 'Add Rest',
+                          loading: creatingSet,
+                          onPressed: () => _addRestSet(
+                            context,
+                            restMove,
+                            30,
                           ),
                         ),
-                      if (_workoutSection.isAMRAP)
-                        ContentBox(
-                          child: DurationPickerDisplay(
-                            modalTitle: 'AMRAP Timecap',
-                            duration:
-                                Duration(seconds: _workoutSection.timecap),
-                            updateDuration: (duration) => _updateWorkoutSection(
-                                {'timecap': duration.inSeconds}),
-                          ),
+                      if (kEMOMName == workoutSectionType.name)
+                        CreateTextIconButton(
+                          text: 'Add Period',
+                          loading: creatingSet,
+                          onPressed: () => _openWorkoutMoveCreator(context,
+                              duration: 60, screenTitle: 'Add Period'),
+                        ),
+                      if (kTabataName == workoutSectionType.name)
+                        CreateTextIconButton(
+                          text: 'Add Set',
+                          loading: creatingSet,
+                          onPressed: () => _openWorkoutMoveCreator(context,
+                              duration: 20, ignoreReps: true),
+                        ),
+                      if (kTabataName == workoutSectionType.name)
+                        CreateTextIconButton(
+                          text: 'Add Rest',
+                          loading: creatingSet,
+                          onPressed: () => _addRestSet(context, restMove, 10),
                         ),
                     ],
                   ),
-                ),
-              ]))
-            ];
-          },
-          body: WorkoutSectionWorkoutSets(
-            sectionIndex: widget.sectionIndex,
-            sortedWorkoutSets: _sortedWorkoutSets,
-            workoutSectionType: _workoutSection.workoutSectionType,
-          )),
+                );
+              })
+        ],
+      ),
     );
   }
 }

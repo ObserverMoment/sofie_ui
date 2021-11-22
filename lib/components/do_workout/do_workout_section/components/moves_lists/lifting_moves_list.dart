@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
+import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_input.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/components/workout/lifting_set_display.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -17,12 +19,15 @@ import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class LiftingMovesList extends StatelessWidget {
   final WorkoutSection workoutSection;
+  final WorkoutSectionProgressState state;
   const LiftingMovesList({
     Key? key,
     required this.workoutSection,
+    required this.state,
   }) : super(key: key);
 
   void _openCreateLiftingSet(BuildContext context) {}
@@ -45,33 +50,48 @@ class LiftingMovesList extends StatelessWidget {
         final completedWorkoutMoveIds =
             controller.completedWorkoutMoveIds.toList();
 
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          itemCount: _workoutSection.workoutSets.length + 1,
-          itemBuilder: (c, i) {
-            if (i == _workoutSection.workoutSets.length) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CreateTextIconButton(
-                    text: 'Add Exercise',
-                    onPressed: () => _openCreateLiftingSet(context)),
-              );
-            } else {
-              final setIsMarkedComplete =
-                  completedSetIds.contains(_workoutSection.workoutSets[i].id);
+        return Column(
+          children: [
+            const SizedBox(height: 8),
+            LinearPercentIndicator(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              lineHeight: 4,
+              percent: state.percentComplete.clamp(0.0, 1.0),
+              backgroundColor: context.theme.primary.withOpacity(0.07),
+              linearGradient: Styles.primaryAccentGradient,
+              linearStrokeCap: LinearStrokeCap.roundAll,
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                itemCount: _workoutSection.workoutSets.length + 1,
+                itemBuilder: (c, i) {
+                  if (i == _workoutSection.workoutSets.length) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CreateTextIconButton(
+                          text: 'Add Exercise',
+                          onPressed: () => _openCreateLiftingSet(context)),
+                    );
+                  } else {
+                    final setIsMarkedComplete = completedSetIds
+                        .contains(_workoutSection.workoutSets[i].id);
 
-              return Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: _WorkoutSetInLiftingSession(
-                  workoutSet: _workoutSection.workoutSets[i],
-                  setIsMarkedComplete: setIsMarkedComplete,
-                  completedWorkoutMoveIds: completedWorkoutMoveIds,
-                  sectionController: controller,
-                  sectionIndex: _workoutSection.sortPosition,
-                ),
-              );
-            }
-          },
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: _WorkoutSetInLiftingSession(
+                        workoutSet: _workoutSection.workoutSets[i],
+                        setIsMarkedComplete: setIsMarkedComplete,
+                        completedWorkoutMoveIds: completedWorkoutMoveIds,
+                        sectionController: controller,
+                        sectionIndex: _workoutSection.sortPosition,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
         );
       },
     );
@@ -122,9 +142,11 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final workoutMoves = workoutSet.workoutMoves;
+    final isMultiMoveSet = workoutSet.isMultiMoveSet;
 
     /// All workout moves in a LiftingSet must share the same equipment and move.
     /// i.e. it is a classic lifting set of a single exercise.
+    /// Only used if [isMultiMoveSet] is true.
     final templateWorkoutMove =
         workoutMoves.isNotEmpty ? workoutMoves[0] : null;
 
@@ -138,7 +160,23 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    LiftingSetHeaderDisplay(workoutMove: templateWorkoutMove),
+                    isMultiMoveSet
+                        ? WorkoutSetDefinition(workoutSet: workoutSet)
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyText(
+                                templateWorkoutMove.move.name,
+                              ),
+                              if (templateWorkoutMove.equipment != null)
+                                MyText(
+                                  templateWorkoutMove.equipment!.name,
+                                  color: Styles.primaryAccent,
+                                  lineHeight: 1.5,
+                                ),
+                            ],
+                          ),
                     SizedBox(
                       height: 50,
                       child: Row(
@@ -175,51 +213,68 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
                     )
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 8),
-                  child: Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    children: workoutMoves
-                        .map((wm) => _WorkoutMoveInLifting(
-                              workoutMove: wm,
-                              markWorkoutMoveComplete: () =>
-                                  _markWorkoutMoveComplete(wm),
-                              markWorkoutMoveIncomplete: () =>
-                                  _markWorkoutMoveIncomplete(wm),
-                              isMarkedComplete:
-                                  completedWorkoutMoveIds.contains(wm.id),
-                              openModifyMove: () =>
-                                  _openModifyMove(context, wm),
-                            ))
-                        .toList(),
-                  ),
-                ),
+                isMultiMoveSet
+                    ? Column(
+                        children: workoutMoves
+                            .map((wm) => _WorkoutMoveInMultiMoveSet(
+                                  workoutMove: wm,
+                                  markWorkoutMoveComplete: () =>
+                                      _markWorkoutMoveComplete(wm),
+                                  markWorkoutMoveIncomplete: () =>
+                                      _markWorkoutMoveIncomplete(wm),
+                                  isMarkedComplete:
+                                      completedWorkoutMoveIds.contains(wm.id),
+                                  openModifyMove: () =>
+                                      _openModifyMove(context, wm),
+                                ))
+                            .toList(),
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 12, bottom: 8),
+                        child: Wrap(
+                          spacing: 20,
+                          runSpacing: 16,
+                          children: workoutMoves
+                              .map((wm) => _WorkoutMoveInSingleMoveSet(
+                                    workoutMove: wm,
+                                    markWorkoutMoveComplete: () =>
+                                        _markWorkoutMoveComplete(wm),
+                                    markWorkoutMoveIncomplete: () =>
+                                        _markWorkoutMoveIncomplete(wm),
+                                    isMarkedComplete:
+                                        completedWorkoutMoveIds.contains(wm.id),
+                                    openModifyMove: () =>
+                                        _openModifyMove(context, wm),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
               ],
             ),
     );
   }
 }
 
-class _WorkoutMoveInLifting extends StatelessWidget {
+class _WorkoutMoveInSingleMoveSet extends StatelessWidget {
   final WorkoutMove workoutMove;
   final VoidCallback markWorkoutMoveComplete;
   final VoidCallback markWorkoutMoveIncomplete;
   final VoidCallback openModifyMove;
   final bool isMarkedComplete;
 
-  const _WorkoutMoveInLifting(
-      {Key? key,
-      required this.workoutMove,
-      required this.openModifyMove,
-      required this.isMarkedComplete,
-      required this.markWorkoutMoveComplete,
-      required this.markWorkoutMoveIncomplete})
-      : super(key: key);
+  const _WorkoutMoveInSingleMoveSet({
+    Key? key,
+    required this.workoutMove,
+    required this.openModifyMove,
+    required this.isMarkedComplete,
+    required this.markWorkoutMoveComplete,
+    required this.markWorkoutMoveIncomplete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final repsOverHundred = workoutMove.reps >= 100;
+
     return GestureDetector(
         onLongPress: isMarkedComplete ? null : openModifyMove,
         onTap: isMarkedComplete
@@ -229,8 +284,8 @@ class _WorkoutMoveInLifting extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: 50,
-              width: 50,
+              height: 46,
+              width: 46,
               child: AnimatedContainer(
                   duration: kStandardAnimationDuration,
                   alignment: Alignment.center,
@@ -249,13 +304,145 @@ class _WorkoutMoveInLifting extends StatelessWidget {
                       color: isMarkedComplete
                           ? Styles.white
                           : context.theme.primary,
-                      size: repsOverHundred ? FONTSIZE.four : FONTSIZE.five)),
+                      size: repsOverHundred ? FONTSIZE.three : FONTSIZE.four)),
             ),
             const SizedBox(height: 7),
-            MyText(
-              '${workoutMove.loadAmount.stringMyDouble()}${workoutMove.loadUnit.display}',
-            )
+            if (Utils.hasLoad(workoutMove.loadAmount))
+              MyText(
+                '${workoutMove.loadAmount.stringMyDouble()}${workoutMove.loadUnit.display}',
+              )
           ],
+        ));
+  }
+}
+
+class _WorkoutMoveInMultiMoveSet extends StatelessWidget {
+  final WorkoutMove workoutMove;
+  final VoidCallback markWorkoutMoveComplete;
+  final VoidCallback markWorkoutMoveIncomplete;
+  final VoidCallback openModifyMove;
+  final bool isMarkedComplete;
+
+  const _WorkoutMoveInMultiMoveSet({
+    Key? key,
+    required this.workoutMove,
+    required this.openModifyMove,
+    required this.isMarkedComplete,
+    required this.markWorkoutMoveComplete,
+    required this.markWorkoutMoveIncomplete,
+  }) : super(key: key);
+
+  Widget _buildRepSuffix() {
+    return MyText(
+      workoutMove.repType == WorkoutMoveRepType.time
+          ? workoutMove.timeUnit.shortDisplay
+          : workoutMove.repType == WorkoutMoveRepType.distance
+              ? workoutMove.distanceUnit.shortDisplay
+              : workoutMove.repType.shortDisplay,
+      size: FONTSIZE.two,
+    );
+  }
+
+  Widget _buildLoadDisplay() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        MyText(
+          workoutMove.loadAmount.stringMyDouble(),
+          lineHeight: 1.1,
+          size: FONTSIZE.four,
+        ),
+        const SizedBox(width: 3),
+        MyText(
+          workoutMove.loadUnit.display,
+          size: FONTSIZE.two,
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final repsOverHundred = workoutMove.reps >= 100;
+
+    final showLoad = Utils.hasLoad(workoutMove.loadAmount) &&
+        workoutMove.equipment != null &&
+        !workoutMove.equipment!.isBodyweight;
+
+    return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onLongPress: isMarkedComplete ? null : openModifyMove,
+        onTap: isMarkedComplete
+            ? markWorkoutMoveIncomplete
+            : markWorkoutMoveComplete,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(right: 8),
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            right: BorderSide(
+                                color:
+                                    context.theme.primary.withOpacity(0.3)))),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MyText(
+                          workoutMove.move.name,
+                        ),
+                        if (Utils.textNotNull(workoutMove.equipment?.name))
+                          Padding(
+                            padding: const EdgeInsets.only(top: 3.0),
+                            child: MyText(workoutMove.equipment!.name,
+                                size: FONTSIZE.two,
+                                color: Styles.primaryAccent),
+                          ),
+                      ],
+                    ),
+                  ),
+                  if (showLoad) _buildLoadDisplay(),
+                ],
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: AnimatedContainer(
+                        duration: kStandardAnimationDuration,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isMarkedComplete
+                                ? null
+                                : context.theme.background.withOpacity(0.3),
+                            gradient: isMarkedComplete
+                                ? Styles.primaryAccentGradient
+                                : null,
+                            border: isMarkedComplete
+                                ? null
+                                : Border.all(color: context.theme.primary)),
+                        child: MyText(workoutMove.reps.round().toString(),
+                            color: isMarkedComplete
+                                ? Styles.white
+                                : context.theme.primary,
+                            size: repsOverHundred
+                                ? FONTSIZE.three
+                                : FONTSIZE.four)),
+                  ),
+                  const SizedBox(width: 4),
+                  _buildRepSuffix()
+                ],
+              )
+            ],
+          ),
         ));
   }
 }

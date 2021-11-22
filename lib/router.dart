@@ -49,6 +49,7 @@ import 'package:sofie_ui/pages/authed/home/your_schedule.dart';
 import 'package:sofie_ui/pages/authed/home/your_workouts/your_workouts.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
 import 'package:sofie_ui/pages/authed/main_tabs_page.dart';
+import 'package:sofie_ui/pages/authed/page_not_found.dart';
 import 'package:sofie_ui/pages/authed/profile/archive_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
@@ -74,19 +75,17 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
         fullscreenDialog: true,
         children: [
           // The main tabs screen has five tabs where each is a stack. Generally these are pages that are user specific and are not likely to be shared across users or groups. Each stack maintains its own state and navigation in iOS style.
-          AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
+          AutoRoute(path: '', page: MainTabsPage, children: [
             AutoRoute(
-                initial: true,
                 path: '',
                 name: 'discoverStack',
                 page: EmptyRouterPage,
                 children: [
-                  AutoRoute(initial: true, path: '', page: DiscoverPage),
+                  AutoRoute(path: '', page: DiscoverPage),
                   AutoRoute(path: 'discover-people', page: DiscoverPeoplePage),
                   AutoRoute(path: 'discover-clubs', page: DiscoverClubsPage),
                   AutoRoute(path: 'community', page: DiscoverCommunityPage),
                   AutoRoute(path: 'champions', page: DiscoverChampionsPage),
-                  RedirectRoute(path: '*', redirectTo: '')
                 ]),
             AutoRoute(
               path: 'social',
@@ -109,7 +108,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
                   AutoRoute(path: 'your-schedule', page: YourSchedulePage),
                   AutoRoute(path: 'your-throwdowns', page: YourThrowdownsPage),
                   AutoRoute(path: 'your-workouts', page: YourWorkoutsPage),
-                  RedirectRoute(path: '*', redirectTo: '')
                 ]),
             AutoRoute(
                 path: 'progress',
@@ -121,7 +119,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
                   AutoRoute(path: 'journals', page: JournalsPage),
                   AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
                   AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
-                  RedirectRoute(path: '*', redirectTo: '')
                 ]),
             AutoRoute(path: 'profile', page: ProfilePage),
           ]),
@@ -180,7 +177,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(
               path: 'create/workout-plan-review',
               page: WorkoutPlanReviewCreatorPage),
-          RedirectRoute(path: '*', redirectTo: '/')
+          AutoRoute(path: '*', page: PageNotFoundPage),
         ]),
   ],
 )

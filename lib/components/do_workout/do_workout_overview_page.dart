@@ -396,7 +396,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
 
     return Card(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      backgroundColor: context.theme.cardBackground.withOpacity(0.95),
+      backgroundColor: context.theme.cardBackground.withOpacity(0.9),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -439,13 +439,6 @@ class _WorkoutSectionSummary extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: equipmentsWithLoad
-                    .sorted((a, b) {
-                      if (a.equipment.name == b.equipment.name) {
-                        return (a.loadAmount ?? 0).compareTo(b.loadAmount ?? 0);
-                      } else {
-                        return a.equipment.name.compareTo(b.equipment.name);
-                      }
-                    })
                     .map((e) =>
                         MyText(_getEquipmentWithLoadTag(e), lineHeight: 1.4))
                     .toList(),
@@ -491,7 +484,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
               if (!(workoutSection.isFreeSession || workoutSection.isLifting))
                 _buildSectionFooterButton(
                     CupertinoIcons.list_bullet,
-                    'Modify',
+                    'View / Modify',
                     () => context.push(
                           fullscreenDialog: true,
                           child: ChangeNotifierProvider<DoWorkoutBloc>.value(
@@ -535,7 +528,7 @@ String _getEquipmentWithLoadTag(EquipmentWithLoad equipmentWithLoad) {
       : equipmentWithLoad.loadAmount;
 
   final load = individualLoadAmount != null
-      ? '${individualLoadAmount.stringMyDouble()} ${equipmentWithLoad.loadUnit.display} '
+      ? '${individualLoadAmount.stringMyDouble()}${equipmentWithLoad.loadUnit.display} '
       : '';
 
   return '$load$name';

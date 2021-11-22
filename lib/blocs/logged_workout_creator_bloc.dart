@@ -470,7 +470,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         broadcastQueryIds: [GQLOpNames.userScheduledWorkoutsQuery]);
   }
 
-  /// To add a gym profile to the logged workout input you can either to add it to
+  /// To add a gym profile to the logged workout input you can either add it to
   /// [scheduledWorkout.gymProfile] or to [loggedWorkout.gymProfile].
   /// [loggedWorkout.gymProfile] will take precedence over [scheduledWorkout.gymProfile].
   static CreateLoggedWorkoutInput createLoggedWorkoutInputFromLoggedWorkout(

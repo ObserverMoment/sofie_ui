@@ -679,7 +679,7 @@ class TextButton extends StatelessWidget {
       this.padding,
       this.color,
       this.fontSize = FONTSIZE.three,
-      this.underline = true})
+      this.underline = false})
       : assert(!(confirm && destructive)),
         super(key: key);
 

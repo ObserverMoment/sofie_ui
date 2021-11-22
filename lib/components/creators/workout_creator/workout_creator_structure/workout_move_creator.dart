@@ -263,17 +263,15 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                             ),
                           if (_showLoadPicker())
                             FadeIn(
-                              child: ContentBox(
-                                child: LoadPickerDisplay(
-                                  expandPopup: true,
-                                  loadAmount: _activeWorkoutMove!.loadAmount,
-                                  loadUnit: _activeWorkoutMove!.loadUnit,
-                                  updateLoad: (loadAmount, loadUnit) =>
-                                      _updateWorkoutMove({
-                                    'loadAmount': loadAmount,
-                                    'loadUnit': loadUnit.apiValue
-                                  }),
-                                ),
+                              child: LoadPickerDisplay(
+                                expandPopup: true,
+                                loadAmount: _activeWorkoutMove!.loadAmount,
+                                loadUnit: _activeWorkoutMove!.loadUnit,
+                                updateLoad: (loadAmount, loadUnit) =>
+                                    _updateWorkoutMove({
+                                  'loadAmount': loadAmount,
+                                  'loadUnit': loadUnit.apiValue
+                                }),
                               ),
                             ),
                         ],

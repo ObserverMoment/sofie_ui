@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
@@ -81,11 +82,13 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     }
   }
 
-  /// When false workout sets are displayed as a minimal single line item.
-  /// To allow clear overview and to make re-ordering more simple.
-  bool showFullSetInfo = true;
-  void toggleShowFullSetInfo() {
-    showFullSetInfo = !showFullSetInfo;
+  /// The user can minimize how sets are displayed (for easy re-ordering or overviewing).
+  /// They can minimize whole sections or just one set at a time.
+  List<String> displayMinimizedSetIds = [];
+
+  /// Using [sectionIndex] as this is being called from [set] level and the set creator widget does not have the section ID.
+  void toggleMinimizeSetInfo(String setId) {
+    displayMinimizedSetIds = displayMinimizedSetIds.toggleItem<String>(setId);
     notifyListeners();
   }
 

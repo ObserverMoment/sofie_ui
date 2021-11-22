@@ -24,6 +24,8 @@ class RepPickerDisplay extends StatelessWidget {
   final TimeUnit timeUnit;
   final void Function(TimeUnit timeUnit) updateTimeUnit;
   final bool expandPopup;
+  final FONTSIZE valueFontSize;
+  final FONTSIZE suffixFontSize;
 
   const RepPickerDisplay(
       {Key? key,
@@ -36,7 +38,9 @@ class RepPickerDisplay extends StatelessWidget {
       required this.updateDistanceUnit,
       required this.timeUnit,
       required this.updateTimeUnit,
-      this.expandPopup = false})
+      this.expandPopup = false,
+      this.valueFontSize = FONTSIZE.nine,
+      this.suffixFontSize = FONTSIZE.five})
       : super(key: key);
 
   Widget _buildRepTypeDisplay() {
@@ -44,27 +48,27 @@ class RepPickerDisplay extends StatelessWidget {
       case WorkoutMoveRepType.distance:
         return MyText(
           describeEnum(distanceUnit),
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       case WorkoutMoveRepType.time:
         return MyText(
           describeEnum(timeUnit),
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       case WorkoutMoveRepType.reps:
         return MyText(
           reps == 1 ? 'rep' : 'reps',
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       case WorkoutMoveRepType.calories:
         return MyText(
           reps == 1 ? 'cal' : 'cals',
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       default:
         return MyText(
           describeEnum(repType),
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
     }
   }
@@ -91,7 +95,7 @@ class RepPickerDisplay extends StatelessWidget {
           children: [
             MyText(
               reps.stringMyDouble(),
-              size: FONTSIZE.nine,
+              size: valueFontSize,
             ),
             const SizedBox(
               width: 6,

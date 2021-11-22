@@ -19,6 +19,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:stream_feed/stream_feed.dart';
 
 /// Make modifications to the structure of the section before starting.
 class DoWorkoutSectionModifications extends StatelessWidget {
@@ -153,7 +154,7 @@ class DoWorkoutSectionModifications extends StatelessWidget {
               curve: Curves.easeInOut,
               animation: animation,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
+                padding: const EdgeInsets.only(bottom: 6.0),
                 child: _WorkoutSetEditor(
                   workoutSectionType: activeWorkoutSection.workoutSectionType,
                   sectionIndex: sectionIndex,
@@ -234,7 +235,7 @@ class _WorkoutSetEditor extends StatelessWidget {
     // The user will just do single workout move for as long as workoutSet.duration, so reps are ignored.
     final showReps = workoutSectionType.showReps(workoutSet);
 
-    return Card(
+    return ContentBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -287,10 +288,10 @@ class _WorkoutSetEditor extends StatelessWidget {
                   onTap: () => _confirmRemoveWorkoutSet(context),
                   behavior: HitTestBehavior.opaque,
                   child: const Padding(
-                    padding: EdgeInsets.all(4.0),
+                    padding: EdgeInsets.all(6.0),
                     child: Icon(
-                      CupertinoIcons.clear_thick,
-                      size: 22,
+                      CupertinoIcons.delete,
+                      size: 20,
                     ),
                   )),
             ],
@@ -300,8 +301,7 @@ class _WorkoutSetEditor extends StatelessWidget {
                 .mapIndexed((i, wm) => GestureDetector(
                     onTap: () => _openEditWorkoutMove(
                         context: context, workoutMove: wm, hideReps: !showReps),
-                    child: WorkoutMoveDisplay(wm,
-                        isLast: i == wm.sortPosition, showReps: showReps)))
+                    child: WorkoutMoveDisplay(wm, showReps: showReps)))
                 .toList(),
           ),
           const SizedBox(height: 5),

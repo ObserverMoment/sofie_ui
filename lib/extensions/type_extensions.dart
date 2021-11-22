@@ -199,6 +199,18 @@ extension ListExtension on List {
         ? (this as List<T>).where((e) => e != item).toList()
         : <T>[...this as List<T>, item];
   }
+
+  List<T> toggleItems<T>(List<T> items) {
+    List<T> result = [...this];
+    for (final i in items) {
+      if (result.contains(i)) {
+        result.removeWhere((o) => o == i);
+      } else {
+        result.add(i);
+      }
+    }
+    return result;
+  }
 }
 
 extension PageControllerExtension on PageController {

@@ -144,7 +144,6 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
             secondaryActions: <IconSlideAction>[
               ...widget.secondaryActions,
               IconSlideAction(
-                caption: widget.verb,
                 color: Styles.errorRed,
                 foregroundColor: Styles.white,
                 iconWidget: Icon(

@@ -420,7 +420,7 @@ class _LiftSetWorkoutMoveEditor extends StatelessWidget {
                       children: [
                         LoadPickerDisplay(
                           loadAmount: workoutMove.loadAmount,
-                          fontSize: FONTSIZE.eight,
+                          valueFontSize: FONTSIZE.eight,
                           loadUnit: workoutMove.loadUnit,
                           updateLoad: _updateLoad,
                         ),

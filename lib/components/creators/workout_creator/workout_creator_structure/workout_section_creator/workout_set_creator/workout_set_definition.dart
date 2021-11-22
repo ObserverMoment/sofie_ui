@@ -19,7 +19,7 @@ class WorkoutSetDefinition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int length = workoutSet.workoutMoves.length;
+    final int length = workoutSet.uniqueMovesInSet;
 
     return length == 1
         ? workoutSet.isRestSet

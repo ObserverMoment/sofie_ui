@@ -219,6 +219,21 @@ extension WorkoutMoveRepTypeExtension on WorkoutMoveRepType {
   String get display => describeEnum(this).capitalize;
   String get apiValue => describeEnum(this).toUpperCase();
 
+  String get shortDisplay {
+    switch (this) {
+      case WorkoutMoveRepType.reps:
+        return 'reps';
+      case WorkoutMoveRepType.calories:
+        return 'cals';
+      case WorkoutMoveRepType.time:
+        return 'time';
+      case WorkoutMoveRepType.distance:
+        return 'distance';
+      default:
+        throw Exception('This is not a valid WorkoutMoveRepType enum: $this');
+    }
+  }
+
   String get displaySingular {
     switch (this) {
       case WorkoutMoveRepType.reps:
@@ -230,8 +245,7 @@ extension WorkoutMoveRepTypeExtension on WorkoutMoveRepType {
       case WorkoutMoveRepType.distance:
         return 'distance';
       default:
-        throw Exception(
-            'This is not a valid WorkoutMoveRepType enum: $this');
+        throw Exception('This is not a valid WorkoutMoveRepType enum: $this');
     }
   }
 }

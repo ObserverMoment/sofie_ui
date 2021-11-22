@@ -519,14 +519,38 @@ class DoWorkoutBloc extends ChangeNotifier {
       /// If AMRAP or ForTime then save reps.
       int? repScore;
 
-      if (wSection.workoutSectionType.isAMRAP) {
+      if (wSection.isAMRAP) {
         repScore =
             (getControllerForSection(sectionIndex) as AMRAPSectionController)
                 .repsCompleted;
-      } else if (wSection.workoutSectionType.name == kForTimeName) {
+      } else if (wSection.isForTime) {
         repScore =
             (getControllerForSection(sectionIndex) as ForTimeSectionController)
                 .repsCompleted;
+      }
+
+      /// If the section is FreeSession or Lifting then we need to check the controller to check which sets / workoutMoves have been completed.
+      if (wSection.isLifting) {
+        final completedWorkoutMoveIds =
+            (getControllerForSection(sectionIndex) as LiftingSectionController)
+                .completedWorkoutMoveIds;
+
+        /// First remove all non completed workout moves
+        for (final wSet in wSection.workoutSets) {
+          wSet.workoutMoves.removeWhere(
+              (wMove) => !completedWorkoutMoveIds.contains(wMove.id));
+        }
+
+        /// Then remove all sets that are now empty / i.e. no completed workout moves.
+        wSection.workoutSets.removeWhere((wSet) => wSet.workoutMoves.isEmpty);
+      } else if (wSection.isFreeSession) {
+        /// FreeSession only allows you to mark sets, not workoutMoves, as complete or not.
+        final completedWorkoutSetIds = (getControllerForSection(sectionIndex)
+                as FreeSessionSectionController)
+            .completedWorkoutSetIds;
+
+        wSection.workoutSets
+            .removeWhere((wSet) => !completedWorkoutSetIds.contains(wSet.id));
       }
 
       final loggedSection = loggedWorkoutSectionFromWorkoutSection(

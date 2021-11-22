@@ -13,52 +13,8 @@ import 'package:sofie_ui/services/utils.dart';
 import 'package:uni_links/uni_links.dart';
 
 /// Scaffold for the main top level tabs view.
-class MainTabsPage extends StatefulWidget {
+class MainTabsPage extends StatelessWidget {
   const MainTabsPage({Key? key}) : super(key: key);
-
-  @override
-  State<MainTabsPage> createState() => _MainTabsPageState();
-}
-
-class _MainTabsPageState extends State<MainTabsPage> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      await _handleInitialUri();
-    });
-  }
-
-  /// NOTE: This was in AuthedRoutesWrapperPage but was not triggering the navigate correctly amidst all the initial setup.
-  /// So, moved down a level (in terms of the AutoRouter) to run after all the initial setup is done.
-  ///
-  /// Handle the initial Uri - the one the app was started with
-  ///
-  /// **ATTENTION**: `getInitialLink`/`getInitialUri` should be handled
-  /// ONLY ONCE in your app's lifetime, since it is not meant to change
-  /// throughout your app's life.
-  ///
-  /// We handle all exceptions, since it is called from initState.
-  Future<void> _handleInitialUri() async {
-    try {
-      final uri = await getInitialUri();
-      if (uri == null) {
-        printLog('Uni_links: no initial uri');
-      } else {
-        _extractRouterPathNameAndPush(uri);
-      }
-    } on PlatformException {
-      // Platform messages may fail but we ignore the exception
-      printLog('Uni_links: falied to get initial uri');
-    } on FormatException catch (err) {
-      printLog('Uni_links: malformed initial uri');
-      printLog(err.toString());
-    }
-  }
-
-  void _extractRouterPathNameAndPush(Uri uri) {
-    context.navigateNamedTo(uri.toString().replaceFirst(kDeepLinkSchema, ''));
-  }
 
   Widget _buildTabItem({
     required TabsRouter tabsRouter,

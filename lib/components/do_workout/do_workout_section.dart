@@ -368,9 +368,10 @@ class _DoSectionTemplateSelector extends StatelessWidget {
       case kHIITCircuitName:
         return MainMovesList(workoutSection: workoutSection, state: state);
       case kLiftingName:
-        return LiftingMovesList(workoutSection: workoutSection);
+        return LiftingMovesList(workoutSection: workoutSection, state: state);
       case kFreeSessionName:
-        return FreeSessionMovesList(workoutSection: workoutSection);
+        return FreeSessionMovesList(
+            workoutSection: workoutSection, state: state);
       default:
         throw Exception(
             'No moves list builder specified for ${workoutSection.workoutSectionType.name}');
