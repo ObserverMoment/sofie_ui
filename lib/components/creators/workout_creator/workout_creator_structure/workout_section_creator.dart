@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_generator_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -26,7 +27,6 @@ import 'package:sofie_ui/services/default_object_factory.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 
 class WorkoutSectionCreator extends StatefulWidget {
@@ -119,6 +119,19 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
           _createSetAndAddWorkoutMove(context, workoutMove, duration: duration),
       sortPosition: 0,
       ignoreReps: ignoreReps,
+    ));
+  }
+
+  Future<void> _openWorkoutMoveTemplateCreator(BuildContext context) async {
+    await context.push(
+        child: WorkoutMoveGeneratorCreator(
+      handleGeneratedSet: (workoutSet) {
+        context
+            .read<WorkoutCreatorBloc>()
+            .createWorkoutSetWithWorkoutMoves(widget.sectionIndex, workoutSet);
+        context.pop();
+      },
+      newSetSortPosition: _sortedWorkoutSets.length,
     ));
   }
 
@@ -360,6 +373,12 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
                           loading: creatingSet,
                           onPressed: () => _addRestSet(context, restMove, 10),
                         ),
+                      CreateTextIconButton(
+                        text: 'Set Generator',
+                        loading: creatingSet,
+                        onPressed: () =>
+                            _openWorkoutMoveTemplateCreator(context),
+                      ),
                     ],
                   ),
                 );

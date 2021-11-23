@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/animated/dragged_item.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -17,12 +16,10 @@ import 'package:sofie_ui/components/user_input/menus/nav_bar_ellipsis_menu.dart'
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/components/user_input/pickers/round_picker.dart';
 import 'package:sofie_ui/components/user_input/pyramid_generator.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/services/utils.dart';
 
 /// Displays a workout set with user interactions such as
 /// [delete workoutMove], [addWorkoutMove (create superset)], [reorderWorkoutMove] etc.
@@ -262,8 +259,10 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
           child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CommaSeparatedList(uniqueMoves.map((m) => m.name).toList(),
-              fontSize: FONTSIZE.three),
+          Expanded(
+            child: CommaSeparatedList(uniqueMoves.map((m) => m.name).toList(),
+                fontSize: FONTSIZE.three),
+          ),
           _buildEllipsisMenu(isMinimized)
         ],
       ));

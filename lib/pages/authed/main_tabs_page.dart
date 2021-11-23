@@ -3,14 +3,10 @@ import 'dart:ui';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/utils.dart';
-import 'package:uni_links/uni_links.dart';
 
 /// Scaffold for the main top level tabs view.
 class MainTabsPage extends StatelessWidget {

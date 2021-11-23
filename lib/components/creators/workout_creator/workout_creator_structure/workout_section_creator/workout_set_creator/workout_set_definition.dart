@@ -3,6 +3,18 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
+String? getWorkoutSetDefinitionText(int length) {
+  return length == 1
+      ? 'SET'
+      : length == 2
+          ? 'SUPERSET'
+          : length == 3
+              ? 'TRISET'
+              : length >= 4
+                  ? 'GIANTSET'
+                  : null;
+}
+
 /// [set], [superset], [giantset] etc.
 class WorkoutSetDefinition extends StatelessWidget {
   final WorkoutSet workoutSet;

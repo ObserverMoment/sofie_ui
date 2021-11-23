@@ -5440,6 +5440,75 @@ Map<String, dynamic> _$DeleteClubInviteTokenById$MutationToJson(
       'deleteClubInviteTokenById': instance.deleteClubInviteTokenById,
     };
 
+CreateWorkoutSetWithWorkoutMoves$Mutation
+    _$CreateWorkoutSetWithWorkoutMoves$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateWorkoutSetWithWorkoutMoves$Mutation()
+          ..createWorkoutSetWithWorkoutMoves = WorkoutSet.fromJson(
+              json['createWorkoutSetWithWorkoutMoves'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateWorkoutSetWithWorkoutMoves$MutationToJson(
+        CreateWorkoutSetWithWorkoutMoves$Mutation instance) =>
+    <String, dynamic>{
+      'createWorkoutSetWithWorkoutMoves':
+          instance.createWorkoutSetWithWorkoutMoves.toJson(),
+    };
+
+CreateWorkoutSetWithWorkoutMovesInput
+    _$CreateWorkoutSetWithWorkoutMovesInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateWorkoutSetWithWorkoutMovesInput(
+          workoutMoves: (json['workoutMoves'] as List<dynamic>)
+              .map((e) => CreateWorkoutMoveInSetInput.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
+          workoutSet: CreateWorkoutSetInput.fromJson(
+              json['workoutSet'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateWorkoutSetWithWorkoutMovesInputToJson(
+        CreateWorkoutSetWithWorkoutMovesInput instance) =>
+    <String, dynamic>{
+      'workoutMoves': instance.workoutMoves.map((e) => e.toJson()).toList(),
+      'workoutSet': instance.workoutSet.toJson(),
+    };
+
+CreateWorkoutMoveInSetInput _$CreateWorkoutMoveInSetInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateWorkoutMoveInSetInput(
+      equipment: json['Equipment'] == null
+          ? null
+          : ConnectRelationInput.fromJson(
+              json['Equipment'] as Map<String, dynamic>),
+      move: ConnectRelationInput.fromJson(json['Move'] as Map<String, dynamic>),
+      distanceUnit: $enumDecodeNullable(
+          _$DistanceUnitEnumMap, json['distanceUnit'],
+          unknownValue: DistanceUnit.artemisUnknown),
+      loadAmount: (json['loadAmount'] as num).toDouble(),
+      loadUnit: $enumDecodeNullable(_$LoadUnitEnumMap, json['loadUnit'],
+          unknownValue: LoadUnit.artemisUnknown),
+      repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+          unknownValue: WorkoutMoveRepType.artemisUnknown),
+      reps: (json['reps'] as num).toDouble(),
+      sortPosition: json['sortPosition'] as int,
+      timeUnit: $enumDecodeNullable(_$TimeUnitEnumMap, json['timeUnit'],
+          unknownValue: TimeUnit.artemisUnknown),
+    );
+
+Map<String, dynamic> _$CreateWorkoutMoveInSetInputToJson(
+        CreateWorkoutMoveInSetInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+      'reps': instance.reps,
+      'sortPosition': instance.sortPosition,
+      'timeUnit': _$TimeUnitEnumMap[instance.timeUnit],
+    };
+
 ClubSummariesByIdArguments _$ClubSummariesByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubSummariesByIdArguments(
@@ -7134,4 +7203,18 @@ Map<String, dynamic> _$DeleteClubInviteTokenByIdArgumentsToJson(
         DeleteClubInviteTokenByIdArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+CreateWorkoutSetWithWorkoutMovesArguments
+    _$CreateWorkoutSetWithWorkoutMovesArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateWorkoutSetWithWorkoutMovesArguments(
+          data: CreateWorkoutSetWithWorkoutMovesInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateWorkoutSetWithWorkoutMovesArgumentsToJson(
+        CreateWorkoutSetWithWorkoutMovesArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
     };

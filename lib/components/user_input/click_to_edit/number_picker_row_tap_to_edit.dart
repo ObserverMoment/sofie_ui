@@ -40,7 +40,6 @@ class IntPickerRowTapToEdit extends StatelessWidget {
               child: MyText(
                 value == null ? ' - ' : value.toString(),
                 size: FONTSIZE.six,
-                weight: FontWeight.bold,
                 lineHeight: 1.2,
               ),
             ),
@@ -60,36 +59,37 @@ class DoublePickerRowTapToEdit extends StatelessWidget {
   final String? suffix;
   final double? value;
   final void Function(double) saveValue;
+  final bool allowNegative;
   const DoublePickerRowTapToEdit(
       {Key? key,
       this.value,
       required this.saveValue,
       required this.title,
-      this.suffix})
+      this.suffix,
+      this.allowNegative = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TappableRow(
         onTap: () => context.showBottomSheet(
-                child: NumberInputModalDouble(
-              value: value,
-              saveValue: saveValue,
-              title: title,
-            )),
+            child: NumberInputModalDouble(
+                value: value,
+                saveValue: saveValue,
+                title: title,
+                allowNegative: allowNegative)),
         display: Row(
           children: [
             ContentBox(
               child: MyText(
                 value == null ? ' - ' : value.toString(),
                 size: FONTSIZE.six,
-                weight: FontWeight.bold,
                 lineHeight: 1.2,
               ),
             ),
             if (suffix != null)
               Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 4.0),
                 child: MyText(suffix!),
               )
           ],

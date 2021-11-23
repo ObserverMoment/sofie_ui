@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class PageNotFoundPage extends StatelessWidget {
   const PageNotFoundPage({Key? key}) : super(key: key);

@@ -286,6 +286,63 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   /// 2. A new set is created (don't notify listeners)
   /// 3. The new workoutMove is created and added to the set (notify listeners)
   /// A workoutMove must be created within a set - so we need to create the set first. The above flow hides this from the user and makes it seem like they are just doing one action - i.e. selecting a workoutMove.
+  Future<WorkoutSet?> createWorkoutSetWithWorkoutMoves(
+      int sectionIndex, WorkoutSet workoutSet) async {
+    _backup();
+    creatingSet = true;
+    notifyListeners();
+
+    final parentSection = workout.workoutSections[sectionIndex];
+    final newSetSortPosition = parentSection.workoutSets.length;
+
+    /// Api only for create ops.
+    final variables = CreateWorkoutSetWithWorkoutMovesArguments(
+        data: CreateWorkoutSetWithWorkoutMovesInput(
+      workoutSet: CreateWorkoutSetInput(
+          duration: workoutSet.duration,
+          rounds: workoutSet.rounds,
+          workoutSection: ConnectRelationInput(id: parentSection.id),
+          sortPosition: newSetSortPosition),
+      workoutMoves: workoutSet.workoutMoves
+          .map((wm) => CreateWorkoutMoveInSetInput(
+                sortPosition: wm.sortPosition,
+                reps: wm.reps,
+                repType: wm.repType,
+                loadAmount: wm.loadAmount,
+                loadUnit: wm.loadUnit,
+                timeUnit: wm.timeUnit,
+                equipment: wm.equipment != null
+                    ? ConnectRelationInput(id: wm.equipment!.id)
+                    : null,
+                distanceUnit: wm.distanceUnit,
+                move: ConnectRelationInput(id: wm.move.id),
+              ))
+          .toList(),
+    ));
+
+    final result = await context.graphQLStore.networkOnlyOperation<
+        CreateWorkoutSetWithWorkoutMoves$Mutation,
+        CreateWorkoutSetWithWorkoutMovesArguments>(
+      operation: CreateWorkoutSetWithWorkoutMovesMutation(variables: variables),
+    );
+
+    final success = _checkApiResult(result);
+
+    WorkoutSet? newCreatedSet;
+
+    if (success) {
+      newCreatedSet = WorkoutSet.fromJson(
+          {...result.data!.createWorkoutSetWithWorkoutMoves.toJson()});
+
+      workout.workoutSections[sectionIndex].workoutSets.add(newCreatedSet);
+    }
+
+    creatingSet = false;
+    notifyListeners();
+
+    return newCreatedSet;
+  }
+
   Future<WorkoutSet?> createWorkoutSet(int sectionIndex,
       {int? duration, bool shouldNotifyListeners = true}) async {
     _backup();

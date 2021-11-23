@@ -8,7 +8,6 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/workout/lifting_set_display_archived.dart';
 import 'package:sofie_ui/components/workout/workout_set_display.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';

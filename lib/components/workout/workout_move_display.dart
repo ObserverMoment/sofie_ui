@@ -35,11 +35,7 @@ class WorkoutMoveDisplay extends StatelessWidget {
         ),
         const SizedBox(width: 3),
         MyText(
-          workoutMove.repType == WorkoutMoveRepType.time
-              ? workoutMove.timeUnit.shortDisplay
-              : workoutMove.repType == WorkoutMoveRepType.distance
-                  ? workoutMove.distanceUnit.shortDisplay
-                  : workoutMove.repType.shortDisplay,
+          workoutMove.repDisplay,
           size: FONTSIZE.two,
         ),
       ],

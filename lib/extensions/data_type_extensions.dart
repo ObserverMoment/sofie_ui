@@ -270,37 +270,6 @@ extension WorkoutSectionExtension on WorkoutSection {
         return a.equipment.name.compareTo(b.equipment.name);
       }
     }).toList();
-
-    // final Set<EquipmentWithLoad> sectionEquipmentsWithLoad =
-    //     workoutSets.fold({}, (acum1, workoutSet) {
-    //   final Set<EquipmentWithLoad> setEquipments =
-    //       workoutSet.workoutMoves.fold({}, (acum2, workoutMove) {
-    //     if (workoutMove.equipment != null) {
-    //       acum2.add(EquipmentWithLoad(
-    //           equipment: workoutMove.equipment!,
-    //           loadAmount: workoutMove.equipment!.loadAdjustable
-    //               ? workoutMove.loadAmount
-    //               : null,
-    //           loadUnit: workoutMove.loadUnit));
-    //     }
-    //     if (workoutMove.move.requiredEquipments.isNotEmpty) {
-    //       acum2.addAll(workoutMove.move.requiredEquipments.map((e) =>
-    //           EquipmentWithLoad(
-    //               equipment: e,
-    //               loadAmount: e.loadAdjustable ? workoutMove.loadAmount : null,
-    //               loadUnit: workoutMove.loadUnit)));
-    //     }
-    //     return acum2;
-    //   });
-
-    //   acum1.addAll(setEquipments);
-
-    //   return acum1;
-    // });
-
-    // return sectionEquipmentsWithLoad
-    //     .where((e) => e.equipment.id != kBodyweightEquipmentId)
-    //     .toList();
   }
 
   List<MoveType> get uniqueMoveTypes {
@@ -359,4 +328,12 @@ extension WorkoutSetExtension on WorkoutSet {
 
   bool get isRestSet =>
       workoutMoves.length == 1 && workoutMoves[0].move.id == kRestMoveId;
+}
+
+extension WorkoutMoveExtension on WorkoutMove {
+  String get repDisplay => repType == WorkoutMoveRepType.time
+      ? timeUnit.shortDisplay
+      : repType == WorkoutMoveRepType.distance
+          ? distanceUnit.shortDisplay
+          : repType.shortDisplay;
 }

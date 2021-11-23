@@ -98,7 +98,7 @@ class RepPickerDisplay extends StatelessWidget {
               size: valueFontSize,
             ),
             const SizedBox(
-              width: 6,
+              width: 4,
             ),
             _buildRepTypeDisplay(),
           ],

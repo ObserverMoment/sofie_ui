@@ -31,13 +31,19 @@ class MoveSelector extends StatefulWidget {
   /// Removes the option to switch to custom moves tab. Also removes filtering option.
   final bool includeCustomMoves;
   final bool showCreateCustomMoveButton;
+
+  /// Optional move filter. E.g only show yoga moves if user is programming a yoga session.
+  /// Only show moves with REPS as a valid rep type if programming a lifting session.
+  final List<Move> Function(List<Move> moves)? customFilter;
+
   const MoveSelector(
       {Key? key,
       required this.selectMove,
       this.includeCustomMoves = true,
       this.showCreateCustomMoveButton = true,
       required this.onCancel,
-      this.pageTitle = 'Select Move'})
+      this.pageTitle = 'Select Move',
+      this.customFilter})
       : super(key: key);
 
   @override
@@ -113,8 +119,11 @@ class _MoveSelectorState extends State<MoveSelector> {
                     _activeTabIndex == 0 ? standardMoves : customMoves;
 
                 final moveFiltersBloc = context.watch<MoveFiltersBloc>();
-                final filteredMoves =
-                    _filterBySearchString(moveFiltersBloc.filter(displayMoves));
+                final customFiltered =
+                    widget.customFilter?.call(displayMoves) ?? displayMoves;
+
+                final filteredMoves = _filterBySearchString(
+                    moveFiltersBloc.filter(customFiltered));
 
                 return MyPageScaffold(
                     navigationBar: CupertinoNavigationBar(
