@@ -11,6 +11,8 @@ const kDeepLinkSchema = 'sofie://';
 const kTempShareImageFileName = 'temp-share-image.png';
 
 const kBodyweightEquipmentId = 'b95da267-c036-4caa-9294-d1fab9b3d2e8';
+const kDumbbellsEquipmentId = '37cf4e1e-dfcc-4895-b2c9-a9db0cc0747c';
+const kKettlebellsEquipmentId = '268ec7a0-5b4f-44e5-a716-688b9ac559d4';
 const kRestMoveId = '975a5da2-12c7-40d6-b666-eed713f0dadd';
 
 /// Layout
@@ -83,7 +85,7 @@ const kExcludeFromNormalization = [
 ];
 
 /// WorkoutSectionTypeNames
-const kFreeSessionName = 'Free Session';
+const kCustomSessionName = 'Custom';
 const kHIITCircuitName = 'HIIT Circuit';
 const kLiftingName = 'Lifting';
 const kForTimeName = 'For Time';
@@ -97,7 +99,7 @@ const kSectionTypesWithFinishLine = [
   kHIITCircuitName,
   kEMOMName,
   kTabataName,
-  kFreeSessionName
+  kCustomSessionName
 ];
 
 /// BodyArea selector SVG viewbox sizes.

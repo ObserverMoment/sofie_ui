@@ -51,11 +51,12 @@ class MoveLoadData {
       this.enableLadder = false});
 }
 
-class WorkoutMoveGeneratorCreator extends StatefulWidget {
+class WorkoutSetGeneratorCreator extends StatefulWidget {
+  /// Only moves that have these as valid reps will be selectable.
   final List<WorkoutMoveRepType> validRepTypes;
   final void Function(WorkoutSet workoutSet) handleGeneratedSet;
   final int newSetSortPosition;
-  const WorkoutMoveGeneratorCreator(
+  const WorkoutSetGeneratorCreator(
       {Key? key,
       this.validRepTypes = const [],
       required this.handleGeneratedSet,
@@ -63,14 +64,23 @@ class WorkoutMoveGeneratorCreator extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutMoveGeneratorCreatorState createState() =>
-      _WorkoutMoveGeneratorCreatorState();
+  _WorkoutSetGeneratorCreatorState createState() =>
+      _WorkoutSetGeneratorCreatorState();
 }
 
-class _WorkoutMoveGeneratorCreatorState
-    extends State<WorkoutMoveGeneratorCreator> {
+class _WorkoutSetGeneratorCreatorState
+    extends State<WorkoutSetGeneratorCreator> {
   int _activePageIndex = 0;
   final PageController _controller = PageController();
+
+  /// If the user has only chosen moves with no equipment.
+  bool _equipmentSelectorRequired = false;
+
+  /// If the user has only chosen equipment where not [loadAdjustable]
+  bool _loadSelectorRequired = false;
+
+  /// Will be 5 if [_equipmentSelectorRequired] and [_loadSelectorRequired] are both true.
+  int _numActivePages = 3;
 
   void _changeTab(int index) {
     Utils.hideKeyboard(context);
@@ -107,11 +117,11 @@ class _WorkoutMoveGeneratorCreatorState
   List<String> get _pageOneErrors {
     final errors = <String>[];
     if (_moves.isEmpty) {
-      errors.add('Page 1: You need to select some moves.');
+      errors.add('Moves: You need to select some moves.');
     }
     if (_moves.toSet().length != _moves.length) {
       errors.add(
-          'Page 1: You should not add the same move twice into a superset.');
+          'Moves: You should not add the same move twice into a superset.');
     }
     return errors;
   }
@@ -121,7 +131,7 @@ class _WorkoutMoveGeneratorCreatorState
     if (_moves.length != _equipmentForMoves.keys.length ||
         !_equipmentForMoves.entries.every(
             (e) => e.key.selectableEquipments.isEmpty || e.value != null)) {
-      errors.add('Page 2: Some moves do not have equipment selected.');
+      errors.add('Equipment: Some moves do not have equipment selected.');
     }
 
     return errors;
@@ -131,23 +141,43 @@ class _WorkoutMoveGeneratorCreatorState
 
   final bool _savingToDB = false;
 
-  void _selectMove(Move move) => setState(() {
-        _moves.add(move);
-        _equipmentForMoves[move] = null;
-        _repDataForMoves[move] = MoveRepData(repType: move.validRepTypes[0]);
-        _loadDataForMoves[move] = MoveLoadData();
-      });
+  void _selectMove(Move move) {
+    setState(() {
+      _moves.add(move);
+      _equipmentForMoves[move] = null;
+      _repDataForMoves[move] = MoveRepData(repType: move.validRepTypes[0]);
+      _loadDataForMoves[move] = MoveLoadData();
+    });
+    _checkIfEquipmentAndLoadSelectorsRequired();
+  }
 
-  void _removeMove(Move move) => setState(() {
-        _moves.remove(move);
-        _equipmentForMoves.remove(move);
-        _repDataForMoves.remove(move);
-        _loadDataForMoves.remove(move);
-      });
+  void _removeMove(Move move) {
+    _moves.remove(move);
+    _equipmentForMoves.remove(move);
+    _repDataForMoves.remove(move);
+    _loadDataForMoves.remove(move);
+    _checkIfEquipmentAndLoadSelectorsRequired();
+  }
 
   void _updateEquipment(Move move, Equipment equipment) {
+    _equipmentForMoves[move] = equipment;
+    _checkIfEquipmentAndLoadSelectorsRequired();
+  }
+
+  void _checkIfEquipmentAndLoadSelectorsRequired() {
     setState(() {
-      _equipmentForMoves[move] = equipment;
+      _equipmentSelectorRequired =
+          _moves.any((m) => m.selectableEquipments.isNotEmpty);
+
+      _loadSelectorRequired =
+          _moves.any((m) => m.requiredEquipments.any((e) => e.loadAdjustable));
+      _equipmentForMoves.values.any((e) => e != null && e.loadAdjustable);
+
+      _numActivePages = _equipmentSelectorRequired && _loadSelectorRequired
+          ? 5
+          : _equipmentSelectorRequired || _loadSelectorRequired
+              ? 4
+              : 3;
     });
   }
 
@@ -220,20 +250,23 @@ class _WorkoutMoveGeneratorCreatorState
                   moves: _moves,
                   removeMove: _removeMove,
                   selectMove: _selectMove,
+                  validRepTypes: _validRepTypes,
                 ),
-                _EquipmentSelectorUI(
-                  equipmentForMoves: _equipmentForMoves,
-                  moves: _moves,
-                  updateEquipment: _updateEquipment,
-                ),
-                _EquipmentLoadSelectorUI(
-                  loadDataForMoves: _loadDataForMoves,
-                  equipmentForMoves: _equipmentForMoves,
-                  moves: _moves,
-                  updateLoad: _updateLoad,
-                  updatePerSetLoadAdjust: _updatePerSetLoadAdjust,
-                  updateEnableLoadLadder: _updateEnableLoadLadder,
-                ),
+                if (_equipmentSelectorRequired)
+                  _EquipmentSelectorUI(
+                    equipmentForMoves: _equipmentForMoves,
+                    moves: _moves,
+                    updateEquipment: _updateEquipment,
+                  ),
+                if (_loadSelectorRequired)
+                  _EquipmentLoadSelectorUI(
+                    loadDataForMoves: _loadDataForMoves,
+                    equipmentForMoves: _equipmentForMoves,
+                    moves: _moves,
+                    updateLoad: _updateLoad,
+                    updatePerSetLoadAdjust: _updatePerSetLoadAdjust,
+                    updateEnableLoadLadder: _updateEnableLoadLadder,
+                  ),
                 _NumSetsAndRepsSelectorUI(
                   repDataForMoves: _repDataForMoves,
                   numSetsPerMove: _numSetsPerMove,
@@ -273,10 +306,11 @@ class _WorkoutMoveGeneratorCreatorState
                           text: 'Prev',
                           onPressed: () => _changeTab(_activePageIndex - 1)),
                 ),
-                BasicProgressDots(numDots: 5, currentIndex: _activePageIndex),
+                BasicProgressDots(
+                    numDots: _numActivePages, currentIndex: _activePageIndex),
                 SizedBox(
                   width: 80,
-                  child: _activePageIndex == 4
+                  child: _activePageIndex == _numActivePages - 1
                       ? Container()
                       : TertiaryButton(
                           text: 'Next',
@@ -296,11 +330,13 @@ class _MoveSelectorUI extends StatelessWidget {
   final List<Move> moves;
   final void Function(Move move) selectMove;
   final void Function(Move move) removeMove;
+  final List<WorkoutMoveRepType> validRepTypes;
   const _MoveSelectorUI(
       {Key? key,
       required this.moves,
       required this.selectMove,
-      required this.removeMove})
+      required this.removeMove,
+      required this.validRepTypes})
       : super(key: key);
 
   @override
@@ -310,7 +346,7 @@ class _MoveSelectorUI extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: MyText(
-            '1. SELECT MOVES',
+            'SELECT MOVES',
             size: FONTSIZE.four,
           ),
         ),
@@ -353,8 +389,12 @@ class _MoveSelectorUI extends StatelessWidget {
               text: 'Add Move',
               onPressed: () => context.push(
                   child: MoveSelector(
-                      customFilter: (movesList) =>
-                          movesList.where((m) => !moves.contains(m)).toList(),
+                      customFilter: (movesList) => movesList
+                          .where((m) =>
+                              !moves.contains(m) &&
+                              m.validRepTypes
+                                  .any((r) => validRepTypes.contains(r)))
+                          .toList(),
                       selectMove: (m) {
                         selectMove(m);
                         context.pop();
@@ -384,7 +424,7 @@ class _EquipmentSelectorUI extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: MyText(
-            '2. SELECT EQUIPMENT',
+            'SELECT EQUIPMENT',
             size: FONTSIZE.four,
           ),
         ),
@@ -453,7 +493,7 @@ class _EquipmentLoadSelectorUI extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.all(16.0),
           child: MyText(
-            '3. SELECT LOAD',
+            'SELECT LOAD',
             size: FONTSIZE.four,
           ),
         ),
@@ -588,7 +628,7 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.only(top: 16.0, bottom: 4),
           child: MyText(
-            '4. DEFINE REPS',
+            'DEFINE REPS',
             size: FONTSIZE.four,
           ),
         ),

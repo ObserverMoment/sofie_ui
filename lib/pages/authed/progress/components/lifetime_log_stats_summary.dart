@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class LifetimeLogStatsWrapper extends StatelessWidget {
   const LifetimeLogStatsWrapper({Key? key}) : super(key: key);
@@ -47,9 +47,7 @@ class LifetimeLogStatsSummaryDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final minutesFormatted = NumberFormat(
-      "#,###,##0",
-    ).format(minutesWorked);
+    final minutesFormatted = minutesWorked.displayLong;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

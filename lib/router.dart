@@ -75,7 +75,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
         fullscreenDialog: true,
         children: [
           // The main tabs screen has five tabs where each is a stack. Generally these are pages that are user specific and are not likely to be shared across users or groups. Each stack maintains its own state and navigation in iOS style.
-          AutoRoute(path: '', page: MainTabsPage, children: [
+          AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
             AutoRoute(
                 path: '',
                 name: 'discoverStack',
@@ -177,7 +177,8 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(
               path: 'create/workout-plan-review',
               page: WorkoutPlanReviewCreatorPage),
-          AutoRoute(path: '*', page: PageNotFoundPage),
+          AutoRoute(page: PageNotFoundPage, path: '404'),
+          RedirectRoute(path: '*', redirectTo: '404')
         ]),
   ],
 )

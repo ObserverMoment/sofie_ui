@@ -46,32 +46,32 @@ class LiftingSectionController extends WorkoutSectionController
     return [];
   }
 
-  void markWorkoutSetComplete(WorkoutSet workoutSet) {
-    completedWorkoutSetIds.add(workoutSet.id);
-    completedWorkoutMoveIds
-        .addAll(workoutSet.workoutMoves.map((wm) => wm.id).toList());
+  // void markWorkoutSetComplete(WorkoutSet workoutSet) {
+  //   completedWorkoutSetIds.add(workoutSet.id);
+  //   completedWorkoutMoveIds
+  //       .addAll(workoutSet.workoutMoves.map((wm) => wm.id).toList());
 
-    state.percentComplete = completedWorkoutMoveIds.length / totalWorkoutMoves;
+  //   state.percentComplete = completedWorkoutMoveIds.length / totalWorkoutMoves;
 
-    /// Broadcast new state.
-    progressStateController.add(state);
+  //   /// Broadcast new state.
+  //   progressStateController.add(state);
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
-  void markWorkoutSetIncomplete(WorkoutSet workoutSet) {
-    completedWorkoutSetIds.remove(workoutSet.id);
+  // void markWorkoutSetIncomplete(WorkoutSet workoutSet) {
+  //   completedWorkoutSetIds.remove(workoutSet.id);
 
-    final moveIdsfromSet = workoutSet.workoutMoves.map((wm) => wm.id).toList();
-    completedWorkoutMoveIds.removeWhere((id) => moveIdsfromSet.contains(id));
+  //   final moveIdsfromSet = workoutSet.workoutMoves.map((wm) => wm.id).toList();
+  //   completedWorkoutMoveIds.removeWhere((id) => moveIdsfromSet.contains(id));
 
-    state.percentComplete = completedWorkoutMoveIds.length / totalWorkoutMoves;
+  //   state.percentComplete = completedWorkoutMoveIds.length / totalWorkoutMoves;
 
-    /// Broadcast new state.
-    progressStateController.add(state);
+  //   /// Broadcast new state.
+  //   progressStateController.add(state);
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
   void markWorkoutMoveComplete(WorkoutSet workoutSet, WorkoutMove workoutMove) {
     completedWorkoutMoveIds.add(workoutMove.id);

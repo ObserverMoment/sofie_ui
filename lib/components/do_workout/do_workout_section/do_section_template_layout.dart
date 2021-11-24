@@ -79,7 +79,7 @@ class DoSectionTemplateLayout extends StatelessWidget {
           if (workoutSection.isScored && isRunning)
             AnimatedSubmitButtonV2(
               height: startResumeButtonHeight,
-              text: 'set Complete',
+              text: 'Set Complete',
               onSubmit: () {
                 context.read<DoWorkoutBloc>().markCurrentWorkoutSetAsComplete(
                     workoutSection.sortPosition);

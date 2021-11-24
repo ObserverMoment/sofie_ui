@@ -3,7 +3,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 // ignore: must_be_immutable
 class EquipmentWithLoad extends Equatable {
-  /// Form the ID by concating equipment.id, loadAmount.toString and loadUnit.toString
+  /// ID is auto formed by concating equipment.id, loadAmount.toString and loadUnit.toString
   late String id;
   final Equipment equipment;
   late double? loadAmount;
@@ -19,4 +19,12 @@ class EquipmentWithLoad extends Equatable {
 
   @override
   List<Object?> get props => [id];
+}
+
+/// E.g [Barbell] / [20kgs, 30kgs, 40kgs] so we can group the equipment for better display to the user.
+class EquipmentWithLoadsAsStrings {
+  final Equipment equipment;
+  final List<String> loadStrings;
+  EquipmentWithLoadsAsStrings(
+      {required this.equipment, this.loadStrings = const []});
 }

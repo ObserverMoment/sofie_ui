@@ -19,14 +19,11 @@ import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart' as feed;
 import 'package:stream_feed/stream_feed.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:sofie_ui/router.gr.dart';
 
 /// https://github.com/Milad-Akarie/auto_route_library/issues/418
 /// Creates and provides all the global objects required on a user is logged in.
 class AuthedRoutesWrapperPage extends StatefulWidget {
-  final AppRouter appRouter;
-  const AuthedRoutesWrapperPage({Key? key, required this.appRouter})
-      : super(key: key);
+  const AuthedRoutesWrapperPage({Key? key}) : super(key: key);
 
   @override
   _AuthedRoutesWrapperPageState createState() =>
@@ -53,8 +50,16 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     _authedUser = GetIt.I<AuthBloc>().authedUser!;
     _streamChatClient = _createStreamChatClient;
     _streamFeedClient = _createStreamFeedClient;
-    _connectUserToChat().then((_) => _initFeeds()
-        .then((_) => _handleIncomingLinks().then((_) => _handleInitialUri())));
+
+    asyncInit();
+  }
+
+  Future<void> asyncInit() async {
+    await _connectUserToChat();
+    await _initFeeds();
+    await _handleIncomingLinks();
+    await _handleInitialUri();
+    setState(() {});
   }
 
   chat.StreamChatClient get _createStreamChatClient =>
@@ -74,9 +79,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       //   _streamChatClient.addDevice(token, PushProvider.firebase);
       // });
 
-      setState(() {
-        _chatInitialized = true;
-      });
+      _chatInitialized = true;
     } catch (e) {
       printLog(e.toString());
       context.showToast(message: e.toString());
@@ -109,9 +112,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       _feedSubscription =
           await _notificationFeed.subscribe(_handleNotification);
 
-      setState(() {
-        _feedsInitialized = true;
-      });
+      _feedsInitialized = true;
     } catch (e) {
       printLog(e.toString());
       context.showToast(message: e.toString());
@@ -120,12 +121,12 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   }
 
   Future<void> _handleNotification(feed.RealtimeMessage? message) async {
-    final _message =
-        message?.newActivities?[0].object?.data.toString() ?? 'No message';
-    context.showNotification(
-        title: 'Notification',
-        onPressed: () => printLog('printLog a test'),
-        message: _message);
+    // final _message =
+    //     message?.newActivities?[0].object?.data.toString() ?? 'No message';
+    // context.showNotification(
+    //     title: 'Notification',
+    //     onPressed: () => printLog('printLog a test'),
+    //     message: _message);
   }
 
   /// Handle incoming links - the ones that the app will recieve from the OS

@@ -40,7 +40,9 @@ class WorkoutSetDefinition extends StatelessWidget {
                 lineHeight: 1,
                 size: FONTSIZE.four,
               )
-            : Container()
+            : _supersetText(
+                'SET',
+              )
         : length > 3
             ? _supersetText(
                 'GIANTSET',

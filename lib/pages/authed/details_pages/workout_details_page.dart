@@ -13,6 +13,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
+import 'package:sofie_ui/components/logged_workout/log_count_by_workout.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
@@ -172,12 +173,13 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final query =
+    final workoutByIdQuery =
         WorkoutByIdQuery(variables: WorkoutByIdArguments(id: widget.id));
 
     return QueryObserver<WorkoutById$Query, WorkoutByIdArguments>(
-        key: Key('WorkoutDetailsPage - ${query.operationName}-${widget.id}'),
-        query: query,
+        key: Key(
+            'WorkoutDetailsPage - ${workoutByIdQuery.operationName}-${widget.id}'),
+        query: workoutByIdQuery,
         parameterizeQuery: true,
         loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (workoutData) {
@@ -321,6 +323,13 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                     SizedUploadcareImage(workout.coverImageUri!,
                                         fit: BoxFit.cover),
                                     _buildMetaInfoRow(workout),
+                                    Positioned(
+                                      bottom: 8,
+                                      right: 8,
+                                      child: LogCountByWorkout(
+                                        workoutId: workout.id,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -349,7 +358,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         workout.introVideoUri))
                                       _ActionIconButton(
                                           icon: const Icon(CupertinoIcons.tv),
-                                          label: 'Video',
+                                          label: 'Intro',
                                           onPressed: () => VideoSetupManager
                                               .openFullScreenVideoPlayer(
                                                   context: context,
@@ -364,7 +373,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                       _ActionIconButton(
                                           icon: const Icon(
                                               CupertinoIcons.headphones),
-                                          label: 'Audio',
+                                          label: 'Intro',
                                           onPressed: () => AudioPlayerController
                                               .openAudioPlayer(
                                                   context: context,

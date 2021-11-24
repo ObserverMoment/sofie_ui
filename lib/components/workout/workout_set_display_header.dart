@@ -21,7 +21,7 @@ class WorkoutSetDisplayHeader extends StatelessWidget {
       case kHIITCircuitName:
       case kTabataName:
         return 'For ${workoutSet.duration.secondsToTimeDisplay}';
-      case kFreeSessionName:
+      case kCustomSessionName:
       case kForTimeName:
       case kAMRAPName:
         return '${workoutSet.rounds} rounds of';

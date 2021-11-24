@@ -87,7 +87,7 @@ class DoWorkoutSectionModifications extends StatelessWidget {
               ),
             ),
           GrowInOut(
-            show: sectionHasStarted && !activeWorkoutSection.isFreeSession,
+            show: sectionHasStarted && !activeWorkoutSection.isCustomSession,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -297,6 +297,7 @@ class _WorkoutSetEditor extends StatelessWidget {
           Column(
             children: workoutSet.workoutMoves
                 .mapIndexed((i, wm) => GestureDetector(
+                    behavior: HitTestBehavior.opaque,
                     onTap: () => _openEditWorkoutMove(
                         context: context, workoutMove: wm, hideReps: !showReps),
                     child: WorkoutMoveDisplay(wm, showReps: showReps)))

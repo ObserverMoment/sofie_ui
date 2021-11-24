@@ -766,6 +766,7 @@ type Query {
   equipments: [Equipment!]!
   gymProfiles: [GymProfile!]!
   lifetimeLogStatsSummary(userId: ID!): LifetimeLogStatsSummary!
+  logCountByWorkout(id: ID!): Int!
   loggedWorkoutById(id: ID!): LoggedWorkout!
   moveTypes: [MoveType!]!
   progressJournalById(id: ID!): ProgressJournal!

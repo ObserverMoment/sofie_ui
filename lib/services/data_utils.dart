@@ -20,6 +20,15 @@ class DataUtils {
           ];
   }
 
+  /// Use this to split the user inputted load amount in two when displaying info on what equipmengt is needed. Eg. Dumbbells and Kettlebells.
+  static double getLoadPerEquipmentUnit(Equipment e, double loadAmount) {
+    final isDumbbells = e.id == kDumbbellsEquipmentId;
+    final isKettleBells = e.id == kKettlebellsEquipmentId;
+    final individualLoadAmount =
+        isDumbbells || isKettleBells ? (loadAmount / 2) : loadAmount;
+    return individualLoadAmount;
+  }
+
   /// Receives any list of bodyAreaMove scores and returns a new list.
   /// Where each body area is represented only once and the score associated with it is calculated as a percentage of the whole list.
   static List<BodyAreaMoveScore> percentageBodyAreaMoveScores(

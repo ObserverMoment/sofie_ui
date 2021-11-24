@@ -79,7 +79,7 @@ extension WorkoutExtension on Workout {
       }
     }
 
-    return allEquipments.toList();
+    return allEquipments.sortedBy<String>((e) => e.name).toList();
   }
 }
 
@@ -170,7 +170,7 @@ extension WorkoutSectionExtension on WorkoutSection {
       Utils.textNotNull(name) ? name! : workoutSectionType.name;
 
   bool get isLifting => workoutSectionType.name == kLiftingName;
-  bool get isFreeSession => workoutSectionType.name == kFreeSessionName;
+  bool get isCustomSession => workoutSectionType.name == kCustomSessionName;
   bool get isAMRAP => workoutSectionType.name == kAMRAPName;
   bool get isForTime => workoutSectionType.name == kForTimeName;
 
@@ -194,7 +194,7 @@ extension WorkoutSectionExtension on WorkoutSection {
           : null;
 
   /// These section types ignore rounds input - generally it should be forced to be [1] when these sections are being used.
-  bool get roundsInputAllowed => ![kAMRAPName, kFreeSessionName, kLiftingName]
+  bool get roundsInputAllowed => ![kAMRAPName, kCustomSessionName, kLiftingName]
       .contains(workoutSectionType.name);
 
   List<BodyArea> get uniqueBodyAreas {
@@ -272,6 +272,35 @@ extension WorkoutSectionExtension on WorkoutSection {
     }).toList();
   }
 
+  /// Returns an object with Equipment + a List of load strings e.g [20kgs, 30kgs, 40kgs].
+  /// Also checks to see if the equipment is in two parts (e.g dumbbells) and if so splits the load between 2.
+  List<EquipmentWithLoadsAsStrings> get combinedEquipmentWithLoads {
+    final withLoad = equipmentsWithLoad;
+
+    final map = withLoad.fold<Map<Equipment, List<String>>>(
+        <Equipment, List<String>>{}, (acum, next) {
+      /// If load
+      if (!acum.containsKey(next.equipment)) {
+        acum[next.equipment] = <String>[];
+      }
+
+      if (next.loadAmount != null) {
+        final individualLoadAmount =
+            DataUtils.getLoadPerEquipmentUnit(next.equipment, next.loadAmount!);
+
+        acum[next.equipment]!.add(
+            '${individualLoadAmount.stringMyDouble()}${next.loadUnit.display}');
+      }
+
+      return acum;
+    });
+
+    return map.entries
+        .map((e) =>
+            EquipmentWithLoadsAsStrings(equipment: e.key, loadStrings: e.value))
+        .toList();
+  }
+
   List<MoveType> get uniqueMoveTypes {
     final Set<MoveType> sectionMoveTypes =
         workoutSets.fold({}, (acum1, workoutSet) {
@@ -296,6 +325,7 @@ extension WorkoutSectionTypeExtension on WorkoutSectionType {
   bool get isAMRAP => name == kAMRAPName;
   bool get isForTime => name == kForTimeName;
   bool get isLifting => name == kLiftingName;
+  bool get isCustom => name == kCustomSessionName;
 
   bool get isScored => [kAMRAPName, kForTimeName].contains(name);
 

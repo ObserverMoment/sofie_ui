@@ -37,7 +37,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   late bool _isEditing;
 
   final List<String> typesInputRequired = [
-    kFreeSessionName,
+    kCustomSessionName,
     kForTimeName,
     kAMRAPName
   ];
@@ -121,7 +121,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
             sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
         return loggedWorkoutSectionFromWorkoutSection(
             workoutSection: ws, repScore: s.input);
-      } else if ([kFreeSessionName, kForTimeName]
+      } else if ([kCustomSessionName, kForTimeName]
           .contains(ws.workoutSectionType.name)) {
         // Get the value from the inputs
         final s =

@@ -80,65 +80,62 @@ class _AuthRouterState extends State<AuthRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<AuthState>(
-        valueListenable: GetIt.I<AuthBloc>().authState,
-        builder: (context, authState, _) {
-          final _authedUser = GetIt.I<AuthBloc>().authedUser;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthBloc>(create: (_) => AuthBloc()),
+        ChangeNotifierProvider<ThemeBloc>(
+            create: (_) => ThemeBloc(deviceBrightness: _userDeviceBrightness)),
+        Provider<GraphQLStore>(
+          create: (_) => GraphQLStore(),
+          dispose: (context, store) => store.dispose(),
+        ),
+        ChangeNotifierProvider<MoveFiltersBloc>(
+            create: (_) => MoveFiltersBloc()),
+        ChangeNotifierProvider<WorkoutFiltersBloc>(
+            create: (_) => WorkoutFiltersBloc()),
+        ChangeNotifierProvider<WorkoutPlanFiltersBloc>(
+            create: (_) => WorkoutPlanFiltersBloc()),
+      ],
+      builder: (context, child) {
+        final authBloc = context.watch<AuthBloc>();
+        final authState = authBloc.authState;
+        final authedUser = authBloc.authedUser;
 
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider<ThemeBloc>(
-                  create: (_) =>
-                      ThemeBloc(deviceBrightness: _userDeviceBrightness)),
-              Provider<GraphQLStore>(
-                create: (_) => GraphQLStore(),
-                dispose: (context, store) => store.dispose(),
-              ),
-              ChangeNotifierProvider<MoveFiltersBloc>(
-                  create: (_) => MoveFiltersBloc()),
-              ChangeNotifierProvider<WorkoutFiltersBloc>(
-                  create: (_) => WorkoutFiltersBloc()),
-              ChangeNotifierProvider<WorkoutPlanFiltersBloc>(
-                  create: (_) => WorkoutPlanFiltersBloc()),
-            ],
-            builder: (context, child) => material.Theme(
-              data: material.ThemeData(
-                  scaffoldBackgroundColor: context.theme.background),
-              child: _Unfocus(
-                  child: CupertinoApp.router(
-                routeInformationParser:
-                    _appRouter.defaultRouteParser(includePrefixMatches: true),
-                routerDelegate: AutoRouterDelegate.declarative(
-                  _appRouter,
-                  routes: (_) => [
-                    // if the user is logged in, they may proceed to the main App
-                    if (authState == AuthState.authed && _authedUser != null)
-                      AuthedRouter(appRouter: _appRouter)
-                    // if they are not logged in, bring them to the Login page
-                    else if (authState == AuthState.validating ||
-                        authState == AuthState.unknown)
-                      const GlobalLoadingRoute()
-                    else
-                      const UnauthedLandingRoute(),
-                  ],
-                ),
-                debugShowCheckedModeBanner: false,
-                theme: context.theme.cupertinoThemeData,
-                localizationsDelegates: const [
-                  material.DefaultMaterialLocalizations.delegate,
-                  DefaultCupertinoLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en', 'US'),
-                  Locale('en', 'GB'),
-                ],
-              )),
+        return material.Theme(
+          data: material.ThemeData(
+              scaffoldBackgroundColor: context.theme.background),
+          child: _Unfocus(
+              child: CupertinoApp.router(
+            routeInformationParser:
+                _appRouter.defaultRouteParser(includePrefixMatches: true),
+            routerDelegate: AutoRouterDelegate.declarative(
+              _appRouter,
+              routes: (_) => [
+                if (authState == AuthState.authed && authedUser != null)
+                  const AuthedRouter()
+                else if (authState == AuthState.loading)
+                  const GlobalLoadingRoute()
+                else
+                  const UnauthedLandingRoute(),
+              ],
             ),
-          );
-        });
+            debugShowCheckedModeBanner: false,
+            theme: context.theme.cupertinoThemeData,
+            localizationsDelegates: const [
+              material.DefaultMaterialLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('en', 'GB'),
+            ],
+          )),
+        );
+      },
+    );
   }
 }
 

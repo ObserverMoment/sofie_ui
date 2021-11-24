@@ -11,15 +11,14 @@ import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section/components/moves_lists/free_session_moves_list.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/moves_lists/lifting_moves_list.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/moves_lists/main_moves_list.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section/components/start_resume_button.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/amrap_timer.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/fortime_timer.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/interval_timer.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/do_section_template_layout.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/do_workout_section_nav.dart';
+import 'package:sofie_ui/components/do_workout/do_workout_section/paused_workout_overlay.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/timers/stopwatch_and_timer.dart';
 import 'package:sofie_ui/constants.dart';
@@ -241,11 +240,10 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
               if (!isRunning && !_openCompleteModal)
                 FadeInUp(
                   child: Align(
-                    alignment: Alignment.center,
-                    child: StartResumeButton(
-                      sectionIndex: workoutSection.sortPosition,
-                    ),
-                  ),
+                      alignment: Alignment.center,
+                      child: PausedWorkoutOverlay(
+                        workoutSection: workoutSection,
+                      )),
                 ),
 
               /// Top nav items.
@@ -284,7 +282,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                             context.pop();
                                           }),
                                       // Don't show reset button for a FreeSession
-                                      if (!workoutSection.isFreeSession &&
+                                      if (!workoutSection.isCustomSession &&
                                           hasStarted)
                                         NavItem(
                                             activeIconData:
@@ -297,7 +295,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                   ),
                           ),
                           // Display a 'Finish' button for untimed workouts where 'completing' it is not necessary.
-                          if (workoutSection.isFreeSession ||
+                          if (workoutSection.isCustomSession ||
                               workoutSection.isLifting)
                             Padding(
                               padding:
@@ -309,7 +307,6 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                 textColor: context.theme.background,
                                 fontSize: FONTSIZE.three,
                                 text: 'Finish',
-                                // withMinWidth: false,
                                 onPressed: () {
                                   // Pause and return to overview.
                                   context.read<DoWorkoutBloc>().pauseSection(
@@ -368,10 +365,8 @@ class _DoSectionTemplateSelector extends StatelessWidget {
       case kHIITCircuitName:
         return MainMovesList(workoutSection: workoutSection, state: state);
       case kLiftingName:
+      case kCustomSessionName:
         return LiftingMovesList(workoutSection: workoutSection, state: state);
-      case kFreeSessionName:
-        return FreeSessionMovesList(
-            workoutSection: workoutSection, state: state);
       default:
         throw Exception(
             'No moves list builder specified for ${workoutSection.workoutSectionType.name}');
@@ -388,7 +383,7 @@ class _DoSectionTemplateSelector extends StatelessWidget {
       case kTabataName:
       case kHIITCircuitName:
         return IntervalTimer(workoutSection: workoutSection, state: state);
-      case kFreeSessionName:
+      case kCustomSessionName:
       case kLiftingName:
         return const StopwatchAndTimer();
       default:

@@ -20,8 +20,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
 import 'package:sofie_ui/model/client_only_model.dart';
@@ -339,6 +337,17 @@ class _WorkoutSectionSummary extends StatelessWidget {
     );
   }
 
+  String _getEquipmentWithLoadTag(
+      EquipmentWithLoadsAsStrings equipmentWithLoadsAsStrings) {
+    final name = equipmentWithLoadsAsStrings.equipment.name;
+
+    final loads = equipmentWithLoadsAsStrings.loadStrings.isEmpty
+        ? ''
+        : ' - ${equipmentWithLoadsAsStrings.loadStrings.join(' | ')}';
+
+    return '$name$loads';
+  }
+
   Widget _buildSectionFooterButton(
       IconData iconData, String label, VoidCallback onPressed,
       {bool disabled = false}) {
@@ -381,7 +390,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
         (b) => b.getControllerForSection(sectionIndex).state.percentComplete);
 
     final workoutSection = context.select<DoWorkoutBloc, WorkoutSection>(
-        (b) => b.getControllerForSection(sectionIndex).workoutSection);
+        (b) => b.activeWorkout.workoutSections[sectionIndex]);
 
     final isComplete = context.select<DoWorkoutBloc, bool>((b) =>
         b.getControllerForSection(workoutSection.sortPosition).sectionComplete);
@@ -390,8 +399,8 @@ class _WorkoutSectionSummary extends StatelessWidget {
         .getControllerForSection(workoutSection.sortPosition)
         .sectionHasStarted);
 
-    final List<EquipmentWithLoad> equipmentsWithLoad =
-        workoutSection.equipmentsWithLoad;
+    final List<EquipmentWithLoadsAsStrings> equipmentsWithLoadsAsStrings =
+        workoutSection.combinedEquipmentWithLoads;
 
     return Card(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -407,6 +416,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
                 fontSize: FONTSIZE.four,
                 withBackground: false,
                 fontColor: Styles.primaryAccent,
+                showMediaIcons: false,
               ),
               AnimatedSwitcher(
                 duration: kStandardAnimationDuration,
@@ -432,14 +442,17 @@ class _WorkoutSectionSummary extends StatelessWidget {
                 title: 'Section Note',
               ),
             ),
-          if (equipmentsWithLoad.isNotEmpty)
+          if (equipmentsWithLoadsAsStrings.isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 6.0, bottom: 6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: equipmentsWithLoad
-                    .map((e) =>
-                        MyText(_getEquipmentWithLoadTag(e), lineHeight: 1.4))
+                children: equipmentsWithLoadsAsStrings
+                    .map((e) => MyText(
+                          _getEquipmentWithLoadTag(e),
+                          lineHeight: 1.4,
+                          maxLines: 3,
+                        ))
                     .toList(),
               ),
             ),
@@ -480,7 +493,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (!(workoutSection.isFreeSession || workoutSection.isLifting))
+              if (!(workoutSection.isCustomSession || workoutSection.isLifting))
                 _buildSectionFooterButton(
                     CupertinoIcons.list_bullet,
                     'View / Modify',
@@ -516,19 +529,4 @@ class _WorkoutSectionSummary extends StatelessWidget {
       ),
     );
   }
-}
-
-String _getEquipmentWithLoadTag(EquipmentWithLoad equipmentWithLoad) {
-  final name = equipmentWithLoad.equipment.name;
-  final isDumbbells = name == 'Dumbbells (x2)';
-  final isKettleBells = name == 'Kettlebells (x2)';
-  final individualLoadAmount = isDumbbells || isKettleBells
-      ? (equipmentWithLoad.loadAmount! / 2)
-      : equipmentWithLoad.loadAmount;
-
-  final load = individualLoadAmount != null
-      ? '${individualLoadAmount.stringMyDouble()}${equipmentWithLoad.loadUnit.display} '
-      : '';
-
-  return '$load$name';
 }

@@ -107,11 +107,9 @@ class AppRouter extends _i41.RootStackRouter {
           fullscreenDialog: true);
     },
     AuthedRouter.name: (routeData) {
-      final args = routeData.argsAs<AuthedRouterArgs>();
       return _i41.CupertinoPageX<dynamic>(
           routeData: routeData,
-          child: _i3.AuthedRoutesWrapperPage(
-              key: args.key, appRouter: args.appRouter),
+          child: const _i3.AuthedRoutesWrapperPage(),
           fullscreenDialog: true);
     },
     MainTabsRoute.name: (routeData) {
@@ -646,7 +644,12 @@ class AppRouter extends _i41.RootStackRouter {
           _i41.RouteConfig(WorkoutPlanReviewCreatorRoute.name,
               path: 'create/workout-plan-review', parent: AuthedRouter.name),
           _i41.RouteConfig(RouteNotFoundRoute.name,
-              path: '*', parent: AuthedRouter.name)
+              path: '404', parent: AuthedRouter.name),
+          _i41.RouteConfig('*#redirect',
+              path: '*',
+              parent: AuthedRouter.name,
+              redirectTo: '404',
+              fullMatch: true)
         ])
       ];
 }
@@ -666,30 +669,11 @@ class GlobalLoadingRoute extends _i41.PageRouteInfo<void> {
 }
 
 /// generated route for [_i3.AuthedRoutesWrapperPage]
-class AuthedRouter extends _i41.PageRouteInfo<AuthedRouterArgs> {
-  AuthedRouter(
-      {_i65.Key? key,
-      required dynamic appRouter,
-      List<_i41.PageRouteInfo>? children})
-      : super(name,
-            path: '/',
-            args: AuthedRouterArgs(key: key, appRouter: appRouter),
-            initialChildren: children);
+class AuthedRouter extends _i41.PageRouteInfo<void> {
+  const AuthedRouter({List<_i41.PageRouteInfo>? children})
+      : super(name, path: '/', initialChildren: children);
 
   static const String name = 'AuthedRouter';
-}
-
-class AuthedRouterArgs {
-  const AuthedRouterArgs({this.key, required this.appRouter});
-
-  final _i65.Key? key;
-
-  final dynamic appRouter;
-
-  @override
-  String toString() {
-    return 'AuthedRouterArgs{key: $key, appRouter: $appRouter}';
-  }
 }
 
 /// generated route for [_i4.MainTabsPage]
@@ -1553,7 +1537,7 @@ class WorkoutPlanReviewCreatorRouteArgs {
 
 /// generated route for [_i40.PageNotFoundPage]
 class RouteNotFoundRoute extends _i41.PageRouteInfo<void> {
-  const RouteNotFoundRoute() : super(name, path: '*');
+  const RouteNotFoundRoute() : super(name, path: '404');
 
   static const String name = 'RouteNotFoundRoute';
 }

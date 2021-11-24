@@ -34,6 +34,10 @@ class WorkoutMoveCreator extends StatefulWidget {
   final bool ignoreReps;
   final FixedTimeReps? fixedTimeReps;
   final void Function(WorkoutMove workoutMove) saveWorkoutMove;
+
+  /// Will get passed as a custom filter to the [MoveSelector] so that the user can only choose moves which are suitable for the workout type that they are trying to build.
+  final List<WorkoutMoveRepType>? validRepTypes;
+
   const WorkoutMoveCreator(
       {Key? key,
       required this.sortPosition,
@@ -41,7 +45,8 @@ class WorkoutMoveCreator extends StatefulWidget {
       this.pageTitle = 'Set',
       this.ignoreReps = false,
       this.fixedTimeReps,
-      this.workoutMove})
+      this.workoutMove,
+      this.validRepTypes})
       : super(key: key);
 
   @override
@@ -103,9 +108,12 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
             : _activeWorkoutMove?.reps ?? 10
         ..repType = widget.fixedTimeReps != null
             ? WorkoutMoveRepType.time
-            : move.validRepTypes.contains(WorkoutMoveRepType.reps)
-                ? WorkoutMoveRepType.reps
-                : move.validRepTypes.first
+            : widget.validRepTypes != null
+                ? move.validRepTypes
+                    .firstWhere((r) => move.validRepTypes.contains(r))
+                : move.validRepTypes.contains(WorkoutMoveRepType.reps)
+                    ? WorkoutMoveRepType.reps
+                    : move.validRepTypes.first
         ..distanceUnit = DistanceUnit.metres
         ..loadUnit = LoadUnit.kg
         ..timeUnit = widget.fixedTimeReps != null
@@ -189,6 +197,12 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
     return IndexedStack(index: _activeTabIndex, children: [
       MoveSelector(
           selectMove: _selectMove,
+          customFilter: widget.validRepTypes == null
+              ? null
+              : (movesList) => movesList
+                  .where((m) => m.validRepTypes
+                      .any((r) => widget.validRepTypes!.contains(r)))
+                  .toList(),
           onCancel: () =>
               _activeWorkoutMove?.move == null ? context.pop() : _changeTab(1)),
       MyPageScaffold(

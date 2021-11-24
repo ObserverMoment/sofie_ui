@@ -44,6 +44,7 @@ class WorkoutSetDisplay extends StatelessWidget {
               child: Column(
                 children: sortedMoves
                     .map((wm) => GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: () => context.push(
                               fullscreenDialog: true,
                               child: MoveDetails(wm.move)),

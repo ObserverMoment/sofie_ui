@@ -188,6 +188,11 @@ extension DurationExtension on Duration {
 
 extension IntExtension on int {
   String get secondsToTimeDisplay => Duration(seconds: this).compactDisplay;
+
+  /// TODO: Requires internationalisation.
+  String get displayLong => NumberFormat(
+        "#,###,##0",
+      ).format(this);
 }
 
 extension ListExtension on List {

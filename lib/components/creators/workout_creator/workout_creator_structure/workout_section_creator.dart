@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_generator_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_set_generator_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -122,9 +122,9 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
     ));
   }
 
-  Future<void> _openWorkoutMoveTemplateCreator(BuildContext context) async {
+  Future<void> _openWorkoutSetGeneratorCreator(BuildContext context) async {
     await context.push(
-        child: WorkoutMoveGeneratorCreator(
+        child: WorkoutSetGeneratorCreator(
       handleGeneratedSet: (workoutSet) {
         context
             .read<WorkoutCreatorBloc>()
@@ -321,7 +321,7 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       if (_workoutSection.isLifting ||
-                          _workoutSection.isFreeSession)
+                          _workoutSection.isCustomSession)
                         CreateTextIconButton(
                           text: 'Add Exercise',
                           loading: creatingSet,
@@ -373,12 +373,13 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
                           loading: creatingSet,
                           onPressed: () => _addRestSet(context, restMove, 10),
                         ),
-                      CreateTextIconButton(
-                        text: 'Set Generator',
-                        loading: creatingSet,
-                        onPressed: () =>
-                            _openWorkoutMoveTemplateCreator(context),
-                      ),
+                      if (!workoutSectionType.isTimed)
+                        CreateTextIconButton(
+                          text: 'Set Generator',
+                          loading: creatingSet,
+                          onPressed: () =>
+                              _openWorkoutSetGeneratorCreator(context),
+                        ),
                     ],
                   ),
                 );
