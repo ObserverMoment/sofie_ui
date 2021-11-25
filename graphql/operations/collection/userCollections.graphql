@@ -5,7 +5,7 @@ query userCollections {
       ...UserSummary
     }
     Workouts {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     WorkoutPlans {
       ...WorkoutPlanData

@@ -169,6 +169,7 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
             workoutSection: _workoutSection,
             uppercase: true,
             withBackground: false,
+            showMediaIcons: false,
           ),
         ],
       ),

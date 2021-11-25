@@ -20,7 +20,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 /// Otherwise it will be set as the initial date when the widget is opened.
 class ScheduledWorkoutCreatorPage extends StatefulWidget {
   final ScheduledWorkout? scheduledWorkout;
-  final Workout? workout;
+  final WorkoutSummary? workout;
   final DateTime? scheduleOn;
   final String? workoutPlanEnrolmentId;
   const ScheduledWorkoutCreatorPage({

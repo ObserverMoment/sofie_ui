@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator_section_moves_list.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -121,15 +122,15 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
           Padding(
             padding:
                 const EdgeInsets.only(left: 4.0, top: 4, right: 4, bottom: 10),
-            child: MyText(
-              loggedWorkoutSection.workoutSectionType.name,
-            ),
+            child: MyText(loggedWorkoutSection.workoutSectionType.name,
+                color: Styles.secondaryAccent),
           ),
           if (Utils.textNotNull(loggedWorkoutSection.name))
             Padding(
               padding: const EdgeInsets.only(
                   left: 4.0, top: 0, right: 4, bottom: 10),
-              child: MyHeaderText(loggedWorkoutSection.name!),
+              child: MyHeaderText(loggedWorkoutSection.name!,
+                  size: FONTSIZE.two, weight: FontWeight.normal),
             ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

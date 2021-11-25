@@ -12,6 +12,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/model/toast_request.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -136,7 +137,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
   Future<void> _openScheduleWorkout(
       BuildContext context, WorkoutPlanDayWorkout workoutPlanDayWorkout) async {
     final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
-      workout: workoutPlanDayWorkout.workout,
+      workout: workoutPlanDayWorkout.workout.summary,
       workoutPlanEnrolmentId: workoutPlanEnrolment.id,
     ));
     if (result is ToastRequest) {
@@ -146,8 +147,8 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
 
   Future<void> _handleLogWorkoutProgramWorkout(
       BuildContext context, WorkoutPlanDayWorkout planDayWorkout) async {
-    await context
-        .pushRoute(LoggedWorkoutCreatorRoute(workout: planDayWorkout.workout));
+    await context.pushRoute(
+        LoggedWorkoutCreatorRoute(workoutId: planDayWorkout.workout.id));
 
     /// Note: Currently there is no automated marking of workouts as done.
     /// This is because only the Plan -> Log flow can be implemented in a sensible was at the moment.
@@ -321,7 +322,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                     clipBehavior: Clip.none,
                     children: [
                       MinimalWorkoutCard(
-                        dayWorkout.workout,
+                        dayWorkout.workout.summary,
                       ),
                       if (completedIds.contains(dayWorkout.id))
                         const Positioned(

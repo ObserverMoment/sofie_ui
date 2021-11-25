@@ -4,19 +4,19 @@ import 'package:sofie_ui/services/utils.dart';
 enum ObjectTextSearchScope { private, public }
 
 class TextSearchFilters {
-  static bool workoutBySearchString(Workout workout, String searchString) {
+  static bool workoutBySearchString(
+      WorkoutSummary workout, String searchString) {
     return [
       workout.name,
-      ...workout.workoutGoals.map((g) => g.name).toList(),
-      ...workout.workoutTags.map((t) => t.tag).toList()
+      ...workout.tags,
     ]
         .where((t) => Utils.textNotNull(t))
         .map((t) => t.toLowerCase())
         .any((t) => t.contains(searchString));
   }
 
-  static List<Workout> workoutsBySearchString(
-      List<Workout> original, String searchString) {
+  static List<WorkoutSummary> workoutsBySearchString(
+      List<WorkoutSummary> original, String searchString) {
     return Utils.textNotNull(searchString)
         ? original.where((w) => workoutBySearchString(w, searchString)).toList()
         : [];

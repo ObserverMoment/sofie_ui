@@ -10,7 +10,7 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class YourSavedWorkouts extends StatelessWidget {
-  final void Function(Workout workout)? selectWorkout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
   const YourSavedWorkouts({Key? key, this.selectWorkout}) : super(key: key);
 
   @override
@@ -19,6 +19,7 @@ class YourSavedWorkouts extends StatelessWidget {
         key: Key('YourSavedWorkouts - ${UserCollectionsQuery().operationName}'),
         query: UserCollectionsQuery(),
         fetchPolicy: QueryFetchPolicy.storeFirst,
+        fullScreenError: false,
         loadingIndicator: const ShimmerCardList(itemCount: 20),
         builder: (data) {
           final collections = data.userCollections;
@@ -32,7 +33,7 @@ class YourSavedWorkouts extends StatelessWidget {
 }
 
 class FilterableSavedWorkouts extends StatefulWidget {
-  final void Function(Workout workout)? selectWorkout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
   final List<Collection> allCollections;
   const FilterableSavedWorkouts(
       {Key? key, required this.selectWorkout, required this.allCollections})
@@ -56,7 +57,8 @@ class _FilterableSavedWorkoutsState extends State<FilterableSavedWorkouts> {
           ];
 
     final workouts = selectedCollections
-        .fold<List<Workout>>([], (acum, next) => [...acum, ...next.workouts])
+        .fold<List<WorkoutSummary>>(
+            [], (acum, next) => [...acum, ...next.workouts])
         .sortedBy<DateTime>((w) => w.createdAt)
         .reversed
         .toList();

@@ -4,6 +4,7 @@ fragment LoggedWorkout on LoggedWorkout {
   completedOn
   note
   name
+  workoutId
 }
 
 fragment LoggedWorkoutSection on LoggedWorkoutSection {

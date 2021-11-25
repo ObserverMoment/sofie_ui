@@ -51,7 +51,7 @@ class _ClubPostCreatorPageState extends State<ClubPostCreatorPage> {
 
   /// Only one of these should ever be not null.
   /// When saving a new one make sure you set all others null.
-  Workout? _workout;
+  WorkoutSummary? _workout;
   WorkoutPlan? _workoutPlan;
 
   final PageController _pageController = PageController();
@@ -79,7 +79,7 @@ class _ClubPostCreatorPageState extends State<ClubPostCreatorPage> {
     _workoutPlan = null;
   }
 
-  void _selectWorkout(Workout w) {
+  void _selectWorkout(WorkoutSummary w) {
     _removeAllObjects();
     _workout = w;
     _selectedObjectId = w.id;

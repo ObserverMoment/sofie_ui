@@ -9,8 +9,8 @@ import 'package:sofie_ui/services/text_search_filters.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class PrivateWorkoutTextSearch extends StatefulWidget {
-  final List<Workout> userWorkouts;
-  final void Function(Workout workout)? selectWorkout;
+  final List<WorkoutSummary> userWorkouts;
+  final void Function(WorkoutSummary workout)? selectWorkout;
 
   const PrivateWorkoutTextSearch({
     Key? key,
@@ -26,7 +26,7 @@ class PrivateWorkoutTextSearch extends StatefulWidget {
 class _PrivateWorkoutTextSearchState extends State<PrivateWorkoutTextSearch> {
   String _searchString = '';
 
-  List<Workout> _filteredUserWorkouts = [];
+  List<WorkoutSummary> _filteredUserWorkouts = [];
 
   void _handleSearchStringUpdate(String text) {
     setState(() => _searchString = text.toLowerCase());

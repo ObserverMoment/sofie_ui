@@ -156,22 +156,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
   ///// WorkoutPlanDay CRUD /////
   ///////////////////////////////
   Future<void> createWorkoutPlanDayWithWorkout(
-      int dayNumber, Workout workout) async {
-    /// Client / Optimistic
+      int dayNumber, WorkoutSummary workout) async {
     _backup();
-    final tempWorkoutPlanDay = WorkoutPlanDay()
-      ..id = const Uuid().v1()
-      ..dayNumber = dayNumber
-      ..workoutPlanDayWorkouts = [
-        WorkoutPlanDayWorkout()
-          ..id = const Uuid().v1()
-          ..sortPosition = 0
-          ..workout = workout
-      ];
 
-    workoutPlan.workoutPlanDays.add(tempWorkoutPlanDay);
-    notifyListeners();
-
+    /// No client / Optimistic when creating
     /// Api.
     final variables = CreateWorkoutPlanDayWithWorkoutArguments(
         data: CreateWorkoutPlanDayWithWorkoutInput(
@@ -188,12 +176,8 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final success = _checkApiResult(result);
 
     if (success) {
-      workoutPlan.workoutPlanDays = workoutPlan.workoutPlanDays
-          .map((d) => d.id == tempWorkoutPlanDay.id
-              ? result.data!.createWorkoutPlanDayWithWorkout
-              : d)
-          .toList();
-
+      workoutPlan.workoutPlanDays
+          .add(result.data!.createWorkoutPlanDayWithWorkout);
       notifyListeners();
     }
   }
@@ -376,8 +360,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
   //////////////////////////////////////
   /// In an already created WorkoutPlanDay - specified by its day number in the plan.
   Future<void> createWorkoutPlanDayWorkout(
-      int dayNumber, Workout workout) async {
-    /// Client / Optimistic
+      int dayNumber, WorkoutSummary workout) async {
     _backup();
     final dayToUpdate = WorkoutPlanDay.fromJson(workoutPlan.workoutPlanDays
         .firstWhere((d) => d.dayNumber == dayNumber)
@@ -385,18 +368,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final sortPosition = dayToUpdate.workoutPlanDayWorkouts.length;
 
-    dayToUpdate.workoutPlanDayWorkouts.add(WorkoutPlanDayWorkout()
-      ..id = const Uuid().v1()
-      ..sortPosition = sortPosition
-      ..workout = workout);
-
-    workoutPlan.workoutPlanDays = workoutPlan.workoutPlanDays
-        .map((original) =>
-            original.id == dayToUpdate.id ? dayToUpdate : original)
-        .toList();
-
-    notifyListeners();
-
+    /// No client / optimistic when creating.
     /// Api
     final variables = CreateWorkoutPlanDayWorkoutArguments(
         data: CreateWorkoutPlanDayWorkoutInput(

@@ -46,17 +46,18 @@ class _YourWorkoutsTextSearchState extends State<YourWorkoutsTextSearch> {
                 final collections = savedWorkoutsData.userCollections;
 
                 /// Cast to Set: There can be duplicate workouts if the user has the same workout in multiple collections, and if they have added their own created workouts to one or more collections.
-                final allWorkouts = <Workout>{
+                final allWorkouts = <WorkoutSummary>{
                   ...createdWorkoutsData.userWorkouts,
-                  ...collections.fold<List<Workout>>(
+                  ...collections.fold<List<WorkoutSummary>>(
                       [], (acum, next) => [...acum, ...next.workouts])
                 }.toList();
 
-                final List<Workout> filteredWorkouts = _searchString.length < 3
-                    ? <Workout>[]
-                    : TextSearchFilters.workoutsBySearchString(
-                            allWorkouts, _searchString)
-                        .sortedBy<String>((workout) => workout.name);
+                final List<WorkoutSummary> filteredWorkouts =
+                    _searchString.length < 3
+                        ? <WorkoutSummary>[]
+                        : TextSearchFilters.workoutsBySearchString(
+                                allWorkouts, _searchString)
+                            .sortedBy<String>((workout) => workout.name);
 
                 return MyPageScaffold(
                   navigationBar: MyNavBar(

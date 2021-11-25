@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
@@ -14,17 +16,20 @@ class PausedWorkoutOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        StartResumeButton(
-          sectionIndex: workoutSection.sortPosition,
-        ),
-        if (workoutSection.isLifting || workoutSection.isCustomSession)
-          const _InstructionsCard(child: _LiftingSectionInstructions()),
-        if (workoutSection.isScored)
-          const _InstructionsCard(child: _ScoredSectionInstructions())
-      ],
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          StartResumeButton(
+            sectionIndex: workoutSection.sortPosition,
+          ),
+          if (workoutSection.isLifting || workoutSection.isCustomSession)
+            const _InstructionsCard(child: _LiftingSectionInstructions()),
+          if (workoutSection.isScored)
+            const _InstructionsCard(child: _ScoredSectionInstructions())
+        ],
+      ),
     );
   }
 }
@@ -36,7 +41,7 @@ class _InstructionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 24.0, left: 8, right: 8),
+      padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
       child: Card(
         padding: const EdgeInsets.all(16.0),
         child: child,

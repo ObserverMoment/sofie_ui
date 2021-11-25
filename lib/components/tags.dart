@@ -125,13 +125,15 @@ class DifficultyLevelDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isElite = difficultyLevel == DifficultyLevel.elite;
+    final borderColor =
+        isElite ? context.theme.primary : difficultyLevel.displayColor;
+
     return Container(
       width: 16,
       height: 16,
       decoration: BoxDecoration(
-          border: difficultyLevel == DifficultyLevel.elite
-              ? Border.all(color: Styles.white)
-              : null,
+          border: Border.all(color: borderColor),
           shape: BoxShape.circle,
           color: difficultyLevel.displayColor),
     );
@@ -206,18 +208,13 @@ class DifficultyLevelTag extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(3),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MyText(
-            difficultyLevel.display.toUpperCase(),
-            size: fontSize,
-            color: textColor ?? context.theme.primary,
-            lineHeight: 1.2,
-          ),
-        ],
+      child: MyText(
+        difficultyLevel.display.toUpperCase(),
+        size: fontSize,
+        color: textColor ?? context.theme.primary,
+        lineHeight: 1.2,
       ),
     );
   }

@@ -5,7 +5,7 @@ query userCollectionById($id: ID!) {
       ...UserSummary
     }
     Workouts {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     WorkoutPlans {
       ...WorkoutPlanData

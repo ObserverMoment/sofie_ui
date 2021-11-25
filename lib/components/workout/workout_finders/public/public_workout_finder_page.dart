@@ -17,7 +17,7 @@ import 'package:sofie_ui/router.gr.dart';
 import 'package:provider/provider.dart';
 
 class PublicWorkoutFinderPage extends StatefulWidget {
-  final void Function(Workout workout)? selectWorkout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
 
   const PublicWorkoutFinderPage({Key? key, this.selectWorkout})
       : super(key: key);
@@ -37,7 +37,7 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
   /// Cursor for public workouts pagination. The id of the last retrieved workout.
   String? _cursor;
 
-  final PagingController<int, Workout> _pagingController =
+  final PagingController<int, WorkoutSummary> _pagingController =
       PagingController(firstPageKey: 0, invisibleItemsThreshold: 10);
 
   @override
@@ -59,7 +59,8 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
     _lastUsedFilters = WorkoutFilters.fromJson(_bloc.filters.json);
   }
 
-  Future<List<Workout>> _executePublicWorkoutsQuery({String? cursor}) async {
+  Future<List<WorkoutSummary>> _executePublicWorkoutsQuery(
+      {String? cursor}) async {
     final variables = PublicWorkoutsArguments(
         take: kfilterResultsPageSize,
         cursor: cursor,
@@ -123,7 +124,7 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
 
   /// Pops itself (and any stack items such as the text seach widget)
   /// Then passes the selected workout to the parent.
-  void _selectWorkout(Workout workout) {
+  void _selectWorkout(WorkoutSummary workout) {
     if (widget.selectWorkout != null) {
       // If open - pop the text search route.
       context.router.popUntilRouteWithName(PublicWorkoutFinderRoute.name);
@@ -182,9 +183,9 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
                 ],
               )),
           Expanded(
-            child: PagedListView<int, Workout>(
+            child: PagedListView<int, WorkoutSummary>(
               pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<Workout>(
+              builderDelegate: PagedChildBuilderDelegate<WorkoutSummary>(
                 itemBuilder: (context, workout, index) => SizeFadeIn(
                   duration: 20,
                   delay: index,

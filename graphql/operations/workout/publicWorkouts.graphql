@@ -1,5 +1,5 @@
 query publicWorkouts($cursor: ID, $filters: WorkoutFiltersInput, $take: Int) {
   publicWorkouts(cursor: $cursor, filters: $filters, take: $take) {
-    ...WorkoutData
+    ...WorkoutSummary
   }
 }

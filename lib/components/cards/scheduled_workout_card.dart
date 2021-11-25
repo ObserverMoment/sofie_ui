@@ -32,11 +32,11 @@ class ScheduledWorkoutCard extends StatelessWidget {
         ? CupertinoIcons.checkmark_alt_circle_fill // Done
         : scheduledWorkout.scheduledAt.isBefore(DateTime.now())
             ? CupertinoIcons.exclamationmark_circle_fill // Missed
-            : CupertinoIcons.clock_fill; // Upcoming
+            : CupertinoIcons.clock; // Upcoming
 
     return Icon(
       icon,
-      size: 15,
+      size: 16,
       color: color,
     );
   }
@@ -156,19 +156,20 @@ class ScheduledWorkoutCard extends StatelessWidget {
                 scheduledWorkout: scheduledWorkout)),
             iconData: CupertinoIcons.arrow_right_square,
           ),
-        if (!hasLog)
+        if (!hasLog && scheduledWorkout.workout != null)
           ContextMenuAction(
             text: 'Log it',
             onTap: () => context.navigateTo(LoggedWorkoutCreatorRoute(
-                workout: scheduledWorkout.workout!,
+                workoutId: scheduledWorkout.workout!.id,
                 scheduledWorkout: scheduledWorkout)),
             iconData: CupertinoIcons.text_badge_checkmark,
           ),
         ContextMenuAction(
             text: 'View Workout',
             iconData: CupertinoIcons.eye,
-            onTap: () => context.navigateTo(
-                WorkoutDetailsRoute(id: scheduledWorkout.workout!.id))),
+            onTap: () => context.navigateTo(WorkoutDetailsRoute(
+                id: scheduledWorkout.workout!.id,
+                scheduledWorkout: scheduledWorkout))),
         if (isPartOfPlan)
           ContextMenuAction(
             text: 'View Plan',

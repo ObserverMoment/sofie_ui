@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout/workout_move_display.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -41,13 +40,10 @@ class WorkoutSetWorkoutMove extends StatelessWidget {
         removeItem: deleteWorkoutMove,
         secondaryActions: [
           IconSlideAction(
+            caption: 'Duplicate',
             color: Styles.primaryAccent,
             foregroundColor: Styles.white,
-            iconWidget: const MyText(
-              'Duplicate',
-              color: Styles.white,
-              size: FONTSIZE.one,
-            ),
+            iconWidget: const Icon(CupertinoIcons.plus_square_on_square),
             onTap: () => duplicateWorkoutMove(workoutMove.sortPosition),
           ),
         ],

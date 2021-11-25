@@ -38,6 +38,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   final List<String> typesInputRequired = [
     kCustomSessionName,
+    kLiftingName,
     kForTimeName,
     kAMRAPName
   ];
@@ -52,7 +53,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       : assert(
             (prevLoggedWorkout == null && workout != null) ||
                 (prevLoggedWorkout != null && workout == null),
-            'Provide a priod log to edit, or a workout to create a log from, not both, or neither') {
+            'Provide a prior log to edit, or a workout to create a log from, not both, or neither') {
     if (prevLoggedWorkout != null) {
       _isEditing = true;
       loggedWorkout = prevLoggedWorkout!.copyAndSortAllChildren;
@@ -108,21 +109,22 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   }
 
   /// Only valid when creating and when [workout] is not null.
-  /// From workout sections plus their inputs - inputted by the user.
-  /// Do not sun this before the user has added reps and timeTakenSeconds to AMRAP, ForTime and FreeSession sections.
+  /// Workout sections plus their inputs - inputted by the user.
+  /// Do not run this before the user has added reps and timeTakenSeconds to AMRAP, ForTime and FreeSession sections.
   void generateLoggedWorkoutSections(
       List<WorkoutSectionWithInput> sectionsWithInputs) {
     loggedWorkout.loggedWorkoutSections = workout!.workoutSections
         .sortedBy<num>((ws) => ws.sortPosition)
         .map((ws) {
-      if (ws.workoutSectionType.name == kAMRAPName) {
+      if (ws.workoutSectionType.isAMRAP) {
         // Get the value from the inputs
         final s =
             sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
         return loggedWorkoutSectionFromWorkoutSection(
             workoutSection: ws, repScore: s.input);
-      } else if ([kCustomSessionName, kForTimeName]
-          .contains(ws.workoutSectionType.name)) {
+      } else if (ws.workoutSectionType.isCustom ||
+          ws.workoutSectionType.isForTime ||
+          ws.workoutSectionType.isLifting) {
         // Get the value from the inputs
         final s =
             sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
@@ -489,6 +491,9 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
           .map((goal) => ConnectRelationInput(id: goal.id))
           .toList(),
       completedOn: loggedWorkout.completedOn,
+      workout: loggedWorkout.workoutId != null
+          ? ConnectRelationInput(id: loggedWorkout.workoutId!)
+          : null,
       loggedWorkoutSections: loggedWorkout.loggedWorkoutSections
           .sortedBy<num>((section) => section.sortPosition)
           .mapIndexed((index, section) =>

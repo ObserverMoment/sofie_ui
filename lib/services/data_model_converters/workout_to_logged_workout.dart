@@ -19,6 +19,7 @@ LoggedWorkout loggedWorkoutFromWorkout(
     ..note = scheduledWorkout?.note
     ..name = name
     ..gymProfile = scheduledWorkout?.gymProfile
+    ..workoutId = workout.id
     ..loggedWorkoutSections = copySections
         ? workout.workoutSections
             .sortedBy<num>((wSection) => wSection.sortPosition)

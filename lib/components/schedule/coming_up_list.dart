@@ -32,8 +32,11 @@ class ComingUpList extends StatelessWidget {
         builder: (data) {
           final comingUp = data.userScheduledWorkouts
               .sortedBy<DateTime>((s) => s.scheduledAt)
-              .where((s) => s.scheduledAt.isAfter(DateTime.now()))
-              .where((s) => s.workout != null)
+              .where((s) =>
+                  s.workout != null &&
+                  // Don't show scheduled workouts the user has already done.
+                  s.loggedWorkoutId == null &&
+                  s.scheduledAt.isAfter(DateTime.now()))
               .take(5)
               .toList();
 
@@ -52,11 +55,12 @@ class ComingUpList extends StatelessWidget {
                   itemCount: comingUp.length,
                   itemBuilder: (c, i) {
                     return GestureDetector(
-                      onTap: () => context.navigateTo(YourScheduleRoute(
-                          openAtDate: comingUp[i].scheduledAt)),
+                      onTap: () => context.navigateTo(WorkoutDetailsRoute(
+                          id: comingUp[i].workout!.id,
+                          scheduledWorkout: comingUp[i])),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4.0),
-                        child: ScheduledWorkoutReminderCard(
+                        child: _ScheduledWorkoutReminderCard(
                           scheduledWorkout: comingUp[i],
                           cardWidth: cardWidth,
                         ),
@@ -69,10 +73,10 @@ class ComingUpList extends StatelessWidget {
   }
 }
 
-class ScheduledWorkoutReminderCard extends StatelessWidget {
+class _ScheduledWorkoutReminderCard extends StatelessWidget {
   final ScheduledWorkout scheduledWorkout;
   final double cardWidth;
-  const ScheduledWorkoutReminderCard(
+  const _ScheduledWorkoutReminderCard(
       {Key? key, required this.scheduledWorkout, required this.cardWidth})
       : super(key: key);
 

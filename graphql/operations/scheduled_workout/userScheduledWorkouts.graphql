@@ -1,8 +1,8 @@
-mutation updateScheduledWorkout($data: UpdateScheduledWorkoutInput!) {
-  updateScheduledWorkout(data: $data) {
+query userScheduledWorkouts {
+  userScheduledWorkouts {
     ...ScheduledWorkout
     Workout {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     GymProfile {
       ...GymProfile

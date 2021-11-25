@@ -81,7 +81,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
                     selectWorkout: (w) => _openScheduleWorkout(w)))),
           ]));
 
-  Future<void> _openScheduleWorkout(Workout workout) async {
+  Future<void> _openScheduleWorkout(WorkoutSummary workout) async {
     final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
         workout: workout,
         // Open at the selected day and at the current time by combining _selectedDay and DateTime.now().
@@ -250,8 +250,7 @@ class _YourScheduleTextSearchState extends State<YourScheduleTextSearch> {
     return scheduledWorkout.workout != null &&
         [
           scheduledWorkout.workout!.name,
-          ...scheduledWorkout.workout!.workoutGoals.map((g) => g.name).toList(),
-          ...scheduledWorkout.workout!.workoutTags.map((t) => t.tag).toList()
+          ...scheduledWorkout.workout!.tags,
         ]
             .where((t) => Utils.textNotNull(t))
             .map((t) => t.toLowerCase())

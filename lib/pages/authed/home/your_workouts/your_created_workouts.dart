@@ -9,7 +9,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class YourCreatedWorkouts extends StatelessWidget {
-  final void Function(Workout workout)? selectWorkout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
   const YourCreatedWorkouts({Key? key, this.selectWorkout}) : super(key: key);
 
   @override
@@ -32,8 +32,8 @@ class YourCreatedWorkouts extends StatelessWidget {
 }
 
 class FilterableCreatedWorkouts extends StatefulWidget {
-  final void Function(Workout workout)? selectWorkout;
-  final List<Workout> allWorkouts;
+  final void Function(WorkoutSummary workout)? selectWorkout;
+  final List<WorkoutSummary> allWorkouts;
   const FilterableCreatedWorkouts(
       {Key? key, this.selectWorkout, required this.allWorkouts})
       : super(key: key);
@@ -44,20 +44,18 @@ class FilterableCreatedWorkouts extends StatefulWidget {
 }
 
 class _FilterableCreatedWorkoutsState extends State<FilterableCreatedWorkouts> {
-  WorkoutTag? _workoutTagFilter;
+  String? _workoutTagFilter;
 
   @override
   Widget build(BuildContext context) {
     final allTags = widget.allWorkouts
-        .fold<List<WorkoutTag>>(
-            [], (acum, next) => [...acum, ...next.workoutTags])
+        .fold<List<String>>([], (acum, next) => [...acum, ...next.tags])
         .toSet()
         .toList();
 
     final filteredWorkouts = _workoutTagFilter == null
         ? widget.allWorkouts
-        : widget.allWorkouts
-            .where((w) => w.workoutTags.contains(_workoutTagFilter));
+        : widget.allWorkouts.where((w) => w.tags.contains(_workoutTagFilter));
 
     final sortedWorkouts = filteredWorkouts
         .sortedBy<DateTime>((w) => w.createdAt)
@@ -77,7 +75,7 @@ class _FilterableCreatedWorkoutsState extends State<FilterableCreatedWorkouts> {
               children: allTags
                   .map((t) => SelectableTag(
                         fontSize: FONTSIZE.two,
-                        text: t.tag,
+                        text: t,
                         isSelected: t == _workoutTagFilter,
                         onPressed: () => setState(() => _workoutTagFilter =
                             t == _workoutTagFilter ? null : t),

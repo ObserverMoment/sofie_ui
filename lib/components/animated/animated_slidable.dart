@@ -60,6 +60,8 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
 
   bool _deleted = false;
 
+  double get _iconSize => 18.0;
+
   @override
   void initState() {
     _slideController = AnimationController(
@@ -135,7 +137,7 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
       child: SlideTransition(
         position: _slideAnimation,
         child: IconTheme(
-          data: const IconThemeData(color: Styles.white),
+          data: IconThemeData(color: Styles.white, size: _iconSize),
           child: Slidable(
             key: widget.key,
             actionPane: const SlidableDrawerActionPane(),
@@ -144,11 +146,12 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
             secondaryActions: <IconSlideAction>[
               ...widget.secondaryActions,
               IconSlideAction(
+                caption: widget.verb,
                 color: Styles.errorRed,
                 foregroundColor: Styles.white,
                 iconWidget: Icon(
                   widget.iconData,
-                  size: 20,
+                  size: _iconSize,
                 ),
                 onTap: _confirmRemoveItem,
               ),

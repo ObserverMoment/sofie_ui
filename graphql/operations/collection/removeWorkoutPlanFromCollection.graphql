@@ -7,7 +7,7 @@ mutation removeWorkoutPlanFromCollection(
       ...UserSummary
     }
     Workouts {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     WorkoutPlans {
       ...WorkoutPlanData

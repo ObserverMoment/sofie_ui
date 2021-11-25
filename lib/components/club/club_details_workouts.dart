@@ -17,7 +17,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 
 class ClubDetailsWorkouts extends StatefulWidget {
   final Club club;
-  final List<Workout> workouts;
+  final List<WorkoutSummary> workouts;
   final bool isOwnerOrAdmin;
   const ClubDetailsWorkouts(
       {Key? key,
@@ -33,7 +33,7 @@ class ClubDetailsWorkouts extends StatefulWidget {
 class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
   bool _loading = false;
 
-  void _handleWorkoutTap(Workout workout) {
+  void _handleWorkoutTap(WorkoutSummary workout) {
     if (widget.isOwnerOrAdmin) {
       openBottomSheetMenu(
           context: context,
@@ -60,7 +60,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     }
   }
 
-  void _navigateToWorkoutDetails(Workout workout) {
+  void _navigateToWorkoutDetails(WorkoutSummary workout) {
     context.navigateTo(WorkoutDetailsRoute(id: workout.id));
   }
 
@@ -69,7 +69,8 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
         selectWorkout: (w) => _addWorkoutToClub(context, w)));
   }
 
-  Future<void> _addWorkoutToClub(BuildContext context, Workout workout) async {
+  Future<void> _addWorkoutToClub(
+      BuildContext context, WorkoutSummary workout) async {
     setState(() {
       _loading = true;
     });
@@ -93,7 +94,8 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
             toastType: ToastType.destructive));
   }
 
-  void _confirmRemoveWorkoutFromClub(BuildContext context, Workout workout) {
+  void _confirmRemoveWorkoutFromClub(
+      BuildContext context, WorkoutSummary workout) {
     context.showConfirmDeleteDialog(
         verb: 'Remove',
         itemType: 'Workout',
@@ -104,7 +106,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
   }
 
   Future<void> _removeWorkoutFromClub(
-      BuildContext context, Workout workout) async {
+      BuildContext context, WorkoutSummary workout) async {
     setState(() {
       _loading = true;
     });
@@ -146,7 +148,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
       children: [
         widget.workouts.isEmpty
             ? _placeholder
-            : ImplicitlyAnimatedList<Workout>(
+            : ImplicitlyAnimatedList<WorkoutSummary>(
                 padding: const EdgeInsets.only(
                     top: 8, bottom: kAssumedFloatingButtonHeight),
                 shrinkWrap: true,

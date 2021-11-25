@@ -45,7 +45,7 @@ class CollectionManager {
         child: CollectionSelector(
             title: 'Save to Collection',
             selectCollection: (collection) {
-              if (object is Workout) {
+              if (object is WorkoutSummary) {
                 addWorkoutToCollection(context, collection, object);
               } else if (object is WorkoutPlan) {
                 addWorkoutPlanToCollection(context, collection, object);
@@ -67,7 +67,7 @@ class CollectionManager {
         verb: 'Remove',
         isDestructive: true,
         onConfirm: () {
-          if (object is Workout) {
+          if (object is WorkoutSummary) {
             removeWorkoutFromCollection(context, collection, object);
           } else if (object is WorkoutPlan) {
             removeWorkoutPlanFromCollection(context, collection, object);
@@ -79,8 +79,8 @@ class CollectionManager {
   }
 
   /// Add / Remove Workout from Collection ////
-  static Future<void> addWorkoutToCollection(
-      BuildContext context, Collection collection, Workout workout) async {
+  static Future<void> addWorkoutToCollection(BuildContext context,
+      Collection collection, WorkoutSummary workout) async {
     final updatedCollection = Collection.fromJson(collection.toJson());
     updatedCollection.workouts.add(workout);
 
@@ -107,7 +107,7 @@ class CollectionManager {
   }
 
   static Future<void> removeWorkoutFromCollection(
-      BuildContext context, Collection collection, Workout workout,
+      BuildContext context, Collection collection, WorkoutSummary workout,
       {bool showToast = true}) async {
     final updatedCollection = Collection.fromJson(collection.toJson());
     updatedCollection.workouts =

@@ -26,7 +26,7 @@ mutation addWorkoutPlanToClub($workoutPlanId: ID!, $clubId: ID!) {
       }
     }
     Workouts {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     WorkoutPlans {
       ...WorkoutPlanData

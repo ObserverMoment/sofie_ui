@@ -14,7 +14,7 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:auto_route/auto_route.dart';
 
 class PrivateWorkoutFinderPage extends StatefulWidget {
-  final void Function(Workout workout) selectWorkout;
+  final void Function(WorkoutSummary workout) selectWorkout;
   const PrivateWorkoutFinderPage({Key? key, required this.selectWorkout})
       : super(key: key);
 
@@ -30,7 +30,7 @@ class _PrivateWorkoutFinderPageState extends State<PrivateWorkoutFinderPage> {
 
   /// Pops itself (and any stack items such as the text seach widget)
   /// Then passes the selected workout to the parent.
-  void _selectWorkout(Workout workout) {
+  void _selectWorkout(WorkoutSummary workout) {
     // If open - pop the text search route.
     context.router.popUntilRouteWithName(PrivateWorkoutFinderRoute.name);
     // Then pop this widget.
@@ -59,7 +59,7 @@ class _PrivateWorkoutFinderPageState extends State<PrivateWorkoutFinderPage> {
                 final userWorkouts = createdWorkoutsData.userWorkouts;
 
                 final savedWorkouts = collectionsData.userCollections
-                    .fold<List<Workout>>(
+                    .fold<List<WorkoutSummary>>(
                         [], (acum, next) => [...acum, ...next.workouts]);
 
                 return MyPageScaffold(
@@ -82,7 +82,7 @@ class _PrivateWorkoutFinderPageState extends State<PrivateWorkoutFinderPage> {
                               selectWorkout: _selectWorkout,
                               // Combining created and saved workouts means there can be dupes.
                               // Remove them by building as a set.
-                              userWorkouts: <Workout>{
+                              userWorkouts: <WorkoutSummary>{
                                 ...userWorkouts,
                                 ...savedWorkouts
                               }.toList(),

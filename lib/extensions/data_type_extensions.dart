@@ -81,6 +81,26 @@ extension WorkoutExtension on Workout {
 
     return allEquipments.sortedBy<String>((e) => e.name).toList();
   }
+
+  WorkoutSummary get summary => WorkoutSummary()
+    ..id = id
+    ..createdAt = createdAt
+    ..archived = archived
+    ..name = name
+    ..user = user
+    ..lengthMinutes = lengthMinutes
+    ..coverImageUri = coverImageUri
+    ..description = description
+    ..difficultyLevel = difficultyLevel
+    ..loggedSessionsCount = 0 // Not displayed when zero
+    ..hasClassAudio = workoutSections.any((ws) => ws.classAudioUri != null)
+    ..hasClassVideo = workoutSections.any((ws) => ws.classVideoUri != null)
+    ..equipments = allEquipment.map((e) => e.name).toList()
+    ..tags = [
+      ...workoutSections.map((ws) => ws.workoutSectionType.name),
+      ...workoutGoals.map((g) => g.name),
+      ...workoutTags.map((t) => t.tag),
+    ];
 }
 
 extension WorkoutPlanExtension on WorkoutPlan {

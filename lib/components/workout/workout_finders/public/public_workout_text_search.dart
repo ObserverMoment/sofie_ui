@@ -14,7 +14,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class PublicWorkoutTextSearch extends StatefulWidget {
-  final void Function(Workout workout)? selectWorkout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
 
   const PublicWorkoutTextSearch({
     Key? key,
@@ -30,7 +30,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
   String _searchString = '';
 
   /// Handles retrieving full workout objects from the API when the user presses submit (search) on the keyboard.
-  late TextSearchBloc<Workout> _workoutsTextSearchBloc;
+  late TextSearchBloc<WorkoutSummary> _workoutsTextSearchBloc;
 
   /// Handles retrieving just workout names (similar to a suggestions list) as the user is typing their search query.
   late TextSearchBloc<TextSearchResult> _workoutNamesTextSearchBloc;
@@ -39,7 +39,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
   void initState() {
     super.initState();
     _workoutsTextSearchBloc =
-        TextSearchBloc<Workout>(context, TextSearchType.workout);
+        TextSearchBloc<WorkoutSummary>(context, TextSearchType.workout);
     _workoutNamesTextSearchBloc =
         TextSearchBloc<TextSearchResult>(context, TextSearchType.workoutName);
   }
@@ -98,8 +98,8 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                 _workoutNamesTextSearchBloc.state
               ]),
               builder: (context, stateSnapshot) {
-                return StreamBuilder<List<Workout>>(
-                    initialData: const <Workout>[],
+                return StreamBuilder<List<WorkoutSummary>>(
+                    initialData: const <WorkoutSummary>[],
                     stream: _workoutsTextSearchBloc.results,
                     builder: (context, workoutsSnapshot) {
                       return StreamBuilder<List<TextSearchResult>>(

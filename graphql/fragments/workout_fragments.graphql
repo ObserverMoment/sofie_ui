@@ -59,6 +59,26 @@ fragment WorkoutData on Workout {
   }
 }
 
+fragment WorkoutSummary on WorkoutSummary {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  User {
+    ...UserSummary
+  }
+  lengthMinutes
+  coverImageUri
+  description
+  difficultyLevel
+  loggedSessionsCount
+  hasClassVideo
+  hasClassAudio
+  equipments
+  tags
+}
+
 fragment Workout on Workout {
   __typename
   id

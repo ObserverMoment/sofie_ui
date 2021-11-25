@@ -2,7 +2,7 @@ query userPublicProfileById($userId: ID!) {
   userPublicProfileById(userId: $userId) {
     ...UserPublicProfile
     Workouts {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     WorkoutPlans {
       ...WorkoutPlanData

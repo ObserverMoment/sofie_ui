@@ -1,8 +1,8 @@
-mutation createScheduledWorkout($data: CreateScheduledWorkoutInput!) {
-  createScheduledWorkout(data: $data) {
+mutation updateScheduledWorkout($data: UpdateScheduledWorkoutInput!) {
+  updateScheduledWorkout(data: $data) {
     ...ScheduledWorkout
     Workout {
-      ...WorkoutData
+      ...WorkoutSummary
     }
     GymProfile {
       ...GymProfile

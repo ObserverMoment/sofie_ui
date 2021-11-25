@@ -66,7 +66,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         });
   }
 
-  Future<void> _openScheduleWorkout(Workout workout) async {
+  Future<void> _openScheduleWorkout(WorkoutSummary workout) async {
     final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
       workout: workout,
     ));
@@ -133,39 +133,43 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         });
   }
 
-  Widget _buildMetaInfoRow(Workout workout, {bool centerAlign = false}) =>
-      Padding(
+  Widget _buildMetaInfoRow(Workout workout) => Padding(
         padding: const EdgeInsets.all(6.0),
-        child: Row(
-          mainAxisAlignment: centerAlign
-              ? MainAxisAlignment.center
-              : workout.archived || workout.lengthMinutes != null
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.end,
+        child: Column(
           children: [
-            if (workout.archived)
-              const FadeIn(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: Icon(
-                    CupertinoIcons.archivebox_fill,
-                    color: Styles.errorRed,
+            Row(
+              mainAxisAlignment:
+                  workout.archived || workout.lengthMinutes != null
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+              children: [
+                if (workout.archived)
+                  const FadeIn(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        CupertinoIcons.archivebox_fill,
+                        color: Styles.errorRed,
+                      ),
+                    ),
                   ),
+                if (workout.lengthMinutes != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: DurationTag(
+                      fontSize: FONTSIZE.three,
+                      iconSize: 15,
+                      backgroundColor:
+                          context.theme.background.withOpacity(0.6),
+                      duration: Duration(minutes: workout.lengthMinutes!),
+                    ),
+                  ),
+                DifficultyLevelTag(
+                  backgroundColor: context.theme.background.withOpacity(0.6),
+                  difficultyLevel: workout.difficultyLevel,
+                  fontSize: FONTSIZE.two,
                 ),
-              ),
-            if (workout.lengthMinutes != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: DurationTag(
-                  fontSize: FONTSIZE.three,
-                  iconSize: 15,
-                  duration: Duration(minutes: workout.lengthMinutes!),
-                ),
-              ),
-            DifficultyLevelTag(
-              backgroundColor: context.theme.background.withOpacity(0.85),
-              difficultyLevel: workout.difficultyLevel,
-              fontSize: FONTSIZE.two,
+              ],
             ),
           ],
         ),
@@ -244,13 +248,6 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         onPressed: () => context.navigateTo(
                                             UserPublicProfileDetailsRoute(
                                                 userId: workout.user.id))),
-                                  BottomSheetMenuItem(
-                                      text: 'Log it',
-                                      icon: const Icon(
-                                          CupertinoIcons.text_badge_checkmark),
-                                      onPressed: () => context.navigateTo(
-                                          LoggedWorkoutCreatorRoute(
-                                              workout: workout))),
                                   if (isOwner ||
                                       workout.contentAccessScope ==
                                           ContentAccessScope.public)
@@ -314,25 +311,30 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           children: [
-                            if (Utils.textNotNull(workout.coverImageUri))
-                              SizedBox(
-                                height: 210,
-                                child: Stack(
-                                  alignment: Alignment.topCenter,
-                                  children: [
-                                    SizedUploadcareImage(workout.coverImageUri!,
-                                        fit: BoxFit.cover),
-                                    _buildMetaInfoRow(workout),
-                                    Positioned(
-                                      bottom: 8,
-                                      right: 8,
-                                      child: LogCountByWorkout(
-                                        workoutId: workout.id,
-                                      ),
+                            SizedBox(
+                              height: 150,
+                              child: Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  Utils.textNotNull(workout.coverImageUri)
+                                      ? SizedUploadcareImage(
+                                          workout.coverImageUri!,
+                                          fit: BoxFit.cover)
+                                      : Image.asset(
+                                          'assets/placeholder_images/workout.jpg',
+                                          width: double.infinity,
+                                          fit: BoxFit.cover),
+                                  _buildMetaInfoRow(workout),
+                                  Positioned(
+                                    bottom: 8,
+                                    right: 8,
+                                    child: LogCountByWorkout(
+                                      workoutId: workout.id,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
+                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
@@ -345,7 +347,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                           CupertinoIcons.calendar_badge_plus),
                                       label: 'Schedule',
                                       onPressed: () =>
-                                          _openScheduleWorkout(workout),
+                                          _openScheduleWorkout(workout.summary),
                                     ),
                                     _ActionIconButton(
                                         icon: const Icon(CupertinoIcons
@@ -353,7 +355,9 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         label: 'Log It',
                                         onPressed: () => context.navigateTo(
                                             LoggedWorkoutCreatorRoute(
-                                                workout: workout))),
+                                                workoutId: workout.id,
+                                                scheduledWorkout:
+                                                    widget.scheduledWorkout))),
                                     if (Utils.textNotNull(
                                         workout.introVideoUri))
                                       _ActionIconButton(
@@ -410,17 +414,6 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                   ]),
                             ),
                             const HorizontalLine(verticalPadding: 0),
-                            if (!Utils.textNotNull(workout.coverImageUri))
-                              Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: context.theme.primary
-                                                  .withOpacity(0.2)))),
-                                  child: _buildMetaInfoRow(workout,
-                                      centerAlign: true)),
                             if (Utils.textNotNull(workout.description))
                               _InfoSection(
                                 content: ReadMoreTextBlock(
