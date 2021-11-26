@@ -17,7 +17,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class PublicWorkoutPlanFinderPage extends StatefulWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
 
   const PublicWorkoutPlanFinderPage({
     Key? key,
@@ -40,7 +40,7 @@ class _PublicWorkoutPlanFinderPageState
   /// Cursor for public plans pagination. The id of the last retrieved plan.
   String? _cursor;
 
-  final PagingController<int, WorkoutPlan> _pagingController =
+  final PagingController<int, WorkoutPlanSummary> _pagingController =
       PagingController(firstPageKey: 0, invisibleItemsThreshold: 5);
 
   @override
@@ -62,7 +62,7 @@ class _PublicWorkoutPlanFinderPageState
     _lastUsedFilters = WorkoutPlanFilters.fromJson(_bloc.filters.json);
   }
 
-  Future<List<WorkoutPlan>> _executePublicWorkoutPlansQuery(
+  Future<List<WorkoutPlanSummary>> _executePublicWorkoutPlansQuery(
       {String? cursor}) async {
     final variables = PublicWorkoutPlansArguments(
         take: kfilterResultsPageSize,
@@ -129,7 +129,7 @@ class _PublicWorkoutPlanFinderPageState
 
   /// Pops itself (and any stack items such as the text seach widget)
   /// Then passes the selected workoutPlan to the parent.
-  void _selectWorkoutPlan(WorkoutPlan workoutPlan) {
+  void _selectWorkoutPlan(WorkoutPlanSummary workoutPlan) {
     if (widget.selectWorkoutPlan != null) {
       // If open - pop the text search route.
       context.router.popUntilRouteWithName(PublicWorkoutPlanFinderRoute.name);
@@ -189,9 +189,9 @@ class _PublicWorkoutPlanFinderPageState
                   ],
                 )),
             Expanded(
-              child: PagedListView<int, WorkoutPlan>(
+              child: PagedListView<int, WorkoutPlanSummary>(
                 pagingController: _pagingController,
-                builderDelegate: PagedChildBuilderDelegate<WorkoutPlan>(
+                builderDelegate: PagedChildBuilderDelegate<WorkoutPlanSummary>(
                   itemBuilder: (context, workoutPlan, index) => SizeFadeIn(
                     duration: 20,
                     delay: index,

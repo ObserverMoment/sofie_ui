@@ -55,15 +55,18 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                     value: _activeTabIndex,
                     updateValue: _updatePageIndex,
                     children: const {
-                      0: MyText('Created'),
-                      1: MyText('Saved'),
+                      0: MyText('Saved'),
+                      1: MyText('Created'),
                     }),
               ),
             ),
             Expanded(
               child: IndexedStack(
                 index: _activeTabIndex,
-                children: const [YourCreatedWorkouts(), YourSavedWorkouts()],
+                children: const [
+                  YourSavedWorkouts(),
+                  YourCreatedWorkouts(),
+                ],
               ),
             )
           ],

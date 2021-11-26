@@ -11,7 +11,6 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class WorkoutCard extends StatelessWidget {
   final WorkoutSummary workout;
@@ -36,7 +35,7 @@ class WorkoutCard extends StatelessWidget {
               child: Column(
                 children: [
                   MyText(
-                    workout.loggedSessionsCount.displayLong,
+                    count.displayLong,
                   ),
                   const MyText(
                     'sessions',
@@ -54,7 +53,8 @@ class WorkoutCard extends StatelessWidget {
     // // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
     final double width = MediaQuery.of(context).size.width;
     final Dimensions dimensions = Dimensions.square((width * 1.5).toInt());
-    final Color contentOverlayColor = Styles.black.withOpacity(0.75);
+    final Color contentOverlayColor =
+        Styles.black.withOpacity(kImageOverlayOpacity);
 
     /// The lower section seems to need to have a border radius of one lower than that of the whole card to avoid a small peak of the underlying image - why does the corner get cut by 1 px?
     const borderRadius = 8.0;
@@ -91,6 +91,7 @@ class WorkoutCard extends StatelessWidget {
                         _buildLoggedSessionsCount(context,
                             workout.loggedSessionsCount, contentOverlayColor),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (workout.lengthMinutes != null)
                               Padding(
@@ -102,10 +103,13 @@ class WorkoutCard extends StatelessWidget {
                                   textColor: infoFontColor,
                                 ),
                               ),
-                            Opacity(
-                              opacity: 0.8,
-                              child: DifficultyLevelDot(
-                                difficultyLevel: workout.difficultyLevel,
+                            Padding(
+                              padding: const EdgeInsets.only(top: 2.0),
+                              child: Opacity(
+                                opacity: 0.75,
+                                child: DifficultyLevelDot(
+                                  difficultyLevel: workout.difficultyLevel,
+                                ),
                               ),
                             ),
                           ],
@@ -124,8 +128,8 @@ class WorkoutCard extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: contentOverlayColor),
                                 padding: const EdgeInsets.all(3),
-                                width: 26,
-                                height: 26,
+                                width: 28,
+                                height: 28,
                                 child: Utils.getEquipmentIcon(context, e,
                                     color: infoFontColor)),
                           )
@@ -155,7 +159,7 @@ class WorkoutCard extends StatelessWidget {
                             lineHeight: 1.3,
                             color: infoFontColor,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           MyText(
                             workout.user.displayName.toUpperCase(),
                             size: FONTSIZE.two,
@@ -169,8 +173,8 @@ class WorkoutCard extends StatelessWidget {
                 ),
                 if (Utils.textNotNull(workout.description))
                   Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: MyText(workout.description!),
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: MyText(workout.description!, subtext: true),
                   ),
                 if (workout.tags.isNotEmpty)
                   Padding(

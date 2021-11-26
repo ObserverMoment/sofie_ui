@@ -29,7 +29,7 @@ mutation removeWorkoutFromClub($workoutId: ID!, $clubId: ID!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

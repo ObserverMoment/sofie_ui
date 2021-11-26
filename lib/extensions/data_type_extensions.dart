@@ -124,21 +124,7 @@ extension WorkoutPlanExtension on WorkoutPlan {
 
   List<WaffleChartInput> get waffleChartInputs {
     final goals = workoutGoalsInPlan;
-    final data = goals.fold<Map<WorkoutGoal, int>>({}, (acum, next) {
-      if (acum[next] != null) {
-        acum[next] = acum[next]! + 1;
-      } else {
-        acum[next] = 1;
-      }
-      return acum;
-    });
-
-    return data.entries
-        .map((e) => WaffleChartInput(
-            fraction: e.value / goals.length,
-            color: HexColor.fromHex(e.key.hexColor),
-            name: e.key.name))
-        .toList();
+    return DataUtils.waffleChartInputsFromGoals(goals);
   }
 
   /// Excludes the equipment 'Bodyweight' by its ID in [workout.allEquipment].

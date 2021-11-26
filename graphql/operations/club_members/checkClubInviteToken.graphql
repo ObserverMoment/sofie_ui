@@ -33,7 +33,7 @@ query checkClubInviteToken($id: ID!) {
           ...WorkoutSummary
         }
         WorkoutPlans {
-          ...WorkoutPlanData
+          ...WorkoutPlanSummary
         }
       }
     }

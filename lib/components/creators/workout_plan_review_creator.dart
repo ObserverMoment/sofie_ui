@@ -145,8 +145,8 @@ class _WorkoutPlanReviewCreatorPageState
       broadcastQueryIds: [
         UserWorkoutPlansQuery().operationName,
         GQLVarParamKeys.workoutPlanByIdQuery(widget.parentWorkoutPlanId),
-        EnrolledWorkoutPlansQuery().operationName,
-        GQLVarParamKeys.workoutPlanByEnrolmentId(
+        WorkoutPlanEnrolmentsQuery().operationName,
+        GQLVarParamKeys.workoutPlanEnrolmentById(
             widget.parentWorkoutPlanEnrolmentId),
       ],
     );

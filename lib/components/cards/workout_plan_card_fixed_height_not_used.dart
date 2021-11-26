@@ -84,20 +84,20 @@ class WorkoutPlanCardFixedHeight extends StatelessWidget {
                             backgroundColor: contentOverlayColor,
                             textColor: infoFontColor,
                           ),
-                        if (workoutPlan.workoutPlanReviews.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 6.0),
-                            child: ContentBox(
-                              backgroundColor: contentOverlayColor,
-                              padding: overlayContentPadding,
-                              borderRadius: 4,
-                              child: WorkoutPlanReviewsSummary(
-                                reviews: workoutPlan.workoutPlanReviews,
-                                itemSize: 14,
-                                textColor: infoFontColor,
-                              ),
-                            ),
-                          ),
+                        // if (workoutPlan.workoutPlanReviews.isNotEmpty)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(top: 6.0),
+                        //     child: ContentBox(
+                        //       backgroundColor: contentOverlayColor,
+                        //       padding: overlayContentPadding,
+                        //       borderRadius: 4,
+                        //       child: WorkoutPlanReviewsSummary(
+                        //         reviews: workoutPlan.workoutPlanReviews,
+                        //         itemSize: 14,
+                        //         textColor: infoFontColor,
+                        //       ),
+                        //     ),
+                        //   ),
                       ],
                     ),
                   ],

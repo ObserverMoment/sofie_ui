@@ -1,5 +1,5 @@
 query textSearchWorkoutPlans($text: String!) {
   textSearchWorkoutPlans(text: $text) {
-    ...WorkoutPlanData
+    ...WorkoutPlanSummary
   }
 }

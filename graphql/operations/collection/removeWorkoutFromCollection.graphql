@@ -8,7 +8,7 @@ mutation removeWorkoutFromCollection($data: RemoveWorkoutFromCollectionInput!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

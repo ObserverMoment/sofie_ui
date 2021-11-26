@@ -9,8 +9,8 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/text_search_filters.dart';
 
 class PrivatePlansTextSearch extends StatefulWidget {
-  final List<WorkoutPlan> userWorkoutPlans;
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final List<WorkoutPlanSummary> userWorkoutPlans;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
 
   const PrivatePlansTextSearch(
       {Key? key, required this.userWorkoutPlans, this.selectWorkoutPlan})
@@ -23,7 +23,7 @@ class PrivatePlansTextSearch extends StatefulWidget {
 class _PrivatePlansTextSearchState extends State<PrivatePlansTextSearch> {
   String _searchString = '';
 
-  List<WorkoutPlan> _filteredUserWorkoutPlans = [];
+  List<WorkoutPlanSummary> _filteredUserWorkoutPlans = [];
 
   void _handleSearchStringUpdate(String text) {
     setState(() => _searchString = text.toLowerCase());

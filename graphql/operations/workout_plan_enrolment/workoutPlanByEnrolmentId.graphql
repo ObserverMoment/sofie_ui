@@ -1,5 +1,0 @@
-query workoutPlanByEnrolmentId($id: ID!) {
-  workoutPlanByEnrolmentId(id: $id) {
-    ...WorkoutPlanData
-  }
-}

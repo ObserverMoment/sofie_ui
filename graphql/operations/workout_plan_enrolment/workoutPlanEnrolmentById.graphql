@@ -1,0 +1,13 @@
+query workoutPlanEnrolmentById($id: ID!) {
+  workoutPlanEnrolmentById(id: $id) {
+    WorkoutPlanEnrolment {
+      ...WorkoutPlanEnrolment
+      User {
+        ...UserSummary
+      }
+    }
+    WorkoutPlan {
+      ...WorkoutPlanData
+    }
+  }
+}

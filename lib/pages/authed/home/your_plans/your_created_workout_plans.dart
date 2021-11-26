@@ -10,7 +10,7 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class YourCreatedWorkoutPlans extends StatelessWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
   const YourCreatedWorkoutPlans({Key? key, this.selectWorkoutPlan})
       : super(key: key);
 
@@ -20,6 +20,7 @@ class YourCreatedWorkoutPlans extends StatelessWidget {
         key: Key(
             'YourCreatedWorkoutPlans - ${UserWorkoutPlansQuery().operationName}'),
         query: UserWorkoutPlansQuery(),
+        fullScreenError: false,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         loadingIndicator: const ShimmerCardList(itemCount: 20),
         builder: (data) {
@@ -37,8 +38,8 @@ class YourCreatedWorkoutPlans extends StatelessWidget {
 }
 
 class FilterableCreatedWorkoutPlans extends StatefulWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
-  final List<WorkoutPlan> allWorkoutPlans;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
+  final List<WorkoutPlanSummary> allWorkoutPlans;
   const FilterableCreatedWorkoutPlans(
       {Key? key, this.selectWorkoutPlan, required this.allWorkoutPlans})
       : super(key: key);
@@ -50,20 +51,19 @@ class FilterableCreatedWorkoutPlans extends StatefulWidget {
 
 class _FilterableCreatedWorkoutPlansState
     extends State<FilterableCreatedWorkoutPlans> {
-  WorkoutTag? _workoutTagFilter;
+  String? _workoutTagFilter;
 
   @override
   Widget build(BuildContext context) {
     final allTags = widget.allWorkoutPlans
-        .fold<List<WorkoutTag>>(
-            [], (acum, next) => [...acum, ...next.workoutTags])
+        .fold<List<String>>([], (acum, next) => [...acum, ...next.tags])
         .toSet()
         .toList();
 
     final filteredWorkoutPlans = _workoutTagFilter == null
         ? widget.allWorkoutPlans
         : widget.allWorkoutPlans
-            .where((w) => w.workoutTags.contains(_workoutTagFilter));
+            .where((w) => w.tags.contains(_workoutTagFilter));
 
     final sortedWorkoutPlans = filteredWorkoutPlans
         .sortedBy<DateTime>((w) => w.createdAt)
@@ -84,7 +84,7 @@ class _FilterableCreatedWorkoutPlansState
                           padding: const EdgeInsets.only(right: 4.0),
                           child: SelectableTag(
                             fontSize: FONTSIZE.two,
-                            text: allTags[i].tag,
+                            text: allTags[i],
                             isSelected: allTags[i] == _workoutTagFilter,
                             onPressed: () => setState(() => _workoutTagFilter =
                                 allTags[i] == _workoutTagFilter

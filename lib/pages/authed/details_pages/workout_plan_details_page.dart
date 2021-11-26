@@ -54,7 +54,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             CreateWorkoutPlanEnrolment$Mutation,
             CreateWorkoutPlanEnrolmentArguments>(
         mutation: CreateWorkoutPlanEnrolmentMutation(variables: variables),
-        addRefToQueries: [EnrolledWorkoutPlansQuery().operationName]);
+        addRefToQueries: [WorkoutPlanEnrolmentsQuery().operationName]);
 
     await checkOperationResult(context, result,
         onSuccess: () =>
@@ -125,12 +125,12 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         });
   }
 
-  Widget _buildContent(
-          {required WorkoutPlan workoutPlan,
-          required List<Equipment> allEquipment,
-          required List<Collection> collections,
-          required bool hasEnrolled,
-          required List<WorkoutPlanEnrolment> workoutPlanEnrolments}) =>
+  Widget _buildContent({
+    required WorkoutPlan workoutPlan,
+    required List<Equipment> allEquipment,
+    required List<Collection> collections,
+    required bool hasEnrolled,
+  }) =>
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -162,8 +162,9 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                   WorkoutPlanGoals(workoutPlan: workoutPlan),
                   WorkoutPlanReviews(reviews: workoutPlan.workoutPlanReviews),
                   WorkoutPlanParticipants(
-                      userSummaries:
-                          workoutPlanEnrolments.map((e) => e.user).toList())
+                      userSummaries: workoutPlan.workoutPlanEnrolments
+                          .map((e) => e.user)
+                          .toList())
                 ],
               ),
             )
@@ -320,17 +321,17 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         ]))
                                       ],
                               body: _buildContent(
-                                  workoutPlan: workoutPlan,
-                                  allEquipment: allEquipment,
-                                  collections: collections,
-                                  hasEnrolled: enrolmentInPlan != null,
-                                  workoutPlanEnrolments: enrolments))
+                                workoutPlan: workoutPlan,
+                                allEquipment: allEquipment,
+                                collections: collections,
+                                hasEnrolled: enrolmentInPlan != null,
+                              ))
                           : _buildContent(
                               workoutPlan: workoutPlan,
                               allEquipment: allEquipment,
                               collections: collections,
                               hasEnrolled: enrolmentInPlan != null,
-                              workoutPlanEnrolments: enrolments),
+                            ),
                     ));
               });
         });

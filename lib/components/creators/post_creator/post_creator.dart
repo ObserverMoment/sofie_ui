@@ -60,7 +60,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
   /// Only one of these should ever be not null.
   /// When saving a new one make sure you set all others null.
   WorkoutSummary? _workout;
-  WorkoutPlan? _workoutPlan;
+  WorkoutPlanSummary? _workoutPlan;
 
   final PageController _pageController = PageController();
   int _activePageIndex = 0;
@@ -99,7 +99,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
     _changePage(1);
   }
 
-  void _selectWorkoutPlan(WorkoutPlan plan) {
+  void _selectWorkoutPlan(WorkoutPlanSummary plan) {
     _removeAllObjects();
     _workoutPlan = plan;
     _selectedObjectId = plan.id;

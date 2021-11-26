@@ -14,7 +14,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class PublicPlansTextSearch extends StatefulWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
 
   const PublicPlansTextSearch({Key? key, this.selectWorkoutPlan})
       : super(key: key);
@@ -27,7 +27,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
   String _searchString = '';
 
   /// Handles retrieving full workout objects from the API when the user presses submit (search) on the keyboard.
-  late TextSearchBloc<WorkoutPlan> _workoutPlansTextSearchBloc;
+  late TextSearchBloc<WorkoutPlanSummary> _workoutPlansTextSearchBloc;
 
   /// Handles retrieving just workout names (similar to a suggestions list) as the user is typing their search query.
   late TextSearchBloc<TextSearchResult> _workoutPlanNamesTextSearchBloc;
@@ -36,7 +36,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
   void initState() {
     super.initState();
     _workoutPlansTextSearchBloc =
-        TextSearchBloc<WorkoutPlan>(context, TextSearchType.workoutPlan);
+        TextSearchBloc<WorkoutPlanSummary>(context, TextSearchType.workoutPlan);
     _workoutPlanNamesTextSearchBloc = TextSearchBloc<TextSearchResult>(
         context, TextSearchType.workoutPlanName);
   }
@@ -97,8 +97,8 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                   _workoutPlanNamesTextSearchBloc.state
                 ]),
                 builder: (context, stateSnapshot) {
-                  return StreamBuilder<List<WorkoutPlan>>(
-                      initialData: const <WorkoutPlan>[],
+                  return StreamBuilder<List<WorkoutPlanSummary>>(
+                      initialData: const <WorkoutPlanSummary>[],
                       stream: _workoutPlansTextSearchBloc.results,
                       builder: (context, workoutPlansSnapshot) {
                         return StreamBuilder<List<TextSearchResult>>(

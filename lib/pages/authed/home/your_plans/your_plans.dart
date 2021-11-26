@@ -62,9 +62,9 @@ class _YourPlansPageState extends State<YourPlansPage> {
                     value: _activeTabIndex,
                     updateValue: _updatePageIndex,
                     children: const {
-                      0: MyText('Created'),
-                      1: MyText('Joined'),
-                      2: MyText('Saved'),
+                      0: MyText('Joined'),
+                      1: MyText('Saved'),
+                      2: MyText('Created'),
                     }),
               ),
             ),
@@ -72,11 +72,11 @@ class _YourPlansPageState extends State<YourPlansPage> {
                 child: IndexedStack(
               index: _activeTabIndex,
               children: [
-                const YourCreatedWorkoutPlans(),
-                YourEnrolledWorkoutPlans(
+                YourWorkoutPlanEnrolments(
                   selectEnrolment: (id) => _openWorkoutPlanEnrolmentDetails(id),
                 ),
-                const YourSavedPlans()
+                const YourSavedPlans(),
+                const YourCreatedWorkoutPlans(),
               ],
             ))
           ],

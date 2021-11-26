@@ -17,7 +17,7 @@ import 'package:sofie_ui/services/store/query_observer.dart';
 /// Wrapper around the UI which handles the [ObservableQuery]s [UserWorkoutPlans] and [UserCollections]
 /// Client side the user can filter their created plans and their saved plans. Via the api their can filter public plans.
 class PrivateWorkoutPlanFinderPage extends StatefulWidget {
-  final void Function(WorkoutPlan workoutPlan) selectWorkoutPlan;
+  final void Function(WorkoutPlanSummary workoutPlan) selectWorkoutPlan;
   const PrivateWorkoutPlanFinderPage(
       {Key? key, required this.selectWorkoutPlan})
       : super(key: key);
@@ -35,7 +35,7 @@ class _PrivateWorkoutPlanFinderPageState
 
   /// Pops itself (and any stack items such as the text seach widget)
   /// Then passes the selected workout to the parent.
-  void _selectWorkoutPlan(WorkoutPlan workoutPlan) {
+  void _selectWorkoutPlan(WorkoutPlanSummary workoutPlan) {
     // If open - pop the text search route.
     context.router.popUntilRouteWithName(PrivateWorkoutPlanFinderRoute.name);
     // Then pop this widget.
@@ -64,7 +64,7 @@ class _PrivateWorkoutPlanFinderPageState
                 final userPlans = createdPlansData.userWorkoutPlans;
 
                 final savedPlans = collectionsData.userCollections
-                    .fold<List<WorkoutPlan>>(
+                    .fold<List<WorkoutPlanSummary>>(
                         [], (acum, next) => [...acum, ...next.workoutPlans]);
 
                 return MyPageScaffold(
@@ -87,7 +87,7 @@ class _PrivateWorkoutPlanFinderPageState
                               selectWorkoutPlan: _selectWorkoutPlan,
                               // Combining created and saved plans means there can be dupes.
                               // Remove them by building as a set.
-                              userWorkoutPlans: <WorkoutPlan>{
+                              userWorkoutPlans: <WorkoutPlanSummary>{
                                 ...userPlans,
                                 ...savedPlans
                               }.toList(),

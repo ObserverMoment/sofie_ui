@@ -36,7 +36,7 @@ const kStandardAnimationDuration = Duration(milliseconds: 250);
 const kDoWorkoutWorkoutSectionTopNavHeight = 60.0;
 
 /// Opacity of overlay on top of images when readable content needs to be displayed.
-const kImageOverlayOpacity = 0.8;
+const kImageOverlayOpacity = 0.75;
 
 /// Object Type names for the store.
 /// For use in [__typename:id] normalization and store ops.

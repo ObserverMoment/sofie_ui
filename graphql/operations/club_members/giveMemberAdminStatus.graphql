@@ -29,7 +29,7 @@ mutation giveMemberAdminStatus($userId: ID!, $clubId: ID!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

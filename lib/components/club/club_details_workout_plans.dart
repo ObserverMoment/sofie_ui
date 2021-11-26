@@ -17,7 +17,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 
 class ClubDetailsWorkoutPlans extends StatefulWidget {
   final Club club;
-  final List<WorkoutPlan> workoutPlans;
+  final List<WorkoutPlanSummary> workoutPlans;
   final bool isOwnerOrAdmin;
   const ClubDetailsWorkoutPlans(
       {Key? key,
@@ -34,7 +34,7 @@ class ClubDetailsWorkoutPlans extends StatefulWidget {
 class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
   bool _loading = false;
 
-  void _handleWorkoutPlanTap(WorkoutPlan workoutPlan) {
+  void _handleWorkoutPlanTap(WorkoutPlanSummary workoutPlan) {
     if (widget.isOwnerOrAdmin) {
       openBottomSheetMenu(
           context: context,
@@ -62,7 +62,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
     }
   }
 
-  void _navigateToWorkoutPlanDetails(WorkoutPlan workoutPlan) {
+  void _navigateToWorkoutPlanDetails(WorkoutPlanSummary workoutPlan) {
     context.navigateTo(WorkoutPlanDetailsRoute(id: workoutPlan.id));
   }
 
@@ -71,7 +71,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
         selectWorkoutPlan: (w) => _addWorkoutPlanToClub(w)));
   }
 
-  Future<void> _addWorkoutPlanToClub(WorkoutPlan workoutPlan) async {
+  Future<void> _addWorkoutPlanToClub(WorkoutPlanSummary workoutPlan) async {
     setState(() {
       _loading = true;
     });
@@ -95,7 +95,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
             toastType: ToastType.destructive));
   }
 
-  void _confirmRemoveWorkoutPlanFromClub(WorkoutPlan workoutPlan) {
+  void _confirmRemoveWorkoutPlanFromClub(WorkoutPlanSummary workoutPlan) {
     context.showConfirmDeleteDialog(
         verb: 'Remove',
         itemType: 'Plan',
@@ -105,7 +105,8 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
         onConfirm: () => _removeWorkoutPlanFromClub(workoutPlan));
   }
 
-  Future<void> _removeWorkoutPlanFromClub(WorkoutPlan workoutPlan) async {
+  Future<void> _removeWorkoutPlanFromClub(
+      WorkoutPlanSummary workoutPlan) async {
     setState(() {
       _loading = true;
     });
@@ -148,7 +149,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
       children: [
         widget.workoutPlans.isEmpty
             ? _placeholder
-            : ImplicitlyAnimatedList<WorkoutPlan>(
+            : ImplicitlyAnimatedList<WorkoutPlanSummary>(
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(
                     top: 8, bottom: kAssumedFloatingButtonHeight),

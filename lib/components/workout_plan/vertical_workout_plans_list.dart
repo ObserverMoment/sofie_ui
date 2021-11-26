@@ -10,8 +10,8 @@ import 'package:collection/collection.dart';
 /// A list of standard cards if [selectWorkoutPlan] is not provided.
 /// A list of [WorkoutPlanCard ContextMenus] if it is.
 class VerticalWorkoutPlansList extends StatelessWidget {
-  final List<WorkoutPlan> workoutPlans;
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final List<WorkoutPlanSummary> workoutPlans;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
   final bool scrollable;
   final bool avoidBottomNavBar;
 
@@ -40,7 +40,7 @@ class VerticalWorkoutPlansList extends StatelessWidget {
                 subtext: true,
               ),
             ))
-        : ImplicitlyAnimatedList<WorkoutPlan>(
+        : ImplicitlyAnimatedList<WorkoutPlanSummary>(
             padding: avoidBottomNavBar
                 ? EdgeInsets.only(bottom: EnvironmentConfig.bottomNavBarHeight)
                 : null,
@@ -50,21 +50,22 @@ class VerticalWorkoutPlansList extends StatelessWidget {
                 .sortedBy<DateTime>((w) => w.createdAt)
                 .reversed
                 .toList(),
-            itemBuilder: (context, animation, WorkoutPlan workoutPlan, i) =>
-                SizeFadeTransition(
-                  sizeFraction: 0.7,
-                  curve: Curves.easeInOut,
-                  animation: animation,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: SelectableWorkoutPlanCard(
-                      index: i,
-                      workoutPlan: workoutPlan,
-                      selectWorkoutPlan: selectWorkoutPlan,
-                      heroTagKey: heroTagKey,
+            itemBuilder:
+                (context, animation, WorkoutPlanSummary workoutPlan, i) =>
+                    SizeFadeTransition(
+                      sizeFraction: 0.7,
+                      curve: Curves.easeInOut,
+                      animation: animation,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: SelectableWorkoutPlanCard(
+                          index: i,
+                          workoutPlan: workoutPlan,
+                          selectWorkoutPlan: selectWorkoutPlan,
+                          heroTagKey: heroTagKey,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
             areItemsTheSame: (a, b) => a == b);
   }
 }

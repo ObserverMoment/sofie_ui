@@ -5,7 +5,7 @@ query userPublicProfileById($userId: ID!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

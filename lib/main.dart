@@ -82,7 +82,7 @@ class _AuthRouterState extends State<AuthRouter> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AuthBloc>(create: (_) => AuthBloc()),
+        ChangeNotifierProvider<AuthBloc>.value(value: _authBloc),
         ChangeNotifierProvider<ThemeBloc>(
             create: (_) => ThemeBloc(deviceBrightness: _userDeviceBrightness)),
         Provider<GraphQLStore>(

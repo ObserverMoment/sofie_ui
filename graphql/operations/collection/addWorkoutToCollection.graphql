@@ -8,7 +8,7 @@ mutation addWorkoutToCollection($data: AddWorkoutToCollectionInput!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

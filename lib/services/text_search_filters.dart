@@ -23,12 +23,12 @@ class TextSearchFilters {
   }
 
   static bool workoutPlanBySearchString(
-      WorkoutPlan workoutPlan, String searchString) {
+      WorkoutPlanSummary workoutPlan, String searchString) {
     return workoutPlan.name.toLowerCase().contains(searchString);
   }
 
-  static List<WorkoutPlan> workoutPlansBySearchString(
-      List<WorkoutPlan> original, String searchString) {
+  static List<WorkoutPlanSummary> workoutPlansBySearchString(
+      List<WorkoutPlanSummary> original, String searchString) {
     return Utils.textNotNull(searchString)
         ? original
             .where((p) => workoutPlanBySearchString(p, searchString))

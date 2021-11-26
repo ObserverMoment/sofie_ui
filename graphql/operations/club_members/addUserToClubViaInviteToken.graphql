@@ -32,7 +32,7 @@ mutation addUserToClubViaInviteToken($userId: ID!, $clubInviteTokenId: ID!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

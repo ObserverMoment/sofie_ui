@@ -1,0 +1,17 @@
+# For when the user is getting plans they are enrolled in - display in cards.
+fragment WorkoutPlanEnrolmentSummary on WorkoutPlanEnrolmentSummary {
+  __typename
+  id
+  startDate
+  completedPlanDayWorkoutIds
+  WorkoutPlan {
+    ...WorkoutPlanSummary
+  }
+}
+
+fragment WorkoutPlanEnrolment on WorkoutPlanEnrolment {
+  __typename
+  id
+  startDate
+  completedPlanDayWorkoutIds
+}

@@ -119,15 +119,18 @@ class ClubCard extends StatelessWidget {
                               size: FONTSIZE.two,
                               color: infoFontColor,
                             ),
-                            const SizedBox(height: 6),
-                            CommaSeparatedList(
-                              club.admins
-                                  .map((a) =>
-                                      '${a.displayName.toUpperCase()} (admin)')
-                                  .toList(),
-                              fontSize: FONTSIZE.one,
-                              textColor: infoFontColor,
-                            ),
+                            if (club.admins.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 6.0),
+                                child: CommaSeparatedList(
+                                  club.admins
+                                      .map((a) =>
+                                          '${a.displayName.toUpperCase()} (admin)')
+                                      .toList(),
+                                  fontSize: FONTSIZE.one,
+                                  textColor: infoFontColor,
+                                ),
+                              ),
                           ],
                         ),
                       ),

@@ -29,7 +29,7 @@ mutation updateClub($data: UpdateClubInput!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

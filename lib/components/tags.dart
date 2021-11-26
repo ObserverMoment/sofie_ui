@@ -120,7 +120,9 @@ class MoveTypeTag extends StatelessWidget {
 
 class DifficultyLevelDot extends StatelessWidget {
   final DifficultyLevel difficultyLevel;
-  const DifficultyLevelDot({Key? key, required this.difficultyLevel})
+  final double size;
+  const DifficultyLevelDot(
+      {Key? key, required this.difficultyLevel, this.size = 15})
       : super(key: key);
 
   @override
@@ -130,8 +132,8 @@ class DifficultyLevelDot extends StatelessWidget {
         isElite ? context.theme.primary : difficultyLevel.displayColor;
 
     return Container(
-      width: 16,
-      height: 16,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
           border: Border.all(color: borderColor),
           shape: BoxShape.circle,

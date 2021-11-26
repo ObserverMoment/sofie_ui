@@ -1,3 +1,4 @@
+import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -6,6 +7,25 @@ import 'package:supercharged/supercharged.dart';
 import 'package:collection/collection.dart';
 
 class DataUtils {
+  static List<WaffleChartInput> waffleChartInputsFromGoals(
+      List<WorkoutGoal> goals) {
+    final data = goals.fold<Map<WorkoutGoal, int>>({}, (acum, next) {
+      if (acum[next] != null) {
+        acum[next] = acum[next]! + 1;
+      } else {
+        acum[next] = 1;
+      }
+      return acum;
+    });
+
+    return data.entries
+        .map((e) => WaffleChartInput(
+            fraction: e.value / goals.length,
+            color: HexColor.fromHex(e.key.hexColor),
+            name: e.key.name))
+        .toList();
+  }
+
   /// Also sorts non bodyweight options alphabetically.
   static List<Equipment> sortEquipmentsWithBodyWeightFirst(
       List<Equipment> equipments) {

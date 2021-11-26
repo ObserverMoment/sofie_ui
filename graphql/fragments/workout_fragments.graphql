@@ -59,6 +59,22 @@ fragment WorkoutData on Workout {
   }
 }
 
+fragment Workout on Workout {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  lengthMinutes
+  difficultyLevel
+  coverImageUri
+  contentAccessScope
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+}
+
 fragment WorkoutSummary on WorkoutSummary {
   __typename
   id
@@ -77,22 +93,6 @@ fragment WorkoutSummary on WorkoutSummary {
   hasClassAudio
   equipments
   tags
-}
-
-fragment Workout on Workout {
-  __typename
-  id
-  createdAt
-  archived
-  name
-  description
-  lengthMinutes
-  difficultyLevel
-  coverImageUri
-  contentAccessScope
-  introVideoUri
-  introVideoThumbUri
-  introAudioUri
 }
 
 fragment ArchivedWorkout on Workout {

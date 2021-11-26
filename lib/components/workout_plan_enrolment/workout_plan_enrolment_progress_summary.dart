@@ -4,22 +4,21 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 class WorkoutPlanEnrolmentProgressSummary extends StatelessWidget {
-  final WorkoutPlan workoutPlan;
-  final WorkoutPlanEnrolment enrolment;
+  final DateTime startedOn;
+  final int total;
+  final int completed;
+
   const WorkoutPlanEnrolmentProgressSummary(
-      {Key? key, required this.workoutPlan, required this.enrolment})
+      {Key? key,
+      required this.total,
+      required this.completed,
+      required this.startedOn})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final total = workoutPlan.workoutPlanDays.fold<int>(
-        0, (acum, nextDay) => acum + nextDay.workoutPlanDayWorkouts.length);
-
-    final completed = enrolment.completedPlanDayWorkoutIds.length;
-
     return Row(
       children: [
         Padding(
@@ -33,7 +32,7 @@ class WorkoutPlanEnrolmentProgressSummary extends StatelessWidget {
                 lineHeight: 1.5,
               ),
               MyText(
-                enrolment.startDate.compactDateString,
+                startedOn.compactDateString,
               ),
             ],
           ),

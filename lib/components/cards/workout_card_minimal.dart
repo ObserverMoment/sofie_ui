@@ -8,6 +8,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 
 /// No background image and more compact - for displaying in a plan schedule list.
 /// Title and equipment are on the top - tags on the bottom.
@@ -55,19 +56,23 @@ class MinimalWorkoutCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        DifficultyLevelTag(
-                          difficultyLevel: workout.difficultyLevel,
-                          fontSize: FONTSIZE.one,
-                        ),
                         if (workout.lengthMinutes != null)
                           Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: DurationTag(
-                              duration:
-                                  Duration(minutes: workout.lengthMinutes!),
-                              fontSize: FONTSIZE.three,
+                            padding: const EdgeInsets.only(right: 6.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(CupertinoIcons.timer, size: 15),
+                                const SizedBox(width: 4),
+                                MyText(
+                                  Duration(minutes: workout.lengthMinutes!)
+                                      .displayString,
+                                ),
+                              ],
                             ),
                           ),
+                        DifficultyLevelDot(
+                            difficultyLevel: workout.difficultyLevel, size: 12),
                       ],
                     ),
                     const SizedBox(height: 8),

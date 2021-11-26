@@ -20,17 +20,15 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:supercharged/supercharged.dart';
 
-class WorkoutPlanEnrolmentWorkoutsProgress extends StatelessWidget {
-  final WorkoutPlan workoutPlan;
-  final WorkoutPlanEnrolment enrolment;
-  const WorkoutPlanEnrolmentWorkoutsProgress(
-      {Key? key, required this.workoutPlan, required this.enrolment})
+class WorkoutPlanEnrolmentProgress extends StatelessWidget {
+  final WorkoutPlanEnrolmentWithPlan enrolment;
+  const WorkoutPlanEnrolmentProgress({Key? key, required this.enrolment})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     /// Zero index - week '1' is at daysByWeek[0].
-    final daysByWeek = workoutPlan.workoutPlanDays
+    final daysByWeek = enrolment.workoutPlan.workoutPlanDays
         .groupBy<int, WorkoutPlanDay>((day) => (day.dayNumber / 7).floor());
 
     return ListView(
@@ -41,7 +39,7 @@ class WorkoutPlanEnrolmentWorkoutsProgress extends StatelessWidget {
                 child: WorkoutPlanEnrolmentWorkoutsWeek(
                     workoutPlanDaysInWeek: daysByWeek[i] ?? [],
                     weekNumber: i,
-                    workoutPlanEnrolment: enrolment),
+                    enrolmentWithPlan: enrolment),
               ))
           .toList(),
     );
@@ -49,14 +47,14 @@ class WorkoutPlanEnrolmentWorkoutsProgress extends StatelessWidget {
 }
 
 class WorkoutPlanEnrolmentWorkoutsWeek extends StatelessWidget {
-  final WorkoutPlanEnrolment workoutPlanEnrolment;
+  final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
   final int weekNumber;
   final List<WorkoutPlanDay> workoutPlanDaysInWeek;
   const WorkoutPlanEnrolmentWorkoutsWeek(
       {Key? key,
       required this.weekNumber,
       required this.workoutPlanDaysInWeek,
-      required this.workoutPlanEnrolment})
+      required this.enrolmentWithPlan})
       : super(key: key);
 
   @override
@@ -107,7 +105,7 @@ class WorkoutPlanEnrolmentWorkoutsWeek extends StatelessWidget {
                 ? _WorkoutPlanEnrolmentDayCard(
                     workoutPlanDay: byDayNumberInWeek[i]!,
                     displayDayNumber: i,
-                    workoutPlanEnrolment: workoutPlanEnrolment,
+                    enrolmentWithPlan: enrolmentWithPlan,
                   )
                 : Opacity(
                     opacity: 0.75,
@@ -126,19 +124,19 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
   /// Zero indexed.
   final int displayDayNumber;
   final WorkoutPlanDay workoutPlanDay;
-  final WorkoutPlanEnrolment workoutPlanEnrolment;
+  final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
   const _WorkoutPlanEnrolmentDayCard(
       {Key? key,
       required this.workoutPlanDay,
       required this.displayDayNumber,
-      required this.workoutPlanEnrolment})
+      required this.enrolmentWithPlan})
       : super(key: key);
 
   Future<void> _openScheduleWorkout(
       BuildContext context, WorkoutPlanDayWorkout workoutPlanDayWorkout) async {
     final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
       workout: workoutPlanDayWorkout.workout.summary,
-      workoutPlanEnrolmentId: workoutPlanEnrolment.id,
+      workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id,
     ));
     if (result is ToastRequest) {
       context.showToast(message: result.message, toastType: result.type);
@@ -176,19 +174,21 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
   Future<void> _updateCompletedWorkoutIds(
       BuildContext context, List<String> updatedIds) async {
     final variables = UpdateWorkoutPlanEnrolmentArguments(
-        data: UpdateWorkoutPlanEnrolmentInput(id: workoutPlanEnrolment.id));
+        data: UpdateWorkoutPlanEnrolmentInput(
+            id: enrolmentWithPlan.workoutPlanEnrolment.id));
 
     final result = await context.graphQLStore.mutate<
             UpdateWorkoutPlanEnrolment$Mutation,
             UpdateWorkoutPlanEnrolmentArguments>(
         mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanByEnrolmentId(workoutPlanEnrolment.id),
-          EnrolledWorkoutPlansQuery().operationName,
+          GQLVarParamKeys.workoutPlanEnrolmentById(
+              enrolmentWithPlan.workoutPlanEnrolment.id),
+          WorkoutPlanEnrolmentsQuery().operationName,
         ],
         customVariablesMap: {
           'data': {
-            'id': workoutPlanEnrolment.id,
+            'id': enrolmentWithPlan.workoutPlanEnrolment.id,
             'completedPlanDayWorkoutIds': updatedIds
           }
         });
@@ -204,7 +204,8 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
         .sortedBy<num>((d) => d.sortPosition)
         .toList();
 
-    final completedIds = workoutPlanEnrolment.completedPlanDayWorkoutIds;
+    final completedIds =
+        enrolmentWithPlan.workoutPlanEnrolment.completedPlanDayWorkoutIds;
 
     final dayComplete =
         sortedWorkoutPlanDayWorkouts.every((w) => completedIds.contains(w.id));

@@ -58,6 +58,29 @@ fragment WorkoutPlan on WorkoutPlan {
   contentAccessScope
 }
 
+fragment WorkoutPlanSummary on WorkoutPlanSummary {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  coverImageUri
+  lengthWeeks
+  daysPerWeek
+  workoutsCount
+  User {
+    ...UserSummary
+  }
+  enrolmentsCount
+  goals {
+    ...WorkoutGoal
+  }
+  tags
+  reviewScore
+  reviewCount
+}
+
 fragment ArchivedWorkoutPlan on WorkoutPlan {
   __typename
   id

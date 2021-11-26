@@ -37,14 +37,14 @@ class _YourPlansTextSearchState extends State<YourPlansTextSearch> {
         loadingIndicator: const ShimmerCardList(itemCount: 20),
         builder: (createdPlansData) {
           /// Enrolled Workout Plans
-          return QueryObserver<EnrolledWorkoutPlans$Query,
+          return QueryObserver<WorkoutPlanEnrolments$Query,
                   json.JsonSerializable>(
               key: Key(
-                  'YourPlansTextSearch - ${EnrolledWorkoutPlansQuery().operationName}'),
-              query: EnrolledWorkoutPlansQuery(),
+                  'YourPlansTextSearch - ${WorkoutPlanEnrolmentsQuery().operationName}'),
+              query: WorkoutPlanEnrolmentsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
               loadingIndicator: const ShimmerListPage(),
-              builder: (enrolledPlansData) {
+              builder: (enrolmentsData) {
                 /// Saved Workout Plans
                 return QueryObserver<UserCollections$Query,
                         json.JsonSerializable>(
@@ -54,21 +54,23 @@ class _YourPlansTextSearchState extends State<YourPlansTextSearch> {
                     fetchPolicy: QueryFetchPolicy.storeFirst,
                     loadingIndicator: const ShimmerCardList(itemCount: 20),
                     builder: (collectionsData) {
-                      final enrolledPlans =
-                          enrolledPlansData.enrolledWorkoutPlans;
+                      final enrolledPlans = enrolmentsData.workoutPlanEnrolments
+                          .map((e) => e.workoutPlan)
+                          .toList();
+
                       final createdPlans = createdPlansData.userWorkoutPlans;
                       final collections = collectionsData.userCollections;
 
-                      final allPlans = <WorkoutPlan>{
+                      final allPlans = <WorkoutPlanSummary>{
                         ...enrolledPlans,
                         ...createdPlans,
-                        ...collections.fold<List<WorkoutPlan>>(
+                        ...collections.fold<List<WorkoutPlanSummary>>(
                             [], (acum, next) => [...acum, ...next.workoutPlans])
                       }.toList();
 
-                      final List<WorkoutPlan> filteredWorkoutPlans =
+                      final List<WorkoutPlanSummary> filteredWorkoutPlans =
                           _searchString.length < 3
-                              ? <WorkoutPlan>[]
+                              ? <WorkoutPlanSummary>[]
                               : TextSearchFilters.workoutPlansBySearchString(
                                       allPlans, _searchString)
                                   .sortedBy<String>(

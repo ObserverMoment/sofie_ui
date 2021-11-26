@@ -5,6 +5,6 @@ query publicWorkoutPlans(
   $take: Int
 ) {
   publicWorkoutPlans(cursor: $cursor, filters: $filters, take: $take) {
-    ...WorkoutPlanData
+    ...WorkoutPlanSummary
   }
 }

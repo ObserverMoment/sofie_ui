@@ -29,7 +29,7 @@ mutation createClub($data: CreateClubInput!) {
       ...WorkoutSummary
     }
     WorkoutPlans {
-      ...WorkoutPlanData
+      ...WorkoutPlanSummary
     }
   }
 }

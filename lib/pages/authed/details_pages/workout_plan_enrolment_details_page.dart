@@ -65,8 +65,8 @@ class _WorkoutPlanEnrolmentDetailsPageState
                 mutation:
                     UpdateWorkoutPlanEnrolmentMutation(variables: variables),
                 broadcastQueryIds: [
-                  GQLVarParamKeys.workoutPlanByEnrolmentId(enrolment.id),
-                  EnrolledWorkoutPlansQuery().operationName,
+                  GQLVarParamKeys.workoutPlanEnrolmentById(enrolment.id),
+                  WorkoutPlanEnrolmentsQuery().operationName,
                 ],
                 customVariablesMap: {
                   'data': {
@@ -100,8 +100,8 @@ class _WorkoutPlanEnrolmentDetailsPageState
             UpdateWorkoutPlanEnrolmentArguments>(
         mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanByEnrolmentId(widget.id),
-          EnrolledWorkoutPlansQuery().operationName,
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
+          WorkoutPlanEnrolmentsQuery().operationName,
         ],
         customVariablesMap: {
           'data': {'id': widget.id, 'completedPlanDayWorkoutIds': []}
@@ -138,7 +138,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
         objectId: widget.id,
         typename: kWorkoutPlanEnrolmentTypename,
         mutation: DeleteWorkoutPlanEnrolmentByIdMutation(variables: variables),
-        removeRefFromQueries: [EnrolledWorkoutPlansQuery().operationName]);
+        removeRefFromQueries: [WorkoutPlanEnrolmentsQuery().operationName]);
 
     if (result.hasErrors) {
       context.showErrorAlert(
@@ -150,27 +150,24 @@ class _WorkoutPlanEnrolmentDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final query = WorkoutPlanByEnrolmentIdQuery(
-        variables: WorkoutPlanByEnrolmentIdArguments(id: widget.id));
+    final query = WorkoutPlanEnrolmentByIdQuery(
+        variables: WorkoutPlanEnrolmentByIdArguments(id: widget.id));
 
-    return QueryObserver<WorkoutPlanByEnrolmentId$Query,
-            WorkoutPlanByEnrolmentIdArguments>(
+    return QueryObserver<WorkoutPlanEnrolmentById$Query,
+            WorkoutPlanEnrolmentByIdArguments>(
         key: Key(
             'WorkoutPlanEnrolmentDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
         loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (data) {
-          final workoutPlan = data.workoutPlanByEnrolmentId;
-
-          final enrolments = workoutPlan.workoutPlanEnrolments;
-
-          /// No else null fallback specified because the user should not be on this page if they are not enrolled in this plan.
-          final enrolment = enrolments.firstWhere((e) => e.id == widget.id);
+          final enrolmentWithPlan = data.workoutPlanEnrolmentById;
+          final enrolment = enrolmentWithPlan.workoutPlanEnrolment;
+          final workoutPlan = enrolmentWithPlan.workoutPlan;
 
           final String? authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-          final WorkoutPlanReview? authedUserReview = workoutPlan
-              .workoutPlanReviews
+          final WorkoutPlanReview? authedUserReview = enrolmentWithPlan
+              .workoutPlan.workoutPlanReviews
               .firstWhereOrNull((r) => r.user.id == authedUserId);
 
           return MyPageScaffold(
@@ -219,7 +216,9 @@ class _WorkoutPlanEnrolmentDetailsPageState
                       vertical: 12.0,
                     ),
                     child: WorkoutPlanEnrolmentProgressSummary(
-                        workoutPlan: workoutPlan, enrolment: enrolment),
+                        completed: enrolment.completedPlanDayWorkoutIds.length,
+                        startedOn: enrolment.startDate,
+                        total: workoutPlan.workoutsInPlan.length),
                   ),
                   MyTabBarNav(
                       titles: const [
@@ -233,9 +232,8 @@ class _WorkoutPlanEnrolmentDetailsPageState
                       activeTabIndex: _activeTabIndex),
                   Expanded(
                     child: IndexedStack(index: _activeTabIndex, children: [
-                      WorkoutPlanEnrolmentWorkoutsProgress(
-                        workoutPlan: workoutPlan,
-                        enrolment: enrolment,
+                      WorkoutPlanEnrolmentProgress(
+                        enrolment: enrolmentWithPlan,
                       ),
                       WorkoutPlanMeta(
                           workoutPlan: workoutPlan,
@@ -247,12 +245,13 @@ class _WorkoutPlanEnrolmentDetailsPageState
                         workoutPlan: workoutPlan,
                       ),
                       _YourReviewDisplay(
-                        workoutPlanEnrolment: enrolment,
+                        enrolmentWithPlan: enrolmentWithPlan,
                         authedUserReview: authedUserReview,
-                        workoutPlan: workoutPlan,
                       ),
                       WorkoutPlanParticipants(
-                        userSummaries: enrolments.map((e) => e.user).toList(),
+                        userSummaries: workoutPlan.workoutPlanEnrolments
+                            .map((e) => e.user)
+                            .toList(),
                       )
                     ]),
                   ),
@@ -263,18 +262,19 @@ class _WorkoutPlanEnrolmentDetailsPageState
 }
 
 class _YourReviewDisplay extends StatelessWidget {
-  final WorkoutPlanEnrolment workoutPlanEnrolment;
-  final WorkoutPlan workoutPlan;
+  final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
   final WorkoutPlanReview? authedUserReview;
-  const _YourReviewDisplay(
-      {Key? key,
-      required this.workoutPlanEnrolment,
-      required this.authedUserReview,
-      required this.workoutPlan})
-      : super(key: key);
+  const _YourReviewDisplay({
+    Key? key,
+    required this.enrolmentWithPlan,
+    required this.authedUserReview,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final enrolment = enrolmentWithPlan.workoutPlanEnrolment;
+    final workoutPlan = enrolmentWithPlan.workoutPlan;
+
     final otherReviews = authedUserReview == null
         ? workoutPlan.workoutPlanReviews
         : workoutPlan.workoutPlanReviews
@@ -306,7 +306,7 @@ class _YourReviewDisplay extends StatelessWidget {
                   text: 'Edit Review',
                   onPressed: () =>
                       context.pushRoute(WorkoutPlanReviewCreatorRoute(
-                    parentWorkoutPlanEnrolmentId: workoutPlanEnrolment.id,
+                    parentWorkoutPlanEnrolmentId: enrolment.id,
                     parentWorkoutPlanId: workoutPlan.id,
                     workoutPlanReview: authedUserReview,
                   )),
@@ -339,7 +339,7 @@ class _YourReviewDisplay extends StatelessWidget {
                     text: 'Leave Review',
                     onPressed: () =>
                         context.pushRoute(WorkoutPlanReviewCreatorRoute(
-                      parentWorkoutPlanEnrolmentId: workoutPlanEnrolment.id,
+                      parentWorkoutPlanEnrolmentId: enrolment.id,
                       parentWorkoutPlanId: workoutPlan.id,
                     )),
                   ),
