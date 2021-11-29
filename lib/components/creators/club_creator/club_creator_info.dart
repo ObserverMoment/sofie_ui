@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/user_input/click_to_edit/display_name_edit_row.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class ClubCreatorInfo extends StatelessWidget {
   final Club club;
@@ -19,13 +21,28 @@ class ClubCreatorInfo extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: [
         UserInputContainer(
-          child: EditableTextFieldRow(
+          child: EditableDisplayNameRow(
             title: 'Name',
             text: club.name,
             onSave: (t) => updateClub({'name': t}),
             inputValidation: (t) => t.length > 3 && t.length <= 30,
             validationMessage: 'Min 3, max 30 characters',
             maxChars: 30,
+            apiMessage: 'Sorry, this club name has been taken.',
+            apiValidation: (t) async {
+              if (club.name == t) {
+                return true;
+              } else {
+                // return true;
+                final isAvailable = await context.graphQLStore
+                    .networkOnlyOperation(
+                        operation: CheckUniqueClubNameQuery(
+                            variables: CheckUniqueClubNameArguments(name: t)));
+
+                return isAvailable.data != null &&
+                    isAvailable.data!.checkUniqueClubName;
+              }
+            },
           ),
         ),
         UserInputContainer(

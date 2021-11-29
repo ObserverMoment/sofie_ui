@@ -11,9 +11,11 @@ import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class ClubCreatorPage extends StatefulWidget {
@@ -92,8 +94,12 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     final result = await context.graphQLStore
         .create<CreateClub$Mutation, CreateClubArguments>(
-            mutation: CreateClubMutation(variables: variables),
-            addRefToQueries: [GQLOpNames.userClubsQuery]);
+      mutation: CreateClubMutation(variables: variables),
+      processResult: (data) {
+        _writeClubSummaryUpdateAndBroadcast(data.createClub,
+            addRefToQuery: true);
+      },
+    );
 
     setState(() => _savingToDB = false);
 
@@ -155,15 +161,15 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
       customVariablesMap: {
         'data': {'id': _activeClub!.id, ...data}
       },
-      broadcastQueryIds: [
-        UserClubsQuery().operationName,
-        GQLVarParamKeys.clubByIdQuery(_activeClub!.id)
-      ],
+      processResult: (data) {
+        _writeClubSummaryUpdateAndBroadcast(data.updateClub);
+      },
+      broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(_activeClub!.id)],
     );
 
     setState(() => _savingToDB = false);
 
-    if (result.hasErrors || result.data == null) {
+    await checkOperationResult(context, result, onFail: () {
       context.showErrorAlert(
           'Sorry there was a problem, the Club was not updated.');
 
@@ -171,14 +177,14 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
       setState(() {
         _activeClub = Club.fromJson(_activeClubBackup);
       });
-    } else {
+    }, onSuccess: () {
       setState(() {
         _activeClub = result.data!.updateClub;
       });
 
       /// Update the backup data.
       _activeClubBackup = _activeClub!.toJson();
-    }
+    });
   }
 
   /// Methods to handle ClubInviteToken CRUD. ClubInviteTokens are nested within Clubs so a manual store write is required to ensure that all the UI updates correctly.
@@ -193,7 +199,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
       _activeClub!.clubInviteTokens!.add(token);
     });
 
-    _writeClubToGraphQLStore();
+    _writeClubToGraphQLStore(_activeClub!);
   }
 
   void _addUpdatedInviteTokenToState(ClubInviteToken token) {
@@ -208,27 +214,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
           .toList();
     });
 
-    _writeClubToGraphQLStore();
-  }
-
-  void _writeClubToGraphQLStore() {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._writeClubToGraphQLStore: [_activeClub] has not been initialized.');
-    }
-
-    final success = context.graphQLStore.writeDataToStore(
-      data: _activeClub!.toJson(),
-      broadcastQueryIds: [
-        GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-        UserClubsQuery().operationName
-      ],
-    );
-
-    if (!success) {
-      context.showErrorAlert(
-          'Sorry there was a problem. The changes were not updated correctly!');
-    }
+    _writeClubToGraphQLStore(_activeClub!);
   }
 
   Future<void> _deleteClubInviteToken(ClubInviteToken token) async {
@@ -280,9 +266,11 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
           mutation: GiveMemberAdminStatusMutation(
               variables: GiveMemberAdminStatusArguments(
                   userId: userId, clubId: _activeClub!.id)),
+          processResult: (data) {
+            _writeClubSummaryUpdateAndBroadcast(data.giveMemberAdminStatus);
+          },
           broadcastQueryIds: [
             GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-            GQLOpNames.userClubsQuery
           ]);
 
       setState(() {
@@ -319,9 +307,11 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
           mutation: RemoveMemberAdminStatusMutation(
               variables: RemoveMemberAdminStatusArguments(
                   userId: userId, clubId: _activeClub!.id)),
+          processResult: (data) {
+            _writeClubSummaryUpdateAndBroadcast(data.removeMemberAdminStatus);
+          },
           broadcastQueryIds: [
             GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-            GQLOpNames.userClubsQuery
           ]);
 
       setState(() {
@@ -360,9 +350,11 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
               mutation: RemoveUserFromClubMutation(
                   variables: RemoveUserFromClubArguments(
                       userToRemoveId: userId, clubId: _activeClub!.id)),
+              processResult: (data) {
+                _writeClubSummaryUpdateAndBroadcast(data.removeUserFromClub);
+              },
               broadcastQueryIds: [
             GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-            GQLOpNames.userClubsQuery
           ]);
 
       setState(() {
@@ -384,6 +376,35 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     /// Update the backup data.
     _activeClubBackup = _activeClub!.toJson();
+  }
+
+  /// Manual writes to store for [Club] and [ClubSummary] objects ///
+  /// Also rebroadcasts the correct queries.
+  void _writeClubToGraphQLStore(Club club) {
+    final success = context.graphQLStore.writeDataToStore(
+      data: _activeClub!.toJson(),
+      broadcastQueryIds: [
+        GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
+      ],
+    );
+
+    if (!success) {
+      context.showErrorAlert(
+          'Sorry there was a problem. The changes were not updated correctly!');
+    }
+  }
+
+  void _writeClubSummaryUpdateAndBroadcast(Club club,
+      {bool addRefToQuery = false}) {
+    final success = context.graphQLStore.writeDataToStore(
+        data: club.summary.toJson(),
+        addRefToQueries: addRefToQuery ? [GQLOpNames.userClubsQuery] : [],
+        broadcastQueryIds: addRefToQuery ? [] : [GQLOpNames.userClubsQuery]);
+
+    if (!success) {
+      context.showErrorAlert(
+          'Sorry there was a problem. The changes were not updated correctly!');
+    }
   }
 
   /// Will not save anything.

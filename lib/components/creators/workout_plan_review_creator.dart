@@ -64,13 +64,10 @@ class _WorkoutPlanReviewCreatorPageState
               workoutPlan:
                   ConnectRelationInput(id: widget.parentWorkoutPlanId)));
 
-      final result = await context.graphQLStore.mutate<
+      final result = await context.graphQLStore.networkOnlyOperation<
               CreateWorkoutPlanReview$Mutation,
               CreateWorkoutPlanReviewArguments>(
-          // Use _writeReviewToStore method to write to nested field
-          // within WorkoutPlan.workoutplanReviews
-          writeToStore: false,
-          mutation: CreateWorkoutPlanReviewMutation(variables: variables));
+          operation: CreateWorkoutPlanReviewMutation(variables: variables));
 
       setState(() => _loading = false);
 
@@ -96,13 +93,10 @@ class _WorkoutPlanReviewCreatorPageState
               score: _score,
               comment: _comment));
 
-      final result = await context.graphQLStore.mutate<
+      final result = await context.graphQLStore.networkOnlyOperation<
               UpdateWorkoutPlanReview$Mutation,
               UpdateWorkoutPlanReviewArguments>(
-          // Use _writeReviewToStore method to write to nested field
-          // within WorkoutPlan.workoutplanReviews
-          writeToStore: false,
-          mutation: UpdateWorkoutPlanReviewMutation(variables: variables));
+          operation: UpdateWorkoutPlanReviewMutation(variables: variables));
 
       setState(() => _loading = false);
 

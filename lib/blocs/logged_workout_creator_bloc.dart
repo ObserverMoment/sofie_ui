@@ -99,7 +99,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(MutationResult result) {
+  bool _checkApiResult(OperationResult result) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;
@@ -152,7 +152,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   }
 
   /// Used when creating only - when editing we save incrementally.
-  Future<MutationResult> createAndSave(BuildContext context) async {
+  Future<OperationResult> createAndSave(BuildContext context) async {
     final input = createLoggedWorkoutInputFromLoggedWorkout(
         loggedWorkout, scheduledWorkout);
 

@@ -48,11 +48,11 @@ class ProgressJournalEntryCreatorBloc extends ChangeNotifier {
         );
 
         /// Use [mutate] here instead of [create] as we will hold off from writing the new entry to the store until the user has finished their editing session.
-        final result = await context.graphQLStore.mutate<
-                CreateProgressJournalEntry$Mutation,
-                CreateProgressJournalEntryArguments>(
-            mutation: CreateProgressJournalEntryMutation(variables: variables),
-            writeToStore: false);
+        final result = await context.graphQLStore.networkOnlyOperation<
+            CreateProgressJournalEntry$Mutation,
+            CreateProgressJournalEntryArguments>(
+          operation: CreateProgressJournalEntryMutation(variables: variables),
+        );
 
         if (result.hasErrors || result.data == null) {
           throw Exception(
@@ -131,7 +131,7 @@ class ProgressJournalEntryCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(MutationResult result) {
+  bool _checkApiResult(OperationResult result) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;
@@ -152,11 +152,11 @@ class ProgressJournalEntryCreatorBloc extends ChangeNotifier {
     final variables = UpdateProgressJournalEntryArguments(
         data: UpdateProgressJournalEntryInput.fromJson(updated.toJson()));
 
-    final result = await context.graphQLStore.mutate<
-            UpdateProgressJournalEntry$Mutation,
-            UpdateProgressJournalEntryArguments>(
-        mutation: UpdateProgressJournalEntryMutation(variables: variables),
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        UpdateProgressJournalEntry$Mutation,
+        UpdateProgressJournalEntryArguments>(
+      operation: UpdateProgressJournalEntryMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 

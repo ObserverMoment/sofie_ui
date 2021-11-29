@@ -87,9 +87,8 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
             userBenchmark: ConnectRelationInput(id: widget.userBenchmark.id)));
 
     /// Run the update on the network - no client side writes until data can be merged with the parent benchmark.
-    final result = await context.graphQLStore.mutate(
-        writeToStore: false,
-        mutation: CreateUserBenchmarkEntryMutation(variables: variables));
+    final result = await context.graphQLStore.networkOnlyOperation(
+        operation: CreateUserBenchmarkEntryMutation(variables: variables));
 
     setState(() => _loading = false);
 

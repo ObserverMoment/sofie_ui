@@ -6,7 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
@@ -101,18 +100,10 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
       };
 
       await context.graphQLStore.mutate(
-          mutation: UpdateUserMutation(variables: variables),
-          customVariablesMap: {
-            'data': varsMap
-          },
-          broadcastQueryIds: [
-            AuthedUserQuery().operationName
-          ],
-          optimisticData: {
-            '__typename': 'User',
-            'id': GetIt.I<AuthBloc>().authedUser!.id,
-            ...varsMap
-          });
+        mutation: UpdateUserMutation(variables: variables),
+        customVariablesMap: {'data': varsMap},
+        broadcastQueryIds: [AuthedUserQuery().operationName],
+      );
     } catch (e) {
       printLog(e.toString());
       await context.showErrorAlert(e.toString());

@@ -5752,6 +5752,17 @@ Map<String, dynamic> _$WorkoutPlanEnrolmentById$QueryToJson(
       'workoutPlanEnrolmentById': instance.workoutPlanEnrolmentById.toJson(),
     };
 
+CheckUniqueClubName$Query _$CheckUniqueClubName$QueryFromJson(
+        Map<String, dynamic> json) =>
+    CheckUniqueClubName$Query()
+      ..checkUniqueClubName = json['checkUniqueClubName'] as bool;
+
+Map<String, dynamic> _$CheckUniqueClubName$QueryToJson(
+        CheckUniqueClubName$Query instance) =>
+    <String, dynamic>{
+      'checkUniqueClubName': instance.checkUniqueClubName,
+    };
+
 ClubSummariesByIdArguments _$ClubSummariesByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubSummariesByIdArguments(
@@ -7472,4 +7483,16 @@ Map<String, dynamic> _$WorkoutPlanEnrolmentByIdArgumentsToJson(
         WorkoutPlanEnrolmentByIdArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+CheckUniqueClubNameArguments _$CheckUniqueClubNameArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CheckUniqueClubNameArguments(
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$CheckUniqueClubNameArgumentsToJson(
+        CheckUniqueClubNameArguments instance) =>
+    <String, dynamic>{
+      'name': instance.name,
     };

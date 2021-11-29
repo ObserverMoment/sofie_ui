@@ -12,6 +12,17 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 /// Extensions which pertain to the processing of fitness related data (i.e. the graphql types.)
 extension ClubExtension on Club {
   int get totalMembers => 1 + admins.length + members.length;
+
+  ClubSummary get summary => ClubSummary()
+    ..$$typename = kClubSummaryTypeName
+    ..id = id
+    ..name = name
+    ..description = description
+    ..coverImageUri = coverImageUri
+    ..location = location
+    ..owner = owner
+    ..admins = admins
+    ..members = members;
 }
 
 extension ClubMembersExtension on ClubMembers {
@@ -83,6 +94,7 @@ extension WorkoutExtension on Workout {
   }
 
   WorkoutSummary get summary => WorkoutSummary()
+    ..$$typename = kWorkoutSummaryTypename
     ..id = id
     ..createdAt = createdAt
     ..archived = archived
@@ -104,6 +116,24 @@ extension WorkoutExtension on Workout {
 }
 
 extension WorkoutPlanExtension on WorkoutPlan {
+  WorkoutPlanSummary get summary => WorkoutPlanSummary()
+    ..$$typename = kWorkoutPlanSummaryTypename
+    ..id = id
+    ..createdAt = createdAt
+    ..archived = archived
+    ..name = name
+    ..description = description
+    ..coverImageUri = coverImageUri
+    ..lengthWeeks = lengthWeeks
+    ..daysPerWeek = daysPerWeek
+    ..workoutsCount = workoutsInPlan.length
+    ..user = user
+    ..enrolmentsCount = workoutPlanEnrolments.length
+    ..goals = workoutGoalsInPlan
+    ..tags = workoutTags.map((t) => t.tag).toList()
+    ..reviewScore = reviewAverage
+    ..reviewCount = workoutPlanReviews.length;
+
   DifficultyLevel? get calcDifficulty {
     final workouts = workoutsInPlan;
     if (workouts.isEmpty) {

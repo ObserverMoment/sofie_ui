@@ -754,6 +754,7 @@ type Query {
   bodyAreas: [BodyArea!]!
   bodyTrackingEntries: [BodyTrackingEntry!]!
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
+  checkUniqueClubName(name: String!): Boolean!
   checkUniqueDisplayName(displayName: String!): Boolean!
   clubById(id: ID!): Club!
   clubMembersFeedPosts(

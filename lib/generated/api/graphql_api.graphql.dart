@@ -7359,6 +7359,21 @@ class WorkoutPlanEnrolmentById$Query extends JsonSerializable
   Map<String, dynamic> toJson() => _$WorkoutPlanEnrolmentById$QueryToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class CheckUniqueClubName$Query extends JsonSerializable with EquatableMixin {
+  CheckUniqueClubName$Query();
+
+  factory CheckUniqueClubName$Query.fromJson(Map<String, dynamic> json) =>
+      _$CheckUniqueClubName$QueryFromJson(json);
+
+  late bool checkUniqueClubName;
+
+  @override
+  List<Object?> get props => [checkUniqueClubName];
+  @override
+  Map<String, dynamic> toJson() => _$CheckUniqueClubName$QueryToJson(this);
+}
+
 enum UserProfileScope {
   @JsonValue('PRIVATE')
   private,
@@ -51865,4 +51880,68 @@ class WorkoutPlanEnrolmentByIdQuery extends GraphQLQuery<
   @override
   WorkoutPlanEnrolmentById$Query parse(Map<String, dynamic> json) =>
       WorkoutPlanEnrolmentById$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CheckUniqueClubNameArguments extends JsonSerializable
+    with EquatableMixin {
+  CheckUniqueClubNameArguments({required this.name});
+
+  @override
+  factory CheckUniqueClubNameArguments.fromJson(Map<String, dynamic> json) =>
+      _$CheckUniqueClubNameArgumentsFromJson(json);
+
+  late String name;
+
+  @override
+  List<Object?> get props => [name];
+  @override
+  Map<String, dynamic> toJson() => _$CheckUniqueClubNameArgumentsToJson(this);
+}
+
+final CHECK_UNIQUE_CLUB_NAME_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'checkUniqueClubName'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'name')),
+            type:
+                NamedTypeNode(name: NameNode(value: 'String'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'checkUniqueClubName'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'name'),
+                  value: VariableNode(name: NameNode(value: 'name')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CheckUniqueClubNameQuery extends GraphQLQuery<CheckUniqueClubName$Query,
+    CheckUniqueClubNameArguments> {
+  CheckUniqueClubNameQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CHECK_UNIQUE_CLUB_NAME_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'checkUniqueClubName';
+
+  @override
+  final CheckUniqueClubNameArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CheckUniqueClubName$Query parse(Map<String, dynamic> json) =>
+      CheckUniqueClubName$Query.fromJson(json);
 }

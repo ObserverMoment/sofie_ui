@@ -71,7 +71,7 @@ class AuthBloc extends ChangeNotifier {
   }
 
   Future<void> registerWithEmailAndPassword(
-      String email, String password) async {
+      String displayName, String email, String password) async {
     try {
       internalState = InternalAuthState.registering;
       final UserCredential user = await _firebaseClient
@@ -81,10 +81,13 @@ class AuthBloc extends ChangeNotifier {
         final token = await getIdToken();
         final endpoint = EnvironmentConfig.getRestApiEndpoint('user/register');
 
-        final res = await http.post(
-          endpoint,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
-        );
+        // https://docs.flutter.dev/cookbook/networking/send-data
+        final res = await http.post(endpoint,
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({'name': displayName}));
 
         final String body = res.body;
         final Map<String, dynamic> json =
@@ -177,7 +180,7 @@ class AuthBloc extends ChangeNotifier {
     final token = await getIdToken();
     final endpoint = EnvironmentConfig.getRestApiEndpoint('user/current');
 
-    final res = await http.post(
+    final res = await http.get(
       endpoint,
       headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
     );
@@ -223,5 +226,17 @@ class AuthBloc extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  static Future<bool> displayNameAvailableCheck(String name) async {
+    final endpoint = EnvironmentConfig.getRestApiEndpoint('user/name-check',
+        params: {'name': name});
+
+    final res = await http.get(endpoint);
+
+    final String body = res.body;
+    final Map<String, dynamic> json = jsonDecode(body) as Map<String, dynamic>;
+
+    return json['isUnique'];
   }
 }

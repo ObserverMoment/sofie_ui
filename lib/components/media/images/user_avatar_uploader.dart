@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -76,18 +75,10 @@ class _UserAvatarUploaderState extends State<UserAvatarUploader> {
       final Map<String, dynamic> varsMap = {'avatarUri': uri};
 
       await context.graphQLStore.mutate(
-          mutation: UpdateUserMutation(variables: variables),
-          customVariablesMap: {
-            'data': varsMap
-          },
-          broadcastQueryIds: [
-            AuthedUserQuery().operationName
-          ],
-          optimisticData: {
-            '__typename': 'User',
-            'id': GetIt.I<AuthBloc>().authedUser!.id,
-            ...varsMap
-          });
+        mutation: UpdateUserMutation(variables: variables),
+        customVariablesMap: {'data': varsMap},
+        broadcastQueryIds: [AuthedUserQuery().operationName],
+      );
 
       widget.onUploadSuccess?.call(uri);
     } catch (e) {

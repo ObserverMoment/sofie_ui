@@ -17,6 +17,7 @@ import 'package:sofie_ui/components/workout_plan/workout_plan_meta.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_participants.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_reviews.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_workout_schedule.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -68,7 +69,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         'workout-plan/${workoutPlan.id}', 'Check out this workout plan!');
   }
 
-  Future<void> _archiveWorkoutPlan(String id) async {
+  Future<void> _archiveWorkoutPlan(WorkoutPlan workoutPlan) async {
     await context.showConfirmDeleteDialog(
         verb: 'Archive',
         itemType: 'Plan',
@@ -78,15 +79,33 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
           final result = await context.graphQLStore.mutate<
               ArchiveWorkoutPlanById$Mutation, ArchiveWorkoutPlanByIdArguments>(
             mutation: ArchiveWorkoutPlanByIdMutation(
-              variables: ArchiveWorkoutPlanByIdArguments(id: id),
+              variables: ArchiveWorkoutPlanByIdArguments(id: workoutPlan.id),
             ),
-            removeRefFromQueries: [
-              GQLOpNames.userWorkoutPlansQuery,
-            ],
+            processResult: (data) {
+              // Remove WorkoutPlanSummary from store.
+              context.graphQLStore.deleteNormalizedObject(
+                  resolveDataId(workoutPlan.summary.toJson())!);
+
+              // Remove all refs to it from queries.
+              context.graphQLStore.removeAllQueryRefsToId(
+                  resolveDataId(workoutPlan.summary.toJson())!);
+
+              // Rebroadcast all queries that may be affected.
+              context.graphQLStore.broadcastQueriesByIds([
+                GQLOpNames.userWorkoutPlansQuery,
+                GQLOpNames.userCollectionsQuery,
+                GQLOpNames.userClubsQuery,
+              ]);
+
+              // Update WorkoutPlan and workoutPlanById query
+              context.graphQLStore.writeDataToStore(data: {
+                ...workoutPlan.summary.toJson(),
+                'archived': true
+              }, broadcastQueryIds: [
+                GQLVarParamKeys.workoutPlanByIdQuery(widget.id)
+              ]);
+            },
             addRefToQueries: [GQLOpNames.userArchivedWorkoutPlansQuery],
-            broadcastQueryIds: [
-              GQLVarParamKeys.workoutPlanByIdQuery(widget.id),
-            ],
           );
 
           await checkOperationResult(context, result,
@@ -97,7 +116,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         });
   }
 
-  Future<void> _unarchiveWorkoutPlan(String id) async {
+  Future<void> _unarchiveWorkoutPlan(WorkoutPlan workoutPlan) async {
     await context.showConfirmDialog(
         title: 'Unarchive this workout plan?',
         message: 'It will be moved back into your plans.',
@@ -107,11 +126,29 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
               UnarchiveWorkoutPlanById$Mutation,
               UnarchiveWorkoutPlanByIdArguments>(
             mutation: UnarchiveWorkoutPlanByIdMutation(
-                variables: UnarchiveWorkoutPlanByIdArguments(id: id)),
-            addRefToQueries: [
-              GQLOpNames.userWorkoutPlansQuery,
-            ],
-            removeRefFromQueries: [GQLOpNames.userArchivedWorkoutPlansQuery],
+                variables:
+                    UnarchiveWorkoutPlanByIdArguments(id: workoutPlan.id)),
+            processResult: (data) {
+              // This operation returns a full WorkoutPlan object.
+              // Add a WorkoutPlanSummary to store and to userWorkoutPlansQuery
+              context.graphQLStore.writeDataToStore(
+                data: data.unarchiveWorkoutPlanById.summary.toJson(),
+                addRefToQueries: [GQLOpNames.userWorkoutPlansQuery],
+              );
+
+              final archivedWorkoutPlan = {
+                '__typename': kArchivedWorkoutPlanTypename,
+                'id': workoutPlan.id
+              };
+
+              // Remove ArchivedWorkoutPlan from store and ref from userArchivedWorkoutPlansQuery.
+              context.graphQLStore
+                  .deleteNormalizedObject(resolveDataId(archivedWorkoutPlan)!);
+
+              context.graphQLStore.removeRefFromQueryData(
+                  data: archivedWorkoutPlan,
+                  queryIds: [GQLOpNames.userArchivedWorkoutPlansQuery]);
+            },
             broadcastQueryIds: [
               GQLVarParamKeys.workoutPlanByIdQuery(widget.id),
             ],
@@ -279,10 +316,8 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         ),
                                         isDestructive: !workoutPlan.archived,
                                         onPressed: () => workoutPlan.archived
-                                            ? _unarchiveWorkoutPlan(
-                                                workoutPlan.id)
-                                            : _archiveWorkoutPlan(
-                                                workoutPlan.id)),
+                                            ? _unarchiveWorkoutPlan(workoutPlan)
+                                            : _archiveWorkoutPlan(workoutPlan)),
                                 ])),
                       ),
                     ),

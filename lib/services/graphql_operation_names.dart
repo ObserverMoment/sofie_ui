@@ -31,6 +31,8 @@ class GQLOpNames {
   static String get userBenchmarksQuery => UserBenchmarksQuery().operationName;
 
   static String get userClubsQuery => UserClubsQuery().operationName;
+  static String get userCollectionsQuery =>
+      UserCollectionsQuery().operationName;
 
   static String get userCustomMovesQuery =>
       UserCustomMovesQuery().operationName;

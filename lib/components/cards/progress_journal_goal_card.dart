@@ -53,7 +53,6 @@ class ProgressJournalGoalCard extends StatelessWidget {
 
           final result = await context.graphQLStore.mutate(
               mutation: UpdateProgressJournalGoalMutation(variables: variables),
-              optimisticData: updated.toJson(),
               broadcastQueryIds: [
                 /// Broadcasting the operation name with no variables (nullified or parameterized)
                 /// This will trigger all observerable queries with [progressJournalByIdQuery] keys to rebuild.
@@ -64,7 +63,7 @@ class ProgressJournalGoalCard extends StatelessWidget {
         });
   }
 
-  void _checkResult(BuildContext context, MutationResult? result) {
+  void _checkResult(BuildContext context, OperationResult? result) {
     if (result?.data == null || result!.hasErrors) {
       context.showToast(
           message: 'Sorry, there was an issue updating this goal.',
@@ -184,7 +183,7 @@ class ProgressJournalGoalCard extends StatelessWidget {
 
 class _MarkGoalCompletedBottomSheet extends StatefulWidget {
   final ProgressJournalGoal progressJournalGoal;
-  final void Function(MutationResult result) onUpdateComplete;
+  final void Function(OperationResult result) onUpdateComplete;
   const _MarkGoalCompletedBottomSheet(
       {required this.progressJournalGoal, required this.onUpdateComplete});
 
@@ -210,7 +209,6 @@ class __MarkGoalCompletedBottomSheetState
 
     final result = await context.graphQLStore.mutate(
         mutation: UpdateProgressJournalGoalMutation(variables: variables),
-        optimisticData: updated.toJson(),
         broadcastQueryIds: [
           GQLOpNames.progressJournalByIdQuery,
           UserProgressJournalsQuery().operationName

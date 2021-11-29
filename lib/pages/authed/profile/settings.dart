@@ -47,18 +47,12 @@ class _SettingsPageState extends State<SettingsPage> {
     final variables = UpdateUserArguments(data: UpdateUserInput());
 
     await context.graphQLStore.mutate(
-        mutation: UpdateUserMutation(variables: variables),
-        customVariablesMap: {
-          'data': {'userProfileScope': scope.apiValue}
-        },
-        broadcastQueryIds: [
-          AuthedUserQuery().operationName
-        ],
-        optimisticData: {
-          '__typename': 'User',
-          'id': userId,
-          'userProfileScope': scope.apiValue
-        });
+      mutation: UpdateUserMutation(variables: variables),
+      customVariablesMap: {
+        'data': {'userProfileScope': scope.apiValue}
+      },
+      broadcastQueryIds: [AuthedUserQuery().operationName],
+    );
   }
 
   @override
@@ -184,7 +178,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     color: _headingColor,
                   ),
                   _spacer(),
-
                   PageLink(
                     linkText: 'View Archive',
                     onPress: () => context.navigateTo(const ArchiveRoute()),
@@ -196,48 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     icon: const Icon(Icons.cached_rounded, size: 20),
                     loading: _loading,
                   ),
-                  // _spacer(),
-                  // MyText(
-                  //   'SUPPORT',
-                  //   color: _headingColor,
-                  // ),
-                  // _spacer(),
-                  // PageLink(
-                  //   linkText: 'Report a problem',
-                  //   onPress: () => {},
-                  // ),
-                  // PageLink(
-                  //   linkText: 'Help center',
-                  //   onPress: () => {},
-                  // ),
-                  // PageLink(
-                  //   linkText: 'Community discussions',
-                  //   onPress: () => {},
-                  // ),
-                  // _spacer(),
-                  // MyText(
-                  //   'ABOUT US',
-                  //   color: _headingColor,
-                  // ),
-                  // _spacer(),
-                  // PageLink(
-                  //   linkText: 'Our story',
-                  //   onPress: () => {},
-                  // ),
-                  // PageLink(
-                  //   linkText: 'Become a Spotter',
-                  //   onPress: () => {},
-                  // ),
-                  // PageLink(
-                  //   linkText: 'Become a Shaper',
-                  //   onPress: () => {},
-                  // ),
-                  // PageLink(
-                  //   linkText: 'Company policies',
-                  //   onPress: () => {},
-                  // ),
                   _spacer(),
-
                   PageLink(
                       linkText: 'Sign out',
                       onPress: () async {

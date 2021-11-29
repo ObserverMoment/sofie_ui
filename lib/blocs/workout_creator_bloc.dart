@@ -43,15 +43,27 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   /// Store gets written and the UI gets updated when the user clicks [done].
   /// This flow should be reviewed at some point.
   bool saveAllChanges() {
-    final success = context.graphQLStore.writeDataToStore(
+    final writeWorkoutSuccess = context.graphQLStore.writeDataToStore(
       data: workout.toJson(),
       broadcastQueryIds: [
         GQLVarParamKeys.workoutByIdQuery(workout.id),
-        GQLOpNames.userScheduledWorkoutsQuery,
-        GQLOpNames.userWorkoutsQuery,
       ],
     );
-    return success;
+
+    if (writeWorkoutSuccess) {
+      final success = context.graphQLStore.writeDataToStore(
+        data: workout.summary.toJson(),
+        broadcastQueryIds: [
+          GQLOpNames.userScheduledWorkoutsQuery,
+          GQLOpNames.userWorkoutsQuery,
+          GQLOpNames.userCollectionsQuery,
+          GQLOpNames.userClubsQuery
+        ],
+      );
+      return success;
+    }
+
+    return false;
   }
 
   /// Helpers for write methods.
@@ -73,7 +85,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(MutationResult result) {
+  bool _checkApiResult(OperationResult result) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;

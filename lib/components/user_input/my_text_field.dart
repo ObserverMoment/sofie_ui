@@ -90,7 +90,7 @@ class _MyTextFieldState extends State<MyTextField> {
         obscureText: widget.isPassword,
         textAlign: widget.textAlign,
         autofillHints: widget.autofillHints,
-        style: const TextStyle(fontWeight: FontWeight.w500),
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
         inputFormatters: widget.inputFormatters,
         prefix: Padding(
           padding: const EdgeInsets.only(left: 8.0),
@@ -103,11 +103,12 @@ class _MyTextFieldState extends State<MyTextField> {
                 child: Icon(CupertinoIcons.clear_thick_circled,
                     color: CupertinoTheme.of(context)
                         .primaryColor
-                        .withOpacity(0.8),
+                        .withOpacity(0.7),
                     size: 18),
               )
             : null,
         placeholderStyle: TextStyle(
+            fontSize: 16,
             color: CupertinoTheme.of(context).primaryColor.withOpacity(0.5)),
         placeholder: widget.placeholder,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),

@@ -5,11 +5,9 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/data_vis/percentage_bar_chart.dart';
 import 'package:sofie_ui/components/indicators.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/workout_plan/workout_plan_reviews_summary.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -41,8 +39,6 @@ class WorkoutPlanCardFixedHeight extends StatelessWidget {
     Dimensions dimensions = Dimensions.square((width * 1.5).toInt());
 
     final planDifficulty = workoutPlan.calcDifficulty;
-    const overlayContentPadding =
-        EdgeInsets.symmetric(vertical: 4, horizontal: 8);
     final Color contentOverlayColor =
         Styles.black.withOpacity(kImageOverlayOpacity);
 

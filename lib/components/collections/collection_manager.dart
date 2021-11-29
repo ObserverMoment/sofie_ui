@@ -92,7 +92,6 @@ class CollectionManager {
     final result = await context.graphQLStore.mutate<
             AddWorkoutToCollection$Mutation, AddWorkoutToCollectionArguments>(
         mutation: AddWorkoutToCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
           GQLVarParamKeys.userCollectionByIdQuery(collection.id)
@@ -122,7 +121,6 @@ class CollectionManager {
             RemoveWorkoutFromCollection$Mutation,
             RemoveWorkoutFromCollectionArguments>(
         mutation: RemoveWorkoutFromCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
           GQLVarParamKeys.userCollectionByIdQuery(collection.id)
@@ -154,7 +152,6 @@ class CollectionManager {
             AddWorkoutPlanToCollection$Mutation,
             AddWorkoutPlanToCollectionArguments>(
         mutation: AddWorkoutPlanToCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
           GQLVarParamKeys.userCollectionByIdQuery(collection.id)
@@ -184,7 +181,6 @@ class CollectionManager {
             RemoveWorkoutPlanFromCollection$Mutation,
             RemoveWorkoutPlanFromCollectionArguments>(
         mutation: RemoveWorkoutPlanFromCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
           GQLVarParamKeys.userCollectionByIdQuery(collection.id)

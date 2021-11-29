@@ -1,0 +1,3 @@
+query checkUniqueClubName($name: String!) {
+  checkUniqueClubName(name: $name)
+}

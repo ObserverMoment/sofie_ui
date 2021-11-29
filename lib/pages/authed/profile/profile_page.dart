@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/coercers.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar_uploader.dart';
 import 'package:sofie_ui/components/media/video/user_intro_video_uploader.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/click_to_edit/display_name_edit_row.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/components/user_input/pickers/date_picker.dart';
@@ -31,18 +33,12 @@ class ProfilePage extends StatelessWidget {
         UpdateUserArguments(data: UpdateUserInput.fromJson({key: value}));
 
     await context.graphQLStore.mutate(
-        mutation: UpdateUserMutation(variables: variables),
-        customVariablesMap: {
-          'data': {key: value}
-        },
-        broadcastQueryIds: [
-          AuthedUserQuery().operationName
-        ],
-        optimisticData: {
-          '__typename': 'User',
-          'id': id,
-          key: value
-        });
+      mutation: UpdateUserMutation(variables: variables),
+      customVariablesMap: {
+        'data': {key: value}
+      },
+      broadcastQueryIds: [AuthedUserQuery().operationName],
+    );
   }
 
   @override
@@ -145,7 +141,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               UserInputContainer(
-                child: EditableTextFieldRow(
+                child: EditableDisplayNameRow(
                   title: 'Name',
                   text: user.displayName,
                   onSave: (newText) => updateUserFields(
@@ -154,6 +150,16 @@ class ProfilePage extends StatelessWidget {
                       text.length > 2 && text.length <= 30,
                   validationMessage: 'Min 3, max 30 characters',
                   maxChars: 30,
+                  apiMessage: 'Sorry, this display name has been taken.',
+                  apiValidation: (t) async {
+                    if (user.displayName == t) {
+                      return true;
+                    } else {
+                      final isAvailable =
+                          await AuthBloc.displayNameAvailableCheck(t);
+                      return isAvailable;
+                    }
+                  },
                 ),
               ),
               UserInputContainer(

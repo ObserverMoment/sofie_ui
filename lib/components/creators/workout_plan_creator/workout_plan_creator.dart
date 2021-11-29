@@ -17,6 +17,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 class WorkoutPlanCreatorPage extends StatefulWidget {
   final WorkoutPlan? workoutPlan;
@@ -52,7 +53,12 @@ class _WorkoutPlanCreatorPageState extends State<WorkoutPlanCreatorPage> {
         .create<CreateWorkoutPlan$Mutation, CreateWorkoutPlanArguments>(
             mutation: CreateWorkoutPlanMutation(
                 variables: CreateWorkoutPlanArguments(data: input)),
-            addRefToQueries: [GQLOpNames.userWorkoutPlansQuery]);
+            processResult: (data) {
+              // The WorkoutPlanSummary gets immediately added to the userWorkoutPlans query when a workout is created.
+              context.graphQLStore.writeDataToStore(
+                  data: data.createWorkoutPlan.summary.toJson(),
+                  addRefToQueries: [GQLOpNames.userWorkoutPlansQuery]);
+            });
 
     await checkOperationResult(context, result, onSuccess: () {
       // Only the [UserSummary] sub object is returned by the create resolver.

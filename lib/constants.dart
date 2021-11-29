@@ -42,13 +42,18 @@ const kImageOverlayOpacity = 0.75;
 /// For use in [__typename:id] normalization and store ops.
 const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
+
 const kClubTypeName = 'Club';
+const kClubSummaryTypeName = 'ClubSummary';
 const kClubInviteTokenTypeName = 'ClubInviteToken';
+
 const kBodyTransformationPhotoTypename = 'BodyTransformationPhoto';
 const kGymProfileTypename = 'GymProfile';
 const kMoveTypename = 'Move';
 const kUserTypename = 'User';
 const kWorkoutTypename = 'Workout';
+const kWorkoutSummaryTypename = 'WorkoutSummary';
+const kArchivedWorkoutTypename = 'ArchivedWorkout';
 const kWorkoutTagTypename = 'WorkoutTag';
 const kScheduledWorkoutTypename = 'ScheduledWorkout';
 const kWorkoutSectionTypename = 'WorkoutSection';
@@ -57,6 +62,8 @@ const kWorkoutSetTypename = 'WorkoutSet';
 const kWorkoutMoveTypename = 'WorkoutMove';
 
 const kWorkoutPlanTypename = 'WorkoutPlan';
+const kWorkoutPlanSummaryTypename = 'WorkoutPlanSummary';
+const kArchivedWorkoutPlanTypename = 'ArchivedWorkoutPlan';
 const kWorkoutPlanEnrolmentTypename = 'WorkoutPlanEnrolment';
 const kWorkoutPlanReviewTypename = 'WorkoutPlanReview';
 
