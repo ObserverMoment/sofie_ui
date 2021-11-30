@@ -237,6 +237,6 @@ class AuthBloc extends ChangeNotifier {
     final String body = res.body;
     final Map<String, dynamic> json = jsonDecode(body) as Map<String, dynamic>;
 
-    return json['isUnique'];
+    return json['isAvailable'];
   }
 }
