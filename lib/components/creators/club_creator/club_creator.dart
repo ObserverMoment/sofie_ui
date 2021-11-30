@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_info.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_media.dart';
@@ -14,6 +16,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/services/debounce.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -36,6 +39,25 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
+  // Pre-create we need to check that the club name is available and that is valid.
+  bool _nameIsValid = false;
+  bool _nameIsAvailable = true;
+  final _debouncer = Debouncer();
+
+  Future<void> _checkNameAvailable() async {
+    final _text = _nameController.text;
+    _nameIsValid = _text.length > 2 && _text.length < 21;
+
+    if (_nameIsValid) {
+      _debouncer.run(() async {
+        final isAvailable = await context.graphQLStore.networkOnlyOperation(
+            operation: CheckUniqueClubNameQuery(
+                variables: CheckUniqueClubNameArguments(name: _text)));
+        setState(() => _nameIsAvailable =
+            isAvailable.data != null && isAvailable.data!.checkUniqueClubName);
+      });
+    }
+  }
 
   /// Post-create data. We go straight here in the case of editing a club.
   Club? _activeClub;
@@ -64,6 +86,8 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
       /// Create initial backup data.
       _activeClubBackup = _activeClub!.toJson();
     }
+
+    _nameController.addListener(_checkNameAvailable);
   }
 
   void _initPreCreateDataFields() {
@@ -417,6 +441,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     _nameController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _debouncer.dispose();
     super.dispose();
   }
 
@@ -431,10 +456,8 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
           ],
         ),
         trailing: _savingToDB
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: const [
+            ? const NavBarTrailingRow(
+                children: [
                   NavBarLoadingDots(),
                 ],
               )
@@ -462,7 +485,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
                           text: 'Create Club',
                           onPressed: _createClub,
                           prefixIconData: CupertinoIcons.add,
-                          disabled: _nameController.text.length < 3,
+                          disabled: !_nameIsValid || !_nameIsAvailable,
                           loading: _savingToDB,
                         )
                       : Padding(
@@ -485,6 +508,8 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
             Expanded(
               child: _PreCreateInputUI(
                 descriptionController: _descriptionController,
+                nameIsValid: _nameIsValid,
+                nameIsAvailable: _nameIsAvailable,
                 locationController: _locationController,
                 nameController: _nameController,
               ),
@@ -547,6 +572,8 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 /// Once saved and data is back from the DB then UI reverts to the standard UI.
 class _PreCreateInputUI extends StatelessWidget {
   final TextEditingController nameController;
+  final bool nameIsValid;
+  final bool nameIsAvailable;
   final TextEditingController descriptionController;
   final TextEditingController locationController;
 
@@ -555,6 +582,8 @@ class _PreCreateInputUI extends StatelessWidget {
     required this.nameController,
     required this.descriptionController,
     required this.locationController,
+    required this.nameIsValid,
+    required this.nameIsAvailable,
   }) : super(key: key);
 
   @override
@@ -569,12 +598,17 @@ class _PreCreateInputUI extends StatelessWidget {
             controller: nameController,
             placeholder: 'Name (required)',
             keyboardType: TextInputType.text,
-            validator: () =>
-                nameController.text.length > 2 &&
-                nameController.text.length < 21,
+            validator: () => nameIsValid && nameIsAvailable,
             validationMessage: 'Min 3, max 20 characters',
           ),
         ),
+        GrowInOut(
+            show: nameIsValid && !nameIsAvailable,
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
+              child: MyText('Sorry, this club name is already taken.',
+                  color: Styles.secondaryAccent),
+            )),
         Padding(
           padding: const EdgeInsets.only(left: 4, right: 4, top: 10),
           child: MyTextAreaFormFieldRow(
