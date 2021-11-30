@@ -75,6 +75,16 @@ class HomePage extends StatelessWidget {
                   onTap: () => context.navigateTo(const YourCollectionsRoute()),
                 ),
                 CategoryLinkTile(
+                  label: 'Throwdowns',
+                  assetImagePath: 'challenges.svg',
+                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+                ),
+                CategoryLinkTile(
+                  label: 'Events',
+                  assetImagePath: 'events.svg',
+                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+                ),
+                CategoryLinkTile(
                   label: 'Gym Profiles',
                   assetImagePath: 'gym_profiles.svg',
                   onTap: () => context.navigateTo(const YourGymProfilesRoute()),
@@ -84,16 +94,6 @@ class HomePage extends StatelessWidget {
                   assetImagePath: 'moves_library.svg',
                   onTap: () =>
                       context.navigateTo(const YourMovesLibraryRoute()),
-                ),
-                CategoryLinkTile(
-                  label: 'Awards',
-                  assetImagePath: 'events.svg',
-                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-                ),
-                CategoryLinkTile(
-                  label: 'Throwdowns',
-                  assetImagePath: 'challenges.svg',
-                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
                 ),
               ],
             ),

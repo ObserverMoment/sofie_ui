@@ -119,8 +119,9 @@ class WorkoutPlanMeta extends StatelessWidget {
           ]),
         ),
         const HorizontalLine(verticalPadding: 0),
-        if (hasEnrolled)
-          Padding(
+        GrowInOut(
+          show: hasEnrolled,
+          child: Padding(
             padding: const EdgeInsets.only(top: 18.0, bottom: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -147,6 +148,7 @@ class WorkoutPlanMeta extends StatelessWidget {
               ],
             ),
           ),
+        ),
         if (workoutPlan.workoutPlanDays.isNotEmpty)
           _InfoSection(
             header: 'Goals',

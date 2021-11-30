@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
@@ -15,6 +16,8 @@ class StartResumeButton extends StatelessWidget {
   /// Runs a countdown animation and THEN starts the workout.
   void _startSectionCountdown(
       BuildContext context, bool isFreeSessionOrLifting) {
+    Vibrate.feedback(FeedbackType.light);
+
     final bloc = context.read<DoWorkoutBloc>();
     final playSection = bloc.playSection;
 
@@ -53,7 +56,10 @@ class StartResumeButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: () => sectionHasStarted
-          ? context.read<DoWorkoutBloc>().playSection(sectionIndex)
+          ? () {
+              Vibrate.feedback(FeedbackType.light);
+              context.read<DoWorkoutBloc>().playSection(sectionIndex);
+            }
           : _startSectionCountdown(context, isFreeSessionOrLifting),
       child: Container(
         width: 160,

@@ -140,7 +140,7 @@ class _WorkoutPlanReviewCreatorPageState
         UserWorkoutPlansQuery().operationName,
         GQLVarParamKeys.workoutPlanByIdQuery(widget.parentWorkoutPlanId),
         WorkoutPlanEnrolmentsQuery().operationName,
-        GQLVarParamKeys.workoutPlanEnrolmentById(
+        GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(
             widget.parentWorkoutPlanEnrolmentId),
       ],
     );

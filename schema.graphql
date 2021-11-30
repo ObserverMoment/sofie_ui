@@ -594,7 +594,7 @@ type Mutation {
   createWorkoutPlanDayWorkout(
     data: CreateWorkoutPlanDayWorkoutInput!
   ): WorkoutPlanDayWorkout!
-  createWorkoutPlanEnrolment(workoutPlanId: ID!): WorkoutPlanEnrolment!
+  createWorkoutPlanEnrolment(workoutPlanId: ID!): WorkoutPlanEnrolmentWithPlan!
   createWorkoutPlanReview(
     data: CreateWorkoutPlanReviewInput!
   ): WorkoutPlanReview!

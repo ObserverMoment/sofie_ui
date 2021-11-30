@@ -47,15 +47,32 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
   }
 
   /// I.e. enrol the user in the plan.
-  Future<void> _createWorkoutPlanEnrolment() async {
+  Future<void> _createWorkoutPlanEnrolment(WorkoutPlan workoutPlan) async {
     final variables =
-        CreateWorkoutPlanEnrolmentArguments(workoutPlanId: widget.id);
+        CreateWorkoutPlanEnrolmentArguments(workoutPlanId: workoutPlan.id);
 
     final result = await context.graphQLStore.mutate<
             CreateWorkoutPlanEnrolment$Mutation,
             CreateWorkoutPlanEnrolmentArguments>(
         mutation: CreateWorkoutPlanEnrolmentMutation(variables: variables),
-        addRefToQueries: [WorkoutPlanEnrolmentsQuery().operationName]);
+        processResult: (data) {
+          /// Add a [WorkoutPlanEnrolmentSummary] to the store and a ref to [workoutPlanEnrolmentsQuery].
+          final enrolmentSummary = data.createWorkoutPlanEnrolment.summary;
+
+          context.graphQLStore.writeDataToStore(
+            data: enrolmentSummary.toJson(),
+            addRefToQueries: [GQLOpNames.workoutPlanEnrolmentsQuery],
+          );
+
+          /// Write the workoutPlan with the updated enrolment to store.
+          /// TODO: Investigate why this is necessary to do manually when I would expect that normalizing [WorkoutPlanEnrolmentWithPlan] would also write over [WorkoutPlanEnrolmentWithPlan.workoutPlan] object.
+          context.graphQLStore.writeDataToStore(
+            data: data.createWorkoutPlanEnrolment.workoutPlan.toJson(),
+          );
+        },
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id)
+        ]);
 
     await checkOperationResult(context, result,
         onSuccess: () =>
@@ -215,7 +232,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         variables: WorkoutPlanByIdArguments(id: widget.id));
 
     return QueryObserver<WorkoutPlanById$Query, WorkoutPlanByIdArguments>(
-        key: Key('YourWorkoutPlansPage - ${query.operationName}-${widget.id}'),
+        key: Key('WorkoutPlanDetails - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
         loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
@@ -327,7 +344,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                           ? () => context.navigateTo(
                               WorkoutPlanEnrolmentDetailsRoute(
                                   id: enrolmentInPlan.id))
-                          : _createWorkoutPlanEnrolment,
+                          : () => _createWorkoutPlanEnrolment(workoutPlan),
                       buttonIconData: enrolmentInPlan != null
                           ? CupertinoIcons.chart_bar_square
                           : CupertinoIcons.plus,

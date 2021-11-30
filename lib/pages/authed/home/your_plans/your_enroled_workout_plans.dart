@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/tags.dart';
@@ -8,6 +9,8 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout_plan_enrolment/workout_plan_enrolment_progress_summary.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/router.gr.dart';
 
 class YourWorkoutPlanEnrolments extends StatelessWidget {
   final void Function(String enrolmentId) selectEnrolment;
@@ -85,12 +88,23 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                         ))),
           ),
         filteredEnrolments.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.all(24),
+            ? Padding(
+                padding: const EdgeInsets.all(24),
                 child: Center(
-                  child: MyText(
-                    'No plans joined yet',
-                    subtext: true,
+                  child: Column(
+                    children: [
+                      const MyText(
+                        'No plans joined yet...',
+                        subtext: true,
+                      ),
+                      const SizedBox(height: 24),
+                      SecondaryButton(
+                        onPressed: () =>
+                            context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                        prefixIconData: CupertinoIcons.compass,
+                        text: 'Find Plans',
+                      )
+                    ],
                   ),
                 ))
             : Expanded(
