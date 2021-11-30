@@ -7,6 +7,8 @@ import 'package:sofie_ui/pages/authed/discover/components/discover_champions.dar
 import 'package:sofie_ui/pages/authed/discover/components/discover_clubs.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_creators.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_live.dart';
+import 'package:sofie_ui/pages/authed/discover/components/discover_plans.dart';
+import 'package:sofie_ui/pages/authed/discover/components/discover_workouts.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class DiscoverPage extends StatelessWidget {
@@ -41,7 +43,7 @@ class DiscoverPage extends StatelessWidget {
                       onPressed: () =>
                           context.navigateTo(PublicWorkoutPlanFinderRoute())),
                   DiscoverPageButton(
-                      text: 'Challenges',
+                      text: 'Throwdowns',
                       onPressed: () =>
                           context.showAlertDialog(title: 'Coming Soon!')),
                   DiscoverPageButton(
@@ -54,6 +56,8 @@ class DiscoverPage extends StatelessWidget {
             child: const DiscoverCreators(),
           ),
           _verticalPadding(child: const DiscoverClubs()),
+          _verticalPadding(child: const DiscoverWorkoutPlans()),
+          _verticalPadding(child: const DiscoverWorkouts()),
           _verticalPadding(child: const DiscoverLive()),
           _verticalPadding(child: const DiscoverChampions()),
         ],

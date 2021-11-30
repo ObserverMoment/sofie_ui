@@ -26,6 +26,9 @@ class GQLOpNames {
   static String get userProgressJournalsQuery =>
       UserProgressJournalsQuery().operationName;
 
+  static String get workoutPlanEnrolmentsQuery =>
+      WorkoutPlanEnrolmentsQuery().operationName;
+
   /// List type queries where variables are not used.
   /// Note: In the API UserBenchmarksQuery can take vars - they are optional and not currently being used.
   static String get userBenchmarksQuery => UserBenchmarksQuery().operationName;
@@ -85,7 +88,7 @@ class GQLVarParamKeys {
   static String workoutPlanByIdQuery(String id) => getParameterizedQueryId(
       WorkoutPlanByIdQuery(variables: WorkoutPlanByIdArguments(id: id)));
 
-  static String workoutPlanEnrolmentById(String id) =>
+  static String workoutPlanEnrolmentByIdQuery(String id) =>
       getParameterizedQueryId(WorkoutPlanEnrolmentByIdQuery(
           variables: WorkoutPlanEnrolmentByIdArguments(id: id)));
 }

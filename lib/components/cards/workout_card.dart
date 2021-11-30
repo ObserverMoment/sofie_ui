@@ -174,7 +174,7 @@ class WorkoutCard extends StatelessWidget {
                 if (Utils.textNotNull(workout.description))
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: MyText(workout.description!, subtext: true),
+                    child: MyText(workout.description!),
                   ),
                 if (workout.tags.isNotEmpty)
                   Padding(

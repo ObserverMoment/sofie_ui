@@ -182,7 +182,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
             UpdateWorkoutPlanEnrolmentArguments>(
         mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentById(
+          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(
               enrolmentWithPlan.workoutPlanEnrolment.id),
           WorkoutPlanEnrolmentsQuery().operationName,
         ],

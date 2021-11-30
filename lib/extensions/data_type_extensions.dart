@@ -189,6 +189,17 @@ extension WorkoutPlanExtension on WorkoutPlan {
   }
 }
 
+extension WorkoutPlanEnrolmentWithPlanExtension
+    on WorkoutPlanEnrolmentWithPlan {
+  WorkoutPlanEnrolmentSummary get summary => WorkoutPlanEnrolmentSummary()
+    ..$$typename = kWorkoutPlanEnrolmentSummaryTypename
+    ..id = workoutPlanEnrolment.id
+    ..startDate = workoutPlanEnrolment.startDate
+    ..completedPlanDayWorkoutIds =
+        workoutPlanEnrolment.completedPlanDayWorkoutIds
+    ..workoutPlan = workoutPlan.summary;
+}
+
 extension WorkoutPlanDayExtension on WorkoutPlanDay {
   DifficultyLevel? get calcDifficulty {
     final workouts = workoutPlanDayWorkouts.map((d) => d.workout);

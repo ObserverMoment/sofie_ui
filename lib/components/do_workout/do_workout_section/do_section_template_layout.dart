@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
@@ -81,6 +82,7 @@ class DoSectionTemplateLayout extends StatelessWidget {
               height: startResumeButtonHeight,
               text: 'Set Complete',
               onSubmit: () {
+                Vibrate.feedback(FeedbackType.light);
                 context.read<DoWorkoutBloc>().markCurrentWorkoutSetAsComplete(
                     workoutSection.sortPosition);
                 showCupertinoModalPopup(

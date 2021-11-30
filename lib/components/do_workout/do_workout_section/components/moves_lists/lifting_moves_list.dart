@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
@@ -139,6 +140,7 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
   }) : super(key: key);
 
   void _markWorkoutMoveComplete(WorkoutMove workoutMove) {
+    Vibrate.feedback(FeedbackType.light);
     sectionController.markWorkoutMoveComplete(workoutSet, workoutMove);
   }
 

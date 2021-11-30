@@ -2,12 +2,15 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout_plan/vertical_workout_plans_list.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/router.gr.dart';
 
 class YourSavedPlans extends StatelessWidget {
   final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
@@ -96,6 +99,25 @@ class _FilterableSavedWorkoutPlansState
             selectWorkoutPlan: widget.selectWorkoutPlan,
             avoidBottomNavBar: true,
             heroTagKey: 'FilterableSavedWorkoutPlans',
+            emptyListPlaceholder: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const MyText(
+                        'No plans saved yet...',
+                        subtext: true,
+                      ),
+                      const SizedBox(height: 24),
+                      SecondaryButton(
+                        onPressed: () =>
+                            context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                        prefixIconData: CupertinoIcons.compass,
+                        text: 'Find Plans',
+                      )
+                    ],
+                  ),
+                )),
           ),
         ),
       ],

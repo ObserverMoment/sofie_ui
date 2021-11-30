@@ -9,7 +9,6 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i41;
-import 'package:flutter/cupertino.dart' as _i65;
 import 'package:flutter/material.dart' as _i64;
 
 import 'components/creators/body_tracking/body_tracking_entry_creator.dart'
@@ -45,7 +44,7 @@ import 'components/workout_plan/workout_plan_finder/private/private_workout_plan
     as _i17;
 import 'components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart'
     as _i16;
-import 'generated/api/graphql_api.dart' as _i66;
+import 'generated/api/graphql_api.dart' as _i65;
 import 'main.dart' as _i2;
 import 'pages/authed/authed_routes_wrapper_page.dart' as _i3;
 import 'pages/authed/details_pages/club_details/club_details_page.dart' as _i18;
@@ -700,7 +699,7 @@ class ChatsOverviewRoute extends _i41.PageRouteInfo<void> {
 
 /// generated route for [_i7.OneToOneChatPage]
 class OneToOneChatRoute extends _i41.PageRouteInfo<OneToOneChatRouteArgs> {
-  OneToOneChatRoute({_i65.Key? key, required String otherUserId})
+  OneToOneChatRoute({_i64.Key? key, required String otherUserId})
       : super(name,
             path: 'chat',
             args: OneToOneChatRouteArgs(key: key, otherUserId: otherUserId));
@@ -711,7 +710,7 @@ class OneToOneChatRoute extends _i41.PageRouteInfo<OneToOneChatRouteArgs> {
 class OneToOneChatRouteArgs {
   const OneToOneChatRouteArgs({this.key, required this.otherUserId});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String otherUserId;
 
@@ -724,7 +723,7 @@ class OneToOneChatRouteArgs {
 /// generated route for [_i8.ClubMembersChatPage]
 class ClubMembersChatRoute
     extends _i41.PageRouteInfo<ClubMembersChatRouteArgs> {
-  ClubMembersChatRoute({_i65.Key? key, required String clubId})
+  ClubMembersChatRoute({_i64.Key? key, required String clubId})
       : super(name,
             path: 'club-chat',
             args: ClubMembersChatRouteArgs(key: key, clubId: clubId));
@@ -735,7 +734,7 @@ class ClubMembersChatRoute
 class ClubMembersChatRouteArgs {
   const ClubMembersChatRouteArgs({this.key, required this.clubId});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String clubId;
 
@@ -748,7 +747,7 @@ class ClubMembersChatRouteArgs {
 /// generated route for [_i9.ClubInviteLandingPage]
 class ClubInviteLandingRoute
     extends _i41.PageRouteInfo<ClubInviteLandingRouteArgs> {
-  ClubInviteLandingRoute({_i65.Key? key, required String id})
+  ClubInviteLandingRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'club-invite/:id',
             args: ClubInviteLandingRouteArgs(key: key, id: id),
@@ -760,7 +759,7 @@ class ClubInviteLandingRoute
 class ClubInviteLandingRouteArgs {
   const ClubInviteLandingRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -773,7 +772,7 @@ class ClubInviteLandingRouteArgs {
 /// generated route for [_i10.CollectionDetailsPage]
 class CollectionDetailsRoute
     extends _i41.PageRouteInfo<CollectionDetailsRouteArgs> {
-  CollectionDetailsRoute({_i65.Key? key, required String id})
+  CollectionDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'collection/:id',
             args: CollectionDetailsRouteArgs(key: key, id: id),
@@ -785,7 +784,7 @@ class CollectionDetailsRoute
 class CollectionDetailsRouteArgs {
   const CollectionDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -799,9 +798,9 @@ class CollectionDetailsRouteArgs {
 class DoWorkoutWrapperRoute
     extends _i41.PageRouteInfo<DoWorkoutWrapperRouteArgs> {
   DoWorkoutWrapperRoute(
-      {_i65.Key? key,
+      {_i64.Key? key,
       required String id,
-      _i66.ScheduledWorkout? scheduledWorkout})
+      _i65.ScheduledWorkout? scheduledWorkout})
       : super(name,
             path: 'do-workout/:id',
             args: DoWorkoutWrapperRouteArgs(
@@ -815,11 +814,11 @@ class DoWorkoutWrapperRouteArgs {
   const DoWorkoutWrapperRouteArgs(
       {this.key, required this.id, this.scheduledWorkout});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
-  final _i66.ScheduledWorkout? scheduledWorkout;
+  final _i65.ScheduledWorkout? scheduledWorkout;
 
   @override
   String toString() {
@@ -845,7 +844,7 @@ class TimersRoute extends _i41.PageRouteInfo<void> {
 class PublicWorkoutFinderRoute
     extends _i41.PageRouteInfo<PublicWorkoutFinderRouteArgs> {
   PublicWorkoutFinderRoute(
-      {_i65.Key? key, void Function(_i66.WorkoutSummary)? selectWorkout})
+      {_i64.Key? key, void Function(_i65.WorkoutSummary)? selectWorkout})
       : super(name,
             path: 'community-workouts',
             args: PublicWorkoutFinderRouteArgs(
@@ -857,9 +856,9 @@ class PublicWorkoutFinderRoute
 class PublicWorkoutFinderRouteArgs {
   const PublicWorkoutFinderRouteArgs({this.key, this.selectWorkout});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final void Function(_i66.WorkoutSummary)? selectWorkout;
+  final void Function(_i65.WorkoutSummary)? selectWorkout;
 
   @override
   String toString() {
@@ -871,8 +870,8 @@ class PublicWorkoutFinderRouteArgs {
 class PrivateWorkoutFinderRoute
     extends _i41.PageRouteInfo<PrivateWorkoutFinderRouteArgs> {
   PrivateWorkoutFinderRoute(
-      {_i65.Key? key,
-      required void Function(_i66.WorkoutSummary) selectWorkout})
+      {_i64.Key? key,
+      required void Function(_i65.WorkoutSummary) selectWorkout})
       : super(name,
             path: 'personal-workouts',
             args: PrivateWorkoutFinderRouteArgs(
@@ -884,9 +883,9 @@ class PrivateWorkoutFinderRoute
 class PrivateWorkoutFinderRouteArgs {
   const PrivateWorkoutFinderRouteArgs({this.key, required this.selectWorkout});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final void Function(_i66.WorkoutSummary) selectWorkout;
+  final void Function(_i65.WorkoutSummary) selectWorkout;
 
   @override
   String toString() {
@@ -898,8 +897,8 @@ class PrivateWorkoutFinderRouteArgs {
 class PublicWorkoutPlanFinderRoute
     extends _i41.PageRouteInfo<PublicWorkoutPlanFinderRouteArgs> {
   PublicWorkoutPlanFinderRoute(
-      {_i65.Key? key,
-      void Function(_i66.WorkoutPlanSummary)? selectWorkoutPlan})
+      {_i64.Key? key,
+      void Function(_i65.WorkoutPlanSummary)? selectWorkoutPlan})
       : super(name,
             path: 'community-plans',
             args: PublicWorkoutPlanFinderRouteArgs(
@@ -911,9 +910,9 @@ class PublicWorkoutPlanFinderRoute
 class PublicWorkoutPlanFinderRouteArgs {
   const PublicWorkoutPlanFinderRouteArgs({this.key, this.selectWorkoutPlan});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final void Function(_i66.WorkoutPlanSummary)? selectWorkoutPlan;
+  final void Function(_i65.WorkoutPlanSummary)? selectWorkoutPlan;
 
   @override
   String toString() {
@@ -925,8 +924,8 @@ class PublicWorkoutPlanFinderRouteArgs {
 class PrivateWorkoutPlanFinderRoute
     extends _i41.PageRouteInfo<PrivateWorkoutPlanFinderRouteArgs> {
   PrivateWorkoutPlanFinderRoute(
-      {_i65.Key? key,
-      required void Function(_i66.WorkoutPlanSummary) selectWorkoutPlan})
+      {_i64.Key? key,
+      required void Function(_i65.WorkoutPlanSummary) selectWorkoutPlan})
       : super(name,
             path: 'personal-plans',
             args: PrivateWorkoutPlanFinderRouteArgs(
@@ -939,9 +938,9 @@ class PrivateWorkoutPlanFinderRouteArgs {
   const PrivateWorkoutPlanFinderRouteArgs(
       {this.key, required this.selectWorkoutPlan});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final void Function(_i66.WorkoutPlanSummary) selectWorkoutPlan;
+  final void Function(_i65.WorkoutPlanSummary) selectWorkoutPlan;
 
   @override
   String toString() {
@@ -951,7 +950,7 @@ class PrivateWorkoutPlanFinderRouteArgs {
 
 /// generated route for [_i18.ClubDetailsPage]
 class ClubDetailsRoute extends _i41.PageRouteInfo<ClubDetailsRouteArgs> {
-  ClubDetailsRoute({_i65.Key? key, required String id})
+  ClubDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'club/:id',
             args: ClubDetailsRouteArgs(key: key, id: id),
@@ -963,7 +962,7 @@ class ClubDetailsRoute extends _i41.PageRouteInfo<ClubDetailsRouteArgs> {
 class ClubDetailsRouteArgs {
   const ClubDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -976,7 +975,7 @@ class ClubDetailsRouteArgs {
 /// generated route for [_i19.LoggedWorkoutDetailsPage]
 class LoggedWorkoutDetailsRoute
     extends _i41.PageRouteInfo<LoggedWorkoutDetailsRouteArgs> {
-  LoggedWorkoutDetailsRoute({_i65.Key? key, required String id})
+  LoggedWorkoutDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'logged-workout/:id',
             args: LoggedWorkoutDetailsRouteArgs(key: key, id: id),
@@ -988,7 +987,7 @@ class LoggedWorkoutDetailsRoute
 class LoggedWorkoutDetailsRouteArgs {
   const LoggedWorkoutDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -1001,7 +1000,7 @@ class LoggedWorkoutDetailsRouteArgs {
 /// generated route for [_i20.PersonalBestDetailsPage]
 class PersonalBestDetailsRoute
     extends _i41.PageRouteInfo<PersonalBestDetailsRouteArgs> {
-  PersonalBestDetailsRoute({_i65.Key? key, required String id})
+  PersonalBestDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'personal-best/:id',
             args: PersonalBestDetailsRouteArgs(key: key, id: id),
@@ -1013,7 +1012,7 @@ class PersonalBestDetailsRoute
 class PersonalBestDetailsRouteArgs {
   const PersonalBestDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -1026,7 +1025,7 @@ class PersonalBestDetailsRouteArgs {
 /// generated route for [_i21.UserPublicProfileDetailsPage]
 class UserPublicProfileDetailsRoute
     extends _i41.PageRouteInfo<UserPublicProfileDetailsRouteArgs> {
-  UserPublicProfileDetailsRoute({_i65.Key? key, required String userId})
+  UserPublicProfileDetailsRoute({_i64.Key? key, required String userId})
       : super(name,
             path: 'profile/:userId',
             args: UserPublicProfileDetailsRouteArgs(key: key, userId: userId),
@@ -1038,7 +1037,7 @@ class UserPublicProfileDetailsRoute
 class UserPublicProfileDetailsRouteArgs {
   const UserPublicProfileDetailsRouteArgs({this.key, required this.userId});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String userId;
 
@@ -1051,7 +1050,7 @@ class UserPublicProfileDetailsRouteArgs {
 /// generated route for [_i22.ProgressJournalDetailsPage]
 class ProgressJournalDetailsRoute
     extends _i41.PageRouteInfo<ProgressJournalDetailsRouteArgs> {
-  ProgressJournalDetailsRoute({_i65.Key? key, required String id})
+  ProgressJournalDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'progress-journal/:id',
             args: ProgressJournalDetailsRouteArgs(key: key, id: id),
@@ -1063,7 +1062,7 @@ class ProgressJournalDetailsRoute
 class ProgressJournalDetailsRouteArgs {
   const ProgressJournalDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -1076,9 +1075,9 @@ class ProgressJournalDetailsRouteArgs {
 /// generated route for [_i23.WorkoutDetailsPage]
 class WorkoutDetailsRoute extends _i41.PageRouteInfo<WorkoutDetailsRouteArgs> {
   WorkoutDetailsRoute(
-      {_i65.Key? key,
+      {_i64.Key? key,
       required String id,
-      _i66.ScheduledWorkout? scheduledWorkout})
+      _i65.ScheduledWorkout? scheduledWorkout})
       : super(name,
             path: 'workout/:id',
             args: WorkoutDetailsRouteArgs(
@@ -1092,11 +1091,11 @@ class WorkoutDetailsRouteArgs {
   const WorkoutDetailsRouteArgs(
       {this.key, required this.id, this.scheduledWorkout});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
-  final _i66.ScheduledWorkout? scheduledWorkout;
+  final _i65.ScheduledWorkout? scheduledWorkout;
 
   @override
   String toString() {
@@ -1107,7 +1106,7 @@ class WorkoutDetailsRouteArgs {
 /// generated route for [_i24.WorkoutPlanDetailsPage]
 class WorkoutPlanDetailsRoute
     extends _i41.PageRouteInfo<WorkoutPlanDetailsRouteArgs> {
-  WorkoutPlanDetailsRoute({_i65.Key? key, required String id})
+  WorkoutPlanDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'workout-plan/:id',
             args: WorkoutPlanDetailsRouteArgs(key: key, id: id),
@@ -1119,7 +1118,7 @@ class WorkoutPlanDetailsRoute
 class WorkoutPlanDetailsRouteArgs {
   const WorkoutPlanDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -1132,7 +1131,7 @@ class WorkoutPlanDetailsRouteArgs {
 /// generated route for [_i25.WorkoutPlanEnrolmentDetailsPage]
 class WorkoutPlanEnrolmentDetailsRoute
     extends _i41.PageRouteInfo<WorkoutPlanEnrolmentDetailsRouteArgs> {
-  WorkoutPlanEnrolmentDetailsRoute({_i65.Key? key, required String id})
+  WorkoutPlanEnrolmentDetailsRoute({_i64.Key? key, required String id})
       : super(name,
             path: 'workout-plan-progress/:id',
             args: WorkoutPlanEnrolmentDetailsRouteArgs(key: key, id: id),
@@ -1144,7 +1143,7 @@ class WorkoutPlanEnrolmentDetailsRoute
 class WorkoutPlanEnrolmentDetailsRouteArgs {
   const WorkoutPlanEnrolmentDetailsRouteArgs({this.key, required this.id});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String id;
 
@@ -1158,7 +1157,7 @@ class WorkoutPlanEnrolmentDetailsRouteArgs {
 class BodyTrackingEntryCreatorRoute
     extends _i41.PageRouteInfo<BodyTrackingEntryCreatorRouteArgs> {
   BodyTrackingEntryCreatorRoute(
-      {_i65.Key? key, _i66.BodyTrackingEntry? bodyTrackingEntry})
+      {_i64.Key? key, _i65.BodyTrackingEntry? bodyTrackingEntry})
       : super(name,
             path: 'create/body-tracking',
             args: BodyTrackingEntryCreatorRouteArgs(
@@ -1170,9 +1169,9 @@ class BodyTrackingEntryCreatorRoute
 class BodyTrackingEntryCreatorRouteArgs {
   const BodyTrackingEntryCreatorRouteArgs({this.key, this.bodyTrackingEntry});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.BodyTrackingEntry? bodyTrackingEntry;
+  final _i65.BodyTrackingEntry? bodyTrackingEntry;
 
   @override
   String toString() {
@@ -1182,7 +1181,7 @@ class BodyTrackingEntryCreatorRouteArgs {
 
 /// generated route for [_i27.ClubCreatorPage]
 class ClubCreatorRoute extends _i41.PageRouteInfo<ClubCreatorRouteArgs> {
-  ClubCreatorRoute({_i65.Key? key, _i66.Club? club})
+  ClubCreatorRoute({_i64.Key? key, _i65.Club? club})
       : super(name,
             path: 'create/club',
             args: ClubCreatorRouteArgs(key: key, club: club));
@@ -1193,9 +1192,9 @@ class ClubCreatorRoute extends _i41.PageRouteInfo<ClubCreatorRouteArgs> {
 class ClubCreatorRouteArgs {
   const ClubCreatorRouteArgs({this.key, this.club});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.Club? club;
+  final _i65.Club? club;
 
   @override
   String toString() {
@@ -1207,9 +1206,9 @@ class ClubCreatorRouteArgs {
 class CollectionCreatorRoute
     extends _i41.PageRouteInfo<CollectionCreatorRouteArgs> {
   CollectionCreatorRoute(
-      {_i65.Key? key,
-      _i66.Collection? collection,
-      void Function(_i66.Collection)? onComplete})
+      {_i64.Key? key,
+      _i65.Collection? collection,
+      void Function(_i65.Collection)? onComplete})
       : super(name,
             path: 'create/collection',
             args: CollectionCreatorRouteArgs(
@@ -1222,11 +1221,11 @@ class CollectionCreatorRouteArgs {
   const CollectionCreatorRouteArgs(
       {this.key, this.collection, this.onComplete});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.Collection? collection;
+  final _i65.Collection? collection;
 
-  final void Function(_i66.Collection)? onComplete;
+  final void Function(_i65.Collection)? onComplete;
 
   @override
   String toString() {
@@ -1237,7 +1236,7 @@ class CollectionCreatorRouteArgs {
 /// generated route for [_i29.CustomMoveCreatorPage]
 class CustomMoveCreatorRoute
     extends _i41.PageRouteInfo<CustomMoveCreatorRouteArgs> {
-  CustomMoveCreatorRoute({_i65.Key? key, _i66.Move? move})
+  CustomMoveCreatorRoute({_i64.Key? key, _i65.Move? move})
       : super(name,
             path: 'create/custom-move',
             args: CustomMoveCreatorRouteArgs(key: key, move: move));
@@ -1248,9 +1247,9 @@ class CustomMoveCreatorRoute
 class CustomMoveCreatorRouteArgs {
   const CustomMoveCreatorRouteArgs({this.key, this.move});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.Move? move;
+  final _i65.Move? move;
 
   @override
   String toString() {
@@ -1261,7 +1260,7 @@ class CustomMoveCreatorRouteArgs {
 /// generated route for [_i30.GymProfileCreatorPage]
 class GymProfileCreatorRoute
     extends _i41.PageRouteInfo<GymProfileCreatorRouteArgs> {
-  GymProfileCreatorRoute({_i65.Key? key, _i66.GymProfile? gymProfile})
+  GymProfileCreatorRoute({_i64.Key? key, _i65.GymProfile? gymProfile})
       : super(name,
             path: 'create/gym-profile',
             args: GymProfileCreatorRouteArgs(key: key, gymProfile: gymProfile));
@@ -1272,9 +1271,9 @@ class GymProfileCreatorRoute
 class GymProfileCreatorRouteArgs {
   const GymProfileCreatorRouteArgs({this.key, this.gymProfile});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.GymProfile? gymProfile;
+  final _i65.GymProfile? gymProfile;
 
   @override
   String toString() {
@@ -1286,7 +1285,7 @@ class GymProfileCreatorRouteArgs {
 class ProgressJournalCreatorRoute
     extends _i41.PageRouteInfo<ProgressJournalCreatorRouteArgs> {
   ProgressJournalCreatorRoute(
-      {_i65.Key? key, _i66.ProgressJournal? progressJournal})
+      {_i64.Key? key, _i65.ProgressJournal? progressJournal})
       : super(name,
             path: 'create/journal',
             args: ProgressJournalCreatorRouteArgs(
@@ -1298,9 +1297,9 @@ class ProgressJournalCreatorRoute
 class ProgressJournalCreatorRouteArgs {
   const ProgressJournalCreatorRouteArgs({this.key, this.progressJournal});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.ProgressJournal? progressJournal;
+  final _i65.ProgressJournal? progressJournal;
 
   @override
   String toString() {
@@ -1311,7 +1310,7 @@ class ProgressJournalCreatorRouteArgs {
 /// generated route for [_i32.PersonalBestCreatorPage]
 class PersonalBestCreatorRoute
     extends _i41.PageRouteInfo<PersonalBestCreatorRouteArgs> {
-  PersonalBestCreatorRoute({_i65.Key? key, _i66.UserBenchmark? userBenchmark})
+  PersonalBestCreatorRoute({_i64.Key? key, _i65.UserBenchmark? userBenchmark})
       : super(name,
             path: 'create/personal-best',
             args: PersonalBestCreatorRouteArgs(
@@ -1323,9 +1322,9 @@ class PersonalBestCreatorRoute
 class PersonalBestCreatorRouteArgs {
   const PersonalBestCreatorRouteArgs({this.key, this.userBenchmark});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.UserBenchmark? userBenchmark;
+  final _i65.UserBenchmark? userBenchmark;
 
   @override
   String toString() {
@@ -1344,9 +1343,9 @@ class PostCreatorRoute extends _i41.PageRouteInfo<void> {
 class ClubPostCreatorRoute
     extends _i41.PageRouteInfo<ClubPostCreatorRouteArgs> {
   ClubPostCreatorRoute(
-      {_i65.Key? key,
+      {_i64.Key? key,
       required String clubId,
-      void Function(_i66.TimelinePostFullData)? onSuccess})
+      void Function(_i65.TimelinePostFullData)? onSuccess})
       : super(name,
             path: 'create/club-post',
             args: ClubPostCreatorRouteArgs(
@@ -1359,11 +1358,11 @@ class ClubPostCreatorRouteArgs {
   const ClubPostCreatorRouteArgs(
       {this.key, required this.clubId, this.onSuccess});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final String clubId;
 
-  final void Function(_i66.TimelinePostFullData)? onSuccess;
+  final void Function(_i65.TimelinePostFullData)? onSuccess;
 
   @override
   String toString() {
@@ -1375,9 +1374,9 @@ class ClubPostCreatorRouteArgs {
 class ScheduledWorkoutCreatorRoute
     extends _i41.PageRouteInfo<ScheduledWorkoutCreatorRouteArgs> {
   ScheduledWorkoutCreatorRoute(
-      {_i65.Key? key,
-      _i66.ScheduledWorkout? scheduledWorkout,
-      _i66.WorkoutSummary? workout,
+      {_i64.Key? key,
+      _i65.ScheduledWorkout? scheduledWorkout,
+      _i65.WorkoutSummary? workout,
       DateTime? scheduleOn,
       String? workoutPlanEnrolmentId})
       : super(name,
@@ -1400,11 +1399,11 @@ class ScheduledWorkoutCreatorRouteArgs {
       this.scheduleOn,
       this.workoutPlanEnrolmentId});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.ScheduledWorkout? scheduledWorkout;
+  final _i65.ScheduledWorkout? scheduledWorkout;
 
-  final _i66.WorkoutSummary? workout;
+  final _i65.WorkoutSummary? workout;
 
   final DateTime? scheduleOn;
 
@@ -1418,7 +1417,7 @@ class ScheduledWorkoutCreatorRouteArgs {
 
 /// generated route for [_i36.WorkoutCreatorPage]
 class WorkoutCreatorRoute extends _i41.PageRouteInfo<WorkoutCreatorRouteArgs> {
-  WorkoutCreatorRoute({_i65.Key? key, _i66.Workout? workout})
+  WorkoutCreatorRoute({_i64.Key? key, _i65.Workout? workout})
       : super(name,
             path: 'create/workout',
             args: WorkoutCreatorRouteArgs(key: key, workout: workout));
@@ -1429,9 +1428,9 @@ class WorkoutCreatorRoute extends _i41.PageRouteInfo<WorkoutCreatorRouteArgs> {
 class WorkoutCreatorRouteArgs {
   const WorkoutCreatorRouteArgs({this.key, this.workout});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.Workout? workout;
+  final _i65.Workout? workout;
 
   @override
   String toString() {
@@ -1443,8 +1442,8 @@ class WorkoutCreatorRouteArgs {
 class LoggedWorkoutCreatorRoute
     extends _i41.PageRouteInfo<LoggedWorkoutCreatorRouteArgs> {
   LoggedWorkoutCreatorRoute(
-      {_i65.Key? key,
-      _i66.ScheduledWorkout? scheduledWorkout,
+      {_i64.Key? key,
+      _i65.ScheduledWorkout? scheduledWorkout,
       required String workoutId})
       : super(name,
             path: 'create/workout-log',
@@ -1460,9 +1459,9 @@ class LoggedWorkoutCreatorRouteArgs {
   const LoggedWorkoutCreatorRouteArgs(
       {this.key, this.scheduledWorkout, required this.workoutId});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.ScheduledWorkout? scheduledWorkout;
+  final _i65.ScheduledWorkout? scheduledWorkout;
 
   final String workoutId;
 
@@ -1475,7 +1474,7 @@ class LoggedWorkoutCreatorRouteArgs {
 /// generated route for [_i38.WorkoutPlanCreatorPage]
 class WorkoutPlanCreatorRoute
     extends _i41.PageRouteInfo<WorkoutPlanCreatorRouteArgs> {
-  WorkoutPlanCreatorRoute({_i65.Key? key, _i66.WorkoutPlan? workoutPlan})
+  WorkoutPlanCreatorRoute({_i64.Key? key, _i65.WorkoutPlan? workoutPlan})
       : super(name,
             path: 'create/workout-plan',
             args: WorkoutPlanCreatorRouteArgs(
@@ -1487,9 +1486,9 @@ class WorkoutPlanCreatorRoute
 class WorkoutPlanCreatorRouteArgs {
   const WorkoutPlanCreatorRouteArgs({this.key, this.workoutPlan});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.WorkoutPlan? workoutPlan;
+  final _i65.WorkoutPlan? workoutPlan;
 
   @override
   String toString() {
@@ -1501,8 +1500,8 @@ class WorkoutPlanCreatorRouteArgs {
 class WorkoutPlanReviewCreatorRoute
     extends _i41.PageRouteInfo<WorkoutPlanReviewCreatorRouteArgs> {
   WorkoutPlanReviewCreatorRoute(
-      {_i65.Key? key,
-      _i66.WorkoutPlanReview? workoutPlanReview,
+      {_i64.Key? key,
+      _i65.WorkoutPlanReview? workoutPlanReview,
       required String parentWorkoutPlanId,
       required String parentWorkoutPlanEnrolmentId})
       : super(name,
@@ -1523,9 +1522,9 @@ class WorkoutPlanReviewCreatorRouteArgs {
       required this.parentWorkoutPlanId,
       required this.parentWorkoutPlanEnrolmentId});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
-  final _i66.WorkoutPlanReview? workoutPlanReview;
+  final _i65.WorkoutPlanReview? workoutPlanReview;
 
   final String parentWorkoutPlanId;
 
@@ -1668,7 +1667,7 @@ class YourPlansRoute extends _i41.PageRouteInfo<void> {
 
 /// generated route for [_i56.YourSchedulePage]
 class YourScheduleRoute extends _i41.PageRouteInfo<YourScheduleRouteArgs> {
-  YourScheduleRoute({_i65.Key? key, DateTime? openAtDate})
+  YourScheduleRoute({_i64.Key? key, DateTime? openAtDate})
       : super(name,
             path: 'your-schedule',
             args: YourScheduleRouteArgs(key: key, openAtDate: openAtDate));
@@ -1679,7 +1678,7 @@ class YourScheduleRoute extends _i41.PageRouteInfo<YourScheduleRouteArgs> {
 class YourScheduleRouteArgs {
   const YourScheduleRouteArgs({this.key, this.openAtDate});
 
-  final _i65.Key? key;
+  final _i64.Key? key;
 
   final DateTime? openAtDate;
 

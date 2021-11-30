@@ -20,26 +20,30 @@ class VerticalWorkoutPlansList extends StatelessWidget {
   /// will cause 'multiple heroes' exception. Use [heroTagKey] to ensure uniqueness.
   final String? heroTagKey;
 
+  final Widget? emptyListPlaceholder;
+
   const VerticalWorkoutPlansList(
       {Key? key,
       required this.workoutPlans,
       this.selectWorkoutPlan,
       this.scrollable = true,
       this.heroTagKey,
-      this.avoidBottomNavBar = false})
+      this.avoidBottomNavBar = false,
+      this.emptyListPlaceholder})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return workoutPlans.isEmpty
-        ? const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(
-              child: MyText(
-                'No plans to display',
-                subtext: true,
-              ),
-            ))
+        ? emptyListPlaceholder ??
+            const Padding(
+                padding: EdgeInsets.all(24),
+                child: Center(
+                  child: MyText(
+                    'No plans to display',
+                    subtext: true,
+                  ),
+                ))
         : ImplicitlyAnimatedList<WorkoutPlanSummary>(
             padding: avoidBottomNavBar
                 ? EdgeInsets.only(bottom: EnvironmentConfig.bottomNavBarHeight)

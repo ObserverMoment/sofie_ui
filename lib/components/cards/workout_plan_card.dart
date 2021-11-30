@@ -66,7 +66,7 @@ class WorkoutPlanCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(CupertinoIcons.person_add, size: 14),
+                      const Icon(CupertinoIcons.person, size: 14),
                       const SizedBox(width: 2),
                       MyText(
                         workoutPlan.enrolmentsCount.displayLong,
@@ -192,7 +192,6 @@ class WorkoutPlanCard extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 5.0),
                       child: MyText(
                         workoutPlan.description!,
-                        subtext: true,
                       ),
                     ),
                   if (workoutPlan.tags.isNotEmpty)

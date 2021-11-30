@@ -1,5 +1,6 @@
 query workoutPlanEnrolmentById($id: ID!) {
   workoutPlanEnrolmentById(id: $id) {
+    __typename
     WorkoutPlanEnrolment {
       ...WorkoutPlanEnrolment
       User {

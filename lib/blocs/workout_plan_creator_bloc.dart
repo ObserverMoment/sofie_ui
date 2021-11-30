@@ -148,10 +148,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteWorkoutPlanDaysByIdArguments(ids: idsToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutPlanDaysById$Mutation,
             DeleteWorkoutPlanDaysByIdArguments>(
-        mutation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
+        operation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 
@@ -351,10 +351,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteWorkoutPlanDaysByIdArguments(ids: idsToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutPlanDaysById$Mutation,
             DeleteWorkoutPlanDaysByIdArguments>(
-        mutation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
+        operation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 
@@ -523,10 +523,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables =
         DeleteWorkoutPlanDayWorkoutByIdArguments(id: workoutPlanDayWorkout.id);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutPlanDayWorkoutById$Mutation,
             DeleteWorkoutPlanDayWorkoutByIdArguments>(
-        mutation:
+        operation:
             DeleteWorkoutPlanDayWorkoutByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);

@@ -283,17 +283,16 @@ class GraphQLStore {
     required GraphQLQuery<TData, TVars> mutation,
     List<String> addRefToQueries = const [],
     void Function(TData resultData)? processResult,
-    bool writeToStore = true,
   }) async {
     final response = await execute(mutation);
 
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
-    if (writeToStore && !result.hasErrors) {
+    if (!result.hasErrors && result.data != null) {
       /// Check for a top level field alias - these are needed sometimes due to the way Artemis generates return types for operations.
       final alias = extractRootFieldAliasFromOperation(mutation);
-      final data = response.data?[alias ?? mutation.operationName] ?? {};
+      final data = response.data![alias ?? mutation.operationName];
 
       /// Handle cases where returned data is a list of created objects.
       if (data is List) {
@@ -304,14 +303,14 @@ class GraphQLStore {
             read: readNormalized,
           );
           addRefToQueryData(data: e, queryIds: addRefToQueries);
-          processResult?.call(e);
         }
       } else {
         normalizeToStore(
             data: data, write: mergeWriteNormalized, read: readNormalized);
         addRefToQueryData(data: data, queryIds: addRefToQueries);
-        processResult?.call(data);
       }
+
+      processResult?.call(result.data!);
     }
 
     return result;
@@ -330,10 +329,10 @@ class GraphQLStore {
     final result = OperationResult<TData>(
         data: query.parse(response.data ?? {}), errors: response.errors);
 
-    if (!result.hasErrors) {
+    if (!result.hasErrors && result.data != null) {
       /// Check for a top level field alias - these are needed sometimes due to the way Artemis generates return types for operations.
       final alias = extractRootFieldAliasFromOperation(query);
-      final data = response.data?[alias ?? query.operationName] ?? {};
+      final data = response.data![alias ?? query.operationName];
 
       /// Important! [normalizeOperation.variables] is by default in alphabetical order.
       /// i.e. [userPublicProfiles({"cursor":null,"take":null})]
@@ -380,13 +379,12 @@ class GraphQLStore {
         await execute(mutation, customVariablesMap: customVariablesMap);
 
     final result = OperationResult<TData>(
-        data: response.data != null ? mutation.parse(response.data!) : null,
-        errors: response.errors);
+        data: mutation.parse(response.data ?? {}), errors: response.errors);
 
-    if (!result.hasErrors) {
+    if (!result.hasErrors && result.data != null) {
       /// Check for a top level field alias - these are needed sometimes due to the way Artemis generates return types for operations.
       final alias = extractRootFieldAliasFromOperation(mutation);
-      final data = response.data?[alias ?? mutation.operationName] ?? {};
+      final data = response.data![alias ?? mutation.operationName];
 
       /// Handle cases where returned data is a list of objects.
       /// E.g CreateBodyTransformPhotosMutation returns [List<BodyTransformPhoto>]
@@ -401,7 +399,6 @@ class GraphQLStore {
           if (removeRefFromQueries.isNotEmpty) {
             removeRefFromQueryData(data: e, queryIds: removeRefFromQueries);
           }
-          processResult?.call(e);
         }
       } else {
         normalizeToStore(
@@ -412,8 +409,9 @@ class GraphQLStore {
         if (removeRefFromQueries.isNotEmpty) {
           removeRefFromQueryData(data: data, queryIds: removeRefFromQueries);
         }
-        processResult?.call(data);
       }
+
+      processResult?.call(result.data!);
 
       /// Handled the same way whether return value is a list or not - it just deletes the data at the specified keys.
       /// Use this to handle side effects where deleting data is necessary. E.g when a user leaves a club we need to delete all data relating to the club from the store.
@@ -439,6 +437,7 @@ class GraphQLStore {
       /// Useful if you have deleted an object that has parent(s) which may still be referencing it.
       bool removeAllRefsToId = false,
       List<String> removeRefFromQueries = const [],
+      void Function(TData resultData)? processResult,
 
       /// Remove a whole query key from the store.
       /// Useful when deleting single objects that have query root data in the store.
@@ -469,6 +468,8 @@ class GraphQLStore {
         _clearQueryDataAtKeys(clearQueryDataAtKeys);
       }
 
+      processResult?.call(result.data!);
+
       broadcastQueriesByIds(broadcastQueryIds);
     }
 
@@ -482,6 +483,8 @@ class GraphQLStore {
       {required GraphQLQuery<TData, TVars> mutation,
       required List<String> objectIds,
       required String typename,
+      void Function(TData resultData)? processResult,
+
       // useful if you have deleted an object that has parent(s) which may still be referencing it.
       bool removeAllRefsToIds = false,
       List<String> removeRefsFromQueries = const [],
@@ -516,6 +519,8 @@ class GraphQLStore {
         _clearQueryDataAtKeys(clearQueryDataAtKeys);
       }
 
+      processResult?.call(result.data!);
+
       broadcastQueriesByIds(broadcastQueryIds);
     }
 
@@ -534,18 +539,6 @@ class GraphQLStore {
 
     final result = OperationResult<TData>(
         data: operation.parse(response.data ?? {}), errors: response.errors);
-
-    return result;
-  }
-
-  Future<OperationResult<TData>>
-      networkOnlyDelete<TData, TVars extends json.JsonSerializable>({
-    required GraphQLQuery<TData, TVars> mutation,
-  }) async {
-    final response = await execute(mutation);
-
-    final result = OperationResult<TData>(
-        data: mutation.parse(response.data ?? {}), errors: response.errors);
 
     return result;
   }

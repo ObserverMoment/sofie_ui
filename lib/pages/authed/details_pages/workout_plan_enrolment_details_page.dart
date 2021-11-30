@@ -57,7 +57,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
           showTime: false,
           saveDateTime: (newDate) async {
             final variables = UpdateWorkoutPlanEnrolmentArguments(
-                data: UpdateWorkoutPlanEnrolmentInput(id: ''));
+                data: UpdateWorkoutPlanEnrolmentInput(id: enrolment.id));
 
             final result = await context.graphQLStore.mutate<
                     UpdateWorkoutPlanEnrolment$Mutation,
@@ -65,7 +65,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
                 mutation:
                     UpdateWorkoutPlanEnrolmentMutation(variables: variables),
                 broadcastQueryIds: [
-                  GQLVarParamKeys.workoutPlanEnrolmentById(enrolment.id),
+                  GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(enrolment.id),
                   WorkoutPlanEnrolmentsQuery().operationName,
                 ],
                 customVariablesMap: {
@@ -100,7 +100,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
             UpdateWorkoutPlanEnrolmentArguments>(
         mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
           WorkoutPlanEnrolmentsQuery().operationName,
         ],
         customVariablesMap: {
@@ -119,26 +119,49 @@ class _WorkoutPlanEnrolmentDetailsPageState
         'workout-plan/${workoutPlan.id}', 'Check out this workout plan!');
   }
 
-  void _confirmLeavePlan() {
+  void _confirmLeavePlan(WorkoutPlan workoutPlan) {
     context.showConfirmDialog(
         title: 'Leave Plan?',
         message:
             'Progress within the plan will not be saved. Your logged workouts will not be affected. OK?',
         verb: 'Leave',
-        onConfirm: _deleteWorkoutPlanEnrolmentById);
+        onConfirm: () => _deleteWorkoutPlanEnrolmentById(workoutPlan));
   }
 
   /// I.e unenrol the user from the plan.
-  Future<void> _deleteWorkoutPlanEnrolmentById() async {
+  Future<void> _deleteWorkoutPlanEnrolmentById(WorkoutPlan workoutPlan) async {
     final variables = DeleteWorkoutPlanEnrolmentByIdArguments(id: widget.id);
 
     final result = await context.graphQLStore.delete<
             DeleteWorkoutPlanEnrolmentById$Mutation,
             DeleteWorkoutPlanEnrolmentByIdArguments>(
-        objectId: widget.id,
-        typename: kWorkoutPlanEnrolmentTypename,
         mutation: DeleteWorkoutPlanEnrolmentByIdMutation(variables: variables),
-        removeRefFromQueries: [WorkoutPlanEnrolmentsQuery().operationName]);
+        objectId: widget.id,
+        typename: kWorkoutPlanEnrolmentWithPlanTypename,
+        processResult: (data) {
+          /// Remove the [WorkoutPlanEnrolmentSummary].
+          final summaryKey =
+              '$kWorkoutPlanEnrolmentSummaryTypename:${widget.id}';
+          context.graphQLStore.deleteNormalizedObject(summaryKey);
+          context.graphQLStore.removeAllQueryRefsToId(summaryKey);
+
+          /// Remove the enrolment from the [WorkoutPlan] in store then re-write.
+          final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
+          final planKey = '$kWorkoutPlanTypename:${workoutPlan.id}';
+          final plan = WorkoutPlan.fromJson(
+              context.graphQLStore.readDenomalized(planKey));
+          plan.workoutPlanEnrolments
+              .removeWhere((e) => e.user.id == authedUserId);
+
+          context.graphQLStore.writeDataToStore(data: plan.toJson());
+        },
+        broadcastQueryIds: [
+          GQLOpNames.workoutPlanEnrolmentsQuery,
+          GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id)
+        ],
+        clearQueryDataAtKeys: [
+          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+        ]);
 
     if (result.hasErrors) {
       context.showErrorAlert(
@@ -205,7 +228,8 @@ class _WorkoutPlanEnrolmentDetailsPageState
                                   CupertinoIcons.square_arrow_right,
                                   color: Styles.errorRed,
                                 ),
-                                onPressed: _confirmLeavePlan),
+                                onPressed: () =>
+                                    _confirmLeavePlan(workoutPlan)),
                           ])),
                 ),
               ),

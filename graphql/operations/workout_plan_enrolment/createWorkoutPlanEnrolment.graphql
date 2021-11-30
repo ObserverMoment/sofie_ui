@@ -1,8 +1,14 @@
 mutation createWorkoutPlanEnrolment($workoutPlanId: ID!) {
   createWorkoutPlanEnrolment(workoutPlanId: $workoutPlanId) {
-    ...WorkoutPlanEnrolment
-    User {
-      ...UserSummary
+    __typename
+    WorkoutPlanEnrolment {
+      ...WorkoutPlanEnrolment
+      User {
+        ...UserSummary
+      }
+    }
+    WorkoutPlan {
+      ...WorkoutPlanData
     }
   }
 }
