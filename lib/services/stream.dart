@@ -172,10 +172,10 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-            onPressed: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: const Icon(CupertinoIcons.chat_bubble)),
+        GestureDetector(
+            onTap: () => context.pushRoute(const ChatsOverviewRoute()),
+            child: Icon(CupertinoIcons.chat_bubble,
+                size: 26, color: context.theme.background)),
         if (_unreadCount > 0)
           Positioned(
             top: 4,

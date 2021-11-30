@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/chat/club_chats_channel_list.dart';
 import 'package:sofie_ui/components/social/chat/friend_chats_channel_list.dart';
@@ -38,34 +39,43 @@ class _ChatsOverviewPageState extends State<ChatsOverviewPage> {
       navigationBar: const MyNavBar(
         middle: NavBarTitle('Chats'),
       ),
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 4, bottom: 6, right: 4),
-              child: SlidingSelect<int>(
-                  value: _activeTabIndex,
-                  updateValue: _updateTabIndex,
-                  children: const {0: MyText('Friends'), 1: MyText('Clubs')}),
-            ),
+      child: FABPage(
+        buttons: [
+          MySlidingSegmentedControl<int>(
+            groupValue: _activeTabIndex,
+            onValueChanged: (v) => _updateTabIndex(v!),
+            children: {
+              0: 'Friends',
+              1: 'Clubs',
+            },
           ),
-          Expanded(
-            child: _streamChatClient.state.currentUser == null
-                ? const ShimmerChatChannelPreviewList()
-                : IndexedStack(
-                    index: _activeTabIndex,
-                    children: [
-                      FriendChatsChannelList(
-                        streamChatClient: _streamChatClient,
-                      ),
-                      ClubChatsChannelList(
-                        streamChatClient: _streamChatClient,
-                      ),
-                    ],
-                  ),
-          )
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 4, bottom: 6, right: 4),
+          //   child: SlidingSelect<int>(
+          //       value: _activeTabIndex,
+          //       updateValue: _updateTabIndex,
+          //       children: const {0: MyText('Friends'), 1: MyText('Clubs')}),
+          // ),
         ],
+        child: Column(
+          children: [
+            Expanded(
+              child: _streamChatClient.state.currentUser == null
+                  ? const ShimmerChatChannelPreviewList()
+                  : IndexedStack(
+                      index: _activeTabIndex,
+                      children: [
+                        FriendChatsChannelList(
+                          streamChatClient: _streamChatClient,
+                        ),
+                        ClubChatsChannelList(
+                          streamChatClient: _streamChatClient,
+                        ),
+                      ],
+                    ),
+            )
+          ],
+        ),
       ),
     );
   }
