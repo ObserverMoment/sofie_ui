@@ -3,28 +3,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
-import 'package:sofie_ui/components/navigation.dart';
-import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_feed.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_followers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_following.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_timeline.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 
-/// Maintains subscriptions - also includes a list of auth user's clubs
-class FeedsAndFollows extends StatefulWidget {
-  const FeedsAndFollows({Key? key}) : super(key: key);
+/// Maintains subscriptions - also includes a list of auth user's clubs.
+/// For You = the users timeline
+/// Your Posts = the users own feed.
+class TimelineAndFeed extends StatefulWidget {
+  const TimelineAndFeed({Key? key}) : super(key: key);
 
   @override
-  _FeedsAndFollowsState createState() => _FeedsAndFollowsState();
+  _TimelineAndFeedState createState() => _TimelineAndFeedState();
 }
 
-class _FeedsAndFollowsState extends State<FeedsAndFollows> {
+class _TimelineAndFeedState extends State<TimelineAndFeed> {
   int _activeTabIndex = 0;
 
   late AuthedUser _authedUser;
@@ -56,12 +57,14 @@ class _FeedsAndFollowsState extends State<FeedsAndFollows> {
     return Column(
       children: [
         const SizedBox(height: 4),
-        MyTabBarNav(titles: const [
-          'Timeline',
-          'Your Posts',
-          'Following',
-          'Followers',
-        ], handleTabChange: _changeTab, activeTabIndex: _activeTabIndex),
+        MySlidingSegmentedControl(
+            value: _activeTabIndex,
+            children: const {
+              0: 'For You',
+              1: 'Following',
+              2: 'Followers',
+            },
+            updateValue: _changeTab),
         const SizedBox(height: 8),
         Expanded(
           child: IndexedStack(
@@ -71,9 +74,6 @@ class _FeedsAndFollowsState extends State<FeedsAndFollows> {
                   userFeed: _userFeed,
                   timelineFeed: _timelineFeed,
                   streamFeedClient: _streamFeedClient),
-              AuthedUserFeed(
-                userFeed: _userFeed,
-              ),
               AuthedUserFollowing(
                 timelineFeed: _timelineFeed,
               ),

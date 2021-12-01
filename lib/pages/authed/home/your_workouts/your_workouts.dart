@@ -51,12 +51,12 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
               padding: const EdgeInsets.symmetric(vertical: 2.0),
               child: SizedBox(
                 width: double.infinity,
-                child: SlidingSelect<int>(
+                child: MySlidingSegmentedControl<int>(
                     value: _activeTabIndex,
                     updateValue: _updatePageIndex,
                     children: const {
-                      0: MyText('Saved'),
-                      1: MyText('Created'),
+                      0: 'Saved',
+                      1: 'Created',
                     }),
               ),
             ),

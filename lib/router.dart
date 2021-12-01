@@ -60,6 +60,7 @@ import 'package:sofie_ui/pages/authed/progress/personal_bests_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_people_page.dart';
 import 'package:sofie_ui/pages/authed/social/social_page.dart';
+import 'package:sofie_ui/pages/authed/social/your_posts_page.dart';
 import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
 @CupertinoAutoRouter(
@@ -135,6 +136,8 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
           AutoRoute(path: 'settings', page: SettingsPage),
           AutoRoute(path: 'timers', page: TimersPage),
+
+          AutoRoute(path: "your-posts", page: YourPostsPage),
 
           /// Finders.
           AutoRoute(path: 'community-workouts', page: PublicWorkoutFinderPage),

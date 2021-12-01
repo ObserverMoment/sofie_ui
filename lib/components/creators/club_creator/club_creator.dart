@@ -492,13 +492,13 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: SizedBox(
                             width: double.infinity,
-                            child: SlidingSelect<int>(
+                            child: MySlidingSegmentedControl<int>(
                                 value: _activePageIndex,
                                 updateValue: _updatePageIndex,
                                 children: const {
-                                  0: MyText('Info'),
-                                  1: MyText('Media'),
-                                  2: MyText('Members'),
+                                  0: 'Info',
+                                  1: 'Media',
+                                  2: 'Members',
                                 }),
                           ),
                         ),

@@ -36,10 +36,12 @@ class WorkoutCard extends StatelessWidget {
                 children: [
                   MyText(
                     count.displayLong,
+                    color: Styles.white,
                   ),
                   const MyText(
                     'sessions',
                     size: FONTSIZE.one,
+                    color: Styles.white,
                   ),
                 ],
               ),
@@ -174,14 +176,14 @@ class WorkoutCard extends StatelessWidget {
                 if (Utils.textNotNull(workout.description))
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
-                    child: MyText(workout.description!),
+                    child: MyText(workout.description!, color: infoFontColor),
                   ),
                 if (workout.tags.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: CommaSeparatedList(
                         workout.tags.where((t) => t != 'Custom').toList(),
-                        textColor: Styles.secondaryAccent),
+                        textColor: Styles.primaryAccent),
                   )
               ],
             ),

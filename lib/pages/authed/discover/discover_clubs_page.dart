@@ -23,7 +23,7 @@ class DiscoverClubsPage extends StatelessWidget {
           final clubSummaries = data.publicClubs;
           return MyPageScaffold(
             navigationBar:
-                const MyNavBar(middle: NavBarTitle('Discover Clubs')),
+                const MyNavBar(middle: NavBarLargeTitle('Discover Clubs')),
             child: ListView.builder(
               itemCount: clubSummaries.length,
               shrinkWrap: true,

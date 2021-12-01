@@ -127,12 +127,12 @@ class _LoadPickerModalState extends State<LoadPickerModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SlidingSelect<LoadUnit>(
+              MySlidingSegmentedControl<LoadUnit>(
                   value: _activeLoadUnit,
                   children: {
                     for (final v in LoadUnit.values
                         .where((v) => v != LoadUnit.artemisUnknown))
-                      v: MyText(v.display)
+                      v: v.display
                   },
                   updateValue: (loadUnit) =>
                       setState(() => _activeLoadUnit = loadUnit)),

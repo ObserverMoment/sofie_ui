@@ -40,22 +40,15 @@ class _ChatsOverviewPageState extends State<ChatsOverviewPage> {
         middle: NavBarTitle('Chats'),
       ),
       child: FABPage(
-        buttons: [
+        rowButtons: [
           MySlidingSegmentedControl<int>(
-            groupValue: _activeTabIndex,
-            onValueChanged: (v) => _updateTabIndex(v!),
-            children: {
+            value: _activeTabIndex,
+            updateValue: (v) => _updateTabIndex(v),
+            children: const {
               0: 'Friends',
               1: 'Clubs',
             },
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 4, bottom: 6, right: 4),
-          //   child: SlidingSelect<int>(
-          //       value: _activeTabIndex,
-          //       updateValue: _updateTabIndex,
-          //       children: const {0: MyText('Friends'), 1: MyText('Clubs')}),
-          // ),
         ],
         child: Column(
           children: [

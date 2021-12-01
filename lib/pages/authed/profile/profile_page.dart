@@ -111,12 +111,12 @@ class ProfilePage extends StatelessWidget {
                         const MyText(
                           'Profile Privacy',
                         ),
-                        SlidingSelect<UserProfileScope>(
+                        MySlidingSegmentedControl<UserProfileScope>(
                             value: user.userProfileScope,
-                            children: <UserProfileScope, Widget>{
+                            children: {
                               for (final v in UserProfileScope.values.where(
                                   (v) => v != UserProfileScope.artemisUnknown))
-                                v: MyText(v.display.capitalize)
+                                v: v.display.capitalize
                             },
                             updateValue: (scope) => updateUserFields(context,
                                 user.id, 'userProfileScope', scope.apiValue)),

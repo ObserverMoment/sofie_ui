@@ -198,7 +198,7 @@ class WorkoutPlanCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: CommaSeparatedList(workoutPlan.tags,
-                          textColor: Styles.secondaryAccent),
+                          textColor: Styles.primaryAccent),
                     ),
                   if (workoutPlan.goals.isNotEmpty)
                     Padding(

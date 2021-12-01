@@ -418,7 +418,7 @@ class FloatingActionButtonContainer extends StatelessWidget {
       decoration: BoxDecoration(
           boxShadow: kElevation[6],
           gradient: Styles.primaryAccentGradient,
-          borderRadius: BorderRadius.circular(30)),
+          borderRadius: BorderRadius.circular(60)),
       child: child,
     );
   }

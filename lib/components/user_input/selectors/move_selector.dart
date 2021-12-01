@@ -157,11 +157,11 @@ class _MoveSelectorState extends State<MoveSelector> {
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
-                                    child: SlidingSelect<int>(
+                                    child: MySlidingSegmentedControl<int>(
                                         value: _activeTabIndex,
                                         children: const {
-                                          0: MyText('Standard'),
-                                          1: MyText('Custom')
+                                          0: 'Standard',
+                                          1: 'Custom'
                                         },
                                         updateValue: (i) => setState(
                                             () => _activeTabIndex = i)),

@@ -1,66 +1,12 @@
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'dart:math' as math;
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-
-class SlidingSelect<T> extends StatelessWidget {
-  final T? value;
-  final void Function(T value) updateValue;
-  final Map<T, Widget> children;
-  final EdgeInsets itemPadding;
-  const SlidingSelect(
-      {Key? key,
-      required this.value,
-      required this.updateValue,
-      required this.children,
-      this.itemPadding = const EdgeInsets.symmetric(vertical: 8)})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final formattedChildren =
-        children.entries.fold<Map<T, Widget>>(<T, Widget>{}, (acum, next) {
-      acum[next.key] = Padding(
-        padding: itemPadding,
-        child: next.value,
-      );
-      return acum;
-    });
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: CupertinoSlidingSegmentedControl<T>(
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-          backgroundColor: context.theme.cardBackground.withOpacity(0),
-          thumbColor: context.theme.primary,
-          groupValue: value,
-          children: formattedChildren,
-          onValueChanged: (v) {
-            if (v != null) {
-              updateValue(v);
-            }
-          }),
-    );
-  }
-}
-
-//////////////
-///
-///
-
-// Extracted from https://developer.apple.com/design/resources/.
-
-// Minimum padding from edges of the segmented control to edges of
-// encompassing widget.
-const EdgeInsetsGeometry _kHorizontalItemPadding =
-    EdgeInsets.symmetric(vertical: 3, horizontal: 5);
 
 // The corner radius of the thumb.
 const Radius _kThumbRadius = Radius.circular(60);
@@ -70,10 +16,6 @@ const EdgeInsets _kThumbInsets = EdgeInsets.symmetric(horizontal: 1);
 
 // Minimum height of the segmented control.
 const double _kMinSegmentedControlHeight = 28.0;
-
-const Color _kSeparatorColor = Color(0x4D8E8E93);
-
-const Color _kThumbColor = Styles.primaryAccent;
 
 // The amount of space by which to inset each separator.
 // const EdgeInsets _kSeparatorInset = EdgeInsets.symmetric(vertical: 6);
@@ -115,285 +57,61 @@ const Duration _kOpacityAnimationDuration = Duration(milliseconds: 470);
 
 const Duration _kHighlightAnimationDuration = Duration(milliseconds: 200);
 
-class _Segment<T> extends StatefulWidget {
-  const _Segment({
-    required ValueKey<T> key,
-    required this.text,
-    required this.pressed,
-    required this.highlighted,
-    required this.isDragging,
-  }) : super(key: key);
-
-  final String text;
-
-  final bool pressed;
-  final bool highlighted;
-
-  // Whether the thumb of the parent widget (MySlidingSegmentedControl)
-  // is currently being dragged.
-  final bool isDragging;
-
-  bool get shouldFadeoutContent => pressed && !highlighted;
-  bool get shouldScaleContent => pressed && highlighted && isDragging;
-
-  @override
-  _SegmentState<T> createState() => _SegmentState<T>();
-}
-
-class _SegmentState<T> extends State<_Segment<T>>
-    with TickerProviderStateMixin<_Segment<T>> {
-  late final AnimationController highlightPressScaleController;
-  late Animation<double> highlightPressScaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    highlightPressScaleController = AnimationController(
-      duration: _kOpacityAnimationDuration,
-      value: widget.shouldScaleContent ? 1 : 0,
-      vsync: this,
-    );
-
-    highlightPressScaleAnimation = highlightPressScaleController.drive(
-      Tween<double>(begin: 1.0, end: _kMinThumbScale),
-    );
-  }
-
-  @override
-  void didUpdateWidget(_Segment<T> oldWidget) {
-    assert(oldWidget.key == widget.key);
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.shouldScaleContent != widget.shouldScaleContent) {
-      highlightPressScaleAnimation = highlightPressScaleController.drive(
-        Tween<double>(
-          begin: highlightPressScaleAnimation.value,
-          end: widget.shouldScaleContent ? _kMinThumbScale : 1.0,
-        ),
-      );
-      highlightPressScaleController
-          .animateWith(_kThumbSpringAnimationSimulation);
-    }
-  }
-
-  Widget get _buildChild => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
-        child: Text(widget.text),
-      );
-
-  @override
-  void dispose() {
-    highlightPressScaleController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MetaData(
-      behavior: HitTestBehavior.opaque,
-      child: IndexedStack(
-        index: 0,
-        alignment: Alignment.center,
-        children: <Widget>[
-          AnimatedOpacity(
-            opacity:
-                widget.shouldFadeoutContent ? _kContentPressedMinOpacity : 1,
-            duration: _kOpacityAnimationDuration,
-            curve: Curves.ease,
-            child: AnimatedDefaultTextStyle(
-              style: DefaultTextStyle.of(context).style.merge(TextStyle(
-                  fontSize: 18,
-                  color: widget.highlighted
-                      ? Styles.white
-                      : context.theme.background,
-                  fontWeight: widget.highlighted
-                      ? FontWeight.w500
-                      : FontWeight.normal)),
-              duration: _kHighlightAnimationDuration,
-              curve: Curves.ease,
-              child: ScaleTransition(
-                scale: highlightPressScaleAnimation,
-                child: _buildChild,
-              ),
-            ),
-          ),
-          // The entire widget will assume the size of this widget, so when a
-          // segment's "highlight" animation plays the size of the parent stays
-          // the same and will always be greater than equal to that of the
-          // visible child (at index 0), to keep the size of the entire
-          // SegmentedControl widget consistent throughout the animation.
-          Offstage(
-            child: DefaultTextStyle.merge(
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-              ),
-              child: _buildChild,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// Fadeout the separator when either adjacent segment is highlighted.
-class _SegmentSeparator extends StatefulWidget {
-  const _SegmentSeparator({
-    required ValueKey<int> key,
-    required this.highlighted,
-  }) : super(key: key);
-
-  final bool highlighted;
-
-  @override
-  _SegmentSeparatorState createState() => _SegmentSeparatorState();
-}
-
-class _SegmentSeparatorState extends State<_SegmentSeparator>
-    with TickerProviderStateMixin<_SegmentSeparator> {
-  late final AnimationController separatorOpacityController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    separatorOpacityController = AnimationController(
-      duration: _kSpringAnimationDuration,
-      value: widget.highlighted ? 0 : 1,
-      vsync: this,
-    );
-  }
-
-  @override
-  void didUpdateWidget(_SegmentSeparator oldWidget) {
-    assert(oldWidget.key == widget.key);
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.highlighted != widget.highlighted) {
-      separatorOpacityController.animateTo(
-        widget.highlighted ? 0 : 1,
-        duration: _kSpringAnimationDuration,
-        curve: Curves.ease,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    separatorOpacityController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: separatorOpacityController,
-      child: const SizedBox(width: _kSeparatorWidth),
-      builder: (BuildContext context, Widget? child) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: _kSeparatorColor.withOpacity(
-                _kSeparatorColor.opacity * separatorOpacityController.value),
-          ),
-          child: child,
-        );
-      },
-    );
-  }
-}
-
-/// An iOS 13 style segmented control.
-///
-/// Displays the widgets provided in the [Map] of [children] in a horizontal list.
-/// It allows the user to select between a number of mutually exclusive options,
-/// by tapping or dragging within the segmented control.
-///
-/// A segmented control can feature any [Widget] as one of the values in its
-/// [Map] of [children]. The type T is the type of the [Map] keys used to identify
-/// each widget and determine which widget is selected. As required by the [Map]
-/// class, keys must be of consistent types and must be comparable. The [children]
-/// argument must be an ordered [Map] such as a [LinkedHashMap], the ordering of
-/// the keys will determine the order of the widgets in the segmented control.
-///
-/// The widget calls the [onValueChanged] callback *when a valid user gesture
-/// completes on an unselected segment*. The map key associated with the newly
-/// selected widget is returned in the [onValueChanged] callback. Typically,
-/// widgets that use a segmented control will listen for the [onValueChanged]
-/// callback and rebuild the segmented control with a new [groupValue] to update
-/// which option is currently selected.
-///
-/// The [children] will be displayed in the order of the keys in the [Map],
-/// along the current [TextDirection]. Each child widget will have the same size.
-/// The height of the segmented control is determined by the height of the
-/// tallest child widget. The width of each child will be the intrinsic width of
-/// the widest child, or the available horizontal space divided by the number of
-/// [children], which ever is smaller.
-///
-/// A segmented control may optionally be created with custom colors. The
-/// [thumbColor], [backgroundColor] arguments can be used to override the
-/// segmented control's colors from its defaults.
-///
-/// See also:
-///
-///  * <https://developer.apple.com/design/human-interface-guidelines/ios/controls/segmented-controls/>
 class MySlidingSegmentedControl<T> extends StatefulWidget {
-  /// Creates an iOS-style segmented control bar.
-  ///
-  /// The [children] and [onValueChanged] arguments must not be null. The
-  /// [children] argument must be an ordered [Map] such as a [LinkedHashMap].
-  /// Further, the length of the [children] list must be greater than one.
-  ///
-  /// Each widget value in the map of [children] must have an associated key
-  /// that uniquely identifies this widget. This key is what will be returned
-  /// in the [onValueChanged] callback when a new value from the [children] map
-  /// is selected.
-  ///
-  /// The [groupValue] is the currently selected value for the segmented control.
-  /// If no [groupValue] is provided, or the [groupValue] is null, no widget will
-  /// appear as selected. The [groupValue] must be either null or one of the keys
-  /// in the [children] map.
-  MySlidingSegmentedControl({
-    Key? key,
-    required this.children,
-    required this.onValueChanged,
-    this.groupValue,
-    this.thumbColor = _kThumbColor,
-    this.padding = _kHorizontalItemPadding,
-  })  : assert(children.length >= 2),
-        assert(
-          groupValue == null || children.keys.contains(groupValue),
-          'The groupValue must be either null or one of the keys in the children map.',
-        ),
-        super(key: key);
-
-  /// The identifying keys and corresponding widget values in the
-  /// segmented control.
-  ///
-  /// This attribute must be an ordered [Map] such as a [LinkedHashMap]. Each
-  /// widget is typically a single-line [Text] widget or an [Icon] widget.
-  ///
   /// The map must have more than one entry.
   final Map<T, String> children;
 
-  /// The identifier of the widget that is currently selected.
-  ///
-  /// This must be one of the keys in the [Map] of [children].
   /// If this attribute is null, no widget will be initially selected.
-  final T? groupValue;
+  final T? value;
+  final ValueChanged<T> updateValue;
 
-  final ValueChanged<T?> onValueChanged;
+  /// Will default to [theme.cardBackground].
+  final Color? backgroundColor;
 
-  /// The color used to paint the interior of the thumb that appears behind the
-  /// currently selected item.
-  ///
-  /// The default value is a [CupertinoDynamicColor] that appears white in light
-  /// mode and becomes a gray color in dark mode.
-  final Color thumbColor;
+  /// [backgroundTransparent] will override [backgroundColor]
+  final bool backgroundTransparent;
+
+  /// Defaults to [theme.background]
+  final Color? thumbColor;
+
+  /// Optional text colors.
+  /// [activeColor] defaults to white.
+  final Color? activeColor;
+
+  /// [inactiveColor] defaults to context.theme.background.
+  final Color? inactiveColor;
 
   /// The amount of space by which to inset the [children].
-  ///
-  /// Must not be null. Defaults to EdgeInsets.symmetric(vertical: 2, horizontal: 3).
-  final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry containerPadding;
+
+  /// The amount of child padding.
+  final EdgeInsetsGeometry childPadding;
+  final EdgeInsetsGeometry margin;
+
+  final double fontSize;
+
+  MySlidingSegmentedControl({
+    Key? key,
+    required this.children,
+    required this.updateValue,
+    this.value,
+    this.thumbColor,
+    this.backgroundColor,
+    this.containerPadding =
+        const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
+    this.childPadding =
+        const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
+    this.backgroundTransparent = false,
+    this.activeColor,
+    this.inactiveColor,
+    this.fontSize = 17,
+    this.margin = const EdgeInsets.symmetric(vertical: 4.0),
+  })  : assert(children.length >= 2),
+        assert(
+          value == null || children.keys.contains(value),
+          'The groupValue must be either null or one of the keys in the children map.',
+        ),
+        super(key: key);
 
   @override
   State<MySlidingSegmentedControl<T>> createState() =>
@@ -438,7 +156,7 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
     // Empty callback to enable the long press recognizer.
     longPress.onLongPress = () {};
 
-    highlighted = widget.groupValue;
+    highlighted = widget.value;
   }
 
   @override
@@ -448,10 +166,10 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
     // Temporarily ignore highlight changes from the widget when the thumb is
     // being dragged. When the drag gesture finishes the widget will be forced
     // to build (see the onEnd method), and didUpdateWidget will be called again.
-    if (!isThumbDragging && highlighted != widget.groupValue) {
+    if (!isThumbDragging && highlighted != widget.value) {
       thumbController.animateWith(_kThumbSpringAnimationSimulation);
       thumbAnimatable = null;
-      highlighted = widget.groupValue;
+      highlighted = widget.value;
     }
   }
 
@@ -555,8 +273,8 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
     if (isThumbDragging) return;
     final T segment = segmentForXPosition(details.localPosition.dx);
     onPressedChangedByGesture(null);
-    if (segment != widget.groupValue) {
-      widget.onValueChanged(segment);
+    if (segment != widget.value && segment != null) {
+      widget.updateValue(segment);
     }
   }
 
@@ -587,14 +305,14 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
     final T? pressed = this.pressed;
     if (isThumbDragging) {
       _playThumbScaleAnimation(isExpanding: true);
-      if (highlighted != widget.groupValue) {
-        widget.onValueChanged(highlighted);
+      if (highlighted != widget.value && highlighted != null) {
+        widget.updateValue(highlighted!);
       }
     } else if (pressed != null) {
       onHighlightChangedByGesture(pressed);
       assert(pressed == highlighted);
-      if (highlighted != widget.groupValue) {
-        widget.onValueChanged(highlighted);
+      if (highlighted != widget.value && highlighted != null) {
+        widget.updateValue(highlighted!);
       }
     }
 
@@ -624,6 +342,12 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
 
   @override
   Widget build(BuildContext context) {
+    final Color activeColor = widget.activeColor ?? context.theme.primary;
+    final Color inactiveColor = widget.inactiveColor ?? context.theme.primary;
+    final Color thumbColor = widget.thumbColor ?? context.theme.background;
+    final Color backgroundColor =
+        widget.backgroundColor ?? context.theme.cardBackground;
+
     assert(widget.children.length >= 2);
     List<Widget> children = <Widget>[];
     bool isPreviousSegmentHighlighted = false;
@@ -651,17 +375,20 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
         Semantics(
           button: true,
           onTap: () {
-            widget.onValueChanged(entry.key);
+            widget.updateValue(entry.key);
           },
           inMutuallyExclusiveGroup: true,
-          selected: widget.groupValue == entry.key,
+          selected: widget.value == entry.key,
           child: _Segment<T>(
-            key: ValueKey<T>(entry.key),
-            highlighted: isHighlighted,
-            pressed: pressed == entry.key,
-            isDragging: isThumbDragging,
-            text: entry.value,
-          ),
+              key: ValueKey<T>(entry.key),
+              highlighted: isHighlighted,
+              pressed: pressed == entry.key,
+              isDragging: isThumbDragging,
+              text: entry.value,
+              activeColor: activeColor,
+              inactiveColor: inactiveColor,
+              padding: widget.childPadding,
+              fontSize: widget.fontSize),
         ),
       );
 
@@ -682,26 +409,161 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
         break;
     }
 
-    return UnconstrainedBox(
-      constrainedAxis: Axis.horizontal,
-      child: Container(
-        padding: widget.padding.resolve(Directionality.of(context)),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(_kThumbRadius),
-          color: context.theme.primary.withOpacity(0.7),
+    return Padding(
+      padding: widget.margin,
+      child: UnconstrainedBox(
+        constrainedAxis: Axis.horizontal,
+        child: Container(
+          padding: widget.containerPadding.resolve(Directionality.of(context)),
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(_kThumbRadius),
+            color: widget.backgroundTransparent
+                ? Colors.transparent
+                : backgroundColor,
+          ),
+          child: AnimatedBuilder(
+            animation: thumbScaleAnimation,
+            builder: (BuildContext context, Widget? child) {
+              return _SegmentedControlRenderWidget<T>(
+                highlightedIndex: highlightedIndex,
+                thumbScale: thumbScaleAnimation.value,
+                thumbColor: thumbColor,
+                state: this,
+                children: children,
+              );
+            },
+          ),
         ),
-        child: AnimatedBuilder(
-          animation: thumbScaleAnimation,
-          builder: (BuildContext context, Widget? child) {
-            return _SegmentedControlRenderWidget<T>(
-              highlightedIndex: highlightedIndex,
-              thumbScale: thumbScaleAnimation.value,
-              thumbColor: _kThumbColor,
-              state: this,
-              children: children,
-            );
-          },
+      ),
+    );
+  }
+}
+
+class _Segment<T> extends StatefulWidget {
+  const _Segment({
+    required ValueKey<T> key,
+    required this.text,
+    required this.pressed,
+    required this.highlighted,
+    required this.isDragging,
+    required this.padding,
+    required this.fontSize,
+    required this.activeColor,
+    required this.inactiveColor,
+  }) : super(key: key);
+
+  final String text;
+  final double fontSize;
+  final Color activeColor;
+  final Color inactiveColor;
+
+  final bool pressed;
+  final bool highlighted;
+
+  // Whether the thumb of the parent widget (MySlidingSegmentedControl)
+  // is currently being dragged.
+  final bool isDragging;
+
+  final EdgeInsetsGeometry padding;
+
+  bool get shouldFadeoutContent => pressed && !highlighted;
+  bool get shouldScaleContent => pressed && highlighted && isDragging;
+
+  @override
+  _SegmentState<T> createState() => _SegmentState<T>();
+}
+
+class _SegmentState<T> extends State<_Segment<T>>
+    with TickerProviderStateMixin<_Segment<T>> {
+  late final AnimationController highlightPressScaleController;
+  late Animation<double> highlightPressScaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    highlightPressScaleController = AnimationController(
+      duration: _kOpacityAnimationDuration,
+      value: widget.shouldScaleContent ? 1 : 0,
+      vsync: this,
+    );
+
+    highlightPressScaleAnimation = highlightPressScaleController.drive(
+      Tween<double>(begin: 1.0, end: _kMinThumbScale),
+    );
+  }
+
+  @override
+  void didUpdateWidget(_Segment<T> oldWidget) {
+    assert(oldWidget.key == widget.key);
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.shouldScaleContent != widget.shouldScaleContent) {
+      highlightPressScaleAnimation = highlightPressScaleController.drive(
+        Tween<double>(
+          begin: highlightPressScaleAnimation.value,
+          end: widget.shouldScaleContent ? _kMinThumbScale : 1.0,
         ),
+      );
+      highlightPressScaleController
+          .animateWith(_kThumbSpringAnimationSimulation);
+    }
+  }
+
+  Widget get _buildChild => Padding(
+        padding: widget.padding,
+        child: Text(widget.text),
+      );
+
+  @override
+  void dispose() {
+    highlightPressScaleController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MetaData(
+      behavior: HitTestBehavior.opaque,
+      child: IndexedStack(
+        index: 0,
+        alignment: Alignment.center,
+        children: <Widget>[
+          AnimatedOpacity(
+            opacity:
+                widget.shouldFadeoutContent ? _kContentPressedMinOpacity : 1,
+            duration: _kOpacityAnimationDuration,
+            curve: Curves.ease,
+            child: AnimatedDefaultTextStyle(
+              style: DefaultTextStyle.of(context).style.merge(TextStyle(
+                  fontSize: widget.fontSize,
+                  color: widget.highlighted
+                      ? widget.activeColor
+                      : widget.inactiveColor,
+                  fontWeight: widget.highlighted
+                      ? FontWeight.bold
+                      : FontWeight.normal)),
+              duration: _kHighlightAnimationDuration,
+              curve: Curves.ease,
+              child: ScaleTransition(
+                scale: highlightPressScaleAnimation,
+                child: _buildChild,
+              ),
+            ),
+          ),
+          // The entire widget will assume the size of this widget, so when a
+          // segment's "highlight" animation plays the size of the parent stays
+          // the same and will always be greater than equal to that of the
+          // visible child (at index 0), to keep the size of the entire
+          // SegmentedControl widget consistent throughout the animation.
+          Offstage(
+            child: DefaultTextStyle.merge(
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+              ),
+              child: _buildChild,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1154,5 +1016,19 @@ class _RenderSegmentedControl<T> extends RenderBox
       child = childParentData.previousSibling;
     }
     return false;
+  }
+}
+
+class _SegmentSeparator extends StatelessWidget {
+  const _SegmentSeparator({
+    required ValueKey<int> key,
+    required this.highlighted,
+  }) : super(key: key);
+
+  final bool highlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(width: _kSeparatorWidth);
   }
 }

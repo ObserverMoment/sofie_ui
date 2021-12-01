@@ -197,13 +197,13 @@ class _RepPickerModalState extends State<RepPickerModal> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.validRepTypes.length > 1)
-                  SlidingSelect<WorkoutMoveRepType>(
+                  MySlidingSegmentedControl<WorkoutMoveRepType>(
                       value: _activeRepType,
                       children: {
                         for (final v in WorkoutMoveRepType.values.where((v) =>
                             v != WorkoutMoveRepType.artemisUnknown &&
                             widget.validRepTypes.contains(v)))
-                          v: MyText(v.display)
+                          v: v.display
                       },
                       updateValue: (repType) =>
                           setState(() => _activeRepType = repType)),
@@ -220,12 +220,12 @@ class _RepPickerModalState extends State<RepPickerModal> {
               ),
             ),
             if (_activeRepType == WorkoutMoveRepType.time)
-              SlidingSelect<TimeUnit>(
+              MySlidingSegmentedControl<TimeUnit>(
                   value: _activeTimeUnit,
                   children: {
                     for (final v in TimeUnit.values
                         .where((v) => v != TimeUnit.artemisUnknown))
-                      v: MyText(describeEnum(v))
+                      v: describeEnum(v)
                   },
                   updateValue: (timeUnit) =>
                       setState(() => _activeTimeUnit = timeUnit)),
@@ -234,12 +234,12 @@ class _RepPickerModalState extends State<RepPickerModal> {
               FadeIn(child: MyText(_activeRepType.display)),
             if (_activeRepType == WorkoutMoveRepType.distance)
               FadeIn(
-                child: SlidingSelect<DistanceUnit>(
+                child: MySlidingSegmentedControl<DistanceUnit>(
                     value: _activeDistanceUnit,
                     children: {
                       for (final v in DistanceUnit.values
                           .where((v) => v != DistanceUnit.artemisUnknown))
-                        v: MyText(v.display)
+                        v: v.display
                     },
                     updateValue: (distanceUnit) =>
                         setState(() => _activeDistanceUnit = distanceUnit)),
@@ -282,12 +282,12 @@ class RepTimePicker extends StatelessWidget {
                 onSelectedItemChanged: (index) => updateReps(index + 1),
                 children: List<Widget>.generate(maxInput - 1,
                     (i) => Center(child: H3((i + 1).toString()))))),
-        SlidingSelect<TimeUnit>(
+        MySlidingSegmentedControl<TimeUnit>(
             value: timeUnit,
             children: {
               for (final v
                   in TimeUnit.values.where((v) => v != TimeUnit.artemisUnknown))
-                v: MyText(describeEnum(v))
+                v: describeEnum(v)
             },
             updateValue: (timeUnit) => updateTimeUnit(timeUnit)),
       ],

@@ -1,33 +1,45 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/blocs/auth_bloc.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/timeline_post_card.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
+import 'package:auto_route/auto_route.dart';
 
 /// Feed for the currently logged in User.
 /// GetStream fees slug is [user_feed].
 /// User posts go into this feed - other [user_timelines] can follow it.
-class AuthedUserFeed extends StatefulWidget {
-  final FlatFeed userFeed;
-  const AuthedUserFeed({
+class YourPostsPage extends StatefulWidget {
+  const YourPostsPage({
     Key? key,
-    required this.userFeed,
   }) : super(key: key);
 
   @override
-  _AuthedUserFeedState createState() => _AuthedUserFeedState();
+  _YourPostsPageState createState() => _YourPostsPageState();
 }
 
-class _AuthedUserFeedState extends State<AuthedUserFeed> {
+class _YourPostsPageState extends State<YourPostsPage> {
+  late AuthedUser _authedUser;
+  late StreamFeedClient _streamFeedClient;
+
+  /// Feed - posts the user has made themselves.
+  late FlatFeed _userFeed;
+
   bool _isLoading = true;
 
   late PagingController<int, ActivityWithObjectData> _pagingController;
@@ -41,6 +53,10 @@ class _AuthedUserFeedState extends State<AuthedUserFeed> {
   @override
   void initState() {
     super.initState();
+    _authedUser = GetIt.I<AuthBloc>().authedUser!;
+    _streamFeedClient = context.streamFeedClient;
+    _userFeed = _streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
+
     _pagingController = PagingController<int, ActivityWithObjectData>(
         firstPageKey: 0, invisibleItemsThreshold: 5);
     _scrollController = ScrollController();
@@ -63,8 +79,8 @@ class _AuthedUserFeedState extends State<AuthedUserFeed> {
 
   Future<void> _getFeedPosts({required int offset}) async {
     try {
-      final feedActivities = await widget.userFeed
-          .getEnrichedActivities<User, String, String, String>(
+      final feedActivities =
+          await _userFeed.getEnrichedActivities<User, String, String, String>(
         limit: _postsPerPage,
         offset: offset,
         flags: EnrichmentFlags().withReactionCounts(),
@@ -93,7 +109,7 @@ class _AuthedUserFeedState extends State<AuthedUserFeed> {
 
   Future<void> _subscribeToFeed() async {
     try {
-      _feedSubscription = await widget.userFeed
+      _feedSubscription = await _userFeed
           .subscribe<User, String, String, String>(_updateNewFeedPosts);
     } catch (e) {
       printLog(e.toString());
@@ -134,7 +150,7 @@ class _AuthedUserFeedState extends State<AuthedUserFeed> {
   }
 
   void _deleteActivityById(String id) =>
-      FeedUtils.deleteActivityById(context, widget.userFeed, id);
+      FeedUtils.deleteActivityById(context, _userFeed, id);
 
   @override
   void dispose() {
@@ -146,62 +162,80 @@ class _AuthedUserFeedState extends State<AuthedUserFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const ShimmerCardList(
-            itemCount: 10,
-            cardHeight: 260,
-          )
-        : _pagingController.itemList == null ||
-                _pagingController.itemList!.isEmpty
-            ? ListView(
-                shrinkWrap: true,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: Center(
-                      child: MyText(
-                        'No posts yet..',
-                        size: FONTSIZE.four,
-                        subtext: true,
+    return MyPageScaffold(
+      navigationBar: const MyNavBar(
+        middle: NavBarLargeTitle('Posted By You'),
+      ),
+      child: _isLoading
+          ? const ShimmerCardList(
+              itemCount: 10,
+              cardHeight: 260,
+            )
+          : FABPage(
+              rowButtons: [
+                FloatingButton(
+                    gradient: Styles.primaryAccentGradient,
+                    contentColor: Styles.white,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 11, horizontal: 16),
+                    text: 'New Post',
+                    onTap: () => context.navigateTo(const PostCreatorRoute()),
+                    icon: CupertinoIcons.pencil),
+              ],
+              child: _pagingController.itemList == null ||
+                      _pagingController.itemList!.isEmpty
+                  ? ListView(
+                      shrinkWrap: true,
+                      children: const [
+                        Padding(
+                          padding: EdgeInsets.all(32.0),
+                          child: Center(
+                            child: MyText(
+                              'No posts yet..',
+                              size: FONTSIZE.four,
+                              subtext: true,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  : PagedListView<int, ActivityWithObjectData>(
+                      pagingController: _pagingController,
+                      scrollController: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      builderDelegate:
+                          PagedChildBuilderDelegate<ActivityWithObjectData>(
+                        itemBuilder: (context, post, index) => SizeFadeIn(
+                          duration: 50,
+                          delay: index,
+                          delayBasis: 10,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: TimelinePostCard(
+                              activityWithObjectData: post,
+                              deleteActivityById: _deleteActivityById,
+                            ),
+                          ),
+                        ),
+                        firstPageErrorIndicatorBuilder: (context) => MyText(
+                          'Oh dear, ${_pagingController.error.toString()}',
+                          maxLines: 5,
+                          textAlign: TextAlign.center,
+                        ),
+                        newPageErrorIndicatorBuilder: (context) => MyText(
+                          'Oh dear, ${_pagingController.error.toString()}',
+                          maxLines: 5,
+                          textAlign: TextAlign.center,
+                        ),
+                        firstPageProgressIndicatorBuilder: (c) =>
+                            const LoadingCircle(),
+                        newPageProgressIndicatorBuilder: (c) =>
+                            const LoadingCircle(),
+                        noItemsFoundIndicatorBuilder: (c) =>
+                            const Center(child: MyText('No results...')),
                       ),
                     ),
-                  )
-                ],
-              )
-            : PagedListView<int, ActivityWithObjectData>(
-                pagingController: _pagingController,
-                scrollController: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                builderDelegate:
-                    PagedChildBuilderDelegate<ActivityWithObjectData>(
-                  itemBuilder: (context, post, index) => SizeFadeIn(
-                    duration: 50,
-                    delay: index,
-                    delayBasis: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: TimelinePostCard(
-                        activityWithObjectData: post,
-                        deleteActivityById: _deleteActivityById,
-                      ),
-                    ),
-                  ),
-                  firstPageErrorIndicatorBuilder: (context) => MyText(
-                    'Oh dear, ${_pagingController.error.toString()}',
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
-                  ),
-                  newPageErrorIndicatorBuilder: (context) => MyText(
-                    'Oh dear, ${_pagingController.error.toString()}',
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
-                  ),
-                  firstPageProgressIndicatorBuilder: (c) =>
-                      const LoadingCircle(),
-                  newPageProgressIndicatorBuilder: (c) => const LoadingCircle(),
-                  noItemsFoundIndicatorBuilder: (c) =>
-                      const Center(child: MyText('No results...')),
-                ),
-              );
+            ),
+    );
   }
 }

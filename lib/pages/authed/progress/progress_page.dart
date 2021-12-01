@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/pages/authed/home/components/category_link_tile.dart';
 import 'package:sofie_ui/pages/authed/progress/components/streak_and_stats_summary.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -12,12 +11,6 @@ class ProgressPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-      navigationBar: const MyNavBar(
-        withoutLeading: true,
-        middle: LeadingNavBarTitle(
-          'Progress',
-        ),
-      ),
       child: ListView(
         children: [
           const StreakAndStatsSummary(),

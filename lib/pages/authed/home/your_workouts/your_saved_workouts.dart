@@ -68,6 +68,7 @@ class _FilterableSavedWorkoutsState extends State<FilterableSavedWorkouts> {
 
     return ListView(
       shrinkWrap: true,
+      padding: EdgeInsets.zero,
       children: [
         if (collectionsWithWorkouts.isNotEmpty)
           Padding(

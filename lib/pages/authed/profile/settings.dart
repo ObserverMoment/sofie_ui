@@ -16,6 +16,7 @@ import 'package:sofie_ui/components/user_input/tag_managers/workout_tags_manager
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -84,18 +85,11 @@ class _SettingsPageState extends State<SettingsPage> {
                         const MyText(
                           'Dark Mode',
                         ),
-                        SlidingSelect<ThemeName>(
+                        MySlidingSegmentedControl<ThemeName>(
                             value: context.watch<ThemeBloc>().themeName,
-                            children: <ThemeName, Widget>{
-                              ThemeName.dark: Icon(
-                                CupertinoIcons.moon_fill,
-                                color: context.theme.primary,
-                              ),
-                              ThemeName.light: Icon(
-                                CupertinoIcons.sun_max_fill,
-                                color: CupertinoColors.systemYellow
-                                    .withOpacity(0.7),
-                              ),
+                            children: const {
+                              ThemeName.dark: 'Dark',
+                              ThemeName.light: 'Light',
                             },
                             updateValue: (themeName) => context
                                 .read<ThemeBloc>()
@@ -114,13 +108,13 @@ class _SettingsPageState extends State<SettingsPage> {
                             const MyText(
                               'Profile Privacy',
                             ),
-                            SlidingSelect<UserProfileScope>(
+                            MySlidingSegmentedControl<UserProfileScope>(
                                 value: user.userProfileScope,
-                                children: <UserProfileScope, Widget>{
+                                children: {
                                   for (final v in UserProfileScope.values.where(
                                       (v) =>
                                           v != UserProfileScope.artemisUnknown))
-                                    v: MyText(v.display)
+                                    v: v.display.capitalize
                                 },
                                 updateValue: (scope) =>
                                     _updateUserProfileScope(user.id, scope)),

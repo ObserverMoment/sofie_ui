@@ -174,13 +174,12 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
       children: [
         GestureDetector(
             onTap: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: Icon(CupertinoIcons.chat_bubble,
-                size: 26, color: context.theme.background)),
+            child: const Icon(CupertinoIcons.chat_bubble, size: 26)),
         if (_unreadCount > 0)
           Positioned(
             top: 4,
             right: 8,
-            child: SizeFadeIn(
+            child: FadeInUp(
                 key: Key(_unreadCount.toString()),
                 child: Dot(
                   diameter: 14,

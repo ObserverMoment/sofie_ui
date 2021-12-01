@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_finder/private/private_plans_text_search.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -14,8 +13,6 @@ import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 /// Widget that uses filters to find and view / save a workout plan.
-/// Wrapper around the UI which handles the [ObservableQuery]s [UserWorkoutPlans] and [UserCollections]
-/// Client side the user can filter their created plans and their saved plans. Via the api their can filter public plans.
 class PrivateWorkoutPlanFinderPage extends StatefulWidget {
   final void Function(WorkoutPlanSummary workoutPlan) selectWorkoutPlan;
   const PrivateWorkoutPlanFinderPage(
@@ -71,13 +68,13 @@ class _PrivateWorkoutPlanFinderPageState
                   navigationBar: MyNavBar(
                     middle: SizedBox(
                       width: double.infinity,
-                      child: SlidingSelect<int>(
-                          itemPadding: const EdgeInsets.symmetric(vertical: 6),
+                      child: MySlidingSegmentedControl<int>(
+                          childPadding: const EdgeInsets.symmetric(vertical: 6),
                           value: _activeTabIndex,
                           updateValue: _handleTabChange,
                           children: const {
-                            0: MyText('Created'),
-                            1: MyText('Saved'),
+                            0: 'Created',
+                            1: 'Saved',
                           }),
                     ),
                     trailing: CupertinoButton(

@@ -248,12 +248,12 @@ class __PersonalBestEntrieslistState extends State<_PersonalBestEntrieslist> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(6.0),
-                child: SlidingSelect<ScoreSortBy>(
+                child: MySlidingSegmentedControl<ScoreSortBy>(
                     value: _sortBy,
                     updateValue: (sortBy) => setState(() => _sortBy = sortBy),
                     children: {
                       for (final v in ScoreSortBy.values)
-                        v: MyText(describeEnum(v).capitalize)
+                        v: describeEnum(v).capitalize
                     }),
               ),
               Expanded(

@@ -58,13 +58,13 @@ class _YourPlansPageState extends State<YourPlansPage> {
               padding: const EdgeInsets.symmetric(vertical: 2.0),
               child: SizedBox(
                 width: double.infinity,
-                child: SlidingSelect<int>(
+                child: MySlidingSegmentedControl<int>(
                     value: _activeTabIndex,
                     updateValue: _updatePageIndex,
                     children: const {
-                      0: MyText('Joined'),
-                      1: MyText('Saved'),
-                      2: MyText('Created'),
+                      0: 'Joined',
+                      1: 'Saved',
+                      2: 'Created',
                     }),
               ),
             ),

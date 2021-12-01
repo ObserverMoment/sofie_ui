@@ -26,7 +26,7 @@ class DiscoverPeoplePage extends StatelessWidget {
 
           return MyPageScaffold(
               navigationBar:
-                  const MyNavBar(middle: NavBarTitle('Discover People')),
+                  const MyNavBar(middle: NavBarLargeTitle('Discover People')),
               child: profiles.isNotEmpty
                   ? ListView.separated(
                       shrinkWrap: true,

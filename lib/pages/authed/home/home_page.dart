@@ -1,11 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/schedule/coming_up_list.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/home/components/category_link_tile.dart';
@@ -15,29 +12,19 @@ import 'package:sofie_ui/services/stream.dart';
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  Widget _buildNavBarButton(IconData iconData, VoidCallback onPressed) =>
-      CupertinoButton(
-          padding: const EdgeInsets.symmetric(horizontal: 13),
-          onPressed: onPressed,
-          child: Icon(iconData));
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
         child: FABPage(
-          buttons: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: FABPageButtonContainer(
-                  padding: EdgeInsets.all(14), child: ChatsIconButton()),
-            ),
-            FloatingButton(
-                onTap: () => context.navigateTo(const TimersRoute()),
-                icon: CupertinoIcons.timer),
+          columnButtons: [
+            const FABPageButtonContainer(child: ChatsIconButton()),
             FloatingButton(
                 onTap: () => context.navigateTo(YourScheduleRoute()),
                 icon: CupertinoIcons.calendar),
+            FloatingButton(
+                onTap: () => context.navigateTo(const TimersRoute()),
+                icon: CupertinoIcons.timer),
           ],
           child: SingleChildScrollView(
             child: Column(

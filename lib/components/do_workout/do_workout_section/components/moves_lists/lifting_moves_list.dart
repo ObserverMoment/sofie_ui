@@ -583,12 +583,12 @@ class _ModifyMoveState extends State<_ModifyMove> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SlidingSelect<LoadUnit>(
+                    MySlidingSegmentedControl<LoadUnit>(
                         value: _loadUnit,
                         children: {
                           for (final v in LoadUnit.values
                               .where((v) => v != LoadUnit.artemisUnknown))
-                            v: MyText(v.display)
+                            v: v.display
                         },
                         updateValue: (loadUnit) =>
                             setState(() => _loadUnit = loadUnit)),
