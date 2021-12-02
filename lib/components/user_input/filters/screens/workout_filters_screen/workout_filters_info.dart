@@ -100,6 +100,7 @@ class WorkoutFiltersInfo extends StatelessWidget {
     final _updateFilters = context.read<WorkoutFiltersBloc>().updateFilters;
 
     return ListView(
+      padding: const EdgeInsets.all(4),
       children: [
         UserInputContainer(
           child: Column(

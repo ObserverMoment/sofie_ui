@@ -172,6 +172,20 @@ class LoadingCircle extends StatelessWidget {
   }
 }
 
+class LoadingSpinningLines extends StatelessWidget {
+  final Color? color;
+  final double? size;
+  const LoadingSpinningLines({Key? key, this.color, this.size})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return SpinKitSpinningLines(
+        lineWidth: 2,
+        color: color ?? CupertinoTheme.of(context).primaryColor,
+        size: size ?? 30);
+  }
+}
+
 class LinearProgressIndicator extends StatelessWidget {
   final double progress;
   final double width;

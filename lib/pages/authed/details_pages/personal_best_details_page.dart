@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/personal_best_entry_card.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_entry_creator.dart';
@@ -77,7 +76,6 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
             'PersonalBestDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(),
         builder: (data) {
           final benchmark = data.userBenchmarkById;
           return MyPageScaffold(

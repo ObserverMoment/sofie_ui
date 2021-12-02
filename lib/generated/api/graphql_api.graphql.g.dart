@@ -34,6 +34,7 @@ const _$UserProfileScopeEnumMap = {
 ClubSummary _$ClubSummaryFromJson(Map<String, dynamic> json) => ClubSummary()
   ..$$typename = json['__typename'] as String?
   ..id = json['id'] as String
+  ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
   ..name = json['name'] as String
   ..description = json['description'] as String?
   ..coverImageUri = json['coverImageUri'] as String?
@@ -50,6 +51,7 @@ Map<String, dynamic> _$ClubSummaryToJson(ClubSummary instance) =>
     <String, dynamic>{
       '__typename': instance.$$typename,
       'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'name': instance.name,
       'description': instance.description,
       'coverImageUri': instance.coverImageUri,

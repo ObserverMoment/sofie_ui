@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/context_menu.dart';
@@ -76,7 +77,7 @@ class _FilterableCollectionWorkoutsState
       children: [
         if (allTags.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(left: 4.0, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(left: 4.0, top: 2, bottom: 8),
             child: SizedBox(
                 height: 32,
                 child: ListView.builder(
@@ -122,9 +123,7 @@ class _CollectionWorkoutsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return workouts.isEmpty
-        ? const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: MyText('No workouts')))
+        ? const Center(child: NoResultsToDisplay())
         : ListView.builder(
             shrinkWrap: true,
             itemCount: workouts.length,

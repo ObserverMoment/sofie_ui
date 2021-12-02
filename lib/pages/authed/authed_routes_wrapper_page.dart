@@ -222,7 +222,7 @@ class _LoadingPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
           SvgPicture.asset('assets/logos/sofie_logo.svg',
-              width: 50, color: context.theme.primary),
+              width: 46, color: context.theme.primary),
           const SizedBox(height: 8),
           Text('Sofie',
               style: GoogleFonts.voces(
@@ -230,9 +230,9 @@ class _LoadingPage extends StatelessWidget {
                 color: context.theme.primary,
               )),
           const SizedBox(height: 8),
-          LoadingDots(
+          LoadingSpinningLines(
             color: context.theme.primary,
-            size: 12,
+            size: 28,
           ),
         ]));
   }

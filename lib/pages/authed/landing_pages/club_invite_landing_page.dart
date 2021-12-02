@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -104,9 +103,6 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
   Widget build(BuildContext context) {
     return FutureBuilderHandler<CheckClubInviteTokenResult>(
         future: _checkClubInviteTokenFuture,
-        loadingWidget: const ShimmerDetailsPage(
-          title: 'Getting invite info...',
-        ),
         builder: (data) {
           if (data is InviteTokenError) {
             return _TokenErrorMessageScreen(

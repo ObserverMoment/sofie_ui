@@ -147,7 +147,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
         automaticallyImplyLeading: !_isLoading,
-        middle: NavBarTitle(
+        middle: NavBarLargeTitle(
             widget.allowCreateTagOnly ? 'Create Tag' : 'Workout Tags'),
         trailing: _isLoading
             ? Row(
@@ -174,16 +174,19 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
             return Column(
               children: [
                 const SizedBox(height: 4),
-                MyTextFormFieldRow(
-                  backgroundColor: context.theme.cardBackground,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.text,
-                  placeholder: 'Enter new tag',
-                  controller: _tagNameController,
-                  validationMessage: 'Min 3, max 30 characters',
-                  validator: () =>
-                      _tagNameController.text.length > 2 &&
-                      _tagNameController.text.length < 31,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MyTextFormFieldRow(
+                    backgroundColor: context.theme.cardBackground,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    placeholder: 'Enter new tag',
+                    controller: _tagNameController,
+                    validationMessage: 'Min 3, max 30 characters',
+                    validator: () =>
+                        _tagNameController.text.length > 2 &&
+                        _tagNameController.text.length < 31,
+                  ),
                 ),
                 GrowInOut(
                   show: _canSaveNewTag,
@@ -303,7 +306,7 @@ class _CurrentTagsList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const HorizontalLine()
+                    const Opacity(opacity: 0.65, child: HorizontalLine())
                   ],
                 ),
               );

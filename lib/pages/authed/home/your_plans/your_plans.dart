@@ -1,18 +1,31 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/home/your_plans/your_created_workout_plans.dart';
 import 'package:sofie_ui/pages/authed/home/your_plans/your_enroled_workout_plans.dart';
 import 'package:sofie_ui/pages/authed/home/your_plans/your_saved_workout_plans.dart';
-import 'package:sofie_ui/pages/authed/home/your_plans/your_workout_plans_text_search.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:collection/collection.dart';
 
 class YourPlansPage extends StatefulWidget {
-  const YourPlansPage({Key? key}) : super(key: key);
+  final void Function(WorkoutPlanSummary plan)? selectPlan;
+  final bool showCreateButton;
+  final bool showDiscoverButton;
+  final String pageTitle;
+  final bool showJoined;
+  final bool showSaved;
+  const YourPlansPage({
+    Key? key,
+    this.selectPlan,
+    this.showCreateButton = false,
+    this.showDiscoverButton = false,
+    this.pageTitle = 'Plans',
+    this.showJoined = true,
+    this.showSaved = true,
+  }) : super(key: key);
 
   @override
   _YourPlansPageState createState() => _YourPlansPageState();
@@ -21,6 +34,25 @@ class YourPlansPage extends StatefulWidget {
 class _YourPlansPageState extends State<YourPlansPage> {
   /// 0 = CreatedPlans, 1 = Participating in plans, 2 = saved to collections
   int _activeTabIndex = 0;
+
+  final List<String> _displayTabs = [];
+  final Map<int, String> _segmentChildren = {};
+
+  @override
+  void initState() {
+    if (widget.showJoined) {
+      _displayTabs.add('Joined');
+    }
+    if (widget.showSaved) {
+      _displayTabs.add('Saved');
+    }
+    _displayTabs.add('Created');
+    _displayTabs.forEachIndexed((i, t) {
+      _segmentChildren[i] = t;
+    });
+
+    super.initState();
+  }
 
   void _updatePageIndex(int index) {
     setState(() => _activeTabIndex = index);
@@ -33,53 +65,46 @@ class _YourPlansPageState extends State<YourPlansPage> {
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-        navigationBar: MyNavBar(
-          middle: const NavBarTitle('Your Plans'),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: () =>
-                    context.push(child: const YourPlansTextSearch()),
-                child: const Icon(CupertinoIcons.search),
-              ),
-              const SizedBox(width: 8),
-              CreateIconButton(
-                  onPressed: () =>
-                      context.navigateTo(WorkoutPlanCreatorRoute())),
-            ],
-          ),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: MySlidingSegmentedControl<int>(
-                    value: _activeTabIndex,
-                    updateValue: _updatePageIndex,
-                    children: const {
-                      0: 'Joined',
-                      1: 'Saved',
-                      2: 'Created',
-                    }),
-              ),
-            ),
-            Expanded(
-                child: IndexedStack(
-              index: _activeTabIndex,
+        child: NestedScrollView(
+            headerSliverBuilder: (c, i) => [
+                  CupertinoSliverNavigationBar(
+                      leading: const NavBarBackButton(),
+                      largeTitle: Text(widget.pageTitle),
+                      border: null)
+                ],
+            body: Column(
               children: [
-                YourWorkoutPlanEnrolments(
-                  selectEnrolment: (id) => _openWorkoutPlanEnrolmentDetails(id),
-                ),
-                const YourSavedPlans(),
-                const YourCreatedWorkoutPlans(),
+                if (_displayTabs.length > 1)
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: MySlidingSegmentedControl<int>(
+                          value: _activeTabIndex,
+                          activeColor: Styles.secondaryAccent,
+                          updateValue: _updatePageIndex,
+                          children: _segmentChildren),
+                    ),
+                  ),
+                Expanded(
+                    child: IndexedStack(
+                  index: _activeTabIndex,
+                  children: [
+                    if (widget.showJoined)
+                      YourWorkoutPlanEnrolments(
+                        selectEnrolment: _openWorkoutPlanEnrolmentDetails,
+                        showDiscoverButton: widget.showDiscoverButton,
+                      ),
+                    if (widget.showSaved)
+                      YourSavedPlans(
+                        showDiscoverButton: widget.showDiscoverButton,
+                      ),
+                    YourCreatedPlans(
+                      showDiscoverButton: widget.showDiscoverButton,
+                    ),
+                  ],
+                ))
               ],
-            ))
-          ],
-        ));
+            )));
   }
 }

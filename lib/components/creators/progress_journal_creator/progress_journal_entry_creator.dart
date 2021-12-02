@@ -5,7 +5,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/progress_journal_entry_creator_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -69,7 +68,6 @@ class _ProgressJournalEntryCreatorState
   @override
   Widget build(BuildContext context) {
     return FutureBuilderHandler<ProgressJournalEntry>(
-        loadingWidget: const ShimmerDetailsPage(),
         future: _initEntryFuture,
         builder: (initialEntryData) => ChangeNotifierProvider(
               create: (context) => ProgressJournalEntryCreatorBloc(

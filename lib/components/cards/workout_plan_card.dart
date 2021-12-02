@@ -39,23 +39,26 @@ class WorkoutPlanCard extends StatelessWidget {
             MyText(
               '${workoutPlan.lengthWeeks} weeks',
               size: FONTSIZE.two,
+              color: Styles.white,
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0),
               child: Dot(
                 diameter: 4,
+                color: Styles.white,
               ),
             ),
             MyText(
               '${workoutPlan.daysPerWeek} days / week',
               size: FONTSIZE.two,
+              color: Styles.white,
             ),
           ],
         ),
       );
 
   Widget _buildEnrolledCount(BuildContext context, Color contentOverlayColor) =>
-      workoutPlan.enrolmentsCount > 0
+      workoutPlan.enrolmentsCount == 0
           ? Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
@@ -66,17 +69,15 @@ class WorkoutPlanCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(CupertinoIcons.person, size: 14),
+                      const Icon(CupertinoIcons.person,
+                          size: 15, color: Styles.white),
                       const SizedBox(width: 2),
-                      MyText(
-                        workoutPlan.enrolmentsCount.displayLong,
-                      ),
+                      MyText(workoutPlan.enrolmentsCount.displayLong,
+                          color: Styles.white),
                     ],
                   ),
-                  const MyText(
-                    'enrolled',
-                    size: FONTSIZE.one,
-                  ),
+                  const MyText('enrolled',
+                      size: FONTSIZE.one, color: Styles.white),
                 ],
               ),
             )
@@ -127,12 +128,12 @@ class WorkoutPlanCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildContentSummary(context, contentOverlayColor),
-                      if (workoutPlan.enrolmentsCount > 0)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6.0),
-                          child:
-                              _buildEnrolledCount(context, contentOverlayColor),
-                        ),
+                      // if (workoutPlan.enrolmentsCount > 0)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child:
+                            _buildEnrolledCount(context, contentOverlayColor),
+                      ),
                     ],
                   ),
                   Column(
@@ -190,9 +191,8 @@ class WorkoutPlanCard extends StatelessWidget {
                   if (Utils.textNotNull(workoutPlan.description))
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
-                      child: MyText(
-                        workoutPlan.description!,
-                      ),
+                      child:
+                          MyText(workoutPlan.description!, color: Styles.white),
                     ),
                   if (workoutPlan.tags.isNotEmpty)
                     Padding(

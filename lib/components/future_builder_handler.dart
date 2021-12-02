@@ -43,7 +43,7 @@ class FutureBuilderHandler<T> extends StatelessWidget {
                 child: Center(
                   child: Padding(
                     padding: EdgeInsets.all(24.0),
-                    child: LoadingCircle(),
+                    child: LoadingSpinningLines(),
                   ),
                 ),
               );

@@ -173,6 +173,7 @@ class _MoveSelectorState extends State<MoveSelector> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           child: MyCupertinoSearchTextField(
+                            placeholder: 'Search moves library',
                             onChanged: (value) => setState(
                                 () => _searchString = value.toLowerCase()),
                           ),

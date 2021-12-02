@@ -166,8 +166,8 @@ class _ProgressJournalGoalTagsManagerState
     return MyPageScaffold(
       navigationBar: MyNavBar(
         automaticallyImplyLeading: !_isLoading,
-        middle:
-            NavBarTitle(widget.allowCreateTagOnly ? 'Create Tag' : 'Goal Tags'),
+        middle: NavBarLargeTitle(
+            widget.allowCreateTagOnly ? 'Create Tag' : 'Goal Tags'),
         trailing: _isLoading
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -196,16 +196,19 @@ class _ProgressJournalGoalTagsManagerState
               child: Column(
                 children: [
                   const SizedBox(height: 4),
-                  MyTextFormFieldRow(
-                    backgroundColor: context.theme.cardBackground,
-                    keyboardType: TextInputType.text,
-                    textAlign: TextAlign.center,
-                    placeholder: 'Enter new tag',
-                    controller: _tagNameController,
-                    validationMessage: 'Min 3, max 30 characters',
-                    validator: () =>
-                        _tagNameController.text.length > 2 &&
-                        _tagNameController.text.length < 31,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MyTextFormFieldRow(
+                      backgroundColor: context.theme.cardBackground,
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.center,
+                      placeholder: 'Enter new tag',
+                      controller: _tagNameController,
+                      validationMessage: 'Min 3, max 30 characters',
+                      validator: () =>
+                          _tagNameController.text.length > 2 &&
+                          _tagNameController.text.length < 31,
+                    ),
                   ),
                   GrowInOut(
                     show: _tagNameController.text.length > 2,
@@ -369,7 +372,7 @@ class _CurrentTagsList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const HorizontalLine()
+                    const Opacity(opacity: 0.65, child: HorizontalLine())
                   ],
                 ),
               );

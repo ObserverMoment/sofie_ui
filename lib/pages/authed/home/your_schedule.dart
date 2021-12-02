@@ -14,7 +14,6 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
-import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/toast_request.dart';
@@ -34,7 +33,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
   final ScrollController _scrollController = ScrollController();
   late DateTime _selectedDay;
   late DateTime _focusedDay;
-  CalendarFormat _calendarFormat = CalendarFormat.week;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
   void initState() {
@@ -75,9 +74,10 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
           items: [
             BottomSheetMenuItem(
                 text: 'Your Workouts',
-                onPressed: () => context.navigateTo(PrivateWorkoutFinderRoute(
-                      selectWorkout: (w) => _openScheduleWorkout(w),
-                    ))),
+                onPressed: () => context.navigateTo(YourWorkoutsRoute(
+                    selectWorkout: (w) => _openScheduleWorkout(w),
+                    showCreateButton: true,
+                    pageTitle: 'Select Workout'))),
             BottomSheetMenuItem(
                 text: 'Public Workouts',
                 onPressed: () => context.navigateTo(PublicWorkoutFinderRoute(
@@ -143,7 +143,6 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
               ),
             ),
             child: FABPage(
-              bottomPadding: EnvironmentConfig.bottomNavBarHeight,
               columnButtons: [
                 FloatingButton(
                     gradient: Styles.primaryAccentGradient,

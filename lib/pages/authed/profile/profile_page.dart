@@ -182,8 +182,7 @@ class ProfilePage extends StatelessWidget {
                               child: SelectedCountryDisplay(user.countryCode!))
                           : null,
                       onTap: () => context.push(
-                          fullscreenDialog: true,
-                          child: CountrySelector(
+                              child: CountrySelector(
                             selectedCountry: user.countryCode != null
                                 ? Country.fromIsoCode(user.countryCode!)
                                 : null,

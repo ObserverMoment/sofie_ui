@@ -306,18 +306,22 @@ class _ClubPostCreatorPageState extends State<ClubPostCreatorPage> {
                         description:
                             'Share a workout you have created, found or are going to do!',
                         assetImageUri: 'assets/placeholder_images/workout.jpg',
-                        onPressed: () => context.pushRoute(
-                            PrivateWorkoutFinderRoute(
-                                selectWorkout: _selectWorkout)),
+                        onPressed: () => context.pushRoute(YourWorkoutsRoute(
+                            pageTitle: 'Select Workout',
+                            showCreateButton: true,
+                            showSaved: false,
+                            selectWorkout: _selectWorkout)),
                       ),
                       ShareObjectTypeSelectorButton(
                         title: 'Workout Plan',
                         description:
                             'Share a plan you have created, found or are going to do!',
                         assetImageUri: 'assets/placeholder_images/plan.jpg',
-                        onPressed: () => context.pushRoute(
-                            PrivateWorkoutPlanFinderRoute(
-                                selectWorkoutPlan: _selectWorkoutPlan)),
+                        onPressed: () => context.pushRoute(YourPlansRoute(
+                            selectPlan: _selectWorkoutPlan,
+                            showJoined: false,
+                            showSaved: false,
+                            showCreateButton: true)),
                       )
                     ],
                   ),

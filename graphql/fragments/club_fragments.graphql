@@ -15,6 +15,7 @@ fragment Club on Club {
 fragment ClubSummary on ClubSummary {
   __typename
   id
+  createdAt
   name
   description
   coverImageUri

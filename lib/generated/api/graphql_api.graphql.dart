@@ -21,6 +21,10 @@ mixin ClubSummaryMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
   late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
   late String name;
   String? description;
   String? coverImageUri;
@@ -691,6 +695,7 @@ class ClubSummary extends JsonSerializable
   List<Object?> get props => [
         $$typename,
         id,
+        createdAt,
         name,
         description,
         coverImageUri,
@@ -7665,6 +7670,12 @@ final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'name'),
             alias: null,
             arguments: [],
@@ -8455,6 +8466,12 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
             alias: null,
             arguments: [],
             directives: [],
@@ -10018,6 +10035,12 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
             alias: null,
             arguments: [],
             directives: [],

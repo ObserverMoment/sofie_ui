@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -39,7 +38,6 @@ class TargetedBodyAreasPageView extends StatelessWidget {
         key: Key('TargetedBodyAreasPageView-${BodyAreasQuery().operationName}'),
         query: BodyAreasQuery(),
         fetchPolicy: QueryFetchPolicy.storeFirst,
-        loadingIndicator: const ShimmerDetailsPage(),
         builder: (data) {
           final List<BodyArea> allBodyAreas = data.bodyAreas;
 

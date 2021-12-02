@@ -3,12 +3,12 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/move_filters_bloc.dart';
+import 'package:sofie_ui/components/user_input/filters/screens/filters_screen_footer.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -71,47 +71,56 @@ class _MoveFiltersScreenState extends State<MoveFiltersScreen> {
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-        navigationBar: MyNavBar(
-          customLeading: NavBarChevronDownButton(_saveAndClose),
-          middle: const NavBarTitle('Move Filters'),
-          trailing:
-              TertiaryButton(text: 'Clear All', onPressed: _clearAllFilters),
-        ),
-        child: Column(
-          children: [
-            MyTabBarNav(
-                titles: const ['Types', 'Equipment', 'BodyAreas'],
-                handleTabChange: _changeTab,
-                activeTabIndex: _activeTabIndex),
-            Expanded(
-              child: IndexedStack(
-                index: _activeTabIndex,
-                children: [
-                  MoveFiltersTypes(
-                    selectedMoveTypes: _activeMoveFilters.moveTypes,
-                    updateSelected: _updateMoveTypes,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MoveFiltersEquipment(
-                      bodyweightOnly: _activeMoveFilters.bodyWeightOnly,
-                      toggleBodyweight: _toggleBodyweightOnly,
-                      handleSelection: (e) => _updateEquipments(
-                          _activeMoveFilters.equipments
-                              .toggleItem<Equipment>(e)),
-                      selectedEquipments: _activeMoveFilters.equipments,
-                    ),
-                  ),
-                  MoveFiltersBody(
-                      selectedBodyAreas: _activeMoveFilters.bodyAreas,
-                      handleTapBodyArea: (ba) => _updateBodyAreas(
-                          _activeMoveFilters.bodyAreas
-                              .toggleItem<BodyArea>(ba))),
-                ],
-              ),
+        child: SafeArea(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: MySlidingSegmentedControl(
+                  value: _activeTabIndex,
+                  children: const {
+                    0: 'Types',
+                    1: 'Equipment',
+                    2: 'Body',
+                  },
+                  updateValue: _changeTab),
             ),
-          ],
-        ));
+          ),
+          Expanded(
+            child: IndexedStack(
+              index: _activeTabIndex,
+              children: [
+                MoveFiltersTypes(
+                  selectedMoveTypes: _activeMoveFilters.moveTypes,
+                  updateSelected: _updateMoveTypes,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MoveFiltersEquipment(
+                    bodyweightOnly: _activeMoveFilters.bodyWeightOnly,
+                    toggleBodyweight: _toggleBodyweightOnly,
+                    handleSelection: (e) => _updateEquipments(
+                        _activeMoveFilters.equipments.toggleItem<Equipment>(e)),
+                    selectedEquipments: _activeMoveFilters.equipments,
+                  ),
+                ),
+                MoveFiltersBody(
+                    selectedBodyAreas: _activeMoveFilters.bodyAreas,
+                    handleTapBodyArea: (ba) => _updateBodyAreas(
+                        _activeMoveFilters.bodyAreas.toggleItem<BodyArea>(ba))),
+              ],
+            ),
+          ),
+          FiltersScreenFooter(
+            numActiveFilters: _activeMoveFilters.numActiveFilters,
+            clearFilters: _clearAllFilters,
+            showResults: _saveAndClose,
+          )
+        ],
+      ),
+    ));
   }
 }
 

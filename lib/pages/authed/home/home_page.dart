@@ -17,11 +17,13 @@ class HomePage extends StatelessWidget {
     return CupertinoPageScaffold(
       child: SafeArea(
         child: FABPage(
-          columnButtons: [
-            const FABPageButtonContainer(child: ChatsIconButton()),
+          rowButtons: [
+            const ChatsIconButton(),
+            const SizedBox(width: 24),
             FloatingButton(
                 onTap: () => context.navigateTo(YourScheduleRoute()),
                 icon: CupertinoIcons.calendar),
+            const SizedBox(width: 24),
             FloatingButton(
                 onTap: () => context.navigateTo(const TimersRoute()),
                 icon: CupertinoIcons.timer),
@@ -40,19 +42,20 @@ class HomePage extends StatelessWidget {
                       left: 8,
                       right: 8,
                       top: 8,
-                      bottom: EnvironmentConfig.bottomNavBarHeight + 12),
+                      bottom: EnvironmentConfig.bottomNavBarHeight + 20),
                   shrinkWrap: true,
                   children: [
                     CategoryLinkTile(
                       label: 'Workouts',
                       assetImagePath: 'workouts.svg',
-                      onTap: () =>
-                          context.navigateTo(const YourWorkoutsRoute()),
+                      onTap: () => context.navigateTo(YourWorkoutsRoute(
+                          showCreateButton: true, showDiscoverButton: true)),
                     ),
                     CategoryLinkTile(
                       label: 'Plans',
                       assetImagePath: 'plans.svg',
-                      onTap: () => context.navigateTo(const YourPlansRoute()),
+                      onTap: () => context.navigateTo(YourPlansRoute(
+                          showCreateButton: true, showDiscoverButton: true)),
                     ),
                     CategoryLinkTile(
                       label: 'Clubs',

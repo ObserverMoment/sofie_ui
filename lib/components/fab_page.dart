@@ -35,7 +35,7 @@ class FABPage extends StatelessWidget {
         if (columnButtons.isNotEmpty)
           Positioned(
             bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 56),
-            right: 4,
+            right: 8,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -51,8 +51,9 @@ class FABPage extends StatelessWidget {
         if (rowButtons.isNotEmpty)
           Positioned(
             bottom: 16,
+            right: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               width: screenWidth,
               child: Row(
                 mainAxisAlignment: rowButtonsAlignment,
@@ -113,7 +114,7 @@ class FloatingButton extends StatelessWidget {
                 size: FONTSIZE.four,
                 color: contentColor,
               ),
-            if (icon != null && text != null) const SizedBox(width: 10),
+            if (icon != null && text != null) const SizedBox(width: 6),
             if (icon != null) Icon(icon, size: iconSize, color: contentColor),
           ],
         ),

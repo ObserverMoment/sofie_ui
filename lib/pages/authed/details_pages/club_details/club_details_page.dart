@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -166,7 +165,6 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
         key: Key('ClubDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (data) {
           final club = data.clubById;
 

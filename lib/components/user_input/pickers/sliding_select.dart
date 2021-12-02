@@ -20,7 +20,6 @@ const double _kMinSegmentedControlHeight = 28.0;
 // The amount of space by which to inset each separator.
 // const EdgeInsets _kSeparatorInset = EdgeInsets.symmetric(vertical: 6);
 const double _kSeparatorWidth = 0;
-// const Radius _kSeparatorRadius = Radius.circular(_kSeparatorWidth / 2);
 
 // The minimum scale factor of the thumb, when being pressed on for a sufficient
 // amount of time.
@@ -94,7 +93,7 @@ class MySlidingSegmentedControl<T> extends StatefulWidget {
     Key? key,
     required this.children,
     required this.updateValue,
-    this.value,
+    required this.value,
     this.thumbColor,
     this.backgroundColor,
     this.containerPadding =
@@ -535,13 +534,11 @@ class _SegmentState<T> extends State<_Segment<T>>
             curve: Curves.ease,
             child: AnimatedDefaultTextStyle(
               style: DefaultTextStyle.of(context).style.merge(TextStyle(
-                  fontSize: widget.fontSize,
-                  color: widget.highlighted
-                      ? widget.activeColor
-                      : widget.inactiveColor,
-                  fontWeight: widget.highlighted
-                      ? FontWeight.bold
-                      : FontWeight.normal)),
+                    fontSize: widget.fontSize,
+                    color: widget.highlighted
+                        ? widget.activeColor
+                        : widget.inactiveColor,
+                  )),
               duration: _kHighlightAnimationDuration,
               curve: Curves.ease,
               child: ScaleTransition(

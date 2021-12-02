@@ -14,18 +14,23 @@ class SocialPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       child: SafeArea(
-        child: FABPage(columnButtons: [
-          const FABPageCircularButtonContainer(child: ChatsIconButton()),
-          FloatingButton(
-              contentColor: Styles.white,
-              onTap: () => context.navigateTo(const YourPostsRoute()),
-              icon: CupertinoIcons.tray_arrow_up),
-          FloatingButton(
-              gradient: Styles.primaryAccentGradient,
-              contentColor: Styles.white,
-              onTap: () => context.navigateTo(const PostCreatorRoute()),
-              icon: CupertinoIcons.pencil),
-        ], child: const TimelineAndFeed()),
+        child: FABPage(
+            rowButtonsAlignment: MainAxisAlignment.end,
+            rowButtons: [
+              const ChatsIconButton(),
+              const SizedBox(width: 16),
+              FloatingButton(
+                  contentColor: Styles.white,
+                  onTap: () => context.navigateTo(const YourPostsRoute()),
+                  icon: CupertinoIcons.tray_arrow_up),
+              const SizedBox(width: 16),
+              FloatingButton(
+                  gradient: Styles.primaryAccentGradient,
+                  contentColor: Styles.white,
+                  onTap: () => context.navigateTo(const PostCreatorRoute()),
+                  icon: CupertinoIcons.pencil),
+            ],
+            child: const TimelineAndFeed()),
       ),
     );
   }

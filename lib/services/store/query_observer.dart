@@ -105,12 +105,20 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
               return widget.builder(snapshot.data!.data! as TData);
             }
           } else {
-            return widget.loadingIndicator ??
-                const Center(
-                    child: Padding(
-                  padding: EdgeInsets.all(32.0),
-                  child: LoadingCircle(),
-                ));
+            return CupertinoPageScaffold(
+              child: widget.loadingIndicator ??
+                  CupertinoPageScaffold(
+                      child: Center(
+                          child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      LoadingSpinningLines(size: 50),
+                      SizedBox(height: 20),
+                      MyText('One moment...'),
+                    ],
+                  ))),
+            );
           }
         });
   }

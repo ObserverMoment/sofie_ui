@@ -9,6 +9,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -173,8 +174,10 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
     return Stack(
       children: [
         GestureDetector(
+            behavior: HitTestBehavior.opaque,
             onTap: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: const Icon(CupertinoIcons.chat_bubble, size: 26)),
+            child: const FABPageButtonContainer(
+                child: Icon(CupertinoIcons.chat_bubble, size: 25))),
         if (_unreadCount > 0)
           Positioned(
             top: 4,

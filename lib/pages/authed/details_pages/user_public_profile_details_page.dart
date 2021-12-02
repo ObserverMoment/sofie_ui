@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -19,8 +18,6 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/country.dart';
-import 'package:sofie_ui/pages/authed/home/your_plans/your_created_workout_plans.dart';
-import 'package:sofie_ui/pages/authed/home/your_workouts/your_created_workouts.dart';
 import 'package:sofie_ui/pages/authed/progress/components/lifetime_log_stats_summary.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
@@ -94,7 +91,6 @@ class _UserPublicProfileDetailsPageState
             'UserPublicProfileDetailsPage - ${query.operationName}-${widget.userId}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (data) {
           final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
           final bool isAuthedUserProfile = authedUserId == widget.userId;
@@ -249,22 +245,22 @@ class _UserPublicProfileDetailsPageState
                                 handleTabChange: _changeTab,
                                 activeTabIndex: _activeTabIndex),
                             const SizedBox(height: 8),
-                            Expanded(
-                              child: PageView(
-                                controller: _pageController,
-                                onPageChanged: _changeTab,
-                                physics: const NeverScrollableScrollPhysics(),
-                                children: [
-                                  FilterableCreatedWorkouts(
-                                    allWorkouts: userPublicProfile.workouts,
-                                  ),
-                                  FilterableCreatedWorkoutPlans(
-                                    allWorkoutPlans:
-                                        userPublicProfile.workoutPlans,
-                                  ),
-                                ],
-                              ),
-                            )
+                            // Expanded(
+                            //   child: PageView(
+                            //     controller: _pageController,
+                            //     onPageChanged: _changeTab,
+                            //     physics: const NeverScrollableScrollPhysics(),
+                            //     children: [
+                            //       FilterableCreatedWorkouts(
+                            //         allWorkouts: userPublicProfile.workouts,
+                            //       ),
+                            //       FilterableCreatedWorkoutPlans(
+                            //         allWorkoutPlans:
+                            //             userPublicProfile.workoutPlans,
+                            //       ),
+                            //     ],
+                            //   ),
+                            // )
                           ],
                         ),
                       ))

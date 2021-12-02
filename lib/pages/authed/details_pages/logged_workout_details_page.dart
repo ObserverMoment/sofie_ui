@@ -4,7 +4,6 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator_with_sections.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -68,7 +67,6 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
         query: query,
         parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.networkOnly,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Finding log...'),
         builder: (data) {
           final loggedWorkout = data.loggedWorkoutById;
 

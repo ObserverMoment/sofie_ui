@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/navigation.dart';
@@ -235,15 +234,12 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         key: Key('WorkoutPlanDetails - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (workoutPlanData) {
           return QueryObserver<UserCollections$Query, json.JsonSerializable>(
               key: Key(
                   'WorkoutPlanDetailsPage - ${UserCollectionsQuery().operationName}'),
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
-              loadingIndicator:
-                  const ShimmerDetailsPage(title: 'Getting Ready'),
               builder: (collectionsData) {
                 final workoutPlan = workoutPlanData.workoutPlanById;
                 final enrolments = workoutPlan.workoutPlanEnrolments;

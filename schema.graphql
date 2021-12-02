@@ -123,6 +123,7 @@ type ClubSummary {
   Members: [UserSummary!]!
   Owner: UserSummary!
   coverImageUri: String
+  createdAt: DateTime!
   description: String
   id: ID!
   location: String
