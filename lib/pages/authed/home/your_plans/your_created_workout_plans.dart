@@ -7,7 +7,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/workout_plan/selectable_workout_plan_card.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/home/components/tags_collections_filter_menu.dart';
+import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -91,15 +91,17 @@ class _FilterableCreatedWorkoutPlansState
         : FABPage(
             rowButtonsAlignment: MainAxisAlignment.end,
             rowButtons: [
-              TagsCollectionsFilterMenu(
-                filterMenuType: FilterMenuType.tag,
-                allCollections: const [],
-                allTags: allTags,
-                selectedCollection: null,
-                selectedTag: _workoutTagFilter,
-                updateSelectedCollection: (_) {},
-                updateSelectedTag: (t) => setState(() => _workoutTagFilter = t),
-              ),
+              if (allTags.isNotEmpty)
+                TagsCollectionsFilterMenu(
+                  filterMenuType: FilterMenuType.tag,
+                  allCollections: const [],
+                  allTags: allTags,
+                  selectedCollection: null,
+                  selectedTag: _workoutTagFilter,
+                  updateSelectedCollection: (_) {},
+                  updateSelectedTag: (t) =>
+                      setState(() => _workoutTagFilter = t),
+                ),
               if (widget.showDiscoverButton)
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),

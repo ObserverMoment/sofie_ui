@@ -29,6 +29,7 @@ mixin ClubSummaryMixin {
   String? description;
   String? coverImageUri;
   String? location;
+  late int memberCount;
 }
 mixin ClubInviteTokenMixin {
   @JsonKey(name: '__typename')
@@ -439,6 +440,12 @@ mixin LoggedWorkoutMixin {
   late String name;
   String? workoutId;
 }
+mixin LifetimeLogStatsSummaryMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late int minutesWorked;
+  late int sessionsLogged;
+}
 mixin WorkoutPlanMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -509,34 +516,31 @@ mixin ArchivedWorkoutMixin {
 mixin UserPublicProfileSummaryMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
+  @JsonKey(unknownEnumValue: UserProfileScope.artemisUnknown)
+  late UserProfileScope userProfileScope;
   late String id;
   String? avatarUri;
   String? tagline;
   String? townCity;
   String? countryCode;
   late String displayName;
-  late int numberPublicWorkouts;
-  late int numberPublicPlans;
+  late int workoutCount;
+  late int planCount;
 }
-mixin UserPublicProfileMixin {
+mixin UserBenchmarkSummaryMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
   late String id;
-  @JsonKey(unknownEnumValue: UserProfileScope.artemisUnknown)
-  late UserProfileScope userProfileScope;
-  String? avatarUri;
-  String? introVideoUri;
-  String? introVideoThumbUri;
-  String? bio;
-  String? tagline;
-  String? townCity;
-  String? instagramUrl;
-  String? tiktokUrl;
-  String? youtubeUrl;
-  String? snapUrl;
-  String? linkedinUrl;
-  String? countryCode;
-  late String displayName;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime lastEntryAt;
+  late String name;
+  String? equipmentInfo;
+  @JsonKey(unknownEnumValue: BenchmarkType.artemisUnknown)
+  late BenchmarkType benchmarkType;
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
 }
 mixin UserBenchmarkEntryMixin {
   @JsonKey(name: '__typename')
@@ -554,6 +558,29 @@ mixin UserBenchmarkEntryMixin {
   String? note;
   String? videoUri;
   String? videoThumbUri;
+}
+mixin UserPublicProfileMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(unknownEnumValue: UserProfileScope.artemisUnknown)
+  late UserProfileScope userProfileScope;
+  String? avatarUri;
+  String? introVideoUri;
+  String? introVideoThumbUri;
+  String? bio;
+  String? tagline;
+  String? townCity;
+  String? instagramHandle;
+  String? tiktokHandle;
+  String? youtubeHandle;
+  String? linkedinHandle;
+  String? countryCode;
+  late String displayName;
+  int? followerCount;
+  int? postsCount;
+  int? workoutCount;
+  int? planCount;
 }
 mixin UserBenchmarkTagMixin {
   @JsonKey(name: '__typename')
@@ -685,12 +712,6 @@ class ClubSummary extends JsonSerializable
   @JsonKey(name: 'Owner')
   late UserSummary owner;
 
-  @JsonKey(name: 'Admins')
-  late List<UserSummary> admins;
-
-  @JsonKey(name: 'Members')
-  late List<UserSummary> members;
-
   @override
   List<Object?> get props => [
         $$typename,
@@ -700,9 +721,8 @@ class ClubSummary extends JsonSerializable
         description,
         coverImageUri,
         location,
-        owner,
-        admins,
-        members
+        memberCount,
+        owner
       ];
   @override
   Map<String, dynamic> toJson() => _$ClubSummaryToJson(this);
@@ -3391,18 +3411,15 @@ class DeleteLoggedWorkoutById$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class LifetimeLogStatsSummary extends JsonSerializable with EquatableMixin {
+class LifetimeLogStatsSummary extends JsonSerializable
+    with EquatableMixin, LifetimeLogStatsSummaryMixin {
   LifetimeLogStatsSummary();
 
   factory LifetimeLogStatsSummary.fromJson(Map<String, dynamic> json) =>
       _$LifetimeLogStatsSummaryFromJson(json);
 
-  late int sessionsLogged;
-
-  late int minutesWorked;
-
   @override
-  List<Object?> get props => [sessionsLogged, minutesWorked];
+  List<Object?> get props => [$$typename, minutesWorked, sessionsLogged];
   @override
   Map<String, dynamic> toJson() => _$LifetimeLogStatsSummaryToJson(this);
 }
@@ -4907,17 +4924,22 @@ class UserPublicProfileSummary extends JsonSerializable
   factory UserPublicProfileSummary.fromJson(Map<String, dynamic> json) =>
       _$UserPublicProfileSummaryFromJson(json);
 
+  @JsonKey(name: 'Clubs')
+  late List<ClubSummary> clubs;
+
   @override
   List<Object?> get props => [
         $$typename,
+        userProfileScope,
         id,
         avatarUri,
         tagline,
         townCity,
         countryCode,
         displayName,
-        numberPublicWorkouts,
-        numberPublicPlans
+        workoutCount,
+        planCount,
+        clubs
       ];
   @override
   Map<String, dynamic> toJson() => _$UserPublicProfileSummaryToJson(this);
@@ -4939,6 +4961,70 @@ class UserPublicProfiles$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class UserBenchmarkSummary extends JsonSerializable
+    with EquatableMixin, UserBenchmarkSummaryMixin {
+  UserBenchmarkSummary();
+
+  factory UserBenchmarkSummary.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmarkSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        lastEntryAt,
+        name,
+        equipmentInfo,
+        benchmarkType,
+        loadUnit
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmarkSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserBenchmarkEntry extends JsonSerializable
+    with EquatableMixin, UserBenchmarkEntryMixin {
+  UserBenchmarkEntry();
+
+  factory UserBenchmarkEntry.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmarkEntryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        completedOn,
+        score,
+        note,
+        videoUri,
+        videoThumbUri
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmarkEntryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserBenchmarkWithBestEntry extends JsonSerializable with EquatableMixin {
+  UserBenchmarkWithBestEntry();
+
+  factory UserBenchmarkWithBestEntry.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmarkWithBestEntryFromJson(json);
+
+  @JsonKey(name: 'UserBenchmarkSummary')
+  late UserBenchmarkSummary userBenchmarkSummary;
+
+  @JsonKey(name: 'BestEntry')
+  late UserBenchmarkEntry bestEntry;
+
+  @override
+  List<Object?> get props => [userBenchmarkSummary, bestEntry];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmarkWithBestEntryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class UserPublicProfile extends JsonSerializable
     with EquatableMixin, UserPublicProfileMixin {
   UserPublicProfile();
@@ -4946,11 +5032,14 @@ class UserPublicProfile extends JsonSerializable
   factory UserPublicProfile.fromJson(Map<String, dynamic> json) =>
       _$UserPublicProfileFromJson(json);
 
-  @JsonKey(name: 'Workouts')
-  late List<WorkoutSummary> workouts;
+  @JsonKey(name: 'Clubs')
+  late List<ClubSummary> clubs;
 
-  @JsonKey(name: 'WorkoutPlans')
-  late List<WorkoutPlanSummary> workoutPlans;
+  @JsonKey(name: 'LifetimeLogStatsSummary')
+  LifetimeLogStatsSummary? lifetimeLogStatsSummary;
+
+  @JsonKey(name: 'BenchmarksWithBestEntries')
+  late List<UserBenchmarkWithBestEntry> benchmarksWithBestEntries;
 
   @override
   List<Object?> get props => [
@@ -4963,15 +5052,19 @@ class UserPublicProfile extends JsonSerializable
         bio,
         tagline,
         townCity,
-        instagramUrl,
-        tiktokUrl,
-        youtubeUrl,
-        snapUrl,
-        linkedinUrl,
+        instagramHandle,
+        tiktokHandle,
+        youtubeHandle,
+        linkedinHandle,
         countryCode,
         displayName,
-        workouts,
-        workoutPlans
+        followerCount,
+        postsCount,
+        workoutCount,
+        planCount,
+        clubs,
+        lifetimeLogStatsSummary,
+        benchmarksWithBestEntries
       ];
   @override
   Map<String, dynamic> toJson() => _$UserPublicProfileToJson(this);
@@ -5454,29 +5547,6 @@ class DeleteUserBenchmarkTagById$Mutation extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$DeleteUserBenchmarkTagById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkEntry extends JsonSerializable
-    with EquatableMixin, UserBenchmarkEntryMixin {
-  UserBenchmarkEntry();
-
-  factory UserBenchmarkEntry.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkEntryFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        completedOn,
-        score,
-        note,
-        videoUri,
-        videoThumbUri
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkEntryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -7591,24 +7661,6 @@ final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
                   ]))
             ]))
       ])),
@@ -7695,6 +7747,12 @@ final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -8392,24 +8450,6 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
                   ]))
             ]))
       ])),
@@ -8496,6 +8536,12 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -9961,24 +10007,6 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
                   ]))
             ]))
       ])),
@@ -10065,6 +10093,12 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -26124,19 +26158,37 @@ final LIFETIME_LOG_STATS_SUMMARY_QUERY_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FieldNode(
-                  name: NameNode(value: 'sessionsLogged'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'minutesWorked'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
+              FragmentSpreadNode(
+                  name: NameNode(value: 'LifetimeLogStatsSummary'),
+                  directives: [])
             ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'LifetimeLogStatsSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'LifetimeLogStatsSummary'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesWorked'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'sessionsLogged'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
       ]))
 ]);
 
@@ -37932,8 +37984,121 @@ final USER_PUBLIC_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
                   name: NameNode(value: 'UserPublicProfileSummary'),
-                  directives: [])
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'Clubs'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubSummary'), directives: []),
+                    FieldNode(
+                        name: NameNode(value: 'Owner'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'UserSummary'),
+                              directives: [])
+                        ]))
+                  ]))
             ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'UserPublicProfileSummary'),
@@ -37945,6 +38110,12 @@ final USER_PUBLIC_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
             name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -37986,13 +38157,13 @@ final USER_PUBLIC_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'numberPublicWorkouts'),
+            name: NameNode(value: 'workoutCount'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'numberPublicPlans'),
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -38063,126 +38234,62 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
               FragmentSpreadNode(
                   name: NameNode(value: 'UserPublicProfile'), directives: []),
               FieldNode(
-                  name: NameNode(value: 'Workouts'),
+                  name: NameNode(value: 'Clubs'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
+                        name: NameNode(value: 'ClubSummary'), directives: []),
+                    FieldNode(
+                        name: NameNode(value: 'Owner'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'UserSummary'),
+                              directives: [])
+                        ]))
                   ])),
               FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
+                  name: NameNode(value: 'LifetimeLogStatsSummary'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
+                        name: NameNode(value: 'LifetimeLogStatsSummary'),
                         directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'BenchmarksWithBestEntries'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'UserBenchmarkSummary'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'UserBenchmarkSummary'),
+                              directives: [])
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'BestEntry'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'UserBenchmarkEntry'),
+                              directives: [])
+                        ]))
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'UserSummary'),
@@ -38223,10 +38330,10 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
+      name: NameNode(value: 'ClubSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -38243,12 +38350,6 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
             alias: null,
             arguments: [],
             directives: [],
@@ -38272,71 +38373,50 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
+            name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
+            name: NameNode(value: 'memberCount'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
+      name: NameNode(value: 'LifetimeLogStatsSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
+              name: NameNode(value: 'LifetimeLogStatsSummary'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesWorked'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'sessionsLogged'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserBenchmarkSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserBenchmarkSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -38352,19 +38432,87 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'lastEntryAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'name'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'description'),
+            name: NameNode(value: 'equipmentInfo'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'hexColor'),
+            name: NameNode(value: 'benchmarkType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserBenchmarkEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserBenchmarkEntry'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -38432,31 +38580,25 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'instagramUrl'),
+            name: NameNode(value: 'instagramHandle'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'tiktokUrl'),
+            name: NameNode(value: 'tiktokHandle'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'youtubeUrl'),
+            name: NameNode(value: 'youtubeHandle'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'snapUrl'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'linkedinUrl'),
+            name: NameNode(value: 'linkedinHandle'),
             alias: null,
             arguments: [],
             directives: [],
@@ -38469,6 +38611,30 @@ final USER_PUBLIC_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'followerCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'postsCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],

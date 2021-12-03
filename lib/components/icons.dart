@@ -161,7 +161,7 @@ class NoResultsToDisplay extends StatelessWidget {
       children: [
         SvgPicture.asset(
           'assets/placeholder_images/no-results-icon.svg',
-          width: 120,
+          width: 90,
           color: context.theme.primary.withOpacity(0.3),
         ),
         Padding(

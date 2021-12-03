@@ -960,7 +960,7 @@ class InfoPopupButton extends StatelessWidget {
               ),
             ),
           )),
-      child: const Icon(CupertinoIcons.info, size: 23),
+      child: const Icon(CupertinoIcons.info),
     );
   }
 }

@@ -20,6 +20,7 @@ fragment ClubSummary on ClubSummary {
   description
   coverImageUri
   location
+  memberCount
 }
 
 fragment ClubInviteToken on ClubInviteToken {

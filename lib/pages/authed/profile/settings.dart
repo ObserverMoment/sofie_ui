@@ -135,6 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       'DATA',
                       color: _headingColor,
                     ),
+                    _spacer(),
                     PageLink(
                       linkText: 'View Archive',
                       onPress: () => context.navigateTo(const ArchiveRoute()),

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:popover/popover.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -26,16 +27,19 @@ class PopoverMenu extends StatelessWidget {
           transitionDuration: const Duration(milliseconds: 150),
           bodyBuilder: (context) => ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: PopoverMenuContainer(
-              items: items,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: PopoverMenuContainer(
+                items: items,
+              ),
             ),
           ),
           backgroundColor: backgroundColor,
           barrierColor: Colors.transparent,
           radius: 12,
           direction: PopoverDirection.top,
-          arrowHeight: 15,
-          arrowWidth: 30,
+          arrowHeight: 10,
+          arrowWidth: 0,
         );
       },
     );
@@ -48,16 +52,20 @@ class PopoverMenuContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: 240,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.theme.primary.withOpacity(0.07)),
+      ),
       child: ListView.separated(
           padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (c, i) => GestureDetector(
               onTap: () {
-                items[i].onTap();
                 context.pop();
+                items[i].onTap();
               },
               child: items[i]),
           separatorBuilder: (c, i) => HorizontalLine(
@@ -75,6 +83,7 @@ class PopoverMenuItem extends StatelessWidget {
   final bool confirm;
   final bool destructive;
   final void Function() onTap;
+  final bool isActive;
   final bool isLast;
   const PopoverMenuItem(
       {Key? key,
@@ -83,7 +92,8 @@ class PopoverMenuItem extends StatelessWidget {
       this.iconData,
       this.confirm = false,
       this.isLast = false,
-      this.destructive = false})
+      this.destructive = false,
+      required this.isActive})
       : assert(!(confirm && destructive)),
         super(key: key);
 
@@ -103,10 +113,21 @@ class PopoverMenuItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          MyText(
-            text,
-            color: color,
-            textAlign: TextAlign.left,
+          Row(
+            children: [
+              MyText(
+                text,
+                color: color,
+                textAlign: TextAlign.left,
+              ),
+              if (isActive)
+                const FadeIn(
+                    child: Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Icon(CupertinoIcons.circle_fill,
+                      size: 10, color: Styles.secondaryAccent),
+                ))
+            ],
           ),
           if (iconData != null)
             Icon(

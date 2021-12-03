@@ -138,7 +138,10 @@ class BottomSheetMenuItemContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: context.theme.cardBackground.withOpacity(0.3),
-            border: Border.all(color: context.theme.primary),
+            border: Border.all(
+                color: bottomSheetMenuItem.isDestructive
+                    ? Styles.errorRed
+                    : context.theme.primary),
             borderRadius: BorderRadius.circular(30)),
         child: CupertinoButton(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),

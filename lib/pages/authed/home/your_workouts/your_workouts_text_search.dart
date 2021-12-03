@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -34,14 +33,12 @@ class _YourWorkoutsTextSearchState extends State<YourWorkoutsTextSearch> {
             'YourWorkoutsTextSearch - ${UserWorkoutsQuery().operationName}'),
         query: UserWorkoutsQuery(),
         fetchPolicy: QueryFetchPolicy.storeFirst,
-        loadingIndicator: const ShimmerListPage(),
         builder: (createdWorkoutsData) {
           return QueryObserver<UserCollections$Query, json.JsonSerializable>(
               key: Key(
                   'YourWorkoutsTextSearch - ${UserCollectionsQuery().operationName}'),
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
-              loadingIndicator: const ShimmerListPage(),
               builder: (savedWorkoutsData) {
                 final collections = savedWorkoutsData.userCollections;
 

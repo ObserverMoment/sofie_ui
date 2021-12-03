@@ -18,6 +18,15 @@ fragment UserAvatarData on UserAvatarData {
   avatarUri
   displayName
 }
+fragment UserBenchmarkSummary on UserBenchmarkSummary {
+  __typename
+  id
+  lastEntryAt
+  name
+  equipmentInfo
+  benchmarkType
+  loadUnit
+}
 
 fragment UserBenchmark on UserBenchmark {
   __typename
@@ -59,25 +68,29 @@ fragment UserPublicProfile on UserPublicProfile {
   bio
   tagline
   townCity
-  instagramUrl
-  tiktokUrl
-  youtubeUrl
-  snapUrl
-  linkedinUrl
+  instagramHandle
+  tiktokHandle
+  youtubeHandle
+  linkedinHandle
   countryCode
   displayName
+  followerCount
+  postsCount
+  workoutCount
+  planCount
 }
 
 fragment UserPublicProfileSummary on UserPublicProfileSummary {
   __typename
+  userProfileScope
   id
   avatarUri
   tagline
   townCity
   countryCode
   displayName
-  numberPublicWorkouts
-  numberPublicPlans
+  workoutCount
+  planCount
 }
 
 fragment UserSummary on UserSummary {

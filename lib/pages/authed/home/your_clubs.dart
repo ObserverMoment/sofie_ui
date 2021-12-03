@@ -76,51 +76,49 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
                       largeTitle: Text('Clubs'),
                       border: null)
                 ],
-            body: sortedClubs.isEmpty
-                ? YourContentEmptyPlaceholder(
-                    message: 'No clubs to display',
-                    explainer:
-                        'Clubs are at the heart of the Sofie experience! You can use them to organise events and groups, share workouts and plans, build teams and motivate, sell services and merch, entertain fans, reward high performing and dedicated team members, create competitions and so much more!',
-                    actions: [
-                        EmptyPlaceholderAction(
-                            action: () =>
-                                context.navigateTo(ClubCreatorRoute()),
-                            buttonIcon: CupertinoIcons.add,
-                            buttonText: 'Create Club'),
-                        EmptyPlaceholderAction(
-                            action: () =>
-                                context.navigateTo(const DiscoverClubsRoute()),
-                            buttonIcon: CupertinoIcons.compass,
-                            buttonText: 'Find Clubs'),
-                      ])
-                : FABPage(
-                    columnButtons: [
-                      FloatingButton(
-                          gradient: Styles.primaryAccentGradient,
-                          contentColor: Styles.white,
-                          icon: CupertinoIcons.add,
-                          onTap: () => context.navigateTo(ClubCreatorRoute())),
-                    ],
-                    rowButtonsAlignment: MainAxisAlignment.end,
-                    rowButtons: [
-                      FABPageButtonContainer(
-                        padding: EdgeInsets.zero,
-                        child: MySlidingSegmentedControl<ClubMemberTypeFilter>(
-                            margin: EdgeInsets.zero,
-                            activeColor: Styles.secondaryAccent,
-                            childPadding:
-                                const EdgeInsets.symmetric(vertical: 7.5),
-                            value: _memberTypeFilter,
-                            updateValue: (t) =>
-                                setState(() => _memberTypeFilter = t),
-                            children: const {
-                              ClubMemberTypeFilter.all: 'All',
-                              ClubMemberTypeFilter.owner: 'Owner',
-                              ClubMemberTypeFilter.member: 'Member',
-                            }),
-                      ),
-                    ],
-                    child: ListView.builder(
+            body: FABPage(
+              columnButtons: [
+                FloatingButton(
+                    gradient: Styles.primaryAccentGradient,
+                    contentColor: Styles.white,
+                    icon: CupertinoIcons.add,
+                    onTap: () => context.navigateTo(ClubCreatorRoute())),
+              ],
+              rowButtonsAlignment: MainAxisAlignment.end,
+              rowButtons: [
+                FABPageButtonContainer(
+                  padding: EdgeInsets.zero,
+                  child: MySlidingSegmentedControl<ClubMemberTypeFilter>(
+                      margin: EdgeInsets.zero,
+                      activeColor: Styles.secondaryAccent,
+                      childPadding: const EdgeInsets.symmetric(vertical: 7.5),
+                      value: _memberTypeFilter,
+                      updateValue: (t) => setState(() => _memberTypeFilter = t),
+                      children: const {
+                        ClubMemberTypeFilter.all: 'All',
+                        ClubMemberTypeFilter.owner: 'Owner',
+                        ClubMemberTypeFilter.member: 'Member',
+                      }),
+                ),
+              ],
+              child: sortedClubs.isEmpty
+                  ? YourContentEmptyPlaceholder(
+                      message: 'No clubs to display',
+                      explainer:
+                          'Clubs are the heart of the Sofie experience! Use them to organise events and groups, share fitness stuff, build teams, sell services and merch, entertain fans, reward dedicated team members, create competitions and so much more!',
+                      actions: [
+                          EmptyPlaceholderAction(
+                              action: () =>
+                                  context.navigateTo(ClubCreatorRoute()),
+                              buttonIcon: CupertinoIcons.add,
+                              buttonText: 'Create Club'),
+                          EmptyPlaceholderAction(
+                              action: () => context
+                                  .navigateTo(const DiscoverClubsRoute()),
+                              buttonIcon: CupertinoIcons.compass,
+                              buttonText: 'Find Clubs'),
+                        ])
+                  : ListView.builder(
                       padding: const EdgeInsets.only(
                         top: 4,
                         bottom: 120,
@@ -138,6 +136,6 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
                         ),
                       ),
                     ),
-                  )));
+            )));
   }
 }

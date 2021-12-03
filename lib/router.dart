@@ -46,6 +46,7 @@ import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dar
 import 'package:sofie_ui/pages/authed/main_tabs_page.dart';
 import 'package:sofie_ui/pages/authed/page_not_found.dart';
 import 'package:sofie_ui/pages/authed/profile/archive_page.dart';
+import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
 import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
@@ -82,22 +83,14 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
             ),
             AutoRoute(path: 'studio', page: HomePage),
             AutoRoute(
-                path: 'progress',
-                name: 'progressStack',
-                page: EmptyRouterPage,
-                children: [
-                  AutoRoute(initial: true, path: '', page: ProgressPage),
-                  AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
-                  AutoRoute(path: 'journals', page: JournalsPage),
-                  AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
-                  AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
-                ]),
+              path: 'progress',
+              page: ProgressPage,
+            ),
             AutoRoute(path: 'profile', page: ProfilePage),
           ]),
           // These pages are 'stand-alone'. They push on top of the underlying main tabs UI / stacks and so go into full screen.
           // They can be pushed to from anywhere and are also pages that would want to be linkable. E.g. when sharing a workout details page with a group or another user.
           // Usually the flow from these pages ends up back on this page - where the user can hit [back] to go back to the main tabs view. E.g. MainTabsView -> WorkoutDetails -> Do Workout -> LogWorkout -> WorkoutDetails -> MainTabsView
-          AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'chats', page: ChatsOverviewPage),
           AutoRoute(path: 'chat', page: OneToOneChatPage),
           AutoRoute(path: 'club-chat', page: ClubMembersChatPage),
@@ -105,10 +98,15 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'collection/:id', page: CollectionDetailsPage),
           AutoRoute(path: "do-workout/:id", page: DoWorkoutWrapperPage),
 
+          /// User related.
+          AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'settings', page: SettingsPage),
+          AutoRoute(path: 'edit-profile', page: EditProfilePage),
+
+          /// Misc
           AutoRoute(path: 'timers', page: TimersPage),
 
-          // Users own content.
+          /// Users own content.
           AutoRoute(path: 'your-clubs', page: YourClubsPage),
           AutoRoute(path: 'your-collections', page: YourCollectionsPage),
           AutoRoute(path: 'your-gym-profiles', page: YourGymProfilesPage),
@@ -119,11 +117,11 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'your-throwdowns', page: YourThrowdownsPage),
           AutoRoute(path: 'your-workouts', page: YourWorkoutsPage),
 
-          // AutoRoute(path: 'personal-workouts', page: PrivateWorkoutFinderPage),
-          // TODO: As per your-workouts - this can be covered by your-plans.
-          // When selecting you should be able to specify which categories are included
-          // Saved / Created. Joined is never included in select ops.
-          // AutoRoute(path: 'personal-plans', page: PrivateWorkoutPlanFinderPage),
+          /// User progress, stats and workout history
+          AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
+          AutoRoute(path: 'journals', page: JournalsPage),
+          AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
+          AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
 
           /// Finders and Public Content.
           /// Consider renaming these all as discover?

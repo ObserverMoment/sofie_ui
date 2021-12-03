@@ -1,11 +1,22 @@
 query userPublicProfileById($userId: ID!) {
   userPublicProfileById(userId: $userId) {
     ...UserPublicProfile
-    Workouts {
-      ...WorkoutSummary
+    Clubs {
+      ...ClubSummary
+      Owner {
+        ...UserSummary
+      }
     }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
+    LifetimeLogStatsSummary {
+      ...LifetimeLogStatsSummary
+    }
+    BenchmarksWithBestEntries {
+      UserBenchmarkSummary {
+        ...UserBenchmarkSummary
+      }
+      BestEntry {
+        ...UserBenchmarkEntry
+      }
     }
   }
 }

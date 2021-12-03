@@ -51,7 +51,8 @@ class FABPage extends StatelessWidget {
         if (rowButtons.isNotEmpty)
           Positioned(
             bottom: 16,
-            right: 0,
+            right: rowButtonsAlignment == MainAxisAlignment.end ? 0 : null,
+            left: rowButtonsAlignment == MainAxisAlignment.start ? 0 : null,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               width: screenWidth,
@@ -185,6 +186,7 @@ class FABPageButtonContainer extends StatelessWidget {
           color:
               gradient != null ? null : color ?? context.theme.cardBackground,
           gradient: gradient,
+          border: Border.all(color: context.theme.primary.withOpacity(0.06)),
           borderRadius: BorderRadius.circular(60)),
       child: child,
     );

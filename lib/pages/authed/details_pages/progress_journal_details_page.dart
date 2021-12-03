@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/journal/progress_journal_entries.dart';
 import 'package:sofie_ui/components/journal/progress_journal_goals.dart';
 import 'package:sofie_ui/components/journal/progress_journal_summary.dart';
@@ -85,7 +84,6 @@ class _ProgressJournalDetailsPageState
             'ProgressJournalDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerListPage(),
         builder: (data) {
           final journal = data.progressJournalById;
           return MyPageScaffold(

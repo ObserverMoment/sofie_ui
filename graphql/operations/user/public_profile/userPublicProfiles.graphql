@@ -3,5 +3,11 @@
 query userPublicProfiles($cursor: ID, $take: Int) {
   userPublicProfiles(cursor: $cursor, take: $take) {
     ...UserPublicProfileSummary
+    Clubs {
+      ...ClubSummary
+      Owner {
+        ...UserSummary
+      }
+    }
   }
 }

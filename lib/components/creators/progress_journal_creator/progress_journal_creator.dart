@@ -172,11 +172,8 @@ class _ProgressJournalCreatorPageState
         withoutLeading: true,
         middle: Align(
             alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child:
-                  NavBarTitle(_isEditing ? 'Edit Journal' : 'Create Journal'),
-            )),
+            child: NavBarLargeTitle(
+                _isEditing ? 'Edit Journal' : 'Create Journal')),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,

@@ -119,14 +119,13 @@ type ClubInviteTokenData {
 }
 
 type ClubSummary {
-  Admins: [UserSummary!]!
-  Members: [UserSummary!]!
   Owner: UserSummary!
   coverImageUri: String
   createdAt: DateTime!
   description: String
   id: ID!
   location: String
+  memberCount: Int!
   name: String!
 }
 
@@ -1246,10 +1245,24 @@ type UserBenchmarkEntry {
   videoUri: String
 }
 
+type UserBenchmarkSummary {
+  benchmarkType: BenchmarkType!
+  equipmentInfo: String
+  id: String!
+  lastEntryAt: DateTime!
+  loadUnit: LoadUnit!
+  name: String!
+}
+
 type UserBenchmarkTag {
   description: String
   id: ID!
   name: String!
+}
+
+type UserBenchmarkWithBestEntry {
+  BestEntry: UserBenchmarkEntry!
+  UserBenchmarkSummary: UserBenchmarkSummary!
 }
 
 enum UserProfileScope {
@@ -1258,34 +1271,40 @@ enum UserProfileScope {
 }
 
 type UserPublicProfile {
-  WorkoutPlans: [WorkoutPlanSummary!]!
-  Workouts: [WorkoutSummary!]!
+  BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
+  Clubs: [ClubSummary!]!
+  LifetimeLogStatsSummary: LifetimeLogStatsSummary
   avatarUri: String
   bio: String
   countryCode: String
   displayName: String!
+  followerCount: Int
   id: ID!
-  instagramUrl: String
+  instagramHandle: String
   introVideoThumbUri: String
   introVideoUri: String
-  linkedinUrl: String
-  snapUrl: String
+  linkedinHandle: String
+  planCount: Int
+  postsCount: Int
   tagline: String
-  tiktokUrl: String
+  tiktokHandle: String
   townCity: String
   userProfileScope: UserProfileScope!
-  youtubeUrl: String
+  workoutCount: Int
+  youtubeHandle: String
 }
 
 type UserPublicProfileSummary {
+  Clubs: [ClubSummary!]!
   avatarUri: String
   countryCode: String
   displayName: String!
   id: ID!
-  numberPublicPlans: Int!
-  numberPublicWorkouts: Int!
+  planCount: Int!
   tagline: String
   townCity: String
+  userProfileScope: UserProfileScope!
+  workoutCount: Int!
 }
 
 type UserSummary {

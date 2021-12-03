@@ -65,13 +65,13 @@ class UserProfileCard extends StatelessWidget {
                   SizedBox(
                     width: avatarSize / 2,
                     child: _statDisplayContainer(
-                        profileSummary.numberPublicWorkouts, 'workouts'),
+                        profileSummary.workoutCount, 'workouts'),
                   ),
                   const SizedBox(width: 8),
                   SizedBox(
                       width: avatarSize / 2,
                       child: _statDisplayContainer(
-                          profileSummary.numberPublicPlans, 'plans')),
+                          profileSummary.planCount, 'plans')),
                 ],
               )
             ],

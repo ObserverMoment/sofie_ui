@@ -41,7 +41,7 @@ class MainTabsPage extends StatelessWidget {
         DiscoverRoute(),
         SocialRoute(),
         HomeRoute(),
-        ProgressStack(),
+        ProgressRoute(),
         ProfileRoute(),
       ],
       bottomNavigationBuilder: (context, _tabsRouter) => ClipRect(

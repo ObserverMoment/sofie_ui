@@ -34,6 +34,7 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
             .map((t) => PopoverMenuItem(
                   onTap: () => updateSelectedTag(t),
                   text: t,
+                  isActive: selectedTag == t,
                 ))
             .toList(),
         if (selectedTag != null)
@@ -41,6 +42,7 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
             iconData: CupertinoIcons.clear,
             onTap: () => updateSelectedTag(null),
             text: 'Clear Filter',
+            isActive: false,
           )
       ];
     } else {
@@ -49,6 +51,7 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
             .map((c) => PopoverMenuItem(
                   onTap: () => updateSelectedCollection(c),
                   text: c.name,
+                  isActive: selectedCollection == c,
                 ))
             .toList(),
         if (selectedCollection != null)
@@ -56,6 +59,7 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
             iconData: CupertinoIcons.clear,
             onTap: () => updateSelectedCollection(null),
             text: 'Clear Filter',
+            isActive: false,
           )
       ];
     }
@@ -113,5 +117,65 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
           ),
         ),
         items: _buildMenuItems);
+  }
+}
+
+/// Same as above but just for tags [List<String>]
+class TagsFilterMenu extends StatelessWidget {
+  final List<String> allTags;
+  final String? selectedTag;
+  final void Function(String? tag) updateSelectedTag;
+  const TagsFilterMenu({
+    Key? key,
+    required this.selectedTag,
+    required this.allTags,
+    required this.updateSelectedTag,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PopoverMenu(
+        button: FABPageButtonContainer(
+          child: Row(
+            children: [
+              AnimatedSwitcher(
+                  duration: kStandardAnimationDuration,
+                  child: selectedTag == null
+                      ? Row(
+                          children: const [
+                            MyText('Tags'),
+                            SizedBox(width: 8),
+                            Icon(
+                              CupertinoIcons.tag,
+                              size: 16,
+                            )
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            MyText(selectedTag!,
+                                weight: FontWeight.bold,
+                                color: Styles.secondaryAccent),
+                          ],
+                        )),
+            ],
+          ),
+        ),
+        items: [
+          ...allTags
+              .map((t) => PopoverMenuItem(
+                    onTap: () => updateSelectedTag(t),
+                    text: t,
+                    isActive: selectedTag == t,
+                  ))
+              .toList(),
+          if (selectedTag != null)
+            PopoverMenuItem(
+              iconData: CupertinoIcons.clear,
+              onTap: () => updateSelectedTag(null),
+              isActive: false,
+              text: 'Clear Filter',
+            )
+        ]);
   }
 }

@@ -4,11 +4,5 @@ query publicClubs {
     Owner {
       ...UserSummary
     }
-    Admins {
-      ...UserSummary
-    }
-    Members {
-      ...UserSummary
-    }
   }
 }

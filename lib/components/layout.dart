@@ -209,7 +209,7 @@ class CreateEditPageNavBar extends CupertinoNavigationBar {
               alignment: Alignment.centerLeft,
               child: Row(
                 children: [
-                  NavBarTitle(title),
+                  NavBarLargeTitle(title),
                 ],
               )),
           trailing: AnimatedSwitcher(
