@@ -99,7 +99,10 @@ class DialogMenuItemContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: context.theme.cardBackground.withOpacity(0.3),
-            border: Border.all(color: context.theme.primary),
+            border: Border.all(
+                color: action.isDestructive
+                    ? Styles.errorRed
+                    : context.theme.primary),
             borderRadius: BorderRadius.circular(30)),
         child: CupertinoButton(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),

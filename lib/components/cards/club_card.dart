@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/lists.dart';
-import 'package:sofie_ui/components/social/users_group_summary.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -16,8 +14,6 @@ class ClubCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<UserSummary> allMembers = [...club.admins, ...club.members];
-
     // Calc the ideal image size based on the display size.
     // Cards usually take up the full width.
     // // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
@@ -50,11 +46,35 @@ class ClubCard extends StatelessWidget {
                 height: 140,
                 width: double.infinity,
                 child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  padding: const EdgeInsets.all(6),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6.0),
+                        child: ContentBox(
+                          backgroundColor: contentOverlayColor,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(CupertinoIcons.person_2_fill,
+                                      size: 12, color: infoFontColor),
+                                  const SizedBox(width: 6),
+                                  MyText(
+                                    club.memberCount.toString(),
+                                    size: FONTSIZE.two,
+                                  )
+                                ],
+                              ),
+                              const MyText('Members',
+                                  size: FONTSIZE.one, color: infoFontColor)
+                            ],
+                          ),
+                        ),
+                      ),
                       if (Utils.textNotNull(club.location))
                         ContentBox(
                           backgroundColor: contentOverlayColor,
@@ -75,20 +95,6 @@ class ClubCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 6.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            UsersGroupSummary(
-                              users: allMembers,
-                              showMax: 10,
-                              avatarSize: 28,
-                            ),
-                          ],
-                        ),
-                      ),
                     ],
                   ),
                 )),
@@ -115,22 +121,9 @@ class ClubCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 6),
                             MyText(
-                              '${club.owner.displayName.toUpperCase()} (owner)',
-                              size: FONTSIZE.two,
+                              club.owner.displayName.toUpperCase(),
                               color: infoFontColor,
                             ),
-                            if (club.admins.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 6.0),
-                                child: CommaSeparatedList(
-                                  club.admins
-                                      .map((a) =>
-                                          '${a.displayName.toUpperCase()} (admin)')
-                                      .toList(),
-                                  fontSize: FONTSIZE.one,
-                                  textColor: infoFontColor,
-                                ),
-                              ),
                           ],
                         ),
                       ),
@@ -138,7 +131,7 @@ class ClubCard extends StatelessWidget {
                   ),
                   if (Utils.textNotNull(club.description))
                     Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
+                      padding: const EdgeInsets.only(top: 6.0),
                       child: MyText(
                         club.description!,
                         maxLines: 2,

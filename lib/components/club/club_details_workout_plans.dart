@@ -67,8 +67,12 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
   }
 
   void _openWorkoutPlanFinder() {
-    context.navigateTo(PrivateWorkoutPlanFinderRoute(
-        selectWorkoutPlan: (w) => _addWorkoutPlanToClub(w)));
+    context.navigateTo(YourPlansRoute(
+        showCreateButton: true,
+        showJoined: false,
+        showSaved: false,
+        pageTitle: 'Select Plan',
+        selectPlan: (w) => _addWorkoutPlanToClub(w)));
   }
 
   Future<void> _addWorkoutPlanToClub(WorkoutPlanSummary workoutPlan) async {

@@ -5,7 +5,6 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/progress_journal_entry_creator_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -69,7 +68,6 @@ class _ProgressJournalEntryCreatorState
   @override
   Widget build(BuildContext context) {
     return FutureBuilderHandler<ProgressJournalEntry>(
-        loadingWidget: const ShimmerDetailsPage(),
         future: _initEntryFuture,
         builder: (initialEntryData) => ChangeNotifierProvider(
               create: (context) => ProgressJournalEntryCreatorBloc(
@@ -213,6 +211,8 @@ class ProgressJournalEntryCreatorScores extends StatelessWidget {
         context.select<ProgressJournalEntryCreatorBloc, ProgressJournalEntry>(
             (b) => b.entry);
 
+    final bool hasSubmittedScores = _hasSubmittedScores(entry);
+
     return Column(
       children: [
         Padding(
@@ -220,38 +220,44 @@ class ProgressJournalEntryCreatorScores extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const MyText(
-                'Mind Health - Reflective Scores',
-              ),
-              if (_hasSubmittedScores(entry))
-                FadeIn(
-                  child: Row(
-                    children: [
-                      const MyText('Average '),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 6.0),
-                        child: CircularPercentIndicator(
-                          startAngle: 180,
-                          backgroundColor:
-                              Styles.primaryAccent.withOpacity(0.35),
-                          circularStrokeCap: CircularStrokeCap.round,
-                          radius: 54.0,
-                          lineWidth: 6.0,
-                          percent: _calcOverallAverage(entry) / kMaxScore,
-                          center: MyText(
-                            _calcOverallAverage(entry).toInt().toString(),
-                            lineHeight: 1,
-                            weight: FontWeight.bold,
-                          ),
-                          progressColor: Color.lerp(
-                              kBadScoreColor,
-                              kGoodScoreColor,
-                              _calcOverallAverage(entry) / kMaxScore),
-                        ),
-                      ),
-                    ],
-                  ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: MyText(
+                  'Mind Health - Reflective Scores',
                 ),
+              ),
+              GrowInOut(
+                show: hasSubmittedScores,
+                child: Row(
+                  children: [
+                    const MyText('Average '),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6.0),
+                      child: CircularPercentIndicator(
+                        startAngle: 180,
+                        backgroundColor: Styles.primaryAccent.withOpacity(0.35),
+                        circularStrokeCap: CircularStrokeCap.round,
+                        radius: 54.0,
+                        lineWidth: 6.0,
+                        percent: hasSubmittedScores
+                            ? _calcOverallAverage(entry) / kMaxScore
+                            : 0,
+                        center: MyText(
+                          hasSubmittedScores
+                              ? _calcOverallAverage(entry).toInt().toString()
+                              : '',
+                          lineHeight: 1,
+                          weight: FontWeight.bold,
+                        ),
+                        progressColor: hasSubmittedScores
+                            ? Color.lerp(kBadScoreColor, kGoodScoreColor,
+                                _calcOverallAverage(entry) / kMaxScore)
+                            : kBadScoreColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

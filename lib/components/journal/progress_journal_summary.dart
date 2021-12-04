@@ -16,6 +16,7 @@ class ProgressJournalSummary extends StatelessWidget {
         children: [
           ProgressJournalGoalsSummaryCard(
             goals: journal.progressJournalGoals,
+            initMinimized: false,
           ),
           const HorizontalLine(
             verticalPadding: 24,

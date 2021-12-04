@@ -18,9 +18,7 @@ import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
-import 'package:sofie_ui/components/workout/workout_finders/private/private_workout_finder_page.dart';
 import 'package:sofie_ui/components/workout/workout_finders/public/public_workout_finder_page.dart';
-import 'package:sofie_ui/components/workout_plan/workout_plan_finder/private/private_workout_plan_finder.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart';
 import 'package:sofie_ui/main.dart';
 import 'package:sofie_ui/pages/authed/authed_routes_wrapper_page.dart';
@@ -33,12 +31,9 @@ import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_
 import 'package:sofie_ui/pages/authed/details_pages/workout_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_enrolment_details_page.dart';
-import 'package:sofie_ui/pages/authed/discover/discover_champions_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_clubs_page.dart';
-import 'package:sofie_ui/pages/authed/discover/discover_community_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_page.dart';
 import 'package:sofie_ui/pages/authed/home/home_page.dart';
-import 'package:sofie_ui/pages/authed/home/your_awards.dart';
 import 'package:sofie_ui/pages/authed/home/your_clubs.dart';
 import 'package:sofie_ui/pages/authed/home/your_collections.dart';
 import 'package:sofie_ui/pages/authed/home/your_gym_profiles.dart';
@@ -51,6 +46,7 @@ import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dar
 import 'package:sofie_ui/pages/authed/main_tabs_page.dart';
 import 'package:sofie_ui/pages/authed/page_not_found.dart';
 import 'package:sofie_ui/pages/authed/profile/archive_page.dart';
+import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
 import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
@@ -60,6 +56,7 @@ import 'package:sofie_ui/pages/authed/progress/personal_bests_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_people_page.dart';
 import 'package:sofie_ui/pages/authed/social/social_page.dart';
+import 'package:sofie_ui/pages/authed/social/your_posts_page.dart';
 import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
 @CupertinoAutoRouter(
@@ -77,55 +74,23 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           // The main tabs screen has five tabs where each is a stack. Generally these are pages that are user specific and are not likely to be shared across users or groups. Each stack maintains its own state and navigation in iOS style.
           AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
             AutoRoute(
-                path: '',
-                name: 'discoverStack',
-                page: EmptyRouterPage,
-                children: [
-                  AutoRoute(path: '', page: DiscoverPage),
-                  AutoRoute(path: 'discover-people', page: DiscoverPeoplePage),
-                  AutoRoute(path: 'discover-clubs', page: DiscoverClubsPage),
-                  AutoRoute(path: 'community', page: DiscoverCommunityPage),
-                  AutoRoute(path: 'champions', page: DiscoverChampionsPage),
-                ]),
+              path: '',
+              page: DiscoverPage,
+            ),
             AutoRoute(
               path: 'social',
               page: SocialPage,
             ),
+            AutoRoute(path: 'studio', page: HomePage),
             AutoRoute(
-                path: 'studio',
-                name: 'homeStack',
-                page: EmptyRouterPage,
-                children: [
-                  AutoRoute(path: '', page: HomePage),
-                  AutoRoute(path: 'your-awards', page: YourAwardsPage),
-                  AutoRoute(path: 'your-clubs', page: YourClubsPage),
-                  AutoRoute(
-                      path: 'your-collections', page: YourCollectionsPage),
-                  AutoRoute(
-                      path: 'your-gym-profiles', page: YourGymProfilesPage),
-                  AutoRoute(path: 'your-moves', page: YourMovesLibraryPage),
-                  AutoRoute(path: 'your-plans', page: YourPlansPage),
-                  AutoRoute(path: 'your-schedule', page: YourSchedulePage),
-                  AutoRoute(path: 'your-throwdowns', page: YourThrowdownsPage),
-                  AutoRoute(path: 'your-workouts', page: YourWorkoutsPage),
-                ]),
-            AutoRoute(
-                path: 'progress',
-                name: 'progressStack',
-                page: EmptyRouterPage,
-                children: [
-                  AutoRoute(initial: true, path: '', page: ProgressPage),
-                  AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
-                  AutoRoute(path: 'journals', page: JournalsPage),
-                  AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
-                  AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
-                ]),
+              path: 'progress',
+              page: ProgressPage,
+            ),
             AutoRoute(path: 'profile', page: ProfilePage),
           ]),
           // These pages are 'stand-alone'. They push on top of the underlying main tabs UI / stacks and so go into full screen.
           // They can be pushed to from anywhere and are also pages that would want to be linkable. E.g. when sharing a workout details page with a group or another user.
           // Usually the flow from these pages ends up back on this page - where the user can hit [back] to go back to the main tabs view. E.g. MainTabsView -> WorkoutDetails -> Do Workout -> LogWorkout -> WorkoutDetails -> MainTabsView
-          AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'chats', page: ChatsOverviewPage),
           AutoRoute(path: 'chat', page: OneToOneChatPage),
           AutoRoute(path: 'club-chat', page: ClubMembersChatPage),
@@ -133,14 +98,38 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'collection/:id', page: CollectionDetailsPage),
           AutoRoute(path: "do-workout/:id", page: DoWorkoutWrapperPage),
 
+          /// User related.
+          AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'settings', page: SettingsPage),
+          AutoRoute(path: 'edit-profile', page: EditProfilePage),
+
+          /// Misc
           AutoRoute(path: 'timers', page: TimersPage),
 
-          /// Finders.
-          AutoRoute(path: 'community-workouts', page: PublicWorkoutFinderPage),
-          AutoRoute(path: 'personal-workouts', page: PrivateWorkoutFinderPage),
-          AutoRoute(path: 'community-plans', page: PublicWorkoutPlanFinderPage),
-          AutoRoute(path: 'personal-plans', page: PrivateWorkoutPlanFinderPage),
+          /// Users own content.
+          AutoRoute(path: 'your-clubs', page: YourClubsPage),
+          AutoRoute(path: 'your-collections', page: YourCollectionsPage),
+          AutoRoute(path: 'your-gym-profiles', page: YourGymProfilesPage),
+          AutoRoute(path: 'your-moves', page: YourMovesLibraryPage),
+          AutoRoute(path: 'your-plans', page: YourPlansPage),
+          AutoRoute(path: "your-posts", page: YourPostsPage),
+          AutoRoute(path: 'your-schedule', page: YourSchedulePage),
+          AutoRoute(path: 'your-throwdowns', page: YourThrowdownsPage),
+          AutoRoute(path: 'your-workouts', page: YourWorkoutsPage),
+
+          /// User progress, stats and workout history
+          AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
+          AutoRoute(path: 'journals', page: JournalsPage),
+          AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
+          AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
+
+          /// Finders and Public Content.
+          /// Consider renaming these all as discover?
+          /// Is a finder different from discover?
+          AutoRoute(path: 'public-workouts', page: PublicWorkoutFinderPage),
+          AutoRoute(path: 'public-plans', page: PublicWorkoutPlanFinderPage),
+          AutoRoute(path: 'discover-people', page: DiscoverPeoplePage),
+          AutoRoute(path: 'discover-clubs', page: DiscoverClubsPage),
 
           /// Details pages - for certain object types.
           AutoRoute(path: 'club/:id', page: ClubDetailsPage),

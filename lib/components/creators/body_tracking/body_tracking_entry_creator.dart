@@ -215,12 +215,12 @@ class _Stats extends StatelessWidget {
         )),
         SizedBox(
             width: double.infinity,
-            child: SlidingSelect<BodyweightUnit>(
+            child: MySlidingSegmentedControl<BodyweightUnit>(
               value:
                   activeBodyTrackingEntry?.bodyweightUnit ?? BodyweightUnit.kg,
-              children: const <BodyweightUnit, Widget>{
-                BodyweightUnit.kg: MyText('KG'),
-                BodyweightUnit.lb: MyText('LB'),
+              children: const {
+                BodyweightUnit.kg: 'KG',
+                BodyweightUnit.lb: 'LB',
               },
               updateValue: (unit) => update({'bodyweightUnit': unit.apiValue}),
             )),

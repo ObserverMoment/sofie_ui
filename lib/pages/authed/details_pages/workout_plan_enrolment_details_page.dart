@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/review_card.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -182,7 +181,6 @@ class _WorkoutPlanEnrolmentDetailsPageState
             'WorkoutPlanEnrolmentDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (data) {
           final enrolmentWithPlan = data.workoutPlanEnrolmentById;
           final enrolment = enrolmentWithPlan.workoutPlanEnrolment;

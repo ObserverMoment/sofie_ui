@@ -4,11 +4,5 @@ query userClubs {
     Owner {
       ...UserSummary
     }
-    Admins {
-      ...UserSummary
-    }
-    Members {
-      ...UserSummary
-    }
   }
 }

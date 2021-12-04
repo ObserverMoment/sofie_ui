@@ -56,7 +56,7 @@ extension BuildContextExtension on BuildContext {
       bool rootNavigator = false}) async {
     final BuildContext context = this;
     final T? res = await Navigator.of(context, rootNavigator: rootNavigator)
-        .push(MaterialWithModalsPageRoute(
+        .push(CupertinoPageRoute(
             fullscreenDialog: fullscreenDialog, builder: (context) => child));
     return res;
   }

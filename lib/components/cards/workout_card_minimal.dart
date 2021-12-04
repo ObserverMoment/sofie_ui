@@ -92,7 +92,7 @@ class MinimalWorkoutCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 6.0),
                         child: CommaSeparatedList(
                           workout.equipments,
-                          textColor: Styles.secondaryAccent,
+                          textColor: Styles.primaryAccent,
                         ),
                       ),
                   ]),

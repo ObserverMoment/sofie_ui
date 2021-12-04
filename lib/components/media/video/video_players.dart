@@ -110,8 +110,6 @@ class _LandscapeInlineVideoPlayerState
       });
       _controller!.addListener(_listener);
     });
-
-    /// TODO: launch / close on user rotation.
   }
 
   @override

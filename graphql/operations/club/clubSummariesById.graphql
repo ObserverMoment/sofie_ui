@@ -4,11 +4,5 @@ query clubSummariesById($ids: [ID!]!) {
     Owner {
       ...UserSummary
     }
-    Admins {
-      ...UserSummary
-    }
-    Members {
-      ...UserSummary
-    }
   }
 }

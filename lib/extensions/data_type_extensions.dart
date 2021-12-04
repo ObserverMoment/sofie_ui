@@ -20,9 +20,7 @@ extension ClubExtension on Club {
     ..description = description
     ..coverImageUri = coverImageUri
     ..location = location
-    ..owner = owner
-    ..admins = admins
-    ..members = members;
+    ..owner = owner;
 }
 
 extension ClubMembersExtension on ClubMembers {

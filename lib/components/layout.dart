@@ -209,7 +209,7 @@ class CreateEditPageNavBar extends CupertinoNavigationBar {
               alignment: Alignment.centerLeft,
               child: Row(
                 children: [
-                  NavBarTitle(title),
+                  NavBarLargeTitle(title),
                 ],
               )),
           trailing: AnimatedSwitcher(
@@ -271,7 +271,7 @@ class MyPageScaffold extends StatelessWidget {
     return CupertinoPageScaffold(
         navigationBar: navigationBar,
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.only(left: 4, top: 8, right: 4),
           child: child,
         ));
   }

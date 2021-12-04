@@ -213,7 +213,11 @@ class TertiaryButton extends StatelessWidget {
   final EdgeInsets padding;
   final Color? textColor;
   final FONTSIZE fontSize;
+  final double iconSize;
   final Color? backgroundColor;
+
+  /// [backgroundGradient] will override [backgroundColor].
+  final Gradient? backgroundGradient;
 
   const TertiaryButton(
       {Key? key,
@@ -225,7 +229,9 @@ class TertiaryButton extends StatelessWidget {
       this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
       this.textColor,
       this.backgroundColor,
-      this.fontSize = FONTSIZE.two})
+      this.fontSize = FONTSIZE.two,
+      this.backgroundGradient,
+      this.iconSize = 16})
       : super(key: key);
 
   @override
@@ -240,7 +246,10 @@ class TertiaryButton extends StatelessWidget {
         child: Container(
           padding: padding,
           decoration: BoxDecoration(
-              color: backgroundColor ?? context.theme.cardBackground,
+              gradient: backgroundGradient,
+              color: backgroundGradient != null
+                  ? null
+                  : backgroundColor ?? context.theme.cardBackground,
               borderRadius: BorderRadius.circular(kStandardButtonBorderRadius)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +259,7 @@ class TertiaryButton extends StatelessWidget {
                 Icon(
                   prefixIconData,
                   color: textColor,
-                  size: 16,
+                  size: iconSize,
                 ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
@@ -258,13 +267,14 @@ class TertiaryButton extends StatelessWidget {
                   text.toUpperCase(),
                   color: textColor,
                   size: fontSize,
+                  lineHeight: 1,
                 ),
               ),
               if (suffixIconData != null)
                 Icon(
                   suffixIconData,
                   color: textColor,
-                  size: 16,
+                  size: iconSize,
                 ),
             ],
           ),
@@ -418,7 +428,7 @@ class FloatingActionButtonContainer extends StatelessWidget {
       decoration: BoxDecoration(
           boxShadow: kElevation[6],
           gradient: Styles.primaryAccentGradient,
-          borderRadius: BorderRadius.circular(30)),
+          borderRadius: BorderRadius.circular(60)),
       child: child,
     );
   }
@@ -589,9 +599,10 @@ class IconButton extends StatelessWidget {
 class PageLink extends StatelessWidget {
   final void Function() onPress;
   final String linkText;
-  final Widget? icon;
+  final IconData? icon;
   final bool infoHighlight;
   final bool destructiveHighlight;
+  final bool separator;
   final bool loading;
   final bool bold;
 
@@ -603,51 +614,59 @@ class PageLink extends StatelessWidget {
       this.infoHighlight = false,
       this.destructiveHighlight = false,
       this.loading = false,
-      this.bold = false})
+      this.bold = false,
+      this.separator = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: loading ? null : onPress,
       child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      color: context.theme.primary.withOpacity(0.06)))),
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
+          padding: const EdgeInsets.only(top: 12, left: 8, bottom: 8, right: 8),
+          child: Column(
+            children: [
               Row(
-                children: [
-                  if (icon != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: icon,
-                    ),
-                  MyText(
-                    linkText,
-                    color: infoHighlight
-                        ? Styles.infoBlue
-                        : destructiveHighlight
-                            ? Styles.errorRed
-                            : null,
-                    weight: bold ? FontWeight.bold : FontWeight.normal,
-                  ),
-                  if (loading)
-                    const FadeIn(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: LoadingDots(
-                          size: 10,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      if (icon != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Icon(icon, size: 20),
                         ),
+                      MyText(
+                        linkText,
+                        color: infoHighlight
+                            ? Styles.infoBlue
+                            : destructiveHighlight
+                                ? Styles.errorRed
+                                : null,
+                        lineHeight: 0.6,
+                        weight: bold ? FontWeight.bold : FontWeight.normal,
                       ),
-                    ),
+                      if (loading)
+                        const FadeIn(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: LoadingDots(
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const Icon(CupertinoIcons.right_chevron, size: 18),
                 ],
               ),
-              const Icon(CupertinoIcons.right_chevron, size: 18),
+              if (separator)
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0, top: 8),
+                  child: Opacity(opacity: 0.4, child: HorizontalLine()),
+                )
             ],
           )),
     );
@@ -943,7 +962,7 @@ class InfoPopupButton extends StatelessWidget {
               ),
             ),
           )),
-      child: const Icon(CupertinoIcons.info, size: 23),
+      child: const Icon(CupertinoIcons.info),
     );
   }
 }

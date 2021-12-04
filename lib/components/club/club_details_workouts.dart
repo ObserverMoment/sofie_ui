@@ -65,7 +65,10 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
   }
 
   void _openWorkoutFinder() {
-    context.navigateTo(PrivateWorkoutFinderRoute(
+    context.navigateTo(YourWorkoutsRoute(
+        pageTitle: 'Select Workout',
+        showSaved: false,
+        showCreateButton: true,
         selectWorkout: (w) => _addWorkoutToClub(context, w)));
   }
 

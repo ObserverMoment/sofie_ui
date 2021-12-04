@@ -24,8 +24,6 @@ class PersonalBestEntryCard extends StatelessWidget {
 
   Future<void> _saveUploadedVideo(
       BuildContext context, String videoUri, String videoThumbUri) async {
-    _closeMediaUploadingAlert(context);
-
     final variables = UpdateUserBenchmarkEntryArguments(
         data: UpdateUserBenchmarkEntryInput(id: entry.id));
 
@@ -79,15 +77,6 @@ class PersonalBestEntryCard extends StatelessWidget {
     }
   }
 
-  void _showMediaUploadingAlert(BuildContext context) {
-    context.showLoadingAlert('Uploading Video',
-        icon: const Icon(
-          CupertinoIcons.cloud_upload,
-        ));
-  }
-
-  void _closeMediaUploadingAlert(BuildContext context) => context.pop();
-
   @override
   Widget build(BuildContext context) {
     return ContentBox(
@@ -118,7 +107,6 @@ class PersonalBestEntryCard extends StatelessWidget {
                 videoUri: entry.videoUri,
                 videoThumbUri: entry.videoThumbUri,
                 displaySize: const Size(60, 60),
-                onUploadStart: () => _showMediaUploadingAlert(context),
                 onUploadSuccess: (v, t) => _saveUploadedVideo(context, v, t),
                 removeVideo: () => _deleteUploadedVideo(context),
               )

@@ -187,12 +187,12 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const MyText('Max Invites'),
-                SlidingSelect<bool>(
+                MySlidingSegmentedControl<bool>(
                     value: _enableInviteLimit,
                     updateValue: (v) => setState(() => _enableInviteLimit = v),
                     children: const {
-                      true: MyText('Limited'),
-                      false: MyText('Unlimited'),
+                      true: 'Limited',
+                      false: 'Unlimited',
                     }),
                 const InfoPopupButton(infoWidget: ClubInviteLinkLimitsInfo())
               ],

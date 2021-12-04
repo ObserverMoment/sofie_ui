@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -13,6 +14,7 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
@@ -69,15 +71,18 @@ class _UserAvatarUploaderState extends State<UserAvatarUploader> {
 
   /// Pass [null] to delete.
   Future<void> _saveUriToDB(String? uri) async {
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
     try {
-      final variables =
-          UpdateUserArguments(data: UpdateUserInput(avatarUri: uri));
+      final variables = UpdateUserProfileArguments(
+          data: UpdateUserProfileInput(avatarUri: uri));
       final Map<String, dynamic> varsMap = {'avatarUri': uri};
 
       await context.graphQLStore.mutate(
-        mutation: UpdateUserMutation(variables: variables),
+        mutation: UpdateUserProfileMutation(variables: variables),
         customVariablesMap: {'data': varsMap},
-        broadcastQueryIds: [AuthedUserQuery().operationName],
+
+        /// TODO: Check user => profile changes have not broken this.
+        broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(authedUserId)],
       );
 
       widget.onUploadSuccess?.call(uri);

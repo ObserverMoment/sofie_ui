@@ -213,13 +213,13 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SlidingSelect<LoadUnit>(
+                          MySlidingSegmentedControl<LoadUnit>(
                               value: _loadUnit,
                               children: {
                                 for (final v in LoadUnit.values.where((v) =>
                                     v != LoadUnit.artemisUnknown &&
                                     v != LoadUnit.percentmax))
-                                  v: MyText(v.display)
+                                  v: v.display
                               },
                               updateValue: (loadUnit) =>
                                   _setStateWrapper(() => _loadUnit = loadUnit)),

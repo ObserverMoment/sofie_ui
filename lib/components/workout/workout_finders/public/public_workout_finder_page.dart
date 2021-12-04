@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/screens/workout_filters_screen/workout_filters_screen.dart';
 import 'package:sofie_ui/components/workout/selectable_workout_card.dart';
@@ -40,9 +40,22 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
   final PagingController<int, WorkoutSummary> _pagingController =
       PagingController(firstPageKey: 0, invisibleItemsThreshold: 10);
 
+  void Function(WorkoutSummary)? _selectWorkout;
+
+  /// Pops itself (and any stack items such as the text seach widget)
+  /// Then passes the selected workout to the parent.
+  void _handleWorkoutSelect(WorkoutSummary workout) {
+    /// If the text search is open then we pop back to the main widget.
+    context.router.popUntilRouteWithName(PublicWorkoutFinderRoute.name);
+    context.pop();
+    widget.selectWorkout?.call(workout);
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _selectWorkout = widget.selectWorkout != null ? _handleWorkoutSelect : null;
 
     _bloc = context.read<WorkoutFiltersBloc>();
     _updateLastUsedFilters();
@@ -122,18 +135,6 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
     });
   }
 
-  /// Pops itself (and any stack items such as the text seach widget)
-  /// Then passes the selected workout to the parent.
-  void _selectWorkout(WorkoutSummary workout) {
-    if (widget.selectWorkout != null) {
-      // If open - pop the text search route.
-      context.router.popUntilRouteWithName(PublicWorkoutFinderRoute.name);
-      // Then pop this widget.
-      context.pop();
-      widget.selectWorkout!(workout);
-    }
-  }
-
   @override
   void dispose() {
     _pagingController.dispose();
@@ -142,70 +143,76 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyPageScaffold(
-      navigationBar: MyNavBar(
-        middle: const NavBarTitle('Find Workouts'),
-        trailing: NavBarTrailingRow(children: [
-          CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: () => context.push(
-                      child: PublicWorkoutTextSearch(
-                    selectWorkout:
-                        widget.selectWorkout != null ? _selectWorkout : null,
-                  )),
-              child: const Icon(CupertinoIcons.search)),
-          CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: _openFilters,
-              child: const Icon(material.Icons.filter_alt)),
-        ]),
-      ),
-      child: Column(
-        children: [
-          GrowInOut(
-              show: _bloc.activeFilters,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MyText(
-                    '${_bloc.numActiveFilters} active ${_bloc.numActiveFilters == 1 ? "filter" : "filters"}',
-                  ),
-                  const SizedBox(width: 8),
-                  TertiaryButton(
-                    onPressed: _openFilters,
-                    text: 'Update',
-                  ),
-                  const SizedBox(width: 8),
-                  TertiaryButton(
-                    onPressed: _clearAllFilters,
-                    text: 'Clear',
-                  ),
+    return CupertinoPageScaffold(
+        child: NestedScrollView(
+            headerSliverBuilder: (c, i) => [
+                  const CupertinoSliverNavigationBar(
+                      leading: NavBarBackButton(),
+                      largeTitle: Text('Discover Workouts'),
+                      border: null)
                 ],
-              )),
-          Expanded(
-            child: PagedListView<int, WorkoutSummary>(
-              pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<WorkoutSummary>(
-                itemBuilder: (context, workout, index) => SizeFadeIn(
-                  duration: 20,
-                  delay: index,
-                  delayBasis: 15,
-                  child: SelectableWorkoutCard(
-                    index: index,
-                    workout: workout,
-                    selectWorkout:
-                        widget.selectWorkout != null ? _selectWorkout : null,
+            body: FABPage(
+                columnButtons: [
+                  FloatingButton(
+                      onTap: () => context.push(
+                          fullscreenDialog: true,
+                          child: PublicWorkoutTextSearch(
+                            selectWorkout: widget.selectWorkout != null
+                                ? _selectWorkout
+                                : null,
+                          )),
+                      icon: CupertinoIcons.search),
+                ],
+                rowButtonsAlignment: MainAxisAlignment.end,
+                rowButtons: [
+                  if (_bloc.numActiveFilters > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: FadeInUp(
+                        child: FloatingButton(
+                            onTap: _clearAllFilters,
+                            icon: CupertinoIcons.clear),
+                      ),
+                    ),
+                  FloatingButton(
+                      onTap: _openFilters,
+                      text: _bloc.numActiveFilters == 0
+                          ? null
+                          : '${_bloc.numActiveFilters} ${_bloc.numActiveFilters == 1 ? "filter" : "filters"}',
+                      contentColor: _bloc.numActiveFilters > 0
+                          ? Styles.secondaryAccent
+                          : null,
+                      icon: CupertinoIcons.slider_horizontal_3),
+                ],
+                child: PagedListView<int, WorkoutSummary>(
+                  padding: const EdgeInsets.only(
+                      top: 8, left: 2, right: 2, bottom: 130),
+                  pagingController: _pagingController,
+                  builderDelegate: PagedChildBuilderDelegate<WorkoutSummary>(
+                    itemBuilder: (context, workout, index) => FadeInUp(
+                      key: Key(workout.id),
+                      delay: 5,
+                      delayBasis: 20,
+                      duration: 100,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: SelectableWorkoutCard(
+                          index: index,
+                          workout: workout,
+                          selectWorkout: widget.selectWorkout != null
+                              ? _selectWorkout
+                              : null,
+                        ),
+                      ),
+                    ),
+                    firstPageProgressIndicatorBuilder: (c) =>
+                        const LoadingSpinningLines(),
+                    newPageProgressIndicatorBuilder: (c) =>
+                        const LoadingSpinningLines(),
+                    noItemsFoundIndicatorBuilder: (c) => const Center(
+                      child: NoResultsToDisplay(),
+                    ),
                   ),
-                ),
-                firstPageProgressIndicatorBuilder: (c) => const LoadingCircle(),
-                newPageProgressIndicatorBuilder: (c) => const LoadingCircle(),
-                noItemsFoundIndicatorBuilder: (c) =>
-                    const Center(child: MyText('No results...')),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+                ))));
   }
 }

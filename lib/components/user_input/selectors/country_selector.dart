@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
@@ -81,6 +81,7 @@ class _CountrySelectorState extends State<CountrySelector> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             child: MyCupertinoSearchTextField(
+              placeholder: 'Search countries',
               onChanged: (text) => _handleTextFilterUpdate(text),
               autofocus: true,
             ),
@@ -114,7 +115,9 @@ class _CountrySelectorState extends State<CountrySelector> {
                               ],
                             ),
                             if (_filteredCountries[index] == _selectedCountry)
-                              const FadeIn(child: ConfirmCheckIcon()),
+                              const FadeIn(
+                                  child: Icon(CupertinoIcons.checkmark_alt,
+                                      color: Styles.secondaryAccent)),
                           ],
                         ),
                       ),

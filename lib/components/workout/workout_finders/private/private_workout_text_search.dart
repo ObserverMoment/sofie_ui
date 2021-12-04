@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
@@ -55,17 +56,13 @@ class _PrivateWorkoutTextSearchState extends State<PrivateWorkoutTextSearch> {
         ),
         child: _searchString.length > 2
             ? _filteredUserWorkouts.isEmpty
-                ? const Center(
-                    child: MyText(
-                    'No results.',
-                    subtext: true,
-                  ))
+                ? const Center(child: NoResultsToDisplay())
                 : VerticalWorkoutsList(
                     selectWorkout: widget.selectWorkout,
                     workouts: _filteredUserWorkouts)
             : const Center(
                 child: MyText(
-                'Enter at least 3 characters.',
+                'Enter at least 3 characters',
                 subtext: true,
               )));
   }

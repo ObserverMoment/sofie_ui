@@ -9,6 +9,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -172,15 +173,16 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-            onPressed: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: const Icon(CupertinoIcons.chat_bubble)),
+        GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => context.pushRoute(const ChatsOverviewRoute()),
+            child: const FABPageButtonContainer(
+                child: Icon(CupertinoIcons.chat_bubble, size: 25))),
         if (_unreadCount > 0)
           Positioned(
             top: 4,
             right: 8,
-            child: SizeFadeIn(
+            child: FadeInUp(
                 key: Key(_unreadCount.toString()),
                 child: Dot(
                   diameter: 14,

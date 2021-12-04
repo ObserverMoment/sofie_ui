@@ -41,6 +41,8 @@ class MoveFiltersBloc extends ChangeNotifier {
       _moveFilters.equipments.isNotEmpty ||
       _moveFilters.bodyAreas.isNotEmpty;
 
+  int get numActiveFilters => _moveFilters.numActiveFilters;
+
   bool _moveCanBeBodyWeight(Move move) {
     if (move.requiredEquipments.isEmpty && move.selectableEquipments.isEmpty) {
       return true;
@@ -144,4 +146,14 @@ class MoveFilters {
         'bodyWeightOnly': bodyWeightOnly,
         'bodyAreas': bodyAreas.map((o) => o.toJson()).toList(),
       };
+
+  int get numActiveFilters {
+    int active = 0;
+    if (moveTypes.isNotEmpty) active++;
+    if (equipments.isNotEmpty) active++;
+    if (bodyWeightOnly == true) active++;
+    if (bodyAreas.isNotEmpty) active++;
+
+    return active;
+  }
 }

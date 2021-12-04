@@ -6,6 +6,7 @@ import 'package:sofie_ui/components/personal_best/entry_top_score_display.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -50,7 +51,7 @@ class PersonalBestCard extends StatelessWidget {
                     ),
                     MyText(
                       userBenchmark.benchmarkType.display,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                     ),
                     const SizedBox(height: 6),
                     if (Utils.textNotNull(userBenchmark.equipmentInfo))
@@ -96,6 +97,8 @@ class PersonalBestCard extends StatelessWidget {
                     .map(
                       (tag) => Tag(
                         tag: tag.name,
+                        color: context.theme.background,
+                        textColor: context.theme.primary,
                       ),
                     )
                     .toList(),

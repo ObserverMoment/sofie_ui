@@ -20,7 +20,7 @@ class MoveListItem extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(
               bottom:
-                  BorderSide(color: context.theme.customThemeData.greyOne))),
+                  BorderSide(color: context.theme.primary.withOpacity(0.11)))),
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

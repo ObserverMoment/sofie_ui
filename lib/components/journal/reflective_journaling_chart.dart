@@ -36,7 +36,7 @@ class _ReflectiveJournalingChartState extends State<ReflectiveJournalingChart> {
     Styles.primaryAccent, // Mood
     Styles.secondaryAccent, // Energy
     Styles.heartRed, // Motivation
-    Styles.secondaryAccent, // Confidence
+    CupertinoColors.systemYellow, // Confidence
     Styles.infoBlue, // Average
   ];
 
@@ -50,8 +50,8 @@ class _ReflectiveJournalingChartState extends State<ReflectiveJournalingChart> {
         enableTooltip: true,
         markerSettings: const MarkerSettings(
           isVisible: true,
-          height: 6,
-          width: 6,
+          height: 3,
+          width: 3,
         ),
         xValueMapper: (_ScorePointData d, _) => d.dateTime,
         yValueMapper: (_ScorePointData d, _) => d.score);

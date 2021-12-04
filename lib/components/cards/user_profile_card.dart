@@ -5,7 +5,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 class UserProfileCard extends StatelessWidget {
-  final UserPublicProfileSummary profileSummary;
+  final UserProfileSummary profileSummary;
   final double avatarSize;
   const UserProfileCard(
       {Key? key, required this.profileSummary, required this.avatarSize})
@@ -65,13 +65,13 @@ class UserProfileCard extends StatelessWidget {
                   SizedBox(
                     width: avatarSize / 2,
                     child: _statDisplayContainer(
-                        profileSummary.numberPublicWorkouts, 'workouts'),
+                        profileSummary.workoutCount, 'workouts'),
                   ),
                   const SizedBox(width: 8),
                   SizedBox(
                       width: avatarSize / 2,
                       child: _statDisplayContainer(
-                          profileSummary.numberPublicPlans, 'plans')),
+                          profileSummary.planCount, 'plans')),
                 ],
               )
             ],

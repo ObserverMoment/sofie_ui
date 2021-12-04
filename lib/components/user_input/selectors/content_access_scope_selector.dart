@@ -26,12 +26,12 @@ class ContentAccessScopeSelector extends StatelessWidget {
           children: [
             SizedBox(
                 width: double.infinity,
-                child: SlidingSelect<ContentAccessScope>(
+                child: MySlidingSegmentedControl<ContentAccessScope>(
                     value: contentAccessScope,
-                    children: <ContentAccessScope, Widget>{
+                    children: <ContentAccessScope, String>{
                       for (final v in ContentAccessScope.values
                           .where((v) => v != ContentAccessScope.artemisUnknown))
-                        v: MyText(v.display)
+                        v: v.display
                     },
                     updateValue: updateContentAccessScope)),
             Padding(

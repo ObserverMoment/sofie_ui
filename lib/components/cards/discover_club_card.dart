@@ -44,31 +44,59 @@ class DiscoverClubCard extends StatelessWidget {
                           'assets/placeholder_images/workout.jpg',
                         ) as ImageProvider),
               child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                padding: const EdgeInsets.all(6),
+                child: Stack(
                   children: [
                     if (Utils.textNotNull(club.location))
-                      ContentBox(
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: ContentBox(
+                          backgroundColor: contentOverlayColor,
+                          padding: overlayContentPadding,
+                          borderRadius: 4,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(CupertinoIcons.location,
+                                  size: 13, color: Styles.secondaryAccent),
+                              const SizedBox(width: 2),
+                              MyText(
+                                club.location!,
+                                color: Styles.secondaryAccent,
+                                size: FONTSIZE.two,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: ContentBox(
                         backgroundColor: contentOverlayColor,
-                        padding: overlayContentPadding,
-                        borderRadius: 4,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(CupertinoIcons.location,
-                                size: 13, color: Styles.secondaryAccent),
-                            const SizedBox(width: 2),
-                            MyText(
-                              club.location!,
-                              color: Styles.secondaryAccent,
-                              size: FONTSIZE.two,
-                            )
+                            Row(
+                              children: [
+                                const Icon(CupertinoIcons.person_2_fill,
+                                    size: 12, color: Styles.white),
+                                const SizedBox(width: 6),
+                                MyText(
+                                  club.memberCount.toString(),
+                                  size: FONTSIZE.two,
+                                  color: Styles.white,
+                                )
+                              ],
+                            ),
+                            const MyText('Members',
+                                size: FONTSIZE.one, color: Styles.white)
                           ],
                         ),
                       ),
+                    )
                   ],
                 ),
               )),
@@ -76,7 +104,10 @@ class DiscoverClubCard extends StatelessWidget {
         const SizedBox(height: 8),
         ContentBox(
             backgroundColor: context.theme.cardBackground.withOpacity(0.5),
-            child: MyText(club.name)),
+            child: MyText(
+              club.name,
+              size: FONTSIZE.two,
+            )),
       ],
     );
   }

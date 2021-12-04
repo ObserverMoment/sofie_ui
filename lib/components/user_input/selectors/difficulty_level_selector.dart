@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
@@ -47,27 +46,23 @@ class DifficultyLevelSelectorRow extends StatelessWidget {
                 ],
               ),
               if (difficultyLevel != null)
-                AnimatedContainer(
+                Container(
                   padding: kStandardCardPadding,
                   decoration: BoxDecoration(
-                    color: difficultyLevel!.displayColor,
                     borderRadius: kStandardCardBorderRadius,
-                    border: difficultyLevel == DifficultyLevel.elite
-                        ? Border.all(color: context.theme.primary)
-                        : null,
                   ),
-                  duration: kStandardAnimationDuration,
                   child: Row(
                     children: [
+                      DifficultyLevelDot(
+                          difficultyLevel: difficultyLevel!, size: 10),
+                      const SizedBox(width: 6),
                       MyText(
                         difficultyLevel!.display.toUpperCase(),
-                        color: Styles.white,
                       ),
                       const SizedBox(width: 4),
                       const Icon(
                         CupertinoIcons.chevron_right,
                         size: 16,
-                        color: Styles.white,
                       )
                     ],
                   ),
@@ -75,7 +70,7 @@ class DifficultyLevelSelectorRow extends StatelessWidget {
               else
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.0),
-                  child: MyText('Select...', subtext: true),
+                  child: MyText('Select', subtext: true),
                 ),
             ],
           )),
@@ -115,44 +110,23 @@ class _DifficultyLevelSelectorState extends State<DifficultyLevelSelector> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
         withoutLeading: true,
-        trailing: NavBarSaveButton(context.pop),
-        middle: const LeadingNavBarTitle('Select Difficulty Level'),
+        trailing: TertiaryButton(
+            backgroundGradient: Styles.primaryAccentGradient,
+            textColor: Styles.white,
+            text: 'Done',
+            onPressed: context.pop),
+        middle: const LeadingNavBarTitle('Difficulty Level'),
       ),
       child: ListView(
         children: DifficultyLevel.values
             .where((d) => d != DifficultyLevel.artemisUnknown)
             .sortedBy<num>((v) => v.numericValue)
-            .map((level) => GestureDetector(
-                  onTap: () => _handleUpdateSelected(level),
-                  child: Container(
-                    height: 50,
-                    decoration: const BoxDecoration(
-                        border:
-                            Border(bottom: BorderSide(color: Styles.greyOne))),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            MyText(level.display),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: DifficultyLevelDot(difficultyLevel: level),
-                            ),
-                          ],
-                        ),
-                        if (_activeDifficultyLevel == level)
-                          const FadeIn(
-                              child: Padding(
-                            padding: EdgeInsets.only(left: 6.0),
-                            child: ConfirmCheckIcon(),
-                          )),
-                      ],
-                    ),
-                  ),
+            .map((l) => Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: SelectableBoxExpanded(
+                      isSelected: _activeDifficultyLevel == l,
+                      onPressed: () => _handleUpdateSelected(l),
+                      text: l.display),
                 ))
             .toList(),
       ),

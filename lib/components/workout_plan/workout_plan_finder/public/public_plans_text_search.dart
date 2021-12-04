@@ -4,6 +4,7 @@ import 'package:sofie_ui/blocs/text_search_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -121,7 +122,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                                 // Or show placeholder message.
                                 return const Center(
                                     child: MyText(
-                                  'Enter at least 3 characters.',
+                                  'Enter at least 3 characters',
                                   subtext: true,
                                 ));
                               } else {
@@ -149,10 +150,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                                 } else {
                                   // Or show empty results message.
                                   return const Center(
-                                      child: MyText(
-                                    'No results....',
-                                    subtext: true,
-                                  ));
+                                      child: NoResultsToDisplay());
                                 }
                               }
                             });
@@ -160,7 +158,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                 })
             : const Center(
                 child: MyText(
-                'Enter at least 3 characters.',
+                'Enter at least 3 characters',
                 subtext: true,
               ))));
   }
@@ -211,7 +209,7 @@ class WorkoutFinderTextResultsNames extends StatelessWidget {
                           textStyleHighlight: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Styles.infoBlue),
+                              color: Styles.secondaryAccent),
                           text: results[i].name,
                           term: searchString),
                     ],

@@ -1,20 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
-import 'package:sofie_ui/components/tags.dart';
-import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/workout_plan_enrolment/workout_plan_enrolment_progress_summary.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class YourWorkoutPlanEnrolments extends StatelessWidget {
   final void Function(String enrolmentId) selectEnrolment;
-  const YourWorkoutPlanEnrolments({Key? key, required this.selectEnrolment})
+  final bool showDiscoverButton;
+  const YourWorkoutPlanEnrolments(
+      {Key? key,
+      required this.selectEnrolment,
+      required this.showDiscoverButton})
       : super(key: key);
 
   @override
@@ -29,6 +34,7 @@ class YourWorkoutPlanEnrolments extends StatelessWidget {
         return _FilterableEnroledPlans(
           enrolments: data.workoutPlanEnrolments,
           selectEnrolment: selectEnrolment,
+          showDiscoverButton: showDiscoverButton,
         );
       },
     );
@@ -38,8 +44,12 @@ class YourWorkoutPlanEnrolments extends StatelessWidget {
 class _FilterableEnroledPlans extends StatefulWidget {
   final void Function(String enrolmentId) selectEnrolment;
   final List<WorkoutPlanEnrolmentSummary> enrolments;
+  final bool showDiscoverButton;
   const _FilterableEnroledPlans(
-      {Key? key, required this.selectEnrolment, required this.enrolments})
+      {Key? key,
+      required this.selectEnrolment,
+      required this.enrolments,
+      required this.showDiscoverButton})
       : super(key: key);
 
   @override
@@ -64,55 +74,51 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
             .where((e) => e.workoutPlan.tags.contains(_workoutTagFilter))
             .toList();
 
-    return Column(
-      children: [
-        if (allTags.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(left: 4.0, top: 8, bottom: 8),
-            child: SizedBox(
-                height: 32,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: allTags.length,
-                    itemBuilder: (c, i) => Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: SelectableTag(
-                            fontSize: FONTSIZE.two,
-                            text: allTags[i],
-                            isSelected: allTags[i] == _workoutTagFilter,
-                            onPressed: () => setState(() => _workoutTagFilter =
-                                allTags[i] == _workoutTagFilter
-                                    ? null
-                                    : allTags[i]),
-                          ),
-                        ))),
-          ),
-        filteredEnrolments.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.all(24),
-                child: Center(
-                  child: Column(
-                    children: [
-                      const MyText(
-                        'No plans joined yet...',
-                        subtext: true,
-                      ),
-                      const SizedBox(height: 24),
-                      SecondaryButton(
-                        onPressed: () =>
-                            context.navigateTo(PublicWorkoutPlanFinderRoute()),
-                        prefixIconData: CupertinoIcons.compass,
-                        text: 'Find Plans',
-                      )
-                    ],
-                  ),
-                ))
-            : Expanded(
-                child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: filteredEnrolments.length,
-                    itemBuilder: (c, i) {
-                      return GestureDetector(
+    return filteredEnrolments.isEmpty
+        ? YourContentEmptyPlaceholder(message: 'No plans joined', actions: [
+            EmptyPlaceholderAction(
+                action: () =>
+                    context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                buttonIcon: CupertinoIcons.compass,
+                buttonText: 'Find Plans'),
+          ])
+        : FABPage(
+            rowButtonsAlignment: MainAxisAlignment.end,
+            rowButtons: [
+              // Tags only for enrolments.
+              if (allTags.isNotEmpty)
+                TagsCollectionsFilterMenu(
+                  filterMenuType: FilterMenuType.tag,
+                  allCollections: const [],
+                  allTags: allTags,
+                  selectedCollection: null,
+                  selectedTag: _workoutTagFilter,
+                  updateSelectedCollection: (_) {},
+                  updateSelectedTag: (t) =>
+                      setState(() => _workoutTagFilter = t),
+                ),
+              if (widget.showDiscoverButton)
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: FloatingButton(
+                      onTap: () =>
+                          context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                      icon: CupertinoIcons.compass),
+                ),
+            ],
+            child: ListView.builder(
+                padding: const EdgeInsets.only(top: 6, bottom: 60),
+                shrinkWrap: true,
+                itemCount: filteredEnrolments.length,
+                itemBuilder: (c, i) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: FadeInUp(
+                      key: Key(filteredEnrolments[i].id),
+                      delay: 5,
+                      delayBasis: 20,
+                      duration: 100,
+                      child: GestureDetector(
                         onTap: () =>
                             widget.selectEnrolment(filteredEnrolments[i].id),
                         child: Card(
@@ -121,7 +127,7 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 9),
+                                    vertical: 12.0, horizontal: 9),
                                 child: WorkoutPlanEnrolmentProgressSummary(
                                   completed: filteredEnrolments[i]
                                       .completedPlanDayWorkoutIds
@@ -139,10 +145,10 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                             ],
                           ),
                         ),
-                      );
-                    }),
-              ),
-      ],
-    );
+                      ),
+                    ),
+                  );
+                }),
+          );
   }
 }

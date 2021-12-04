@@ -46,7 +46,7 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
           children: [
             SvgPicture.asset(
               'assets/logos/sofie_logo.svg',
-              width: 50,
+              width: 48,
               color: context.theme.primary,
             ),
             const Padding(
@@ -55,8 +55,8 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: LoadingDots(
-                size: 12,
+              child: LoadingSpinningLines(
+                size: 28,
               ),
             ),
           ],

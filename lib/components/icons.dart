@@ -1,18 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-
-class ConfirmCheckIcon extends StatelessWidget {
-  final double? size;
-  const ConfirmCheckIcon({Key? key, this.size}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Icon(CupertinoIcons.checkmark_alt,
-        color: Styles.infoBlue, size: size);
-  }
-}
 
 class CompactTimerIcon extends StatelessWidget {
   final Duration? duration;
@@ -156,5 +146,32 @@ class JumpSeekIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return forward ? _forwardIcon() : _backwardIcon();
+  }
+}
+
+class NoResultsToDisplay extends StatelessWidget {
+  final String message;
+  const NoResultsToDisplay({Key? key, this.message = 'No results to display'})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SvgPicture.asset(
+          'assets/placeholder_images/no-results-icon.svg',
+          width: 90,
+          color: context.theme.primary.withOpacity(0.3),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
+          child: MyText(
+            message,
+            color: context.theme.primary.withOpacity(0.8),
+          ),
+        ),
+      ],
+    );
   }
 }

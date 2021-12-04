@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
 import 'package:sofie_ui/components/cards/card.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -37,15 +39,34 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
     setState(() => _activeTabIndex = i);
   }
 
+  void _openEntryPhotosViewer(List<String> photoUris) {
+    context.push(
+        child: Stack(
+          children: [
+            FullScreenImageGallery(
+              photoUris,
+              withTopNavBar: false,
+            ),
+            SafeArea(
+              child: CupertinoButton(
+                child: CircularBox(
+                    padding: const EdgeInsets.all(10),
+                    color: context.readTheme.background.withOpacity(0.5),
+                    child: Icon(
+                      CupertinoIcons.clear_thick,
+                      color: context.readTheme.primary.withOpacity(0.8),
+                    )),
+                onPressed: () => context.pop(rootNavigator: true),
+              ),
+            )
+          ],
+        ),
+        rootNavigator: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-      navigationBar: MyNavBar(
-        middle: const NavBarTitle('Body Tracking'),
-        trailing: CreateIconButton(
-            onPressed: () =>
-                context.navigateTo(BodyTrackingEntryCreatorRoute())),
-      ),
       child: QueryObserver<BodyTrackingEntries$Query, json.JsonSerializable>(
           key: Key(
               'BodyTrackingPage - ${BodyTrackingEntriesQuery().operationName}'),
@@ -59,28 +80,64 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
                 .reversed
                 .toList();
 
-            return Column(
-              children: [
-                MyTabBarNav(
-                    titles: const ['Entries', 'Photos'],
-                    handleTabChange: _updateTabIndex,
-                    activeTabIndex: _activeTabIndex),
-                Expanded(
-                  child: IndexedStack(
-                    index: _activeTabIndex,
-                    children: [
-                      _Entries(
-                        entries: entries,
+            final allPhotoUris = entries.fold<List<String>>(
+                <String>[], (acum, next) => [...acum, ...next.photoUris]);
+
+            return CupertinoPageScaffold(
+                child: NestedScrollView(
+                    headerSliverBuilder: (c, i) => [
+                          const CupertinoSliverNavigationBar(
+                              leading: NavBarBackButton(),
+                              largeTitle: Text('Body Tracking'),
+                              border: null)
+                        ],
+                    body: FABPage(
+                      rowButtons: [
+                        FloatingButton(
+                            gradient: Styles.primaryAccentGradient,
+                            contentColor: Styles.white,
+                            iconSize: 20,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 11, horizontal: 16),
+                            icon: CupertinoIcons.add,
+                            text: 'New Entry',
+                            onTap: () => context
+                                .navigateTo(BodyTrackingEntryCreatorRoute())),
+                        const SizedBox(width: 16),
+                        FloatingButton(
+                            iconSize: 20,
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                            icon: CupertinoIcons.fullscreen,
+                            text: 'Viewer',
+                            onTap: () => _openEntryPhotosViewer(allPhotoUris)),
+                      ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Column(
+                          children: [
+                            MyTabBarNav(
+                                titles: const ['Entries', 'Photos'],
+                                handleTabChange: _updateTabIndex,
+                                activeTabIndex: _activeTabIndex),
+                            Expanded(
+                              child: IndexedStack(
+                                index: _activeTabIndex,
+                                children: [
+                                  _Entries(
+                                    entries: entries,
+                                  ),
+                                  _Photos(
+                                      photoUris: allPhotoUris,
+                                      openEntryPhotosViewer: (uri) =>
+                                          _openEntryPhotosViewer([uri])),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                      _Photos(
-                        photoUris: entries.fold(<String>[],
-                            (acum, next) => [...acum, ...next.photoUris]),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
+                    )));
           }),
     );
   }
@@ -148,70 +205,33 @@ class _Entries extends StatelessWidget {
 
 class _Photos extends StatelessWidget {
   final List<String> photoUris;
-  const _Photos({Key? key, this.photoUris = const []}) : super(key: key);
-
-  void _openEntryPhotosViewer(BuildContext context, List<String> photoUris) {
-    context.push(
-        child: Stack(
-          children: [
-            FullScreenImageGallery(
-              photoUris,
-              withTopNavBar: false,
-            ),
-            SafeArea(
-              child: CupertinoButton(
-                child: CircularBox(
-                    padding: const EdgeInsets.all(10),
-                    color: context.readTheme.background.withOpacity(0.5),
-                    child: Icon(
-                      CupertinoIcons.clear_thick,
-                      color: context.readTheme.primary.withOpacity(0.8),
-                    )),
-                onPressed: () => context.pop(rootNavigator: true),
-              ),
-            )
-          ],
-        ),
-        rootNavigator: true);
-  }
+  final void Function(String uri) openEntryPhotosViewer;
+  const _Photos(
+      {Key? key,
+      this.photoUris = const [],
+      required this.openEntryPhotosViewer})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
+    return GridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 2,
+      childAspectRatio: 3 / 4,
+      padding: const EdgeInsets.only(top: 4, bottom: 80),
+      children: photoUris
+          .map((uri) => Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TertiaryButton(
-                  prefixIconData: CupertinoIcons.fullscreen,
-                  text: 'Viewer',
-                  onPressed: () => _openEntryPhotosViewer(context, photoUris)),
-            ),
-          ],
-        ),
-        Expanded(
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 2,
-            childAspectRatio: 3 / 4,
-            children: photoUris
-                .map((uri) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                        onTap: () => _openEntryPhotosViewer(context, [uri]),
-                        child: Card(
-                            padding: EdgeInsets.zero,
-                            margin: EdgeInsets.zero,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: SizedUploadcareImage(uri),
-                            )))))
-                .toList(),
-          ),
-        )
-      ],
+              child: GestureDetector(
+                  onTap: () => openEntryPhotosViewer(uri),
+                  child: Card(
+                      padding: EdgeInsets.zero,
+                      margin: EdgeInsets.zero,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: SizedUploadcareImage(uri),
+                      )))))
+          .toList(),
     );
   }
 }

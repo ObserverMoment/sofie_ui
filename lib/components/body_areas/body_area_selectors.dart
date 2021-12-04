@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/body_areas/body_area_selector_overlay.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -51,24 +50,23 @@ class _BodyAreaSelectorFrontBackPagedState
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: SlidingSelect<int>(
-                    updateValue: _updatePage,
-                    value: _activePageIndex,
-                    children: const {
-                      0: MyText('Front'),
-                      1: MyText('Back'),
-                    },
-                  ),
+                padding: const EdgeInsets.all(12.0),
+                child: MySlidingSegmentedControl<int>(
+                  updateValue: _updatePage,
+                  value: _activePageIndex,
+                  children: const {
+                    0: 'Front',
+                    1: 'Back',
+                  },
                 ),
               ),
               SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
+                  child: Container(
+                    alignment: Alignment.center,
                     height: widget.bodyGraphicHeight,
+                    width: double.infinity,
                     child: IndexedStack(
                       index: _activePageIndex,
                       children: [

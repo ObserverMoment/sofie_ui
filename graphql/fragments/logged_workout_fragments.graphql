@@ -15,3 +15,9 @@ fragment LoggedWorkoutSection on LoggedWorkoutSection {
   timeTakenSeconds
   sortPosition
 }
+
+fragment LifetimeLogStatsSummary on LifetimeLogStatsSummary {
+  __typename
+  minutesWorked
+  sessionsLogged
+}
