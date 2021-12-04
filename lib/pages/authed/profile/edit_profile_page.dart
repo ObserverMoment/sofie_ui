@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/coercers.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -16,6 +16,7 @@ import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/country.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -27,26 +28,33 @@ class EditProfilePage extends StatelessWidget {
 
   Future<void> updateUserFields(
       BuildContext context, String id, String key, dynamic value) async {
-    final variables =
-        UpdateUserArguments(data: UpdateUserInput.fromJson({key: value}));
+    final variables = UpdateUserProfileArguments(
+        data: UpdateUserProfileInput.fromJson({key: value}));
 
     await context.graphQLStore.mutate(
-      mutation: UpdateUserMutation(variables: variables),
+      mutation: UpdateUserProfileMutation(variables: variables),
       customVariablesMap: {
         'data': {key: value}
       },
-      broadcastQueryIds: [AuthedUserQuery().operationName],
+      // processResult: (data) {},
+
+      /// TODO: Check user => profile changes have not broken this.
+      broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(id)],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<AuthedUser$Query, json.JsonSerializable>(
-        key: Key('EditProfilePage - ${AuthedUserQuery().operationName}'),
-        query: AuthedUserQuery(),
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+    final query = UserProfileByIdQuery(
+        variables: UserProfileByIdArguments(userId: authedUserId));
+
+    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
+        key: Key('EditProfilePage - ${query.operationName}'),
+        query: query,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final user = data.authedUser;
+          final user = data.userProfileById;
 
           return MyPageScaffold(
               child: NestedScrollView(

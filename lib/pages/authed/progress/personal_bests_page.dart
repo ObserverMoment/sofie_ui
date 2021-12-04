@@ -121,7 +121,11 @@ class __FilterablePBsListState extends State<_FilterablePBsList> {
           itemBuilder: (c, i) => GestureDetector(
                 key: Key(sortedBenchmarks[i].id),
                 onTap: () => widget.selectBenchmark(sortedBenchmarks[i].id),
-                child: SizeFadeIn(
+                child: FadeInUp(
+                  key: Key(sortedBenchmarks[i].id),
+                  delay: 5,
+                  delayBasis: 20,
+                  duration: 100,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 2.0),
                     child: PersonalBestCard(userBenchmark: sortedBenchmarks[i]),

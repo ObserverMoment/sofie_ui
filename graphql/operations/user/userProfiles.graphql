@@ -1,8 +1,8 @@
 ### Important! Args must be in alphabetical order if there is a chance they will be passed as null.
 # If the args are parameterized when data is being normalized into the store then the Normalize package will sort them alphabetically.
-query userPublicProfiles($cursor: ID, $take: Int) {
-  userPublicProfiles(cursor: $cursor, take: $take) {
-    ...UserPublicProfileSummary
+query userProfiles($cursor: ID, $take: Int) {
+  userProfiles(cursor: $cursor, take: $take) {
+    ...UserProfileSummary
     Clubs {
       ...ClubSummary
       Owner {

@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
@@ -13,6 +14,7 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
@@ -89,20 +91,23 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
   }
 
   Future<void> _saveUrisToDB(String? videoUri, String? videoThumbUri) async {
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
     try {
-      final input = UpdateUserInput()
+      final input = UpdateUserProfileInput()
         ..introVideoUri = videoUri
         ..introVideoThumbUri = videoThumbUri;
-      final variables = UpdateUserArguments(data: input);
+      final variables = UpdateUserProfileArguments(data: input);
       final Map<String, dynamic> varsMap = {
         'introVideoUri': videoUri,
         'introVideoThumbUri': videoThumbUri
       };
 
       await context.graphQLStore.mutate(
-        mutation: UpdateUserMutation(variables: variables),
+        mutation: UpdateUserProfileMutation(variables: variables),
         customVariablesMap: {'data': varsMap},
-        broadcastQueryIds: [AuthedUserQuery().operationName],
+
+        /// TODO: Check user => profile changes have not broken this.
+        broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(authedUserId)],
       );
     } catch (e) {
       printLog(e.toString());

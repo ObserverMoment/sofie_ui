@@ -13,14 +13,13 @@ class DiscoverPeoplePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query =
-        UserPublicProfilesQuery(variables: UserPublicProfilesArguments());
-    return QueryObserver<UserPublicProfiles$Query, json.JsonSerializable>(
+    final query = UserProfilesQuery(variables: UserProfilesArguments());
+    return QueryObserver<UserProfiles$Query, json.JsonSerializable>(
         key: Key('DiscoverPeoplePage- ${query.operationName}'),
         query: query,
         loadingIndicator: const ShimmerListPage(),
         builder: (data) {
-          final profiles = data.userPublicProfiles;
+          final profiles = data.userProfiles;
 
           return MyPageScaffold(
               child: NestedScrollView(

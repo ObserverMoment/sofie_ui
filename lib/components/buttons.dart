@@ -213,6 +213,7 @@ class TertiaryButton extends StatelessWidget {
   final EdgeInsets padding;
   final Color? textColor;
   final FONTSIZE fontSize;
+  final double iconSize;
   final Color? backgroundColor;
 
   /// [backgroundGradient] will override [backgroundColor].
@@ -229,7 +230,8 @@ class TertiaryButton extends StatelessWidget {
       this.textColor,
       this.backgroundColor,
       this.fontSize = FONTSIZE.two,
-      this.backgroundGradient})
+      this.backgroundGradient,
+      this.iconSize = 16})
       : super(key: key);
 
   @override
@@ -257,7 +259,7 @@ class TertiaryButton extends StatelessWidget {
                 Icon(
                   prefixIconData,
                   color: textColor,
-                  size: 16,
+                  size: iconSize,
                 ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6.0),
@@ -272,7 +274,7 @@ class TertiaryButton extends StatelessWidget {
                 Icon(
                   suffixIconData,
                   color: textColor,
-                  size: 16,
+                  size: iconSize,
                 ),
             ],
           ),

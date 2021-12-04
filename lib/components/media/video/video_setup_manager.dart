@@ -100,7 +100,10 @@ class VideoSetupManager {
     final String? subtitle,
   }) async {
     final controller = await initializeVideoPlayer(
-        uri: videoUri, autoLoop: autoLoop, startAt: startAt);
+        uri: videoUri,
+        autoLoop: autoLoop,
+        autoPlay: autoPlay,
+        startAt: startAt);
 
     final aspectRatio = controller.value.aspectRatio;
     final isPortrait = aspectRatio < 1;

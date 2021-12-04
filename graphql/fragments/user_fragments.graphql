@@ -1,17 +1,3 @@
-fragment User on User {
-  __typename
-  id
-  avatarUri
-  bio
-  birthdate
-  countryCode
-  displayName
-  introVideoUri
-  introVideoThumbUri
-  gender
-  userProfileScope
-}
-
 fragment UserAvatarData on UserAvatarData {
   __typename
   id
@@ -58,7 +44,7 @@ fragment UserBenchmarkTag on UserBenchmarkTag {
   description
 }
 
-fragment UserPublicProfile on UserPublicProfile {
+fragment UserProfile on UserProfile {
   __typename
   id
   userProfileScope
@@ -74,13 +60,15 @@ fragment UserPublicProfile on UserPublicProfile {
   linkedinHandle
   countryCode
   displayName
+  gender
+  birthdate
   followerCount
   postsCount
   workoutCount
   planCount
 }
 
-fragment UserPublicProfileSummary on UserPublicProfileSummary {
+fragment UserProfileSummary on UserProfileSummary {
   __typename
   userProfileScope
   id

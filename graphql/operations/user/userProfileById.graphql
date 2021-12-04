@@ -1,6 +1,6 @@
-query userPublicProfileById($userId: ID!) {
-  userPublicProfileById(userId: $userId) {
-    ...UserPublicProfile
+query userProfileById($userId: ID!) {
+  userProfileById(userId: $userId) {
+    ...UserProfile
     Clubs {
       ...ClubSummary
       Owner {

@@ -3204,116 +3204,6 @@ Map<String, dynamic> _$CreateWorkoutPlanInputToJson(
       'name': instance.name,
     };
 
-User _$UserFromJson(Map<String, dynamic> json) => User()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..avatarUri = json['avatarUri'] as String?
-  ..bio = json['bio'] as String?
-  ..birthdate = fromGraphQLDateTimeNullableToDartDateTimeNullable(
-      json['birthdate'] as int?)
-  ..countryCode = json['countryCode'] as String?
-  ..displayName = json['displayName'] as String
-  ..introVideoUri = json['introVideoUri'] as String?
-  ..introVideoThumbUri = json['introVideoThumbUri'] as String?
-  ..gender = $enumDecode(_$GenderEnumMap, json['gender'],
-      unknownValue: Gender.artemisUnknown)
-  ..userProfileScope = $enumDecode(
-      _$UserProfileScopeEnumMap, json['userProfileScope'],
-      unknownValue: UserProfileScope.artemisUnknown);
-
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'avatarUri': instance.avatarUri,
-      'bio': instance.bio,
-      'birthdate':
-          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.birthdate),
-      'countryCode': instance.countryCode,
-      'displayName': instance.displayName,
-      'introVideoUri': instance.introVideoUri,
-      'introVideoThumbUri': instance.introVideoThumbUri,
-      'gender': _$GenderEnumMap[instance.gender],
-      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
-    };
-
-const _$GenderEnumMap = {
-  Gender.female: 'FEMALE',
-  Gender.male: 'MALE',
-  Gender.nonbinary: 'NONBINARY',
-  Gender.pnts: 'PNTS',
-  Gender.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-AuthedUser$Query _$AuthedUser$QueryFromJson(Map<String, dynamic> json) =>
-    AuthedUser$Query()
-      ..authedUser = User.fromJson(json['authedUser'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$AuthedUser$QueryToJson(AuthedUser$Query instance) =>
-    <String, dynamic>{
-      'authedUser': instance.authedUser.toJson(),
-    };
-
-UpdateUser$Mutation _$UpdateUser$MutationFromJson(Map<String, dynamic> json) =>
-    UpdateUser$Mutation()
-      ..updateUser = User.fromJson(json['updateUser'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UpdateUser$MutationToJson(
-        UpdateUser$Mutation instance) =>
-    <String, dynamic>{
-      'updateUser': instance.updateUser.toJson(),
-    };
-
-UpdateUserInput _$UpdateUserInputFromJson(Map<String, dynamic> json) =>
-    UpdateUserInput(
-      avatarUri: json['avatarUri'] as String?,
-      bio: json['bio'] as String?,
-      birthdate: fromGraphQLDateTimeNullableToDartDateTimeNullable(
-          json['birthdate'] as int?),
-      countryCode: json['countryCode'] as String?,
-      displayName: json['displayName'] as String?,
-      firstname: json['firstname'] as String?,
-      gender: $enumDecodeNullable(_$GenderEnumMap, json['gender'],
-          unknownValue: Gender.artemisUnknown),
-      hasOnboarded: json['hasOnboarded'] as bool?,
-      instagramUrl: json['instagramUrl'] as String?,
-      introVideoThumbUri: json['introVideoThumbUri'] as String?,
-      introVideoUri: json['introVideoUri'] as String?,
-      lastname: json['lastname'] as String?,
-      linkedinUrl: json['linkedinUrl'] as String?,
-      snapUrl: json['snapUrl'] as String?,
-      tagline: json['tagline'] as String?,
-      tiktokUrl: json['tiktokUrl'] as String?,
-      townCity: json['townCity'] as String?,
-      userProfileScope: $enumDecodeNullable(
-          _$UserProfileScopeEnumMap, json['userProfileScope'],
-          unknownValue: UserProfileScope.artemisUnknown),
-      youtubeUrl: json['youtubeUrl'] as String?,
-    );
-
-Map<String, dynamic> _$UpdateUserInputToJson(UpdateUserInput instance) =>
-    <String, dynamic>{
-      'avatarUri': instance.avatarUri,
-      'bio': instance.bio,
-      'birthdate':
-          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.birthdate),
-      'countryCode': instance.countryCode,
-      'displayName': instance.displayName,
-      'firstname': instance.firstname,
-      'gender': _$GenderEnumMap[instance.gender],
-      'hasOnboarded': instance.hasOnboarded,
-      'instagramUrl': instance.instagramUrl,
-      'introVideoThumbUri': instance.introVideoThumbUri,
-      'introVideoUri': instance.introVideoUri,
-      'lastname': instance.lastname,
-      'linkedinUrl': instance.linkedinUrl,
-      'snapUrl': instance.snapUrl,
-      'tagline': instance.tagline,
-      'tiktokUrl': instance.tiktokUrl,
-      'townCity': instance.townCity,
-      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
-      'youtubeUrl': instance.youtubeUrl,
-    };
-
 UserAvatarData _$UserAvatarDataFromJson(Map<String, dynamic> json) =>
     UserAvatarData()
       ..$$typename = json['__typename'] as String?
@@ -3752,206 +3642,6 @@ Map<String, dynamic> _$UpdateGymProfileInputToJson(
       'name': instance.name,
     };
 
-UserPublicProfileSummary _$UserPublicProfileSummaryFromJson(
-        Map<String, dynamic> json) =>
-    UserPublicProfileSummary()
-      ..$$typename = json['__typename'] as String?
-      ..userProfileScope = $enumDecode(
-          _$UserProfileScopeEnumMap, json['userProfileScope'],
-          unknownValue: UserProfileScope.artemisUnknown)
-      ..id = json['id'] as String
-      ..avatarUri = json['avatarUri'] as String?
-      ..tagline = json['tagline'] as String?
-      ..townCity = json['townCity'] as String?
-      ..countryCode = json['countryCode'] as String?
-      ..displayName = json['displayName'] as String
-      ..workoutCount = json['workoutCount'] as int
-      ..planCount = json['planCount'] as int
-      ..clubs = (json['Clubs'] as List<dynamic>)
-          .map((e) => ClubSummary.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserPublicProfileSummaryToJson(
-        UserPublicProfileSummary instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
-      'id': instance.id,
-      'avatarUri': instance.avatarUri,
-      'tagline': instance.tagline,
-      'townCity': instance.townCity,
-      'countryCode': instance.countryCode,
-      'displayName': instance.displayName,
-      'workoutCount': instance.workoutCount,
-      'planCount': instance.planCount,
-      'Clubs': instance.clubs.map((e) => e.toJson()).toList(),
-    };
-
-UserPublicProfiles$Query _$UserPublicProfiles$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserPublicProfiles$Query()
-      ..userPublicProfiles = (json['userPublicProfiles'] as List<dynamic>)
-          .map((e) =>
-              UserPublicProfileSummary.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserPublicProfiles$QueryToJson(
-        UserPublicProfiles$Query instance) =>
-    <String, dynamic>{
-      'userPublicProfiles':
-          instance.userPublicProfiles.map((e) => e.toJson()).toList(),
-    };
-
-UserBenchmarkSummary _$UserBenchmarkSummaryFromJson(
-        Map<String, dynamic> json) =>
-    UserBenchmarkSummary()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..lastEntryAt =
-          fromGraphQLDateTimeToDartDateTime(json['lastEntryAt'] as int)
-      ..name = json['name'] as String
-      ..equipmentInfo = json['equipmentInfo'] as String?
-      ..benchmarkType = $enumDecode(
-          _$BenchmarkTypeEnumMap, json['benchmarkType'],
-          unknownValue: BenchmarkType.artemisUnknown)
-      ..loadUnit = $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
-          unknownValue: LoadUnit.artemisUnknown);
-
-Map<String, dynamic> _$UserBenchmarkSummaryToJson(
-        UserBenchmarkSummary instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'lastEntryAt': fromDartDateTimeToGraphQLDateTime(instance.lastEntryAt),
-      'name': instance.name,
-      'equipmentInfo': instance.equipmentInfo,
-      'benchmarkType': _$BenchmarkTypeEnumMap[instance.benchmarkType],
-      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
-    };
-
-const _$BenchmarkTypeEnumMap = {
-  BenchmarkType.amrap: 'AMRAP',
-  BenchmarkType.fastesttime: 'FASTESTTIME',
-  BenchmarkType.maxload: 'MAXLOAD',
-  BenchmarkType.unbrokenreps: 'UNBROKENREPS',
-  BenchmarkType.unbrokentime: 'UNBROKENTIME',
-  BenchmarkType.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-UserBenchmarkEntry _$UserBenchmarkEntryFromJson(Map<String, dynamic> json) =>
-    UserBenchmarkEntry()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-      ..completedOn =
-          fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
-      ..score = (json['score'] as num).toDouble()
-      ..note = json['note'] as String?
-      ..videoUri = json['videoUri'] as String?
-      ..videoThumbUri = json['videoThumbUri'] as String?;
-
-Map<String, dynamic> _$UserBenchmarkEntryToJson(UserBenchmarkEntry instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
-      'score': instance.score,
-      'note': instance.note,
-      'videoUri': instance.videoUri,
-      'videoThumbUri': instance.videoThumbUri,
-    };
-
-UserBenchmarkWithBestEntry _$UserBenchmarkWithBestEntryFromJson(
-        Map<String, dynamic> json) =>
-    UserBenchmarkWithBestEntry()
-      ..userBenchmarkSummary = UserBenchmarkSummary.fromJson(
-          json['UserBenchmarkSummary'] as Map<String, dynamic>)
-      ..bestEntry = UserBenchmarkEntry.fromJson(
-          json['BestEntry'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UserBenchmarkWithBestEntryToJson(
-        UserBenchmarkWithBestEntry instance) =>
-    <String, dynamic>{
-      'UserBenchmarkSummary': instance.userBenchmarkSummary.toJson(),
-      'BestEntry': instance.bestEntry.toJson(),
-    };
-
-UserPublicProfile _$UserPublicProfileFromJson(Map<String, dynamic> json) =>
-    UserPublicProfile()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..userProfileScope = $enumDecode(
-          _$UserProfileScopeEnumMap, json['userProfileScope'],
-          unknownValue: UserProfileScope.artemisUnknown)
-      ..avatarUri = json['avatarUri'] as String?
-      ..introVideoUri = json['introVideoUri'] as String?
-      ..introVideoThumbUri = json['introVideoThumbUri'] as String?
-      ..bio = json['bio'] as String?
-      ..tagline = json['tagline'] as String?
-      ..townCity = json['townCity'] as String?
-      ..instagramHandle = json['instagramHandle'] as String?
-      ..tiktokHandle = json['tiktokHandle'] as String?
-      ..youtubeHandle = json['youtubeHandle'] as String?
-      ..linkedinHandle = json['linkedinHandle'] as String?
-      ..countryCode = json['countryCode'] as String?
-      ..displayName = json['displayName'] as String
-      ..followerCount = json['followerCount'] as int?
-      ..postsCount = json['postsCount'] as int?
-      ..workoutCount = json['workoutCount'] as int?
-      ..planCount = json['planCount'] as int?
-      ..clubs = (json['Clubs'] as List<dynamic>)
-          .map((e) => ClubSummary.fromJson(e as Map<String, dynamic>))
-          .toList()
-      ..lifetimeLogStatsSummary = json['LifetimeLogStatsSummary'] == null
-          ? null
-          : LifetimeLogStatsSummary.fromJson(
-              json['LifetimeLogStatsSummary'] as Map<String, dynamic>)
-      ..benchmarksWithBestEntries = (json['BenchmarksWithBestEntries']
-              as List<dynamic>)
-          .map((e) =>
-              UserBenchmarkWithBestEntry.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserPublicProfileToJson(UserPublicProfile instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
-      'avatarUri': instance.avatarUri,
-      'introVideoUri': instance.introVideoUri,
-      'introVideoThumbUri': instance.introVideoThumbUri,
-      'bio': instance.bio,
-      'tagline': instance.tagline,
-      'townCity': instance.townCity,
-      'instagramHandle': instance.instagramHandle,
-      'tiktokHandle': instance.tiktokHandle,
-      'youtubeHandle': instance.youtubeHandle,
-      'linkedinHandle': instance.linkedinHandle,
-      'countryCode': instance.countryCode,
-      'displayName': instance.displayName,
-      'followerCount': instance.followerCount,
-      'postsCount': instance.postsCount,
-      'workoutCount': instance.workoutCount,
-      'planCount': instance.planCount,
-      'Clubs': instance.clubs.map((e) => e.toJson()).toList(),
-      'LifetimeLogStatsSummary': instance.lifetimeLogStatsSummary?.toJson(),
-      'BenchmarksWithBestEntries':
-          instance.benchmarksWithBestEntries.map((e) => e.toJson()).toList(),
-    };
-
-UserPublicProfileById$Query _$UserPublicProfileById$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserPublicProfileById$Query()
-      ..userPublicProfileById = UserPublicProfile.fromJson(
-          json['userPublicProfileById'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UserPublicProfileById$QueryToJson(
-        UserPublicProfileById$Query instance) =>
-    <String, dynamic>{
-      'userPublicProfileById': instance.userPublicProfileById.toJson(),
-    };
-
 DeleteWorkoutTagById$Mutation _$DeleteWorkoutTagById$MutationFromJson(
         Map<String, dynamic> json) =>
     DeleteWorkoutTagById$Mutation()
@@ -4319,6 +4009,30 @@ Map<String, dynamic> _$DeleteUserBenchmarkTagById$MutationToJson(
       'deleteUserBenchmarkTagById': instance.deleteUserBenchmarkTagById,
     };
 
+UserBenchmarkEntry _$UserBenchmarkEntryFromJson(Map<String, dynamic> json) =>
+    UserBenchmarkEntry()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..completedOn =
+          fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
+      ..score = (json['score'] as num).toDouble()
+      ..note = json['note'] as String?
+      ..videoUri = json['videoUri'] as String?
+      ..videoThumbUri = json['videoThumbUri'] as String?;
+
+Map<String, dynamic> _$UserBenchmarkEntryToJson(UserBenchmarkEntry instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+      'score': instance.score,
+      'note': instance.note,
+      'videoUri': instance.videoUri,
+      'videoThumbUri': instance.videoThumbUri,
+    };
+
 CreateUserBenchmarkEntry$Mutation _$CreateUserBenchmarkEntry$MutationFromJson(
         Map<String, dynamic> json) =>
     CreateUserBenchmarkEntry$Mutation()
@@ -4525,6 +4239,15 @@ Map<String, dynamic> _$UserBenchmarkToJson(UserBenchmark instance) =>
       'UserBenchmarkTags':
           instance.userBenchmarkTags.map((e) => e.toJson()).toList(),
     };
+
+const _$BenchmarkTypeEnumMap = {
+  BenchmarkType.amrap: 'AMRAP',
+  BenchmarkType.fastesttime: 'FASTESTTIME',
+  BenchmarkType.maxload: 'MAXLOAD',
+  BenchmarkType.unbrokenreps: 'UNBROKENREPS',
+  BenchmarkType.unbrokentime: 'UNBROKENTIME',
+  BenchmarkType.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
 
 UpdateUserBenchmark$Mutation _$UpdateUserBenchmark$MutationFromJson(
         Map<String, dynamic> json) =>
@@ -5827,6 +5550,302 @@ Map<String, dynamic> _$DeleteClubInviteTokenById$MutationToJson(
       'deleteClubInviteTokenById': instance.deleteClubInviteTokenById,
     };
 
+UserProfileSummary _$UserProfileSummaryFromJson(Map<String, dynamic> json) =>
+    UserProfileSummary()
+      ..$$typename = json['__typename'] as String?
+      ..userProfileScope = $enumDecode(
+          _$UserProfileScopeEnumMap, json['userProfileScope'],
+          unknownValue: UserProfileScope.artemisUnknown)
+      ..id = json['id'] as String
+      ..avatarUri = json['avatarUri'] as String?
+      ..tagline = json['tagline'] as String?
+      ..townCity = json['townCity'] as String?
+      ..countryCode = json['countryCode'] as String?
+      ..displayName = json['displayName'] as String
+      ..workoutCount = json['workoutCount'] as int
+      ..planCount = json['planCount'] as int
+      ..clubs = (json['Clubs'] as List<dynamic>)
+          .map((e) => ClubSummary.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserProfileSummaryToJson(UserProfileSummary instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
+      'id': instance.id,
+      'avatarUri': instance.avatarUri,
+      'tagline': instance.tagline,
+      'townCity': instance.townCity,
+      'countryCode': instance.countryCode,
+      'displayName': instance.displayName,
+      'workoutCount': instance.workoutCount,
+      'planCount': instance.planCount,
+      'Clubs': instance.clubs.map((e) => e.toJson()).toList(),
+    };
+
+UserProfiles$Query _$UserProfiles$QueryFromJson(Map<String, dynamic> json) =>
+    UserProfiles$Query()
+      ..userProfiles = (json['userProfiles'] as List<dynamic>)
+          .map((e) => UserProfileSummary.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserProfiles$QueryToJson(UserProfiles$Query instance) =>
+    <String, dynamic>{
+      'userProfiles': instance.userProfiles.map((e) => e.toJson()).toList(),
+    };
+
+UpdateUserProfile _$UpdateUserProfileFromJson(Map<String, dynamic> json) =>
+    UpdateUserProfile()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..userProfileScope = $enumDecode(
+          _$UserProfileScopeEnumMap, json['userProfileScope'],
+          unknownValue: UserProfileScope.artemisUnknown)
+      ..avatarUri = json['avatarUri'] as String?
+      ..introVideoUri = json['introVideoUri'] as String?
+      ..introVideoThumbUri = json['introVideoThumbUri'] as String?
+      ..bio = json['bio'] as String?
+      ..tagline = json['tagline'] as String?
+      ..townCity = json['townCity'] as String?
+      ..instagramHandle = json['instagramHandle'] as String?
+      ..tiktokHandle = json['tiktokHandle'] as String?
+      ..youtubeHandle = json['youtubeHandle'] as String?
+      ..linkedinHandle = json['linkedinHandle'] as String?
+      ..countryCode = json['countryCode'] as String?
+      ..displayName = json['displayName'] as String
+      ..gender = $enumDecodeNullable(_$GenderEnumMap, json['gender'],
+          unknownValue: Gender.artemisUnknown)
+      ..birthdate = fromGraphQLDateTimeNullableToDartDateTimeNullable(
+          json['birthdate'] as int?)
+      ..followerCount = json['followerCount'] as int?
+      ..postsCount = json['postsCount'] as int?
+      ..workoutCount = json['workoutCount'] as int?
+      ..planCount = json['planCount'] as int?;
+
+Map<String, dynamic> _$UpdateUserProfileToJson(UpdateUserProfile instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
+      'avatarUri': instance.avatarUri,
+      'introVideoUri': instance.introVideoUri,
+      'introVideoThumbUri': instance.introVideoThumbUri,
+      'bio': instance.bio,
+      'tagline': instance.tagline,
+      'townCity': instance.townCity,
+      'instagramHandle': instance.instagramHandle,
+      'tiktokHandle': instance.tiktokHandle,
+      'youtubeHandle': instance.youtubeHandle,
+      'linkedinHandle': instance.linkedinHandle,
+      'countryCode': instance.countryCode,
+      'displayName': instance.displayName,
+      'gender': _$GenderEnumMap[instance.gender],
+      'birthdate':
+          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.birthdate),
+      'followerCount': instance.followerCount,
+      'postsCount': instance.postsCount,
+      'workoutCount': instance.workoutCount,
+      'planCount': instance.planCount,
+    };
+
+const _$GenderEnumMap = {
+  Gender.female: 'FEMALE',
+  Gender.male: 'MALE',
+  Gender.nonbinary: 'NONBINARY',
+  Gender.pnts: 'PNTS',
+  Gender.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
+UpdateUserProfile$Mutation _$UpdateUserProfile$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserProfile$Mutation()
+      ..updateUserProfile = UpdateUserProfile.fromJson(
+          json['updateUserProfile'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateUserProfile$MutationToJson(
+        UpdateUserProfile$Mutation instance) =>
+    <String, dynamic>{
+      'updateUserProfile': instance.updateUserProfile.toJson(),
+    };
+
+UpdateUserProfileInput _$UpdateUserProfileInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserProfileInput(
+      avatarUri: json['avatarUri'] as String?,
+      bio: json['bio'] as String?,
+      birthdate: fromGraphQLDateTimeNullableToDartDateTimeNullable(
+          json['birthdate'] as int?),
+      countryCode: json['countryCode'] as String?,
+      displayName: json['displayName'] as String?,
+      firstname: json['firstname'] as String?,
+      gender: $enumDecodeNullable(_$GenderEnumMap, json['gender'],
+          unknownValue: Gender.artemisUnknown),
+      hasOnboarded: json['hasOnboarded'] as bool?,
+      instagramUrl: json['instagramUrl'] as String?,
+      introVideoThumbUri: json['introVideoThumbUri'] as String?,
+      introVideoUri: json['introVideoUri'] as String?,
+      lastname: json['lastname'] as String?,
+      linkedinUrl: json['linkedinUrl'] as String?,
+      snapUrl: json['snapUrl'] as String?,
+      tagline: json['tagline'] as String?,
+      tiktokUrl: json['tiktokUrl'] as String?,
+      townCity: json['townCity'] as String?,
+      userProfileScope: $enumDecodeNullable(
+          _$UserProfileScopeEnumMap, json['userProfileScope'],
+          unknownValue: UserProfileScope.artemisUnknown),
+      youtubeUrl: json['youtubeUrl'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateUserProfileInputToJson(
+        UpdateUserProfileInput instance) =>
+    <String, dynamic>{
+      'avatarUri': instance.avatarUri,
+      'bio': instance.bio,
+      'birthdate':
+          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.birthdate),
+      'countryCode': instance.countryCode,
+      'displayName': instance.displayName,
+      'firstname': instance.firstname,
+      'gender': _$GenderEnumMap[instance.gender],
+      'hasOnboarded': instance.hasOnboarded,
+      'instagramUrl': instance.instagramUrl,
+      'introVideoThumbUri': instance.introVideoThumbUri,
+      'introVideoUri': instance.introVideoUri,
+      'lastname': instance.lastname,
+      'linkedinUrl': instance.linkedinUrl,
+      'snapUrl': instance.snapUrl,
+      'tagline': instance.tagline,
+      'tiktokUrl': instance.tiktokUrl,
+      'townCity': instance.townCity,
+      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
+      'youtubeUrl': instance.youtubeUrl,
+    };
+
+UserBenchmarkSummary _$UserBenchmarkSummaryFromJson(
+        Map<String, dynamic> json) =>
+    UserBenchmarkSummary()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..lastEntryAt =
+          fromGraphQLDateTimeToDartDateTime(json['lastEntryAt'] as int)
+      ..name = json['name'] as String
+      ..equipmentInfo = json['equipmentInfo'] as String?
+      ..benchmarkType = $enumDecode(
+          _$BenchmarkTypeEnumMap, json['benchmarkType'],
+          unknownValue: BenchmarkType.artemisUnknown)
+      ..loadUnit = $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+          unknownValue: LoadUnit.artemisUnknown);
+
+Map<String, dynamic> _$UserBenchmarkSummaryToJson(
+        UserBenchmarkSummary instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'lastEntryAt': fromDartDateTimeToGraphQLDateTime(instance.lastEntryAt),
+      'name': instance.name,
+      'equipmentInfo': instance.equipmentInfo,
+      'benchmarkType': _$BenchmarkTypeEnumMap[instance.benchmarkType],
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+    };
+
+UserBenchmarkWithBestEntry _$UserBenchmarkWithBestEntryFromJson(
+        Map<String, dynamic> json) =>
+    UserBenchmarkWithBestEntry()
+      ..userBenchmarkSummary = UserBenchmarkSummary.fromJson(
+          json['UserBenchmarkSummary'] as Map<String, dynamic>)
+      ..bestEntry = json['BestEntry'] == null
+          ? null
+          : UserBenchmarkEntry.fromJson(
+              json['BestEntry'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UserBenchmarkWithBestEntryToJson(
+        UserBenchmarkWithBestEntry instance) =>
+    <String, dynamic>{
+      'UserBenchmarkSummary': instance.userBenchmarkSummary.toJson(),
+      'BestEntry': instance.bestEntry?.toJson(),
+    };
+
+UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile()
+  ..$$typename = json['__typename'] as String?
+  ..id = json['id'] as String
+  ..userProfileScope = $enumDecode(
+      _$UserProfileScopeEnumMap, json['userProfileScope'],
+      unknownValue: UserProfileScope.artemisUnknown)
+  ..avatarUri = json['avatarUri'] as String?
+  ..introVideoUri = json['introVideoUri'] as String?
+  ..introVideoThumbUri = json['introVideoThumbUri'] as String?
+  ..bio = json['bio'] as String?
+  ..tagline = json['tagline'] as String?
+  ..townCity = json['townCity'] as String?
+  ..instagramHandle = json['instagramHandle'] as String?
+  ..tiktokHandle = json['tiktokHandle'] as String?
+  ..youtubeHandle = json['youtubeHandle'] as String?
+  ..linkedinHandle = json['linkedinHandle'] as String?
+  ..countryCode = json['countryCode'] as String?
+  ..displayName = json['displayName'] as String
+  ..gender = $enumDecodeNullable(_$GenderEnumMap, json['gender'],
+      unknownValue: Gender.artemisUnknown)
+  ..birthdate = fromGraphQLDateTimeNullableToDartDateTimeNullable(
+      json['birthdate'] as int?)
+  ..followerCount = json['followerCount'] as int?
+  ..postsCount = json['postsCount'] as int?
+  ..workoutCount = json['workoutCount'] as int?
+  ..planCount = json['planCount'] as int?
+  ..clubs = (json['Clubs'] as List<dynamic>)
+      .map((e) => ClubSummary.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..lifetimeLogStatsSummary = json['LifetimeLogStatsSummary'] == null
+      ? null
+      : LifetimeLogStatsSummary.fromJson(
+          json['LifetimeLogStatsSummary'] as Map<String, dynamic>)
+  ..benchmarksWithBestEntries = (json['BenchmarksWithBestEntries']
+          as List<dynamic>)
+      .map(
+          (e) => UserBenchmarkWithBestEntry.fromJson(e as Map<String, dynamic>))
+      .toList();
+
+Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'userProfileScope': _$UserProfileScopeEnumMap[instance.userProfileScope],
+      'avatarUri': instance.avatarUri,
+      'introVideoUri': instance.introVideoUri,
+      'introVideoThumbUri': instance.introVideoThumbUri,
+      'bio': instance.bio,
+      'tagline': instance.tagline,
+      'townCity': instance.townCity,
+      'instagramHandle': instance.instagramHandle,
+      'tiktokHandle': instance.tiktokHandle,
+      'youtubeHandle': instance.youtubeHandle,
+      'linkedinHandle': instance.linkedinHandle,
+      'countryCode': instance.countryCode,
+      'displayName': instance.displayName,
+      'gender': _$GenderEnumMap[instance.gender],
+      'birthdate':
+          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.birthdate),
+      'followerCount': instance.followerCount,
+      'postsCount': instance.postsCount,
+      'workoutCount': instance.workoutCount,
+      'planCount': instance.planCount,
+      'Clubs': instance.clubs.map((e) => e.toJson()).toList(),
+      'LifetimeLogStatsSummary': instance.lifetimeLogStatsSummary?.toJson(),
+      'BenchmarksWithBestEntries':
+          instance.benchmarksWithBestEntries.map((e) => e.toJson()).toList(),
+    };
+
+UserProfileById$Query _$UserProfileById$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserProfileById$Query()
+      ..userProfileById =
+          UserProfile.fromJson(json['userProfileById'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UserProfileById$QueryToJson(
+        UserProfileById$Query instance) =>
+    <String, dynamic>{
+      'userProfileById': instance.userProfileById.toJson(),
+    };
+
 ClubSummariesByIdArguments _$ClubSummariesByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubSummariesByIdArguments(
@@ -6669,17 +6688,6 @@ Map<String, dynamic> _$CreateWorkoutPlanArgumentsToJson(
       'data': instance.data.toJson(),
     };
 
-UpdateUserArguments _$UpdateUserArgumentsFromJson(Map<String, dynamic> json) =>
-    UpdateUserArguments(
-      data: UpdateUserInput.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$UpdateUserArgumentsToJson(
-        UpdateUserArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
 UserAvatarByIdArguments _$UserAvatarByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     UserAvatarByIdArguments(
@@ -6846,32 +6854,6 @@ Map<String, dynamic> _$UpdateGymProfileArgumentsToJson(
         UpdateGymProfileArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
-    };
-
-UserPublicProfilesArguments _$UserPublicProfilesArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    UserPublicProfilesArguments(
-      cursor: json['cursor'] as String?,
-      take: json['take'] as int?,
-    );
-
-Map<String, dynamic> _$UserPublicProfilesArgumentsToJson(
-        UserPublicProfilesArguments instance) =>
-    <String, dynamic>{
-      'cursor': instance.cursor,
-      'take': instance.take,
-    };
-
-UserPublicProfileByIdArguments _$UserPublicProfileByIdArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    UserPublicProfileByIdArguments(
-      userId: json['userId'] as String,
-    );
-
-Map<String, dynamic> _$UserPublicProfileByIdArgumentsToJson(
-        UserPublicProfileByIdArguments instance) =>
-    <String, dynamic>{
-      'userId': instance.userId,
     };
 
 DeleteWorkoutTagByIdArguments _$DeleteWorkoutTagByIdArgumentsFromJson(
@@ -7559,4 +7541,43 @@ Map<String, dynamic> _$DeleteClubInviteTokenByIdArgumentsToJson(
         DeleteClubInviteTokenByIdArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+UserProfilesArguments _$UserProfilesArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UserProfilesArguments(
+      cursor: json['cursor'] as String?,
+      take: json['take'] as int?,
+    );
+
+Map<String, dynamic> _$UserProfilesArgumentsToJson(
+        UserProfilesArguments instance) =>
+    <String, dynamic>{
+      'cursor': instance.cursor,
+      'take': instance.take,
+    };
+
+UpdateUserProfileArguments _$UpdateUserProfileArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserProfileArguments(
+      data:
+          UpdateUserProfileInput.fromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateUserProfileArgumentsToJson(
+        UpdateUserProfileArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+UserProfileByIdArguments _$UserProfileByIdArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UserProfileByIdArguments(
+      userId: json['userId'] as String,
+    );
+
+Map<String, dynamic> _$UserProfileByIdArgumentsToJson(
+        UserProfileByIdArguments instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
     };

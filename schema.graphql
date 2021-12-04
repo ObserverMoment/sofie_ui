@@ -684,12 +684,12 @@ type Mutation {
     data: UpdateProgressJournalGoalTagInput!
   ): ProgressJournalGoalTag!
   updateScheduledWorkout(data: UpdateScheduledWorkoutInput!): ScheduledWorkout!
-  updateUser(data: UpdateUserInput!): User!
   updateUserBenchmark(data: UpdateUserBenchmarkInput!): UserBenchmark!
   updateUserBenchmarkEntry(
     data: UpdateUserBenchmarkEntryInput!
   ): UserBenchmarkEntry!
   updateUserBenchmarkTag(data: UpdateUserBenchmarkTagInput!): UserBenchmarkTag!
+  updateUserProfile(data: UpdateUserProfileInput!): UserProfile!
   updateWorkout(data: UpdateWorkoutInput!): Workout!
   updateWorkoutMove(data: UpdateWorkoutMoveInput!): WorkoutMove!
   updateWorkoutMoves(data: [UpdateWorkoutMoveInput!]!): [WorkoutMove!]!
@@ -750,7 +750,6 @@ type ProgressJournalGoalTag {
 }
 
 type Query {
-  authedUser: User!
   bodyAreas: [BodyArea!]!
   bodyTrackingEntries: [BodyTrackingEntry!]!
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
@@ -783,8 +782,8 @@ type Query {
     take: Int
   ): [WorkoutSummary!]!
   standardMoves: [Move!]!
-  textSearchUserPublicNames(text: String!): [TextSearchResult!]
-  textSearchUserPublicProfiles(text: String!): [UserPublicProfile!]
+  textSearchUserNames(text: String!): [TextSearchResult!]
+  textSearchUserProfiles(text: String!): [UserProfileSummary!]
   textSearchWorkoutNames(text: String!): [TextSearchResult!]
   textSearchWorkoutPlanNames(text: String!): [TextSearchResult!]
   textSearchWorkoutPlans(text: String!): [WorkoutPlanSummary!]
@@ -805,9 +804,9 @@ type Query {
   userCollections: [Collection!]!
   userCustomMoves: [Move!]!
   userLoggedWorkouts(take: Int): [LoggedWorkout!]!
+  userProfileById(userId: ID!): UserProfile!
+  userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userProgressJournals: [ProgressJournal!]!
-  userPublicProfileById(userId: ID!): UserPublicProfile!
-  userPublicProfiles(cursor: ID, take: Int): [UserPublicProfileSummary!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
   userWorkoutTags: [WorkoutTag!]!
@@ -1077,7 +1076,7 @@ input UpdateUserBenchmarkTagInput {
   name: String
 }
 
-input UpdateUserInput {
+input UpdateUserProfileInput {
   avatarUri: String
   bio: String
   birthdate: DateTime
@@ -1191,31 +1190,6 @@ input UpdateWorkoutTagInput {
   tag: String!
 }
 
-type User {
-  GymProfiles: [GymProfile!]
-  ProgressJournalGoalTags: [ProgressJournalGoalTag!]
-  avatarUri: String
-  bio: String
-  birthdate: DateTime
-  countryCode: String
-  displayName: String!
-  firstname: String
-  gender: Gender!
-  hasOnboarded: Boolean!
-  id: ID!
-  instagramUrl: String
-  introVideoThumbUri: String
-  introVideoUri: String
-  lastname: String
-  linkedinUrl: String
-  snapUrl: String
-  tagline: String
-  tiktokUrl: String
-  townCity: String
-  userProfileScope: UserProfileScope!
-  youtubeUrl: String
-}
-
 type UserAvatarData {
   avatarUri: String
   displayName: String!
@@ -1261,24 +1235,21 @@ type UserBenchmarkTag {
 }
 
 type UserBenchmarkWithBestEntry {
-  BestEntry: UserBenchmarkEntry!
+  BestEntry: UserBenchmarkEntry
   UserBenchmarkSummary: UserBenchmarkSummary!
 }
 
-enum UserProfileScope {
-  PRIVATE
-  PUBLIC
-}
-
-type UserPublicProfile {
+type UserProfile {
   BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
   avatarUri: String
   bio: String
+  birthdate: DateTime
   countryCode: String
   displayName: String!
   followerCount: Int
+  gender: Gender
   id: ID!
   instagramHandle: String
   introVideoThumbUri: String
@@ -1294,7 +1265,12 @@ type UserPublicProfile {
   youtubeHandle: String
 }
 
-type UserPublicProfileSummary {
+enum UserProfileScope {
+  PRIVATE
+  PUBLIC
+}
+
+type UserProfileSummary {
   Clubs: [ClubSummary!]!
   avatarUri: String
   countryCode: String

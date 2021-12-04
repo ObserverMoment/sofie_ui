@@ -5,7 +5,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 class UserProfileCard extends StatelessWidget {
-  final UserPublicProfileSummary profileSummary;
+  final UserProfileSummary profileSummary;
   final double avatarSize;
   const UserProfileCard(
       {Key? key, required this.profileSummary, required this.avatarSize})

@@ -10,39 +10,23 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({Key? key}) : super(key: key);
-
-  Future<void> updateUserFields(
-      BuildContext context, String id, String key, dynamic value) async {
-    final variables =
-        UpdateUserArguments(data: UpdateUserInput.fromJson({key: value}));
-
-    await context.graphQLStore.mutate(
-      mutation: UpdateUserMutation(variables: variables),
-      customVariablesMap: {
-        'data': {key: value}
-      },
-      broadcastQueryIds: [AuthedUserQuery().operationName],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
 
-    final query = UserPublicProfileByIdQuery(
-        variables: UserPublicProfileByIdArguments(userId: authedUserId));
+    final query = UserProfileByIdQuery(
+        variables: UserProfileByIdArguments(userId: authedUserId));
 
-    return QueryObserver<UserPublicProfileById$Query,
-            UserPublicProfileByIdArguments>(
+    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
         key: Key('ProfilePage - ${query.operationName}'),
         query: query,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final profile = data.userPublicProfileById;
+          final profile = data.userProfileById;
 
           return MyPageScaffold(
               navigationBar: MyNavBar(

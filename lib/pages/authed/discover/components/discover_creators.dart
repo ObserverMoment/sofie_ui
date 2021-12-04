@@ -16,8 +16,7 @@ class DiscoverCreators extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query =
-        UserPublicProfilesQuery(variables: UserPublicProfilesArguments());
+    final query = UserProfilesQuery(variables: UserProfilesArguments());
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,7 +34,7 @@ class DiscoverCreators extends StatelessWidget {
             ],
           ),
         ),
-        QueryObserver<UserPublicProfiles$Query, json.JsonSerializable>(
+        QueryObserver<UserProfiles$Query, json.JsonSerializable>(
             key: Key('DiscoverCreators- ${query.operationName}'),
             query: query,
             loadingIndicator: Container(
@@ -46,7 +45,7 @@ class DiscoverCreators extends StatelessWidget {
               ),
             ),
             builder: (data) {
-              final profiles = data.userPublicProfiles;
+              final profiles = data.userProfiles;
               return Container(
                 height: 200,
                 padding: const EdgeInsets.only(top: 2.0, left: 12),
@@ -73,7 +72,7 @@ class DiscoverCreators extends StatelessWidget {
 }
 
 class _CreatorAvatar extends StatelessWidget {
-  final UserPublicProfileSummary profileSummary;
+  final UserProfileSummary profileSummary;
   const _CreatorAvatar({Key? key, required this.profileSummary})
       : super(key: key);
 

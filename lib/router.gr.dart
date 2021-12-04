@@ -9,7 +9,7 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i60;
-import 'package:flutter/cupertino.dart' as _i62;
+import 'package:flutter/foundation.dart' as _i62;
 import 'package:flutter/material.dart' as _i61;
 
 import 'components/creators/body_tracking/body_tracking_entry_creator.dart'

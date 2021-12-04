@@ -87,6 +87,7 @@ class DiscoverClubCard extends StatelessWidget {
                                 MyText(
                                   club.memberCount.toString(),
                                   size: FONTSIZE.two,
+                                  color: Styles.white,
                                 )
                               ],
                             ),

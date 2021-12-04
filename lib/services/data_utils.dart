@@ -153,11 +153,11 @@ class DataUtils {
     });
   }
 
-  static String buildBenchmarkEntryScoreText(
-      UserBenchmark benchmark, UserBenchmarkEntry entry) {
-    switch (benchmark.benchmarkType) {
+  static String buildBenchmarkEntryScoreText(BenchmarkType benchmarkType,
+      LoadUnit loadUnit, UserBenchmarkEntry entry) {
+    switch (benchmarkType) {
       case BenchmarkType.maxload:
-        return '${entry.score.stringMyDouble()}${benchmark.loadUnit.display}';
+        return '${entry.score.stringMyDouble()}${loadUnit.display}';
       case BenchmarkType.fastesttime:
       case BenchmarkType.unbrokentime:
         return Duration(seconds: entry.score.round()).compactDisplay;

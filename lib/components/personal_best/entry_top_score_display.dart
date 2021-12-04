@@ -31,7 +31,8 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
               gradient: Styles.secondaryButtonGradient,
               borderRadius: BorderRadius.circular(30)),
           child: MyText(
-              DataUtils.buildBenchmarkEntryScoreText(benchmark, benchmarkEntry),
+              DataUtils.buildBenchmarkEntryScoreText(
+                  benchmark.benchmarkType, benchmark.loadUnit, benchmarkEntry),
               size: fontSize,
               color: Styles.white),
         ),

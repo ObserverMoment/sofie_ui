@@ -14,24 +14,23 @@ class UserPublicProfileDetailsPage extends StatelessWidget {
       {Key? key, @PathParam('userId') required this.userId})
       : super(key: key);
 
-  Future<void> _shareUserProfile(UserPublicProfile userPublicProfile) async {
+  Future<void> _shareUserProfile(UserProfile userPublicProfile) async {
     await SharingAndLinking.shareLink(
         'profile/${userPublicProfile.id}', 'Check out this profile!');
   }
 
   @override
   Widget build(BuildContext context) {
-    final query = UserPublicProfileByIdQuery(
-        variables: UserPublicProfileByIdArguments(userId: userId));
+    final query = UserProfileByIdQuery(
+        variables: UserProfileByIdArguments(userId: userId));
 
-    return QueryObserver<UserPublicProfileById$Query,
-            UserPublicProfileByIdArguments>(
+    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
         key: Key(
             'UserPublicProfileDetailsPage - ${query.operationName}-$userId'),
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          final userPublicProfile = data.userPublicProfileById;
+          final userPublicProfile = data.userProfileById;
 
           final profileIsPublic =
               userPublicProfile.userProfileScope == UserProfileScope.public;
