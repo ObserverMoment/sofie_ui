@@ -8,6 +8,7 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/timeline_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
@@ -16,6 +17,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
@@ -184,21 +186,8 @@ class _YourPostsPageState extends State<YourPostsPage> {
               ],
               child: _pagingController.itemList == null ||
                       _pagingController.itemList!.isEmpty
-                  ? ListView(
-                      shrinkWrap: true,
-                      children: const [
-                        Padding(
-                          padding: EdgeInsets.all(32.0),
-                          child: Center(
-                            child: MyText(
-                              'No posts yet..',
-                              size: FONTSIZE.four,
-                              subtext: true,
-                            ),
-                          ),
-                        )
-                      ],
-                    )
+                  ? const YourContentEmptyPlaceholder(
+                      message: 'No posts yet', actions: [])
                   : PagedListView<int, ActivityWithObjectData>(
                       pagingController: _pagingController,
                       scrollController: _scrollController,

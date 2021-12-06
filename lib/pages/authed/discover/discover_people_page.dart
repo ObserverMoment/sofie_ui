@@ -23,12 +23,8 @@ class DiscoverPeoplePage extends StatelessWidget {
 
           return MyPageScaffold(
               child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                        const CupertinoSliverNavigationBar(
-                            leading: NavBarBackButton(),
-                            largeTitle: Text('Discover People'),
-                            border: null)
-                      ],
+                  headerSliverBuilder: (c, i) =>
+                      [const MySliverNavbar(title: 'Discover People')],
                   body: ListView.separated(
                     padding: const EdgeInsets.only(top: 8),
                     shrinkWrap: true,

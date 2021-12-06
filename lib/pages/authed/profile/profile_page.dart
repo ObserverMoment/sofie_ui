@@ -24,6 +24,7 @@ class ProfilePage extends StatelessWidget {
     return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
         key: Key('ProfilePage - ${query.operationName}'),
         query: query,
+        parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
           final profile = data.userProfileById;

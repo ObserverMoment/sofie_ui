@@ -277,6 +277,22 @@ class MyPageScaffold extends StatelessWidget {
   }
 }
 
+class MySliverNavbar extends StatelessWidget {
+  final String title;
+  final Widget? trailing;
+  const MySliverNavbar({Key? key, required this.title, this.trailing})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoSliverNavigationBar(
+        leading: const NavBarBackButton(),
+        largeTitle: Text(title),
+        trailing: trailing,
+        border: null);
+  }
+}
+
 class MyNavBar extends CupertinoNavigationBar {
   @override
   final Key? key;

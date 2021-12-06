@@ -58,7 +58,7 @@ class WorkoutPlanCard extends StatelessWidget {
       );
 
   Widget _buildEnrolledCount(BuildContext context, Color contentOverlayColor) =>
-      workoutPlan.enrolmentsCount == 0
+      workoutPlan.enrolmentsCount > 0
           ? Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
@@ -128,7 +128,6 @@ class WorkoutPlanCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildContentSummary(context, contentOverlayColor),
-                      // if (workoutPlan.enrolmentsCount > 0)
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
                         child:

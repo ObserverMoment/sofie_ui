@@ -12,8 +12,11 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
+import 'package:auto_route/auto_route.dart';
 
 /// Timeline for the currently logged in User.
 /// GetStream fees slug is [user_timeline].
@@ -285,21 +288,17 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
         else
           _pagingController.itemList == null ||
                   _pagingController.itemList!.isEmpty
-              ? ListView(
-                  shrinkWrap: true,
-                  children: const [
-                    Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: Center(
-                        child: MyText(
-                          'No posts yet..',
-                          size: FONTSIZE.four,
-                          subtext: true,
-                        ),
-                      ),
-                    )
-                  ],
-                )
+              ? YourContentEmptyPlaceholder(
+                  message: 'No posts yet',
+                  explainer:
+                      'Posts from anyone you are following will show up here. Keep up with all the latest fitness news and content from your friends and fans!',
+                  actions: [
+                      EmptyPlaceholderAction(
+                          action: () =>
+                              context.navigateTo(const DiscoverPeopleRoute()),
+                          buttonIcon: CupertinoIcons.compass,
+                          buttonText: 'Discover People'),
+                    ])
               : PagedListView<int, ActivityWithObjectData>(
                   pagingController: _pagingController,
                   scrollController: _scrollController,

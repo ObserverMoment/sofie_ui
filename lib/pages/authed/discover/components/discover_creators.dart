@@ -47,7 +47,7 @@ class DiscoverCreators extends StatelessWidget {
             builder: (data) {
               final profiles = data.userProfiles;
               return Container(
-                height: 200,
+                height: 190,
                 padding: const EdgeInsets.only(top: 2.0, left: 12),
                 child: ListView.builder(
                     scrollDirection: Axis.horizontal,

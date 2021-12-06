@@ -5,12 +5,14 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/timeline_and_feed.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
+import 'package:auto_route/auto_route.dart';
 
 /// People that the current User is following.
 /// i.e. Feeds that their [user_timeline] is following.
@@ -97,21 +99,17 @@ class _AuthedUserFollowingState extends State<AuthedUserFollowing> {
         _isLoading
             ? const ShimmerCirclesGrid()
             : _following.isEmpty
-                ? ListView(
-                    shrinkWrap: true,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: Center(
-                          child: MyText(
-                            'No following anyone yet..',
-                            size: FONTSIZE.four,
-                            subtext: true,
-                          ),
-                        ),
-                      )
-                    ],
-                  )
+                ? YourContentEmptyPlaceholder(
+                    message: 'Not following anyone yet',
+                    explainer:
+                        "Keep up with the latest news and fitness content by subscribing to people's feeds.",
+                    actions: [
+                        EmptyPlaceholderAction(
+                            action: () =>
+                                context.navigateTo(const DiscoverPeopleRoute()),
+                            buttonIcon: CupertinoIcons.compass,
+                            buttonText: 'Discover People'),
+                      ])
                 : GridView.count(
                     padding: const EdgeInsets.all(8),
                     childAspectRatio: 0.9,

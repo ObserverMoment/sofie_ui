@@ -30,12 +30,8 @@ class YourCollectionsPage extends StatelessWidget {
 
           return MyPageScaffold(
               child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                        const CupertinoSliverNavigationBar(
-                            leading: NavBarBackButton(),
-                            largeTitle: Text('Collections'),
-                            border: null)
-                      ],
+                  headerSliverBuilder: (c, i) =>
+                      [const MySliverNavbar(title: 'Colections')],
                   body: collections.isEmpty
                       ? YourContentEmptyPlaceholder(
                           message: 'No collections yet',

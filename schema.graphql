@@ -689,7 +689,7 @@ type Mutation {
     data: UpdateUserBenchmarkEntryInput!
   ): UserBenchmarkEntry!
   updateUserBenchmarkTag(data: UpdateUserBenchmarkTagInput!): UserBenchmarkTag!
-  updateUserProfile(data: UpdateUserProfileInput!): UserProfile!
+  updateUserProfile(data: UpdateUserProfileInput!): UpdateUserProfileResult!
   updateWorkout(data: UpdateWorkoutInput!): Workout!
   updateWorkoutMove(data: UpdateWorkoutMoveInput!): WorkoutMove!
   updateWorkoutMoves(data: [UpdateWorkoutMoveInput!]!): [WorkoutMove!]!
@@ -807,6 +807,8 @@ type Query {
   userProfileById(userId: ID!): UserProfile!
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userProgressJournals: [ProgressJournal!]!
+  userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
+  userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
   userWorkoutTags: [WorkoutTag!]!
@@ -1085,17 +1087,38 @@ input UpdateUserProfileInput {
   firstname: String
   gender: Gender
   hasOnboarded: Boolean
-  instagramUrl: String
+  instagramHandle: String
   introVideoThumbUri: String
   introVideoUri: String
   lastname: String
-  linkedinUrl: String
-  snapUrl: String
+  linkedinHandle: String
   tagline: String
-  tiktokUrl: String
+  tiktokHandle: String
   townCity: String
   userProfileScope: UserProfileScope
-  youtubeUrl: String
+  youtubeHandle: String
+}
+
+type UpdateUserProfileResult {
+  avatarUri: String
+  bio: String
+  birthdate: DateTime
+  countryCode: String
+  displayName: String
+  firstname: String
+  gender: Gender
+  hasOnboarded: Boolean
+  id: ID!
+  instagramHandle: String
+  introVideoThumbUri: String
+  introVideoUri: String
+  lastname: String
+  linkedinHandle: String
+  tagline: String
+  tiktokHandle: String
+  townCity: String
+  userProfileScope: UserProfileScope
+  youtubeHandle: String
 }
 
 input UpdateWorkoutInput {
@@ -1256,7 +1279,6 @@ type UserProfile {
   introVideoUri: String
   linkedinHandle: String
   planCount: Int
-  postsCount: Int
   tagline: String
   tiktokHandle: String
   townCity: String

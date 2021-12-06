@@ -63,9 +63,31 @@ fragment UserProfile on UserProfile {
   gender
   birthdate
   followerCount
-  postsCount
   workoutCount
   planCount
+}
+
+fragment UserProfileResult on UpdateUserProfileResult {
+  __typename
+  id
+  userProfileScope
+  avatarUri
+  introVideoUri
+  introVideoThumbUri
+  bio
+  tagline
+  birthdate
+  townCity
+  countryCode
+  displayName
+  instagramHandle
+  tiktokHandle
+  youtubeHandle
+  linkedinHandle
+  firstname
+  gender
+  hasOnboarded
+  lastname
 }
 
 fragment UserProfileSummary on UserProfileSummary {

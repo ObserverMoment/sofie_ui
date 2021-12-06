@@ -128,12 +128,8 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
 
                 return CupertinoPageScaffold(
                     child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                    CupertinoSliverNavigationBar(
-                        leading: const NavBarBackButton(),
-                        largeTitle: Text(widget.pageTitle),
-                        border: null)
-                  ],
+                  headerSliverBuilder: (c, i) =>
+                      [MySliverNavbar(title: widget.pageTitle)],
                   body: FABPage(
                       rowButtonsAlignment: MainAxisAlignment.end,
                       columnButtons: [

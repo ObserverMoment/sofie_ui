@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
 
@@ -26,45 +29,48 @@ class FABPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return Stack(
-      fit: StackFit.expand,
-      alignment: stackAlignment,
-      clipBehavior: Clip.none,
-      children: [
-        child,
-        if (columnButtons.isNotEmpty)
-          Positioned(
-            bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 56),
-            right: 8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: columnButtons
-                  .map((b) => Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: b,
-                      ))
-                  .toList(),
-            ),
-          ),
-        if (rowButtons.isNotEmpty)
-          Positioned(
-            bottom: 16,
-            right: rowButtonsAlignment == MainAxisAlignment.end ? 0 : null,
-            left: rowButtonsAlignment == MainAxisAlignment.start ? 0 : null,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              width: screenWidth,
-              child: Row(
-                mainAxisAlignment: rowButtonsAlignment,
+    return Padding(
+      padding: EdgeInsets.only(bottom: Platform.isIOS ? 12.0 : 4.0),
+      child: Stack(
+        fit: StackFit.expand,
+        alignment: stackAlignment,
+        clipBehavior: Clip.none,
+        children: [
+          child,
+          if (columnButtons.isNotEmpty)
+            Positioned(
+              bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 56),
+              right: 8,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                children: rowButtons,
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: columnButtons
+                    .map((b) => Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: b,
+                        ))
+                    .toList(),
               ),
             ),
-          ),
-      ],
+          if (rowButtons.isNotEmpty)
+            Positioned(
+              bottom: 16,
+              right: rowButtonsAlignment == MainAxisAlignment.end ? 0 : null,
+              left: rowButtonsAlignment == MainAxisAlignment.start ? 0 : null,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                width: screenWidth,
+                child: Row(
+                  mainAxisAlignment: rowButtonsAlignment,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.max,
+                  children: rowButtons,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -109,14 +115,14 @@ class FloatingButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (icon != null) Icon(icon, size: iconSize, color: contentColor),
+            if (icon != null && text != null) const SizedBox(width: 6),
             if (text != null)
               MyText(
                 text!,
                 size: FONTSIZE.four,
                 color: contentColor,
               ),
-            if (icon != null && text != null) const SizedBox(width: 6),
-            if (icon != null) Icon(icon, size: iconSize, color: contentColor),
           ],
         ),
       ),

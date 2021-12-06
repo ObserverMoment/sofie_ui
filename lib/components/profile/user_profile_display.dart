@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/profile/club_summaries_slider.dart';
+import 'package:sofie_ui/components/profile/created_content.dart';
 import 'package:sofie_ui/components/profile/header_content.dart';
 import 'package:sofie_ui/components/profile/personal_best_slider.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -23,36 +22,19 @@ class UserProfileDisplay extends StatelessWidget {
 
   double get _avatarSize => 100.0;
 
-  Widget _contentCountTile(String title, int count) => Card(
-      elevation: 1,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          MyText(
-            count.toString(),
-            size: FONTSIZE.five,
-            color: Styles.primaryAccent,
-            weight: FontWeight.bold,
-            textAlign: TextAlign.center,
-          ),
-          MyText(
-            title,
-            size: FONTSIZE.two,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ));
-
   @override
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
     final bool isAuthedUserProfile = authedUserId == profile.id;
 
+    final int workoutCount = profile.workoutCount ?? 0;
+    final int planCount = profile.planCount ?? 0;
+
     return profile.userProfileScope == UserProfileScope.private
         ? PrivateProfilePlaceholder(profile: profile)
         : ListView(
             padding: EdgeInsets.only(
-                top: 16, bottom: EnvironmentConfig.bottomNavBarHeight),
+                top: 8, bottom: EnvironmentConfig.bottomNavBarHeight),
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 2, right: 2, bottom: 6),
@@ -61,7 +43,7 @@ class UserProfileDisplay extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   children: [
                     HeaderContent(
-                      userPublicProfile: profile,
+                      profile: profile,
                       avatarSize: _avatarSize,
                       isAuthedUserProfile: isAuthedUserProfile,
                     ),
@@ -114,18 +96,14 @@ class UserProfileDisplay extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _contentCountTile('Workouts', profile.workoutCount ?? 0),
-                    _contentCountTile('Plans', profile.planCount ?? 0),
-                    _contentCountTile('Posts', profile.postsCount ?? 0),
-                    _contentCountTile('Followers', profile.followerCount ?? 0),
-                  ],
+              if (workoutCount > 0 || planCount > 0)
+                CreatedContent(
+                  planCount: planCount,
+                  isAuthedUserProfile: isAuthedUserProfile,
+                  profileId: profile.id,
+                  userDisplayName: profile.displayName,
+                  workoutCount: workoutCount,
                 ),
-              ),
               if (profile.benchmarksWithBestEntries.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 6.0, bottom: 16),

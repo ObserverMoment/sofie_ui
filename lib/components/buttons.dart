@@ -213,6 +213,7 @@ class TertiaryButton extends StatelessWidget {
   final EdgeInsets padding;
   final Color? textColor;
   final FONTSIZE fontSize;
+  final FontWeight fontWeight;
   final double iconSize;
   final Color? backgroundColor;
 
@@ -231,7 +232,8 @@ class TertiaryButton extends StatelessWidget {
       this.backgroundColor,
       this.fontSize = FONTSIZE.two,
       this.backgroundGradient,
-      this.iconSize = 16})
+      this.iconSize = 16,
+      this.fontWeight = FontWeight.normal})
       : super(key: key);
 
   @override
@@ -267,7 +269,8 @@ class TertiaryButton extends StatelessWidget {
                   text.toUpperCase(),
                   color: textColor,
                   size: fontSize,
-                  lineHeight: 1,
+                  lineHeight: 1.1,
+                  weight: fontWeight,
                 ),
               ),
               if (suffixIconData != null)

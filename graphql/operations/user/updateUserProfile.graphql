@@ -1,5 +1,5 @@
 mutation updateUserProfile($data: UpdateUserProfileInput!) {
-  updateUserProfile: updateUserProfile(data: $data) {
-    ...UserProfile
+  updateUserProfile(data: $data) {
+    ...UserProfileResult
   }
 }

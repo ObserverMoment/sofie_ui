@@ -14,12 +14,12 @@ import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 class HeaderContent extends StatelessWidget {
-  final UserProfile userPublicProfile;
+  final UserProfile profile;
   final double avatarSize;
   final bool isAuthedUserProfile;
   const HeaderContent(
       {Key? key,
-      required this.userPublicProfile,
+      required this.profile,
       this.avatarSize = 100,
       required this.isAuthedUserProfile})
       : super(key: key);
@@ -29,14 +29,16 @@ class HeaderContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasSocialLinks = [
-      userPublicProfile.youtubeHandle,
-      userPublicProfile.instagramHandle,
-      userPublicProfile.tiktokHandle,
-      userPublicProfile.linkedinHandle,
+      profile.youtubeHandle,
+      profile.instagramHandle,
+      profile.tiktokHandle,
+      profile.linkedinHandle,
     ].any((l) => l != null);
 
-    final hasCountry = Utils.textNotNull(userPublicProfile.countryCode);
-    final hasTown = Utils.textNotNull(userPublicProfile.townCity);
+    final hasCountry = Utils.textNotNull(profile.countryCode);
+    final hasTown = Utils.textNotNull(profile.townCity);
+
+    final followerCount = profile.followerCount ?? 0;
 
     return Padding(
       padding: EdgeInsets.only(top: avatarSize / 2),
@@ -54,7 +56,7 @@ class HeaderContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       UserFeedConnectionButton(
-                        otherUserId: userPublicProfile.id,
+                        otherUserId: profile.id,
                       ),
                       const SizedBox(width: 8),
                       BorderButton(
@@ -64,16 +66,16 @@ class HeaderContent extends StatelessWidget {
                           size: 15,
                         ),
                         onPressed: () => context.navigateTo(OneToOneChatRoute(
-                          otherUserId: userPublicProfile.id,
+                          otherUserId: profile.id,
                         )),
                       ),
                     ],
                   ),
                 ),
-              const SizedBox(height: 12),
-              if (Utils.textNotNull(userPublicProfile.tagline))
+              const SizedBox(height: 4),
+              if (Utils.textNotNull(profile.tagline))
                 MyText(
-                  userPublicProfile.tagline!,
+                  profile.tagline!,
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   weight: FontWeight.bold,
@@ -84,50 +86,65 @@ class HeaderContent extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (Utils.textNotNull(userPublicProfile.countryCode))
+                      if (hasCountry)
                         MyText(
-                          Country.fromIsoCode(userPublicProfile.countryCode!)
-                              .name,
-                          size: FONTSIZE.one,
+                          Country.fromIsoCode(profile.countryCode!).name,
+                          size: FONTSIZE.two,
                           subtext: true,
                         ),
                       if (hasCountry && hasTown)
                         const MyText(
                           ' | ',
-                          size: FONTSIZE.one,
+                          size: FONTSIZE.two,
                           subtext: true,
                         ),
                       if (hasTown)
                         MyText(
-                          userPublicProfile.townCity!,
-                          size: FONTSIZE.one,
+                          profile.townCity!,
+                          size: FONTSIZE.two,
                           subtext: true,
                         ),
                     ],
                   ),
                 ),
               const SizedBox(height: 10),
-              if (Utils.textNotNull(userPublicProfile.bio))
+              if (Utils.textNotNull(profile.bio))
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                   child: ReadMoreTextBlock(
-                    text: userPublicProfile.bio!,
+                    text: profile.bio!,
                     title: 'Bio',
                     textAlign: TextAlign.center,
                     trimLines: 5,
                   ),
                 ),
+              if (followerCount > 0)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MyText('$followerCount', size: FONTSIZE.five),
+                      const SizedBox(height: 3),
+                      const MyText(
+                        'FOLLOWERS',
+                        size: FONTSIZE.one,
+                        subtext: true,
+                      )
+                    ],
+                  ),
+                ),
               const HorizontalLine(),
-              if (userPublicProfile.lifetimeLogStatsSummary != null)
+              if (profile.lifetimeLogStatsSummary != null)
                 Container(
                   height: 60,
                   alignment: Alignment.center,
                   child: LifetimeLogStatsSummaryDisplay(
-                    minutesWorked: userPublicProfile
-                        .lifetimeLogStatsSummary!.minutesWorked,
-                    sessionsLogged: userPublicProfile
-                        .lifetimeLogStatsSummary!.sessionsLogged,
+                    minutesWorked:
+                        profile.lifetimeLogStatsSummary!.minutesWorked,
+                    sessionsLogged:
+                        profile.lifetimeLogStatsSummary!.sessionsLogged,
                   ),
                 ),
               if (hasSocialLinks) const HorizontalLine(),
@@ -135,7 +152,7 @@ class HeaderContent extends StatelessWidget {
                 Padding(
                   padding: verticalPadding,
                   child: SocialMediaLinks(
-                    userPublicProfile: userPublicProfile,
+                    profile: profile,
                   ),
                 ),
             ],
