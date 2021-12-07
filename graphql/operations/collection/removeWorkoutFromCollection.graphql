@@ -1,9 +1,6 @@
 mutation removeWorkoutFromCollection($data: RemoveWorkoutFromCollectionInput!) {
   removeWorkoutFromCollection(data: $data) {
     ...Collection
-    User {
-      ...UserSummary
-    }
     Workouts {
       ...WorkoutSummary
     }

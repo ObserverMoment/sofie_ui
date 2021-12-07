@@ -9,7 +9,6 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class YourCollectionsPage extends StatelessWidget {
@@ -21,7 +20,6 @@ class YourCollectionsPage extends StatelessWidget {
         key: Key(
             'YourCollectionsPage - ${UserCollectionsQuery().operationName}'),
         query: UserCollectionsQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
           final collections = data.userCollections
               .sortedBy<DateTime>((c) => c.createdAt)
@@ -31,7 +29,7 @@ class YourCollectionsPage extends StatelessWidget {
           return MyPageScaffold(
               child: NestedScrollView(
                   headerSliverBuilder: (c, i) =>
-                      [const MySliverNavbar(title: 'Colections')],
+                      [const MySliverNavbar(title: 'Collections')],
                   body: collections.isEmpty
                       ? YourContentEmptyPlaceholder(
                           message: 'No collections yet',

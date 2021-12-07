@@ -494,7 +494,7 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a FreeSession.
+  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a Custom or Lifting section.
   Future<void> updateWorkoutMove(
       int sectionIndex, int setIndex, WorkoutMove workoutMove) async {
     final section = WorkoutSection.fromJson(

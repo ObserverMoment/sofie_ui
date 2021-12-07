@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
 
@@ -40,7 +39,7 @@ class FABPage extends StatelessWidget {
           if (columnButtons.isNotEmpty)
             Positioned(
               bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 56),
-              right: 8,
+              right: 16,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -59,7 +58,7 @@ class FABPage extends StatelessWidget {
               right: rowButtonsAlignment == MainAxisAlignment.end ? 0 : null,
               left: rowButtonsAlignment == MainAxisAlignment.start ? 0 : null,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 width: screenWidth,
                 child: Row(
                   mainAxisAlignment: rowButtonsAlignment,

@@ -55,12 +55,12 @@ class StartResumeButton extends StatelessWidget {
     });
 
     return GestureDetector(
-      onTap: () => sectionHasStarted
+      onTap: sectionHasStarted
           ? () {
               Vibrate.feedback(FeedbackType.light);
               context.read<DoWorkoutBloc>().playSection(sectionIndex);
             }
-          : _startSectionCountdown(context, isFreeSessionOrLifting),
+          : () => _startSectionCountdown(context, isFreeSessionOrLifting),
       child: Container(
         width: 160,
         height: 160,

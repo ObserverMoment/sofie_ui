@@ -138,6 +138,8 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
               Row(
                 children: [
                   ContentBox(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     backgroundColor: context.theme.background,
                     child: DurationPickerDisplay(
                         modalTitle: 'Update Duration',
@@ -153,6 +155,8 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: ContentBox(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
                         backgroundColor: context.theme.background,
                         child: NumberPickerInt(
                           number: loggedWorkoutSection.repScore,
@@ -163,7 +167,7 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
                           fontSize: FONTSIZE.five,
                           prefix: const Icon(
                             CupertinoIcons.chart_bar_alt_fill,
-                            size: 22,
+                            size: 18,
                           ),
                           suffix: const MyText(
                             'reps',

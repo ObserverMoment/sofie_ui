@@ -6,25 +6,36 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class CompactTimerIcon extends StatelessWidget {
   final Duration? duration;
-  const CompactTimerIcon({Key? key, required this.duration}) : super(key: key);
 
-  List<Widget> _buildChildren() => [
+  /// Compact display = 03:56 for three mins 56 secs.
+  /// Standard display would be 3 mins 56 seconds.
+  final bool compactDisplay;
+  const CompactTimerIcon(
+      {Key? key, required this.duration, this.compactDisplay = false})
+      : super(key: key);
+
+  List<Widget> _buildChildren(String display) => [
         const Icon(
           CupertinoIcons.timer,
-          size: 20,
+          size: 16,
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 4),
         MyText(
-          duration?.displayString ?? '---',
+          duration?.compactDisplay ?? '---',
           size: FONTSIZE.four,
         )
       ];
 
   @override
   Widget build(BuildContext context) {
+    final display = duration == null
+        ? '---'
+        : compactDisplay
+            ? duration!.compactDisplay
+            : duration!.displayString;
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: _buildChildren(),
+      children: _buildChildren(display),
     );
   }
 }

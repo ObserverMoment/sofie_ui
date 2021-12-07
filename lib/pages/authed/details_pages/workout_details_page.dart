@@ -191,15 +191,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                     ),
                   ),
                 if (workout.lengthMinutes != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: DurationTag(
-                      fontSize: FONTSIZE.three,
-                      iconSize: 15,
-                      backgroundColor:
-                          context.theme.background.withOpacity(0.6),
-                      duration: Duration(minutes: workout.lengthMinutes!),
-                    ),
+                  DurationTag(
+                    fontSize: FONTSIZE.three,
+                    iconSize: 15,
+                    backgroundColor: context.theme.background.withOpacity(0.6),
+                    duration: Duration(minutes: workout.lengthMinutes!),
                   ),
                 DifficultyLevelTag(
                   backgroundColor: context.theme.background.withOpacity(0.6),

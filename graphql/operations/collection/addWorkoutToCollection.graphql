@@ -1,9 +1,6 @@
 mutation addWorkoutToCollection($data: AddWorkoutToCollectionInput!) {
   addWorkoutToCollection(data: $data) {
     ...Collection
-    User {
-      ...UserSummary
-    }
     Workouts {
       ...WorkoutSummary
     }

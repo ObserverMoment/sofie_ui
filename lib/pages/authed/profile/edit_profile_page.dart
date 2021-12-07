@@ -370,13 +370,13 @@ class _HandleInput extends StatelessWidget {
   final String? value;
   final void Function(String handle) updateHandle;
   final Widget icon;
-  const _HandleInput(
-      {Key? key,
-      required this.title,
-      required this.updateHandle,
-      this.value,
-      required this.icon})
-      : super(key: key);
+  const _HandleInput({
+    Key? key,
+    required this.title,
+    required this.updateHandle,
+    this.value,
+    required this.icon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -387,7 +387,7 @@ class _HandleInput extends StatelessWidget {
       title: title,
       icon: icon,
       validationMessage:
-          'Enter your user name or handle, not a full web address',
+          'Enter your user name or handle, NOT a full web address',
     );
   }
 }

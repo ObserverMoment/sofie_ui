@@ -16,8 +16,8 @@ class PausedWorkoutOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+    return Container(
+      color: Styles.black.withOpacity(0.7),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -90,7 +90,8 @@ class _ScoredSectionInstructions extends StatelessWidget {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
                 gradient: Styles.primaryAccentGradient),
-            child: const MyHeaderText('Set Complete', size: FONTSIZE.two)),
+            child: const MyHeaderText('Set Complete',
+                size: FONTSIZE.two, color: Styles.white)),
       ],
     );
   }

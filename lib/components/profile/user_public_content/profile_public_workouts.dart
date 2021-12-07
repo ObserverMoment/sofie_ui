@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';

@@ -199,6 +199,11 @@ class _RepPickerModalState extends State<RepPickerModal> {
                 if (widget.validRepTypes.length > 1)
                   MySlidingSegmentedControl<WorkoutMoveRepType>(
                       value: _activeRepType,
+                      fontSize: 15,
+                      containerPadding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 2),
+                      childPadding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 8),
                       children: {
                         for (final v in WorkoutMoveRepType.values.where((v) =>
                             v != WorkoutMoveRepType.artemisUnknown &&

@@ -4,7 +4,6 @@ import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';

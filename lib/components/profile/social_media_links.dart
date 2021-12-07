@@ -1,19 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/other_app_icons.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+enum _Network { tiktok, youtube, instagram, linkedin }
+
+Map<_Network, String> _mapping = {
+  _Network.tiktok: kTiktokBaseUrl,
+  _Network.youtube: kYoutubeBaseUrl,
+  _Network.instagram: kInstagramBaseUrl,
+  _Network.linkedin: kLinkedinBaseUrl
+};
 
 class SocialMediaLinks extends StatelessWidget {
   final UserProfile profile;
   const SocialMediaLinks({Key? key, required this.profile}) : super(key: key);
 
-  Future<void> _handleOpenSocialUrl(String handle) async {
-    /// TODO: convert to correct url based on network name.
+  Future<void> _handleOpenSocialUrl(_Network network, String handle) async {
+    final url = '${_mapping[network]}/$handle';
 
-    if (await canLaunch(handle)) {
-      await launch(handle);
+    if (await canLaunch(url)) {
+      await launch(url);
     } else {
       throw 'Could not launch $handle';
     }
@@ -34,23 +44,26 @@ class SocialMediaLinks extends StatelessWidget {
             _SocialLink(
                 handle: profile.instagramHandle!,
                 icon: InstagramIcon(size: _iconSize),
-                onPressed: () =>
-                    _handleOpenSocialUrl(profile.instagramHandle!)),
+                onPressed: () => _handleOpenSocialUrl(
+                    _Network.instagram, profile.instagramHandle!)),
           if (Utils.textNotNull(profile.tiktokHandle))
             _SocialLink(
                 handle: profile.tiktokHandle!,
                 icon: TikTokIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(profile.tiktokHandle!)),
+                onPressed: () => _handleOpenSocialUrl(
+                    _Network.tiktok, profile.tiktokHandle!)),
           if (Utils.textNotNull(profile.linkedinHandle))
             _SocialLink(
                 handle: profile.linkedinHandle!,
                 icon: LinkedInIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(profile.linkedinHandle!)),
+                onPressed: () => _handleOpenSocialUrl(
+                    _Network.linkedin, profile.linkedinHandle!)),
           if (Utils.textNotNull(profile.youtubeHandle))
             _SocialLink(
                 handle: profile.youtubeHandle!,
                 icon: YouTubeIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(profile.youtubeHandle!)),
+                onPressed: () => _handleOpenSocialUrl(
+                    _Network.youtube, profile.youtubeHandle!)),
         ],
       ),
     );

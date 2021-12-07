@@ -3,9 +3,6 @@ mutation removeWorkoutPlanFromCollection(
 ) {
   removeWorkoutPlanFromCollection(data: $data) {
     ...Collection
-    User {
-      ...UserSummary
-    }
     Workouts {
       ...WorkoutSummary
     }

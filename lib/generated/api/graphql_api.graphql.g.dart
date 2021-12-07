@@ -874,7 +874,6 @@ Collection _$CollectionFromJson(Map<String, dynamic> json) => Collection()
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
   ..name = json['name'] as String
   ..description = json['description'] as String?
-  ..user = UserSummary.fromJson(json['User'] as Map<String, dynamic>)
   ..workouts = (json['Workouts'] as List<dynamic>)
       .map((e) => WorkoutSummary.fromJson(e as Map<String, dynamic>))
       .toList()
@@ -889,7 +888,6 @@ Map<String, dynamic> _$CollectionToJson(Collection instance) =>
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'name': instance.name,
       'description': instance.description,
-      'User': instance.user.toJson(),
       'Workouts': instance.workouts.map((e) => e.toJson()).toList(),
       'WorkoutPlans': instance.workoutPlans.map((e) => e.toJson()).toList(),
     };

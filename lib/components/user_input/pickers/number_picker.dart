@@ -35,7 +35,7 @@ class NumberPickerInt extends StatelessWidget {
         children: [
           if (prefix != null)
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
+              padding: const EdgeInsets.only(right: 4.0),
               child: prefix,
             ),
           MyText(
@@ -44,7 +44,7 @@ class NumberPickerInt extends StatelessWidget {
           ),
           if (suffix != null)
             Padding(
-              padding: const EdgeInsets.only(left: 8.0),
+              padding: const EdgeInsets.only(left: 4.0),
               child: suffix,
             ),
         ],

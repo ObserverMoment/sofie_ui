@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/personal_best/entry_top_score_display.dart';
 import 'package:sofie_ui/components/tags.dart';
@@ -51,16 +50,14 @@ class PersonalBestCard extends StatelessWidget {
                     ),
                     MyText(
                       userBenchmark.benchmarkType.display,
-                      color: Styles.primaryAccent,
+                      weight: FontWeight.bold,
                     ),
                     const SizedBox(height: 6),
                     if (Utils.textNotNull(userBenchmark.equipmentInfo))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6),
-                        child: MyText(
-                          userBenchmark.equipmentInfo!,
-                          maxLines: 5,
-                        ),
+                        child: MyText(userBenchmark.equipmentInfo!,
+                            maxLines: 5, weight: FontWeight.bold),
                       ),
                   ],
                 ),

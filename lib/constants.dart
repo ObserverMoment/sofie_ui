@@ -42,6 +42,7 @@ const kImageOverlayOpacity = 0.8;
 /// For use in [__typename:id] normalization and store ops.
 const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
+const kCollectionSummaryTypename = 'CollectionSummary';
 
 const kClubTypeName = 'Club';
 const kClubSummaryTypeName = 'ClubSummary';
@@ -155,3 +156,9 @@ const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
 
 /// Messages ///
 const String kDefaultErrorMessage = "Sorry, that didn't work";
+
+/// Other social networks - just add the handle.
+const kLinkedinBaseUrl = 'https://www.linkedin.com/in';
+const kYoutubeBaseUrl = 'https://www.youtube.com';
+const kTiktokBaseUrl = 'https://www.tiktok.com';
+const kInstagramBaseUrl = 'https://www.instagram.com';

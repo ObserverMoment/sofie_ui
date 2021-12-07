@@ -5,7 +5,6 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/timeline_and_feed.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';

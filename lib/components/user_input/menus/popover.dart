@@ -36,7 +36,7 @@ class PopoverMenu extends StatelessWidget {
           ),
           backgroundColor: backgroundColor,
           barrierColor: Colors.transparent,
-          radius: 12,
+          radius: 16,
           direction: PopoverDirection.top,
           arrowHeight: 10,
           arrowWidth: 0,

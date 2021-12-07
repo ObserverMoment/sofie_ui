@@ -8,7 +8,6 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/timeline_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
