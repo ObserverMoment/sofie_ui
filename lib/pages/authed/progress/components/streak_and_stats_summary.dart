@@ -46,9 +46,18 @@ class StreakAndStatsSummary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 6),
-                LifetimeLogStatsSummaryDisplay(
-                  sessionsLogged: sessionsLogged,
-                  minutesWorked: minutesWorked,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SummaryStatDisplay(
+                      label: 'session',
+                      number: sessionsLogged,
+                    ),
+                    SummaryStatDisplay(
+                      label: 'minutes',
+                      number: minutesWorked,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 Row(

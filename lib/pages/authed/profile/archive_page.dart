@@ -151,7 +151,7 @@ class _ArchivedCustomMoves extends StatelessWidget {
       removeRefFromQueries: [GQLOpNames.userArchivedCustomMovesQuery],
     );
 
-    await checkOperationResult(context, result,
+    checkOperationResult(context, result,
         onSuccess: () => context.showToast(message: 'Custom move unarchived'),
         onFail: () => context.showErrorAlert(
             'Something went wrong, the move was not unarchived correctly'));

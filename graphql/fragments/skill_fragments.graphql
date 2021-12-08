@@ -1,0 +1,11 @@
+fragment Skill on Skill {
+  __typename
+  id
+  createdAt
+  name
+  experience
+  certification
+  awardingBody
+  certificateRef
+  documentUri
+}

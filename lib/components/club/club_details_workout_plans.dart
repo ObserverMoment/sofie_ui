@@ -92,7 +92,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
       _loading = false;
     });
 
-    await checkOperationResult(context, result,
+    checkOperationResult(context, result,
         onSuccess: () => context.showToast(message: 'Plan added.'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem.',
@@ -128,7 +128,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
       _loading = false;
     });
 
-    await checkOperationResult(context, result,
+    checkOperationResult(context, result,
         onSuccess: () => context.showToast(message: 'Plan removed.'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem.',

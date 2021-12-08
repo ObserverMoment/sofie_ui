@@ -101,6 +101,7 @@ fragment UserProfileSummary on UserProfileSummary {
   displayName
   workoutCount
   planCount
+  skills
 }
 
 fragment UserSummary on UserSummary {

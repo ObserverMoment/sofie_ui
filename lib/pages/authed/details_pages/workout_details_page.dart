@@ -58,7 +58,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                   variables: DuplicateWorkoutByIdArguments(id: id)),
               addRefToQueries: [GQLOpNames.userWorkoutsQuery]);
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(
                   message: 'Copy created. View in Your Workouts'),
               onFail: () => context.showErrorAlert(
@@ -119,7 +119,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
             addRefToQueries: [GQLOpNames.userArchivedWorkoutsQuery],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Workout archived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not archived correctly'));
@@ -163,7 +163,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
             ],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Workout unarchived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not unarchived correctly'));

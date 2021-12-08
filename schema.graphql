@@ -3,6 +3,11 @@ schema {
   mutation: Mutation
 }
 
+input AddDocumentToSkillInput {
+  id: ID!
+  uri: String!
+}
+
 input AddWorkoutPlanToClubInput {
   WorkoutPlan: ConnectRelationInput!
   id: ID!
@@ -280,6 +285,12 @@ input CreateScheduledWorkoutInput {
   scheduledAt: DateTime!
 }
 
+input CreateSkillInput {
+  description: String
+  experience: String
+  name: String!
+}
+
 input CreateUserBenchmarkEntryInput {
   UserBenchmark: ConnectRelationInput!
   completedOn: DateTime!
@@ -542,6 +553,7 @@ input MoveWorkoutPlanDayToAnotherDayInput {
 }
 
 type Mutation {
+  addDocumentToSkill(data: AddDocumentToSkillInput!): Skill!
   addUserToClubViaInviteToken(clubInviteTokenId: ID!, userId: ID!): Club!
   addWorkoutPlanToClub(clubId: ID!, workoutPlanId: ID!): Club!
   addWorkoutPlanToCollection(
@@ -579,6 +591,7 @@ type Mutation {
     data: CreateProgressJournalGoalTagInput!
   ): ProgressJournalGoalTag!
   createScheduledWorkout(data: CreateScheduledWorkoutInput!): ScheduledWorkout!
+  createSkill(data: CreateSkillInput!): Skill!
   createUserBenchmark(data: CreateUserBenchmarkInput!): UserBenchmark!
   createUserBenchmarkEntry(
     data: CreateUserBenchmarkEntryInput!
@@ -615,6 +628,7 @@ type Mutation {
   deleteProgressJournalGoalById(id: ID!): ID!
   deleteProgressJournalGoalTagById(id: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
+  deleteSkillById(id: ID!): ID!
   deleteUserBenchmarkById(id: ID!): ID!
   deleteUserBenchmarkEntryById(id: ID!): ID!
   deleteUserBenchmarkTagById(id: ID!): ID!
@@ -634,6 +648,7 @@ type Mutation {
   moveWorkoutPlanDayToAnotherDay(
     data: MoveWorkoutPlanDayToAnotherDayInput!
   ): WorkoutPlanDay!
+  removeDocumentFromSkill(data: RemoveDocumentFromSkillInput!): Skill!
   removeMemberAdminStatus(clubId: ID!, userId: ID!): Club!
   removeUserFromClub(clubId: ID!, userToRemoveId: ID!): Club!
   removeWorkoutFromClub(clubId: ID!, workoutId: ID!): Club!
@@ -683,6 +698,7 @@ type Mutation {
     data: UpdateProgressJournalGoalTagInput!
   ): ProgressJournalGoalTag!
   updateScheduledWorkout(data: UpdateScheduledWorkoutInput!): ScheduledWorkout!
+  updateSkill(data: UpdateSkillInput!): Skill!
   updateUserBenchmark(data: UpdateUserBenchmarkInput!): UserBenchmark!
   updateUserBenchmarkEntry(
     data: UpdateUserBenchmarkEntryInput!
@@ -821,6 +837,10 @@ type Query {
   workoutSectionTypes: [WorkoutSectionType!]!
 }
 
+input RemoveDocumentFromSkillInput {
+  id: ID!
+}
+
 input RemoveWorkoutFromClubInput {
   Workout: ConnectRelationInput!
   id: ID!
@@ -850,6 +870,17 @@ type ScheduledWorkout {
   note: String
   scheduledAt: DateTime!
   workoutPlanEnrolmentId: ID
+}
+
+type Skill {
+  awardingBody: String
+  certificateRef: String
+  certification: String
+  createdAt: DateTime!
+  documentUri: String
+  experience: String
+  id: ID!
+  name: String!
 }
 
 type SortPositionUpdated {
@@ -1045,6 +1076,16 @@ input UpdateScheduledWorkoutInput {
   id: ID!
   note: String
   scheduledAt: DateTime
+}
+
+input UpdateSkillInput {
+  awardingBody: String
+  certificateRef: String
+  certification: String
+  documentUri: String
+  experience: String
+  id: ID!
+  name: String!
 }
 
 input UpdateSortPositionInput {
@@ -1265,6 +1306,7 @@ type UserProfile {
   BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
+  Skills: [Skill!]!
   avatarUri: String
   bio: String
   birthdate: DateTime
@@ -1298,6 +1340,7 @@ type UserProfileSummary {
   displayName: String!
   id: ID!
   planCount: Int!
+  skills: [String!]!
   tagline: String
   townCity: String
   userProfileScope: UserProfileScope!

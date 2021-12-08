@@ -33,6 +33,7 @@ class WorkoutPlanEnrolmentProgressSummary extends StatelessWidget {
               ),
               MyText(
                 startedOn.compactDateString,
+                size: FONTSIZE.two,
               ),
             ],
           ),

@@ -98,7 +98,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                     limit: _postsPerPage,
                     offset: offset)));
 
-        await checkOperationResult(context, result,
+        checkOperationResult(context, result,
             onFail: () => throw Exception(result.errors));
 
         return result.data!.clubMembersFeedPosts;
@@ -159,7 +159,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                   variables: DeleteClubTimelinePostArguments(
                       activityId: post.activityId)));
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Post deleted'),
               onFail: () => context.showToast(
                   message: 'Sorry, there was a problem deleting the post',

@@ -5,7 +5,6 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
@@ -157,7 +156,7 @@ class _Entries extends StatelessWidget {
         removeRefFromQueries: [GQLOpNames.bodyTrackingEntries],
         removeAllRefsToId: true);
 
-    await checkOperationResult(context, result, onFail: () {
+    checkOperationResult(context, result, onFail: () {
       context.showToast(
           message: 'Sorry, there was a problem',
           toastType: ToastType.destructive);
@@ -214,21 +213,15 @@ class _Photos extends StatelessWidget {
     return photoUris.isNotEmpty
         ? GridView.count(
             shrinkWrap: true,
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
             crossAxisCount: 2,
             childAspectRatio: 3 / 4,
             padding: const EdgeInsets.only(top: 4, bottom: 80),
             children: photoUris
-                .map((uri) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                        onTap: () => openEntryPhotosViewer(uri),
-                        child: Card(
-                            padding: EdgeInsets.zero,
-                            margin: EdgeInsets.zero,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: SizedUploadcareImage(uri),
-                            )))))
+                .map((uri) => GestureDetector(
+                    onTap: () => openEntryPhotosViewer(uri),
+                    child: SizedUploadcareImage(uri)))
                 .toList(),
           )
         : const _NoEntriesPlaceholder(

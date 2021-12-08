@@ -1,8 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+
+class AwardIcon extends StatelessWidget {
+  final double size;
+  final Color color;
+  const AwardIcon(
+      {Key? key, this.size = 24, this.color = Styles.secondaryAccent})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SvgPicture.asset('assets/graphics/award_icon.svg',
+        width: size, color: color);
+  }
+}
 
 class CompactTimerIcon extends StatelessWidget {
   final Duration? duration;

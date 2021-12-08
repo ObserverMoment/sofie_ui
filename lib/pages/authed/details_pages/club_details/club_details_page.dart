@@ -57,7 +57,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
               UserJoinPublicClub$Mutation, UserJoinPublicClubArguments>(
           operation: UserJoinPublicClubMutation(variables: variables));
 
-      await checkOperationResult(context, result, onSuccess: () async {
+      checkOperationResult(context, result, onSuccess: () async {
         await context.graphQLStore.query<ClubById$Query, ClubByIdArguments>(
             query: ClubByIdQuery(variables: ClubByIdArguments(id: widget.id)),
             broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.id)]);
@@ -138,7 +138,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
               clearQueryDataAtKeys: [GQLVarParamKeys.clubByIdQuery(clubId)],
             );
 
-            await checkOperationResult(context, result,
+            checkOperationResult(context, result,
                 onSuccess: () {
                   /// Manually remove the ref to the Club from [userClubs] query.
                   /// Necessary as the return type from [userClubs] is a ClubSummary (so the ID will be ClubSummary:12345 - not Club:12345) whereas return type from the above mutation is a Club.

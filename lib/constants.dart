@@ -80,18 +80,25 @@ const kProgressJournalEntryTypename = 'ProgressJournalEntry';
 const kProgressJournalGoalTypename = 'ProgressJournalGoal';
 const kProgressJournalGoalTagTypename = 'ProgressJournalGoalTag';
 
+const kSkillTypeName = 'Skill';
+
 const kUserBenchmarkTypename = 'UserBenchmark';
 const kUserBenchmarkEntryTypename = 'UserBenchmarkEntry';
 const kUserBenchmarkTagTypename = 'UserBenchmarkTag';
 
 const kExcludeFromNormalization = [
+  // Within the Workout
   kWorkoutSectionTypename,
   kWorkoutSetTypename,
   kWorkoutMoveTypename,
+  // Within the LoggedWorkout
   kLoggedWorkoutSectionTypename,
   kLoggedWorkoutSetTypename,
   kLoggedWorkoutMoveTypename,
-  kWorkoutPlanReviewTypename
+  // Within the UserProfile
+  kSkillTypeName,
+  // Within the WorkoutPlan
+  kWorkoutPlanReviewTypename,
 ];
 
 /// WorkoutSectionTypeNames

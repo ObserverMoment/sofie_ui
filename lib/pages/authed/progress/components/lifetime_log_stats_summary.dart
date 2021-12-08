@@ -5,7 +5,6 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class LifetimeLogStatsWrapper extends StatelessWidget {
   const LifetimeLogStatsWrapper({Key? key}) : super(key: key);
@@ -30,61 +29,47 @@ class LifetimeLogStatsWrapper extends StatelessWidget {
                 });
           });
 
-          return LifetimeLogStatsSummaryDisplay(
-            sessionsLogged: sessionsLogged,
-            minutesWorked: minutesWorked,
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SummaryStatDisplay(
+                label: 'SESSIONS',
+                number: sessionsLogged,
+              ),
+              SummaryStatDisplay(
+                label: 'MINUTES',
+                number: minutesWorked,
+              ),
+            ],
           );
         });
   }
 }
 
-class LifetimeLogStatsSummaryDisplay extends StatelessWidget {
-  final int sessionsLogged;
-  final int minutesWorked;
-  const LifetimeLogStatsSummaryDisplay(
-      {Key? key, required this.sessionsLogged, required this.minutesWorked})
+class SummaryStatDisplay extends StatelessWidget {
+  final String label;
+  final int number;
+  const SummaryStatDisplay(
+      {Key? key, required this.label, required this.number})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final minutesFormatted = minutesWorked.displayLong;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ContentBox(
-          child: Column(
-            children: [
-              MyText(
-                sessionsLogged.toString(),
-                size: FONTSIZE.six,
-              ),
-              const MyText(
-                'SESSIONS',
-                size: FONTSIZE.one,
-                subtext: true,
-                lineHeight: 1.4,
-              ),
-            ],
+    return ContentBox(
+      child: Column(
+        children: [
+          MyText(
+            number.toString(),
+            size: FONTSIZE.five,
           ),
-        ),
-        const SizedBox(width: 12),
-        ContentBox(
-          child: Column(
-            children: [
-              MyText(
-                minutesFormatted,
-                size: FONTSIZE.six,
-              ),
-              const MyText(
-                'MINUTES',
-                size: FONTSIZE.one,
-                subtext: true,
-                lineHeight: 1.4,
-              ),
-            ],
+          MyText(
+            label,
+            size: FONTSIZE.one,
+            subtext: true,
+            lineHeight: 1.4,
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

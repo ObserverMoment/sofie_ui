@@ -35,7 +35,7 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
     final result =
         await context.graphQLStore.networkOnlyOperation(operation: query);
 
-    await checkOperationResult(context, result);
+    checkOperationResult(context, result);
 
     return result.data!.workoutById;
   }

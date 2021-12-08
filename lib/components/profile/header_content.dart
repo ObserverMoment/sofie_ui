@@ -6,7 +6,6 @@ import 'package:sofie_ui/components/profile/social_media_links.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/model/country.dart';
-import 'package:sofie_ui/pages/authed/progress/components/lifetime_log_stats_summary.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:auto_route/auto_route.dart';
@@ -133,18 +132,6 @@ class HeaderContent extends StatelessWidget {
                         subtext: true,
                       )
                     ],
-                  ),
-                ),
-              const HorizontalLine(),
-              if (profile.lifetimeLogStatsSummary != null)
-                Container(
-                  height: 60,
-                  alignment: Alignment.center,
-                  child: LifetimeLogStatsSummaryDisplay(
-                    minutesWorked:
-                        profile.lifetimeLogStatsSummary!.minutesWorked,
-                    sessionsLogged:
-                        profile.lifetimeLogStatsSummary!.sessionsLogged,
                   ),
                 ),
               if (hasSocialLinks) const HorizontalLine(),

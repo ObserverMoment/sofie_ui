@@ -88,7 +88,7 @@ class _BodyTrackingEntryCreatorPageState
           mutation: mutation,
           addRefToQueries: [GQLOpNames.bodyTrackingEntries]);
 
-      await checkOperationResult(context, result,
+      checkOperationResult(context, result,
           onFail: _handleOnFailAndBackup,
           onSuccess: () =>
               _handleSuccessfulUpdate(result.data!.createBodyTrackingEntry));
@@ -104,7 +104,7 @@ class _BodyTrackingEntryCreatorPageState
           mutation: mutation,
           broadcastQueryIds: [GQLOpNames.bodyTrackingEntries]);
 
-      await checkOperationResult(context, result,
+      checkOperationResult(context, result,
           onFail: _handleOnFailAndBackup,
           onSuccess: () =>
               _handleSuccessfulUpdate(result.data!.updateBodyTrackingEntry));

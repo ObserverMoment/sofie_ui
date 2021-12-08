@@ -2,10 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/coercers.dart';
+import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/creators/skill_creator/skills_manager.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar_uploader.dart';
 import 'package:sofie_ui/components/media/video/user_intro_video_uploader.dart';
-import 'package:sofie_ui/components/other_app_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/display_name_edit_row.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
@@ -18,6 +19,7 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/country.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/profile/components/social_handles_input.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -38,7 +40,7 @@ class EditProfilePage extends StatelessWidget {
         operation: UpdateUserProfileMutation(variables: variables),
         customVariablesMap: {'data': data});
 
-    await checkOperationResult(context, result, onFail: () {
+    checkOperationResult(context, result, onFail: () {
       context.showToast(
           message: 'Sorry, there was a problem.',
           toastType: ToastType.destructive);
@@ -209,14 +211,29 @@ class EditProfilePage extends StatelessWidget {
                             maxDisplayLines: 2,
                           ),
                         ),
-                        ContentBox(
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0, top: 16),
+                          child: ContentBox(
                             padding: const EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16),
-                            child: _SocialHandlesInput(
-                              profile: userProfile,
-                              update: (key, value) => updateUserFields(
-                                  context, userProfile.id, {key: value}),
-                            )),
+                                horizontal: 6, vertical: 8),
+                            child: PageLink(
+                                linkText: 'Skills and Qualifications',
+                                separator: false,
+                                onPress: () =>
+                                    context.push(child: const SkillsManager())),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ContentBox(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: SocialHandlesInput(
+                                profile: userProfile,
+                                update: (key, value) => updateUserFields(
+                                    context, userProfile.id, {key: value}),
+                              )),
+                        ),
                         UserInputContainer(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -306,88 +323,5 @@ class EditProfilePage extends StatelessWidget {
                         ),
                       ])));
         });
-  }
-}
-
-class _SocialHandlesInput extends StatelessWidget {
-  final void Function(String key, String value) update;
-  final UserProfile profile;
-  const _SocialHandlesInput(
-      {Key? key, required this.update, required this.profile})
-      : super(key: key);
-
-  Widget _padding({required Widget child}) =>
-      Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: child);
-
-  double get _iconSize => 24.0;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const MyHeaderText('Social Handles'),
-        const SizedBox(height: 6),
-        _padding(
-          child: _HandleInput(
-            title: 'YouTube',
-            icon: YouTubeIcon(size: _iconSize),
-            value: profile.youtubeHandle,
-            updateHandle: (h) => update('youtubeHandle', h),
-          ),
-        ),
-        _padding(
-          child: _HandleInput(
-            title: 'Instagram',
-            icon: InstagramIcon(size: _iconSize),
-            value: profile.instagramHandle,
-            updateHandle: (h) => update('instagramHandle', h),
-          ),
-        ),
-        _padding(
-          child: _HandleInput(
-            title: 'TikTok',
-            icon: TikTokIcon(size: _iconSize),
-            value: profile.tiktokHandle,
-            updateHandle: (h) => update('tiktokHandle', h),
-          ),
-        ),
-        _padding(
-          child: _HandleInput(
-            title: 'LinkedIn',
-            icon: LinkedInIcon(size: _iconSize),
-            value: profile.linkedinHandle,
-            updateHandle: (h) => update('linkedinHandle', h),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HandleInput extends StatelessWidget {
-  final String title;
-  final String? value;
-  final void Function(String handle) updateHandle;
-  final Widget icon;
-  const _HandleInput({
-    Key? key,
-    required this.title,
-    required this.updateHandle,
-    this.value,
-    required this.icon,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return EditableTextFieldRow(
-      text: value ?? '',
-      inputValidation: (t) => true,
-      onSave: updateHandle,
-      title: title,
-      icon: icon,
-      validationMessage:
-          'Enter your user name or handle, NOT a full web address',
-    );
   }
 }

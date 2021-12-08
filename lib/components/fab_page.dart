@@ -38,7 +38,7 @@ class FABPage extends StatelessWidget {
           child,
           if (columnButtons.isNotEmpty)
             Positioned(
-              bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 56),
+              bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 64),
               right: 16,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,

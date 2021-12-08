@@ -162,7 +162,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         mutation: CreateLoggedWorkoutMutation(variables: variables),
         addRefToQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
 
-    await checkOperationResult(context, result);
+    checkOperationResult(context, result);
 
     /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
     if (scheduledWorkout != null && result.data != null) {

@@ -248,7 +248,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
                         'Info',
                         'Goals',
                         'Reviews',
-                        'Social',
+                        'People',
                       ],
                       handleTabChange: _handleTabChange,
                       activeTabIndex: _activeTabIndex),
@@ -271,9 +271,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
                         authedUserReview: authedUserReview,
                       ),
                       WorkoutPlanParticipants(
-                        userSummaries: workoutPlan.workoutPlanEnrolments
-                            .map((e) => e.user)
-                            .toList(),
+                        workoutPlan: workoutPlan,
                       )
                     ]),
                   ),
