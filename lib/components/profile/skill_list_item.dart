@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -19,6 +18,7 @@ class SkillListItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +62,7 @@ class SkillListItem extends StatelessWidget {
           ),
           if (Utils.textNotNull(skill.documentUri))
             const Padding(
-              padding: EdgeInsets.only(bottom: 4.0),
+              padding: EdgeInsets.only(right: 4.0),
               child: Icon(CupertinoIcons.doc_checkmark),
             ),
         ],

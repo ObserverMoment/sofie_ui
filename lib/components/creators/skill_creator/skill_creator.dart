@@ -29,7 +29,6 @@ class _SkillCreatorState extends State<SkillCreator> {
   /// User must add these (only name is required) and then save.
   /// This creates a new skill in the DB and returns it.
   final _nameController = TextEditingController();
-  final _descriptionController = TextEditingController();
   final _experienceController = TextEditingController();
 
   /// Post-create data. We go straight here in the case of editing a skill.
@@ -64,10 +63,7 @@ class _SkillCreatorState extends State<SkillCreator> {
     _nameController.addListener(() {
       setState(() {});
     });
-    _descriptionController.addListener(() {
-      setState(() {});
-    });
-    _descriptionController.addListener(() {
+    _experienceController.addListener(() {
       setState(() {});
     });
   }
@@ -78,7 +74,6 @@ class _SkillCreatorState extends State<SkillCreator> {
     final variables = CreateSkillArguments(
         data: CreateSkillInput(
             name: _nameController.text,
-            description: _descriptionController.text,
             experience: _experienceController.text));
 
     final result = await context.graphQLStore
@@ -175,7 +170,6 @@ class _SkillCreatorState extends State<SkillCreator> {
   @override
   void dispose() {
     _nameController.dispose();
-    _descriptionController.dispose();
     _experienceController.dispose();
     super.dispose();
   }
@@ -200,74 +194,76 @@ class _SkillCreatorState extends State<SkillCreator> {
                 ? NavBarCancelButton(_close)
                 : NavBarTextButton(_close, 'Done'),
       ),
-      child: AnimatedSwitcher(
-        duration: kStandardAnimationDuration,
-        child: _activeSkill == null
-            ? _PreCreateInputUI(
-                addSkill: _createSkill,
-                descriptionController: _descriptionController,
-                experienceController: _experienceController,
-                nameController: _nameController,
-                savingToDB: _savingToDB,
-              )
-            : ListView(
-                children: [
-                  UserInputContainer(
-                    child: EditableTextFieldRow(
-                      title: 'Skill',
-                      text: _activeSkill!.name,
-                      onSave: (t) => _updateSkill({'name': t}),
-                      inputValidation: (t) => t.length > 2 && t.length < 51,
-                      validationMessage: 'Min 3, max 50 characters',
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: AnimatedSwitcher(
+          duration: kStandardAnimationDuration,
+          child: _activeSkill == null
+              ? _PreCreateInputUI(
+                  addSkill: _createSkill,
+                  experienceController: _experienceController,
+                  nameController: _nameController,
+                  savingToDB: _savingToDB,
+                )
+              : ListView(
+                  children: [
+                    UserInputContainer(
+                      child: EditableTextFieldRow(
+                        title: 'Skill',
+                        text: _activeSkill!.name,
+                        onSave: (t) => _updateSkill({'name': t}),
+                        inputValidation: (t) => t.length > 2 && t.length < 51,
+                        validationMessage: 'Min 3, max 50 characters',
+                      ),
                     ),
-                  ),
-                  UserInputContainer(
-                    child: EditableTextAreaRow(
-                      title: 'Experience',
-                      text: _activeSkill!.experience ?? '',
-                      onSave: (t) => _updateSkill({'experience': t}),
-                      inputValidation: (t) => true,
+                    UserInputContainer(
+                      child: EditableTextAreaRow(
+                        title: 'Experience',
+                        text: _activeSkill!.experience ?? '',
+                        onSave: (t) => _updateSkill({'experience': t}),
+                        inputValidation: (t) => true,
+                      ),
                     ),
-                  ),
-                  ContentBox(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: MyHeaderText('Certification'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: EditableTextFieldRow(
-                          title: 'Certification',
-                          text: _activeSkill!.certification ?? '',
-                          onSave: (t) => _updateSkill({'certification': t}),
-                          inputValidation: (t) => true,
+                    ContentBox(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: MyHeaderText('Certification'),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: EditableTextFieldRow(
-                          title: 'Awarding Body',
-                          text: _activeSkill!.awardingBody ?? '',
-                          onSave: (t) => _updateSkill({'awardingBody': t}),
-                          inputValidation: (t) => true,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: EditableTextFieldRow(
+                            title: 'Certification',
+                            text: _activeSkill!.certification ?? '',
+                            onSave: (t) => _updateSkill({'certification': t}),
+                            inputValidation: (t) => true,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: EditableTextFieldRow(
-                          title: 'Certificate Reference',
-                          text: _activeSkill!.certificateRef ?? '',
-                          onSave: (t) => _updateSkill({'certificateRef': t}),
-                          inputValidation: (t) => true,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: EditableTextFieldRow(
+                            title: 'Awarding Body',
+                            text: _activeSkill!.awardingBody ?? '',
+                            onSave: (t) => _updateSkill({'awardingBody': t}),
+                            inputValidation: (t) => true,
+                          ),
                         ),
-                      )
-                    ],
-                  ))
-                ],
-              ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: EditableTextFieldRow(
+                            title: 'Certificate Reference',
+                            text: _activeSkill!.certificateRef ?? '',
+                            onSave: (t) => _updateSkill({'certificateRef': t}),
+                            inputValidation: (t) => true,
+                          ),
+                        )
+                      ],
+                    ))
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -280,13 +276,11 @@ class _PreCreateInputUI extends StatelessWidget {
   final VoidCallback addSkill;
   final bool savingToDB;
   final TextEditingController nameController;
-  final TextEditingController descriptionController;
   final TextEditingController experienceController;
 
   const _PreCreateInputUI({
     Key? key,
     required this.nameController,
-    required this.descriptionController,
     required this.experienceController,
     required this.addSkill,
     required this.savingToDB,
@@ -319,14 +313,6 @@ class _PreCreateInputUI extends StatelessWidget {
               validator: () => _nameIsValid,
               validationMessage: 'Min 3, max 50 characters',
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 4, right: 4, top: 10),
-            child: MyTextAreaFormFieldRow(
-                placeholder: 'Description (optional)',
-                backgroundColor: context.theme.cardBackground,
-                keyboardType: TextInputType.text,
-                controller: descriptionController),
           ),
           Padding(
             padding: const EdgeInsets.only(left: 4, right: 4, top: 10),

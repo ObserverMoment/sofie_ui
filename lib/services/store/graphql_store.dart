@@ -537,6 +537,14 @@ class GraphQLStore {
     final response =
         await execute(operation, customVariablesMap: customVariablesMap);
 
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
+
     final result = OperationResult<TData>(
         data: operation.parse(response.data ?? {}), errors: response.errors);
 

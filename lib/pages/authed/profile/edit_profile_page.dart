@@ -218,6 +218,7 @@ class EditProfilePage extends StatelessWidget {
                                 horizontal: 6, vertical: 8),
                             child: PageLink(
                                 linkText: 'Skills and Qualifications',
+                                bold: true,
                                 separator: false,
                                 onPress: () =>
                                     context.push(child: const SkillsManager())),
