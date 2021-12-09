@@ -25,7 +25,7 @@ class AudioPlayerController {
         .configure(sessionType ?? const AudioSessionConfiguration.speech());
 
     try {
-      final url = await UploadcareService.getFileUrl(audioUri);
+      final url = UploadcareService.getFileUrl(audioUri);
 
       if (Utils.textNotNull(url)) {
         await player.setUrl(url!);

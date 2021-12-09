@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/other_app_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 
 enum _Network { tiktok, youtube, instagram, linkedin }
 
@@ -29,43 +31,40 @@ class SocialMediaLinks extends StatelessWidget {
     }
   }
 
-  double get _iconSize => 20.0;
+  double get _iconSize => 24.0;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 4.0, top: 4, right: 4),
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 12,
-        alignment: WrapAlignment.center,
-        children: [
-          if (Utils.textNotNull(profile.instagramHandle))
-            _SocialLink(
-                handle: profile.instagramHandle!,
-                icon: InstagramIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(
-                    _Network.instagram, profile.instagramHandle!)),
-          if (Utils.textNotNull(profile.tiktokHandle))
-            _SocialLink(
-                handle: profile.tiktokHandle!,
-                icon: TikTokIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(
-                    _Network.tiktok, profile.tiktokHandle!)),
-          if (Utils.textNotNull(profile.linkedinHandle))
-            _SocialLink(
-                handle: profile.linkedinHandle!,
-                icon: LinkedInIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(
-                    _Network.linkedin, profile.linkedinHandle!)),
-          if (Utils.textNotNull(profile.youtubeHandle))
-            _SocialLink(
-                handle: profile.youtubeHandle!,
-                icon: YouTubeIcon(size: _iconSize),
-                onPressed: () => _handleOpenSocialUrl(
-                    _Network.youtube, profile.youtubeHandle!)),
-        ],
-      ),
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      alignment: WrapAlignment.center,
+      children: [
+        if (Utils.textNotNull(profile.instagramHandle))
+          _SocialLink(
+              handle: profile.instagramHandle!,
+              icon: InstagramIcon(size: _iconSize),
+              onPressed: () => _handleOpenSocialUrl(
+                  _Network.instagram, profile.instagramHandle!)),
+        if (Utils.textNotNull(profile.tiktokHandle))
+          _SocialLink(
+              handle: profile.tiktokHandle!,
+              icon: TikTokIcon(size: _iconSize),
+              onPressed: () =>
+                  _handleOpenSocialUrl(_Network.tiktok, profile.tiktokHandle!)),
+        if (Utils.textNotNull(profile.linkedinHandle))
+          _SocialLink(
+              handle: profile.linkedinHandle!,
+              icon: LinkedInIcon(size: _iconSize),
+              onPressed: () => _handleOpenSocialUrl(
+                  _Network.linkedin, profile.linkedinHandle!)),
+        if (Utils.textNotNull(profile.youtubeHandle))
+          _SocialLink(
+              handle: profile.youtubeHandle!,
+              icon: YouTubeIcon(size: _iconSize),
+              onPressed: () => _handleOpenSocialUrl(
+                  _Network.youtube, profile.youtubeHandle!)),
+      ],
     );
   }
 }
@@ -83,20 +82,24 @@ class _SocialLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            icon,
-            const SizedBox(width: 6),
-            MyText(
-              handle,
-            )
-          ],
+    return ContentBox(
+      backgroundColor: context.theme.cardBackground.withOpacity(0.75),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              icon,
+              const SizedBox(width: 5),
+              MyText(
+                handle,
+              )
+            ],
+          ),
         ),
       ),
     );

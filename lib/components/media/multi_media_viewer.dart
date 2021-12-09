@@ -4,7 +4,6 @@ import 'package:sofie_ui/components/media/documents/pdf_viewer.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:path/path.dart' as p;
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 enum _MediaType { audio, video, image, pdf }
 

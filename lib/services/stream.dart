@@ -199,7 +199,13 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
 /// Onpress it handles follow / unfollow functionality.
 class UserFeedConnectionButton extends StatefulWidget {
   final String otherUserId;
-  const UserFeedConnectionButton({Key? key, required this.otherUserId})
+  final double iconSize;
+  final FONTSIZE fontSize;
+  const UserFeedConnectionButton(
+      {Key? key,
+      required this.otherUserId,
+      this.iconSize = 20,
+      this.fontSize = FONTSIZE.three})
       : super(key: key);
 
   @override
@@ -284,23 +290,24 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
     return AnimatedSwitcher(
         duration: kStandardAnimationDuration,
         child: SizedBox(
-          width: 120,
-          height: 42,
+          height: 44,
           child: _authedUser.id == widget.otherUserId
               ? const Center(child: MyText('...'))
               : _isLoading
                   ? const Center(child: LoadingDots(size: 10))
                   : _isFollowing
-                      ? BorderButton(
+                      ? TertiaryButton(
                           text: 'Following',
+                          prefixIconData: CupertinoIcons.checkmark_alt,
                           onPressed: _unfollowOtherUser,
+                          iconSize: widget.iconSize,
+                          fontSize: widget.fontSize,
                           backgroundColor: Styles.infoBlue,
                           textColor: Styles.white)
-                      : BorderButton(
-                          prefix: const Icon(
-                            CupertinoIcons.person_add,
-                            size: 15,
-                          ),
+                      : TertiaryButton(
+                          prefixIconData: CupertinoIcons.person,
+                          iconSize: widget.iconSize,
+                          fontSize: widget.fontSize,
                           text: 'Follow',
                           onPressed: _followOtherUser),
         ));
