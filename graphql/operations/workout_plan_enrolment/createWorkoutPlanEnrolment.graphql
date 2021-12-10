@@ -3,6 +3,9 @@ mutation createWorkoutPlanEnrolment($workoutPlanId: ID!) {
     __typename
     WorkoutPlanEnrolment {
       ...WorkoutPlanEnrolment
+      CompletedWorkoutPlanDayWorkouts {
+        ...CompletedWorkoutPlanDayWorkout
+      }
       User {
         ...UserSummary
       }

@@ -44,7 +44,10 @@ fragment ScheduledWorkout on ScheduledWorkout {
   id
   scheduledAt
   note
+  workoutPlanName
   workoutPlanEnrolmentId
+  workoutPlanDayWorkoutId
+  loggedWorkoutId
 }
 
 # Minimal data for the poster of a post or the creator of the object referenced by it.

@@ -20,11 +20,14 @@ import 'package:sofie_ui/components/workout_plan_enrolment/workout_plan_enrolmen
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 class WorkoutPlanEnrolmentDetailsPage extends StatefulWidget {
   final String id;
@@ -46,71 +49,118 @@ class _WorkoutPlanEnrolmentDetailsPageState
     setState(() => _activeTabIndex = index);
   }
 
-  Future<void> _updateStartDate(WorkoutPlanEnrolment enrolment) async {
-    context.showBottomSheet(
-        expand: false,
-        child: DateTimePicker(
-          title: 'Change Start Date',
-          dateTime: enrolment.startDate,
-          showDate: true,
-          showTime: false,
-          saveDateTime: (newDate) async {
-            final variables = UpdateWorkoutPlanEnrolmentArguments(
-                data: UpdateWorkoutPlanEnrolmentInput(id: enrolment.id));
-
-            final result = await context.graphQLStore.mutate<
-                    UpdateWorkoutPlanEnrolment$Mutation,
-                    UpdateWorkoutPlanEnrolmentArguments>(
-                mutation:
-                    UpdateWorkoutPlanEnrolmentMutation(variables: variables),
-                broadcastQueryIds: [
-                  GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(enrolment.id),
-                  WorkoutPlanEnrolmentsQuery().operationName,
-                ],
-                customVariablesMap: {
-                  'data': {
-                    'id': enrolment.id,
-                    'startDate': newDate.millisecondsSinceEpoch
-                  }
-                });
-
-            if (result.hasErrors) {
-              context.showErrorAlert(
-                  'Something went wrong, the update did not work.');
-            }
-          },
-        ));
-  }
-
-  void _confirmResetPlan() {
+  void _confirmSchedulePlan() {
     context.showConfirmDialog(
-        title: 'Reset Plan Progress?',
-        verb: 'Reset Progress',
-        message: 'All completed workout progress will be cleared. OK?',
-        onConfirm: _resetCompletedWorkoutPlanDayWorkoutIds);
+        title: 'Schedule Plan',
+        verb: 'Schedule Plan',
+        message:
+            'All workouts will be added to your calendar, starting from your chosen date and time. Any previous schedule will be cleared.',
+        onConfirm: () => _selectScheduleStartDate());
   }
 
-  Future<void> _resetCompletedWorkoutPlanDayWorkoutIds() async {
-    final variables = UpdateWorkoutPlanEnrolmentArguments(
-        data: UpdateWorkoutPlanEnrolmentInput(id: ''));
+  void _selectScheduleStartDate() {
+    context.showBottomSheet(
+        child: DateTimePicker(
+      saveDateTime: _createScheduleForPlanEnrolment,
+      title: 'Start Date and Time',
+    ));
+  }
 
-    final result = await context.graphQLStore.mutate<
-            UpdateWorkoutPlanEnrolment$Mutation,
-            UpdateWorkoutPlanEnrolmentArguments>(
-        mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
+  Future<void> _createScheduleForPlanEnrolment(DateTime startDate) async {
+    final variables = CreateScheduleForPlanEnrolmentArguments(
+        data: CreateScheduleForPlanEnrolmentInput(
+            startDate: startDate, workoutPlanEnrolmentId: widget.id));
+
+    final result = await context.graphQLStore.mutate(
+        mutation: CreateScheduleForPlanEnrolmentMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.userScheduledWorkoutsQuery,
+          GQLOpNames.workoutPlanEnrolmentsQuery
+        ],
         broadcastQueryIds: [
           GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
-          WorkoutPlanEnrolmentsQuery().operationName,
-        ],
-        customVariablesMap: {
-          'data': {'id': widget.id, 'completedPlanDayWorkoutIds': []}
-        });
+        ]);
 
-    if (result.hasErrors) {
-      context.showErrorAlert('Something went wrong, the update did not work.');
-    } else {
-      context.showToast(message: 'Plan progress reset');
-    }
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message:
+            'Plan scheduled! 1st workout on ${startDate.compactDateString}',
+      ),
+    );
+  }
+
+  void _confirmClearSchedule() {
+    context.showConfirmDialog(
+        title: 'Clear Plan Schedule',
+        message:
+            'All workouts from this plan will be removed from your calendar.',
+        onConfirm: _clearScheduleForPlanEnrolment);
+  }
+
+  Future<void> _clearScheduleForPlanEnrolment() async {
+    final variables =
+        ClearScheduleForPlanEnrolmentArguments(enrolmentId: widget.id);
+
+    final result = await context.graphQLStore.mutate(
+        mutation: ClearScheduleForPlanEnrolmentMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.userScheduledWorkoutsQuery,
+          GQLOpNames.workoutPlanEnrolmentsQuery
+        ],
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+        ]);
+
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message: 'Plan schedule removed from your calendar.',
+      ),
+    );
+  }
+
+  /// Deletes all [CompletedWorkoutplanDayWorkouts] from the enrolment - for full reset.
+  void _confirmClearAllProgress() {
+    context.showConfirmDialog(
+        title: 'Clear All Progress',
+        message:
+            'All progress will be reset. Logged workouts will not be deleted, but they will no longer count towards progress in this plan.',
+        onConfirm: _clearWorkoutPlanEnrolmentProgres);
+  }
+
+  Future<void> _clearWorkoutPlanEnrolmentProgres() async {
+    final variables =
+        ClearWorkoutPlanEnrolmentProgressArguments(enrolmentId: widget.id);
+
+    final result = await context.graphQLStore.mutate(
+        mutation:
+            ClearWorkoutPlanEnrolmentProgressMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.workoutPlanEnrolmentsQuery
+        ],
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+        ]);
+
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message: 'Plan progress has been reset.',
+      ),
+    );
   }
 
   Future<void> _shareWorkoutPlan(WorkoutPlan workoutPlan) async {
@@ -207,13 +257,24 @@ class _WorkoutPlanEnrolmentDetailsPageState
                           ),
                           items: [
                             BottomSheetMenuItem(
-                                text: 'Reset progress',
-                                icon: const Icon(CupertinoIcons.refresh_bold),
-                                onPressed: _confirmResetPlan),
-                            BottomSheetMenuItem(
-                                text: 'Change start date',
-                                icon: const Icon(CupertinoIcons.calendar_today),
-                                onPressed: () => _updateStartDate(enrolment)),
+                                text: enrolment.startDate == null
+                                    ? 'Schedule All Workouts'
+                                    : 'Re-schedule All Workouts',
+                                icon: const Icon(
+                                    CupertinoIcons.calendar_badge_plus),
+                                onPressed: _confirmSchedulePlan),
+                            if (enrolment.startDate != null)
+                              BottomSheetMenuItem(
+                                  text: 'Clear Plan Schedule',
+                                  icon: const Icon(
+                                      CupertinoIcons.calendar_badge_minus),
+                                  onPressed: _confirmClearSchedule),
+                            if (enrolment
+                                .completedWorkoutPlanDayWorkouts.isNotEmpty)
+                              BottomSheetMenuItem(
+                                  text: 'Reset progress',
+                                  icon: const Icon(CupertinoIcons.refresh_bold),
+                                  onPressed: _confirmClearAllProgress),
                             BottomSheetMenuItem(
                                 text: 'Share plan',
                                 icon: const Icon(CupertinoIcons.paperplane),
@@ -238,7 +299,8 @@ class _WorkoutPlanEnrolmentDetailsPageState
                       vertical: 12.0,
                     ),
                     child: WorkoutPlanEnrolmentProgressSummary(
-                        completed: enrolment.completedPlanDayWorkoutIds.length,
+                        completed:
+                            enrolment.completedWorkoutPlanDayWorkouts.length,
                         startedOn: enrolment.startDate,
                         total: workoutPlan.workoutsInPlan.length),
                   ),
@@ -255,7 +317,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
                   Expanded(
                     child: IndexedStack(index: _activeTabIndex, children: [
                       WorkoutPlanEnrolmentProgress(
-                        enrolment: enrolmentWithPlan,
+                        enrolmentWithPlan: enrolmentWithPlan,
                       ),
                       WorkoutPlanMeta(
                           workoutPlan: workoutPlan,

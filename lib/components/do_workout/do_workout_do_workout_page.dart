@@ -79,6 +79,10 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
   Future<void> _generateLog() async {
     final loggedWorkout = context.read<DoWorkoutBloc>().generateLog();
     final scheduledWorkout = context.read<DoWorkoutBloc>().scheduledWorkout;
+    final workoutPlanDayWorkoutId =
+        context.read<DoWorkoutBloc>().workoutPlanDayWorkoutId;
+    final workoutPlanEnrolmentId =
+        context.read<DoWorkoutBloc>().workoutPlanEnrolmentId;
 
     context.showConfirmDialog(
         title: 'Save Log and Exit?',
@@ -88,8 +92,10 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
         onConfirm: () async {
           /// Save log to DB.
           final input = LoggedWorkoutCreatorBloc
-              .createLoggedWorkoutInputFromLoggedWorkout(
-                  loggedWorkout, scheduledWorkout);
+              .createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
+                  scheduledWorkout: scheduledWorkout,
+                  workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+                  workoutPlanEnrolmentId: workoutPlanEnrolmentId);
 
           final variables = CreateLoggedWorkoutArguments(data: input);
 

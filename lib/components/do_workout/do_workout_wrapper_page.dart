@@ -15,9 +15,19 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 /// Uses [AutoRouter.declarative] to move the user from the do workout page to the log workout page onec all workout sections are completed.
 class DoWorkoutWrapperPage extends StatefulWidget {
   final String id;
+
+  // When present these should be passed on to log creator.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
   const DoWorkoutWrapperPage(
-      {Key? key, @PathParam('id') required this.id, this.scheduledWorkout})
+      {Key? key,
+      @PathParam('id') required this.id,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : super(key: key);
 
   @override
@@ -77,7 +87,9 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
         builder: (workout) => ChangeNotifierProvider<DoWorkoutBloc>(
               create: (context) => DoWorkoutBloc(
                   originalWorkout: workout,
-                  scheduledWorkout: widget.scheduledWorkout),
+                  scheduledWorkout: widget.scheduledWorkout,
+                  workoutPlanDayWorkoutId: widget.workoutPlanDayWorkoutId,
+                  workoutPlanEnrolmentId: widget.workoutPlanEnrolmentId),
               builder: (context, _) {
                 final mediaSetupComplete = context.select<DoWorkoutBloc, bool>(
                     (b) => b.audioInitSuccess && b.videoInitSuccess);

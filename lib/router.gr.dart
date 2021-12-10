@@ -160,7 +160,9 @@ class AppRouter extends _i62.RootStackRouter {
           child: _i10.DoWorkoutWrapperPage(
               key: args.key,
               id: args.id,
-              scheduledWorkout: args.scheduledWorkout));
+              scheduledWorkout: args.scheduledWorkout,
+              workoutPlanDayWorkoutId: args.workoutPlanDayWorkoutId,
+              workoutPlanEnrolmentId: args.workoutPlanEnrolmentId));
     },
     ArchiveRoute.name: (routeData) {
       return _i62.CupertinoPageX<dynamic>(
@@ -350,7 +352,9 @@ class AppRouter extends _i62.RootStackRouter {
           child: _i39.WorkoutDetailsPage(
               key: args.key,
               id: args.id,
-              scheduledWorkout: args.scheduledWorkout));
+              scheduledWorkout: args.scheduledWorkout,
+              workoutPlanDayWorkoutId: args.workoutPlanDayWorkoutId,
+              workoutPlanEnrolmentId: args.workoutPlanEnrolmentId));
     },
     WorkoutPlanDetailsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
@@ -464,7 +468,9 @@ class AppRouter extends _i62.RootStackRouter {
           child: _i53.LoggedWorkoutCreatorPage(
               key: args.key,
               scheduledWorkout: args.scheduledWorkout,
-              workoutId: args.workoutId));
+              workoutId: args.workoutId,
+              workoutPlanDayWorkoutId: args.workoutPlanDayWorkoutId,
+              workoutPlanEnrolmentId: args.workoutPlanEnrolmentId));
     },
     WorkoutPlanCreatorRoute.name: (routeData) {
       final args = routeData.argsAs<WorkoutPlanCreatorRouteArgs>(
@@ -783,11 +789,17 @@ class DoWorkoutWrapperRoute
   DoWorkoutWrapperRoute(
       {_i64.Key? key,
       required String id,
-      _i65.ScheduledWorkout? scheduledWorkout})
+      _i65.ScheduledWorkout? scheduledWorkout,
+      String? workoutPlanDayWorkoutId,
+      String? workoutPlanEnrolmentId})
       : super(name,
             path: 'do-workout/:id',
             args: DoWorkoutWrapperRouteArgs(
-                key: key, id: id, scheduledWorkout: scheduledWorkout),
+                key: key,
+                id: id,
+                scheduledWorkout: scheduledWorkout,
+                workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+                workoutPlanEnrolmentId: workoutPlanEnrolmentId),
             rawPathParams: {'id': id});
 
   static const String name = 'DoWorkoutWrapperRoute';
@@ -795,7 +807,11 @@ class DoWorkoutWrapperRoute
 
 class DoWorkoutWrapperRouteArgs {
   const DoWorkoutWrapperRouteArgs(
-      {this.key, required this.id, this.scheduledWorkout});
+      {this.key,
+      required this.id,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId});
 
   final _i64.Key? key;
 
@@ -803,9 +819,13 @@ class DoWorkoutWrapperRouteArgs {
 
   final _i65.ScheduledWorkout? scheduledWorkout;
 
+  final String? workoutPlanDayWorkoutId;
+
+  final String? workoutPlanEnrolmentId;
+
   @override
   String toString() {
-    return 'DoWorkoutWrapperRouteArgs{key: $key, id: $id, scheduledWorkout: $scheduledWorkout}';
+    return 'DoWorkoutWrapperRouteArgs{key: $key, id: $id, scheduledWorkout: $scheduledWorkout, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId}';
   }
 }
 
@@ -1287,11 +1307,17 @@ class WorkoutDetailsRoute extends _i62.PageRouteInfo<WorkoutDetailsRouteArgs> {
   WorkoutDetailsRoute(
       {_i64.Key? key,
       required String id,
-      _i65.ScheduledWorkout? scheduledWorkout})
+      _i65.ScheduledWorkout? scheduledWorkout,
+      String? workoutPlanDayWorkoutId,
+      String? workoutPlanEnrolmentId})
       : super(name,
             path: 'workout/:id',
             args: WorkoutDetailsRouteArgs(
-                key: key, id: id, scheduledWorkout: scheduledWorkout),
+                key: key,
+                id: id,
+                scheduledWorkout: scheduledWorkout,
+                workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+                workoutPlanEnrolmentId: workoutPlanEnrolmentId),
             rawPathParams: {'id': id});
 
   static const String name = 'WorkoutDetailsRoute';
@@ -1299,7 +1325,11 @@ class WorkoutDetailsRoute extends _i62.PageRouteInfo<WorkoutDetailsRouteArgs> {
 
 class WorkoutDetailsRouteArgs {
   const WorkoutDetailsRouteArgs(
-      {this.key, required this.id, this.scheduledWorkout});
+      {this.key,
+      required this.id,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId});
 
   final _i64.Key? key;
 
@@ -1307,9 +1337,13 @@ class WorkoutDetailsRouteArgs {
 
   final _i65.ScheduledWorkout? scheduledWorkout;
 
+  final String? workoutPlanDayWorkoutId;
+
+  final String? workoutPlanEnrolmentId;
+
   @override
   String toString() {
-    return 'WorkoutDetailsRouteArgs{key: $key, id: $id, scheduledWorkout: $scheduledWorkout}';
+    return 'WorkoutDetailsRouteArgs{key: $key, id: $id, scheduledWorkout: $scheduledWorkout, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId}';
   }
 }
 
@@ -1654,20 +1688,28 @@ class LoggedWorkoutCreatorRoute
   LoggedWorkoutCreatorRoute(
       {_i64.Key? key,
       _i65.ScheduledWorkout? scheduledWorkout,
-      required String workoutId})
+      required String workoutId,
+      String? workoutPlanDayWorkoutId,
+      String? workoutPlanEnrolmentId})
       : super(name,
             path: 'create/workout-log',
             args: LoggedWorkoutCreatorRouteArgs(
                 key: key,
                 scheduledWorkout: scheduledWorkout,
-                workoutId: workoutId));
+                workoutId: workoutId,
+                workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+                workoutPlanEnrolmentId: workoutPlanEnrolmentId));
 
   static const String name = 'LoggedWorkoutCreatorRoute';
 }
 
 class LoggedWorkoutCreatorRouteArgs {
   const LoggedWorkoutCreatorRouteArgs(
-      {this.key, this.scheduledWorkout, required this.workoutId});
+      {this.key,
+      this.scheduledWorkout,
+      required this.workoutId,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId});
 
   final _i64.Key? key;
 
@@ -1675,9 +1717,13 @@ class LoggedWorkoutCreatorRouteArgs {
 
   final String workoutId;
 
+  final String? workoutPlanDayWorkoutId;
+
+  final String? workoutPlanEnrolmentId;
+
   @override
   String toString() {
-    return 'LoggedWorkoutCreatorRouteArgs{key: $key, scheduledWorkout: $scheduledWorkout, workoutId: $workoutId}';
+    return 'LoggedWorkoutCreatorRouteArgs{key: $key, scheduledWorkout: $scheduledWorkout, workoutId: $workoutId, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId}';
   }
 }
 

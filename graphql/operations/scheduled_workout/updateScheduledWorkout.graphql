@@ -10,7 +10,5 @@ mutation updateScheduledWorkout($data: UpdateScheduledWorkoutInput!) {
         ...Equipment
       }
     }
-    loggedWorkoutId
-    workoutPlanEnrolmentId
   }
 }

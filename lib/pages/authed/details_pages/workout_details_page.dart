@@ -36,9 +36,19 @@ import 'package:sofie_ui/services/utils.dart';
 
 class WorkoutDetailsPage extends StatefulWidget {
   final String id;
+
+  /// When present these should be passed on to Do It / Log It components.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
   const WorkoutDetailsPage(
-      {Key? key, @PathParam('id') required this.id, this.scheduledWorkout})
+      {Key? key,
+      @PathParam('id') required this.id,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : super(key: key);
 
   @override
@@ -331,7 +341,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                         onPressed: () => context.navigateTo(
                             DoWorkoutWrapperRoute(
                                 id: widget.id,
-                                scheduledWorkout: widget.scheduledWorkout)),
+                                scheduledWorkout: widget.scheduledWorkout,
+                                workoutPlanDayWorkoutId:
+                                    widget.workoutPlanDayWorkoutId,
+                                workoutPlanEnrolmentId:
+                                    widget.workoutPlanEnrolmentId)),
                         pageHasBottomNavBar: false,
                         buttonText: 'Do It',
                         buttonIconData: CupertinoIcons.arrow_right_square,
@@ -387,7 +401,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                             LoggedWorkoutCreatorRoute(
                                                 workoutId: workout.id,
                                                 scheduledWorkout:
-                                                    widget.scheduledWorkout))),
+                                                    widget.scheduledWorkout,
+                                                workoutPlanDayWorkoutId: widget
+                                                    .workoutPlanDayWorkoutId,
+                                                workoutPlanEnrolmentId: widget
+                                                    .workoutPlanEnrolmentId))),
                                     if (Utils.textNotNull(
                                         workout.introVideoUri))
                                       _ActionIconButton(

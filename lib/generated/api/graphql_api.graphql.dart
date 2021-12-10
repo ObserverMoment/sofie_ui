@@ -300,27 +300,33 @@ mixin WorkoutPlanDayWorkoutMixin {
   String? note;
   late int sortPosition;
 }
-mixin WorkoutPlanEnrolmentMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime startDate;
-  late List<String> completedPlanDayWorkoutIds;
-}
 mixin WorkoutPlanEnrolmentSummaryMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
   late String id;
   @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime startDate;
-  late List<String> completedPlanDayWorkoutIds;
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? startDate;
+  late int completedWorkoutsCount;
   @JsonKey(name: 'WorkoutPlan')
   late WorkoutPlanSummary workoutPlan;
+}
+mixin CompletedWorkoutPlanDayWorkoutMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late String loggedWorkoutId;
+  late String workoutPlanDayWorkoutId;
+}
+mixin WorkoutPlanEnrolmentMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? startDate;
 }
 mixin WorkoutPlanDataMixin {
   @JsonKey(name: '__typename')
@@ -663,7 +669,10 @@ mixin ScheduledWorkoutMixin {
       toJson: fromDartDateTimeToGraphQLDateTime)
   late DateTime scheduledAt;
   String? note;
+  String? workoutPlanName;
   String? workoutPlanEnrolmentId;
+  String? workoutPlanDayWorkoutId;
+  String? loggedWorkoutId;
 }
 mixin TimelinePostObjectDataUserMixin {
   @JsonKey(name: '__typename')
@@ -2286,67 +2295,6 @@ class DeleteWorkoutPlanDayWorkoutById$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class WorkoutPlanEnrolment extends JsonSerializable
-    with EquatableMixin, WorkoutPlanEnrolmentMixin {
-  WorkoutPlanEnrolment();
-
-  factory WorkoutPlanEnrolment.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutPlanEnrolmentFromJson(json);
-
-  @JsonKey(name: 'User')
-  late UserSummary user;
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, startDate, completedPlanDayWorkoutIds, user];
-  @override
-  Map<String, dynamic> toJson() => _$WorkoutPlanEnrolmentToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateWorkoutPlanEnrolment$Mutation extends JsonSerializable
-    with EquatableMixin {
-  UpdateWorkoutPlanEnrolment$Mutation();
-
-  factory UpdateWorkoutPlanEnrolment$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$UpdateWorkoutPlanEnrolment$MutationFromJson(json);
-
-  late WorkoutPlanEnrolment updateWorkoutPlanEnrolment;
-
-  @override
-  List<Object?> get props => [updateWorkoutPlanEnrolment];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateWorkoutPlanEnrolment$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateWorkoutPlanEnrolmentInput extends JsonSerializable
-    with EquatableMixin {
-  UpdateWorkoutPlanEnrolmentInput(
-      {this.completedPlanDayWorkoutIds, required this.id, this.startDate});
-
-  factory UpdateWorkoutPlanEnrolmentInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateWorkoutPlanEnrolmentInputFromJson(json);
-
-  List<String>? completedPlanDayWorkoutIds;
-
-  late String id;
-
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? startDate;
-
-  @override
-  List<Object?> get props => [completedPlanDayWorkoutIds, id, startDate];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateWorkoutPlanEnrolmentInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class DeleteWorkoutPlanEnrolmentById$Mutation extends JsonSerializable
     with EquatableMixin {
   DeleteWorkoutPlanEnrolmentById$Mutation();
@@ -2374,7 +2322,7 @@ class WorkoutPlanEnrolmentSummary extends JsonSerializable
 
   @override
   List<Object?> get props =>
-      [$$typename, id, startDate, completedPlanDayWorkoutIds, workoutPlan];
+      [$$typename, id, startDate, completedWorkoutsCount, workoutPlan];
   @override
   Map<String, dynamic> toJson() => _$WorkoutPlanEnrolmentSummaryToJson(this);
 }
@@ -2425,6 +2373,42 @@ class WorkoutPlanEnrolmentSummaryMixin$WorkoutPlanSummary
   @override
   Map<String, dynamic> toJson() =>
       _$WorkoutPlanEnrolmentSummaryMixin$WorkoutPlanSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CompletedWorkoutPlanDayWorkout extends JsonSerializable
+    with EquatableMixin, CompletedWorkoutPlanDayWorkoutMixin {
+  CompletedWorkoutPlanDayWorkout();
+
+  factory CompletedWorkoutPlanDayWorkout.fromJson(Map<String, dynamic> json) =>
+      _$CompletedWorkoutPlanDayWorkoutFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, loggedWorkoutId, workoutPlanDayWorkoutId];
+  @override
+  Map<String, dynamic> toJson() => _$CompletedWorkoutPlanDayWorkoutToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutPlanEnrolment extends JsonSerializable
+    with EquatableMixin, WorkoutPlanEnrolmentMixin {
+  WorkoutPlanEnrolment();
+
+  factory WorkoutPlanEnrolment.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutPlanEnrolmentFromJson(json);
+
+  @JsonKey(name: 'CompletedWorkoutPlanDayWorkouts')
+  late List<CompletedWorkoutPlanDayWorkout> completedWorkoutPlanDayWorkouts;
+
+  @JsonKey(name: 'User')
+  late UserSummary user;
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, startDate, completedWorkoutPlanDayWorkouts, user];
+  @override
+  Map<String, dynamic> toJson() => _$WorkoutPlanEnrolmentToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2579,12 +2563,15 @@ class WorkoutPlanDataMixin$WorkoutPlanEnrolment extends JsonSerializable
           Map<String, dynamic> json) =>
       _$WorkoutPlanDataMixin$WorkoutPlanEnrolmentFromJson(json);
 
+  @JsonKey(name: 'CompletedWorkoutPlanDayWorkouts')
+  late List<CompletedWorkoutPlanDayWorkout> completedWorkoutPlanDayWorkouts;
+
   @JsonKey(name: 'User')
   late UserSummary user;
 
   @override
   List<Object?> get props =>
-      [$$typename, id, startDate, completedPlanDayWorkoutIds, user];
+      [$$typename, id, startDate, completedWorkoutPlanDayWorkouts, user];
   @override
   Map<String, dynamic> toJson() =>
       _$WorkoutPlanDataMixin$WorkoutPlanEnrolmentToJson(this);
@@ -3719,6 +3706,8 @@ class CreateLoggedWorkoutInput extends JsonSerializable with EquatableMixin {
       this.scheduledWorkout,
       this.workout,
       required this.workoutGoals,
+      this.workoutPlanDayWorkout,
+      this.workoutPlanEnrolment,
       required this.completedOn,
       required this.name,
       this.note});
@@ -3742,6 +3731,12 @@ class CreateLoggedWorkoutInput extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'WorkoutGoals')
   late List<ConnectRelationInput> workoutGoals;
 
+  @JsonKey(name: 'WorkoutPlanDayWorkout')
+  ConnectRelationInput? workoutPlanDayWorkout;
+
+  @JsonKey(name: 'WorkoutPlanEnrolment')
+  ConnectRelationInput? workoutPlanEnrolment;
+
   @JsonKey(
       fromJson: fromGraphQLDateTimeToDartDateTime,
       toJson: fromDartDateTimeToGraphQLDateTime)
@@ -3758,6 +3753,8 @@ class CreateLoggedWorkoutInput extends JsonSerializable with EquatableMixin {
         scheduledWorkout,
         workout,
         workoutGoals,
+        workoutPlanDayWorkout,
+        workoutPlanEnrolment,
         completedOn,
         name,
         note
@@ -6550,20 +6547,18 @@ class ScheduledWorkout extends JsonSerializable
   @JsonKey(name: 'GymProfile')
   GymProfile? gymProfile;
 
-  String? loggedWorkoutId;
-
-  String? workoutPlanEnrolmentId;
-
   @override
   List<Object?> get props => [
         $$typename,
         id,
         scheduledAt,
         note,
+        workoutPlanName,
         workoutPlanEnrolmentId,
+        workoutPlanDayWorkoutId,
+        loggedWorkoutId,
         workout,
-        gymProfile,
-        loggedWorkoutId
+        gymProfile
       ];
   @override
   Map<String, dynamic> toJson() => _$ScheduledWorkoutToJson(this);
@@ -6591,8 +6586,6 @@ class UpdateScheduledWorkoutInput extends JsonSerializable with EquatableMixin {
   UpdateScheduledWorkoutInput(
       {this.gymProfile,
       this.loggedWorkout,
-      this.workout,
-      this.workoutPlanEnrolment,
       required this.id,
       this.note,
       this.scheduledAt});
@@ -6606,12 +6599,6 @@ class UpdateScheduledWorkoutInput extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'LoggedWorkout')
   ConnectRelationInput? loggedWorkout;
 
-  @JsonKey(name: 'Workout')
-  ConnectRelationInput? workout;
-
-  @JsonKey(name: 'WorkoutPlanEnrolment')
-  ConnectRelationInput? workoutPlanEnrolment;
-
   late String id;
 
   String? note;
@@ -6622,15 +6609,7 @@ class UpdateScheduledWorkoutInput extends JsonSerializable with EquatableMixin {
   DateTime? scheduledAt;
 
   @override
-  List<Object?> get props => [
-        gymProfile,
-        loggedWorkout,
-        workout,
-        workoutPlanEnrolment,
-        id,
-        note,
-        scheduledAt
-      ];
+  List<Object?> get props => [gymProfile, loggedWorkout, id, note, scheduledAt];
   @override
   Map<String, dynamic> toJson() => _$UpdateScheduledWorkoutInputToJson(this);
 }
@@ -6657,6 +6636,7 @@ class CreateScheduledWorkoutInput extends JsonSerializable with EquatableMixin {
   CreateScheduledWorkoutInput(
       {this.gymProfile,
       required this.workout,
+      this.workoutPlanDayWorkout,
       this.workoutPlanEnrolment,
       this.note,
       required this.scheduledAt});
@@ -6670,6 +6650,9 @@ class CreateScheduledWorkoutInput extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'Workout')
   late ConnectRelationInput workout;
 
+  @JsonKey(name: 'WorkoutPlanDayWorkout')
+  ConnectRelationInput? workoutPlanDayWorkout;
+
   @JsonKey(name: 'WorkoutPlanEnrolment')
   ConnectRelationInput? workoutPlanEnrolment;
 
@@ -6681,8 +6664,14 @@ class CreateScheduledWorkoutInput extends JsonSerializable with EquatableMixin {
   late DateTime scheduledAt;
 
   @override
-  List<Object?> get props =>
-      [gymProfile, workout, workoutPlanEnrolment, note, scheduledAt];
+  List<Object?> get props => [
+        gymProfile,
+        workout,
+        workoutPlanDayWorkout,
+        workoutPlanEnrolment,
+        note,
+        scheduledAt
+      ];
   @override
   Map<String, dynamic> toJson() => _$CreateScheduledWorkoutInputToJson(this);
 }
@@ -7690,6 +7679,168 @@ class DeleteClubInviteTokenById$Mutation extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$DeleteClubInviteTokenById$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClearScheduleForPlanEnrolment$Mutation extends JsonSerializable
+    with EquatableMixin {
+  ClearScheduleForPlanEnrolment$Mutation();
+
+  factory ClearScheduleForPlanEnrolment$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClearScheduleForPlanEnrolment$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment clearScheduleForPlanEnrolment;
+
+  @override
+  List<Object?> get props => [clearScheduleForPlanEnrolment];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClearScheduleForPlanEnrolment$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteCompletedWorkoutPlanDayWorkout$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteCompletedWorkoutPlanDayWorkout$Mutation();
+
+  factory DeleteCompletedWorkoutPlanDayWorkout$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteCompletedWorkoutPlanDayWorkout$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment deleteCompletedWorkoutPlanDayWorkout;
+
+  @override
+  List<Object?> get props => [deleteCompletedWorkoutPlanDayWorkout];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteCompletedWorkoutPlanDayWorkout$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteCompletedWorkoutPlanDayWorkoutInput extends JsonSerializable
+    with EquatableMixin {
+  DeleteCompletedWorkoutPlanDayWorkoutInput(
+      {required this.workoutPlanDayWorkoutId,
+      required this.workoutPlanEnrolmentId});
+
+  factory DeleteCompletedWorkoutPlanDayWorkoutInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteCompletedWorkoutPlanDayWorkoutInputFromJson(json);
+
+  late String workoutPlanDayWorkoutId;
+
+  late String workoutPlanEnrolmentId;
+
+  @override
+  List<Object?> get props => [workoutPlanDayWorkoutId, workoutPlanEnrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteCompletedWorkoutPlanDayWorkoutInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClearWorkoutPlanEnrolmentProgress$Mutation extends JsonSerializable
+    with EquatableMixin {
+  ClearWorkoutPlanEnrolmentProgress$Mutation();
+
+  factory ClearWorkoutPlanEnrolmentProgress$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClearWorkoutPlanEnrolmentProgress$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment clearWorkoutPlanEnrolmentProgress;
+
+  @override
+  List<Object?> get props => [clearWorkoutPlanEnrolmentProgress];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClearWorkoutPlanEnrolmentProgress$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateScheduleForPlanEnrolment$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateScheduleForPlanEnrolment$Mutation();
+
+  factory CreateScheduleForPlanEnrolment$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateScheduleForPlanEnrolment$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment createScheduleForPlanEnrolment;
+
+  @override
+  List<Object?> get props => [createScheduleForPlanEnrolment];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateScheduleForPlanEnrolment$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateScheduleForPlanEnrolmentInput extends JsonSerializable
+    with EquatableMixin {
+  CreateScheduleForPlanEnrolmentInput(
+      {required this.startDate, required this.workoutPlanEnrolmentId});
+
+  factory CreateScheduleForPlanEnrolmentInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateScheduleForPlanEnrolmentInputFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime startDate;
+
+  late String workoutPlanEnrolmentId;
+
+  @override
+  List<Object?> get props => [startDate, workoutPlanEnrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateScheduleForPlanEnrolmentInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateCompletedWorkoutPlanDayWorkout$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateCompletedWorkoutPlanDayWorkout$Mutation();
+
+  factory CreateCompletedWorkoutPlanDayWorkout$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateCompletedWorkoutPlanDayWorkout$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment createCompletedWorkoutPlanDayWorkout;
+
+  @override
+  List<Object?> get props => [createCompletedWorkoutPlanDayWorkout];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateCompletedWorkoutPlanDayWorkout$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateCompletedWorkoutPlanDayWorkoutInput extends JsonSerializable
+    with EquatableMixin {
+  CreateCompletedWorkoutPlanDayWorkoutInput(
+      {required this.loggedWorkoutId,
+      required this.workoutPlanDayWorkoutId,
+      required this.workoutPlanEnrolmentId});
+
+  factory CreateCompletedWorkoutPlanDayWorkoutInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateCompletedWorkoutPlanDayWorkoutInputFromJson(json);
+
+  late String loggedWorkoutId;
+
+  late String workoutPlanDayWorkoutId;
+
+  late String workoutPlanEnrolmentId;
+
+  @override
+  List<Object?> get props =>
+      [loggedWorkoutId, workoutPlanDayWorkoutId, workoutPlanEnrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateCompletedWorkoutPlanDayWorkoutInputToJson(this);
 }
 
 enum UserProfileScope {
@@ -17548,157 +17699,6 @@ class DeleteWorkoutPlanDayWorkoutByIdMutation extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class UpdateWorkoutPlanEnrolmentArguments extends JsonSerializable
-    with EquatableMixin {
-  UpdateWorkoutPlanEnrolmentArguments({required this.data});
-
-  @override
-  factory UpdateWorkoutPlanEnrolmentArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$UpdateWorkoutPlanEnrolmentArgumentsFromJson(json);
-
-  late UpdateWorkoutPlanEnrolmentInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateWorkoutPlanEnrolmentArgumentsToJson(this);
-}
-
-final UPDATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateWorkoutPlanEnrolment'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateWorkoutPlanEnrolmentInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateWorkoutPlanEnrolment'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutPlanEnrolment'),
-                  directives: []),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanEnrolment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateWorkoutPlanEnrolmentMutation extends GraphQLQuery<
-    UpdateWorkoutPlanEnrolment$Mutation, UpdateWorkoutPlanEnrolmentArguments> {
-  UpdateWorkoutPlanEnrolmentMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateWorkoutPlanEnrolment';
-
-  @override
-  final UpdateWorkoutPlanEnrolmentArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateWorkoutPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
-      UpdateWorkoutPlanEnrolment$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
 class DeleteWorkoutPlanEnrolmentByIdArguments extends JsonSerializable
     with EquatableMixin {
   DeleteWorkoutPlanEnrolmentByIdArguments({required this.id});
@@ -17811,7 +17811,7 @@ final WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
+            name: NameNode(value: 'completedWorkoutsCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18089,6 +18089,18 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'WorkoutPlanEnrolment'),
                         directives: []),
                     FieldNode(
+                        name:
+                            NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(
+                                  value: 'CompletedWorkoutPlanDayWorkout'),
+                              directives: [])
+                        ])),
+                    FieldNode(
                         name: NameNode(value: 'User'),
                         alias: null,
                         arguments: [],
@@ -18110,6 +18122,39 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                         directives: [])
                   ]))
             ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'UserSummary'),
@@ -18170,12 +18215,6 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18340,6 +18379,16 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
               FragmentSpreadNode(
                   name: NameNode(value: 'WorkoutPlanEnrolment'),
                   directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
               FieldNode(
                   name: NameNode(value: 'User'),
                   alias: null,
@@ -19213,6 +19262,18 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
                         name: NameNode(value: 'WorkoutPlanEnrolment'),
                         directives: []),
                     FieldNode(
+                        name:
+                            NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(
+                                  value: 'CompletedWorkoutPlanDayWorkout'),
+                              directives: [])
+                        ])),
+                    FieldNode(
                         name: NameNode(value: 'User'),
                         alias: null,
                         arguments: [],
@@ -19234,6 +19295,39 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
                         directives: [])
                   ]))
             ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'UserSummary'),
@@ -19294,12 +19388,6 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19464,6 +19552,16 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
               FragmentSpreadNode(
                   name: NameNode(value: 'WorkoutPlanEnrolment'),
                   directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
               FieldNode(
                   name: NameNode(value: 'User'),
                   alias: null,
@@ -31925,6 +32023,16 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   name: NameNode(value: 'WorkoutPlanEnrolment'),
                   directives: []),
               FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
                   name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
@@ -32755,6 +32863,39 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
@@ -32775,12 +32916,6 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
             alias: null,
             arguments: [],
             directives: [],
@@ -33454,6 +33589,16 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   name: NameNode(value: 'WorkoutPlanEnrolment'),
                   directives: []),
               FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
                   name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
@@ -34284,6 +34429,39 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
@@ -34304,12 +34482,6 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
             alias: null,
             arguments: [],
             directives: [],
@@ -34903,6 +35075,16 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
                   name: NameNode(value: 'WorkoutPlanEnrolment'),
                   directives: []),
               FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
                   name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
@@ -35733,6 +35915,39 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
@@ -35753,12 +35968,6 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedPlanDayWorkoutIds'),
             alias: null,
             arguments: [],
             directives: [],
@@ -44949,19 +45158,7 @@ final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               name: NameNode(value: 'Equipment'),
                               directives: [])
                         ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'loggedWorkoutId'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'workoutPlanEnrolmentId'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -45199,7 +45396,25 @@ final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'workoutPlanName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'workoutPlanEnrolmentId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
@@ -45299,19 +45514,7 @@ final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               name: NameNode(value: 'Equipment'),
                               directives: [])
                         ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'loggedWorkoutId'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'workoutPlanEnrolmentId'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -45549,7 +45752,25 @@ final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'workoutPlanName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'workoutPlanEnrolmentId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
@@ -45619,19 +45840,7 @@ final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
                               name: NameNode(value: 'Equipment'),
                               directives: [])
                         ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'loggedWorkoutId'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null),
-              FieldNode(
-                  name: NameNode(value: 'workoutPlanEnrolmentId'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: null)
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -45869,7 +46078,25 @@ final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'workoutPlanName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'workoutPlanEnrolmentId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
@@ -54343,4 +54570,954 @@ class DeleteClubInviteTokenByIdMutation extends GraphQLQuery<
   @override
   DeleteClubInviteTokenById$Mutation parse(Map<String, dynamic> json) =>
       DeleteClubInviteTokenById$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClearScheduleForPlanEnrolmentArguments extends JsonSerializable
+    with EquatableMixin {
+  ClearScheduleForPlanEnrolmentArguments({required this.enrolmentId});
+
+  @override
+  factory ClearScheduleForPlanEnrolmentArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClearScheduleForPlanEnrolmentArgumentsFromJson(json);
+
+  late String enrolmentId;
+
+  @override
+  List<Object?> get props => [enrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClearScheduleForPlanEnrolmentArgumentsToJson(this);
+}
+
+final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'clearScheduleForPlanEnrolment'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'enrolmentId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clearScheduleForPlanEnrolment'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'enrolmentId'),
+                  value: VariableNode(name: NameNode(value: 'enrolmentId')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserSummary'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'startDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClearScheduleForPlanEnrolmentMutation extends GraphQLQuery<
+    ClearScheduleForPlanEnrolment$Mutation,
+    ClearScheduleForPlanEnrolmentArguments> {
+  ClearScheduleForPlanEnrolmentMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'clearScheduleForPlanEnrolment';
+
+  @override
+  final ClearScheduleForPlanEnrolmentArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClearScheduleForPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
+      ClearScheduleForPlanEnrolment$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteCompletedWorkoutPlanDayWorkoutArguments({required this.data});
+
+  @override
+  factory DeleteCompletedWorkoutPlanDayWorkoutArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsFromJson(json);
+
+  late DeleteCompletedWorkoutPlanDayWorkoutInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
+}
+
+final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteCompletedWorkoutPlanDayWorkout'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(
+                    value: 'DeleteCompletedWorkoutPlanDayWorkoutInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteCompletedWorkoutPlanDayWorkout'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserSummary'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'startDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
+    DeleteCompletedWorkoutPlanDayWorkout$Mutation,
+    DeleteCompletedWorkoutPlanDayWorkoutArguments> {
+  DeleteCompletedWorkoutPlanDayWorkoutMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteCompletedWorkoutPlanDayWorkout';
+
+  @override
+  final DeleteCompletedWorkoutPlanDayWorkoutArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteCompletedWorkoutPlanDayWorkout$Mutation parse(
+          Map<String, dynamic> json) =>
+      DeleteCompletedWorkoutPlanDayWorkout$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClearWorkoutPlanEnrolmentProgressArguments extends JsonSerializable
+    with EquatableMixin {
+  ClearWorkoutPlanEnrolmentProgressArguments({required this.enrolmentId});
+
+  @override
+  factory ClearWorkoutPlanEnrolmentProgressArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClearWorkoutPlanEnrolmentProgressArgumentsFromJson(json);
+
+  late String enrolmentId;
+
+  @override
+  List<Object?> get props => [enrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClearWorkoutPlanEnrolmentProgressArgumentsToJson(this);
+}
+
+final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'clearWorkoutPlanEnrolmentProgress'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'enrolmentId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clearWorkoutPlanEnrolmentProgress'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'enrolmentId'),
+                  value: VariableNode(name: NameNode(value: 'enrolmentId')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserSummary'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'startDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClearWorkoutPlanEnrolmentProgressMutation extends GraphQLQuery<
+    ClearWorkoutPlanEnrolmentProgress$Mutation,
+    ClearWorkoutPlanEnrolmentProgressArguments> {
+  ClearWorkoutPlanEnrolmentProgressMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'clearWorkoutPlanEnrolmentProgress';
+
+  @override
+  final ClearWorkoutPlanEnrolmentProgressArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClearWorkoutPlanEnrolmentProgress$Mutation parse(Map<String, dynamic> json) =>
+      ClearWorkoutPlanEnrolmentProgress$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateScheduleForPlanEnrolmentArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateScheduleForPlanEnrolmentArguments({required this.data});
+
+  @override
+  factory CreateScheduleForPlanEnrolmentArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateScheduleForPlanEnrolmentArgumentsFromJson(json);
+
+  late CreateScheduleForPlanEnrolmentInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateScheduleForPlanEnrolmentArgumentsToJson(this);
+}
+
+final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createScheduleForPlanEnrolment'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateScheduleForPlanEnrolmentInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createScheduleForPlanEnrolment'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserSummary'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'startDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateScheduleForPlanEnrolmentMutation extends GraphQLQuery<
+    CreateScheduleForPlanEnrolment$Mutation,
+    CreateScheduleForPlanEnrolmentArguments> {
+  CreateScheduleForPlanEnrolmentMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createScheduleForPlanEnrolment';
+
+  @override
+  final CreateScheduleForPlanEnrolmentArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateScheduleForPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
+      CreateScheduleForPlanEnrolment$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateCompletedWorkoutPlanDayWorkoutArguments({required this.data});
+
+  @override
+  factory CreateCompletedWorkoutPlanDayWorkoutArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateCompletedWorkoutPlanDayWorkoutArgumentsFromJson(json);
+
+  late CreateCompletedWorkoutPlanDayWorkoutInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
+}
+
+final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createCompletedWorkoutPlanDayWorkout'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(
+                    value: 'CreateCompletedWorkoutPlanDayWorkoutInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createCompletedWorkoutPlanDayWorkout'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserSummary'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userProfileScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'startDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
+    CreateCompletedWorkoutPlanDayWorkout$Mutation,
+    CreateCompletedWorkoutPlanDayWorkoutArguments> {
+  CreateCompletedWorkoutPlanDayWorkoutMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createCompletedWorkoutPlanDayWorkout';
+
+  @override
+  final CreateCompletedWorkoutPlanDayWorkoutArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateCompletedWorkoutPlanDayWorkout$Mutation parse(
+          Map<String, dynamic> json) =>
+      CreateCompletedWorkoutPlanDayWorkout$Mutation.fromJson(json);
 }

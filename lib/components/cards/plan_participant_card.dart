@@ -61,7 +61,7 @@ class ParticipantCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             WorkoutPlanEnrolmentProgressSummary(
-              completed: enrolment.completedPlanDayWorkoutIds.length,
+              completed: enrolment.completedWorkoutPlanDayWorkouts.length,
               startedOn: enrolment.startDate,
               total: totalWorkouts,
             ),

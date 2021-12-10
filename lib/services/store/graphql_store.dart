@@ -255,6 +255,15 @@ class GraphQLStore {
     }
   }
 
+  Future<void> refetchQueriesByIds(List<String> ids) async {
+    for (final id in ids) {
+      final observableQueries = _getQueriesbyId(id);
+      for (final q in observableQueries) {
+        await _queryNetwork(q.id);
+      }
+    }
+  }
+
   /////////////////////////////////////
   ////// Request executions ///////////
   /////////////////////////////////////
@@ -360,11 +369,16 @@ class GraphQLStore {
   Future<OperationResult<TData>>
       mutate<TData, TVars extends json.JsonSerializable>({
     required GraphQLQuery<TData, TVars> mutation,
-    List<String> broadcastQueryIds = const [],
 
     /// If you want to add / remove ref to / from queries the you have to provide [id] and [__typename] in the optimistic data and these fields must also be returned by the api in the result object.
     List<String> addRefToQueries = const [],
     List<String> removeRefFromQueries = const [],
+
+    /// Query IDs passed here will be refetched from the network. Data will be added to store and then the query broadcast.
+    List<String> refetchQueryIds = const [],
+
+    /// Broascast from the store - no network request made.
+    List<String> broadcastQueryIds = const [],
 
     /// Remove a whole query key from the store.
     /// Useful when deleting single objects that have query root data in the store.
@@ -377,6 +391,14 @@ class GraphQLStore {
   }) async {
     final response =
         await execute(mutation, customVariablesMap: customVariablesMap);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
@@ -420,6 +442,7 @@ class GraphQLStore {
       }
 
       broadcastQueriesByIds(broadcastQueryIds);
+      refetchQueriesByIds(refetchQueryIds);
     }
 
     return result;

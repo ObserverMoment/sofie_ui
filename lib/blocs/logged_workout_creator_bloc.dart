@@ -27,7 +27,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   final LoggedWorkout? prevLoggedWorkout;
   final Workout? workout;
+
+  /// When present these will be passed on to log creation function.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
 
   /// Before every update we make a copy of the last workout here.
   /// If there is an issue calling the api then this is reverted to.
@@ -49,11 +55,16 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       {required this.context,
       this.prevLoggedWorkout,
       this.workout,
-      this.scheduledWorkout})
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : assert(
             (prevLoggedWorkout == null && workout != null) ||
                 (prevLoggedWorkout != null && workout == null),
             'Provide a prior log to edit, or a workout to create a log from, not both, or neither') {
+    print(workoutPlanDayWorkoutId);
+    print(workoutPlanEnrolmentId);
+
     if (prevLoggedWorkout != null) {
       _isEditing = true;
       loggedWorkout = prevLoggedWorkout!.copyAndSortAllChildren;
@@ -153,8 +164,10 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   /// Used when creating only - when editing we save incrementally.
   Future<OperationResult> createAndSave(BuildContext context) async {
-    final input = createLoggedWorkoutInputFromLoggedWorkout(
-        loggedWorkout, scheduledWorkout);
+    final input = createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
+        scheduledWorkout: scheduledWorkout,
+        workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+        workoutPlanEnrolmentId: workoutPlanEnrolmentId);
 
     final variables = CreateLoggedWorkoutArguments(data: input);
 
@@ -476,7 +489,10 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   /// [scheduledWorkout.gymProfile] or to [loggedWorkout.gymProfile].
   /// [loggedWorkout.gymProfile] will take precedence over [scheduledWorkout.gymProfile].
   static CreateLoggedWorkoutInput createLoggedWorkoutInputFromLoggedWorkout(
-      LoggedWorkout loggedWorkout, ScheduledWorkout? scheduledWorkout) {
+      LoggedWorkout loggedWorkout,
+      {ScheduledWorkout? scheduledWorkout,
+      String? workoutPlanDayWorkoutId,
+      String? workoutPlanEnrolmentId}) {
     final gymProfile = loggedWorkout.gymProfile ?? scheduledWorkout?.gymProfile;
 
     return CreateLoggedWorkoutInput(
@@ -484,6 +500,12 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       note: loggedWorkout.note,
       scheduledWorkout: scheduledWorkout != null
           ? ConnectRelationInput(id: scheduledWorkout.id)
+          : null,
+      workoutPlanDayWorkout: workoutPlanDayWorkoutId != null
+          ? ConnectRelationInput(id: workoutPlanDayWorkoutId)
+          : null,
+      workoutPlanEnrolment: workoutPlanEnrolmentId != null
+          ? ConnectRelationInput(id: workoutPlanEnrolmentId)
           : null,
       gymProfile:
           gymProfile != null ? ConnectRelationInput(id: gymProfile.id) : null,

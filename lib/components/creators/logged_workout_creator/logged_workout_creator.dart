@@ -15,9 +15,19 @@ import 'package:sofie_ui/services/store/query_observer.dart';
 
 class LoggedWorkoutCreatorPage extends StatefulWidget {
   final String workoutId;
+
+  // When present these should be connected to the log
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
   const LoggedWorkoutCreatorPage(
-      {Key? key, this.scheduledWorkout, required this.workoutId})
+      {Key? key,
+      this.scheduledWorkout,
+      required this.workoutId,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : super(key: key);
 
   @override
@@ -70,7 +80,9 @@ class _LoggedWorkoutCreatorPageState extends State<LoggedWorkoutCreatorPage> {
               create: (context) => LoggedWorkoutCreatorBloc(
                   context: context,
                   workout: data.workoutById,
-                  scheduledWorkout: widget.scheduledWorkout),
+                  scheduledWorkout: widget.scheduledWorkout,
+                  workoutPlanDayWorkoutId: widget.workoutPlanDayWorkoutId,
+                  workoutPlanEnrolmentId: widget.workoutPlanEnrolmentId),
               builder: (context, child) {
                 final requireUserInputs =
                     context.select<LoggedWorkoutCreatorBloc, bool>(

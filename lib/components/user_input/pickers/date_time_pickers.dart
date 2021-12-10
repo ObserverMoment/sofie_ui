@@ -205,7 +205,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       cancel: context.pop,
       validToSave: true,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
             DateTimePickerDisplayRow(

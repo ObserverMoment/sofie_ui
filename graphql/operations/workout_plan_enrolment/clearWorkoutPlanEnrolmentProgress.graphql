@@ -1,0 +1,11 @@
+mutation clearWorkoutPlanEnrolmentProgress($enrolmentId: ID!) {
+  clearWorkoutPlanEnrolmentProgress(enrolmentId: $enrolmentId) {
+    ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
+    User {
+      ...UserSummary
+    }
+  }
+}
