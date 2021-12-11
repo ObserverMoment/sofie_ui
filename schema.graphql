@@ -509,7 +509,7 @@ enum LoadUnit {
 type LoggedWorkout {
   GymProfile: GymProfile
   LoggedWorkoutSections: [LoggedWorkoutSection!]!
-  ScheduledWorkout: ScheduledWorkout
+  User: UserSummary!
   WorkoutGoals: [WorkoutGoal!]!
   completedOn: DateTime!
   id: ID!

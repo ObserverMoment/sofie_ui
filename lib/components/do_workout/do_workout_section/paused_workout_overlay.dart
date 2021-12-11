@@ -17,12 +17,17 @@ class PausedWorkoutOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Styles.black.withOpacity(0.7),
+      color: Styles.black.withOpacity(0.5),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          StartResumeButton(
-            sectionIndex: workoutSection.sortPosition,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              StartResumeButton(
+                sectionIndex: workoutSection.sortPosition,
+              ),
+            ],
           ),
           if (workoutSection.isLifting || workoutSection.isCustomSession)
             const _InstructionsCard(child: _LiftingSectionInstructions()),

@@ -2622,6 +2622,7 @@ LoggedWorkout _$LoggedWorkoutFromJson(Map<String, dynamic> json) =>
       ..note = json['note'] as String?
       ..name = json['name'] as String
       ..workoutId = json['workoutId'] as String?
+      ..user = UserSummary.fromJson(json['User'] as Map<String, dynamic>)
       ..gymProfile = json['GymProfile'] == null
           ? null
           : GymProfile.fromJson(json['GymProfile'] as Map<String, dynamic>)
@@ -2640,6 +2641,7 @@ Map<String, dynamic> _$LoggedWorkoutToJson(LoggedWorkout instance) =>
       'note': instance.note,
       'name': instance.name,
       'workoutId': instance.workoutId,
+      'User': instance.user.toJson(),
       'GymProfile': instance.gymProfile?.toJson(),
       'WorkoutGoals': instance.workoutGoals.map((e) => e.toJson()).toList(),
       'LoggedWorkoutSections':

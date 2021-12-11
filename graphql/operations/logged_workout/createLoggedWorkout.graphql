@@ -1,6 +1,9 @@
 mutation createLoggedWorkout($data: CreateLoggedWorkoutInput!) {
   createLoggedWorkout(data: $data) {
     ...LoggedWorkout
+    User {
+      ...UserSummary
+    }
     GymProfile {
       ...GymProfile
       Equipments {

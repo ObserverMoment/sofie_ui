@@ -208,10 +208,12 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
         .sortedBy<num>((d) => d.sortPosition)
         .toList();
 
-    final completedIds = completedWorkouts.map((w) => w.id).toList();
+    final completedworkoutPlanDayWorkoutIds =
+        completedWorkouts.map((w) => w.workoutPlanDayWorkoutId).toList();
 
-    final dayComplete =
-        sortedWorkoutPlanDayWorkouts.every((w) => completedIds.contains(w.id));
+    /// All workouts for that day are complete.
+    final dayComplete = sortedWorkoutPlanDayWorkouts
+        .every((w) => completedworkoutPlanDayWorkoutIds.contains(w.id));
 
     return ContentBox(
       padding: const EdgeInsets.all(8),
@@ -266,7 +268,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
               itemBuilder: (c, i) {
                 final dayWorkout = sortedWorkoutPlanDayWorkouts[i];
                 final completedPlanDayWorkout =
-                    completedIds.contains(dayWorkout.id)
+                    completedworkoutPlanDayWorkoutIds.contains(dayWorkout.id)
                         ? completedWorkouts.firstWhere(
                             (w) => w.workoutPlanDayWorkoutId == dayWorkout.id)
                         : null;
@@ -339,7 +341,8 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                       MinimalWorkoutCard(
                         dayWorkout.workout.summary,
                       ),
-                      if (completedIds.contains(dayWorkout.id))
+                      if (completedworkoutPlanDayWorkoutIds
+                          .contains(dayWorkout.id))
                         const Positioned(
                             top: 0,
                             right: 4,

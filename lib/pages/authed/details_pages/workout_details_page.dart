@@ -85,9 +85,9 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
     }
   }
 
-  Future<void> _shareWorkout(Workout workout) async {
+  Future<void> _shareWorkout() async {
     await SharingAndLinking.shareLink(
-        'workout/${workout.id}', 'Check out this workout!');
+        'workout/${widget.id}', 'Check out this workout!');
   }
 
   Future<void> _archiveWorkout(Workout workout) async {
@@ -295,8 +295,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         text: 'Share',
                                         icon: const Icon(
                                             CupertinoIcons.paperplane),
-                                        onPressed: () =>
-                                            _shareWorkout(workout)),
+                                        onPressed: _shareWorkout),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',

@@ -1,6 +1,9 @@
 query userLoggedWorkouts($take: Int) {
   userLoggedWorkouts(take: $take) {
     ...LoggedWorkout
+    User {
+      ...UserSummary
+    }
     GymProfile {
       ...GymProfile
       Equipments {

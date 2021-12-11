@@ -54,15 +54,9 @@ class GraphQLStore {
 
   List<ObservableQuery<TData, TVars>>
       _getQueriesbyId<TData, TVars extends json.JsonSerializable>(String id) =>
-          observableQueries.values.fold(
-              [],
-              (observableQueries, next) =>
-                  next.id == id || next.query.operationName == id
-                      ? [
-                          ...observableQueries,
-                          next as ObservableQuery<TData, TVars>
-                        ]
-                      : observableQueries);
+          observableQueries.values
+              .where((oq) => oq.id == id || oq.query.operationName == id)
+              .toList() as List<ObservableQuery<TData, TVars>>;
 
   /// [T] is query type. [U] is variables / args type.
   ObservableQuery<TData, TVars>
@@ -234,7 +228,6 @@ class GraphQLStore {
               typePolicies: _typePolicies,
               read: readNormalized,
               write: mergeWriteNormalized);
-
           // Broadcast the updated data.
           broadcastQueriesByIds([id]);
           return true;

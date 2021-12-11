@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/do_workout/do_workout_overview_page.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -103,16 +104,27 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
               mutation: CreateLoggedWorkoutMutation(variables: variables),
               addRefToQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
 
-          checkOperationResult(context, result);
+          checkOperationResult(context, result,
+              onFail: () => context.showToast(
+                  message: 'Sorry, something went wrong',
+                  toastType: ToastType.destructive),
+              onSuccess: () {
+                /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
+                if (scheduledWorkout != null) {
+                  LoggedWorkoutCreatorBloc.updateScheduleWithLoggedWorkout(
+                      context,
+                      scheduledWorkout,
+                      result.data!.createLoggedWorkout);
+                }
+                if (workoutPlanDayWorkoutId != null &&
+                    workoutPlanEnrolmentId != null) {
+                  LoggedWorkoutCreatorBloc.refetchWorkoutPlanEnrolmentQueries(
+                      context, workoutPlanEnrolmentId);
+                }
 
-          /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
-          if (scheduledWorkout != null && result.data != null) {
-            LoggedWorkoutCreatorBloc.updateScheduleWithLoggedWorkout(
-                context, scheduledWorkout, result.data!.createLoggedWorkout);
-          }
-
-          context.router.popAndPush(LoggedWorkoutDetailsRoute(
-              id: result.data!.createLoggedWorkout.id));
+                context.router.popAndPush(LoggedWorkoutDetailsRoute(
+                    id: result.data!.createLoggedWorkout.id));
+              });
         });
   }
 
