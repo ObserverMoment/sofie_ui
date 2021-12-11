@@ -14,6 +14,8 @@ import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dar
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_review_creator.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_wrapper_page.dart';
+import 'package:sofie_ui/components/profile/user_public_content/profile_public_workout_plans.dart';
+import 'package:sofie_ui/components/profile/user_public_content/profile_public_workouts.dart';
 import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/one_to_one_chat_page.dart';
@@ -122,6 +124,13 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'journals', page: JournalsPage),
           AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
           AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
+
+          /// Other users public content.
+          AutoRoute(
+              path: 'public-workouts/:userId', page: ProfilePublicWorkoutsPage),
+          AutoRoute(
+              path: 'public-plans/:userId',
+              page: ProfilePublicWorkoutPlansPage),
 
           /// Finders and Public Content.
           /// Consider renaming these all as discover?

@@ -5,10 +5,10 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/timeline_and_feed.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 
@@ -96,21 +96,11 @@ class _AuthedUserFollowersState extends State<AuthedUserFollowers> {
         _isLoading
             ? const ShimmerCirclesGrid()
             : _followers.isEmpty
-                ? ListView(
-                    shrinkWrap: true,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: Center(
-                          child: MyText(
-                            'No followers yet..',
-                            size: FONTSIZE.four,
-                            subtext: true,
-                          ),
-                        ),
-                      )
-                    ],
-                  )
+                ? const YourContentEmptyPlaceholder(
+                    message: 'No followers yet',
+                    explainer:
+                        'Anyone who subscribes to your feed will show here. Easily keep in touch with your friends and fans!',
+                    actions: [])
                 : GridView.count(
                     padding: const EdgeInsets.all(8),
                     childAspectRatio: 0.9,

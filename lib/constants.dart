@@ -42,6 +42,7 @@ const kImageOverlayOpacity = 0.8;
 /// For use in [__typename:id] normalization and store ops.
 const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
+const kCollectionSummaryTypename = 'CollectionSummary';
 
 const kClubTypeName = 'Club';
 const kClubSummaryTypeName = 'ClubSummary';
@@ -50,7 +51,7 @@ const kClubInviteTokenTypeName = 'ClubInviteToken';
 const kBodyTransformationPhotoTypename = 'BodyTransformationPhoto';
 const kGymProfileTypename = 'GymProfile';
 const kMoveTypename = 'Move';
-const kUserTypename = 'User';
+const kUserProfileTypename = 'UserProfile';
 const kWorkoutTypename = 'Workout';
 const kWorkoutSummaryTypename = 'WorkoutSummary';
 const kArchivedWorkoutTypename = 'ArchivedWorkout';
@@ -79,18 +80,25 @@ const kProgressJournalEntryTypename = 'ProgressJournalEntry';
 const kProgressJournalGoalTypename = 'ProgressJournalGoal';
 const kProgressJournalGoalTagTypename = 'ProgressJournalGoalTag';
 
+const kSkillTypeName = 'Skill';
+
 const kUserBenchmarkTypename = 'UserBenchmark';
 const kUserBenchmarkEntryTypename = 'UserBenchmarkEntry';
 const kUserBenchmarkTagTypename = 'UserBenchmarkTag';
 
 const kExcludeFromNormalization = [
+  // Within the Workout
   kWorkoutSectionTypename,
   kWorkoutSetTypename,
   kWorkoutMoveTypename,
+  // Within the LoggedWorkout
   kLoggedWorkoutSectionTypename,
   kLoggedWorkoutSetTypename,
   kLoggedWorkoutMoveTypename,
-  kWorkoutPlanReviewTypename
+  // Within the UserProfile
+  kSkillTypeName,
+  // Within the WorkoutPlan
+  kWorkoutPlanReviewTypename,
 ];
 
 /// WorkoutSectionTypeNames
@@ -155,3 +163,9 @@ const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
 
 /// Messages ///
 const String kDefaultErrorMessage = "Sorry, that didn't work";
+
+/// Other social networks - just add the handle.
+const kLinkedinBaseUrl = 'https://www.linkedin.com/in';
+const kYoutubeBaseUrl = 'https://www.youtube.com';
+const kTiktokBaseUrl = 'https://www.tiktok.com';
+const kInstagramBaseUrl = 'https://www.instagram.com';

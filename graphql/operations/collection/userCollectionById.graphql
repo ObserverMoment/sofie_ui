@@ -1,9 +1,6 @@
 query userCollectionById($id: ID!) {
   userCollectionById(id: $id) {
     ...Collection
-    User {
-      ...UserSummary
-    }
     Workouts {
       ...WorkoutSummary
     }

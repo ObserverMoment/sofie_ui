@@ -64,13 +64,12 @@ class DialogMenu extends StatelessWidget {
           if (Utils.textNotNull(message))
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: MyText(
-                message!,
-                subtext: true,
-                size: FONTSIZE.two,
-                maxLines: 4,
-                textAlign: TextAlign.center,
-              ),
+              child: MyText(message!,
+                  subtext: true,
+                  size: FONTSIZE.two,
+                  maxLines: 4,
+                  textAlign: TextAlign.center,
+                  lineHeight: 1.4),
             ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),

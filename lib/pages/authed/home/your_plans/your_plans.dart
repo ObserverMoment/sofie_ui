@@ -66,12 +66,8 @@ class _YourPlansPageState extends State<YourPlansPage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         child: NestedScrollView(
-            headerSliverBuilder: (c, i) => [
-                  CupertinoSliverNavigationBar(
-                      leading: const NavBarBackButton(),
-                      largeTitle: Text(widget.pageTitle),
-                      border: null)
-                ],
+            headerSliverBuilder: (c, i) =>
+                [MySliverNavbar(title: widget.pageTitle)],
             body: Column(
               children: [
                 if (_displayTabs.length > 1)

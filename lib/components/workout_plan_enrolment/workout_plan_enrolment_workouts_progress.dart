@@ -11,25 +11,30 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/model/toast_request.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:supercharged/supercharged.dart';
 
 class WorkoutPlanEnrolmentProgress extends StatelessWidget {
-  final WorkoutPlanEnrolmentWithPlan enrolment;
-  const WorkoutPlanEnrolmentProgress({Key? key, required this.enrolment})
+  final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
+  const WorkoutPlanEnrolmentProgress(
+      {Key? key, required this.enrolmentWithPlan})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     /// Zero index - week '1' is at daysByWeek[0].
-    final daysByWeek = enrolment.workoutPlan.workoutPlanDays
+    final daysByWeek = enrolmentWithPlan.workoutPlan.workoutPlanDays
         .groupBy<int, WorkoutPlanDay>((day) => (day.dayNumber / 7).floor());
+
+    final completedWorkouts =
+        enrolmentWithPlan.workoutPlanEnrolment.completedWorkoutPlanDayWorkouts;
 
     return ListView(
       shrinkWrap: true,
@@ -39,7 +44,8 @@ class WorkoutPlanEnrolmentProgress extends StatelessWidget {
                 child: WorkoutPlanEnrolmentWorkoutsWeek(
                     workoutPlanDaysInWeek: daysByWeek[i] ?? [],
                     weekNumber: i,
-                    enrolmentWithPlan: enrolment),
+                    enrolmentWithPlan: enrolmentWithPlan,
+                    completedWorkouts: completedWorkouts),
               ))
           .toList(),
     );
@@ -50,11 +56,13 @@ class WorkoutPlanEnrolmentWorkoutsWeek extends StatelessWidget {
   final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
   final int weekNumber;
   final List<WorkoutPlanDay> workoutPlanDaysInWeek;
+  final List<CompletedWorkoutPlanDayWorkout> completedWorkouts;
   const WorkoutPlanEnrolmentWorkoutsWeek(
       {Key? key,
       required this.weekNumber,
       required this.workoutPlanDaysInWeek,
-      required this.enrolmentWithPlan})
+      required this.enrolmentWithPlan,
+      required this.completedWorkouts})
       : super(key: key);
 
   @override
@@ -106,7 +114,7 @@ class WorkoutPlanEnrolmentWorkoutsWeek extends StatelessWidget {
                     workoutPlanDay: byDayNumberInWeek[i]!,
                     displayDayNumber: i,
                     enrolmentWithPlan: enrolmentWithPlan,
-                  )
+                    completedWorkouts: completedWorkouts)
                 : Opacity(
                     opacity: 0.75,
                     child: WorkoutPlanRestDayCard(
@@ -125,11 +133,13 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
   final int displayDayNumber;
   final WorkoutPlanDay workoutPlanDay;
   final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
+  final List<CompletedWorkoutPlanDayWorkout> completedWorkouts;
   const _WorkoutPlanEnrolmentDayCard(
       {Key? key,
       required this.workoutPlanDay,
       required this.displayDayNumber,
-      required this.enrolmentWithPlan})
+      required this.enrolmentWithPlan,
+      required this.completedWorkouts})
       : super(key: key);
 
   Future<void> _openScheduleWorkout(
@@ -145,57 +155,51 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
 
   Future<void> _handleLogWorkoutProgramWorkout(
       BuildContext context, WorkoutPlanDayWorkout planDayWorkout) async {
-    await context.pushRoute(
-        LoggedWorkoutCreatorRoute(workoutId: planDayWorkout.workout.id));
-
-    /// Note: Currently there is no automated marking of workouts as done.
-    /// This is because only the Plan -> Log flow can be implemented in a sensible was at the moment.
-    /// The below is disabled pending further research on how to manage these flows.
-    /// All Flows
-    // Log (Directly from view workout)
-    // Do -> Log
-    // Schedule -> Log
-    // Schedule -> Do -> Log
-    // PlanEnrolment -> Log
-    // PlanEnrolment -> Do -> Log
-    // PlanEnrolment -> Schedule -> Log
-    // PlanEnrolment -> Schedule -> Do -> Log
-
-    // if (success != null && success == true) {
-    //   if (!workoutPlanEnrolment.completedPlanDayWorkoutIds
-    //       .contains(planDayWorkout.id)) {
-    //     workoutPlanEnrolment.completedPlanDayWorkoutIds.add(planDayWorkout.id);
-    //     _updateCompletedWorkoutIds(
-    //         context, workoutPlanEnrolment.completedPlanDayWorkoutIds);
-    //   }
-    // }
+    await context.pushRoute(LoggedWorkoutCreatorRoute(
+        workoutId: planDayWorkout.workout.id,
+        workoutPlanDayWorkoutId: planDayWorkout.id,
+        workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id));
   }
 
-  Future<void> _updateCompletedWorkoutIds(
-      BuildContext context, List<String> updatedIds) async {
-    final variables = UpdateWorkoutPlanEnrolmentArguments(
-        data: UpdateWorkoutPlanEnrolmentInput(
-            id: enrolmentWithPlan.workoutPlanEnrolment.id));
+  void _confirmDeleteCompletedWorkout(BuildContext context,
+      CompletedWorkoutPlanDayWorkout completedPlanDayWorkout) {
+    context.showConfirmDialog(
+        title: 'Reset This Workout',
+        message:
+            'Do this if you want to do the workout again. The original workout log will not be deleted but will no longer count towards progress in this plan.',
+        onConfirm: () => _deleteCompletedWorkoutPlanDayWorkout(
+            context, completedPlanDayWorkout));
+  }
 
-    final result = await context.graphQLStore.mutate<
-            UpdateWorkoutPlanEnrolment$Mutation,
-            UpdateWorkoutPlanEnrolmentArguments>(
-        mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(
-              enrolmentWithPlan.workoutPlanEnrolment.id),
-          WorkoutPlanEnrolmentsQuery().operationName,
+  Future<void> _deleteCompletedWorkoutPlanDayWorkout(BuildContext context,
+      CompletedWorkoutPlanDayWorkout completedPlanDayWorkout) async {
+    final enrolmentId = enrolmentWithPlan.workoutPlanEnrolment.id;
+
+    final variables = DeleteCompletedWorkoutPlanDayWorkoutArguments(
+        data: DeleteCompletedWorkoutPlanDayWorkoutInput(
+            workoutPlanDayWorkoutId: completedPlanDayWorkout.id,
+            workoutPlanEnrolmentId: enrolmentId));
+
+    final result = await context.graphQLStore.mutate(
+        mutation:
+            DeleteCompletedWorkoutPlanDayWorkoutMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.workoutPlanEnrolmentsQuery
         ],
-        customVariablesMap: {
-          'data': {
-            'id': enrolmentWithPlan.workoutPlanEnrolment.id,
-            'completedPlanDayWorkoutIds': updatedIds
-          }
-        });
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(enrolmentId),
+        ]);
 
-    if (result.hasErrors) {
-      context.showErrorAlert('Something went wrong, the update did not work.');
-    }
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message: 'Workout progress has been reset.',
+      ),
+    );
   }
 
   @override
@@ -204,11 +208,12 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
         .sortedBy<num>((d) => d.sortPosition)
         .toList();
 
-    final completedIds =
-        enrolmentWithPlan.workoutPlanEnrolment.completedPlanDayWorkoutIds;
+    final completedworkoutPlanDayWorkoutIds =
+        completedWorkouts.map((w) => w.workoutPlanDayWorkoutId).toList();
 
-    final dayComplete =
-        sortedWorkoutPlanDayWorkouts.every((w) => completedIds.contains(w.id));
+    /// All workouts for that day are complete.
+    final dayComplete = sortedWorkoutPlanDayWorkouts
+        .every((w) => completedworkoutPlanDayWorkoutIds.contains(w.id));
 
     return ContentBox(
       padding: const EdgeInsets.all(8),
@@ -262,7 +267,12 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
               separatorBuilder: (c, i) => const HorizontalLine(),
               itemBuilder: (c, i) {
                 final dayWorkout = sortedWorkoutPlanDayWorkouts[i];
-                final workoutCompleted = completedIds.contains(dayWorkout.id);
+                final completedPlanDayWorkout =
+                    completedworkoutPlanDayWorkoutIds.contains(dayWorkout.id)
+                        ? completedWorkouts.firstWhere(
+                            (w) => w.workoutPlanDayWorkoutId == dayWorkout.id)
+                        : null;
+
                 return GestureDetector(
                   onTap: () => openBottomSheetMenu(
                       context: context,
@@ -273,30 +283,32 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                             imageUri: dayWorkout.workout.coverImageUri,
                           ),
                           items: [
-                            if (workoutCompleted)
+                            if (completedPlanDayWorkout != null) ...[
                               BottomSheetMenuItem(
-                                  text: 'Unmark as done',
-                                  icon: const Icon(CupertinoIcons.clear_thick),
-                                  onPressed: () => _updateCompletedWorkoutIds(
-                                      context,
-                                      completedIds.toggleItem(dayWorkout.id)))
-                            else
+                                  text: 'View Log',
+                                  icon: const Icon(CupertinoIcons.doc_chart),
+                                  onPressed: () => context.navigateTo(
+                                      LoggedWorkoutDetailsRoute(
+                                          id: completedPlanDayWorkout
+                                              .loggedWorkoutId))),
                               BottomSheetMenuItem(
-                                  text: 'Mark as done',
-                                  icon:
-                                      const Icon(CupertinoIcons.checkmark_alt),
-                                  onPressed: () => _updateCompletedWorkoutIds(
-                                      context,
-                                      completedIds.toggleItem(dayWorkout.id))),
-                            if (!workoutCompleted) ...[
+                                  text: 'Reset Workout',
+                                  icon: const Icon(CupertinoIcons.doc_chart),
+                                  onPressed: () =>
+                                      _confirmDeleteCompletedWorkout(
+                                          context, completedPlanDayWorkout))
+                            ] else ...[
                               BottomSheetMenuItem(
                                 text: 'Do it',
                                 icon: const Icon(
                                     CupertinoIcons.arrow_right_square),
-                                onPressed: () =>
-                                    context.navigateTo(DoWorkoutWrapperRoute(
-                                  id: dayWorkout.workout.id,
-                                )),
+                                onPressed: () => context.navigateTo(
+                                    DoWorkoutWrapperRoute(
+                                        id: dayWorkout.workout.id,
+                                        workoutPlanDayWorkoutId: dayWorkout.id,
+                                        workoutPlanEnrolmentId:
+                                            enrolmentWithPlan
+                                                .workoutPlanEnrolment.id)),
                               ),
                               BottomSheetMenuItem(
                                   text: 'Log it',
@@ -317,7 +329,11 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                                 icon: const Icon(CupertinoIcons.eye),
                                 onPressed: () => context.navigateTo(
                                     WorkoutDetailsRoute(
-                                        id: dayWorkout.workout.id))),
+                                        id: dayWorkout.workout.id,
+                                        workoutPlanDayWorkoutId: dayWorkout.id,
+                                        workoutPlanEnrolmentId:
+                                            enrolmentWithPlan
+                                                .workoutPlanEnrolment.id))),
                           ])),
                   child: Stack(
                     clipBehavior: Clip.none,
@@ -325,7 +341,8 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                       MinimalWorkoutCard(
                         dayWorkout.workout.summary,
                       ),
-                      if (completedIds.contains(dayWorkout.id))
+                      if (completedworkoutPlanDayWorkoutIds
+                          .contains(dayWorkout.id))
                         const Positioned(
                             top: 0,
                             right: 4,

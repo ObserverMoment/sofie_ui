@@ -27,7 +27,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   final LoggedWorkout? prevLoggedWorkout;
   final Workout? workout;
+
+  /// When present these will be passed on to log creation function.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
 
   /// Before every update we make a copy of the last workout here.
   /// If there is an issue calling the api then this is reverted to.
@@ -49,7 +55,9 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       {required this.context,
       this.prevLoggedWorkout,
       this.workout,
-      this.scheduledWorkout})
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : assert(
             (prevLoggedWorkout == null && workout != null) ||
                 (prevLoggedWorkout != null && workout == null),
@@ -152,9 +160,12 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   }
 
   /// Used when creating only - when editing we save incrementally.
+  /// When creating a log we need to check if the log should be associated with a scheduled workout and / or with a workout plan enrolment.
   Future<OperationResult> createAndSave(BuildContext context) async {
-    final input = createLoggedWorkoutInputFromLoggedWorkout(
-        loggedWorkout, scheduledWorkout);
+    final input = createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
+        scheduledWorkout: scheduledWorkout,
+        workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+        workoutPlanEnrolmentId: workoutPlanEnrolmentId);
 
     final variables = CreateLoggedWorkoutArguments(data: input);
 
@@ -162,13 +173,25 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         mutation: CreateLoggedWorkoutMutation(variables: variables),
         addRefToQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
 
-    await checkOperationResult(context, result);
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry, something went wrong',
+            toastType: ToastType.destructive),
+        onSuccess: () async {
+          /// We need to update the userEnrolmentsQuery and the enrolmentByIdQuery.
+          /// We do this via the network for simplicity.
+          if (workoutPlanDayWorkoutId != null &&
+              workoutPlanEnrolmentId != null) {
+            await refetchWorkoutPlanEnrolmentQueries(
+                context, workoutPlanEnrolmentId!);
+          }
 
-    /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
-    if (scheduledWorkout != null && result.data != null) {
-      updateScheduleWithLoggedWorkout(
-          context, scheduledWorkout!, result.data!.createLoggedWorkout);
-    }
+          /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
+          if (scheduledWorkout != null) {
+            updateScheduleWithLoggedWorkout(
+                context, scheduledWorkout!, result.data!.createLoggedWorkout);
+          }
+        });
 
     return result;
   }
@@ -472,11 +495,24 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         broadcastQueryIds: [GQLOpNames.userScheduledWorkoutsQuery]);
   }
 
+  /// Refetches from the network the enrolments query (summaries) and the details query.
+  /// This would be overly complex to manage purely on the FE.
+  static Future<void> refetchWorkoutPlanEnrolmentQueries(
+      BuildContext context, String workoutPlanEnrolmentId) async {
+    await context.graphQLStore.refetchQueriesByIds([
+      GQLOpNames.workoutPlanEnrolmentsQuery,
+      GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(workoutPlanEnrolmentId)
+    ]);
+  }
+
   /// To add a gym profile to the logged workout input you can either add it to
   /// [scheduledWorkout.gymProfile] or to [loggedWorkout.gymProfile].
   /// [loggedWorkout.gymProfile] will take precedence over [scheduledWorkout.gymProfile].
   static CreateLoggedWorkoutInput createLoggedWorkoutInputFromLoggedWorkout(
-      LoggedWorkout loggedWorkout, ScheduledWorkout? scheduledWorkout) {
+      LoggedWorkout loggedWorkout,
+      {ScheduledWorkout? scheduledWorkout,
+      String? workoutPlanDayWorkoutId,
+      String? workoutPlanEnrolmentId}) {
     final gymProfile = loggedWorkout.gymProfile ?? scheduledWorkout?.gymProfile;
 
     return CreateLoggedWorkoutInput(
@@ -484,6 +520,12 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       note: loggedWorkout.note,
       scheduledWorkout: scheduledWorkout != null
           ? ConnectRelationInput(id: scheduledWorkout.id)
+          : null,
+      workoutPlanDayWorkout: workoutPlanDayWorkoutId != null
+          ? ConnectRelationInput(id: workoutPlanDayWorkoutId)
+          : null,
+      workoutPlanEnrolment: workoutPlanEnrolmentId != null
+          ? ConnectRelationInput(id: workoutPlanEnrolmentId)
           : null,
       gymProfile:
           gymProfile != null ? ConnectRelationInput(id: gymProfile.id) : null,

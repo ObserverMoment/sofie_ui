@@ -27,12 +27,8 @@ class YourGymProfilesPage extends StatelessWidget {
 
           return MyPageScaffold(
               child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                        const CupertinoSliverNavigationBar(
-                            leading: NavBarBackButton(),
-                            largeTitle: Text('Gym Profiles'),
-                            border: null)
-                      ],
+                  headerSliverBuilder: (c, i) =>
+                      [const MySliverNavbar(title: 'Gym Profiles')],
                   body: gymProfiles.isEmpty
                       ? YourContentEmptyPlaceholder(
                           message: 'No gym profiles yet',

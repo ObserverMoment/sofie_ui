@@ -92,13 +92,9 @@ class _FilterableCreatedWorkoutPlansState
             rowButtonsAlignment: MainAxisAlignment.end,
             rowButtons: [
               if (allTags.isNotEmpty)
-                TagsCollectionsFilterMenu(
-                  filterMenuType: FilterMenuType.tag,
-                  allCollections: const [],
+                TagsFilterMenu(
                   allTags: allTags,
-                  selectedCollection: null,
                   selectedTag: _workoutTagFilter,
-                  updateSelectedCollection: (_) {},
                   updateSelectedTag: (t) =>
                       setState(() => _workoutTagFilter = t),
                 ),

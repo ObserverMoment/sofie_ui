@@ -1,0 +1,11 @@
+mutation clearScheduleForPlanEnrolment($enrolmentId: ID!) {
+  clearScheduleForPlanEnrolment(enrolmentId: $enrolmentId) {
+    ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
+    User {
+      ...UserSummary
+    }
+  }
+}

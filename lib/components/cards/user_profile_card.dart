@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
@@ -57,7 +58,7 @@ class UserProfileCard extends StatelessWidget {
                 size: FONTSIZE.two,
                 maxLines: 2,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -67,13 +68,28 @@ class UserProfileCard extends StatelessWidget {
                     child: _statDisplayContainer(
                         profileSummary.workoutCount, 'workouts'),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 10),
                   SizedBox(
                       width: avatarSize / 2,
                       child: _statDisplayContainer(
                           profileSummary.planCount, 'plans')),
                 ],
-              )
+              ),
+              if (profileSummary.skills.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: profileSummary.skills
+                        .take(4)
+                        .map((s) => Tag(
+                            tag: s,
+                            fontSize: FONTSIZE.one,
+                            fontWeight: FontWeight.bold))
+                        .toList(),
+                  ),
+                )
             ],
           ),
         ),

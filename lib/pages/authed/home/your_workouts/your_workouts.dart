@@ -128,12 +128,8 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
 
                 return CupertinoPageScaffold(
                     child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                    CupertinoSliverNavigationBar(
-                        leading: const NavBarBackButton(),
-                        largeTitle: Text(widget.pageTitle),
-                        border: null)
-                  ],
+                  headerSliverBuilder: (c, i) =>
+                      [MySliverNavbar(title: widget.pageTitle)],
                   body: FABPage(
                       rowButtonsAlignment: MainAxisAlignment.end,
                       columnButtons: [
@@ -144,13 +140,6 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                               icon: CupertinoIcons.add,
                               onTap: () =>
                                   context.navigateTo(WorkoutCreatorRoute())),
-                        if (widget.showDiscoverButton)
-                          FloatingButton(
-                              onTap: () =>
-                                  context.navigateTo(PublicWorkoutFinderRoute(
-                                    selectWorkout: _selectWorkout,
-                                  )),
-                              icon: CupertinoIcons.compass),
                       ],
                       rowButtons: [
                         TagsCollectionsFilterMenu(
@@ -167,7 +156,7 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                           updateSelectedTag: (t) =>
                               setState(() => _selectedTag = t),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 12),
                         FloatingButton(
                             onTap: () => context.push(
                                     child: PrivateWorkoutTextSearch(
@@ -179,7 +168,17 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                                     if (widget.showSaved) ...savedWorkouts
                                   }.toList(),
                                 )),
-                            icon: CupertinoIcons.search)
+                            icon: CupertinoIcons.search),
+                        if (widget.showDiscoverButton)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: FloatingButton(
+                                onTap: () =>
+                                    context.navigateTo(PublicWorkoutFinderRoute(
+                                      selectWorkout: _selectWorkout,
+                                    )),
+                                icon: CupertinoIcons.compass),
+                          ),
                       ],
                       child: Column(
                         children: [

@@ -65,7 +65,7 @@ class ReadMoreTextBlock extends StatelessWidget {
     final _defaultDelimiterStyle = delimiterStyle ?? effectiveTextStyle;
 
     TextSpan link = const TextSpan(
-      text: 'MORE',
+      text: 'more',
       style: TextStyle(fontWeight: FontWeight.bold),
     );
 

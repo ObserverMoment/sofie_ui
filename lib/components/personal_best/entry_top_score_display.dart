@@ -5,6 +5,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 /// Oval shape container with shadow that displays the score of the entry in the correct format for the type of entry it is (max reps, fgastest time etc).
 class UserBenchmarkScoreDisplay extends StatelessWidget {
@@ -25,16 +26,28 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           decoration: BoxDecoration(
               boxShadow: kElevation[3],
               gradient: Styles.secondaryButtonGradient,
               borderRadius: BorderRadius.circular(30)),
-          child: MyText(
-              DataUtils.buildBenchmarkEntryScoreText(
-                  benchmark.benchmarkType, benchmark.loadUnit, benchmarkEntry),
-              size: fontSize,
-              color: Styles.white),
+          child: Row(
+            children: [
+              MyText(
+                  DataUtils.buildBenchmarkEntryScoreText(
+                      benchmark.benchmarkType,
+                      benchmark.loadUnit,
+                      benchmarkEntry),
+                  size: fontSize,
+                  color: Styles.secondaryAccent),
+              if (Utils.textNotNull(benchmarkEntry.videoUri))
+                const Padding(
+                  padding: EdgeInsets.only(left: 6.0),
+                  child: Icon(CupertinoIcons.film,
+                      color: Styles.secondaryAccent, size: 18),
+                )
+            ],
+          ),
         ),
         if (showDate)
           Column(

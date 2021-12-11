@@ -145,12 +145,8 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
         child: NestedScrollView(
-            headerSliverBuilder: (c, i) => [
-                  const CupertinoSliverNavigationBar(
-                      leading: NavBarBackButton(),
-                      largeTitle: Text('Discover Workouts'),
-                      border: null)
-                ],
+            headerSliverBuilder: (c, i) =>
+                [const MySliverNavbar(title: 'Discover Workouts')],
             body: FABPage(
                 columnButtons: [
                   FloatingButton(

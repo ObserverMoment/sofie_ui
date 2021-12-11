@@ -63,12 +63,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return CupertinoPageScaffold(
         child: NestedScrollView(
-            headerSliverBuilder: (c, i) => [
-                  const CupertinoSliverNavigationBar(
-                      leading: NavBarBackButton(),
-                      largeTitle: Text('Settings'),
-                      border: null)
-                ],
+            headerSliverBuilder: (c, i) =>
+                [const MySliverNavbar(title: 'Settings')],
             body: ListView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [

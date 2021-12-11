@@ -193,8 +193,8 @@ extension WorkoutPlanEnrolmentWithPlanExtension
     ..$$typename = kWorkoutPlanEnrolmentSummaryTypename
     ..id = workoutPlanEnrolment.id
     ..startDate = workoutPlanEnrolment.startDate
-    ..completedPlanDayWorkoutIds =
-        workoutPlanEnrolment.completedPlanDayWorkoutIds
+    ..completedWorkoutsCount =
+        workoutPlanEnrolment.completedWorkoutPlanDayWorkouts.length
     ..workoutPlan = workoutPlan.summary;
 }
 

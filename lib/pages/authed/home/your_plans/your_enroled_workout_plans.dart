@@ -130,8 +130,7 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                                     vertical: 12.0, horizontal: 9),
                                 child: WorkoutPlanEnrolmentProgressSummary(
                                   completed: filteredEnrolments[i]
-                                      .completedPlanDayWorkoutIds
-                                      .length,
+                                      .completedWorkoutsCount,
                                   startedOn: filteredEnrolments[i].startDate,
                                   total: filteredEnrolments[i]
                                       .workoutPlan

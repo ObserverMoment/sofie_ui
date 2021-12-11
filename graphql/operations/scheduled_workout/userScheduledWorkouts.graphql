@@ -10,7 +10,5 @@ query userScheduledWorkouts {
         ...Equipment
       }
     }
-    loggedWorkoutId
-    workoutPlanEnrolmentId
   }
 }

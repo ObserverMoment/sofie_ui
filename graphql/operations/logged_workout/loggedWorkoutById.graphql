@@ -1,6 +1,9 @@
 query loggedWorkoutById($id: ID!) {
   loggedWorkoutById(id: $id) {
     ...LoggedWorkout
+    User {
+      ...UserSummary
+    }
     GymProfile {
       ...GymProfile
       Equipments {

@@ -70,12 +70,8 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
 
     return CupertinoPageScaffold(
         child: NestedScrollView(
-            headerSliverBuilder: (c, i) => [
-                  const CupertinoSliverNavigationBar(
-                      leading: NavBarBackButton(),
-                      largeTitle: Text('Clubs'),
-                      border: null)
-                ],
+            headerSliverBuilder: (c, i) =>
+                [const MySliverNavbar(title: 'Clubs')],
             body: FABPage(
               columnButtons: [
                 FloatingButton(

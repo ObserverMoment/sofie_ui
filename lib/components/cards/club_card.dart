@@ -63,10 +63,8 @@ class ClubCard extends StatelessWidget {
                                   const Icon(CupertinoIcons.person_2_fill,
                                       size: 12, color: infoFontColor),
                                   const SizedBox(width: 6),
-                                  MyText(
-                                    club.memberCount.toString(),
-                                    size: FONTSIZE.two,
-                                  )
+                                  MyText(club.memberCount.toString(),
+                                      size: FONTSIZE.two, color: infoFontColor)
                                 ],
                               ),
                               const MyText('Members',

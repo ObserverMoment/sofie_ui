@@ -40,10 +40,9 @@ class LoggedWorkoutsPage extends StatelessWidget {
           return MyPageScaffold(
               child: NestedScrollView(
                   headerSliverBuilder: (c, i) => [
-                        const CupertinoSliverNavigationBar(
-                            leading: NavBarBackButton(),
-                            largeTitle: Text('Workout Logs'),
-                            border: null)
+                        const MySliverNavbar(
+                          title: 'Workout Logs',
+                        )
                       ],
                   body: logs.isEmpty
                       ? YourContentEmptyPlaceholder(

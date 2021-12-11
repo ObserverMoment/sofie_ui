@@ -154,7 +154,8 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
       context.showBottomSheet(
           child: _ModifyMove(
         updateWorkoutMove: (updated) {
-          sectionController.modifyMove(workoutSet.sortPosition, updated);
+          context.read<DoWorkoutBloc>().updateWorkoutMove(
+              sectionIndex, workoutSet.sortPosition, updated);
         },
         workoutMove: originalWorkoutMove,
       ));
@@ -522,7 +523,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -538,7 +539,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -559,7 +560,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
         if (widget.workoutMove.equipment != null &&
             !widget.workoutMove.equipment!.isBodyweight)
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Column(
               children: [
                 Row(
@@ -585,6 +586,11 @@ class _ModifyMoveState extends State<_ModifyMove> {
                   children: [
                     MySlidingSegmentedControl<LoadUnit>(
                         value: _loadUnit,
+                        fontSize: 14,
+                        containerPadding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 2),
+                        childPadding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 8),
                         children: {
                           for (final v in LoadUnit.values
                               .where((v) => v != LoadUnit.artemisUnknown))

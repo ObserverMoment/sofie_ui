@@ -63,7 +63,7 @@ class _WorkoutCreatorPageState extends State<WorkoutCreatorPage> {
       },
     );
 
-    await checkOperationResult(context, result, onSuccess: () {
+    checkOperationResult(context, result, onSuccess: () {
       _initBloc(result.data!.createWorkout);
     });
 

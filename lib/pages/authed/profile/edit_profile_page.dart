@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/coercers.dart';
+import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/creators/skill_creator/skills_manager.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar_uploader.dart';
 import 'package:sofie_ui/components/media/video/user_intro_video_uploader.dart';
@@ -16,31 +18,49 @@ import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/country.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/profile/components/social_handles_input.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({Key? key}) : super(key: key);
 
   Future<void> updateUserFields(
-      BuildContext context, String id, String key, dynamic value) async {
-    final variables = UpdateUserProfileArguments(
-        data: UpdateUserProfileInput.fromJson({key: value}));
+      BuildContext context, String id, Map<String, dynamic> data) async {
+    final variables =
+        UpdateUserProfileArguments(data: UpdateUserProfileInput.fromJson(data));
 
-    await context.graphQLStore.mutate(
-      mutation: UpdateUserProfileMutation(variables: variables),
-      customVariablesMap: {
-        'data': {key: value}
-      },
-      // processResult: (data) {},
+    final result = await context.graphQLStore.networkOnlyOperation(
+        operation: UpdateUserProfileMutation(variables: variables),
+        customVariablesMap: {'data': data});
 
-      /// TODO: Check user => profile changes have not broken this.
-      broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(id)],
-    );
+    checkOperationResult(context, result, onFail: () {
+      context.showToast(
+          message: 'Sorry, there was a problem.',
+          toastType: ToastType.destructive);
+    }, onSuccess: () {
+      /// Write new user data to UserProfile object.
+      final prev =
+          context.graphQLStore.readDenomalized('$kUserProfileTypename:$id');
+
+      var updated = <String, dynamic>{
+        ...prev,
+      };
+
+      for (final key in data.keys) {
+        updated[key] = result.data!.updateUserProfile.toJson()[key];
+      }
+
+      context.graphQLStore.writeDataToStore(
+          data: updated,
+          broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(id)]);
+    });
   }
 
   @override
@@ -52,18 +72,15 @@ class EditProfilePage extends StatelessWidget {
     return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
         key: Key('EditProfilePage - ${query.operationName}'),
         query: query,
+        parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final user = data.userProfileById;
+          final userProfile = data.userProfileById;
 
           return MyPageScaffold(
               child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                        const CupertinoSliverNavigationBar(
-                            leading: null,
-                            largeTitle: Text('Edit Profile'),
-                            border: null)
-                      ],
+                  headerSliverBuilder: (c, i) =>
+                      [const MySliverNavbar(title: 'Edit Profile')],
                   body: ListView(
                       padding: const EdgeInsets.all(8),
                       shrinkWrap: true,
@@ -76,8 +93,12 @@ class EditProfilePage extends StatelessWidget {
                               Column(
                                 children: [
                                   UserAvatarUploader(
-                                    avatarUri: user.avatarUri,
+                                    avatarUri: userProfile.avatarUri,
                                     displaySize: const Size(100, 100),
+                                    onUploadSuccess: (uri) => updateUserFields(
+                                        context,
+                                        userProfile.id,
+                                        {'avatarUri': uri}),
                                   ),
                                   const SizedBox(height: 6),
                                   const MyText(
@@ -90,9 +111,16 @@ class EditProfilePage extends StatelessWidget {
                               Column(
                                 children: [
                                   UserIntroVideoUploader(
-                                    introVideoUri: user.introVideoUri,
-                                    introVideoThumbUri: user.introVideoThumbUri,
+                                    introVideoUri: userProfile.introVideoUri,
+                                    introVideoThumbUri:
+                                        userProfile.introVideoThumbUri,
                                     displaySize: const Size(100, 100),
+                                    onUploadSuccess: (videoUri, thumbUri) =>
+                                        updateUserFields(
+                                            context, userProfile.id, {
+                                      'introVideoUri': videoUri,
+                                      'introVideoThumbUri': thumbUri
+                                    }),
                                   ),
                                   const SizedBox(height: 6),
                                   const MyText(
@@ -116,7 +144,7 @@ class EditProfilePage extends StatelessWidget {
                                     'Profile Privacy',
                                   ),
                                   MySlidingSegmentedControl<UserProfileScope>(
-                                      value: user.userProfileScope,
+                                      value: userProfile.userProfileScope,
                                       children: {
                                         for (final v in UserProfileScope.values
                                             .where((v) =>
@@ -126,10 +154,9 @@ class EditProfilePage extends StatelessWidget {
                                           v: v.display.capitalize
                                       },
                                       updateValue: (scope) => updateUserFields(
-                                          context,
-                                          user.id,
-                                          'userProfileScope',
-                                          scope.apiValue)),
+                                              context, userProfile.id, {
+                                            'userProfileScope': scope.apiValue
+                                          })),
                                 ],
                               ),
                               Padding(
@@ -137,7 +164,7 @@ class EditProfilePage extends StatelessWidget {
                                 child: AnimatedSwitcher(
                                     duration: kStandardAnimationDuration,
                                     child: MyText(
-                                      user.userProfileScope ==
+                                      userProfile.userProfileScope ==
                                               UserProfileScope.private
                                           ? 'Your profile will not be discoverable or visible to the community.'
                                           : 'Your profile will be visible to and discoverable by the community.',
@@ -154,9 +181,9 @@ class EditProfilePage extends StatelessWidget {
                         UserInputContainer(
                           child: EditableDisplayNameRow(
                             title: 'Name',
-                            text: user.displayName,
-                            onSave: (newText) => updateUserFields(
-                                context, user.id, 'displayName', newText),
+                            text: userProfile.displayName,
+                            onSave: (newText) => updateUserFields(context,
+                                userProfile.id, {'displayName': newText}),
                             inputValidation: (String text) =>
                                 text.length > 2 && text.length <= 30,
                             validationMessage: 'Min 3, max 30 characters',
@@ -164,7 +191,7 @@ class EditProfilePage extends StatelessWidget {
                             apiMessage:
                                 'Sorry, this display name has been taken.',
                             apiValidation: (t) async {
-                              if (user.displayName == t) {
+                              if (userProfile.displayName == t) {
                                 return true;
                               } else {
                                 final isAvailable =
@@ -177,33 +204,69 @@ class EditProfilePage extends StatelessWidget {
                         UserInputContainer(
                           child: EditableTextAreaRow(
                             title: 'Bio',
-                            text: user.bio ?? '',
+                            text: userProfile.bio ?? '',
                             onSave: (newText) => updateUserFields(
-                                context, user.id, 'bio', newText),
+                                context, userProfile.id, {'bio': newText}),
                             inputValidation: (t) => true,
                             maxDisplayLines: 2,
                           ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0, top: 16),
+                          child: ContentBox(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 8),
+                            child: PageLink(
+                                linkText: 'Skills and Qualifications',
+                                bold: true,
+                                separator: false,
+                                onPress: () =>
+                                    context.push(child: const SkillsManager())),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ContentBox(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: SocialHandlesInput(
+                                profile: userProfile,
+                                update: (key, value) => updateUserFields(
+                                    context, userProfile.id, {key: value}),
+                              )),
                         ),
                         UserInputContainer(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: TappableRow(
                                 title: 'Country',
-                                display: user.countryCode != null
+                                display: userProfile.countryCode != null
                                     ? ContentBox(
                                         child: SelectedCountryDisplay(
-                                            user.countryCode!))
+                                            userProfile.countryCode!))
                                     : null,
                                 onTap: () => context.push(
                                         child: CountrySelector(
-                                      selectedCountry: user.countryCode != null
-                                          ? Country.fromIsoCode(
-                                              user.countryCode!)
-                                          : null,
+                                      selectedCountry:
+                                          userProfile.countryCode != null
+                                              ? Country.fromIsoCode(
+                                                  userProfile.countryCode!)
+                                              : null,
                                       selectCountry: (country) =>
-                                          updateUserFields(context, user.id,
-                                              'countryCode', country.isoCode),
+                                          updateUserFields(
+                                              context,
+                                              userProfile.id,
+                                              {'countryCode': country.isoCode}),
                                     ))),
+                          ),
+                        ),
+                        UserInputContainer(
+                          child: EditableTextFieldRow(
+                            title: 'Town / City',
+                            text: userProfile.townCity ?? '',
+                            onSave: (newText) => updateUserFields(
+                                context, userProfile.id, {'townCity': newText}),
+                            inputValidation: (t) => true,
                           ),
                         ),
                         UserInputContainer(
@@ -211,20 +274,20 @@ class EditProfilePage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: TappableRow(
                                 title: 'Birthdate',
-                                display: user.birthdate != null
+                                display: userProfile.birthdate != null
                                     ? ContentBox(
-                                        child:
-                                            MyText(user.birthdate!.dateString))
+                                        child: MyText(
+                                            userProfile.birthdate!.dateString))
                                     : null,
                                 onTap: () => context.showActionSheetPopup(
                                         child: DatePicker(
-                                      selectedDate: user.birthdate,
+                                      selectedDate: userProfile.birthdate,
                                       saveDate: (date) => updateUserFields(
-                                          context,
-                                          user.id,
-                                          'birthdate',
-                                          fromDartDateTimeToGraphQLDateTime(
-                                              date)),
+                                          context, userProfile.id, {
+                                        'birthdate':
+                                            fromDartDateTimeToGraphQLDateTime(
+                                                date)
+                                      }),
                                     ))),
                           ),
                         ),
@@ -247,12 +310,11 @@ class EditProfilePage extends StatelessWidget {
                                   children: Gender.values
                                       .where((v) => v != Gender.artemisUnknown)
                                       .map((g) => SelectableBox(
-                                          isSelected: user.gender == g,
+                                          isSelected: userProfile.gender == g,
                                           onPressed: () => updateUserFields(
                                               context,
-                                              user.id,
-                                              'gender',
-                                              g.apiValue),
+                                              userProfile.id,
+                                              {'gender': g.apiValue}),
                                           text: g.display))
                                       .toList(),
                                 ),

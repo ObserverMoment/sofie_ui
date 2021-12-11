@@ -3,6 +3,11 @@ schema {
   mutation: Mutation
 }
 
+input AddDocumentToSkillInput {
+  id: ID!
+  uri: String!
+}
+
 input AddWorkoutPlanToClubInput {
   WorkoutPlan: ConnectRelationInput!
   id: ID!
@@ -130,13 +135,18 @@ type ClubSummary {
 }
 
 type Collection {
-  User: UserSummary!
   WorkoutPlans: [WorkoutPlanSummary!]!
   Workouts: [WorkoutSummary!]!
   createdAt: DateTime!
   description: String
   id: ID!
   name: String!
+}
+
+type CompletedWorkoutPlanDayWorkout {
+  id: ID!
+  loggedWorkoutId: ID!
+  workoutPlanDayWorkoutId: ID!
 }
 
 input ConnectRelationInput {
@@ -185,6 +195,12 @@ input CreateCollectionInput {
   name: String!
 }
 
+input CreateCompletedWorkoutPlanDayWorkoutInput {
+  loggedWorkoutId: ID!
+  workoutPlanDayWorkoutId: ID!
+  workoutPlanEnrolmentId: ID!
+}
+
 input CreateEquipmentInput {
   altNames: String
   loadAdjustable: Boolean!
@@ -214,6 +230,8 @@ input CreateLoggedWorkoutInput {
   ScheduledWorkout: ConnectRelationInput
   Workout: ConnectRelationInput
   WorkoutGoals: [ConnectRelationInput!]!
+  WorkoutPlanDayWorkout: ConnectRelationInput
+  WorkoutPlanEnrolment: ConnectRelationInput
   completedOn: DateTime!
   name: String!
   note: String
@@ -273,12 +291,23 @@ input CreateProgressJournalInput {
   name: String!
 }
 
+input CreateScheduleForPlanEnrolmentInput {
+  startDate: DateTime!
+  workoutPlanEnrolmentId: ID!
+}
+
 input CreateScheduledWorkoutInput {
   GymProfile: ConnectRelationInput
   Workout: ConnectRelationInput!
+  WorkoutPlanDayWorkout: ConnectRelationInput
   WorkoutPlanEnrolment: ConnectRelationInput
   note: String
   scheduledAt: DateTime!
+}
+
+input CreateSkillInput {
+  experience: String
+  name: String!
 }
 
 input CreateUserBenchmarkEntryInput {
@@ -393,6 +422,11 @@ input CreateWorkoutTagInput {
 
 scalar DateTime
 
+input DeleteCompletedWorkoutPlanDayWorkoutInput {
+  workoutPlanDayWorkoutId: ID!
+  workoutPlanEnrolmentId: ID!
+}
+
 enum DifficultyLevel {
   ADVANCED
   CHALLENGING
@@ -475,7 +509,7 @@ enum LoadUnit {
 type LoggedWorkout {
   GymProfile: GymProfile
   LoggedWorkoutSections: [LoggedWorkoutSection!]!
-  ScheduledWorkout: ScheduledWorkout
+  User: UserSummary!
   WorkoutGoals: [WorkoutGoal!]!
   completedOn: DateTime!
   id: ID!
@@ -543,6 +577,7 @@ input MoveWorkoutPlanDayToAnotherDayInput {
 }
 
 type Mutation {
+  addDocumentToSkill(data: AddDocumentToSkillInput!): Skill!
   addUserToClubViaInviteToken(clubInviteTokenId: ID!, userId: ID!): Club!
   addWorkoutPlanToClub(clubId: ID!, workoutPlanId: ID!): Club!
   addWorkoutPlanToCollection(
@@ -553,6 +588,8 @@ type Mutation {
   archiveCustomMoveById(id: ID!): Move!
   archiveWorkoutById(id: ID!): Workout!
   archiveWorkoutPlanById(id: ID!): WorkoutPlan!
+  clearScheduleForPlanEnrolment(enrolmentId: ID!): WorkoutPlanEnrolment!
+  clearWorkoutPlanEnrolmentProgress(enrolmentId: ID!): WorkoutPlanEnrolment!
   copyWorkoutPlanDayToAnotherDay(
     data: CopyWorkoutPlanDayToAnotherDayInput!
   ): WorkoutPlanDay!
@@ -565,6 +602,9 @@ type Mutation {
     data: CreateClubTimelinePostInput!
   ): TimelinePostFullData!
   createCollection(data: CreateCollectionInput!): Collection!
+  createCompletedWorkoutPlanDayWorkout(
+    data: CreateCompletedWorkoutPlanDayWorkoutInput!
+  ): WorkoutPlanEnrolment!
   createEquipment(data: CreateEquipmentInput!): Equipment
   createGymProfile(data: CreateGymProfileInput!): GymProfile!
   createLoggedWorkout(data: CreateLoggedWorkoutInput!): LoggedWorkout!
@@ -579,7 +619,11 @@ type Mutation {
   createProgressJournalGoalTag(
     data: CreateProgressJournalGoalTagInput!
   ): ProgressJournalGoalTag!
+  createScheduleForPlanEnrolment(
+    data: CreateScheduleForPlanEnrolmentInput!
+  ): WorkoutPlanEnrolment!
   createScheduledWorkout(data: CreateScheduledWorkoutInput!): ScheduledWorkout!
+  createSkill(data: CreateSkillInput!): Skill!
   createUserBenchmark(data: CreateUserBenchmarkInput!): UserBenchmark!
   createUserBenchmarkEntry(
     data: CreateUserBenchmarkEntryInput!
@@ -609,6 +653,9 @@ type Mutation {
   deleteClubInviteTokenById(id: ID!): ID!
   deleteClubTimelinePost(activityId: ID!): ID!
   deleteCollectionById(id: ID!): ID!
+  deleteCompletedWorkoutPlanDayWorkout(
+    data: DeleteCompletedWorkoutPlanDayWorkoutInput!
+  ): WorkoutPlanEnrolment!
   deleteGymProfileById(id: ID!): ID
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteProgressJournalById(id: ID!): ID!
@@ -616,6 +663,7 @@ type Mutation {
   deleteProgressJournalGoalById(id: ID!): ID!
   deleteProgressJournalGoalTagById(id: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
+  deleteSkillById(id: ID!): ID!
   deleteUserBenchmarkById(id: ID!): ID!
   deleteUserBenchmarkEntryById(id: ID!): ID!
   deleteUserBenchmarkTagById(id: ID!): ID!
@@ -635,6 +683,7 @@ type Mutation {
   moveWorkoutPlanDayToAnotherDay(
     data: MoveWorkoutPlanDayToAnotherDayInput!
   ): WorkoutPlanDay!
+  removeDocumentFromSkill(data: RemoveDocumentFromSkillInput!): Skill!
   removeMemberAdminStatus(clubId: ID!, userId: ID!): Club!
   removeUserFromClub(clubId: ID!, userToRemoveId: ID!): Club!
   removeWorkoutFromClub(clubId: ID!, workoutId: ID!): Club!
@@ -684,12 +733,13 @@ type Mutation {
     data: UpdateProgressJournalGoalTagInput!
   ): ProgressJournalGoalTag!
   updateScheduledWorkout(data: UpdateScheduledWorkoutInput!): ScheduledWorkout!
+  updateSkill(data: UpdateSkillInput!): Skill!
   updateUserBenchmark(data: UpdateUserBenchmarkInput!): UserBenchmark!
   updateUserBenchmarkEntry(
     data: UpdateUserBenchmarkEntryInput!
   ): UserBenchmarkEntry!
   updateUserBenchmarkTag(data: UpdateUserBenchmarkTagInput!): UserBenchmarkTag!
-  updateUserProfile(data: UpdateUserProfileInput!): UserProfile!
+  updateUserProfile(data: UpdateUserProfileInput!): UpdateUserProfileResult!
   updateWorkout(data: UpdateWorkoutInput!): Workout!
   updateWorkoutMove(data: UpdateWorkoutMoveInput!): WorkoutMove!
   updateWorkoutMoves(data: [UpdateWorkoutMoveInput!]!): [WorkoutMove!]!
@@ -698,9 +748,6 @@ type Mutation {
   updateWorkoutPlanDayWorkout(
     data: UpdateWorkoutPlanDayWorkoutInput!
   ): WorkoutPlanDayWorkout!
-  updateWorkoutPlanEnrolment(
-    data: UpdateWorkoutPlanEnrolmentInput!
-  ): WorkoutPlanEnrolment!
   updateWorkoutPlanReview(
     data: UpdateWorkoutPlanReviewInput!
   ): WorkoutPlanReview!
@@ -807,6 +854,8 @@ type Query {
   userProfileById(userId: ID!): UserProfile!
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userProgressJournals: [ProgressJournal!]!
+  userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
+  userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
   userWorkoutTags: [WorkoutTag!]!
@@ -818,6 +867,10 @@ type Query {
   workoutPlanEnrolmentById(id: ID!): WorkoutPlanEnrolmentWithPlan!
   workoutPlanEnrolments: [WorkoutPlanEnrolmentSummary!]!
   workoutSectionTypes: [WorkoutSectionType!]!
+}
+
+input RemoveDocumentFromSkillInput {
+  id: ID!
 }
 
 input RemoveWorkoutFromClubInput {
@@ -848,7 +901,20 @@ type ScheduledWorkout {
   loggedWorkoutId: ID
   note: String
   scheduledAt: DateTime!
+  workoutPlanDayWorkoutId: ID
   workoutPlanEnrolmentId: ID
+  workoutPlanName: String
+}
+
+type Skill {
+  awardingBody: String
+  certificateRef: String
+  certification: String
+  createdAt: DateTime!
+  documentUri: String
+  experience: String
+  id: ID!
+  name: String!
 }
 
 type SortPositionUpdated {
@@ -1039,11 +1105,19 @@ input UpdateProgressJournalInput {
 input UpdateScheduledWorkoutInput {
   GymProfile: ConnectRelationInput
   LoggedWorkout: ConnectRelationInput
-  Workout: ConnectRelationInput
-  WorkoutPlanEnrolment: ConnectRelationInput
   id: ID!
   note: String
   scheduledAt: DateTime
+}
+
+input UpdateSkillInput {
+  awardingBody: String
+  certificateRef: String
+  certification: String
+  documentUri: String
+  experience: String
+  id: ID!
+  name: String
 }
 
 input UpdateSortPositionInput {
@@ -1085,17 +1159,38 @@ input UpdateUserProfileInput {
   firstname: String
   gender: Gender
   hasOnboarded: Boolean
-  instagramUrl: String
+  instagramHandle: String
   introVideoThumbUri: String
   introVideoUri: String
   lastname: String
-  linkedinUrl: String
-  snapUrl: String
+  linkedinHandle: String
   tagline: String
-  tiktokUrl: String
+  tiktokHandle: String
   townCity: String
   userProfileScope: UserProfileScope
-  youtubeUrl: String
+  youtubeHandle: String
+}
+
+type UpdateUserProfileResult {
+  avatarUri: String
+  bio: String
+  birthdate: DateTime
+  countryCode: String
+  displayName: String
+  firstname: String
+  gender: Gender
+  hasOnboarded: Boolean
+  id: ID!
+  instagramHandle: String
+  introVideoThumbUri: String
+  introVideoUri: String
+  lastname: String
+  linkedinHandle: String
+  tagline: String
+  tiktokHandle: String
+  townCity: String
+  userProfileScope: UserProfileScope
+  youtubeHandle: String
 }
 
 input UpdateWorkoutInput {
@@ -1136,12 +1231,6 @@ input UpdateWorkoutPlanDayWorkoutInput {
   WorkoutPlanDay: ConnectRelationInput
   id: ID!
   note: String
-}
-
-input UpdateWorkoutPlanEnrolmentInput {
-  completedPlanDayWorkoutIds: [String!]
-  id: ID!
-  startDate: DateTime
 }
 
 input UpdateWorkoutPlanInput {
@@ -1243,6 +1332,7 @@ type UserProfile {
   BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
+  Skills: [Skill!]!
   avatarUri: String
   bio: String
   birthdate: DateTime
@@ -1256,7 +1346,6 @@ type UserProfile {
   introVideoUri: String
   linkedinHandle: String
   planCount: Int
-  postsCount: Int
   tagline: String
   tiktokHandle: String
   townCity: String
@@ -1277,6 +1366,7 @@ type UserProfileSummary {
   displayName: String!
   id: ID!
   planCount: Int!
+  skills: [String!]!
   tagline: String
   townCity: String
   userProfileScope: UserProfileScope!
@@ -1386,17 +1476,17 @@ type WorkoutPlanDayWorkout {
 }
 
 type WorkoutPlanEnrolment {
+  CompletedWorkoutPlanDayWorkouts: [CompletedWorkoutPlanDayWorkout!]!
   User: UserSummary!
-  completedPlanDayWorkoutIds: [String!]!
   id: ID!
-  startDate: DateTime!
+  startDate: DateTime
 }
 
 type WorkoutPlanEnrolmentSummary {
   WorkoutPlan: WorkoutPlanSummary!
-  completedPlanDayWorkoutIds: [String!]!
+  completedWorkoutsCount: Int!
   id: ID!
-  startDate: DateTime!
+  startDate: DateTime
 }
 
 type WorkoutPlanEnrolmentWithPlan {

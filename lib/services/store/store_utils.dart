@@ -11,9 +11,8 @@ import 'package:sofie_ui/services/utils.dart';
 
 const kStoreReferenceKey = '\$ref';
 
-Future<void> checkOperationResult<T>(
-    BuildContext context, OperationResult<T> result,
-    {VoidCallback? onSuccess, VoidCallback? onFail}) async {
+void checkOperationResult<T>(BuildContext context, OperationResult<T> result,
+    {VoidCallback? onSuccess, VoidCallback? onFail}) {
   if (result.hasErrors || result.data == null) {
     result.errors?.forEach((e) {
       printLog(e.toString());

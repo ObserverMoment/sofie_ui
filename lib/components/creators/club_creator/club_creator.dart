@@ -127,18 +127,19 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     setState(() => _savingToDB = false);
 
-    if (result.hasErrors || result.data == null) {
-      context.showErrorAlert(
-          'Sorry there was a problem, the Club was not created.');
-    } else {
-      setState(() {
-        _activeClub = result.data!.createClub;
-      });
+    checkOperationResult(context, result,
+        onFail: () => context.showErrorAlert(
+            'Sorry there was a problem, the Club was not created.'),
+        onSuccess: () {
+          setState(() {
+            _activeClub = result.data!.createClub;
+          });
 
-      context.showToast(message: 'Club created!', toastType: ToastType.success);
+          context.showToast(
+              message: 'Club created!', toastType: ToastType.success);
 
-      _activeClubBackup = _activeClub!.toJson();
-    }
+          _activeClubBackup = _activeClub!.toJson();
+        });
   }
 
   void _onMediaUploadComplete(Map<String, dynamic> data) {
@@ -193,7 +194,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     setState(() => _savingToDB = false);
 
-    await checkOperationResult(context, result, onFail: () {
+    checkOperationResult(context, result, onFail: () {
       context.showErrorAlert(
           'Sorry there was a problem, the Club was not updated.');
 

@@ -36,9 +36,19 @@ import 'package:sofie_ui/services/utils.dart';
 
 class WorkoutDetailsPage extends StatefulWidget {
   final String id;
+
+  /// When present these should be passed on to Do It / Log It components.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
   const WorkoutDetailsPage(
-      {Key? key, @PathParam('id') required this.id, this.scheduledWorkout})
+      {Key? key,
+      @PathParam('id') required this.id,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : super(key: key);
 
   @override
@@ -58,7 +68,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                   variables: DuplicateWorkoutByIdArguments(id: id)),
               addRefToQueries: [GQLOpNames.userWorkoutsQuery]);
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(
                   message: 'Copy created. View in Your Workouts'),
               onFail: () => context.showErrorAlert(
@@ -75,9 +85,9 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
     }
   }
 
-  Future<void> _shareWorkout(Workout workout) async {
+  Future<void> _shareWorkout() async {
     await SharingAndLinking.shareLink(
-        'workout/${workout.id}', 'Check out this workout!');
+        'workout/${widget.id}', 'Check out this workout!');
   }
 
   Future<void> _archiveWorkout(Workout workout) async {
@@ -119,7 +129,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
             addRefToQueries: [GQLOpNames.userArchivedWorkoutsQuery],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Workout archived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not archived correctly'));
@@ -163,7 +173,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
             ],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Workout unarchived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not unarchived correctly'));
@@ -191,15 +201,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                     ),
                   ),
                 if (workout.lengthMinutes != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: DurationTag(
-                      fontSize: FONTSIZE.three,
-                      iconSize: 15,
-                      backgroundColor:
-                          context.theme.background.withOpacity(0.6),
-                      duration: Duration(minutes: workout.lengthMinutes!),
-                    ),
+                  DurationTag(
+                    fontSize: FONTSIZE.three,
+                    iconSize: 15,
+                    backgroundColor: context.theme.background.withOpacity(0.6),
+                    duration: Duration(minutes: workout.lengthMinutes!),
                   ),
                 DifficultyLevelTag(
                   backgroundColor: context.theme.background.withOpacity(0.6),
@@ -289,8 +295,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         text: 'Share',
                                         icon: const Icon(
                                             CupertinoIcons.paperplane),
-                                        onPressed: () =>
-                                            _shareWorkout(workout)),
+                                        onPressed: _shareWorkout),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',
@@ -335,7 +340,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                         onPressed: () => context.navigateTo(
                             DoWorkoutWrapperRoute(
                                 id: widget.id,
-                                scheduledWorkout: widget.scheduledWorkout)),
+                                scheduledWorkout: widget.scheduledWorkout,
+                                workoutPlanDayWorkoutId:
+                                    widget.workoutPlanDayWorkoutId,
+                                workoutPlanEnrolmentId:
+                                    widget.workoutPlanEnrolmentId)),
                         pageHasBottomNavBar: false,
                         buttonText: 'Do It',
                         buttonIconData: CupertinoIcons.arrow_right_square,
@@ -391,7 +400,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                             LoggedWorkoutCreatorRoute(
                                                 workoutId: workout.id,
                                                 scheduledWorkout:
-                                                    widget.scheduledWorkout))),
+                                                    widget.scheduledWorkout,
+                                                workoutPlanDayWorkoutId: widget
+                                                    .workoutPlanDayWorkoutId,
+                                                workoutPlanEnrolmentId: widget
+                                                    .workoutPlanEnrolmentId))),
                                     if (Utils.textNotNull(
                                         workout.introVideoUri))
                                       _ActionIconButton(

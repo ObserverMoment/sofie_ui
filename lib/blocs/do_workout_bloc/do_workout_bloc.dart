@@ -25,7 +25,13 @@ import 'package:wakelock/wakelock.dart';
 class DoWorkoutBloc extends ChangeNotifier {
   /// Before any pre-start adjustments.
   final Workout originalWorkout;
+
+  /// When present these will be passed on to log creation function.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
 
   /// After any pre-start adjustments. Use this during.
   late Workout activeWorkout;
@@ -76,10 +82,11 @@ class DoWorkoutBloc extends ChangeNotifier {
   String get _toneCompleteAsset =>
       'assets/audio/do_workout/chime_clickbell_octave_lo.mp3';
 
-  DoWorkoutBloc({
-    required this.originalWorkout,
-    this.scheduledWorkout,
-  }) {
+  DoWorkoutBloc(
+      {required this.originalWorkout,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId}) {
     activeWorkout = originalWorkout.copyAndSortAllChildren;
 
     final workoutSections = activeWorkout.workoutSections;
@@ -494,7 +501,7 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a FreeSession.
+  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a Custom or Lifting section.
   Future<void> updateWorkoutMove(
       int sectionIndex, int setIndex, WorkoutMove workoutMove) async {
     final section = WorkoutSection.fromJson(

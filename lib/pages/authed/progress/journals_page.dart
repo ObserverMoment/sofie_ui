@@ -30,11 +30,10 @@ class JournalsPage extends StatelessWidget {
           return MyPageScaffold(
             child: NestedScrollView(
               headerSliverBuilder: (c, i) => [
-                const CupertinoSliverNavigationBar(
-                    leading: NavBarBackButton(),
-                    largeTitle: Text('Journals'),
-                    trailing: InfoPopupButton(infoWidget: JournalsInfo()),
-                    border: null)
+                const MySliverNavbar(
+                  title: 'Journals',
+                  trailing: InfoPopupButton(infoWidget: JournalsInfo()),
+                )
               ],
               body: journals.isEmpty
                   ? YourContentEmptyPlaceholder(

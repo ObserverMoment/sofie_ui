@@ -28,7 +28,7 @@ class PopoverMenu extends StatelessWidget {
           bodyBuilder: (context) => ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
               child: PopoverMenuContainer(
                 items: items,
               ),
@@ -36,7 +36,7 @@ class PopoverMenu extends StatelessWidget {
           ),
           backgroundColor: backgroundColor,
           barrierColor: Colors.transparent,
-          radius: 12,
+          radius: 16,
           direction: PopoverDirection.top,
           arrowHeight: 10,
           arrowWidth: 0,
@@ -69,7 +69,7 @@ class PopoverMenuContainer extends StatelessWidget {
               },
               child: items[i]),
           separatorBuilder: (c, i) => HorizontalLine(
-                color: Styles.greyOne.withOpacity(0.2),
+                color: context.theme.primary.withOpacity(0.06),
                 verticalPadding: 0,
               ),
           itemCount: items.length),

@@ -54,15 +54,9 @@ class GraphQLStore {
 
   List<ObservableQuery<TData, TVars>>
       _getQueriesbyId<TData, TVars extends json.JsonSerializable>(String id) =>
-          observableQueries.values.fold(
-              [],
-              (observableQueries, next) =>
-                  next.id == id || next.query.operationName == id
-                      ? [
-                          ...observableQueries,
-                          next as ObservableQuery<TData, TVars>
-                        ]
-                      : observableQueries);
+          observableQueries.values
+              .where((oq) => oq.id == id || oq.query.operationName == id)
+              .toList() as List<ObservableQuery<TData, TVars>>;
 
   /// [T] is query type. [U] is variables / args type.
   ObservableQuery<TData, TVars>
@@ -234,7 +228,6 @@ class GraphQLStore {
               typePolicies: _typePolicies,
               read: readNormalized,
               write: mergeWriteNormalized);
-
           // Broadcast the updated data.
           broadcastQueriesByIds([id]);
           return true;
@@ -251,6 +244,15 @@ class GraphQLStore {
       final observableQueries = _getQueriesbyId(id);
       for (final q in observableQueries) {
         _queryStore(q.id);
+      }
+    }
+  }
+
+  Future<void> refetchQueriesByIds(List<String> ids) async {
+    for (final id in ids) {
+      final observableQueries = _getQueriesbyId(id);
+      for (final q in observableQueries) {
+        await _queryNetwork(q.id);
       }
     }
   }
@@ -360,11 +362,16 @@ class GraphQLStore {
   Future<OperationResult<TData>>
       mutate<TData, TVars extends json.JsonSerializable>({
     required GraphQLQuery<TData, TVars> mutation,
-    List<String> broadcastQueryIds = const [],
 
     /// If you want to add / remove ref to / from queries the you have to provide [id] and [__typename] in the optimistic data and these fields must also be returned by the api in the result object.
     List<String> addRefToQueries = const [],
     List<String> removeRefFromQueries = const [],
+
+    /// Query IDs passed here will be refetched from the network. Data will be added to store and then the query broadcast.
+    List<String> refetchQueryIds = const [],
+
+    /// Broascast from the store - no network request made.
+    List<String> broadcastQueryIds = const [],
 
     /// Remove a whole query key from the store.
     /// Useful when deleting single objects that have query root data in the store.
@@ -377,6 +384,14 @@ class GraphQLStore {
   }) async {
     final response =
         await execute(mutation, customVariablesMap: customVariablesMap);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
@@ -420,6 +435,7 @@ class GraphQLStore {
       }
 
       broadcastQueriesByIds(broadcastQueryIds);
+      refetchQueriesByIds(refetchQueryIds);
     }
 
     return result;
@@ -536,6 +552,14 @@ class GraphQLStore {
           Map<String, dynamic>? customVariablesMap}) async {
     final response =
         await execute(operation, customVariablesMap: customVariablesMap);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
     final result = OperationResult<TData>(
         data: operation.parse(response.data ?? {}), errors: response.errors);

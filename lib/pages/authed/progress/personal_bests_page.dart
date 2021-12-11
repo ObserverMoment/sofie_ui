@@ -39,10 +39,9 @@ class PersonalBestsPage extends StatelessWidget {
           return MyPageScaffold(
               child: NestedScrollView(
                   headerSliverBuilder: (c, i) => [
-                        const CupertinoSliverNavigationBar(
-                            leading: NavBarBackButton(),
-                            largeTitle: Text('Personal Bests'),
-                            border: null)
+                        const MySliverNavbar(
+                          title: 'Personal Bests',
+                        )
                       ],
                   body: benchmarks.isEmpty
                       ? YourContentEmptyPlaceholder(

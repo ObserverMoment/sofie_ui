@@ -36,6 +36,9 @@ fragment WorkoutPlanData on WorkoutPlan {
   }
   WorkoutPlanEnrolments {
     ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
     User {
       ...UserSummary
     }
@@ -86,13 +89,6 @@ fragment ArchivedWorkoutPlan on WorkoutPlan {
   id
   name
   archived
-}
-
-fragment WorkoutPlanEnrolment on WorkoutPlanEnrolment {
-  __typename
-  id
-  startDate
-  completedPlanDayWorkoutIds
 }
 
 fragment WorkoutPlanDay on WorkoutPlanDay {

@@ -6,7 +6,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class WorkoutPlanEnrolmentProgressSummary extends StatelessWidget {
-  final DateTime startedOn;
+  final DateTime? startedOn;
   final int total;
   final int completed;
 
@@ -27,12 +27,14 @@ class WorkoutPlanEnrolmentProgressSummary extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const MyText(
-                'Started on',
+                'Start date',
                 size: FONTSIZE.one,
                 lineHeight: 1.5,
               ),
               MyText(
-                startedOn.compactDateString,
+                startedOn?.compactDateString ?? ' - ',
+                size: FONTSIZE.two,
+                lineHeight: 1.3,
               ),
             ],
           ),

@@ -10,6 +10,9 @@ query userProfileById($userId: ID!) {
     LifetimeLogStatsSummary {
       ...LifetimeLogStatsSummary
     }
+    Skills {
+      ...Skill
+    }
     BenchmarksWithBestEntries {
       UserBenchmarkSummary {
         ...UserBenchmarkSummary

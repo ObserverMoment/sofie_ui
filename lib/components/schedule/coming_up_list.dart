@@ -57,7 +57,11 @@ class ComingUpList extends StatelessWidget {
                     return GestureDetector(
                       onTap: () => context.navigateTo(WorkoutDetailsRoute(
                           id: comingUp[i].workout!.id,
-                          scheduledWorkout: comingUp[i])),
+                          scheduledWorkout: comingUp[i],
+                          workoutPlanDayWorkoutId:
+                              comingUp[i].workoutPlanDayWorkoutId,
+                          workoutPlanEnrolmentId:
+                              comingUp[i].workoutPlanEnrolmentId)),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 4.0),
                         child: _ScheduledWorkoutReminderCard(

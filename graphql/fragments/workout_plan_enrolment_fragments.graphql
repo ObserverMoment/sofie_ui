@@ -3,7 +3,7 @@ fragment WorkoutPlanEnrolmentSummary on WorkoutPlanEnrolmentSummary {
   __typename
   id
   startDate
-  completedPlanDayWorkoutIds
+  completedWorkoutsCount
   WorkoutPlan {
     ...WorkoutPlanSummary
   }
@@ -13,5 +13,11 @@ fragment WorkoutPlanEnrolment on WorkoutPlanEnrolment {
   __typename
   id
   startDate
-  completedPlanDayWorkoutIds
+}
+
+fragment CompletedWorkoutPlanDayWorkout on CompletedWorkoutPlanDayWorkout {
+  __typename
+  id
+  loggedWorkoutId
+  workoutPlanDayWorkoutId
 }

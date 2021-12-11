@@ -60,7 +60,7 @@ class _WorkoutPlanCreatorPageState extends State<WorkoutPlanCreatorPage> {
                   addRefToQueries: [GQLOpNames.userWorkoutPlansQuery]);
             });
 
-    await checkOperationResult(context, result, onSuccess: () {
+    checkOperationResult(context, result, onSuccess: () {
       // Only the [UserSummary] sub object is returned by the create resolver.
       // Add these other fields manually to avoid [fromJson] throwing an error.
       _initBloc(result.data!.createWorkoutPlan);

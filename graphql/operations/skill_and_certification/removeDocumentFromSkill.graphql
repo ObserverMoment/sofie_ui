@@ -1,0 +1,5 @@
+mutation removeDocumentFromSkill($data: RemoveDocumentFromSkillInput!) {
+  removeDocumentFromSkill(data: $data) {
+    ...Skill
+  }
+}

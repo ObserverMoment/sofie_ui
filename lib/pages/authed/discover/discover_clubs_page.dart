@@ -20,12 +20,8 @@ class DiscoverClubsPage extends StatelessWidget {
           final clubSummaries = data.publicClubs;
           return MyPageScaffold(
             child: NestedScrollView(
-                headerSliverBuilder: (c, i) => [
-                      const CupertinoSliverNavigationBar(
-                          leading: NavBarBackButton(),
-                          largeTitle: Text('Discover Clubs'),
-                          border: null)
-                    ],
+                headerSliverBuilder: (c, i) =>
+                    [const MySliverNavbar(title: 'Discover Clubs')],
                 body: ListView.builder(
                   padding: const EdgeInsets.only(top: 8),
                   itemCount: clubSummaries.length,

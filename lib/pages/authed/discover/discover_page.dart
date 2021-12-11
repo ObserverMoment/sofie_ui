@@ -40,9 +40,7 @@ class DiscoverPage extends StatelessWidget {
                       context.showAlertDialog(title: 'Coming Soon!')),
             ],
           ),
-          _verticalPadding(
-            child: const DiscoverCreators(),
-          ),
+          _verticalPadding(child: const DiscoverCreators()),
           _verticalPadding(child: const DiscoverClubs()),
           _verticalPadding(child: const DiscoverWorkouts()),
           _verticalPadding(child: const DiscoverWorkoutPlans()),

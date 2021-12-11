@@ -1,75 +1,106 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/other_app_icons.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
+
+enum _Network { tiktok, youtube, instagram, linkedin }
+
+Map<_Network, String> _mapping = {
+  _Network.tiktok: kTiktokBaseUrl,
+  _Network.youtube: kYoutubeBaseUrl,
+  _Network.instagram: kInstagramBaseUrl,
+  _Network.linkedin: kLinkedinBaseUrl
+};
 
 class SocialMediaLinks extends StatelessWidget {
-  final UserProfile userPublicProfile;
-  const SocialMediaLinks({Key? key, required this.userPublicProfile})
-      : super(key: key);
+  final UserProfile profile;
+  const SocialMediaLinks({Key? key, required this.profile}) : super(key: key);
 
-  Future<void> _handleOpenSocialUrl(String url) async {
+  Future<void> _handleOpenSocialUrl(_Network network, String handle) async {
+    final url = '${_mapping[network]}/$handle';
+
     if (await canLaunch(url)) {
       await launch(url);
     } else {
-      throw 'Could not launch $url';
+      throw 'Could not launch $handle';
     }
   }
+
+  double get _iconSize => 24.0;
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: 12,
+      runSpacing: 12,
       alignment: WrapAlignment.center,
       children: [
-        if (Utils.textNotNull(userPublicProfile.instagramHandle))
+        if (Utils.textNotNull(profile.instagramHandle))
           _SocialLink(
-              url: userPublicProfile.instagramHandle!,
-              onPressed: () =>
-                  _handleOpenSocialUrl(userPublicProfile.instagramHandle!)),
-        if (Utils.textNotNull(userPublicProfile.tiktokHandle))
+              handle: profile.instagramHandle!,
+              icon: InstagramIcon(size: _iconSize),
+              onPressed: () => _handleOpenSocialUrl(
+                  _Network.instagram, profile.instagramHandle!)),
+        if (Utils.textNotNull(profile.tiktokHandle))
           _SocialLink(
-              url: userPublicProfile.tiktokHandle!,
+              handle: profile.tiktokHandle!,
+              icon: TikTokIcon(size: _iconSize),
               onPressed: () =>
-                  _handleOpenSocialUrl(userPublicProfile.tiktokHandle!)),
-        if (Utils.textNotNull(userPublicProfile.linkedinHandle))
+                  _handleOpenSocialUrl(_Network.tiktok, profile.tiktokHandle!)),
+        if (Utils.textNotNull(profile.linkedinHandle))
           _SocialLink(
-              url: userPublicProfile.linkedinHandle!,
-              onPressed: () =>
-                  _handleOpenSocialUrl(userPublicProfile.linkedinHandle!)),
-        if (Utils.textNotNull(userPublicProfile.youtubeHandle))
+              handle: profile.linkedinHandle!,
+              icon: LinkedInIcon(size: _iconSize),
+              onPressed: () => _handleOpenSocialUrl(
+                  _Network.linkedin, profile.linkedinHandle!)),
+        if (Utils.textNotNull(profile.youtubeHandle))
           _SocialLink(
-              url: userPublicProfile.youtubeHandle!,
-              onPressed: () =>
-                  _handleOpenSocialUrl(userPublicProfile.youtubeHandle!)),
+              handle: profile.youtubeHandle!,
+              icon: YouTubeIcon(size: _iconSize),
+              onPressed: () => _handleOpenSocialUrl(
+                  _Network.youtube, profile.youtubeHandle!)),
       ],
     );
   }
 }
 
 class _SocialLink extends StatelessWidget {
-  final String url;
+  final String handle;
   final VoidCallback onPressed;
-  const _SocialLink({Key? key, required this.url, required this.onPressed})
+  final Widget icon;
+  const _SocialLink(
+      {Key? key,
+      required this.handle,
+      required this.onPressed,
+      required this.icon})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(CupertinoIcons.link, size: 16),
-          const SizedBox(width: 6),
-          MyText(
-            url,
-            size: FONTSIZE.two,
-            weight: FontWeight.bold,
-          )
-        ],
+    return ContentBox(
+      backgroundColor: context.theme.cardBackground.withOpacity(0.75),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              icon,
+              const SizedBox(width: 5),
+              MyText(
+                handle,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

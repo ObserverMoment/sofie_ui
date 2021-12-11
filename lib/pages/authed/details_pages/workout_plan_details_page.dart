@@ -73,16 +73,16 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
           GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id)
         ]);
 
-    await checkOperationResult(context, result,
+    checkOperationResult(context, result,
         onSuccess: () =>
             context.showToast(message: 'Plan joined. Congratulations!'),
         onFail: () => context.showErrorAlert(
             'Something went wrong, there was an issue joining the plan'));
   }
 
-  Future<void> _shareWorkoutPlan(WorkoutPlan workoutPlan) async {
+  Future<void> _shareWorkoutPlan() async {
     await SharingAndLinking.shareLink(
-        'workout-plan/${workoutPlan.id}', 'Check out this workout plan!');
+        'workout-plan/${widget.id}', 'Check out this workout plan!');
   }
 
   Future<void> _archiveWorkoutPlan(WorkoutPlan workoutPlan) async {
@@ -124,7 +124,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             addRefToQueries: [GQLOpNames.userArchivedWorkoutPlansQuery],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () =>
                   context.showToast(message: 'Workout plan archived'),
               onFail: () => context.showErrorAlert(
@@ -170,7 +170,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             ],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () =>
                   context.showToast(message: 'Workout plan unarchived'),
               onFail: () => context.showErrorAlert(
@@ -214,10 +214,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                   WorkoutPlanWorkoutSchedule(workoutPlan: workoutPlan),
                   WorkoutPlanGoals(workoutPlan: workoutPlan),
                   WorkoutPlanReviews(reviews: workoutPlan.workoutPlanReviews),
-                  WorkoutPlanParticipants(
-                      userSummaries: workoutPlan.workoutPlanEnrolments
-                          .map((e) => e.user)
-                          .toList())
+                  WorkoutPlanParticipants(workoutPlan: workoutPlan)
                 ],
               ),
             )
@@ -301,8 +298,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         text: 'Share',
                                         icon: const Icon(
                                             CupertinoIcons.paperplane),
-                                        onPressed: () =>
-                                            _shareWorkoutPlan(workoutPlan)),
+                                        onPressed: _shareWorkoutPlan),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',

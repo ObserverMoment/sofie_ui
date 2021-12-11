@@ -129,6 +129,11 @@ class _LoadPickerModalState extends State<LoadPickerModal> {
             children: [
               MySlidingSegmentedControl<LoadUnit>(
                   value: _activeLoadUnit,
+                  fontSize: 15,
+                  containerPadding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  childPadding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                   children: {
                     for (final v in LoadUnit.values
                         .where((v) => v != LoadUnit.artemisUnknown))

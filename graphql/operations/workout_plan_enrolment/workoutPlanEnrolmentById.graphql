@@ -3,6 +3,9 @@ query workoutPlanEnrolmentById($id: ID!) {
     __typename
     WorkoutPlanEnrolment {
       ...WorkoutPlanEnrolment
+      CompletedWorkoutPlanDayWorkouts {
+        ...CompletedWorkoutPlanDayWorkout
+      }
       User {
         ...UserSummary
       }

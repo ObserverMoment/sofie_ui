@@ -1,7 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/collections/collection_workout_plans_list.dart';
 import 'package:sofie_ui/components/collections/collection_workouts_list.dart';
@@ -79,15 +77,8 @@ class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
         parameterizeQuery: true,
         builder: (data) {
           final collection = data.userCollectionById;
-
-          final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
-          final bool isOwner = collection.user.id == authedUserId;
-
-          /// Remove any archived content from the display;
-          final activeWorkouts =
-              collection.workouts.where((w) => !w.archived).toList();
-          final activeWorkoutPlans =
-              collection.workoutPlans.where((wp) => !wp.archived).toList();
+          final workouts = collection.workouts;
+          final workoutPlans = collection.workoutPlans;
 
           return MyPageScaffold(
             navigationBar: MyNavBar(
@@ -103,23 +94,21 @@ class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
                           subtitle: 'Collection',
                         ),
                         items: [
-                          if (isOwner)
-                            BottomSheetMenuItem(
-                                text: 'Edit',
-                                icon: const Icon(CupertinoIcons.pencil),
-                                onPressed: () => context.pushRoute(
-                                    CollectionCreatorRoute(
-                                        collection: collection))),
-                          if (isOwner)
-                            BottomSheetMenuItem(
-                                text: 'Delete',
-                                icon: const Icon(
-                                  CupertinoIcons.delete_simple,
-                                  color: Styles.errorRed,
-                                ),
-                                isDestructive: true,
-                                onPressed: () => _confirmDeleteCollection(
-                                    context, collection)),
+                          BottomSheetMenuItem(
+                              text: 'Edit',
+                              icon: const Icon(CupertinoIcons.pencil),
+                              onPressed: () => context.pushRoute(
+                                  CollectionCreatorRoute(
+                                      collection: collection))),
+                          BottomSheetMenuItem(
+                              text: 'Delete',
+                              icon: const Icon(
+                                CupertinoIcons.delete_simple,
+                                color: Styles.errorRed,
+                              ),
+                              isDestructive: true,
+                              onPressed: () => _confirmDeleteCollection(
+                                  context, collection)),
                         ])),
               ),
             ),
@@ -131,12 +120,12 @@ class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
                       'Plans'
                     ],
                     superscriptIcons: [
-                      activeWorkouts.isEmpty
+                      workouts.isEmpty
                           ? null
-                          : _buildNumberDisplay(activeWorkouts.length),
-                      activeWorkoutPlans.isEmpty
+                          : _buildNumberDisplay(workouts.length),
+                      workoutPlans.isEmpty
                           ? null
-                          : _buildNumberDisplay(activeWorkoutPlans.length),
+                          : _buildNumberDisplay(workoutPlans.length),
                     ],
                     handleTabChange: _changeTab,
                     activeTabIndex: _activeTabIndex),

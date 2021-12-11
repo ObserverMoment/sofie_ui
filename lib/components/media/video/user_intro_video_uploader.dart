@@ -6,15 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
-import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
@@ -23,14 +20,16 @@ class UserIntroVideoUploader extends StatefulWidget {
   final String? introVideoUri;
   final String? introVideoThumbUri;
   final Size displaySize;
-  final Function(String uploadedVideoUri, String uploadedVideoThumbUri)?
+
+  /// Pass null and the api will delete from the DB.
+  final Function(String? uploadedVideoUri, String? uploadedVideoThumbUri)
       onUploadSuccess;
   const UserIntroVideoUploader(
       {Key? key,
       this.introVideoUri,
       this.introVideoThumbUri,
       this.displaySize = const Size(120, 120),
-      this.onUploadSuccess})
+      required this.onUploadSuccess})
       : super(key: key);
 
   @override
@@ -80,8 +79,7 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
                 _uploading = false;
                 _processing = true;
               }),
-          onComplete: (String videoUri, String videoThumbUri) =>
-              _saveUrisToDB(videoUri, videoThumbUri),
+          onComplete: _saveUrisToDB,
           onFail: (e) => throw Exception(e));
     } catch (e) {
       printLog(e.toString());
@@ -91,24 +89,8 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
   }
 
   Future<void> _saveUrisToDB(String? videoUri, String? videoThumbUri) async {
-    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
     try {
-      final input = UpdateUserProfileInput()
-        ..introVideoUri = videoUri
-        ..introVideoThumbUri = videoThumbUri;
-      final variables = UpdateUserProfileArguments(data: input);
-      final Map<String, dynamic> varsMap = {
-        'introVideoUri': videoUri,
-        'introVideoThumbUri': videoThumbUri
-      };
-
-      await context.graphQLStore.mutate(
-        mutation: UpdateUserProfileMutation(variables: variables),
-        customVariablesMap: {'data': varsMap},
-
-        /// TODO: Check user => profile changes have not broken this.
-        broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(authedUserId)],
-      );
+      widget.onUploadSuccess(videoUri, videoThumbUri);
     } catch (e) {
       printLog(e.toString());
       await context.showErrorAlert(e.toString());
