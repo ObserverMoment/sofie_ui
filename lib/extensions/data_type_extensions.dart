@@ -17,10 +17,12 @@ extension ClubExtension on Club {
     ..$$typename = kClubSummaryTypeName
     ..id = id
     ..name = name
+    ..createdAt = createdAt
     ..description = description
     ..coverImageUri = coverImageUri
     ..location = location
-    ..owner = owner;
+    ..owner = owner
+    ..memberCount = totalMembers;
 }
 
 extension ClubMembersExtension on ClubMembers {

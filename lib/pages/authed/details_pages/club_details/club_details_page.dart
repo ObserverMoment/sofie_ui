@@ -10,6 +10,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/details_pages/club_details/club_details_members_page.dart';
@@ -86,11 +87,11 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
     }
   }
 
-  void _confirmDeleteClub(String clubName) {
+  void _confirmDeleteClub(Club club) {
     context.showConfirmDeleteDialog(
         message:
             'Warning: This cannot be undone and will result in the deletion of all data, chat and timeline history from this club!',
-        itemName: clubName,
+        itemName: club.name,
         itemType: 'Club',
         onConfirm: () async {
           setState(() {
@@ -99,17 +100,29 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
           try {
             await context.graphQLStore
                 .delete<DeleteClubById$Mutation, DeleteClubByIdArguments>(
-                    mutation: DeleteClubByIdMutation(
-                        variables: DeleteClubByIdArguments(id: widget.id)),
-                    objectId: widget.id,
-                    typename: kClubTypeName,
-                    removeAllRefsToId: true,
-                    clearQueryDataAtKeys: [
-                  GQLVarParamKeys.clubByIdQuery(widget.id),
-                ],
-                    removeRefFromQueries: [
-                  GQLOpNames.userClubsQuery
+              mutation: DeleteClubByIdMutation(
+                  variables: DeleteClubByIdArguments(id: widget.id)),
+              objectId: widget.id,
+              typename: kClubTypeName,
+              removeAllRefsToId: true,
+              clearQueryDataAtKeys: [
+                GQLVarParamKeys.clubByIdQuery(widget.id),
+              ],
+              processResult: (data) {
+                // Remove ClubSummary from store.
+                context.graphQLStore.deleteNormalizedObject(
+                    resolveDataId(club.summary.toJson())!);
+
+                // Remove all refs to it from queries.
+                context.graphQLStore.removeAllQueryRefsToId(
+                    resolveDataId(club.summary.toJson())!);
+
+                // Rebroadcast all queries that may be affected.
+                context.graphQLStore.broadcastQueriesByIds([
+                  GQLOpNames.userClubsQuery,
                 ]);
+              },
+            );
             context.pop();
           } catch (e) {
             printLog(e.toString());
@@ -259,7 +272,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
                                       ),
                                       isDestructive: true,
                                       onPressed: () =>
-                                          _confirmDeleteClub(club.name)),
+                                          _confirmDeleteClub(club)),
                               ])))
                 ],
               ),
