@@ -43,6 +43,7 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
             FullScreenImageGallery(
               photoUris,
               withTopNavBar: false,
+              scrollDirection: Axis.horizontal,
             ),
             SafeArea(
               child: CupertinoButton(

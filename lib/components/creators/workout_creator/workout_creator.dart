@@ -105,7 +105,6 @@ class __PreCreateUIState extends State<_PreCreateUI> {
     super.initState();
     _createWorkoutInput = CreateWorkoutInput(
         name: 'Workout ${DateTime.now().dateString}',
-        difficultyLevel: DifficultyLevel.challenging,
         contentAccessScope: ContentAccessScope.private);
   }
 
@@ -137,6 +136,7 @@ class __PreCreateUIState extends State<_PreCreateUI> {
         ),
         DifficultyLevelSelectorRow(
           difficultyLevel: _createWorkoutInput.difficultyLevel,
+          unselectedLabel: 'Not Specified',
           updateDifficultyLevel: (level) =>
               setState(() => _createWorkoutInput.difficultyLevel = level),
         ),

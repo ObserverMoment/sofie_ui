@@ -2,11 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/indicators.dart';
-import 'package:sofie_ui/components/info_pages/club_invite_link_limits_info.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_input.dart';
-import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
+import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
 import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -183,20 +182,10 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const MyText('Max Invites'),
-                MySlidingSegmentedControl<bool>(
-                    value: _enableInviteLimit,
-                    updateValue: (v) => setState(() => _enableInviteLimit = v),
-                    children: const {
-                      true: 'Limited',
-                      false: 'Unlimited',
-                    }),
-                const InfoPopupButton(infoWidget: ClubInviteLinkLimitsInfo())
-              ],
-            ),
+            child: CupertinoSwitchRow(
+                title: 'Limit Invites',
+                updateValue: (v) => setState(() => _enableInviteLimit = v),
+                value: _enableInviteLimit),
           ),
           const SizedBox(height: 8),
           GrowInOut(

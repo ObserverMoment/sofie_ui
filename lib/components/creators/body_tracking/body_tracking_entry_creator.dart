@@ -283,27 +283,22 @@ class _Photos extends StatelessWidget {
       childAspectRatio: 3 / 4,
       children: [
         FadeIn(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ImageUploader(
-              onUploadStart: onUploadStart,
-              onUploadSuccess: _handleNewImageUpload,
-              removeImage: (_) => {},
-              emptyThumbIcon: CupertinoIcons.add,
-            ),
+          child: ImageUploader(
+            onUploadStart: onUploadStart,
+            onUploadSuccess: _handleNewImageUpload,
+            removeImage: (_) => {},
+            emptyThumbIcon: CupertinoIcons.add,
+            borderRadius: 0,
           ),
         ),
         ...photoUris
-            .map((uri) => Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ImageUploader(
-                    imageUri: uri,
-                    onUploadStart: onUploadStart,
-                    onUploadSuccess: (newUri) =>
-                        _handleImageUpdate(uri, newUri),
-                    removeImage: _handleRemoveImageUpload,
-                    emptyThumbIcon: CupertinoIcons.add,
-                  ),
+            .map((uri) => ImageUploader(
+                  imageUri: uri,
+                  onUploadStart: onUploadStart,
+                  onUploadSuccess: (newUri) => _handleImageUpdate(uri, newUri),
+                  removeImage: _handleRemoveImageUpload,
+                  emptyThumbIcon: CupertinoIcons.add,
+                  borderRadius: 0,
                 ))
             .toList(),
       ],

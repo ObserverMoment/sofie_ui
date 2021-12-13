@@ -316,9 +316,9 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
                           assetImageUri: 'assets/placeholder_images/plan.jpg',
                           onPressed: () => context.navigateTo(
                                 YourPlansRoute(
-                                    selectPlan: _selectWorkoutPlan,
-                                    showCreateButton: true,
-                                    showJoined: false),
+                                  selectPlan: _selectWorkoutPlan,
+                                  showCreateButton: true,
+                                ),
                               ))
                     ],
                   ),

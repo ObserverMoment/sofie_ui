@@ -57,7 +57,8 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
     final hasCountry = Utils.textNotNull(profile.countryCode);
     final hasTown = Utils.textNotNull(profile.townCity);
 
-    return profile.userProfileScope == UserProfileScope.private
+    return !isAuthedUserProfile &&
+            profile.userProfileScope == UserProfileScope.private
         ? _PrivateProfilePlaceholder(profile: profile)
         : NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -86,32 +87,34 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
                               ),
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              if (!isAuthedUserProfile)
-                                _ProfileButtons(
-                                  profile: profile,
-                                ),
-                              if (followerCount > 0)
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      MyText('$followerCount',
-                                          size: FONTSIZE.one,
-                                          weight: FontWeight.bold),
-                                      const SizedBox(width: 3),
-                                      const MyText(
-                                        'FOLLOWERS',
-                                        size: FONTSIZE.one,
-                                      )
-                                    ],
+                          if (!isAuthedUserProfile || followerCount > 0)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                if (!isAuthedUserProfile)
+                                  _ProfileButtons(
+                                    profile: profile,
                                   ),
-                                ),
-                            ],
-                          ),
+                                if (followerCount > 0)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        MyText('$followerCount',
+                                            size: FONTSIZE.one,
+                                            weight: FontWeight.bold),
+                                        const SizedBox(width: 3),
+                                        const MyText(
+                                          'FOLLOWERS',
+                                          size: FONTSIZE.one,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
                         ],
                       ),
                     ),

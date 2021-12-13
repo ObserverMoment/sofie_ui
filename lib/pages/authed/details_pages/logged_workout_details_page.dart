@@ -87,7 +87,7 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
           final loggedWorkout = data.loggedWorkoutById;
 
           final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
-          final bool isOwner = loggedWorkout.user.id == authedUserId;
+          final bool isOwner = loggedWorkout.user?.id == authedUserId;
 
           if (!isOwner) {
             return _LoggedWorkoutReadOnly(
@@ -152,7 +152,7 @@ class _LoggedWorkoutReadOnly extends StatelessWidget {
     return MyPageScaffold(
         child: NestedScrollView(
       headerSliverBuilder: (c, i) => [
-        MySliverNavbar(title: loggedWorkout.user.displayName),
+        MySliverNavbar(title: loggedWorkout.user?.displayName ?? 'Log'),
         SliverToBoxAdapter(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),

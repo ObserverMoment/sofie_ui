@@ -9,6 +9,7 @@ import 'package:sofie_ui/pages/authed/home/your_plans/your_saved_workout_plans.d
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:collection/collection.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class YourPlansPage extends StatefulWidget {
   final void Function(WorkoutPlanSummary plan)? selectPlan;
@@ -38,6 +39,8 @@ class _YourPlansPageState extends State<YourPlansPage> {
   final List<String> _displayTabs = [];
   final Map<int, String> _segmentChildren = {};
 
+  void Function(WorkoutPlanSummary)? _selectPlan;
+
   @override
   void initState() {
     if (widget.showJoined) {
@@ -51,6 +54,8 @@ class _YourPlansPageState extends State<YourPlansPage> {
       _segmentChildren[i] = t;
     });
 
+    _selectPlan = widget.selectPlan != null ? _handlePlanSelect : null;
+
     super.initState();
   }
 
@@ -58,8 +63,13 @@ class _YourPlansPageState extends State<YourPlansPage> {
     setState(() => _activeTabIndex = index);
   }
 
-  void _openWorkoutPlanEnrolmentDetails(String id) {
-    context.navigateTo(WorkoutPlanEnrolmentDetailsRoute(id: id));
+  /// Pops itself (and any stack items such as the text seach widget)
+  /// Then passes the selected plan to the parent.
+  void _handlePlanSelect(WorkoutPlanSummary plan) {
+    /// If the text search is open then we pop back to the main widget.
+    context.router.popUntilRouteWithName(YourPlansRoute.name);
+    context.pop();
+    widget.selectPlan?.call(plan);
   }
 
   @override
@@ -88,15 +98,17 @@ class _YourPlansPageState extends State<YourPlansPage> {
                   children: [
                     if (widget.showJoined)
                       YourWorkoutPlanEnrolments(
-                        selectEnrolment: _openWorkoutPlanEnrolmentDetails,
+                        selectPlan: _selectPlan,
                         showDiscoverButton: widget.showDiscoverButton,
                       ),
                     if (widget.showSaved)
                       YourSavedPlans(
                         showDiscoverButton: widget.showDiscoverButton,
+                        selectWorkoutPlan: _selectPlan,
                       ),
                     YourCreatedPlans(
                       showDiscoverButton: widget.showDiscoverButton,
+                      selectWorkoutPlan: _selectPlan,
                     ),
                   ],
                 ))

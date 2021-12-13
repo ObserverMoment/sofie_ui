@@ -58,8 +58,12 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     await _connectUserToChat();
     await _initFeeds();
     await _handleIncomingLinks();
-    await _handleInitialUri();
     setState(() {});
+
+    /// Wait until after the [AutoRoute] component has built before checking for an initialUri
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _handleInitialUri();
+    });
   }
 
   chat.StreamChatClient get _createStreamChatClient =>

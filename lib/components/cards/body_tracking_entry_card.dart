@@ -73,7 +73,7 @@ class BodyTrackingEntryCard extends StatelessWidget {
                 ),
                 if (leanMass != null)
                   MyText(
-                    'Lean Mass: $leanMass $unitString',
+                    'Lean Mass: ${leanMass.stringMyDouble()} $unitString',
                   ),
                 if (bodyweightString != null || fatPercentString != null)
                   Padding(

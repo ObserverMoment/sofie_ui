@@ -21,6 +21,7 @@ import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 class ImageUploader extends StatefulWidget {
   final String? imageUri;
   final Size displaySize;
+  final double borderRadius;
   final void Function()? onUploadStart;
   final void Function(String uploadedUri) onUploadSuccess;
   final VoidCallback? onUploadFail;
@@ -34,7 +35,8 @@ class ImageUploader extends StatefulWidget {
       this.onUploadStart,
       required this.removeImage,
       this.onUploadFail,
-      this.emptyThumbIcon = CupertinoIcons.photo})
+      this.emptyThumbIcon = CupertinoIcons.photo,
+      this.borderRadius = 8})
       : super(key: key);
 
   @override
@@ -116,7 +118,7 @@ class _ImageUploaderState extends State<ImageUploader> {
         width: widget.displaySize.width,
         height: widget.displaySize.height,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
           color: cardBackground,
           boxShadow: kElevation[3],
         ),

@@ -335,7 +335,7 @@ input CreateUserBenchmarkTagInput {
 
 input CreateWorkoutInput {
   contentAccessScope: ContentAccessScope!
-  difficultyLevel: DifficultyLevel!
+  difficultyLevel: DifficultyLevel
   name: String!
 }
 
@@ -509,7 +509,7 @@ enum LoadUnit {
 type LoggedWorkout {
   GymProfile: GymProfile
   LoggedWorkoutSections: [LoggedWorkoutSection!]!
-  User: UserSummary!
+  User: UserSummary
   WorkoutGoals: [WorkoutGoal!]!
   completedOn: DateTime!
   id: ID!
@@ -1390,7 +1390,7 @@ type Workout {
   coverImageUri: String
   createdAt: DateTime!
   description: String
-  difficultyLevel: DifficultyLevel!
+  difficultyLevel: DifficultyLevel
   id: ID!
   introAudioUri: String
   introVideoThumbUri: String
@@ -1603,7 +1603,7 @@ type WorkoutSummary {
   coverImageUri: String
   createdAt: DateTime!
   description: String
-  difficultyLevel: DifficultyLevel!
+  difficultyLevel: DifficultyLevel
   equipments: [String!]!
   hasClassAudio: Boolean!
   hasClassVideo: Boolean!

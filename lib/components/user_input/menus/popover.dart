@@ -27,15 +27,12 @@ class PopoverMenu extends StatelessWidget {
           transitionDuration: const Duration(milliseconds: 150),
           bodyBuilder: (context) => ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: PopoverMenuContainer(
-                items: items,
-              ),
+            child: PopoverMenuContainer(
+              items: items,
             ),
           ),
           backgroundColor: backgroundColor,
-          barrierColor: Colors.transparent,
+          barrierColor: Styles.black.withOpacity(0.2),
           radius: 16,
           direction: PopoverDirection.top,
           arrowHeight: 10,

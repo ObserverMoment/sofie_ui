@@ -288,6 +288,14 @@ class GraphQLStore {
   }) async {
     final response = await execute(mutation);
 
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
+
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
@@ -327,6 +335,14 @@ class GraphQLStore {
     List<String> broadcastQueryIds = const [],
   }) async {
     final response = await execute(query);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
     final result = OperationResult<TData>(
         data: query.parse(response.data ?? {}), errors: response.errors);
@@ -462,6 +478,14 @@ class GraphQLStore {
       List<String> broadcastQueryIds = const []}) async {
     final response = await execute(mutation);
 
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
+
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
@@ -507,6 +531,14 @@ class GraphQLStore {
       List<String> clearQueryDataAtKeys = const [],
       List<String> broadcastQueryIds = const []}) async {
     final response = await execute(mutation);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
     /// [result][data][operationName] should always be a list of deleted IDs being returned from the API.
     final result = OperationResult<TData>(

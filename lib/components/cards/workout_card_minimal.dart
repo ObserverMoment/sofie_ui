@@ -71,8 +71,10 @@ class MinimalWorkoutCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                        DifficultyLevelDot(
-                            difficultyLevel: workout.difficultyLevel, size: 12),
+                        if (workout.difficultyLevel != null)
+                          DifficultyLevelDot(
+                              difficultyLevel: workout.difficultyLevel!,
+                              size: 12),
                       ],
                     ),
                     const SizedBox(height: 8),

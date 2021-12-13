@@ -207,11 +207,12 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                     backgroundColor: context.theme.background.withOpacity(0.6),
                     duration: Duration(minutes: workout.lengthMinutes!),
                   ),
-                DifficultyLevelTag(
-                  backgroundColor: context.theme.background.withOpacity(0.6),
-                  difficultyLevel: workout.difficultyLevel,
-                  fontSize: FONTSIZE.two,
-                ),
+                if (workout.difficultyLevel != null)
+                  DifficultyLevelTag(
+                    backgroundColor: context.theme.background.withOpacity(0.6),
+                    difficultyLevel: workout.difficultyLevel!,
+                    fontSize: FONTSIZE.two,
+                  ),
               ],
             ),
           ],

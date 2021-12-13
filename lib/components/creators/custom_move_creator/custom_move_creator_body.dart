@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/body_areas/body_area_score_adjuster.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selector_score_indicator.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -21,13 +23,9 @@ class CustomMoveCreatorBody extends StatefulWidget {
 }
 
 class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
-  final PageController _pageController = PageController();
-  final Duration _animDuration = const Duration(milliseconds: 250);
-  final Curve _animCurve = Curves.fastOutSlowIn;
-  final double _kBodyAreaGraphicHeight = 550;
-
-  void _animateToPage(int page) => _pageController.animateToPage(page,
-      duration: _animDuration, curve: _animCurve);
+  /// 0 = Front. 1 = Back.
+  int _activePageIndex = 0;
+  final double _kBodyAreaGraphicHeight = 500;
 
   Future<void> _handleTapBodyArea(BodyArea bodyArea) async {
     await context.showBottomSheet(
@@ -58,73 +56,51 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
             child: Column(
               children: [
                 if (widget.move.bodyAreaMoveScores.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: const [
-                        MyText(
-                          'Targeted areas not yet specified',
-                          subtext: true,
-                          lineHeight: 1.3,
-                        ),
-                        MyText(
-                          '(Click body area to add / edit scores)',
-                          subtext: true,
-                          size: FONTSIZE.two,
-                          lineHeight: 1.3,
-                        ),
-                      ],
+                  const Padding(
+                    padding: EdgeInsets.only(top: 4, bottom: 8.0),
+                    child: MyText(
+                      'Non specified. Tap Body Area to edit scores',
+                      color: Styles.secondaryAccent,
+                      lineHeight: 1.3,
+                      size: FONTSIZE.two,
                     ),
                   )
                 else
                   Padding(
-                    padding: const EdgeInsets.only(top: 16, bottom: 4.0),
+                    padding: const EdgeInsets.only(top: 4, bottom: 8.0),
                     child: TargetedBodyAreasScoreList(
                       widget.move.bodyAreaMoveScores,
                       showNumericalScore: true,
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: SizedBox(
-                    height: _kBodyAreaGraphicHeight,
-                    child: PageView(
-                      controller: _pageController,
-                      children: [
-                        Stack(alignment: Alignment.topCenter, children: [
-                          const Positioned(child: H3('Front')),
-                          Positioned(
-                              right: 0,
-                              child: CupertinoButton(
-                                  child: const MyText('Back >'),
-                                  onPressed: () => _animateToPage(1))),
-                          BodyAreaSelectorScoreIndicator(
-                            bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
-                            frontBack: BodyAreaFrontBack.front,
-                            allBodyAreas: allBodyAreas,
-                            indicatePercentWithColor: true,
-                            handleTapBodyArea: _handleTapBodyArea,
-                            height: _kBodyAreaGraphicHeight,
-                          ),
-                        ]),
-                        Stack(alignment: Alignment.topCenter, children: [
-                          const Positioned(child: H3('Back')),
-                          Positioned(
-                              left: 0,
-                              child: CupertinoButton(
-                                  child: const MyText('< Front'),
-                                  onPressed: () => _animateToPage(0))),
-                          BodyAreaSelectorScoreIndicator(
-                            bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
-                            frontBack: BodyAreaFrontBack.back,
-                            allBodyAreas: allBodyAreas,
-                            indicatePercentWithColor: true,
-                            handleTapBodyArea: _handleTapBodyArea,
-                            height: _kBodyAreaGraphicHeight,
-                          ),
-                        ]),
-                      ],
-                    ),
+                MySlidingSegmentedControl<int>(
+                    children: const {0: 'Front', 1: 'Back'},
+                    updateValue: (i) => setState(() => _activePageIndex = i),
+                    value: _activePageIndex),
+                SizedBox(
+                  height: _kBodyAreaGraphicHeight,
+                  width: double.infinity,
+                  child: IndexedStack(
+                    alignment: Alignment.center,
+                    index: _activePageIndex,
+                    children: [
+                      BodyAreaSelectorScoreIndicator(
+                        bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
+                        frontBack: BodyAreaFrontBack.front,
+                        allBodyAreas: allBodyAreas,
+                        indicatePercentWithColor: true,
+                        handleTapBodyArea: _handleTapBodyArea,
+                        height: _kBodyAreaGraphicHeight,
+                      ),
+                      BodyAreaSelectorScoreIndicator(
+                        bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
+                        frontBack: BodyAreaFrontBack.back,
+                        allBodyAreas: allBodyAreas,
+                        indicatePercentWithColor: true,
+                        handleTapBodyArea: _handleTapBodyArea,
+                        height: _kBodyAreaGraphicHeight,
+                      ),
+                    ],
                   ),
                 )
               ],

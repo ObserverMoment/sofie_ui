@@ -105,15 +105,16 @@ class WorkoutCard extends StatelessWidget {
                                   textColor: infoFontColor,
                                 ),
                               ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 2.0),
-                              child: Opacity(
-                                opacity: 0.75,
-                                child: DifficultyLevelDot(
-                                  difficultyLevel: workout.difficultyLevel,
+                            if (workout.difficultyLevel != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2.0),
+                                child: Opacity(
+                                  opacity: 0.75,
+                                  child: DifficultyLevelDot(
+                                    difficultyLevel: workout.difficultyLevel!,
+                                  ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ],

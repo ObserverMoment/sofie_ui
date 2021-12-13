@@ -139,7 +139,9 @@ extension WorkoutPlanExtension on WorkoutPlan {
     if (workouts.isEmpty) {
       return null;
     }
-    final average = workouts.averageBy((w) => w.difficultyLevel.numericValue);
+    final average = workouts
+        .where((w) => w.difficultyLevel != null)
+        .averageBy((w) => w.difficultyLevel!.numericValue);
     return DifficultyLevelExtension.levelFromNumber(average!);
   }
 
@@ -206,7 +208,9 @@ extension WorkoutPlanDayExtension on WorkoutPlanDay {
     if (workouts.isEmpty) {
       return null;
     }
-    final average = workouts.averageBy((w) => w.difficultyLevel.numericValue);
+    final average = workouts
+        .where((w) => w.difficultyLevel != null)
+        .averageBy((w) => w.difficultyLevel!.numericValue);
     return DifficultyLevelExtension.levelFromNumber(average!);
   }
 }

@@ -121,8 +121,9 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
                           })),
                   DifficultyLevelSelectorRow(
                     difficultyLevel: difficultyLevel,
+                    unselectedLabel: 'Any',
                     updateDifficultyLevel: (difficultyLevel) => _updateFilters(
-                        {'difficultyLevel': difficultyLevel.apiValue}),
+                        {'difficultyLevel': difficultyLevel?.apiValue}),
                   ),
                   UserInputContainer(
                     child: Column(

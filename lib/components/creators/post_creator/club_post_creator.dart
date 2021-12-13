@@ -319,8 +319,8 @@ class _ClubPostCreatorPageState extends State<ClubPostCreatorPage> {
                         assetImageUri: 'assets/placeholder_images/plan.jpg',
                         onPressed: () => context.pushRoute(YourPlansRoute(
                             selectPlan: _selectWorkoutPlan,
-                            showJoined: false,
                             showSaved: false,
+                            showJoined: false,
                             showCreateButton: true)),
                       )
                     ],

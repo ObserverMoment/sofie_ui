@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/workout_plan/selectable_workout_plan_card.dart';
 import 'package:sofie_ui/components/workout_plan_enrolment/workout_plan_enrolment_progress_summary.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
@@ -14,12 +15,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class YourWorkoutPlanEnrolments extends StatelessWidget {
-  final void Function(String enrolmentId) selectEnrolment;
+  final void Function(WorkoutPlanSummary plan)? selectPlan;
   final bool showDiscoverButton;
   const YourWorkoutPlanEnrolments(
-      {Key? key,
-      required this.selectEnrolment,
-      required this.showDiscoverButton})
+      {Key? key, required this.selectPlan, required this.showDiscoverButton})
       : super(key: key);
 
   @override
@@ -33,7 +32,7 @@ class YourWorkoutPlanEnrolments extends StatelessWidget {
       builder: (data) {
         return _FilterableEnroledPlans(
           enrolments: data.workoutPlanEnrolments,
-          selectEnrolment: selectEnrolment,
+          selectPlan: selectPlan,
           showDiscoverButton: showDiscoverButton,
         );
       },
@@ -42,12 +41,12 @@ class YourWorkoutPlanEnrolments extends StatelessWidget {
 }
 
 class _FilterableEnroledPlans extends StatefulWidget {
-  final void Function(String enrolmentId) selectEnrolment;
+  final void Function(WorkoutPlanSummary plan)? selectPlan;
   final List<WorkoutPlanEnrolmentSummary> enrolments;
   final bool showDiscoverButton;
   const _FilterableEnroledPlans(
       {Key? key,
-      required this.selectEnrolment,
+      required this.selectPlan,
       required this.enrolments,
       required this.showDiscoverButton})
       : super(key: key);
@@ -118,31 +117,38 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                       delay: 5,
                       delayBasis: 20,
                       duration: 100,
-                      child: GestureDetector(
-                        onTap: () =>
-                            widget.selectEnrolment(filteredEnrolments[i].id),
-                        child: Card(
-                          padding: EdgeInsets.zero,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12.0, horizontal: 9),
-                                child: WorkoutPlanEnrolmentProgressSummary(
-                                  completed: filteredEnrolments[i]
-                                      .completedWorkoutsCount,
-                                  startedOn: filteredEnrolments[i].startDate,
-                                  total: filteredEnrolments[i]
-                                      .workoutPlan
-                                      .workoutsCount,
-                                ),
+                      child: Card(
+                        padding: EdgeInsets.zero,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12.0, horizontal: 9),
+                              child: WorkoutPlanEnrolmentProgressSummary(
+                                completed: filteredEnrolments[i]
+                                    .completedWorkoutsCount,
+                                startedOn: filteredEnrolments[i].startDate,
+                                total: filteredEnrolments[i]
+                                    .workoutPlan
+                                    .workoutsCount,
                               ),
-                              WorkoutPlanCard(
-                                filteredEnrolments[i].workoutPlan,
-                                elevation: 0,
-                              ),
-                            ],
-                          ),
+                            ),
+                            widget.selectPlan != null
+                                ? SelectableWorkoutPlanCard(
+                                    index: i,
+                                    workoutPlan:
+                                        filteredEnrolments[i].workoutPlan,
+                                    selectWorkoutPlan: widget.selectPlan)
+                                : GestureDetector(
+                                    onTap: () => context.navigateTo(
+                                        WorkoutPlanEnrolmentDetailsRoute(
+                                            id: filteredEnrolments[i].id)),
+                                    child: WorkoutPlanCard(
+                                      filteredEnrolments[i].workoutPlan,
+                                      elevation: 0,
+                                    ),
+                                  ),
+                          ],
                         ),
                       ),
                     ),

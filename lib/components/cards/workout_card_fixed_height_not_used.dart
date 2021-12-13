@@ -85,12 +85,13 @@ class WorkoutCardFixedHeight extends StatelessWidget {
                               textColor: infoFontColor,
                             ),
                           ),
-                        DifficultyLevelTag(
-                          difficultyLevel: workout.difficultyLevel,
-                          fontSize: FONTSIZE.one,
-                          backgroundColor: contentOverlayColor,
-                          textColor: infoFontColor,
-                        ),
+                        if (workout.difficultyLevel != null)
+                          DifficultyLevelTag(
+                            difficultyLevel: workout.difficultyLevel!,
+                            fontSize: FONTSIZE.one,
+                            backgroundColor: contentOverlayColor,
+                            textColor: infoFontColor,
+                          ),
                       ],
                     ),
                   ],
