@@ -16,18 +16,6 @@ mutation addUserToClubViaInviteToken($userId: ID!, $clubInviteTokenId: ID!) {
     ClubInviteTokens {
       ...ClubInviteToken
     }
-    JoinClubInvites {
-      ...JoinClubInvite
-      Invited {
-        ...UserSummary
-      }
-    }
-    JoinClubRequests {
-      ...JoinClubRequest
-      Applicant {
-        ...UserSummary
-      }
-    }
     Workouts {
       ...WorkoutSummary
     }

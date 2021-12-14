@@ -51,6 +51,7 @@ class WorkoutSetDisplay extends StatelessWidget {
                           child: WorkoutMoveDisplay(
                             wm,
                             showReps: showReps,
+                            showMoveNumber: sortedMoves.length > 1,
                           ),
                         ))
                     .toList(),

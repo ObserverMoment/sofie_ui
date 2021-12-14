@@ -188,20 +188,11 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
           )
         : _pagingController.itemList == null ||
                 _pagingController.itemList!.isEmpty
-            ? ListView(
-                shrinkWrap: true,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: Center(
-                      child: MyText(
-                        'No posts yet..',
-                        size: FONTSIZE.four,
-                        subtext: true,
-                      ),
-                    ),
-                  )
-                ],
+            ? const Center(
+                child: MyText(
+                  'No Activity',
+                  subtext: true,
+                ),
               )
             : PagedListView<int, TimelinePostFullData>(
                 shrinkWrap: true,

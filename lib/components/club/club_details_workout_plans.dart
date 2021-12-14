@@ -139,7 +139,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
         height: 100,
         child: Center(
           child: MyText(
-            'No workoutPlans',
+            'No Plans',
             subtext: true,
           ),
         ),

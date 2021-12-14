@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -45,14 +45,15 @@ class ScoreInputSlider extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: Material(
-                  color: Colors.transparent,
-                  child: SliderTheme(
-                    data: const SliderThemeData(
+                child: material.Material(
+                  color: material.Colors.transparent,
+                  child: material.SliderTheme(
+                    data: const material.SliderThemeData(
                       trackHeight: 20.0,
-                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 11),
+                      thumbShape: material.RoundSliderThumbShape(
+                          enabledThumbRadius: 11),
                     ),
-                    child: Slider(
+                    child: material.Slider(
                       min: min,
                       max: max,
                       divisions: divisions,

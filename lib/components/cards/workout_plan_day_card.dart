@@ -147,20 +147,22 @@ class EditableWorkoutPlanDayCard extends StatelessWidget {
                         sortedWorkoutPlanDayWorkouts[removeAtIndex]),
                     secondaryActions: [
                       if (i != 0)
-                        IconSlideAction(
-                          caption: 'Move up',
-                          color: Styles.primaryAccent,
+                        SlidableAction(
+                          label: 'Move up',
+                          backgroundColor: Styles.primaryAccent,
                           foregroundColor: Styles.white,
                           icon: CupertinoIcons.arrow_up,
-                          onTap: () => reorderWorkoutPlanDayWorkouts(i, i - 1),
+                          onPressed: (_) =>
+                              reorderWorkoutPlanDayWorkouts(i, i - 1),
                         ),
                       if (i != sortedWorkoutPlanDayWorkouts.length - 1)
-                        IconSlideAction(
-                          caption: 'Move down',
-                          color: Styles.primaryAccent,
+                        SlidableAction(
+                          label: 'Move down',
+                          backgroundColor: Styles.primaryAccent,
                           foregroundColor: Styles.white,
                           icon: CupertinoIcons.arrow_down,
-                          onTap: () => reorderWorkoutPlanDayWorkouts(i, i + 1),
+                          onPressed: (_) =>
+                              reorderWorkoutPlanDayWorkouts(i, i + 1),
                         ),
                     ],
                     child: Padding(

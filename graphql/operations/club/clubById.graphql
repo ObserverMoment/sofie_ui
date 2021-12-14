@@ -13,18 +13,6 @@ query clubById($id: ID!) {
     ClubInviteTokens {
       ...ClubInviteToken
     }
-    JoinClubInvites {
-      ...JoinClubInvite
-      Invited {
-        ...UserSummary
-      }
-    }
-    JoinClubRequests {
-      ...JoinClubRequest
-      Applicant {
-        ...UserSummary
-      }
-    }
     Workouts {
       ...WorkoutSummary
     }

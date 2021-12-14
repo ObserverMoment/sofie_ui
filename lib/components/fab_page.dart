@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
 
@@ -84,6 +86,7 @@ class FloatingButton extends StatelessWidget {
   final Color? contentColor;
   final Color? color;
   final Gradient? gradient;
+  final bool loading;
 
   const FloatingButton({
     Key? key,
@@ -96,36 +99,43 @@ class FloatingButton extends StatelessWidget {
     this.gradient,
     this.contentColor,
     this.padding = const EdgeInsets.all(11),
+    this.loading = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Vibrate.feedback(FeedbackType.light);
-        onTap();
-      },
-      child: FABPageButtonContainer(
-        color: color,
-        gradient: gradient,
-        padding: padding,
-        margin: margin,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) Icon(icon, size: iconSize, color: contentColor),
-            if (icon != null && text != null) const SizedBox(width: 6),
-            if (text != null)
-              MyText(
-                text!,
-                size: FONTSIZE.four,
-                color: contentColor,
-              ),
-          ],
-        ),
-      ),
-    );
+        onTap: () {
+          Vibrate.feedback(FeedbackType.light);
+          onTap();
+        },
+        child: FABPageButtonContainer(
+          color: color,
+          gradient: gradient,
+          padding: padding,
+          margin: margin,
+          child: AnimatedSwitcher(
+            duration: kStandardAnimationDuration,
+            child: loading
+                ? const LoadingDots()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (icon != null)
+                        Icon(icon, size: iconSize, color: contentColor),
+                      if (icon != null && text != null)
+                        const SizedBox(width: 6),
+                      if (text != null)
+                        MyText(
+                          text!,
+                          size: FONTSIZE.four,
+                          color: contentColor,
+                        ),
+                    ],
+                  ),
+          ),
+        ));
   }
 }
 

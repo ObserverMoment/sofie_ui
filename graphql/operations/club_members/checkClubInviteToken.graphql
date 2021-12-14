@@ -4,38 +4,14 @@ query checkClubInviteToken($id: ID!) {
     ... on ClubInviteTokenData {
       ...ClubInviteTokenData
       Club {
-        ...Club
+        ...ClubSummary
         Owner {
           ...UserSummary
         }
-        Admins {
-          ...UserSummary
-        }
-        Members {
-          ...UserSummary
-        }
-        ClubInviteTokens {
-          ...ClubInviteToken
-        }
-        JoinClubInvites {
-          ...JoinClubInvite
-          Invited {
-            ...UserSummary
-          }
-        }
-        JoinClubRequests {
-          ...JoinClubRequest
-          Applicant {
-            ...UserSummary
-          }
-        }
-        Workouts {
-          ...WorkoutSummary
-        }
-        WorkoutPlans {
-          ...WorkoutPlanSummary
-        }
       }
+      introVideoUri
+      introVideoThumbUri
+      introAudioUri
     }
     ... on InviteTokenError {
       ...InviteTokenError

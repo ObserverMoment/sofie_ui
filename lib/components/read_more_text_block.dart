@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
@@ -65,9 +64,7 @@ class ReadMoreTextBlock extends StatelessWidget {
     final _defaultDelimiterStyle = delimiterStyle ?? effectiveTextStyle;
 
     TextSpan link = const TextSpan(
-      text: 'more',
-      style: TextStyle(fontWeight: FontWeight.bold),
-    );
+        text: 'MORE', style: TextStyle(color: Styles.primaryAccent));
 
     TextSpan _delimiter = TextSpan(
       text: delimiter,

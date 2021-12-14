@@ -46,6 +46,15 @@ extension LoggedWorkoutExtension on LoggedWorkout {
 }
 
 extension MoveExtension on Move {
+  WorkoutMoveRepType get initialRepType =>
+      validRepTypes.contains(WorkoutMoveRepType.reps)
+          ? WorkoutMoveRepType.reps
+          : validRepTypes.contains(WorkoutMoveRepType.calories)
+              ? WorkoutMoveRepType.calories
+              : validRepTypes.contains(WorkoutMoveRepType.distance)
+                  ? WorkoutMoveRepType.distance
+                  : WorkoutMoveRepType.time;
+
   /// Can any of its equipments have a load input. [loadAdjustable] = true.
   bool get isLoadAdjustable =>
       requiredEquipments.any((e) => e.loadAdjustable) ||

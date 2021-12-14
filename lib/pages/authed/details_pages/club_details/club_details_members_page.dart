@@ -36,8 +36,8 @@ class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
           children: [
             MyTabBarNav(
                 titles: const [
-                  'Info',
-                  'Feed',
+                  'Activity',
+                  'About',
                   'Workouts',
                   'Plans',
                 ],
@@ -59,13 +59,13 @@ class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
               child: IndexedStack(
                 index: _activeTabIndex,
                 children: [
-                  ClubDetailsInfo(
-                    club: widget.club,
-                  ),
                   ClubDetailsTimeline(
                     club: widget.club,
                     isOwnerOrAdmin: widget.isOwnerOrAdmin,
                     stopPollingFeed: widget.stopPollingFeed,
+                  ),
+                  ClubDetailsInfo(
+                    club: widget.club,
                   ),
                   ClubDetailsWorkouts(
                       club: widget.club,

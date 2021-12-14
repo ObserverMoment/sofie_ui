@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:popover/popover.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';

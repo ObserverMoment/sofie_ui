@@ -13,18 +13,6 @@ mutation addWorkoutPlanToClub($workoutPlanId: ID!, $clubId: ID!) {
     ClubInviteTokens {
       ...ClubInviteToken
     }
-    JoinClubInvites {
-      ...JoinClubInvite
-      Invited {
-        ...UserSummary
-      }
-    }
-    JoinClubRequests {
-      ...JoinClubRequest
-      Applicant {
-        ...UserSummary
-      }
-    }
     Workouts {
       ...WorkoutSummary
     }

@@ -17,8 +17,10 @@ import 'package:sofie_ui/components/workout/workout_move_display.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -145,7 +147,7 @@ class _WorkoutSetGeneratorCreatorState
     setState(() {
       _moves.add(move);
       _equipmentForMoves[move] = null;
-      _repDataForMoves[move] = MoveRepData(repType: move.validRepTypes[0]);
+      _repDataForMoves[move] = MoveRepData(repType: move.initialRepType);
       _loadDataForMoves[move] = MoveLoadData();
     });
     _checkIfEquipmentAndLoadSelectorsRequired();
@@ -169,8 +171,10 @@ class _WorkoutSetGeneratorCreatorState
       _equipmentSelectorRequired =
           _moves.any((m) => m.selectableEquipments.isNotEmpty);
 
-      _loadSelectorRequired =
-          _moves.any((m) => m.requiredEquipments.any((e) => e.loadAdjustable));
+      _loadSelectorRequired = _moves
+              .any((m) => m.requiredEquipments.any((e) => e.loadAdjustable)) ||
+          _equipmentForMoves.values.any((e) => e != null && e.loadAdjustable);
+
       _equipmentForMoves.values.any((e) => e != null && e.loadAdjustable);
 
       _numActivePages = _equipmentSelectorRequired && _loadSelectorRequired
@@ -234,7 +238,7 @@ class _WorkoutSetGeneratorCreatorState
     return MyPageScaffold(
       navigationBar: MyNavBar(
         customLeading: NavBarCancelButton(context.pop),
-        middle: const NavBarTitle('Generate Set'),
+        middle: const NavBarLargeTitle('Generate Set'),
         trailing: _savingToDB
             ? const NavBarTrailingRow(children: [NavBarLoadingDots()])
             : null,
@@ -339,70 +343,88 @@ class _MoveSelectorUI extends StatelessWidget {
       required this.validRepTypes})
       : super(key: key);
 
+  void _addMove(BuildContext context) => context.push(
+      child: MoveSelector(
+          customFilter: (movesList) => movesList
+              .where((m) =>
+                  !moves.contains(m) &&
+                  m.validRepTypes.any((r) => validRepTypes.contains(r)))
+              .toList(),
+          selectMove: (m) {
+            selectMove(m);
+            context.pop();
+          },
+          onCancel: context.pop));
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: MyText(
-            'SELECT MOVES',
-            size: FONTSIZE.four,
-          ),
-        ),
-        if (moves.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MyText(
-              getWorkoutSetDefinitionText(moves.length) ?? '',
-              size: FONTSIZE.four,
-            ),
-          ),
-        if (moves.isNotEmpty)
-          Expanded(
-            child: FadeInUp(
-              child: ListView(
-                shrinkWrap: true,
-                children: moves
-                    .mapIndexed((i, m) => Row(
-                          children: [
-                            MyText((i + 1).toString(), subtext: true),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: ContentBox(
-                                  child: MyText(m.name, size: FONTSIZE.four)),
-                            ),
-                            CupertinoButton(
-                              onPressed: () => removeMove(m),
-                              child:
-                                  const Icon(CupertinoIcons.delete, size: 18),
-                            )
-                          ],
-                        ))
-                    .toList(),
+    return moves.isEmpty
+        ? YourContentEmptyPlaceholder(
+            message: 'Set Generator!',
+            explainer:
+                'The set generator allow you to easily create more complex sets such as supersets, rep ladders and load ladders. Select your moves, choose your equipment, enter reps and load info and then hit generate!',
+            showIcon: false,
+            actions: [
+                EmptyPlaceholderAction(
+                    action: () => _addMove(context),
+                    buttonIcon: CupertinoIcons.add,
+                    buttonText: 'Add First Move'),
+              ])
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0, bottom: 8, top: 8),
+                child: MyHeaderText(
+                  'SELECT MOVES',
+                ),
               ),
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: CreateTextIconButton(
-              text: 'Add Move',
-              onPressed: () => context.push(
-                  child: MoveSelector(
-                      customFilter: (movesList) => movesList
-                          .where((m) =>
-                              !moves.contains(m) &&
-                              m.validRepTypes
-                                  .any((r) => validRepTypes.contains(r)))
+              if (moves.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MyText(
+                    getWorkoutSetDefinitionText(moves.length) ?? '',
+                    color: Styles.primaryAccent,
+                  ),
+                ),
+              if (moves.isNotEmpty)
+                Flexible(
+                  child: FadeInUp(
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: moves
+                          .mapIndexed((i, m) => Row(
+                                children: [
+                                  MyText((i + 1).toString(), subtext: true),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: ContentBox(
+                                        child: MyText(m.name,
+                                            size: FONTSIZE.four)),
+                                  ),
+                                  CupertinoButton(
+                                    onPressed: () => removeMove(m),
+                                    child: const Icon(CupertinoIcons.delete,
+                                        size: 18),
+                                  )
+                                ],
+                              ))
                           .toList(),
-                      selectMove: (m) {
-                        selectMove(m);
-                        context.pop();
-                      },
-                      onCancel: context.pop))),
-        ),
-      ],
-    );
+                    ),
+                  ),
+                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: CreateTextIconButton(
+                        text: 'Add Move', onPressed: () => _addMove(context)),
+                  ),
+                ],
+              ),
+            ],
+          );
   }
 }
 
@@ -420,12 +442,12 @@ class _EquipmentSelectorUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: MyText(
+          padding: EdgeInsets.only(left: 8.0, bottom: 16, top: 8),
+          child: MyHeaderText(
             'SELECT EQUIPMENT',
-            size: FONTSIZE.four,
           ),
         ),
         ListView(
@@ -455,7 +477,8 @@ class _EquipmentSelectorUI extends StatelessWidget {
                             selectedEquipments: equipmentForMoves[m] != null
                                 ? [equipmentForMoves[m]!]
                                 : [],
-                            equipments: m.selectableEquipments,
+                            equipments: m.selectableEquipments
+                                .sortedBy<String>((e) => e.name),
                             handleSelection: (e) => updateEquipment(m, e)),
                       ],
                     ),
@@ -489,12 +512,12 @@ class _EquipmentLoadSelectorUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: MyText(
+          padding: EdgeInsets.only(left: 8.0, bottom: 16, top: 8),
+          child: MyHeaderText(
             'SELECT LOAD',
-            size: FONTSIZE.four,
           ),
         ),
         ListView(
@@ -624,37 +647,40 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.only(top: 16.0, bottom: 4),
-          child: MyText(
+          padding: EdgeInsets.only(left: 8.0, top: 8),
+          child: MyHeaderText(
             'DEFINE REPS',
-            size: FONTSIZE.four,
           ),
         ),
+        const HorizontalLine(),
         Expanded(
           child: ListView(
             shrinkWrap: true,
             children: [
-              UserInputContainer(
+              Container(
+                  padding: const EdgeInsets.all(8),
                   child: Column(
-                children: [
-                  IntPickerRowTapToEdit(
-                    value: numSetsPerMove,
-                    min: 1,
-                    max: 50,
-                    saveValue: updateNumSetsPerMove,
-                    title: 'Number of Sets for each Move',
-                  ),
-                  const SizedBox(height: 8),
-                  const MyText(
-                    'Eg. For a superset of two moves you would do both moves this many times',
-                    size: FONTSIZE.two,
-                    maxLines: 3,
-                    subtext: true,
-                  ),
-                ],
-              )),
+                    children: [
+                      IntPickerRowTapToEdit(
+                        value: numSetsPerMove,
+                        min: 1,
+                        max: 50,
+                        saveValue: updateNumSetsPerMove,
+                        title: 'Number of Sets',
+                      ),
+                      const SizedBox(height: 8),
+                      const MyText(
+                        'Eg. For a superset of two moves you would do both moves this many times',
+                        size: FONTSIZE.two,
+                        maxLines: 3,
+                        subtext: true,
+                      ),
+                    ],
+                  )),
+              const HorizontalLine(),
               ...repDataForMoves.entries.map((e) => Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: Column(
@@ -790,27 +816,26 @@ class _GeneratedSetPreview extends StatelessWidget {
             round,
             i))).expand((x) => x).toList();
 
-  // id, sortPosition, rounds, duration, workoutMoves
-
   /// [round] is zero indexed
   WorkoutMove _genWorkoutMove(Move m, Equipment? e, MoveRepData r,
-          MoveLoadData l, int round, int index) =>
-      WorkoutMove()
-        ..id = const Uuid().v1()
-        ..sortPosition = (round * moves.length) + index
-        ..move = m
-        ..equipment = e
-        ..reps = r.enableLadder
-            ? (r.initialReps + (r.perSetRepAdjust * round)).clamp(0.0, 1000.0)
-            : r.initialReps
-        ..repType = r.repType
-        ..timeUnit = r.timeUnit
-        ..distanceUnit = r.distanceUnit
-        ..loadAmount = l.enableLadder
-            ? (l.initialLoadAmount + (l.perSetLoadAdjust * round))
-                .clamp(0.0, 1000.0)
-            : l.initialLoadAmount
-        ..loadUnit = l.loadUnit;
+      MoveLoadData l, int round, int index) {
+    return WorkoutMove()
+      ..id = const Uuid().v1()
+      ..sortPosition = (round * moves.length) + index
+      ..move = m
+      ..equipment = e
+      ..reps = r.enableLadder
+          ? (r.initialReps + (r.perSetRepAdjust * round)).clamp(0.0, 1000.0)
+          : r.initialReps
+      ..repType = r.repType
+      ..timeUnit = r.timeUnit
+      ..distanceUnit = r.distanceUnit
+      ..loadAmount = l.enableLadder
+          ? (l.initialLoadAmount + (l.perSetLoadAdjust * round))
+              .clamp(0.0, 1000.0)
+          : l.initialLoadAmount
+      ..loadUnit = l.loadUnit;
+  }
 
   @override
   Widget build(BuildContext context) {

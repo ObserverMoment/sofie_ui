@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
@@ -164,27 +163,6 @@ class ClubTimelinePostCard extends StatelessWidget {
           ),
         const SizedBox(height: 6),
         Flexible(child: _buildTitleCaptionAndTags()),
-
-        /// TODO:
-        // if (!isPreview)
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: [
-        //         Row(
-        //           children: [
-        //             CupertinoButton(
-        //                 onPressed: () => print('like'),
-        //                 child: const Icon(CupertinoIcons.hand_thumbsup)),
-        //             CupertinoButton(
-        //                 onPressed: () => print('comments / chat'),
-        //                 child: const Icon(CupertinoIcons.chat_bubble)),
-        //           ],
-        //         ),
-        //       ],
-        //     ),
-        //   ),
         HorizontalLine(
             verticalPadding: 0, color: context.theme.primary.withOpacity(0.2))
       ]),

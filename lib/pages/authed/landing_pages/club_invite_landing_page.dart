@@ -7,10 +7,10 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_thumbnail_player.dart';
+import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_player.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
-import 'package:sofie_ui/components/social/users_group_summary.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -55,7 +55,7 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
   }
 
   Future<void> _addUserToClubViaInviteToken(
-      BuildContext context, Club club) async {
+      BuildContext context, ClubSummary club) async {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
     final alertDialogContext = context.showLoadingAlert('Joining Club...',
         icon: const Icon(CupertinoIcons.star_fill));
@@ -83,20 +83,24 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
     }
   }
 
-  Widget _buildOwnerAvatar(Club club) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          UserAvatar(
-            avatarUri: club.owner.avatarUri,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: MyText(
-              club.owner.displayName,
-              size: FONTSIZE.one,
+  Widget _buildOwnerAvatar(ClubSummary club) => GestureDetector(
+        onTap: () => context
+            .navigateTo(UserPublicProfileDetailsRoute(userId: club.owner.id)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            UserAvatar(
+              avatarUri: club.owner.avatarUri,
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: MyText(
+                club.owner.displayName,
+                size: FONTSIZE.one,
+              ),
+            ),
+          ],
+        ),
       );
 
   @override
@@ -112,21 +116,24 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
             /// data must be type [ClubInviteTokenData]
             final club = (data as ClubInviteTokenData).club;
 
-            /// 1 is the owner.
-            final allMembers = [...club.admins, ...club.members];
-
-            final authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
-            final userIsOwner = authedUserId == club.owner.id;
-            final userIsAdmin = club.admins.any((a) => a.id == authedUserId);
-
-            final userIsMember = userIsOwner ||
-                userIsAdmin ||
-                club.members.any((m) => m.id == authedUserId);
+            final hasCoverImage = Utils.textNotNull(club.coverImageUri);
 
             return CupertinoPageScaffold(
                 child: SafeArea(
+              top: !hasCoverImage,
               child: Column(
                 children: [
+                  if (Utils.textNotNull(club.coverImageUri))
+                    SizedBox(
+                      height: 180,
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          SizedUploadcareImage(club.coverImageUri!,
+                              fit: BoxFit.cover),
+                        ],
+                      ),
+                    ),
                   Expanded(
                     child: ListView(
                       padding: const EdgeInsets.symmetric(
@@ -164,13 +171,13 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildOwnerAvatar(club),
-                            if (club.introVideoUri != null)
+                            if (Utils.textNotNull(data.introVideoUri))
                               Column(
                                 children: [
                                   ClipOval(
                                     child: VideoThumbnailPlayer(
-                                      videoUri: club.introVideoUri,
-                                      videoThumbUri: club.introVideoThumbUri,
+                                      videoUri: data.introVideoUri,
+                                      videoThumbUri: data.introVideoThumbUri,
                                       displaySize: thumbSize,
                                     ),
                                   ),
@@ -183,12 +190,12 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
                                   ),
                                 ],
                               ),
-                            if (club.introAudioUri != null)
+                            if (Utils.textNotNull(data.introAudioUri))
                               Column(
                                 children: [
                                   ClipOval(
                                     child: AudioThumbnailPlayer(
-                                      audioUri: club.introAudioUri!,
+                                      audioUri: data.introAudioUri!,
                                       displaySize: thumbSize,
                                       playerTitle: '${club.name} - Intro',
                                     ),
@@ -204,77 +211,45 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
                               ),
                           ],
                         ),
-                        if (userIsMember)
-                          Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Column(
-                              children: [
-                                const SizedBox(height: 16),
-                                const MyText(
-                                    'Looks like you already joined this Club!'),
-                                const SizedBox(height: 24),
-                                SecondaryButton(
-                                    text: 'View Club Details',
-                                    onPressed: () => context.router.popAndPush(
-                                        ClubDetailsRoute(id: club.id))),
-                                const SizedBox(height: 16),
-                                SecondaryButton(
-                                    text: 'Go Back', onPressed: context.pop)
-                              ],
-                            ),
-                          )
-                        else
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Column(
-                              children: [
-                                if (Utils.textNotNull(club.description))
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ReadMoreTextBlock(
-                                      trimLines: 5,
-                                      text: club.description!,
-                                      title: 'Description',
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        if (allMembers.isNotEmpty)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Column(
                             children: [
-                              UsersGroupSummary(
-                                users: allMembers,
-                                avatarSize: 50,
-                                subtitle: '${allMembers.length} members',
-                              ),
+                              if (Utils.textNotNull(club.description))
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ReadMoreTextBlock(
+                                    trimLines: 5,
+                                    text: club.description!,
+                                    title: 'Description',
+                                  ),
+                                ),
                             ],
-                          )
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  if (!userIsMember)
-                    Column(
-                      children: [
-                        const HorizontalLine(),
-                        const SizedBox(height: 12),
-                        Column(
-                          children: [
-                            PrimaryButton(
-                                text: 'Yes, Join the Club!',
-                                prefixIconData: CupertinoIcons.checkmark_alt,
-                                onPressed: () => _addUserToClubViaInviteToken(
-                                    context, club)),
-                            const SizedBox(height: 12),
-                            SecondaryButton(
-                                prefixIconData: CupertinoIcons.xmark,
-                                text: 'No, thanks',
-                                onPressed: context.pop)
-                          ],
-                        )
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      const HorizontalLine(),
+                      const SizedBox(height: 12),
+                      Column(
+                        children: [
+                          PrimaryButton(
+                              text: 'Yes, Join the Club!',
+                              prefixIconData: CupertinoIcons.checkmark_alt,
+                              onPressed: () =>
+                                  _addUserToClubViaInviteToken(context, club)),
+                          const SizedBox(height: 12),
+                          SecondaryButton(
+                              prefixIconData: CupertinoIcons.xmark,
+                              text: 'No, thanks',
+                              onPressed: context.pop)
+                        ],
+                      )
+                    ],
+                  ),
                 ],
               ),
             ));
@@ -291,15 +266,27 @@ class _TokenErrorMessageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-        child: SafeArea(
-            child: Column(
-      children: [
-        MyText(error.message),
-        TextButton(
-            prefix: const Icon(CupertinoIcons.arrow_left),
-            text: 'Close',
-            onPressed: context.pop)
-      ],
-    )));
+        navigationBar: const MyNavBar(
+          middle: NavBarTitle('This Was Unexpected...'),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              MyText(
+                error.message,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                size: FONTSIZE.four,
+              ),
+              const SizedBox(height: 24),
+              TertiaryButton(
+                  prefixIconData: CupertinoIcons.clear,
+                  text: 'Exit',
+                  onPressed: context.pop)
+            ],
+          ),
+        ));
   }
 }

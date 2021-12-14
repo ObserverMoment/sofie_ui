@@ -13,18 +13,6 @@ mutation createClub($data: CreateClubInput!) {
     ClubInviteTokens {
       ...ClubInviteToken
     }
-    JoinClubInvites {
-      ...JoinClubInvite
-      Invited {
-        ...UserSummary
-      }
-    }
-    JoinClubRequests {
-      ...JoinClubRequest
-      Applicant {
-        ...UserSummary
-      }
-    }
     Workouts {
       ...WorkoutSummary
     }

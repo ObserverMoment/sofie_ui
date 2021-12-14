@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/animated/dragged_item.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
@@ -203,7 +203,18 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
     _bloc.reorderWorkoutMoves(widget.sectionIndex, widget.setIndex, from, to);
   }
 
-  Widget _buildEllipsisMenu(bool isMinimized) => NavBarEllipsisMenu(items: [
+  Widget _minimizeExpandButton(bool isMinimized) => CupertinoButton(
+      padding: isMinimized ? EdgeInsets.zero : const EdgeInsets.only(right: 16),
+      child: Icon(
+          isMinimized
+              ? CupertinoIcons.fullscreen
+              : CupertinoIcons.fullscreen_exit,
+          size: 20),
+      onPressed: () => context.read<WorkoutCreatorBloc>().toggleMinimizeSetInfo(
+            _workoutSet.id,
+          ));
+
+  Widget get _buildEllipsisMenu => NavBarEllipsisMenu(items: [
         if (widget.allowReorder)
           ContextMenuItem(
               text: 'Move Up',
@@ -223,15 +234,6 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
               text: 'Pyramid',
               iconData: CupertinoIcons.triangle_righthalf_fill,
               onTap: _generateSequenceForPyramid),
-        ContextMenuItem(
-          text: isMinimized ? 'Expand' : 'Minimize',
-          iconData: isMinimized
-              ? CupertinoIcons.fullscreen
-              : CupertinoIcons.fullscreen_exit,
-          onTap: () => context.read<WorkoutCreatorBloc>().toggleMinimizeSetInfo(
-                _workoutSet.id,
-              ),
-        ),
         ContextMenuItem(
           text: 'Delete',
           iconData: CupertinoIcons.delete_simple,
@@ -255,17 +257,24 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
         _sortedWorkoutMoves.map((wm) => wm.move).toSet().toList();
 
     if (isMinimized) {
-      return ContentBox(
-          child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: CommaSeparatedList(uniqueMoves.map((m) => m.name).toList(),
-                fontSize: FONTSIZE.three),
-          ),
-          _buildEllipsisMenu(isMinimized)
-        ],
-      ));
+      return FadeIn(
+        child: ContentBox(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: CommaSeparatedList(uniqueMoves.map((m) => m.name).toList(),
+                  fontSize: FONTSIZE.three),
+            ),
+            Column(
+              children: [
+                _buildEllipsisMenu,
+                _minimizeExpandButton(isMinimized),
+              ],
+            )
+          ],
+        )),
+      );
     }
     // Don't show reps when user is doing a timed workout and when there is only one move in the set.
     // The user will just do single workout move for as long as workoutSet.duration, so reps are ignored.
@@ -334,7 +343,8 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
                             onPressed: _openAddWorkoutMoveToSet,
                           ),
                   ),
-                  _buildEllipsisMenu(isMinimized)
+                  _minimizeExpandButton(isMinimized),
+                  _buildEllipsisMenu
                 ],
               )
             ],

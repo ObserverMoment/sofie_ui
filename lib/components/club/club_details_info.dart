@@ -22,10 +22,9 @@ class ClubDetailsInfo extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const SizedBox(height: 10),
           if (Utils.textNotNull(club.location))
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -42,13 +41,13 @@ class ClubDetailsInfo extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (club.introVideoUri != null)
+                  if (Utils.textNotNull(club.introVideoUri))
                     VideoThumbnailPlayer(
                       videoUri: club.introVideoUri,
                       videoThumbUri: club.introVideoThumbUri,
                       displaySize: _kthumbDisplaySize,
                     ),
-                  if (club.introAudioUri != null)
+                  if (Utils.textNotNull(club.introAudioUri))
                     AudioThumbnailPlayer(
                       audioUri: club.introAudioUri!,
                       displaySize: _kthumbDisplaySize,

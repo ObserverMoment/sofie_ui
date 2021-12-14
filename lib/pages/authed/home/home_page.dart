@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/schedule/coming_up_list.dart';
 import 'package:sofie_ui/env_config.dart';

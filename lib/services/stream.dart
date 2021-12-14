@@ -18,7 +18,6 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:stream_feed/src/client/flat_feed.dart';
 import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart';
 

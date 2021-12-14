@@ -90,8 +90,6 @@ union CheckClubInviteTokenResult = ClubInviteTokenData | InviteTokenError
 type Club {
   Admins: [UserSummary!]!
   ClubInviteTokens: [ClubInviteToken!]
-  JoinClubInvites: [JoinClubInvite!]
-  JoinClubRequests: [JoinClubRequest!]
   Members: [UserSummary!]!
   Owner: UserSummary!
   WorkoutPlans: [WorkoutPlanSummary!]
@@ -119,7 +117,10 @@ type ClubInviteToken {
 }
 
 type ClubInviteTokenData {
-  Club: Club!
+  Club: ClubSummary!
+  introAudioUri: String
+  introVideoThumbUri: String
+  introVideoUri: String
   token: String!
 }
 
@@ -211,17 +212,6 @@ input CreateGymProfileInput {
   Equipments: [ConnectRelationInput!]
   description: String
   name: String!
-}
-
-input CreateJoinClubInviteInput {
-  Club: ConnectRelationInput!
-  Invited: ConnectRelationInput!
-  Sender: ConnectRelationInput!
-}
-
-input CreateJoinClubRequestInput {
-  Applicant: ConnectRelationInput!
-  Club: ConnectRelationInput!
 }
 
 input CreateLoggedWorkoutInput {
@@ -468,25 +458,6 @@ type InviteTokenError {
 }
 
 scalar JSON
-
-type JoinClubInvite {
-  Invited: UserSummary!
-  Responder: UserSummary!
-  Sender: UserSummary!
-  createdAt: DateTime!
-  id: ID!
-  respondedAt: DateTime
-  status: JoinClubRequestStatus!
-}
-
-type JoinClubRequest {
-  Applicant: UserSummary!
-  Responder: UserSummary
-  createdAt: DateTime!
-  id: ID!
-  respondedAt: DateTime
-  status: JoinClubRequestStatus!
-}
 
 enum JoinClubRequestStatus {
   ACCEPTED
@@ -1024,18 +995,6 @@ input UpdateGymProfileInput {
   description: String
   id: ID!
   name: String
-}
-
-input UpdateJoinClubInviteInput {
-  Responder: ConnectRelationInput!
-  id: ID!
-  status: JoinClubRequestStatus!
-}
-
-input UpdateJoinClubRequestInput {
-  Responder: ConnectRelationInput!
-  id: ID!
-  status: JoinClubRequestStatus!
 }
 
 input UpdateLoggedWorkoutInput {

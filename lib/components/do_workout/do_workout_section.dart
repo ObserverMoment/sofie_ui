@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';

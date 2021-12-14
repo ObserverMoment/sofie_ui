@@ -60,7 +60,7 @@ class _TimelineAndFeedState extends State<TimelineAndFeed> {
         MySlidingSegmentedControl(
             value: _activeTabIndex,
             children: const {
-              0: 'For You',
+              0: 'Activity',
               1: 'Following',
               2: 'Followers',
             },

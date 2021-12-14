@@ -1,6 +1,3 @@
-// https://stackoverflow.com/questions/49172746/is-it-possible-extend-themedata-in-flutter
-import 'dart:ui';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';

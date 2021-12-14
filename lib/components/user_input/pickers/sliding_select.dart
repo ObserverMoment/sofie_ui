@@ -1,12 +1,10 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'dart:math' as math;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 // The corner radius of the thumb.
 const Radius _kThumbRadius = Radius.circular(60);
@@ -417,7 +415,7 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(_kThumbRadius),
             color: widget.backgroundTransparent
-                ? Colors.transparent
+                ? material.Colors.transparent
                 : backgroundColor,
           ),
           child: AnimatedBuilder(

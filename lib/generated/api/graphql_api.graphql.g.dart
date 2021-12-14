@@ -92,58 +92,6 @@ Map<String, dynamic> _$ClubInviteTokenToJson(ClubInviteToken instance) =>
       'joinedUserIds': instance.joinedUserIds,
     };
 
-JoinClubInvite _$JoinClubInviteFromJson(Map<String, dynamic> json) =>
-    JoinClubInvite()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-      ..respondedAt = fromGraphQLDateTimeNullableToDartDateTimeNullable(
-          json['respondedAt'] as int?)
-      ..status = $enumDecode(_$JoinClubRequestStatusEnumMap, json['status'],
-          unknownValue: JoinClubRequestStatus.artemisUnknown)
-      ..invited = UserSummary.fromJson(json['Invited'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$JoinClubInviteToJson(JoinClubInvite instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'respondedAt': fromDartDateTimeNullableToGraphQLDateTimeNullable(
-          instance.respondedAt),
-      'status': _$JoinClubRequestStatusEnumMap[instance.status],
-      'Invited': instance.invited.toJson(),
-    };
-
-const _$JoinClubRequestStatusEnumMap = {
-  JoinClubRequestStatus.accepted: 'ACCEPTED',
-  JoinClubRequestStatus.pending: 'PENDING',
-  JoinClubRequestStatus.rejected: 'REJECTED',
-  JoinClubRequestStatus.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-JoinClubRequest _$JoinClubRequestFromJson(Map<String, dynamic> json) =>
-    JoinClubRequest()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-      ..respondedAt = fromGraphQLDateTimeNullableToDartDateTimeNullable(
-          json['respondedAt'] as int?)
-      ..status = $enumDecode(_$JoinClubRequestStatusEnumMap, json['status'],
-          unknownValue: JoinClubRequestStatus.artemisUnknown)
-      ..applicant =
-          UserSummary.fromJson(json['Applicant'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$JoinClubRequestToJson(JoinClubRequest instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'respondedAt': fromDartDateTimeNullableToGraphQLDateTimeNullable(
-          instance.respondedAt),
-      'status': _$JoinClubRequestStatusEnumMap[instance.status],
-      'Applicant': instance.applicant.toJson(),
-    };
-
 WorkoutSummary _$WorkoutSummaryFromJson(Map<String, dynamic> json) =>
     WorkoutSummary()
       ..$$typename = json['__typename'] as String?
@@ -258,12 +206,6 @@ Club _$ClubFromJson(Map<String, dynamic> json) => Club()
   ..clubInviteTokens = (json['ClubInviteTokens'] as List<dynamic>?)
       ?.map((e) => ClubInviteToken.fromJson(e as Map<String, dynamic>))
       .toList()
-  ..joinClubInvites = (json['JoinClubInvites'] as List<dynamic>?)
-      ?.map((e) => JoinClubInvite.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..joinClubRequests = (json['JoinClubRequests'] as List<dynamic>?)
-      ?.map((e) => JoinClubRequest.fromJson(e as Map<String, dynamic>))
-      .toList()
   ..workouts = (json['Workouts'] as List<dynamic>?)
       ?.map((e) => WorkoutSummary.fromJson(e as Map<String, dynamic>))
       .toList()
@@ -289,10 +231,6 @@ Map<String, dynamic> _$ClubToJson(Club instance) => <String, dynamic>{
       'Members': instance.members.map((e) => e.toJson()).toList(),
       'ClubInviteTokens':
           instance.clubInviteTokens?.map((e) => e.toJson()).toList(),
-      'JoinClubInvites':
-          instance.joinClubInvites?.map((e) => e.toJson()).toList(),
-      'JoinClubRequests':
-          instance.joinClubRequests?.map((e) => e.toJson()).toList(),
       'Workouts': instance.workouts?.map((e) => e.toJson()).toList(),
       'WorkoutPlans': instance.workoutPlans?.map((e) => e.toJson()).toList(),
     };
@@ -5959,7 +5897,10 @@ ClubInviteTokenData _$ClubInviteTokenDataFromJson(Map<String, dynamic> json) =>
     ClubInviteTokenData()
       ..$$typename = json['__typename'] as String?
       ..token = json['token'] as String
-      ..club = Club.fromJson(json['Club'] as Map<String, dynamic>);
+      ..club = ClubSummary.fromJson(json['Club'] as Map<String, dynamic>)
+      ..introVideoUri = json['introVideoUri'] as String?
+      ..introVideoThumbUri = json['introVideoThumbUri'] as String?
+      ..introAudioUri = json['introAudioUri'] as String?;
 
 Map<String, dynamic> _$ClubInviteTokenDataToJson(
         ClubInviteTokenData instance) =>
@@ -5967,6 +5908,9 @@ Map<String, dynamic> _$ClubInviteTokenDataToJson(
       '__typename': instance.$$typename,
       'token': instance.token,
       'Club': instance.club.toJson(),
+      'introVideoUri': instance.introVideoUri,
+      'introVideoThumbUri': instance.introVideoThumbUri,
+      'introAudioUri': instance.introAudioUri,
     };
 
 InviteTokenError _$InviteTokenErrorFromJson(Map<String, dynamic> json) =>
