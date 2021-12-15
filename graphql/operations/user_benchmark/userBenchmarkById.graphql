@@ -4,8 +4,5 @@ query userBenchmarkById($id: ID!) {
     UserBenchmarkEntries {
       ...UserBenchmarkEntry
     }
-    UserBenchmarkTags {
-      ...UserBenchmarkTag
-    }
   }
 }

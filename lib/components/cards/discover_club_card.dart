@@ -111,6 +111,7 @@ class DiscoverClubCard extends StatelessWidget {
                     child: MyHeaderText(
                       club.name,
                       maxLines: 2,
+                      color: Styles.white,
                     ),
                   ),
                 ],

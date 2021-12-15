@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/personal_best_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -26,14 +25,6 @@ class PersonalBestsPage extends StatelessWidget {
           final benchmarks = data.userBenchmarks
               .sortedBy<DateTime>((b) => b.lastEntryAt)
               .reversed
-              .toList();
-
-          final allTags = benchmarks
-              .fold<List<String>>(
-                  [],
-                  (acum, next) =>
-                      [...acum, ...next.userBenchmarkTags.map((t) => t.name)])
-              .toSet()
               .toList();
 
           return MyPageScaffold(
@@ -57,7 +48,6 @@ class PersonalBestsPage extends StatelessWidget {
                             ])
                       : _FilterablePBsList(
                           allBenchmarks: benchmarks,
-                          allTags: allTags,
                           selectBenchmark: (id) => context
                               .navigateTo(PersonalBestDetailsRoute(id: id)))));
         });
@@ -65,48 +55,23 @@ class PersonalBestsPage extends StatelessWidget {
 }
 
 /// Note: UserBenchmark (API) == Personal Best (UI)
-class _FilterablePBsList extends StatefulWidget {
+class _FilterablePBsList extends StatelessWidget {
   final void Function(String benchmarkId) selectBenchmark;
   final List<UserBenchmark> allBenchmarks;
-  final List<String> allTags;
-  const _FilterablePBsList(
-      {Key? key,
-      required this.selectBenchmark,
-      required this.allBenchmarks,
-      required this.allTags})
-      : super(key: key);
-
-  @override
-  __FilterablePBsListState createState() => __FilterablePBsListState();
-}
-
-class __FilterablePBsListState extends State<_FilterablePBsList> {
-  String? _tagFilter;
+  const _FilterablePBsList({
+    Key? key,
+    required this.selectBenchmark,
+    required this.allBenchmarks,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final filteredBenchmarks = _tagFilter == null
-        ? widget.allBenchmarks
-        : widget.allBenchmarks.where(
-            (w) => w.userBenchmarkTags.map((t) => t.name).contains(_tagFilter));
-
-    final sortedBenchmarks = filteredBenchmarks
-        .sortedBy<DateTime>((w) => w.createdAt)
-        .reversed
-        .toList();
+    final sortedBenchmarks =
+        allBenchmarks.sortedBy<DateTime>((w) => w.createdAt).reversed.toList();
 
     return FABPage(
       rowButtonsAlignment: MainAxisAlignment.end,
       rowButtons: [
-        if (widget.allTags.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: TagsFilterMenu(
-              allTags: widget.allTags,
-              selectedTag: _tagFilter,
-              updateSelectedTag: (t) => setState(() => _tagFilter = t),
-            ),
-          ),
         FloatingButton(
             gradient: Styles.primaryAccentGradient,
             contentColor: Styles.white,
@@ -119,7 +84,7 @@ class __FilterablePBsListState extends State<_FilterablePBsList> {
           itemCount: sortedBenchmarks.length,
           itemBuilder: (c, i) => GestureDetector(
                 key: Key(sortedBenchmarks[i].id),
-                onTap: () => widget.selectBenchmark(sortedBenchmarks[i].id),
+                onTap: () => selectBenchmark(sortedBenchmarks[i].id),
                 child: FadeInUp(
                   key: Key(sortedBenchmarks[i].id),
                   delay: 5,

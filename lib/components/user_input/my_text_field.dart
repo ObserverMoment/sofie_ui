@@ -77,47 +77,44 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: CupertinoTextField(
-        keyboardAppearance: context.theme.cupertinoThemeData.brightness,
-        key: widget.key,
-        maxLines: widget.maxLines,
-        controller: widget.controller,
-        autofocus: widget.autofocus,
-        focusNode: _focusNode,
-        maxLength: widget.maxLength,
-        obscureText: widget.isPassword,
-        textAlign: widget.textAlign,
-        autofillHints: widget.autofillHints,
-        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-        inputFormatters: widget.inputFormatters,
-        prefix: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: widget.icon,
-        ),
-        suffix: widget.controller.text.length > 2 && _focusNode.hasFocus
-            ? CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: _onClear,
-                child: Icon(CupertinoIcons.clear_thick_circled,
-                    color: CupertinoTheme.of(context)
-                        .primaryColor
-                        .withOpacity(0.7),
-                    size: 18),
-              )
-            : null,
-        placeholderStyle: TextStyle(
-            fontSize: 16,
-            color: CupertinoTheme.of(context).primaryColor.withOpacity(0.5)),
-        placeholder: widget.placeholder,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-        keyboardType: widget.isPassword
-            ? TextInputType.visiblePassword
-            : widget.textInputType ?? TextInputType.text,
-        decoration: BoxDecoration(
-          color: CupertinoTheme.of(context).primaryColor.withOpacity(0.1),
-        ),
+    return CupertinoTextField(
+      keyboardAppearance: context.theme.cupertinoThemeData.brightness,
+      key: widget.key,
+      maxLines: widget.maxLines,
+      controller: widget.controller,
+      autofocus: widget.autofocus,
+      focusNode: _focusNode,
+      maxLength: widget.maxLength,
+      obscureText: widget.isPassword,
+      textAlign: widget.textAlign,
+      autofillHints: widget.autofillHints,
+      style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+      inputFormatters: widget.inputFormatters,
+      prefix: Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: widget.icon,
+      ),
+      suffix: widget.controller.text.length > 2 && _focusNode.hasFocus
+          ? CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: _onClear,
+              child: Icon(CupertinoIcons.clear_thick_circled,
+                  color:
+                      CupertinoTheme.of(context).primaryColor.withOpacity(0.7),
+                  size: 18),
+            )
+          : null,
+      placeholderStyle: TextStyle(
+          fontSize: 18,
+          color: CupertinoTheme.of(context).primaryColor.withOpacity(0.5)),
+      placeholder: widget.placeholder,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      keyboardType: widget.isPassword
+          ? TextInputType.visiblePassword
+          : widget.textInputType ?? TextInputType.text,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: CupertinoTheme.of(context).primaryColor.withOpacity(0.1),
       ),
     );
   }

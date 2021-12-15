@@ -35,19 +35,3 @@ fragment ClubInviteToken on ClubInviteToken {
   # Only updated by the sever when user joins via this token.
   joinedUserIds
 }
-
-fragment JoinClubInvite on JoinClubInvite {
-  __typename
-  id
-  createdAt
-  respondedAt
-  status
-}
-
-fragment JoinClubRequest on JoinClubRequest {
-  __typename
-  id
-  createdAt
-  respondedAt
-  status
-}

@@ -84,7 +84,7 @@ class FloatingButton extends StatelessWidget {
   final EdgeInsets margin;
   final EdgeInsets padding;
   final Color? contentColor;
-  final Color? color;
+  final Color? backgroundColor;
   final Gradient? gradient;
   final bool loading;
 
@@ -95,7 +95,7 @@ class FloatingButton extends StatelessWidget {
     required this.onTap,
     this.iconSize = 26,
     this.margin = EdgeInsets.zero,
-    this.color,
+    this.backgroundColor,
     this.gradient,
     this.contentColor,
     this.padding = const EdgeInsets.all(11),
@@ -110,7 +110,7 @@ class FloatingButton extends StatelessWidget {
           onTap();
         },
         child: FABPageButtonContainer(
-          color: color,
+          color: backgroundColor,
           gradient: gradient,
           padding: padding,
           margin: margin,

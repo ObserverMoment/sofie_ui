@@ -18,7 +18,8 @@ class AnimatedSlidable extends StatefulWidget {
   final Widget child;
 
   /// Remove is added by default - just provide a removeItem callback
-  final List<SlidableAction> secondaryActions;
+  final List<IconSlideAction> secondaryActions;
+  // final List<SlidableAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;
   final String itemType;
@@ -140,25 +141,54 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
           data: IconThemeData(color: Styles.white, size: _iconSize),
           child: Slidable(
             key: widget.key,
-            startActionPane: ActionPane(
-                extentRatio: 0.20,
-                motion: const DrawerMotion(),
-                children: <SlidableAction>[
-                  ...widget.secondaryActions,
-                  SlidableAction(
-                    label: widget.verb,
-                    backgroundColor: Styles.errorRed,
-                    foregroundColor: Styles.white,
-                    icon: widget.iconData,
-                    onPressed: (_) => _confirmRemoveItem(),
-                  ),
-                ]),
+            actionPane: const SlidableDrawerActionPane(),
             enabled: widget.enabled,
+            actionExtentRatio: 0.20,
+            secondaryActions: <IconSlideAction>[
+              ...widget.secondaryActions,
+              IconSlideAction(
+                caption: widget.verb,
+                color: Styles.errorRed,
+                foregroundColor: Styles.white,
+                iconWidget: Icon(
+                  widget.iconData,
+                  size: _iconSize,
+                ),
+                onTap: _confirmRemoveItem,
+              ),
+            ],
             child: widget.child,
           ),
         ),
       ),
     );
+    // return SizeTransition(
+    //   sizeFactor: _scaleAnimation,
+    //   child: SlideTransition(
+    //     position: _slideAnimation,
+    //     child: IconTheme(
+    //       data: IconThemeData(color: Styles.white, size: _iconSize),
+    //       child: Slidable(
+    //         key: widget.key,
+    //         startActionPane: ActionPane(
+    //             extentRatio: 0.20,
+    //             motion: const DrawerMotion(),
+    //             children: <SlidableAction>[
+    //               ...widget.secondaryActions,
+    //               SlidableAction(
+    //                 label: widget.verb,
+    //                 backgroundColor: Styles.errorRed,
+    //                 foregroundColor: Styles.white,
+    //                 icon: widget.iconData,
+    //                 onPressed: (_) => _confirmRemoveItem(),
+    //               ),
+    //             ]),
+    //         enabled: widget.enabled,
+    //         child: widget.child,
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -169,7 +199,8 @@ class MySlidable extends StatelessWidget {
   final Widget child;
 
   /// Remove is added by default - just provide a removeItem callback
-  final List<SlidableAction> secondaryActions;
+  // final List<SlidableAction> secondaryActions;
+  final List<IconSlideAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;
   final String itemType;
@@ -213,20 +244,22 @@ class MySlidable extends StatelessWidget {
       data: const IconThemeData(color: Styles.white),
       child: Slidable(
         key: key,
-        startActionPane: ActionPane(
-            extentRatio: 0.20,
-            motion: const DrawerMotion(),
-            children: <SlidableAction>[
-              ...secondaryActions,
-              SlidableAction(
-                label: verb,
-                backgroundColor: Styles.errorRed,
-                foregroundColor: Styles.white,
-                icon: iconData,
-                onPressed: (c) => _confirmRemoveItem(c),
-              ),
-            ]),
+        actionPane: const SlidableDrawerActionPane(),
         enabled: enabled,
+        actionExtentRatio: 0.20,
+        secondaryActions: <IconSlideAction>[
+          ...secondaryActions,
+          IconSlideAction(
+            caption: verb,
+            color: Styles.errorRed,
+            foregroundColor: Styles.white,
+            iconWidget: Icon(
+              iconData,
+              size: 20,
+            ),
+            onTap: () => _confirmRemoveItem(context),
+          ),
+        ],
         child: child,
       ),
     );

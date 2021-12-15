@@ -310,23 +310,20 @@ extension BuildContextExtension on BuildContext {
     final contentColor = toastType == ToastType.destructive
         ? Styles.errorRed
         : readTheme.primary;
-    final iconData = toastType == ToastType.destructive
-        ? CupertinoIcons.exclamationmark_circle_fill
-        : CupertinoIcons.checkmark_alt_circle_fill;
 
     Flushbar(
-      backgroundColor: readTheme.cardBackground.withOpacity(0.80),
-      icon: Icon(iconData, size: 14, color: contentColor.withOpacity(0.65)),
-      flushbarPosition: flushbarPosition,
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      animationDuration: const Duration(milliseconds: 300),
-      messageText: MyText(message,
-          color: contentColor, textAlign: textAlign, size: FONTSIZE.two),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      duration: const Duration(seconds: 3),
-      blockBackgroundInteraction: false,
-      isDismissible: true,
-    ).show(this);
+            backgroundColor: readTheme.cardBackground.withOpacity(0.80),
+            flushbarPosition: flushbarPosition,
+            flushbarStyle: FlushbarStyle.FLOATING,
+            animationDuration: const Duration(milliseconds: 300),
+            messageText:
+                MyText(message, color: contentColor, textAlign: textAlign),
+            padding: const EdgeInsets.all(16),
+            duration: const Duration(seconds: 3),
+            blockBackgroundInteraction: false,
+            isDismissible: true,
+            borderRadius: BorderRadius.circular(16))
+        .show(this);
   }
 
   /// Toast + more text and a button for interactivity.

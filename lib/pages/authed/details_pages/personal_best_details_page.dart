@@ -8,7 +8,6 @@ import 'package:sofie_ui/components/cards/personal_best_entry_card.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_entry_creator.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
@@ -132,21 +131,6 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
                                       color: Styles.secondaryAccent,
                                     ),
                                   ],
-                                ),
-                              ),
-                            if (benchmark.userBenchmarkTags.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: Wrap(
-                                  spacing: 4,
-                                  runSpacing: 4,
-                                  children: benchmark.userBenchmarkTags
-                                      .map(
-                                        (tag) => Tag(
-                                          tag: tag.name,
-                                        ),
-                                      )
-                                      .toList(),
                                 ),
                               ),
                           ],

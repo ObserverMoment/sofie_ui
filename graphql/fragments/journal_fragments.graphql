@@ -1,0 +1,27 @@
+fragment JournalNote on JournalNote {
+  __typename
+  id
+  createdAt
+  textNote
+  voiceNoteUri
+}
+
+fragment JournalMood on JournalMood {
+  __typename
+  id
+  createdAt
+  moodScore
+  energyScore
+  confidenceScore
+  motivationScore
+}
+
+fragment JournalGoal on JournalGoal {
+  __typename
+  id
+  createdAt
+  name
+  description
+  deadline
+  completedDate
+}

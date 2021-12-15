@@ -1,3 +1,0 @@
-mutation deleteProgressJournalById($id: ID!) {
-  deleteProgressJournalById(id: $id)
-}

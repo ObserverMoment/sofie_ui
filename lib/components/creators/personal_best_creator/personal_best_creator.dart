@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
-import 'package:sofie_ui/components/user_input/selectors/user_benchmark_tags_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -35,7 +34,6 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
   String? _description;
   String? _equipmentInfo;
   LoadUnit _loadUnit = LoadUnit.kg;
-  List<UserBenchmarkTag> _tags = [];
 
   @override
   void initState() {
@@ -46,7 +44,6 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
       _description = widget.userBenchmark!.description;
       _equipmentInfo = widget.userBenchmark!.equipmentInfo;
       _loadUnit = widget.userBenchmark!.loadUnit;
-      _tags = widget.userBenchmark!.userBenchmarkTags;
     }
   }
 
@@ -60,14 +57,13 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
     if (widget.userBenchmark != null) {
       final variables = UpdateUserBenchmarkArguments(
           data: UpdateUserBenchmarkInput(
-              id: widget.userBenchmark!.id,
-              benchmarkType: _benchmarkType!,
-              name: _name,
-              description: _description,
-              equipmentInfo: _equipmentInfo,
-              loadUnit: _loadUnit,
-              userBenchmarkTags:
-                  _tags.map((t) => ConnectRelationInput(id: t.id)).toList()));
+        id: widget.userBenchmark!.id,
+        benchmarkType: _benchmarkType!,
+        name: _name,
+        description: _description,
+        equipmentInfo: _equipmentInfo,
+        loadUnit: _loadUnit,
+      ));
 
       final result = await context.graphQLStore.mutate(
           mutation: UpdateUserBenchmarkMutation(variables: variables),
@@ -90,13 +86,12 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
     } else {
       final variables = CreateUserBenchmarkArguments(
           data: CreateUserBenchmarkInput(
-              benchmarkType: _benchmarkType!,
-              name: _name!,
-              description: _description,
-              equipmentInfo: _equipmentInfo,
-              loadUnit: _loadUnit,
-              userBenchmarkTags:
-                  _tags.map((t) => ConnectRelationInput(id: t.id)).toList()));
+        benchmarkType: _benchmarkType!,
+        name: _name!,
+        description: _description,
+        equipmentInfo: _equipmentInfo,
+        loadUnit: _loadUnit,
+      ));
 
       final result = await context.graphQLStore.create(
           mutation: CreateUserBenchmarkMutation(variables: variables),
@@ -227,13 +222,6 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
                       ),
                     ],
                   ),
-                ),
-              ),
-              GrowInOut(
-                show: _benchmarkType != null,
-                child: UserBenchmarkTagsSelectorRow(
-                  selectedTags: _tags,
-                  updateTags: (tags) => _setStateWrapper(() => _tags = tags),
                 ),
               ),
             ],

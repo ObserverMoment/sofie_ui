@@ -1,0 +1,5 @@
+mutation createJournalGoal($data: CreateJournalGoalInput!) {
+  createJournalGoal(data: $data) {
+    ...JournalGoal
+  }
+}

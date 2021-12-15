@@ -4,8 +4,5 @@ query userBenchmarks {
     UserBenchmarkEntries {
       ...UserBenchmarkEntry
     }
-    UserBenchmarkTags {
-      ...UserBenchmarkTag
-    }
   }
 }

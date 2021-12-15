@@ -5,29 +5,23 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 /// Useful for managing store state - store mutations and QueryObserver updates.
 /// Variables / args are ignored - just the operation name is returned.
 class GQLOpNames {
-  /// By Id. This will (NEEDS testing!) trigger all byId queries of this type. i.e. all of the [progressJournalById] queries or all of the [workoutByIdQueries].
-  static String get progressJournalByIdQuery =>
-      ProgressJournalByIdQuery(variables: ProgressJournalByIdArguments(id: ''))
-          .operationName;
+  /// List type queries where variables are not used.
+  static String get bodyTrackingEntries =>
+      BodyTrackingEntriesQuery().operationName;
 
-  /// TODO: Does this key trigger all workoutById queries?
-  static String get workoutByIdQuery =>
-      WorkoutByIdQuery(variables: WorkoutByIdArguments(id: '')).operationName;
+  static String get journalGoals => JournalNotesQuery().operationName;
+
+  static String get journalMoods => JournalNotesQuery().operationName;
+
+  static String get journalNotes => JournalNotesQuery().operationName;
+
+  static String get workoutPlanEnrolmentsQuery =>
+      WorkoutPlanEnrolmentsQuery().operationName;
 
   /// TODO: Does this key trigger all userBenchmarkByIdQuery queries?
   static String get userBenchmarkByIdQuery =>
       UserBenchmarkByIdQuery(variables: UserBenchmarkByIdArguments(id: ''))
           .operationName;
-
-  /// List type queries where variables are not used.
-  static String get bodyTrackingEntries =>
-      BodyTrackingEntriesQuery().operationName;
-
-  static String get userProgressJournalsQuery =>
-      UserProgressJournalsQuery().operationName;
-
-  static String get workoutPlanEnrolmentsQuery =>
-      WorkoutPlanEnrolmentsQuery().operationName;
 
   /// List type queries where variables are not used.
   /// Note: In the API UserBenchmarksQuery can take vars - they are optional and not currently being used.
@@ -39,6 +33,10 @@ class GQLOpNames {
 
   static String get userCustomMovesQuery =>
       UserCustomMovesQuery().operationName;
+
+  /// TODO: Does this key trigger all workoutById queries?
+  static String get workoutByIdQuery =>
+      WorkoutByIdQuery(variables: WorkoutByIdArguments(id: '')).operationName;
 
   static String get userWorkoutsQuery => UserWorkoutsQuery().operationName;
 
@@ -71,10 +69,6 @@ class GQLNullVarsKeys {
 class GQLVarParamKeys {
   static String clubByIdQuery(String id) => getParameterizedQueryId(
       ClubByIdQuery(variables: ClubByIdArguments(id: id)));
-
-  static String progressJournalByIdQuery(String id) =>
-      getParameterizedQueryId(ProgressJournalByIdQuery(
-          variables: ProgressJournalByIdArguments(id: id)));
 
   static String userBenchmarkByIdQuery(String id) => getParameterizedQueryId(
       UserBenchmarkByIdQuery(variables: UserBenchmarkByIdArguments(id: id)));

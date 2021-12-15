@@ -211,25 +211,23 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          customLeading: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.pop(context),
-                  child: const MyText('Cancel')),
-            ],
+          customLeading: Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: NavBarCancelButton(context.pop, text: 'Cancel'),
           ),
-          middle: NavBarTitle(widget.title),
+          middle: NavBarLargeTitle(widget.title),
           trailing: _formIsDirty && _inputIsValid()
               ? FadeIn(
-                  child: NavBarSaveButton(
-                  _handleSave,
+                  child: TertiaryButton(
+                  backgroundColor: Styles.primaryAccent,
+                  textColor: Styles.white,
+                  onPressed: _handleSave,
+                  text: 'Save',
                 ))
               : null,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          padding: const EdgeInsets.all(12.0),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

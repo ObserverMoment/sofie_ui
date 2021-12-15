@@ -39,13 +39,20 @@ class WorkoutSetWorkoutMove extends StatelessWidget {
         itemType: 'Move',
         removeItem: deleteWorkoutMove,
         secondaryActions: [
-          SlidableAction(
-            label: 'Duplicate',
-            backgroundColor: Styles.primaryAccent,
+          IconSlideAction(
+            caption: 'Duplicate',
+            color: Styles.primaryAccent,
             foregroundColor: Styles.white,
-            icon: CupertinoIcons.plus_square_on_square,
-            onPressed: (_) => duplicateWorkoutMove(workoutMove.sortPosition),
+            iconWidget: const Icon(CupertinoIcons.plus_square_on_square),
+            onTap: () => duplicateWorkoutMove(workoutMove.sortPosition),
           ),
+          // SlidableAction(
+          //   label: 'Duplicate',
+          //   backgroundColor: Styles.primaryAccent,
+          //   foregroundColor: Styles.white,
+          //   icon: CupertinoIcons.plus_square_on_square,
+          //   onPressed: (_) => duplicateWorkoutMove(workoutMove.sortPosition),
+          // ),
         ],
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),

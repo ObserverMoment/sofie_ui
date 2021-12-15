@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/date_time_pickers.dart';
 import 'package:sofie_ui/constants.dart';
@@ -10,19 +9,18 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class ProgressJournalGoalCard extends StatelessWidget {
-  final ProgressJournalGoal progressJournalGoal;
-  const ProgressJournalGoalCard({
+class JournalGoalCard extends StatelessWidget {
+  final JournalGoal journalGoal;
+  const JournalGoalCard({
     Key? key,
-    required this.progressJournalGoal,
+    required this.journalGoal,
   }) : super(key: key);
 
   Future<void> _toggleComplete(BuildContext context) async {
-    if (progressJournalGoal.completedDate == null) {
+    if (journalGoal.completedDate == null) {
       _markComplete(context);
     } else {
       _markIncomplete(context);
@@ -32,7 +30,7 @@ class ProgressJournalGoalCard extends StatelessWidget {
   Future<void> _markComplete(BuildContext context) async {
     await context.showActionSheetPopup(
         child: _MarkGoalCompletedBottomSheet(
-      progressJournalGoal: progressJournalGoal,
+      journalGoal: journalGoal,
       onUpdateComplete: (result) {
         context.pop();
         _checkResult(context, result);
@@ -44,21 +42,15 @@ class ProgressJournalGoalCard extends StatelessWidget {
     context.showConfirmDialog(
         title: 'Mark Incomplete?',
         onConfirm: () async {
-          final updated =
-              ProgressJournalGoal.fromJson(progressJournalGoal.toJson());
+          final updated = JournalGoal.fromJson(journalGoal.toJson());
           updated.completedDate = null;
 
-          final variables = UpdateProgressJournalGoalArguments(
-              data: UpdateProgressJournalGoalInput.fromJson(updated.toJson()));
+          final variables = UpdateJournalGoalArguments(
+              data: UpdateJournalGoalInput.fromJson(updated.toJson()));
 
           final result = await context.graphQLStore.mutate(
-              mutation: UpdateProgressJournalGoalMutation(variables: variables),
-              broadcastQueryIds: [
-                /// Broadcasting the operation name with no variables (nullified or parameterized)
-                /// This will trigger all observerable queries with [progressJournalByIdQuery] keys to rebuild.
-                GQLOpNames.progressJournalByIdQuery,
-                UserProgressJournalsQuery().operationName
-              ]);
+              mutation: UpdateJournalGoalMutation(variables: variables),
+              broadcastQueryIds: [JournalGoalsQuery().operationName]);
           _checkResult(context, result);
         });
   }
@@ -73,7 +65,7 @@ class ProgressJournalGoalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isComplete = progressJournalGoal.completedDate != null;
+    final isComplete = journalGoal.completedDate != null;
 
     return AnimatedOpacity(
       opacity: isComplete ? 0.7 : 1,
@@ -91,64 +83,48 @@ class ProgressJournalGoalCard extends StatelessWidget {
                     Row(
                       children: [
                         MyText(
-                          progressJournalGoal.name,
+                          journalGoal.name,
                           lineHeight: 1.3,
                           decoration:
                               isComplete ? TextDecoration.lineThrough : null,
                         ),
-                        if (!isComplete && progressJournalGoal.deadline != null)
+                        if (!isComplete && journalGoal.deadline != null)
                           Padding(
                             padding: const EdgeInsets.only(left: 6.0),
                             child: MyText(
-                              'by ${progressJournalGoal.deadline!.compactDateString}',
+                              'by ${journalGoal.deadline!.compactDateString}',
                               size: FONTSIZE.two,
                               decoration: isComplete
                                   ? TextDecoration.lineThrough
                                   : null,
-                              color: progressJournalGoal.deadline!
-                                      .isBefore(DateTime.now())
-                                  ? Styles.errorRed
-                                  : Styles.primaryAccent,
+                              color:
+                                  journalGoal.deadline!.isBefore(DateTime.now())
+                                      ? Styles.errorRed
+                                      : Styles.primaryAccent,
                             ),
                           ),
                         if (isComplete)
                           Padding(
                             padding: const EdgeInsets.only(left: 6.0),
                             child: MyText(
-                              'Completed ${progressJournalGoal.completedDate!.compactDateString}',
+                              'Completed ${journalGoal.completedDate!.compactDateString}',
                               color: Styles.primaryAccent,
                               size: FONTSIZE.two,
                             ),
                           )
                       ],
                     ),
-                    if (Utils.textNotNull(progressJournalGoal.description))
+                    if (Utils.textNotNull(journalGoal.description))
                       Padding(
                         padding: const EdgeInsets.only(
                             right: 6.0, top: 6, bottom: 6),
                         child: MyText(
-                          progressJournalGoal.description!,
+                          journalGoal.description!,
                           maxLines: 10,
                           lineHeight: 1.3,
                           decoration:
                               isComplete ? TextDecoration.lineThrough : null,
                           size: FONTSIZE.two,
-                        ),
-                      ),
-                    if (progressJournalGoal.progressJournalGoalTags.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Wrap(
-                          spacing: 5,
-                          runSpacing: 5,
-                          children: progressJournalGoal.progressJournalGoalTags
-                              .map((tag) => Tag(
-                                    tag: tag.tag,
-                                    color: HexColor.fromHex(tag.hexColor),
-                                    textColor: Styles.white,
-                                    fontSize: FONTSIZE.one,
-                                  ))
-                              .toList(),
                         ),
                       ),
                   ],
@@ -182,10 +158,10 @@ class ProgressJournalGoalCard extends StatelessWidget {
 }
 
 class _MarkGoalCompletedBottomSheet extends StatefulWidget {
-  final ProgressJournalGoal progressJournalGoal;
+  final JournalGoal journalGoal;
   final void Function(OperationResult result) onUpdateComplete;
   const _MarkGoalCompletedBottomSheet(
-      {required this.progressJournalGoal, required this.onUpdateComplete});
+      {required this.journalGoal, required this.onUpdateComplete});
 
   @override
   __MarkGoalCompletedBottomSheetState createState() =>
@@ -199,20 +175,16 @@ class __MarkGoalCompletedBottomSheetState
 
   Future<void> _markComplete() async {
     setState(() => _loading = true);
-    final updated =
-        ProgressJournalGoal.fromJson(widget.progressJournalGoal.toJson());
+    final updated = JournalGoal.fromJson(widget.journalGoal.toJson());
     updated.completedDate = _completedDate;
 
-    final input = UpdateProgressJournalGoalInput.fromJson(updated.toJson());
+    final input = UpdateJournalGoalInput.fromJson(updated.toJson());
 
-    final variables = UpdateProgressJournalGoalArguments(data: input);
+    final variables = UpdateJournalGoalArguments(data: input);
 
     final result = await context.graphQLStore.mutate(
-        mutation: UpdateProgressJournalGoalMutation(variables: variables),
-        broadcastQueryIds: [
-          GQLOpNames.progressJournalByIdQuery,
-          UserProgressJournalsQuery().operationName
-        ]);
+        mutation: UpdateJournalGoalMutation(variables: variables),
+        broadcastQueryIds: [JournalGoalsQuery().operationName]);
 
     setState(() => _loading = false);
 

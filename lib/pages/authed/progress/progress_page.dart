@@ -29,9 +29,9 @@ class ProgressPage extends StatelessWidget {
                   onTap: () => context.navigateTo(const PersonalBestsRoute()),
                 ),
                 CategoryLinkTile(
-                  label: 'Journal and Goal Tracking',
+                  label: 'Journal and Goals',
                   assetImagePath: 'journal.svg',
-                  onTap: () => context.navigateTo(const JournalsRoute()),
+                  onTap: () => context.navigateTo(const JournalRoute()),
                 ),
                 CategoryLinkTile(
                   label: 'Body Tracking',

@@ -176,7 +176,10 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
             behavior: HitTestBehavior.opaque,
             onTap: () => context.pushRoute(const ChatsOverviewRoute()),
             child: const FABPageButtonContainer(
-                child: Icon(CupertinoIcons.chat_bubble, size: 25))),
+                child: Icon(
+              CupertinoIcons.chat_bubble,
+              size: 25,
+            ))),
         if (_unreadCount > 0)
           Positioned(
             top: 4,
@@ -184,7 +187,7 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
             child: FadeInUp(
                 key: Key(_unreadCount.toString()),
                 child: Dot(
-                  diameter: 14,
+                  diameter: 18,
                   border: Border.all(color: context.theme.background, width: 2),
                   color: Styles.primaryAccent,
                 )),

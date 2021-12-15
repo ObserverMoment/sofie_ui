@@ -37,13 +37,6 @@ fragment UserBenchmarkEntry on UserBenchmarkEntry {
   videoThumbUri
 }
 
-fragment UserBenchmarkTag on UserBenchmarkTag {
-  __typename
-  id
-  name
-  description
-}
-
 fragment UserProfile on UserProfile {
   __typename
   id

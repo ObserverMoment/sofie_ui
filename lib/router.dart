@@ -8,7 +8,6 @@ import 'package:sofie_ui/components/creators/logged_workout_creator/logged_worko
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_post_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/post_creator.dart';
-import 'package:sofie_ui/components/creators/progress_journal_creator/progress_journal_creator.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
@@ -28,7 +27,6 @@ import 'package:sofie_ui/pages/authed/details_pages/club_details/club_details_pa
 import 'package:sofie_ui/pages/authed/details_pages/collection_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/logged_workout_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/personal_best_details_page.dart';
-import 'package:sofie_ui/pages/authed/details_pages/progress_journal_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_details_page.dart';
@@ -52,7 +50,7 @@ import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
 import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
-import 'package:sofie_ui/pages/authed/progress/journals_page.dart';
+import 'package:sofie_ui/pages/authed/progress/journal_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_bests_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
@@ -121,7 +119,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
           /// User progress, stats and workout history
           AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
-          AutoRoute(path: 'journals', page: JournalsPage),
+          AutoRoute(path: 'journal', page: JournalPage),
           AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
           AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
 
@@ -146,8 +144,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'personal-best/:id', page: PersonalBestDetailsPage),
           AutoRoute(
               path: 'profile/:userId', page: UserPublicProfileDetailsPage),
-          AutoRoute(
-              path: 'progress-journal/:id', page: ProgressJournalDetailsPage),
+
           AutoRoute(path: 'workout/:id', page: WorkoutDetailsPage),
           AutoRoute(path: 'workout-plan/:id', page: WorkoutPlanDetailsPage),
           AutoRoute(
@@ -161,7 +158,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/collection', page: CollectionCreatorPage),
           AutoRoute(path: 'create/custom-move', page: CustomMoveCreatorPage),
           AutoRoute(path: 'create/gym-profile', page: GymProfileCreatorPage),
-          AutoRoute(path: 'create/journal', page: ProgressJournalCreatorPage),
           AutoRoute(
               path: 'create/personal-best', page: PersonalBestCreatorPage),
           AutoRoute(path: 'create/post', page: PostCreatorPage),

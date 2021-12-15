@@ -4,8 +4,5 @@ mutation createUserBenchmark($data: CreateUserBenchmarkInput!) {
     UserBenchmarkEntries {
       ...UserBenchmarkEntry
     }
-    UserBenchmarkTags {
-      ...UserBenchmarkTag
-    }
   }
 }

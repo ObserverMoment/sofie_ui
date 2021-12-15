@@ -1,5 +1,0 @@
-mutation updateUserBenchmarkTag($data: UpdateUserBenchmarkTagInput!) {
-  updateUserBenchmarkTag(data: $data) {
-    ...UserBenchmarkTag
-  }
-}

@@ -4,8 +4,5 @@ mutation updateUserBenchmark($data: UpdateUserBenchmarkInput!) {
     UserBenchmarkEntries {
       ...UserBenchmarkEntry
     }
-    UserBenchmarkTags {
-      ...UserBenchmarkTag
-    }
   }
 }

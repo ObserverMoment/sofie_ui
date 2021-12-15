@@ -1,8 +1,0 @@
-mutation updateProgressJournalGoal($data: UpdateProgressJournalGoalInput!) {
-  updateProgressJournalGoal(data: $data) {
-    ...ProgressJournalGoal
-    ProgressJournalGoalTags {
-      ...ProgressJournalGoalTag
-    }
-  }
-}

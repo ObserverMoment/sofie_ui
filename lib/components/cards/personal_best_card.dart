@@ -84,23 +84,6 @@ class PersonalBestCard extends StatelessWidget {
                 lineHeight: 1.4,
               ),
             ),
-          if (userBenchmark.userBenchmarkTags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 6, bottom: 8),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: userBenchmark.userBenchmarkTags
-                    .map(
-                      (tag) => Tag(
-                        tag: tag.name,
-                        color: context.theme.background,
-                        textColor: context.theme.primary,
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
         ],
       ),
     );
