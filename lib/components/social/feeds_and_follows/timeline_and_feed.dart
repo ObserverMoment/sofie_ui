@@ -57,14 +57,18 @@ class _TimelineAndFeedState extends State<TimelineAndFeed> {
     return Column(
       children: [
         const SizedBox(height: 4),
-        MySlidingSegmentedControl(
-            value: _activeTabIndex,
-            children: const {
-              0: 'Activity',
-              1: 'Following',
-              2: 'Followers',
-            },
-            updateValue: _changeTab),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          width: double.infinity,
+          child: MySlidingSegmentedControl<int>(
+              value: _activeTabIndex,
+              children: const {
+                0: 'Activity',
+                1: 'Following',
+                2: 'Followers',
+              },
+              updateValue: _changeTab),
+        ),
         const SizedBox(height: 8),
         Expanded(
           child: IndexedStack(

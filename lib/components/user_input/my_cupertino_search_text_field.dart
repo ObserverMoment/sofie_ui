@@ -21,7 +21,7 @@ class MyCupertinoSearchTextField extends StatelessWidget {
     return CupertinoSearchTextField(
       autofocus: autofocus,
       placeholder: placeholder,
-      padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 8, 12),
+      padding: const EdgeInsetsDirectional.fromSTEB(8, 10, 8, 12),
       suffixInsets: const EdgeInsets.only(right: 8),
       prefixIcon: Container(),
       style: TextStyle(

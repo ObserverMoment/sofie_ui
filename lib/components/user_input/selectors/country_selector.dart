@@ -117,7 +117,7 @@ class _CountrySelectorState extends State<CountrySelector> {
                             if (_filteredCountries[index] == _selectedCountry)
                               const FadeIn(
                                   child: Icon(CupertinoIcons.checkmark_alt,
-                                      color: Styles.secondaryAccent)),
+                                      color: Styles.primaryAccent)),
                           ],
                         ),
                       ),

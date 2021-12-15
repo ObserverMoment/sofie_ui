@@ -120,7 +120,7 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
                                       child: Icon(
                                         CupertinoIcons.cube,
                                         size: 16,
-                                        color: Styles.secondaryAccent,
+                                        color: Styles.primaryAccent,
                                       ),
                                     ),
                                     MyText(
@@ -128,7 +128,7 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
                                       maxLines: 10,
                                       textAlign: TextAlign.center,
                                       lineHeight: 1,
-                                      color: Styles.secondaryAccent,
+                                      color: Styles.primaryAccent,
                                     ),
                                   ],
                                 ),

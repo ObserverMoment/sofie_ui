@@ -58,7 +58,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
         ? Styles.primaryAccent // Done
         : scheduled.scheduledAt.isBefore(DateTime.now())
             ? Styles.errorRed // Missed
-            : Styles.secondaryAccent; // Upcoming
+            : Styles.primaryAccent; // Upcoming
     return Container(
         height: 8,
         width: 8,

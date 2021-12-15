@@ -30,7 +30,7 @@ class SkillListItem extends StatelessWidget {
                   Row(
                     children: [
                       SvgPicture.asset('assets/graphics/award_icon.svg',
-                          width: 24, color: Styles.secondaryAccent),
+                          width: 24, color: Styles.primaryAccent),
                       const SizedBox(width: 8),
                       MyText(
                         skill.name,

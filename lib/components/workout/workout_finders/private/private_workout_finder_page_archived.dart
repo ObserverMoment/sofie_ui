@@ -163,7 +163,7 @@
 //                           padding: EdgeInsets.zero,
 //                           child: MySlidingSegmentedControl<int>(
 //                               margin: EdgeInsets.zero,
-//                               activeColor: Styles.secondaryAccent,
+//                               activeColor: Styles.primaryAccent,
 //                               childPadding:
 //                                   const EdgeInsets.symmetric(vertical: 7.5),
 //                               value: _activeTabIndex,
@@ -281,7 +281,7 @@
 //                             children: [
 //                               MyText(selectedTag!,
 //                                   weight: FontWeight.bold,
-//                                   color: Styles.secondaryAccent),
+//                                   color: Styles.primaryAccent),
 //                             ],
 //                           )),
 //               ),
@@ -305,7 +305,7 @@
 //                             children: [
 //                               MyText(selectedCollection!.name,
 //                                   weight: FontWeight.bold,
-//                                   color: Styles.secondaryAccent),
+//                                   color: Styles.primaryAccent),
 //                             ],
 //                           )),
 //               ),

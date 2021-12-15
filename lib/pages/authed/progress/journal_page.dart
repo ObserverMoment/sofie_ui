@@ -3,7 +3,6 @@ import 'package:sofie_ui/components/journal/journal_goals.dart';
 import 'package:sofie_ui/components/journal/journal_moods.dart';
 import 'package:sofie_ui/components/journal/journal_notes.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 
 class JournalPage extends StatefulWidget {

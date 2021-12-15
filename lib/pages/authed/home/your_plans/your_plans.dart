@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/pages/authed/home/your_plans/your_created_workout_plans.dart';
@@ -87,7 +86,6 @@ class _YourPlansPageState extends State<YourPlansPage> {
                       width: double.infinity,
                       child: MySlidingSegmentedControl<int>(
                           value: _activeTabIndex,
-                          activeColor: Styles.secondaryAccent,
                           updateValue: _updatePageIndex,
                           children: _segmentChildren),
                     ),

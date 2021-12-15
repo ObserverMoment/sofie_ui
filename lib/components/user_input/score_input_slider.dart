@@ -59,7 +59,7 @@ class ScoreInputSlider extends StatelessWidget {
                       divisions: divisions,
                       value: value,
                       onChanged: saveValue,
-                      activeColor: Styles.secondaryAccent,
+                      activeColor: Styles.primaryAccent,
                       inactiveColor: context.theme.primary.withOpacity(0.08),
                     ),
                   ),

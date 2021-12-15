@@ -60,12 +60,10 @@ class DiscoverClubCard extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(CupertinoIcons.location,
-                                  size: 13, color: Styles.secondaryAccent),
+                              const Icon(CupertinoIcons.location, size: 13),
                               const SizedBox(width: 2),
                               MyText(
                                 club.location!,
-                                color: Styles.secondaryAccent,
                                 size: FONTSIZE.two,
                               )
                             ],

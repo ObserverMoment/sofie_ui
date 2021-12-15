@@ -44,7 +44,7 @@ class MyCupertinoSwitch extends StatelessWidget {
     return CupertinoSwitch(
       value: value,
       onChanged: onChanged,
-      activeColor: Styles.secondaryAccent,
+      activeColor: Styles.primaryAccent,
     );
   }
 }

@@ -29,9 +29,9 @@ class ClubDetailsInfo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(CupertinoIcons.location,
-                      size: 18, color: Styles.secondaryAccent),
+                      size: 18, color: Styles.primaryAccent),
                   const SizedBox(width: 2),
-                  MyText(club.location!, color: Styles.secondaryAccent)
+                  MyText(club.location!, color: Styles.primaryAccent)
                 ],
               ),
             ),

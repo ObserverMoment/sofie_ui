@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/cards/gym_profile_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -19,9 +18,6 @@ class YourGymProfilesPage extends StatelessWidget {
     return QueryObserver<GymProfiles$Query, json.JsonSerializable>(
         key: Key('YourGymProfilesPage- ${GymProfilesQuery().operationName}'),
         query: GymProfilesQuery(),
-        loadingIndicator: const ShimmerCardList(
-          itemCount: 10,
-        ),
         builder: (data) {
           final gymProfiles = data.gymProfiles.reversed.toList();
 

@@ -150,7 +150,7 @@ class WorkoutPlanCardFixedHeight extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: CommaSeparatedList(allTags,
-                              textColor: Styles.secondaryAccent),
+                              textColor: Styles.primaryAccent),
                         ),
                       if (workoutPlan.workoutPlanDays.isNotEmpty)
                         Padding(

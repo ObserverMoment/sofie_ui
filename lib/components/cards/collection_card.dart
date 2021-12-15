@@ -83,11 +83,11 @@ class CollectionCard extends StatelessWidget {
                 children: [
                   MyText(
                     '$workoutCount ${workoutCount == 1 ? "workout" : "workouts"}',
-                    color: Styles.secondaryAccent,
+                    color: Styles.primaryAccent,
                   ),
                   MyText(
                     '$planCount ${planCount == 1 ? "plan" : "plans"}',
-                    color: Styles.secondaryAccent,
+                    color: Styles.primaryAccent,
                   )
                 ],
               )

@@ -71,13 +71,6 @@ class MySlidingSegmentedControl<T> extends StatefulWidget {
   /// Defaults to [theme.background]
   final Color? thumbColor;
 
-  /// Optional text colors.
-  /// [activeColor] defaults to white.
-  final Color? activeColor;
-
-  /// [inactiveColor] defaults to context.theme.background.
-  final Color? inactiveColor;
-
   /// The amount of space by which to inset the [children].
   final EdgeInsetsGeometry containerPadding;
 
@@ -99,8 +92,6 @@ class MySlidingSegmentedControl<T> extends StatefulWidget {
     this.childPadding =
         const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
     this.backgroundTransparent = false,
-    this.activeColor,
-    this.inactiveColor,
     this.fontSize = 17,
     this.margin = const EdgeInsets.symmetric(vertical: 4.0),
   })  : assert(children.length >= 2),
@@ -339,8 +330,6 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
 
   @override
   Widget build(BuildContext context) {
-    final Color activeColor = widget.activeColor ?? context.theme.primary;
-    final Color inactiveColor = widget.inactiveColor ?? context.theme.primary;
     final Color thumbColor = widget.thumbColor ?? context.theme.background;
     final Color backgroundColor =
         widget.backgroundColor ?? context.theme.cardBackground;
@@ -382,8 +371,6 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
               pressed: pressed == entry.key,
               isDragging: isThumbDragging,
               text: entry.value,
-              activeColor: activeColor,
-              inactiveColor: inactiveColor,
               padding: widget.childPadding,
               fontSize: widget.fontSize),
         ),
@@ -445,14 +432,10 @@ class _Segment<T> extends StatefulWidget {
     required this.isDragging,
     required this.padding,
     required this.fontSize,
-    required this.activeColor,
-    required this.inactiveColor,
   }) : super(key: key);
 
   final String text;
   final double fontSize;
-  final Color activeColor;
-  final Color inactiveColor;
 
   final bool pressed;
   final bool highlighted;
@@ -533,9 +516,10 @@ class _SegmentState<T> extends State<_Segment<T>>
             child: AnimatedDefaultTextStyle(
               style: DefaultTextStyle.of(context).style.merge(TextStyle(
                     fontSize: widget.fontSize,
-                    color: widget.highlighted
-                        ? widget.activeColor
-                        : widget.inactiveColor,
+                    color: context.theme.primary,
+                    fontWeight: widget.highlighted
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   )),
               duration: _kHighlightAnimationDuration,
               curve: Curves.ease,

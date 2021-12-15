@@ -247,7 +247,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                               ),
                               SizedBox(width: 6),
                               Icon(CupertinoIcons.checkmark_alt_circle,
-                                  color: Styles.secondaryAccent)
+                                  color: Styles.primaryAccent)
                             ],
                           ),
                         ))
@@ -348,7 +348,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                             right: 4,
                             child: FadeIn(
                               child: Icon(CupertinoIcons.checkmark_alt,
-                                  color: Styles.secondaryAccent, size: 20),
+                                  color: Styles.primaryAccent, size: 20),
                             )),
                     ],
                   ),

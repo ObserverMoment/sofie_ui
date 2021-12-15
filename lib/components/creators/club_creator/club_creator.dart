@@ -608,7 +608,7 @@ class _PreCreateInputUI extends StatelessWidget {
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
               child: MyText('Sorry, this club name is already taken.',
-                  color: Styles.secondaryAccent),
+                  color: Styles.primaryAccent),
             )),
         Padding(
           padding: const EdgeInsets.only(left: 4, right: 4, top: 10),

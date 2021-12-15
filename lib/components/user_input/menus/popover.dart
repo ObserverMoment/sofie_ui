@@ -119,7 +119,7 @@ class PopoverMenuItem extends StatelessWidget {
                     child: Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Icon(CupertinoIcons.circle_fill,
-                      size: 10, color: Styles.secondaryAccent),
+                      size: 10, color: Styles.primaryAccent),
                 ))
             ],
           ),

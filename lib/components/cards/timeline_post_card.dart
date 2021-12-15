@@ -168,7 +168,6 @@ class TimelinePostCard extends StatelessWidget {
                             .whereType<String>()
                             .map((tag) => MyText(
                                   '#$tag',
-                                  color: Styles.primaryAccent,
                                   weight: FontWeight.bold,
                                 ))
                             .toList(),

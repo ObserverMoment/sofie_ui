@@ -181,8 +181,8 @@ class WorkoutCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: CommaSeparatedList(
-                        workout.tags.where((t) => t != 'Custom').toList(),
-                        textColor: Styles.primaryAccent),
+                      workout.tags.where((t) => t != 'Custom').toList(),
+                    ),
                   )
               ],
             ),

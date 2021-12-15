@@ -172,7 +172,7 @@ class _WorkoutGoalsSelectorState extends State<WorkoutGoalsSelector> {
                       ),
                       MyText(
                         '${_activeSelectedWorkoutGoals.length} selected',
-                        color: Styles.secondaryAccent,
+                        color: Styles.primaryAccent,
                       ),
                     ],
                   ),

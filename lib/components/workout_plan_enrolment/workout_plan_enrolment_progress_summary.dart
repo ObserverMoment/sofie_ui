@@ -60,7 +60,7 @@ class WorkoutPlanEnrolmentProgressSummary extends StatelessWidget {
                     lineHeight: 4,
                     padding: const EdgeInsets.only(left: 8),
                     backgroundColor: context.theme.primary.withOpacity(0.3),
-                    progressColor: Styles.secondaryAccent,
+                    progressColor: Styles.primaryAccent,
                   ),
                 ],
               ),

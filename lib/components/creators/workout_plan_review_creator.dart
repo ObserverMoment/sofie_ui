@@ -184,10 +184,10 @@ class _WorkoutPlanReviewCreatorPageState
               itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               glowRadius: 0.5,
               updateOnDrag: true,
-              unratedColor: Styles.secondaryAccent.withOpacity(0.2),
+              unratedColor: Styles.primaryAccent.withOpacity(0.2),
               itemBuilder: (context, _) => const Icon(
                 CupertinoIcons.star_fill,
-                color: Styles.secondaryAccent,
+                color: Styles.primaryAccent,
               ),
               onRatingUpdate: (rating) {
                 setState(() => _score = rating);
@@ -197,7 +197,7 @@ class _WorkoutPlanReviewCreatorPageState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircularBox(
-              color: Styles.secondaryAccent,
+              color: Styles.primaryAccent,
               child: Container(
                 height: 40,
                 alignment: Alignment.center,

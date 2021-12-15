@@ -40,7 +40,7 @@ class PersonalBestScoreIcon extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SvgPicture.asset('assets/category_icons/events.svg',
-                  color: Styles.secondaryAccent.withOpacity(0.15)),
+                  color: Styles.primaryAccent.withOpacity(0.15)),
             ),
             Padding(
               padding: const EdgeInsets.all(12),
@@ -70,10 +70,10 @@ class PersonalBestScoreIcon extends StatelessWidget {
                             MyText('Video',
                                 size: FONTSIZE.one,
                                 weight: FontWeight.bold,
-                                color: Styles.secondaryAccent),
+                                color: Styles.primaryAccent),
                             SizedBox(width: 2),
                             Icon(CupertinoIcons.checkmark_alt,
-                                size: 15, color: Styles.secondaryAccent)
+                                size: 15, color: Styles.primaryAccent)
                           ],
                         )
                       : Container(),
@@ -93,7 +93,7 @@ class PersonalBestScoreIcon extends StatelessWidget {
                                     benchmark.benchmarkType,
                                     benchmark.loadUnit,
                                     bestEntry),
-                                color: Styles.secondaryAccent,
+                                color: Styles.primaryAccent,
                                 size: FONTSIZE.two,
                               ),
                             ],

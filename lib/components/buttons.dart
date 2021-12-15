@@ -798,7 +798,7 @@ class FilterButton extends StatelessWidget {
             right: 0,
             child: Icon(
               CupertinoIcons.checkmark_alt_circle_fill,
-              color: Styles.secondaryAccent,
+              color: Styles.primaryAccent,
               size: 16,
             ),
           )

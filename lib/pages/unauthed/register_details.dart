@@ -97,7 +97,7 @@ class _RegisterDetailsState extends State<RegisterDetails> {
                                   'Sorry, this name has been taken!',
                                   size: FONTSIZE.two,
                                   weight: FontWeight.bold,
-                                  color: Styles.secondaryAccent))
+                                  color: Styles.primaryAccent))
                           : Container()
                 ],
               ),

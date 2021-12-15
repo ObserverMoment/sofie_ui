@@ -207,7 +207,7 @@ class WorkoutFinderTextResultsNames extends StatelessWidget {
                           textStyleHighlight: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Styles.secondaryAccent),
+                              color: Styles.primaryAccent),
                           text: results[i].name,
                           term: searchString),
                     ],

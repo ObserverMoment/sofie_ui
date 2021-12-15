@@ -381,7 +381,7 @@ class _YourReviewDisplay extends StatelessWidget {
                   mini: true,
                   prefix: const Icon(
                     CupertinoIcons.star_fill,
-                    color: Styles.secondaryAccent,
+                    color: Styles.primaryAccent,
                     size: 14,
                   ),
                   text: 'Edit Review',
@@ -414,7 +414,7 @@ class _YourReviewDisplay extends StatelessWidget {
                     mini: true,
                     prefix: const Icon(
                       CupertinoIcons.star_fill,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                       size: 14,
                     ),
                     text: 'Leave Review',

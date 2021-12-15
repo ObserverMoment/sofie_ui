@@ -78,7 +78,6 @@ class ClubTimelinePostCard extends StatelessWidget {
                         children: postData.tags
                             .map((tag) => MyText(
                                   '#$tag',
-                                  color: Styles.primaryAccent,
                                   weight: FontWeight.bold,
                                 ))
                             .toList(),

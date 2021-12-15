@@ -236,8 +236,8 @@ class _FullScreenDisplayNameEditingState
                   FadeInUp(
                       child: Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: MyText(widget.apiMessage,
-                        color: Styles.secondaryAccent),
+                    child:
+                        MyText(widget.apiMessage, color: Styles.primaryAccent),
                   ))
               ],
             ),

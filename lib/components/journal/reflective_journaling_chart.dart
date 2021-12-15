@@ -34,7 +34,7 @@
 
 //   final List<Color> legendColors = const [
 //     Styles.primaryAccent, // Mood
-//     Styles.secondaryAccent, // Energy
+//     Styles.primaryAccent, // Energy
 //     Styles.heartRed, // Motivation
 //     CupertinoColors.systemYellow, // Confidence
 //     Styles.infoBlue, // Average

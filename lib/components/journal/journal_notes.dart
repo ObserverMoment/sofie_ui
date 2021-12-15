@@ -2,12 +2,17 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/media/audio/audio_players.dart';
 import 'package:sofie_ui/components/media/audio/mic_audio_recorder.dart';
+import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
@@ -130,16 +135,139 @@ class _JournalNotesState extends State<JournalNotes> {
                       ),
                     ],
                   child: GridView.builder(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
                       itemCount: sortedNotes.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              mainAxisSpacing: 6,
+                              crossAxisSpacing: 6,
+                              crossAxisCount: 2),
                       itemBuilder: (c, i) {
                         if (Utils.textNotNull(sortedNotes[i].textNote)) {
-                          return MyText('Text note UI');
+                          return FadeIn(
+                              child: _TextNoteTile(note: sortedNotes[i]));
                         } else {
-                          return MyText('Voice note UI');
+                          return FadeIn(
+                              child: _VoiceNoteTile(note: sortedNotes[i]));
                         }
                       }));
         });
+  }
+}
+
+class _TextNoteTile extends StatelessWidget {
+  final JournalNote note;
+  const _TextNoteTile({Key? key, required this.note}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.showBottomSheet(
+          child: TextViewer(
+              note.textNote!, 'Note ${note.createdAt.compactDateString}')),
+      child: Card(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyText(
+                  note.createdAt.dateAndTime,
+                  size: FONTSIZE.two,
+                )
+              ],
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: MyText(
+                        note.textNote!,
+                        maxLines: 5,
+                        textAlign: TextAlign.center,
+                        size: FONTSIZE.four,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _VoiceNoteTile extends StatelessWidget {
+  final JournalNote note;
+  const _VoiceNoteTile({Key? key, required this.note}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push(
+          fullscreenDialog: true,
+          child: FullAudioPlayer(
+              audioUri: note.voiceNoteUri!,
+              pageTitle: 'Voice Note',
+              audioTitle: note.createdAt.compactDateString)),
+      child: Card(
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyText(
+                  note.createdAt.dateAndTime,
+                  size: FONTSIZE.two,
+                )
+              ],
+            ),
+            Expanded(
+              child: SizedBox.expand(
+                child: Center(
+                  child: Stack(
+                    alignment: Alignment.center,
+                    fit: StackFit.expand,
+                    children: [
+                      const Opacity(
+                        opacity: 0.1,
+                        child: Icon(
+                          CupertinoIcons.waveform,
+                          size: 130,
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Icon(
+                            CupertinoIcons.play_fill,
+                            size: 50,
+                          ),
+                          SizedBox(height: 6),
+                          MyText(
+                            'VOICE NOTE',
+                            subtext: true,
+                            size: FONTSIZE.two,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

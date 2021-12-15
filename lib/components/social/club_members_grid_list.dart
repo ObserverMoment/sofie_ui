@@ -29,7 +29,7 @@ class ClubMembersGridList extends StatelessWidget {
       child: Tag(
         tag: text,
         padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
-        color: Styles.secondaryAccent,
+        color: Styles.primaryAccent,
         textColor: Styles.white,
         fontSize: FONTSIZE.one,
       ));
