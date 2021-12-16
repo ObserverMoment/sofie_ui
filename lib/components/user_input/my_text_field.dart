@@ -20,6 +20,9 @@ class MyTextField extends StatefulWidget {
   final String? initialValue;
   final Iterable<String>? autofillHints;
   final List<TextInputFormatter>? inputFormatters;
+  final Color? backgroundColor;
+  final EdgeInsets padding;
+  final bool disableSuffix;
 
   const MyTextField(
       {this.key,
@@ -36,7 +39,10 @@ class MyTextField extends StatefulWidget {
       this.initialValue,
       this.textAlign = TextAlign.start,
       this.autofillHints,
-      this.inputFormatters})
+      this.inputFormatters,
+      this.backgroundColor,
+      this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      this.disableSuffix = false})
       : super(key: key);
 
   @override
@@ -94,7 +100,9 @@ class _MyTextFieldState extends State<MyTextField> {
         padding: const EdgeInsets.only(left: 8.0),
         child: widget.icon,
       ),
-      suffix: widget.controller.text.length > 2 && _focusNode.hasFocus
+      suffix: !widget.disableSuffix &&
+              widget.controller.text.length > 2 &&
+              _focusNode.hasFocus
           ? CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: _onClear,
@@ -108,13 +116,13 @@ class _MyTextFieldState extends State<MyTextField> {
           fontSize: 18,
           color: CupertinoTheme.of(context).primaryColor.withOpacity(0.5)),
       placeholder: widget.placeholder,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      padding: widget.padding,
       keyboardType: widget.isPassword
           ? TextInputType.visiblePassword
           : widget.textInputType ?? TextInputType.text,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: CupertinoTheme.of(context).primaryColor.withOpacity(0.1),
+        color: widget.backgroundColor ?? context.theme.primary.withOpacity(0.1),
       ),
     );
   }

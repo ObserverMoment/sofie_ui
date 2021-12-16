@@ -4,6 +4,7 @@ import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -80,22 +81,19 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
 
             return CupertinoPageScaffold(
                 child: NestedScrollView(
-                    headerSliverBuilder: (c, i) =>
-                        [const MySliverNavbar(title: 'Body Tracking')],
+                    headerSliverBuilder: (c, i) => [
+                          MySliverNavbar(
+                            title: 'Body Tracking',
+                            trailing: allPhotoUris.isNotEmpty
+                                ? TertiaryButton(
+                                    text: 'Viewer',
+                                    onPressed: () =>
+                                        _openEntryPhotosViewer(allPhotoUris))
+                                : null,
+                          ),
+                        ],
                     body: FABPage(
                       rowButtons: [
-                        if (allPhotoUris.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 16.0),
-                            child: FloatingButton(
-                                iconSize: 20,
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 16),
-                                icon: CupertinoIcons.fullscreen,
-                                text: 'Viewer',
-                                onTap: () =>
-                                    _openEntryPhotosViewer(allPhotoUris)),
-                          ),
                         if ((_activeTabIndex == 0 && entries.isNotEmpty) ||
                             (_activeTabIndex == 1 && allPhotoUris.isNotEmpty))
                           FloatingButton(

@@ -9,7 +9,12 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 class PopoverMenu extends StatelessWidget {
   final Widget button;
   final List<PopoverMenuItem> items;
-  const PopoverMenu({Key? key, required this.button, required this.items})
+  final PopoverDirection popoverDirection;
+  const PopoverMenu(
+      {Key? key,
+      required this.button,
+      required this.items,
+      this.popoverDirection = PopoverDirection.bottom})
       : super(key: key);
 
   @override
@@ -18,6 +23,7 @@ class PopoverMenu extends StatelessWidget {
         context.theme.cardBackground.withOpacity(0.99);
     return GestureDetector(
       child: button,
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         showPopover(
           context: context,
@@ -31,7 +37,7 @@ class PopoverMenu extends StatelessWidget {
           backgroundColor: backgroundColor,
           barrierColor: Styles.black.withOpacity(0.2),
           radius: 16,
-          direction: PopoverDirection.top,
+          direction: popoverDirection,
           arrowHeight: 10,
           arrowWidth: 0,
         );
@@ -87,7 +93,7 @@ class PopoverMenuItem extends StatelessWidget {
       this.confirm = false,
       this.isLast = false,
       this.destructive = false,
-      required this.isActive})
+      this.isActive = false})
       : assert(!(confirm && destructive)),
         super(key: key);
 

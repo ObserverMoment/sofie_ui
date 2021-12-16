@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/cards/journal_mood_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
@@ -9,11 +10,13 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:auto_route/auto_route.dart';
 
 class JournalMoods extends StatelessWidget {
   const JournalMoods({Key? key}) : super(key: key);
@@ -55,11 +58,21 @@ class JournalMoods extends StatelessWidget {
                       'Keep track of your energy levels and your mental and emotional state, so that you know when to push and when to rest.',
                   actions: [
                       EmptyPlaceholderAction(
-                          action: () => print('create mood'),
+                          action: () =>
+                              context.navigateTo(JournalMoodCreatorRoute()),
                           buttonIcon: CupertinoIcons.add,
                           buttonText: 'Add Mood'),
                     ])
               : FABPage(
+                  rowButtons: [
+                      FloatingButton(
+                        gradient: Styles.primaryAccentGradient,
+                        contentColor: Styles.white,
+                        onTap: () =>
+                            context.navigateTo(JournalMoodCreatorRoute()),
+                        icon: CupertinoIcons.add,
+                      ),
+                    ],
                   child: ListView.builder(
                       itemCount: sortedMoods.length,
                       itemBuilder: (c, i) => GestureDetector(

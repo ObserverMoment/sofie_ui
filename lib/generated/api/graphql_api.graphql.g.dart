@@ -24,8 +24,8 @@ JournalMood _$JournalMoodFromJson(Map<String, dynamic> json) => JournalMood()
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
   ..moodScore = (json['moodScore'] as num?)?.toDouble()
   ..energyScore = (json['energyScore'] as num?)?.toDouble()
-  ..confidenceScore = (json['confidenceScore'] as num?)?.toDouble()
-  ..motivationScore = (json['motivationScore'] as num?)?.toDouble();
+  ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
+  ..textNote = json['textNote'] as String?;
 
 Map<String, dynamic> _$JournalMoodToJson(JournalMood instance) =>
     <String, dynamic>{
@@ -34,8 +34,8 @@ Map<String, dynamic> _$JournalMoodToJson(JournalMood instance) =>
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'moodScore': instance.moodScore,
       'energyScore': instance.energyScore,
-      'confidenceScore': instance.confidenceScore,
-      'motivationScore': instance.motivationScore,
+      'tags': instance.tags,
+      'textNote': instance.textNote,
     };
 
 JournalMoods$Query _$JournalMoods$QueryFromJson(Map<String, dynamic> json) =>
@@ -64,21 +64,21 @@ Map<String, dynamic> _$UpdateJournalMood$MutationToJson(
 UpdateJournalMoodInput _$UpdateJournalMoodInputFromJson(
         Map<String, dynamic> json) =>
     UpdateJournalMoodInput(
-      confidenceScore: (json['confidenceScore'] as num?)?.toDouble(),
       energyScore: (json['energyScore'] as num?)?.toDouble(),
       id: json['id'] as String,
       moodScore: (json['moodScore'] as num?)?.toDouble(),
-      motivationScore: (json['motivationScore'] as num?)?.toDouble(),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      textNote: json['textNote'] as String?,
     );
 
 Map<String, dynamic> _$UpdateJournalMoodInputToJson(
         UpdateJournalMoodInput instance) =>
     <String, dynamic>{
-      'confidenceScore': instance.confidenceScore,
       'energyScore': instance.energyScore,
       'id': instance.id,
       'moodScore': instance.moodScore,
-      'motivationScore': instance.motivationScore,
+      'tags': instance.tags,
+      'textNote': instance.textNote,
     };
 
 JournalGoal _$JournalGoalFromJson(Map<String, dynamic> json) => JournalGoal()
@@ -263,19 +263,19 @@ Map<String, dynamic> _$CreateJournalMood$MutationToJson(
 CreateJournalMoodInput _$CreateJournalMoodInputFromJson(
         Map<String, dynamic> json) =>
     CreateJournalMoodInput(
-      confidenceScore: (json['confidenceScore'] as num?)?.toDouble(),
       energyScore: (json['energyScore'] as num?)?.toDouble(),
       moodScore: (json['moodScore'] as num?)?.toDouble(),
-      motivationScore: (json['motivationScore'] as num?)?.toDouble(),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      textNote: json['textNote'] as String?,
     );
 
 Map<String, dynamic> _$CreateJournalMoodInputToJson(
         CreateJournalMoodInput instance) =>
     <String, dynamic>{
-      'confidenceScore': instance.confidenceScore,
       'energyScore': instance.energyScore,
       'moodScore': instance.moodScore,
-      'motivationScore': instance.motivationScore,
+      'tags': instance.tags,
+      'textNote': instance.textNote,
     };
 
 CreateJournalNote$Mutation _$CreateJournalNote$MutationFromJson(

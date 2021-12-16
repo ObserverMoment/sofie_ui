@@ -18,8 +18,8 @@ mixin JournalMoodMixin {
   late DateTime createdAt;
   double? moodScore;
   double? energyScore;
-  double? confidenceScore;
-  double? motivationScore;
+  late List<String> tags;
+  String? textNote;
 }
 mixin JournalGoalMixin {
   @JsonKey(name: '__typename')
@@ -699,15 +699,8 @@ class JournalMood extends JsonSerializable
       _$JournalMoodFromJson(json);
 
   @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        moodScore,
-        energyScore,
-        confidenceScore,
-        motivationScore
-      ];
+  List<Object?> get props =>
+      [$$typename, id, createdAt, moodScore, energyScore, tags, textNote];
   @override
   Map<String, dynamic> toJson() => _$JournalMoodToJson(this);
 }
@@ -745,16 +738,14 @@ class UpdateJournalMood$Mutation extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class UpdateJournalMoodInput extends JsonSerializable with EquatableMixin {
   UpdateJournalMoodInput(
-      {this.confidenceScore,
-      this.energyScore,
+      {this.energyScore,
       required this.id,
       this.moodScore,
-      this.motivationScore});
+      this.tags,
+      this.textNote});
 
   factory UpdateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateJournalMoodInputFromJson(json);
-
-  double? confidenceScore;
 
   double? energyScore;
 
@@ -762,11 +753,12 @@ class UpdateJournalMoodInput extends JsonSerializable with EquatableMixin {
 
   double? moodScore;
 
-  double? motivationScore;
+  List<String>? tags;
+
+  String? textNote;
 
   @override
-  List<Object?> get props =>
-      [confidenceScore, energyScore, id, moodScore, motivationScore];
+  List<Object?> get props => [energyScore, id, moodScore, tags, textNote];
   @override
   Map<String, dynamic> toJson() => _$UpdateJournalMoodInputToJson(this);
 }
@@ -986,25 +978,21 @@ class CreateJournalMood$Mutation extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class CreateJournalMoodInput extends JsonSerializable with EquatableMixin {
   CreateJournalMoodInput(
-      {this.confidenceScore,
-      this.energyScore,
-      this.moodScore,
-      this.motivationScore});
+      {this.energyScore, this.moodScore, this.tags, this.textNote});
 
   factory CreateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
       _$CreateJournalMoodInputFromJson(json);
-
-  double? confidenceScore;
 
   double? energyScore;
 
   double? moodScore;
 
-  double? motivationScore;
+  List<String>? tags;
+
+  String? textNote;
 
   @override
-  List<Object?> get props =>
-      [confidenceScore, energyScore, moodScore, motivationScore];
+  List<Object?> get props => [energyScore, moodScore, tags, textNote];
   @override
   Map<String, dynamic> toJson() => _$CreateJournalMoodInputToJson(this);
 }
@@ -7669,13 +7657,13 @@ final JOURNAL_MOODS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'confidenceScore'),
+            name: NameNode(value: 'tags'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'motivationScore'),
+            name: NameNode(value: 'textNote'),
             alias: null,
             arguments: [],
             directives: [],
@@ -7783,13 +7771,13 @@ final UPDATE_JOURNAL_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'confidenceScore'),
+            name: NameNode(value: 'tags'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'motivationScore'),
+            name: NameNode(value: 'textNote'),
             alias: null,
             arguments: [],
             directives: [],
@@ -8451,13 +8439,13 @@ final CREATE_JOURNAL_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'confidenceScore'),
+            name: NameNode(value: 'tags'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'motivationScore'),
+            name: NameNode(value: 'textNote'),
             alias: null,
             arguments: [],
             directives: [],

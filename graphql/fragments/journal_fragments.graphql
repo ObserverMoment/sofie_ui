@@ -12,8 +12,8 @@ fragment JournalMood on JournalMood {
   createdAt
   moodScore
   energyScore
-  confidenceScore
-  motivationScore
+  tags
+  textNote
 }
 
 fragment JournalGoal on JournalGoal {

@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
@@ -10,6 +14,7 @@ import 'package:sofie_ui/components/media/audio/mic_audio_recorder.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
+import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -48,10 +53,25 @@ class _JournalNotesState extends State<JournalNotes> {
       ],
     );
 
-    checkOperationResult(context, result,
-        onFail: () => context.showToast(
-            message: 'Sorry, there was a problem creating this note.',
-            toastType: ToastType.destructive));
+    checkOperationResult(context, result, onFail: _showErrorToast);
+  }
+
+  Future<void> _updateJournalNote(
+      {required String id, String? textNote, String? voiceNoteUri}) async {
+    assert(textNote != null || voiceNoteUri != null);
+
+    final variables = UpdateJournalNoteArguments(
+        data: UpdateJournalNoteInput(
+            id: id, textNote: textNote, voiceNoteUri: voiceNoteUri));
+
+    final result = await context.graphQLStore.mutate(
+      mutation: UpdateJournalNoteMutation(variables: variables),
+      broadcastQueryIds: [
+        GQLOpNames.journalNotes,
+      ],
+    );
+
+    checkOperationResult(context, result, onFail: _showErrorToast);
   }
 
   Future<void> _deleteJournalNote(String id) async {
@@ -72,13 +92,15 @@ class _JournalNotesState extends State<JournalNotes> {
             toastType: ToastType.destructive));
   }
 
-  void _openTextNoteInput({String? text}) {
+  void _openTextNoteInput({JournalNote? journalNote}) {
     context.push(
         child: FullScreenTextEditing(
             title: 'Note',
-            initialValue: text,
-            onSave: (note) => _createJournalNote(textNote: note),
-            inputValidation: (_) => true));
+            initialValue: journalNote?.textNote,
+            onSave: (note) => journalNote?.textNote != null
+                ? _updateJournalNote(id: journalNote!.id, textNote: note)
+                : _createJournalNote(textNote: note),
+            inputValidation: (t) => t.isNotEmpty));
   }
 
   void _openVoiceNoteInput() {
@@ -91,6 +113,11 @@ class _JournalNotesState extends State<JournalNotes> {
           },
           onFail: (_) => _showErrorToast);
     }));
+  }
+
+  void _confirmDeleteJournalNote(String id) {
+    context.showConfirmDeleteDialog(
+        itemType: 'Note', onConfirm: () => _deleteJournalNote(id));
   }
 
   void _showErrorToast() => context.showToast(
@@ -124,41 +151,67 @@ class _JournalNotesState extends State<JournalNotes> {
                           buttonText: 'Add Voice Note'),
                     ])
               : FABPage(
-                  columnButtons: [
-                      FloatingButton(
-                        onTap: _openVoiceNoteInput,
-                        icon: CupertinoIcons.mic,
-                      ),
-                      FloatingButton(
-                        onTap: _openTextNoteInput,
-                        icon: CupertinoIcons.doc_text,
-                      ),
-                    ],
+                  rowButtonsAlignment: MainAxisAlignment.end,
+                  rowButtons: [
+                    FloatingButton(
+                      gradient: Styles.primaryAccentGradient,
+                      contentColor: Styles.white,
+                      onTap: _openVoiceNoteInput,
+                      icon: CupertinoIcons.mic,
+                    ),
+                    const SizedBox(width: 12),
+                    FloatingButton(
+                      onTap: _openTextNoteInput,
+                      gradient: Styles.primaryAccentGradient,
+                      contentColor: Styles.white,
+                      icon: CupertinoIcons.doc_text,
+                    ),
+                  ],
                   child: GridView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 4),
-                      itemCount: sortedNotes.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              mainAxisSpacing: 6,
-                              crossAxisSpacing: 6,
-                              crossAxisCount: 2),
-                      itemBuilder: (c, i) {
-                        if (Utils.textNotNull(sortedNotes[i].textNote)) {
-                          return FadeIn(
-                              child: _TextNoteTile(note: sortedNotes[i]));
-                        } else {
-                          return FadeIn(
-                              child: _VoiceNoteTile(note: sortedNotes[i]));
-                        }
-                      }));
+                    itemCount: sortedNotes.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            mainAxisSpacing: 6,
+                            crossAxisSpacing: 6,
+                            crossAxisCount: 2),
+                    padding:
+                        const EdgeInsets.only(left: 6, right: 6, bottom: 60),
+                    shrinkWrap: true,
+                    itemBuilder: (context, i) {
+                      final item = sortedNotes[i];
+                      return SizedBox(
+                        height: 90,
+                        child: Utils.textNotNull(item.textNote)
+                            ? _TextNoteTile(
+                                note: item,
+                                openTextNoteInput: () =>
+                                    _openTextNoteInput(journalNote: item),
+                                confirmDeleteNote: () =>
+                                    _confirmDeleteJournalNote(item.id),
+                              )
+                            : _VoiceNoteTile(
+                                note: item,
+                                confirmDeleteNote: () =>
+                                    _confirmDeleteJournalNote(item.id),
+                              ),
+                      );
+                    },
+                  ),
+                );
         });
   }
 }
 
 class _TextNoteTile extends StatelessWidget {
   final JournalNote note;
-  const _TextNoteTile({Key? key, required this.note}) : super(key: key);
+  final VoidCallback openTextNoteInput;
+  final VoidCallback confirmDeleteNote;
+  const _TextNoteTile(
+      {Key? key,
+      required this.note,
+      required this.openTextNoteInput,
+      required this.confirmDeleteNote})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -168,34 +221,63 @@ class _TextNoteTile extends StatelessWidget {
               note.textNote!, 'Note ${note.createdAt.compactDateString}')),
       child: Card(
         borderRadius: BorderRadius.circular(16),
-        child: Column(
+        child: Stack(
+          alignment: Alignment.center,
+          clipBehavior: Clip.none,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MyText(
-                  note.createdAt.dateAndTime,
-                  size: FONTSIZE.two,
-                )
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FadeIn(
+                        key: Key(note.textNote!),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: MyText(
+                            note.textNote!,
+                            maxLines: 3,
+                            lineHeight: 1.2,
+                            size: FONTSIZE.four,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: MyText(
-                        note.textNote!,
-                        maxLines: 5,
-                        textAlign: TextAlign.center,
-                        size: FONTSIZE.four,
-                      ),
-                    ),
+            Positioned(
+              top: 0,
+              right: 4,
+              child: PopoverMenu(
+                  button: const Padding(
+                    padding: EdgeInsets.all(4.0),
+                    child: Icon(CupertinoIcons.ellipsis),
                   ),
-                ],
+                  items: [
+                    PopoverMenuItem(
+                      onTap: openTextNoteInput,
+                      iconData: CupertinoIcons.pencil,
+                      text: 'Edit',
+                    ),
+                    PopoverMenuItem(
+                      onTap: confirmDeleteNote,
+                      iconData: CupertinoIcons.trash_circle,
+                      text: 'Delete',
+                    ),
+                  ]),
+            ),
+            Positioned(
+              top: 8,
+              left: 2,
+              child: MyText(
+                note.createdAt.dateAndTime,
+                size: FONTSIZE.one,
               ),
             )
           ],
@@ -207,66 +289,53 @@ class _TextNoteTile extends StatelessWidget {
 
 class _VoiceNoteTile extends StatelessWidget {
   final JournalNote note;
-  const _VoiceNoteTile({Key? key, required this.note}) : super(key: key);
+  final VoidCallback confirmDeleteNote;
+  const _VoiceNoteTile(
+      {Key? key, required this.note, required this.confirmDeleteNote})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.push(
-          fullscreenDialog: true,
-          child: FullAudioPlayer(
+    return Card(
+      borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: [
+          const Opacity(
+              opacity: 0.07,
+              child: Icon(
+                CupertinoIcons.waveform,
+                size: 120,
+              )),
+          Padding(
+            padding: const EdgeInsets.only(top: 24.0),
+            child: InlineAudioPlayer(
               audioUri: note.voiceNoteUri!,
-              pageTitle: 'Voice Note',
-              audioTitle: note.createdAt.compactDateString)),
-      child: Card(
-        borderRadius: BorderRadius.circular(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MyText(
-                  note.createdAt.dateAndTime,
-                  size: FONTSIZE.two,
-                )
-              ],
+              layout: Axis.vertical,
+              buttonSize: 50,
             ),
-            Expanded(
-              child: SizedBox.expand(
-                child: Center(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    fit: StackFit.expand,
-                    children: [
-                      const Opacity(
-                        opacity: 0.1,
-                        child: Icon(
-                          CupertinoIcons.waveform,
-                          size: 130,
-                        ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(
-                            CupertinoIcons.play_fill,
-                            size: 50,
-                          ),
-                          SizedBox(height: 6),
-                          MyText(
-                            'VOICE NOTE',
-                            subtext: true,
-                            size: FONTSIZE.two,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+          ),
+          Positioned(
+              top: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: confirmDeleteNote,
+                child: const Padding(
+                  padding: EdgeInsets.all(4.0),
+                  child: Icon(CupertinoIcons.delete_simple, size: 18),
                 ),
-              ),
-            )
-          ],
-        ),
+              )),
+          Positioned(
+            top: 8,
+            left: 2,
+            child: MyText(
+              note.createdAt.dateAndTime,
+              size: FONTSIZE.one,
+            ),
+          )
+        ],
       ),
     );
   }

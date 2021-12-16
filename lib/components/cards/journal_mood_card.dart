@@ -15,15 +15,13 @@ class JournalMoodCard extends StatelessWidget {
     required this.journalMood,
   }) : super(key: key);
 
-  int get kMaxScore => 10;
+  int get kMaxScore => 5;
 
   double _calcOverallAverage() {
     final scores = [
       for (final s in [
         journalMood.moodScore,
         journalMood.energyScore,
-        journalMood.motivationScore,
-        journalMood.confidenceScore,
       ])
         if (s != null) s
     ];
@@ -33,19 +31,15 @@ class JournalMoodCard extends StatelessWidget {
   bool _hasSubmittedScores() => [
         journalMood.moodScore,
         journalMood.energyScore,
-        journalMood.motivationScore,
-        journalMood.confidenceScore
       ].any((s) => s != null);
 
   List<Widget> _buildScoreIndicators() {
-    final tags = ['Mood', 'Energy', 'Motivation', 'Confidence'];
+    final tags = ['Mood', 'Energy'];
 
     return [
       for (final s in [
         journalMood.moodScore,
         journalMood.energyScore,
-        journalMood.motivationScore,
-        journalMood.confidenceScore,
       ])
         if (s != null) s
     ]
