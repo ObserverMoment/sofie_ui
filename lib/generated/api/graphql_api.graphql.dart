@@ -16,8 +16,8 @@ mixin JournalMoodMixin {
       fromJson: fromGraphQLDateTimeToDartDateTime,
       toJson: fromDartDateTimeToGraphQLDateTime)
   late DateTime createdAt;
-  double? moodScore;
-  double? energyScore;
+  int? moodScore;
+  int? energyScore;
   late List<String> tags;
   String? textNote;
 }
@@ -747,11 +747,11 @@ class UpdateJournalMoodInput extends JsonSerializable with EquatableMixin {
   factory UpdateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateJournalMoodInputFromJson(json);
 
-  double? energyScore;
+  int? energyScore;
 
   late String id;
 
-  double? moodScore;
+  int? moodScore;
 
   List<String>? tags;
 
@@ -983,9 +983,9 @@ class CreateJournalMoodInput extends JsonSerializable with EquatableMixin {
   factory CreateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
       _$CreateJournalMoodInputFromJson(json);
 
-  double? energyScore;
+  int? energyScore;
 
-  double? moodScore;
+  int? moodScore;
 
   List<String>? tags;
 

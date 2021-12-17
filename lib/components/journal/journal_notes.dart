@@ -2,11 +2,8 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
@@ -175,8 +172,8 @@ class _JournalNotesState extends State<JournalNotes> {
                             crossAxisSpacing: 6,
                             crossAxisCount: 2),
                     padding:
-                        const EdgeInsets.only(left: 6, right: 6, bottom: 60),
-                    shrinkWrap: true,
+                        const EdgeInsets.only(left: 6, right: 6, bottom: 0),
+                    // shrinkWrap: true,
                     itemBuilder: (context, i) {
                       final item = sortedNotes[i];
                       return SizedBox(

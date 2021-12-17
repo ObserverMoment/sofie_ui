@@ -221,8 +221,8 @@ input CreateJournalGoalInput {
 }
 
 input CreateJournalMoodInput {
-  energyScore: Float
-  moodScore: Float
+  energyScore: Int
+  moodScore: Int
   tags: [String!]
   textNote: String
 }
@@ -459,9 +459,9 @@ type JournalGoal {
 
 type JournalMood {
   createdAt: DateTime!
-  energyScore: Float
+  energyScore: Int
   id: ID!
-  moodScore: Float
+  moodScore: Int
   tags: [String!]!
   textNote: String
 }
@@ -956,9 +956,9 @@ input UpdateJournalGoalInput {
 }
 
 input UpdateJournalMoodInput {
-  energyScore: Float
+  energyScore: Int
   id: ID!
-  moodScore: Float
+  moodScore: Int
   tags: [String!]
   textNote: String
 }

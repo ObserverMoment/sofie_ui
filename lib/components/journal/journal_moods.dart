@@ -1,5 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/cards/journal_mood_card.dart';
@@ -29,13 +31,13 @@ class JournalMoods extends StatelessWidget {
         objectId: id,
         typename: kJournalMoodTypename,
         broadcastQueryIds: [
-          GQLOpNames.journalNotes,
+          GQLOpNames.journalMoods,
         ],
         removeAllRefsToId: true);
 
     checkOperationResult(context, result,
         onFail: () => context.showToast(
-            message: 'Sorry, there was a problem deleting this entry.',
+            message: 'Sorry, there was a problem.',
             toastType: ToastType.destructive));
   }
 
@@ -65,32 +67,44 @@ class JournalMoods extends StatelessWidget {
                     ])
               : FABPage(
                   rowButtons: [
-                      FloatingButton(
-                        gradient: Styles.primaryAccentGradient,
-                        contentColor: Styles.white,
-                        onTap: () =>
-                            context.navigateTo(JournalMoodCreatorRoute()),
-                        icon: CupertinoIcons.add,
-                      ),
-                    ],
-                  child: ListView.builder(
-                      itemCount: sortedMoods.length,
-                      itemBuilder: (c, i) => GestureDetector(
-                          onTap: () => print('edit mood'),
-                          child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: AnimatedSlidable(
-                                  key: Key('journal-mood-${sortedMoods[i].id}'),
-                                  index: i,
-                                  itemType: 'Journal Mood',
-                                  itemName: sortedMoods[i].createdAt.dateString,
-                                  removeItem: (index) => _deleteJournalMood(
-                                      context, sortedMoods[i].id),
-                                  secondaryActions: const [],
-                                  child: JournalMoodCard(
-                                    journalMood: sortedMoods[i],
-                                  ))))));
+                    FloatingButton(
+                      gradient: Styles.primaryAccentGradient,
+                      contentColor: Styles.white,
+                      iconSize: 20,
+                      text: 'Add Mood',
+                      onTap: () =>
+                          context.navigateTo(JournalMoodCreatorRoute()),
+                      icon: CupertinoIcons.add,
+                    ),
+                  ],
+                  child: ImplicitlyAnimatedList<JournalMood>(
+                      padding: const EdgeInsets.only(bottom: 60),
+                      items: sortedMoods,
+                      areItemsTheSame: (a, b) => a.id == b.id,
+                      itemBuilder: (context, animation, mood, index) =>
+                          SizeFadeTransition(
+                            animation: animation,
+                            sizeFraction: 0.7,
+                            curve: Curves.easeInOut,
+                            child: GestureDetector(
+                                onTap: () => context.navigateTo(
+                                    JournalMoodCreatorRoute(journalMood: mood)),
+                                child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    child: MySlidable(
+                                        key: Key('journal-mood-${mood.id}'),
+                                        index: index,
+                                        itemType: 'Journal Mood',
+                                        itemName: mood.createdAt.dateString,
+                                        removeItem: (index) =>
+                                            _deleteJournalMood(
+                                                context, mood.id),
+                                        secondaryActions: const [],
+                                        child: JournalMoodCard(
+                                          journalMood: mood,
+                                        )))),
+                          )),
+                );
         });
   }
 }

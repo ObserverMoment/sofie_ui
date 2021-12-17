@@ -9,9 +9,9 @@ class GQLOpNames {
   static String get bodyTrackingEntries =>
       BodyTrackingEntriesQuery().operationName;
 
-  static String get journalGoals => JournalNotesQuery().operationName;
+  static String get journalGoals => JournalGoalsQuery().operationName;
 
-  static String get journalMoods => JournalNotesQuery().operationName;
+  static String get journalMoods => JournalMoodsQuery().operationName;
 
   static String get journalNotes => JournalNotesQuery().operationName;
 
