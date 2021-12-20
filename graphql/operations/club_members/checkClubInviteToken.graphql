@@ -6,7 +6,10 @@ query checkClubInviteToken($id: ID!) {
       Club {
         ...ClubSummary
         Owner {
-          ...UserSummary
+          ...UserAvatarData
+        }
+        Admins {
+          ...UserAvatarData
         }
       }
       introVideoUri

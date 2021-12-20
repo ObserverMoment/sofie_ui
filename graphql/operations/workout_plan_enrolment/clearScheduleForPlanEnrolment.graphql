@@ -5,7 +5,7 @@ mutation clearScheduleForPlanEnrolment($enrolmentId: ID!) {
       ...CompletedWorkoutPlanDayWorkout
     }
     User {
-      ...UserSummary
+      ...UserAvatarData
     }
   }
 }

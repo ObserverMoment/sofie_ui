@@ -6,13 +6,12 @@ import 'package:sofie_ui/components/media/video/video_thumbnail_player.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/social/club_members_grid_list.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class ClubDetailsInfo extends StatelessWidget {
-  final Club club;
+  final ClubSummary club;
   const ClubDetailsInfo({Key? key, required this.club}) : super(key: key);
 
   Size get _kthumbDisplaySize => const Size(120, 120);
@@ -31,7 +30,11 @@ class ClubDetailsInfo extends StatelessWidget {
                   const Icon(CupertinoIcons.location,
                       size: 18, color: Styles.primaryAccent),
                   const SizedBox(width: 2),
-                  MyText(club.location!, color: Styles.primaryAccent)
+                  MyText(
+                    club.location!,
+                    color: Styles.primaryAccent,
+                    size: FONTSIZE.four,
+                  )
                 ],
               ),
             ),
@@ -62,7 +65,7 @@ class ClubDetailsInfo extends StatelessWidget {
               child: ReadMoreTextBlock(
                 text: club.description!,
                 title: club.name,
-                trimLines: 4,
+                trimLines: 16,
               ),
             ),
           const SizedBox(height: 8),
@@ -72,14 +75,14 @@ class ClubDetailsInfo extends StatelessWidget {
               children: [
                 const Icon(CupertinoIcons.person_2),
                 const SizedBox(width: 8),
-                H3('Members (${club.totalMembers})')
+                H3('Admins (${club.admins.length + 1})')
               ],
             ),
           ),
           ClubMembersGridList(
               scrollPhysics: const NeverScrollableScrollPhysics(),
               admins: club.admins,
-              members: club.members,
+              members: const [],
               owner: club.owner,
               onTapAvatar: (userId, _) => context
                   .navigateTo(UserPublicProfileDetailsRoute(userId: userId))),

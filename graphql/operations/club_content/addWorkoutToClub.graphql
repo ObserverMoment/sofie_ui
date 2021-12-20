@@ -2,13 +2,13 @@ mutation addWorkoutToClub($workoutId: ID!, $clubId: ID!) {
   addWorkoutToClub(workoutId: $workoutId, clubId: $clubId) {
     ...Club
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
     ClubInviteTokens {
       ...ClubInviteToken

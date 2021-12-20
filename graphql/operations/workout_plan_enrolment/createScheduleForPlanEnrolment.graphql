@@ -7,7 +7,7 @@ mutation createScheduleForPlanEnrolment(
       ...CompletedWorkoutPlanDayWorkout
     }
     User {
-      ...UserSummary
+      ...UserAvatarData
     }
   }
 }

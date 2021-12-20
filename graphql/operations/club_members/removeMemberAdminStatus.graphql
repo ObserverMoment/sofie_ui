@@ -2,13 +2,13 @@ mutation removeMemberAdminStatus($userId: ID!, $clubId: ID!) {
   removeMemberAdminStatus(userId: $userId, clubId: $clubId) {
     ...Club
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
     ClubInviteTokens {
       ...ClubInviteToken

@@ -2,13 +2,13 @@ mutation removeUserFromClub($userToRemoveId: ID!, $clubId: ID!) {
   removeUserFromClub(userToRemoveId: $userToRemoveId, clubId: $clubId) {
     ...Club
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
     ClubInviteTokens {
       ...ClubInviteToken

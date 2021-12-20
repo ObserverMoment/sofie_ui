@@ -88,10 +88,10 @@ enum BodyweightUnit {
 union CheckClubInviteTokenResult = ClubInviteTokenData | InviteTokenError
 
 type Club {
-  Admins: [UserSummary!]!
+  Admins: [UserAvatarData!]!
   ClubInviteTokens: [ClubInviteToken!]
-  Members: [UserSummary!]!
-  Owner: UserSummary!
+  Members: [UserAvatarData!]!
+  Owner: UserAvatarData!
   WorkoutPlans: [WorkoutPlanSummary!]
   Workouts: [WorkoutSummary!]
   contentAccessScope: ContentAccessScope!
@@ -107,7 +107,7 @@ type Club {
 }
 
 type ClubInviteToken {
-  User: UserSummary!
+  User: UserAvatarData!
   active: Boolean!
   createdAt: DateTime!
   id: ID!
@@ -124,15 +124,28 @@ type ClubInviteTokenData {
   token: String!
 }
 
+type ClubMembers {
+  Admins: [UserAvatarData!]!
+  Members: [UserAvatarData!]
+  Owner: UserAvatarData!
+}
+
 type ClubSummary {
-  Owner: UserSummary!
+  Admins: [UserAvatarData!]!
+  Owner: UserAvatarData!
+  contentAccessScope: ContentAccessScope!
   coverImageUri: String
   createdAt: DateTime!
   description: String
   id: ID!
+  introAudioUri: String
+  introVideoThumbUri: String
+  introVideoUri: String
   location: String
   memberCount: Int!
   name: String!
+  planCount: Int!
+  workoutCount: Int!
 }
 
 type Collection {
@@ -221,8 +234,8 @@ input CreateJournalGoalInput {
 }
 
 input CreateJournalMoodInput {
-  energyScore: Int
-  moodScore: Int
+  energyScore: Int!
+  moodScore: Int!
   tags: [String!]
   textNote: String
 }
@@ -459,9 +472,9 @@ type JournalGoal {
 
 type JournalMood {
   createdAt: DateTime!
-  energyScore: Int
+  energyScore: Int!
   id: ID!
-  moodScore: Int
+  moodScore: Int!
   tags: [String!]!
   textNote: String
 }
@@ -724,13 +737,18 @@ type Query {
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
   checkUniqueClubName(name: String!): Boolean!
   checkUniqueDisplayName(displayName: String!): Boolean!
+  checkUserClubMemberStatus(clubId: ID!): UserClubMemberStatus!
   clubById(id: ID!): Club!
+  clubMembers(clubId: ID!): ClubMembers!
   clubMembersFeedPosts(
     clubId: ID!
     limit: Int!
     offset: Int!
   ): [TimelinePostFullData!]!
   clubSummariesById(ids: [ID!]!): [ClubSummary!]!
+  clubSummaryById(id: ID!): ClubSummary!
+  clubWorkoutPlans(clubId: ID!): [WorkoutPlanSummary!]!
+  clubWorkouts(clubId: ID!): [WorkoutSummary!]!
   equipments: [Equipment!]!
   gymProfiles: [GymProfile!]!
   journalGoals: [JournalGoal!]!
@@ -1213,6 +1231,13 @@ type UserBenchmarkWithBestEntry {
   UserBenchmarkSummary: UserBenchmarkSummary!
 }
 
+enum UserClubMemberStatus {
+  ADMIN
+  MEMBER
+  NONE
+  OWNER
+}
+
 type UserProfile {
   BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
   Clubs: [ClubSummary!]!
@@ -1262,11 +1287,12 @@ type UserSummary {
   avatarUri: String
   displayName: String!
   id: ID!
+  skills: [String!]!
   userProfileScope: UserProfileScope!
 }
 
 type Workout {
-  User: UserSummary!
+  User: UserAvatarData!
   WorkoutGoals: [WorkoutGoal!]!
   WorkoutSections: [WorkoutSection!]!
   WorkoutTags: [WorkoutTag!]!
@@ -1327,7 +1353,7 @@ enum WorkoutMoveRepType {
 }
 
 type WorkoutPlan {
-  User: UserSummary!
+  User: UserAvatarData!
   WorkoutPlanDays: [WorkoutPlanDay!]!
   WorkoutPlanEnrolments: [WorkoutPlanEnrolment!]!
   WorkoutPlanReviews: [WorkoutPlanReview!]!
@@ -1388,7 +1414,7 @@ input WorkoutPlanFiltersInput {
 }
 
 type WorkoutPlanReview {
-  User: UserSummary!
+  User: UserAvatarData!
   comment: String
   createdAt: DateTime!
   id: ID!
@@ -1396,7 +1422,7 @@ type WorkoutPlanReview {
 }
 
 type WorkoutPlanSummary {
-  User: UserSummary!
+  User: UserAvatarData!
   archived: Boolean!
   coverImageUri: String
   createdAt: DateTime!
@@ -1483,7 +1509,7 @@ enum WorkoutSetGeneratorType {
 }
 
 type WorkoutSummary {
-  User: UserSummary!
+  User: UserAvatarData!
   archived: Boolean!
   coverImageUri: String
   createdAt: DateTime!

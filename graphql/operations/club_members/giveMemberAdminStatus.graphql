@@ -2,13 +2,13 @@ mutation giveMemberAdminStatus($userId: ID!, $clubId: ID!) {
   giveMemberAdminStatus(userId: $userId, clubId: $clubId) {
     ...Club
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
     ClubInviteTokens {
       ...ClubInviteToken

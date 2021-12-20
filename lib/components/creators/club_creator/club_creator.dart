@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_info.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_media.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_members.dart';
+import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -21,11 +22,12 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
+/// This creator retrieves the full club data (when editing) before the owner / admin starts editing.
 class ClubCreatorPage extends StatefulWidget {
-  final Club? club;
+  final String? id;
   const ClubCreatorPage({
     Key? key,
-    this.club,
+    this.id,
   }) : super(key: key);
 
   @override
@@ -44,21 +46,6 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
   bool _nameIsAvailable = true;
   final _debouncer = Debouncer();
 
-  Future<void> _checkNameAvailable() async {
-    final _text = _nameController.text;
-    _nameIsValid = _text.length > 2 && _text.length < 21;
-
-    if (_nameIsValid) {
-      _debouncer.run(() async {
-        final isAvailable = await context.graphQLStore.networkOnlyOperation(
-            operation: CheckUniqueClubNameQuery(
-                variables: CheckUniqueClubNameArguments(name: _text)));
-        setState(() => _nameIsAvailable =
-            isAvailable.data != null && isAvailable.data!.checkUniqueClubName);
-      });
-    }
-  }
-
   /// Post-create data. We go straight here in the case of editing a club.
   Club? _activeClub;
   Map<String, dynamic> _activeClubBackup = {};
@@ -70,24 +57,51 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
   bool _uploadingMedia = false;
   late bool _isCreate;
 
+  /// https://stackoverflow.com/questions/57793479/flutter-futurebuilder-gets-constantly-called
+  /// If user is creating then this immediately returns [true].
+  /// Otherwise it gets club data from the API and saves it to [_activeClub].
+  /// Returns a [bool] when completed.
+  late Future<bool> _retrieveClubData;
+
+  Future<bool> _getClubData() async {
+    if (_isCreate) {
+      return true;
+    }
+    final variables = ClubByIdArguments(id: widget.id!);
+    final query = ClubByIdQuery(variables: variables);
+
+    final result =
+        await context.graphQLStore.networkOnlyOperation(operation: query);
+
+    final success = checkOperationResult(context, result);
+
+    if (success) {
+      _activeClub = result.data!.clubById;
+      _activeClubBackup = _activeClub!.toJson();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    _isCreate = widget.club == null;
+    _isCreate = widget.id == null;
 
-    if (!_isCreate) {
-      _activeClub = Club.fromJson(widget.club!.toJson());
-    }
-
-    if (_activeClub == null) {
+    if (_isCreate) {
       _initPreCreateDataFields();
-    } else {
-      /// Create initial backup data.
-      _activeClubBackup = _activeClub!.toJson();
     }
 
     _nameController.addListener(_checkNameAvailable);
+
+    _retrieveClubData = _getClubData();
+  }
+
+  void _updatePageIndex(int i) {
+    Utils.hideKeyboard(context);
+    setState(() => _activePageIndex = i);
   }
 
   void _initPreCreateDataFields() {
@@ -102,9 +116,19 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     });
   }
 
-  void _updatePageIndex(int i) {
-    Utils.hideKeyboard(context);
-    setState(() => _activePageIndex = i);
+  Future<void> _checkNameAvailable() async {
+    final _text = _nameController.text;
+    _nameIsValid = _text.length > 2 && _text.length < 21;
+
+    if (_nameIsValid) {
+      _debouncer.run(() async {
+        final isAvailable = await context.graphQLStore.networkOnlyOperation(
+            operation: CheckUniqueClubNameQuery(
+                variables: CheckUniqueClubNameArguments(name: _text)));
+        setState(() => _nameIsAvailable =
+            isAvailable.data != null && isAvailable.data!.checkUniqueClubName);
+      });
+    }
   }
 
   Future<void> _createClub() async {
@@ -448,121 +472,124 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyPageScaffold(
-      navigationBar: MyNavBar(
-        withoutLeading: true,
-        middle: Row(
+    return FutureBuilderHandler<bool>(
+      future: _retrieveClubData,
+      builder: (data) => MyPageScaffold(
+        navigationBar: MyNavBar(
+          withoutLeading: true,
+          middle: Row(
+            children: [
+              NavBarLargeTitle(_isCreate ? 'Create Club' : 'Manage Club'),
+            ],
+          ),
+          trailing: _savingToDB
+              ? const NavBarTrailingRow(
+                  children: [
+                    NavBarLoadingDots(),
+                  ],
+                )
+              : _activeClub == null
+                  ? NavBarCancelButton(_close)
+                  : NavBarTextButton(_close, 'Done'),
+        ),
+        child: Column(
           children: [
-            NavBarLargeTitle(_isCreate ? 'Create Club' : 'Manage Club'),
+            SizedBox(
+              height: 80,
+              child: AnimatedSwitcher(
+                duration: kStandardAnimationDuration,
+                child: _uploadingMedia
+                    ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          MyText('Uploading media'),
+                          SizedBox(width: 6),
+                          NavBarLoadingDots()
+                        ],
+                      )
+                    : _activeClub == null
+                        ? PrimaryButton(
+                            text: 'Create Club',
+                            onPressed: _createClub,
+                            prefixIconData: CupertinoIcons.add,
+                            disabled: !_nameIsValid || !_nameIsAvailable,
+                            loading: _savingToDB,
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: MySlidingSegmentedControl<int>(
+                                  value: _activePageIndex,
+                                  updateValue: _updatePageIndex,
+                                  children: const {
+                                    0: 'Info',
+                                    1: 'Media',
+                                    2: 'Members',
+                                  }),
+                            ),
+                          ),
+              ),
+            ),
+            if (_activeClub == null)
+              Expanded(
+                child: _PreCreateInputUI(
+                  descriptionController: _descriptionController,
+                  nameIsValid: _nameIsValid,
+                  nameIsAvailable: _nameIsAvailable,
+                  locationController: _locationController,
+                  nameController: _nameController,
+                ),
+              )
+            else
+              Expanded(
+                child: IndexedStack(
+                  index: _activePageIndex,
+                  children: [
+                    ClubCreatorInfo(
+                      club: _activeClub!,
+                      updateClub: _updateClub,
+                    ),
+                    ClubCreatorMedia(
+                      coverImageUri: _activeClub?.coverImageUri,
+                      onImageUploaded: (imageUri) =>
+                          _onMediaUploadComplete({'coverImageUri': imageUri}),
+                      removeImage: (_) =>
+                          _onMediaUploadComplete({'coverImageUri': null}),
+                      introVideoUri: _activeClub?.introVideoUri,
+                      introVideoThumbUri: _activeClub?.introVideoThumbUri,
+                      onVideoUploaded: (videoUri, thumbUri) =>
+                          _onMediaUploadComplete({
+                        'introVideoUri': videoUri,
+                        'introVideoThumbUri': thumbUri
+                      }),
+                      removeVideo: () => _onMediaUploadComplete(
+                          {'introVideoUri': null, 'introVideoThumbUri': null}),
+                      introAudioUri: _activeClub?.introAudioUri,
+                      onAudioUploaded: (audioUri) =>
+                          _onMediaUploadComplete({'introAudioUri': audioUri}),
+                      removeAudio: () =>
+                          _onMediaUploadComplete({'introAudioUri': null}),
+                      onMediaUploadStart: () =>
+                          setState(() => _uploadingMedia = true),
+                      onMediaUploadFail: () =>
+                          setState(() => _uploadingMedia = false),
+                    ),
+                    ClubCreatorMembers(
+                      club: _activeClub!,
+                      onCreateInviteToken: _addNewInviteTokenToState,
+                      onUpdateInviteToken: _addUpdatedInviteTokenToState,
+                      deleteClubInviteToken: (token) =>
+                          _deleteClubInviteToken(token),
+                      giveMemberAdminStatus: _giveMemberAdminStatus,
+                      removeMemberAdminStatus: _removeMemberAdminStatus,
+                      removeUserFromClub: _removeUserFromClub,
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
-        trailing: _savingToDB
-            ? const NavBarTrailingRow(
-                children: [
-                  NavBarLoadingDots(),
-                ],
-              )
-            : _activeClub == null
-                ? NavBarCancelButton(_close)
-                : NavBarTextButton(_close, 'Done'),
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 80,
-            child: AnimatedSwitcher(
-              duration: kStandardAnimationDuration,
-              child: _uploadingMedia
-                  ? Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        MyText('Uploading media'),
-                        SizedBox(width: 6),
-                        NavBarLoadingDots()
-                      ],
-                    )
-                  : _activeClub == null
-                      ? PrimaryButton(
-                          text: 'Create Club',
-                          onPressed: _createClub,
-                          prefixIconData: CupertinoIcons.add,
-                          disabled: !_nameIsValid || !_nameIsAvailable,
-                          loading: _savingToDB,
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: MySlidingSegmentedControl<int>(
-                                value: _activePageIndex,
-                                updateValue: _updatePageIndex,
-                                children: const {
-                                  0: 'Info',
-                                  1: 'Media',
-                                  2: 'Members',
-                                }),
-                          ),
-                        ),
-            ),
-          ),
-          if (_activeClub == null)
-            Expanded(
-              child: _PreCreateInputUI(
-                descriptionController: _descriptionController,
-                nameIsValid: _nameIsValid,
-                nameIsAvailable: _nameIsAvailable,
-                locationController: _locationController,
-                nameController: _nameController,
-              ),
-            )
-          else
-            Expanded(
-              child: IndexedStack(
-                index: _activePageIndex,
-                children: [
-                  ClubCreatorInfo(
-                    club: _activeClub!,
-                    updateClub: _updateClub,
-                  ),
-                  ClubCreatorMedia(
-                    coverImageUri: _activeClub?.coverImageUri,
-                    onImageUploaded: (imageUri) =>
-                        _onMediaUploadComplete({'coverImageUri': imageUri}),
-                    removeImage: (_) =>
-                        _onMediaUploadComplete({'coverImageUri': null}),
-                    introVideoUri: _activeClub?.introVideoUri,
-                    introVideoThumbUri: _activeClub?.introVideoThumbUri,
-                    onVideoUploaded: (videoUri, thumbUri) =>
-                        _onMediaUploadComplete({
-                      'introVideoUri': videoUri,
-                      'introVideoThumbUri': thumbUri
-                    }),
-                    removeVideo: () => _onMediaUploadComplete(
-                        {'introVideoUri': null, 'introVideoThumbUri': null}),
-                    introAudioUri: _activeClub?.introAudioUri,
-                    onAudioUploaded: (audioUri) =>
-                        _onMediaUploadComplete({'introAudioUri': audioUri}),
-                    removeAudio: () =>
-                        _onMediaUploadComplete({'introAudioUri': null}),
-                    onMediaUploadStart: () =>
-                        setState(() => _uploadingMedia = true),
-                    onMediaUploadFail: () =>
-                        setState(() => _uploadingMedia = false),
-                  ),
-                  ClubCreatorMembers(
-                    club: _activeClub!,
-                    onCreateInviteToken: _addNewInviteTokenToState,
-                    onUpdateInviteToken: _addUpdatedInviteTokenToState,
-                    deleteClubInviteToken: (token) =>
-                        _deleteClubInviteToken(token),
-                    giveMemberAdminStatus: _giveMemberAdminStatus,
-                    removeMemberAdminStatus: _removeMemberAdminStatus,
-                    removeUserFromClub: _removeUserFromClub,
-                  ),
-                ],
-              ),
-            ),
-        ],
       ),
     );
   }

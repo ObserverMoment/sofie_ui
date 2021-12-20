@@ -15,7 +15,6 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:collection/collection.dart';
-import 'package:sofie_ui/services/utils.dart';
 
 const List<String> kGoodFeelings = [
   'Calm',
@@ -64,18 +63,14 @@ class _CreateMood extends StatefulWidget {
 }
 
 class _CreateMoodState extends State<_CreateMood> {
-  final JournalMood _activeJournalMood = JournalMood()
-    ..id = 'temp'
-    ..createdAt = DateTime.now()
-    ..tags = [];
+  int? _moodScore;
+  int? _energyScore;
+  List<String> _tags = [];
+  String? _textNote;
 
   bool _saving = false;
 
-  bool get _validToSubmit =>
-      _activeJournalMood.moodScore != null ||
-      _activeJournalMood.energyScore != null ||
-      _activeJournalMood.tags.isNotEmpty ||
-      Utils.textNotNull(_activeJournalMood.textNote);
+  bool get _validToSubmit => _moodScore != null && _energyScore != null;
 
   Future<void> _saveAndClose() async {
     if (_validToSubmit) {
@@ -84,10 +79,10 @@ class _CreateMoodState extends State<_CreateMood> {
       });
       final variables = CreateJournalMoodArguments(
           data: CreateJournalMoodInput(
-              energyScore: _activeJournalMood.energyScore,
-              moodScore: _activeJournalMood.moodScore,
-              tags: _activeJournalMood.tags,
-              textNote: _activeJournalMood.textNote));
+              energyScore: _energyScore!,
+              moodScore: _moodScore!,
+              tags: _tags,
+              textNote: _textNote));
 
       final result = await context.graphQLStore.create(
         mutation: CreateJournalMoodMutation(variables: variables),
@@ -141,18 +136,15 @@ class _CreateMoodState extends State<_CreateMood> {
               ),
       ),
       child: _Inputs(
-          moodScore: _activeJournalMood.moodScore,
-          updateMoodScore: (score) =>
-              setState(() => _activeJournalMood.moodScore = score),
-          energyScore: _activeJournalMood.energyScore,
-          updateEnergyScore: (score) =>
-              setState(() => _activeJournalMood.energyScore = score),
-          tags: _activeJournalMood.tags,
-          toggleTag: (tag) => setState(() => _activeJournalMood.tags =
-              _activeJournalMood.tags.toggleItem<String>(tag)),
-          textNote: _activeJournalMood.textNote,
-          updateTextNote: (note) =>
-              setState(() => _activeJournalMood.textNote = note)),
+          moodScore: _moodScore,
+          updateMoodScore: (score) => setState(() => _moodScore = score),
+          energyScore: _energyScore,
+          updateEnergyScore: (score) => setState(() => _energyScore = score),
+          tags: _tags,
+          toggleTag: (tag) =>
+              setState(() => _tags = _tags.toggleItem<String>(tag)),
+          textNote: _textNote,
+          updateTextNote: (note) => setState(() => _textNote = note)),
     );
   }
 }
@@ -278,6 +270,10 @@ class _Inputs extends StatelessWidget {
           child: Column(
             children: [
               _heading('How is your mood?'),
+              const MyText(
+                '(REQUIRED)',
+                size: FONTSIZE.two,
+              ),
               _spacer,
               _ScoreSelectorInput(
                 score: moodScore,
@@ -292,6 +288,10 @@ class _Inputs extends StatelessWidget {
           child: Column(
             children: [
               _heading('How are your energy levels?'),
+              const MyText(
+                '(REQUIRED)',
+                size: FONTSIZE.two,
+              ),
               _spacer,
               _ScoreSelectorInput(
                 score: energyScore,

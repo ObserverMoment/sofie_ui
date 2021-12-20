@@ -19,8 +19,14 @@ fragment ClubSummary on ClubSummary {
   name
   description
   coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  contentAccessScope
   location
   memberCount
+  workoutCount
+  planCount
 }
 
 fragment ClubInviteToken on ClubInviteToken {

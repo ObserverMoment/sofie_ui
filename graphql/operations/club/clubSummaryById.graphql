@@ -1,5 +1,5 @@
-query userClubs {
-  userClubs {
+query clubSummaryById($id: ID!) {
+  clubSummaryById(id: $id) {
     ...ClubSummary
     Owner {
       ...UserAvatarData

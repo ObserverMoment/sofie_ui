@@ -7,7 +7,7 @@ query workoutPlanEnrolmentById($id: ID!) {
         ...CompletedWorkoutPlanDayWorkout
       }
       User {
-        ...UserSummary
+        ...UserAvatarData
       }
     }
     WorkoutPlan {

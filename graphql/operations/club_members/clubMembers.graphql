@@ -1,14 +1,13 @@
-query clubMembers($id: ID!) {
-  clubMembers: clubById(id: $id) {
-    ...Club
+query clubMembers($clubId: ID!) {
+  clubMembers(clubId: $clubId) {
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
   }
 }

@@ -2,7 +2,10 @@ query publicClubs {
   publicClubs {
     ...ClubSummary
     Owner {
-      ...UserSummary
+      ...UserAvatarData
+    }
+    Admins {
+      ...UserAvatarData
     }
   }
 }

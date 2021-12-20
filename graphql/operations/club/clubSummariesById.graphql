@@ -2,7 +2,10 @@ query clubSummariesById($ids: [ID!]!) {
   clubSummariesById(ids: $ids) {
     ...ClubSummary
     Owner {
-      ...UserSummary
+      ...UserAvatarData
+    }
+    Admins {
+      ...UserAvatarData
     }
   }
 }

@@ -7,7 +7,7 @@ mutation deleteCompletedWorkoutPlanDayWorkout(
       ...CompletedWorkoutPlanDayWorkout
     }
     User {
-      ...UserSummary
+      ...UserAvatarData
     }
   }
 }

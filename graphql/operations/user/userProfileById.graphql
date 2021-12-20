@@ -4,7 +4,10 @@ query userProfileById($userId: ID!) {
     Clubs {
       ...ClubSummary
       Owner {
-        ...UserSummary
+        ...UserAvatarData
+      }
+      Admins {
+        ...UserAvatarData
       }
     }
     LifetimeLogStatsSummary {

@@ -5,13 +5,13 @@ mutation addUserToClubViaInviteToken($userId: ID!, $clubInviteTokenId: ID!) {
   ) {
     ...Club
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
     ClubInviteTokens {
       ...ClubInviteToken

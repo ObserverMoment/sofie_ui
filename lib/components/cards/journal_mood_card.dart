@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
@@ -23,40 +22,52 @@ class JournalMoodCard extends StatelessWidget {
 
   int get kMaxScore => 4;
 
+  double get kScoreDisplayDiameter => 60.0;
+
   List<Widget> _buildScoreIndicators(BuildContext context) {
     final tags = ['Mood', 'Energy'];
 
     return [
-      for (final s in [
-        journalMood.moodScore,
-        journalMood.energyScore,
-      ])
-        if (s != null) s
+      journalMood.moodScore,
+      journalMood.energyScore,
     ]
         .mapIndexed((index, score) => Column(
               children: [
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 3),
-                  child: CircularPercentIndicator(
-                    startAngle: 90,
-                    backgroundColor: context.theme.background.withOpacity(0.3),
-                    radius: 50.0,
-                    lineWidth: 30.0,
-                    percent: score / kMaxScore,
-                    center: Opacity(
-                      opacity: 0.8,
-                      child: score > 2
-                          ? const Icon(CupertinoIcons.hand_thumbsup_fill)
-                          : score == 2
-                              ? null
-                              : const Icon(
-                                  CupertinoIcons.exclamationmark_triangle_fill,
-                                  color: Styles.errorRed,
-                                ),
+                  child: ClipOval(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          height: kScoreDisplayDiameter,
+                          width: kScoreDisplayDiameter,
+                          color: context.theme.background,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            height: kScoreDisplayDiameter * (score / kMaxScore),
+                            width: kScoreDisplayDiameter,
+                            color: Color.lerp(kBadScoreColor, kGoodScoreColor,
+                                score / kMaxScore),
+                          ),
+                        ),
+                        Opacity(
+                          opacity: 0.6,
+                          child: score > 2
+                              ? const Icon(CupertinoIcons.checkmark_alt)
+                              : score == 2
+                                  ? null
+                                  : const Icon(
+                                      CupertinoIcons
+                                          .exclamationmark_triangle_fill,
+                                      color: Styles.errorRed,
+                                    ),
+                        )
+                      ],
                     ),
-                    progressColor: Color.lerp(
-                        kBadScoreColor, kGoodScoreColor, score / kMaxScore),
                   ),
                 ),
                 MyText(
@@ -70,48 +81,59 @@ class JournalMoodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                spacing: 8,
-                runSpacing: 8,
-                children: _buildScoreIndicators(context),
-              ),
-              MyText(
-                journalMood.createdAt.minimalDateString,
-                size: FONTSIZE.four,
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ContentBox(
+                  backgroundColor: context.theme.background,
+                  child: MyText(
+                    journalMood.createdAt.minimalDateString,
+                  ),
+                ),
+                Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _buildScoreIndicators(context),
+                ),
+              ],
+            ),
           ),
           if (journalMood.tags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0, top: 16, right: 4),
-              child: Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                spacing: 10,
-                runSpacing: 10,
-                children: journalMood.tags
-                    .map((t) => kGoodFeelings.contains(t)
-                        ? Tag(
-                            textColor: Styles.white,
-                            color: kGoodScoreColor,
-                            fontSize: FONTSIZE.three,
-                            tag: t,
-                          )
-                        : Tag(
-                            tag: t,
-                            color: material.Colors.transparent,
-                            textColor: context.theme.primary,
-                          ))
-                    .toList(),
-              ),
+            Column(
+              children: [
+                const HorizontalLine(),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 4.0, top: 16, right: 4, bottom: 4),
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: journalMood.tags
+                        .map((t) => kGoodFeelings.contains(t)
+                            ? Tag(
+                                textColor: Styles.white,
+                                color: kGoodScoreColor,
+                                fontSize: FONTSIZE.three,
+                                tag: t,
+                              )
+                            : Tag(
+                                tag: t,
+                                color: material.Colors.transparent,
+                                textColor: context.theme.primary,
+                              ))
+                        .toList(),
+                  ),
+                ),
+              ],
             ),
           if (Utils.textNotNull(journalMood.textNote))
             Column(

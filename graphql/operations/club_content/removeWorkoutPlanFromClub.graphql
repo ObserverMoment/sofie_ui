@@ -2,13 +2,13 @@ mutation removeWorkoutPlanFromClub($workoutPlanId: ID!, $clubId: ID!) {
   removeWorkoutPlanFromClub(workoutPlanId: $workoutPlanId, clubId: $clubId) {
     ...Club
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
+      ...UserAvatarData
     }
     Members {
-      ...UserSummary
+      ...UserAvatarData
     }
     ClubInviteTokens {
       ...ClubInviteToken

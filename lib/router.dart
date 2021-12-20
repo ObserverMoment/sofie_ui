@@ -4,7 +4,7 @@ import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
 import 'package:sofie_ui/components/creators/gym_profile_creator.dart';
-import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creator_page-archived.dart';
+import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creator_page.dart';
 import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';

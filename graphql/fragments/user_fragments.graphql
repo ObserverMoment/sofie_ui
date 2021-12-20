@@ -96,11 +96,3 @@ fragment UserProfileSummary on UserProfileSummary {
   planCount
   skills
 }
-
-fragment UserSummary on UserSummary {
-  __typename
-  id
-  avatarUri
-  displayName
-  userProfileScope
-}
