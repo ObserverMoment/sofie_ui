@@ -1,23 +1,5 @@
 mutation removeWorkoutFromClub($workoutId: ID!, $clubId: ID!) {
   removeWorkoutFromClub(workoutId: $workoutId, clubId: $clubId) {
-    ...Club
-    Owner {
-      ...UserAvatarData
-    }
-    Admins {
-      ...UserAvatarData
-    }
-    Members {
-      ...UserAvatarData
-    }
-    ClubInviteTokens {
-      ...ClubInviteToken
-    }
-    Workouts {
-      ...WorkoutSummary
-    }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
-    }
+    ...ClubWorkouts
   }
 }

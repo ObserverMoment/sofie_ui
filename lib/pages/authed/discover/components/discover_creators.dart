@@ -9,7 +9,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class DiscoverCreators extends StatelessWidget {
   const DiscoverCreators({Key? key}) : super(key: key);
@@ -22,11 +21,14 @@ class DiscoverCreators extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 6, bottom: 10),
+          padding: const EdgeInsets.only(left: 12.0, top: 8, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const MyHeaderText('Creators'),
+              const MyHeaderText(
+                'Creators',
+                size: FONTSIZE.five,
+              ),
               IconButton(
                   iconData: CupertinoIcons.compass,
                   onPressed: () =>
@@ -38,32 +40,31 @@ class DiscoverCreators extends StatelessWidget {
             key: Key('DiscoverCreators- ${query.operationName}'),
             query: query,
             loadingIndicator: Container(
-              height: 190,
+              height: 300,
               padding: const EdgeInsets.only(top: 2.0, left: 12),
               child: const ShimmerFriendsList(
-                avatarSize: 140,
+                avatarSize: 120,
               ),
             ),
             builder: (data) {
-              final profiles = data.userProfiles;
-              return Container(
-                height: 190,
-                padding: const EdgeInsets.only(top: 2.0, left: 12),
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (c, i) => Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: GestureDetector(
+              return SizedBox(
+                height: 290,
+                child: GridView.count(
+                  padding: EdgeInsets.zero,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  scrollDirection: Axis.horizontal,
+                  crossAxisCount: 2,
+                  children: data.userProfiles
+                      .map((p) => GestureDetector(
                             onTap: () => context.navigateTo(
-                                UserPublicProfileDetailsRoute(
-                                    userId: profiles[i].id)),
+                                UserPublicProfileDetailsRoute(userId: p.id)),
                             child: _CreatorAvatar(
-                              profileSummary: profiles[i],
+                              profileSummary: p,
                             ),
-                          ),
-                        )),
+                          ))
+                      .toList(),
+                ),
               );
             })
       ],
@@ -78,24 +79,19 @@ class _CreatorAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 146,
-      child: Column(children: [
-        UserAvatar(
-          elevation: 0,
-          avatarUri: profileSummary.avatarUri,
-          size: 140,
-        ),
-        const SizedBox(height: 8),
-        ContentBox(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            backgroundColor: context.theme.cardBackground.withOpacity(0.5),
-            child: MyText(
-              profileSummary.displayName,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            )),
-      ]),
-    );
+    return Column(children: [
+      UserAvatar(
+        elevation: 1,
+        avatarUri: profileSummary.avatarUri,
+        size: 120,
+      ),
+      const SizedBox(height: 4),
+      MyText(
+        profileSummary.displayName,
+        maxLines: 2,
+        textAlign: TextAlign.center,
+        size: FONTSIZE.two,
+      ),
+    ]);
   }
 }

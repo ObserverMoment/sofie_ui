@@ -4,17 +4,17 @@ import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Displays a grid of all the users in the club.
 /// Shows tags on the owner and the admins.
 class ClubMembersGridList extends StatelessWidget {
-  final UserSummary owner;
-  final List<UserSummary> admins;
-  final List<UserSummary> members;
+  final UserAvatarData owner;
+  final List<UserAvatarData> admins;
+  final List<UserAvatarData> members;
   final ScrollPhysics? scrollPhysics;
-  final void Function(String userId, ClubMemberType memberType) onTapAvatar;
+  final void Function(String userId, UserClubMemberStatus memberType)
+      onTapAvatar;
   const ClubMembersGridList(
       {Key? key,
       required this.members,
@@ -53,7 +53,7 @@ class ClubMembersGridList extends StatelessWidget {
           {required BuildContext context,
           required String userId,
           required Widget child,
-          required ClubMemberType memberType}) =>
+          required UserClubMemberStatus memberType}) =>
       GestureDetector(
         onTap: () => onTapAvatar(userId, memberType),
         child: child,
@@ -73,7 +73,7 @@ class ClubMembersGridList extends StatelessWidget {
         _gestureDetectorWrap(
           context: context,
           userId: owner.id,
-          memberType: ClubMemberType.owner,
+          memberType: UserClubMemberStatus.owner,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -94,7 +94,7 @@ class ClubMembersGridList extends StatelessWidget {
             .map((a) => _gestureDetectorWrap(
                   context: context,
                   userId: a.id,
-                  memberType: ClubMemberType.admin,
+                  memberType: UserClubMemberStatus.admin,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -116,7 +116,7 @@ class ClubMembersGridList extends StatelessWidget {
             .map((m) => _gestureDetectorWrap(
                   context: context,
                   userId: m.id,
-                  memberType: ClubMemberType.member,
+                  memberType: UserClubMemberStatus.member,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

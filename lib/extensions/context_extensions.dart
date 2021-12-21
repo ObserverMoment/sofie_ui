@@ -304,7 +304,7 @@ extension BuildContextExtension on BuildContext {
     required String message,
     Widget? icon,
     ToastType toastType = ToastType.standard,
-    TextAlign textAlign = TextAlign.start,
+    TextAlign textAlign = TextAlign.center,
     FlushbarPosition flushbarPosition = FlushbarPosition.TOP,
   }) {
     final contentColor = toastType == ToastType.destructive
@@ -312,13 +312,14 @@ extension BuildContextExtension on BuildContext {
         : readTheme.primary;
 
     Flushbar(
-            backgroundColor: readTheme.cardBackground.withOpacity(0.80),
+            backgroundColor: readTheme.cardBackground.withOpacity(0.90),
             flushbarPosition: flushbarPosition,
             flushbarStyle: FlushbarStyle.FLOATING,
             animationDuration: const Duration(milliseconds: 300),
             messageText:
                 MyText(message, color: contentColor, textAlign: textAlign),
-            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
             duration: const Duration(seconds: 3),
             blockBackgroundInteraction: false,
             isDismissible: true,

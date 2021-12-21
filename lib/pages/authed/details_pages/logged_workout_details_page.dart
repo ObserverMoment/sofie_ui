@@ -55,7 +55,7 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
               getParameterizedQueryId(LoggedWorkoutByIdQuery(
                   variables: LoggedWorkoutByIdArguments(id: id)))
             ],
-            removeRefFromQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery],
+            removeRefFromQueries: [GQLNullVarsKeys.userLoggedWorkouts],
           );
 
           if (result.hasErrors) {

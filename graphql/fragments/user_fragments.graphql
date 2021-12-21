@@ -4,6 +4,7 @@ fragment UserAvatarData on UserAvatarData {
   avatarUri
   displayName
 }
+
 fragment UserBenchmarkSummary on UserBenchmarkSummary {
   __typename
   id

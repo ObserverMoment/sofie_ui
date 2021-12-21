@@ -155,7 +155,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   bool writeAllChangesToStore() {
     final success = context.graphQLStore.writeDataToStore(
         data: loggedWorkout.toJson(),
-        broadcastQueryIds: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
+        broadcastQueryIds: [GQLNullVarsKeys.userLoggedWorkouts]);
     return success;
   }
 
@@ -171,7 +171,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     final result = await context.graphQLStore.create(
         mutation: CreateLoggedWorkoutMutation(variables: variables),
-        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
+        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
 
     checkOperationResult(context, result,
         onFail: () => context.showToast(
@@ -492,7 +492,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     context.graphQLStore.writeDataToStore(
         data: updated.toJson(),
-        broadcastQueryIds: [GQLOpNames.userScheduledWorkoutsQuery]);
+        broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
   }
 
   /// Refetches from the network the enrolments query (summaries) and the details query.
@@ -500,8 +500,8 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   static Future<void> refetchWorkoutPlanEnrolmentQueries(
       BuildContext context, String workoutPlanEnrolmentId) async {
     await context.graphQLStore.refetchQueriesByIds([
-      GQLOpNames.workoutPlanEnrolmentsQuery,
-      GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(workoutPlanEnrolmentId)
+      GQLOpNames.workoutPlanEnrolments,
+      GQLVarParamKeys.workoutPlanEnrolmentById(workoutPlanEnrolmentId)
     ]);
   }
 

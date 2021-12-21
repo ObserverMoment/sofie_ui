@@ -96,7 +96,6 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
         padding: EdgeInsets.zero,
         // https://stackoverflow.com/questions/57913888/how-to-consume-provider-after-navigating-to-another-route
         onPressed: () => context.push(
-          fullscreenDialog: true,
           child: ChangeNotifierProvider<LoggedWorkoutCreatorBloc>.value(
             value: bloc,
             child: pageChild,

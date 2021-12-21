@@ -7,9 +7,9 @@ import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_c
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator_structure.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -57,7 +57,7 @@ class _WorkoutPlanCreatorPageState extends State<WorkoutPlanCreatorPage> {
               // The WorkoutPlanSummary gets immediately added to the userWorkoutPlans query when a workout is created.
               context.graphQLStore.writeDataToStore(
                   data: data.createWorkoutPlan.summary.toJson(),
-                  addRefToQueries: [GQLOpNames.userWorkoutPlansQuery]);
+                  addRefToQueries: [GQLOpNames.userWorkoutPlans]);
             });
 
     checkOperationResult(context, result, onSuccess: () {
@@ -146,11 +146,19 @@ class __MainUIState extends State<_MainUI> {
                             MyText('Uploading media, please wait...'),
                           ],
                         ))
-                    : MyTabBarNav(
-                        titles: const ['Info', 'Structure', 'Media'],
-                        handleTabChange: (i) =>
-                            setState(() => _activeTabIndex = i),
-                        activeTabIndex: _activeTabIndex),
+                    : Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        width: double.infinity,
+                        child: MySlidingSegmentedControl<int>(
+                            value: _activeTabIndex,
+                            children: const {
+                              0: 'Info',
+                              1: 'Structure',
+                              2: 'Media'
+                            },
+                            updateValue: (i) =>
+                                setState(() => _activeTabIndex = i)),
+                      ),
               ),
               Expanded(
                   child: IndexedStack(

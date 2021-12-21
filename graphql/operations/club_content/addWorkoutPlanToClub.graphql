@@ -1,23 +1,5 @@
 mutation addWorkoutPlanToClub($workoutPlanId: ID!, $clubId: ID!) {
   addWorkoutPlanToClub(workoutPlanId: $workoutPlanId, clubId: $clubId) {
-    ...Club
-    Owner {
-      ...UserAvatarData
-    }
-    Admins {
-      ...UserAvatarData
-    }
-    Members {
-      ...UserAvatarData
-    }
-    ClubInviteTokens {
-      ...ClubInviteToken
-    }
-    Workouts {
-      ...WorkoutSummary
-    }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
-    }
+    ...ClubWorkoutPlans
   }
 }

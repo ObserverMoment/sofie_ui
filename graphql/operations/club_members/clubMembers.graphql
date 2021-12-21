@@ -1,13 +1,15 @@
 query clubMembers($clubId: ID!) {
   clubMembers(clubId: $clubId) {
+    __typename
+    id
     Owner {
-      ...UserAvatarData
+      ...ClubMemberSummary
     }
     Admins {
-      ...UserAvatarData
+      ...ClubMemberSummary
     }
     Members {
-      ...UserAvatarData
+      ...ClubMemberSummary
     }
   }
 }

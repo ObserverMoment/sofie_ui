@@ -2,25 +2,5 @@ mutation addUserToClubViaInviteToken($userId: ID!, $clubInviteTokenId: ID!) {
   addUserToClubViaInviteToken(
     userId: $userId
     clubInviteTokenId: $clubInviteTokenId
-  ) {
-    ...Club
-    Owner {
-      ...UserAvatarData
-    }
-    Admins {
-      ...UserAvatarData
-    }
-    Members {
-      ...UserAvatarData
-    }
-    ClubInviteTokens {
-      ...ClubInviteToken
-    }
-    Workouts {
-      ...WorkoutSummary
-    }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
-    }
-  }
+  )
 }

@@ -104,7 +104,7 @@ class CollectionManager {
         mutation: AddWorkoutToCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -133,7 +133,7 @@ class CollectionManager {
         mutation: RemoveWorkoutFromCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -164,7 +164,7 @@ class CollectionManager {
         mutation: AddWorkoutPlanToCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -193,7 +193,7 @@ class CollectionManager {
         mutation: RemoveWorkoutPlanFromCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {

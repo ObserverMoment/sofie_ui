@@ -6,7 +6,6 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -83,17 +82,18 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
     final variables = AddWorkoutPlanToClubArguments(
         clubId: widget.clubId, workoutPlanId: workoutPlan.id);
 
-    final result = await context.graphQLStore
-        .mutate<AddWorkoutPlanToClub$Mutation, AddWorkoutPlanToClubArguments>(
-            mutation: AddWorkoutPlanToClubMutation(variables: variables),
-            broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.clubId)]);
+    final result = await context.graphQLStore.mutate<
+            AddWorkoutPlanToClub$Mutation, AddWorkoutPlanToClubArguments>(
+        mutation: AddWorkoutPlanToClubMutation(variables: variables),
+        refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
+        broadcastQueryIds: [GQLVarParamKeys.clubWorkoutPlans(widget.clubId)]);
 
     setState(() {
       _loading = false;
     });
 
     checkOperationResult(context, result,
-        onSuccess: () => context.showToast(message: 'Plan added.'),
+        onSuccess: () => context.showToast(message: 'Plan Added'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem.',
             toastType: ToastType.destructive));
@@ -122,28 +122,19 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
             RemoveWorkoutPlanFromClub$Mutation,
             RemoveWorkoutPlanFromClubArguments>(
         mutation: RemoveWorkoutPlanFromClubMutation(variables: variables),
-        broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.clubId)]);
+        refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
+        broadcastQueryIds: [GQLVarParamKeys.clubWorkoutPlans(widget.clubId)]);
 
     setState(() {
       _loading = false;
     });
 
     checkOperationResult(context, result,
-        onSuccess: () => context.showToast(message: 'Plan removed.'),
+        onSuccess: () => context.showToast(message: 'Plan Removed'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem.',
             toastType: ToastType.destructive));
   }
-
-  Widget get _placeholder => const SizedBox(
-        height: 100,
-        child: Center(
-          child: MyText(
-            'No Plans',
-            subtext: true,
-          ),
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
@@ -153,13 +144,14 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
     return QueryObserver<ClubWorkoutPlans$Query, ClubWorkoutPlansArguments>(
         key: Key('ClubDetailsWorkoutPlans - ${query.operationName}'),
         query: query,
+        parameterizeQuery: true,
         builder: (data) {
-          final workouts = data.clubWorkoutPlans;
+          final workoutPlans = data.clubWorkoutPlans.workoutPlans;
 
           return MyPageScaffold(
               child: NestedScrollView(
             headerSliverBuilder: (c, i) =>
-                [const MySliverNavbar(title: 'Club Plans')],
+                [const MySliverNavbar(title: 'Plans')],
             body: widget.isOwnerOrAdmin
                 ? FABPage(
                     rowButtonsAlignment: MainAxisAlignment.center,
@@ -173,11 +165,11 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
                     ],
                     child: _ClubWorkoutPlansList(
                       handleWorkoutPlanTap: _handleWorkoutPlanTap,
-                      workoutPlans: workouts,
+                      workoutPlans: workoutPlans,
                     ))
                 : _ClubWorkoutPlansList(
                     handleWorkoutPlanTap: _handleWorkoutPlanTap,
-                    workoutPlans: workouts,
+                    workoutPlans: workoutPlans,
                   ),
           ));
         });

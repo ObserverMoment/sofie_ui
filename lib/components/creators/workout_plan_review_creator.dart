@@ -138,9 +138,9 @@ class _WorkoutPlanReviewCreatorPageState
       data: updatedParentWorkoutPlan.toJson(),
       broadcastQueryIds: [
         UserWorkoutPlansQuery().operationName,
-        GQLVarParamKeys.workoutPlanByIdQuery(widget.parentWorkoutPlanId),
+        GQLVarParamKeys.workoutPlanById(widget.parentWorkoutPlanId),
         WorkoutPlanEnrolmentsQuery().operationName,
-        GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(
+        GQLVarParamKeys.workoutPlanEnrolmentById(
             widget.parentWorkoutPlanEnrolmentId),
       ],
     );

@@ -73,11 +73,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
     final result = await context.graphQLStore.mutate(
         mutation: CreateScheduleForPlanEnrolmentMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.userScheduledWorkoutsQuery,
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     checkOperationResult(
@@ -108,11 +108,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
     final result = await context.graphQLStore.mutate(
         mutation: ClearScheduleForPlanEnrolmentMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.userScheduledWorkoutsQuery,
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     checkOperationResult(
@@ -144,10 +144,10 @@ class _WorkoutPlanEnrolmentDetailsPageState
         mutation:
             ClearWorkoutPlanEnrolmentProgressMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     checkOperationResult(
@@ -204,11 +204,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
           context.graphQLStore.writeDataToStore(data: plan.toJson());
         },
         broadcastQueryIds: [
-          GQLOpNames.workoutPlanEnrolmentsQuery,
-          GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id)
+          GQLOpNames.workoutPlanEnrolments,
+          GQLVarParamKeys.workoutPlanById(workoutPlan.id)
         ],
         clearQueryDataAtKeys: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     if (result.hasErrors) {

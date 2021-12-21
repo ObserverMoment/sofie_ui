@@ -83,16 +83,17 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     final result = await context.graphQLStore
         .mutate<AddWorkoutToClub$Mutation, AddWorkoutToClubArguments>(
             mutation: AddWorkoutToClubMutation(variables: variables),
-            broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.clubId)]);
+            refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
+            broadcastQueryIds: [GQLVarParamKeys.clubWorkouts(widget.clubId)]);
 
     setState(() {
       _loading = false;
     });
 
     checkOperationResult(context, result,
-        onSuccess: () => context.showToast(message: 'Workout added.'),
+        onSuccess: () => context.showToast(message: 'Workout Added'),
         onFail: () => context.showToast(
-            message: 'Sorry there was a problem.',
+            message: 'Sorry there was a problem',
             toastType: ToastType.destructive));
   }
 
@@ -103,7 +104,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
         itemType: 'Workout',
         itemName: workout.name,
         message:
-            'Club members will no longer have access to this workout via your club.',
+            'Club members will no longer have access to this workout via your club',
         onConfirm: () => _removeWorkoutFromClub(context, workout));
   }
 
@@ -119,16 +120,17 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     final result = await context.graphQLStore
         .mutate<RemoveWorkoutFromClub$Mutation, RemoveWorkoutFromClubArguments>(
             mutation: RemoveWorkoutFromClubMutation(variables: variables),
-            broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.clubId)]);
+            refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
+            broadcastQueryIds: [GQLVarParamKeys.clubWorkouts(widget.clubId)]);
 
     setState(() {
       _loading = false;
     });
 
     checkOperationResult(context, result,
-        onSuccess: () => context.showToast(message: 'Workout removed.'),
+        onSuccess: () => context.showToast(message: 'Workout Removed'),
         onFail: () => context.showToast(
-            message: 'Sorry there was a problem.',
+            message: 'Sorry there was a problem',
             toastType: ToastType.destructive));
   }
 
@@ -140,13 +142,14 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     return QueryObserver<ClubWorkouts$Query, ClubWorkoutsArguments>(
         key: Key('ClubDetailsWorkouts - ${query.operationName}'),
         query: query,
+        parameterizeQuery: true,
         builder: (data) {
-          final workouts = data.clubWorkouts;
+          final workouts = data.clubWorkouts.workouts;
 
           return MyPageScaffold(
               child: NestedScrollView(
             headerSliverBuilder: (c, i) =>
-                [const MySliverNavbar(title: 'Club Workouts')],
+                [const MySliverNavbar(title: 'Workouts')],
             body: widget.isOwnerOrAdmin
                 ? FABPage(
                     rowButtonsAlignment: MainAxisAlignment.center,

@@ -184,10 +184,10 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
         mutation:
             DeleteCompletedWorkoutPlanDayWorkoutMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(enrolmentId),
+          GQLVarParamKeys.workoutPlanEnrolmentById(enrolmentId),
         ]);
 
     checkOperationResult(

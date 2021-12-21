@@ -69,7 +69,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
       mutation: UpdateCollectionMutation(variables: variables),
       broadcastQueryIds: [
         UserCollectionsQuery().operationName,
-        GQLVarParamKeys.userCollectionByIdQuery(widget.collection!.id)
+        GQLVarParamKeys.userCollectionById(widget.collection!.id)
       ],
     );
 

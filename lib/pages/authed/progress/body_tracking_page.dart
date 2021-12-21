@@ -10,7 +10,7 @@ import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
-import 'package:sofie_ui/components/navigation.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
@@ -111,10 +111,15 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
                         padding: const EdgeInsets.only(top: 10.0),
                         child: Column(
                           children: [
-                            MyTabBarNav(
-                                titles: const ['Entries', 'Photos'],
-                                handleTabChange: _updateTabIndex,
-                                activeTabIndex: _activeTabIndex),
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              width: double.infinity,
+                              child: MySlidingSegmentedControl<int>(
+                                  value: _activeTabIndex,
+                                  children: const {0: 'Entries', 1: 'Photos'},
+                                  updateValue: _updateTabIndex),
+                            ),
                             Expanded(
                               child: IndexedStack(
                                 index: _activeTabIndex,

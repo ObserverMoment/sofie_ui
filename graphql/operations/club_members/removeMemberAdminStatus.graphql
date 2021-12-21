@@ -1,23 +1,15 @@
 mutation removeMemberAdminStatus($userId: ID!, $clubId: ID!) {
   removeMemberAdminStatus(userId: $userId, clubId: $clubId) {
-    ...Club
+    __typename
+    id
     Owner {
-      ...UserAvatarData
+      ...ClubMemberSummary
     }
     Admins {
-      ...UserAvatarData
+      ...ClubMemberSummary
     }
     Members {
-      ...UserAvatarData
-    }
-    ClubInviteTokens {
-      ...ClubInviteToken
-    }
-    Workouts {
-      ...WorkoutSummary
-    }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
+      ...ClubMemberSummary
     }
   }
 }

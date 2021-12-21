@@ -4,8 +4,6 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_info.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator_media.dart';
-import 'package:sofie_ui/components/creators/club_creator/club_creator_members.dart';
-import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -13,8 +11,6 @@ import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/debounce.dart';
@@ -24,10 +20,10 @@ import 'package:sofie_ui/services/utils.dart';
 
 /// This creator retrieves the full club data (when editing) before the owner / admin starts editing.
 class ClubCreatorPage extends StatefulWidget {
-  final String? id;
+  final ClubSummary? clubSummary;
   const ClubCreatorPage({
     Key? key,
-    this.id,
+    this.clubSummary,
   }) : super(key: key);
 
   @override
@@ -47,7 +43,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
   final _debouncer = Debouncer();
 
   /// Post-create data. We go straight here in the case of editing a club.
-  Club? _activeClub;
+  ClubSummary? _activeClub;
   Map<String, dynamic> _activeClubBackup = {};
 
   int _activePageIndex = 0;
@@ -57,46 +53,20 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
   bool _uploadingMedia = false;
   late bool _isCreate;
 
-  /// https://stackoverflow.com/questions/57793479/flutter-futurebuilder-gets-constantly-called
-  /// If user is creating then this immediately returns [true].
-  /// Otherwise it gets club data from the API and saves it to [_activeClub].
-  /// Returns a [bool] when completed.
-  late Future<bool> _retrieveClubData;
-
-  Future<bool> _getClubData() async {
-    if (_isCreate) {
-      return true;
-    }
-    final variables = ClubByIdArguments(id: widget.id!);
-    final query = ClubByIdQuery(variables: variables);
-
-    final result =
-        await context.graphQLStore.networkOnlyOperation(operation: query);
-
-    final success = checkOperationResult(context, result);
-
-    if (success) {
-      _activeClub = result.data!.clubById;
-      _activeClubBackup = _activeClub!.toJson();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
 
-    _isCreate = widget.id == null;
+    _isCreate = widget.clubSummary == null;
 
     if (_isCreate) {
       _initPreCreateDataFields();
+    } else {
+      _activeClub == widget.clubSummary;
+      _activeClubBackup = _activeClub!.toJson();
     }
 
     _nameController.addListener(_checkNameAvailable);
-
-    _retrieveClubData = _getClubData();
   }
 
   void _updatePageIndex(int i) {
@@ -143,10 +113,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     final result = await context.graphQLStore
         .create<CreateClub$Mutation, CreateClubArguments>(
       mutation: CreateClubMutation(variables: variables),
-      processResult: (data) {
-        _writeClubSummaryUpdateAndBroadcast(data.createClub,
-            addRefToQuery: true);
-      },
+      addRefToQueries: [GQLOpNames.userClubs],
     );
 
     setState(() => _savingToDB = false);
@@ -181,7 +148,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     }
 
     setState(() {
-      _activeClub = Club.fromJson({
+      _activeClub = ClubSummary.fromJson({
         ..._activeClub!.toJson(),
         ...data,
       });
@@ -199,21 +166,21 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     setState(() => _savingToDB = true);
 
-    final variables = UpdateClubArguments(
-        data: UpdateClubInput(
+    final variables = UpdateClubSummaryArguments(
+        data: UpdateClubSummaryInput(
       id: _activeClub!.id,
     ));
 
     final result = await context.graphQLStore
-        .mutate<UpdateClub$Mutation, UpdateClubArguments>(
-      mutation: UpdateClubMutation(variables: variables),
+        .mutate<UpdateClubSummary$Mutation, UpdateClubSummaryArguments>(
+      mutation: UpdateClubSummaryMutation(variables: variables),
       customVariablesMap: {
         'data': {'id': _activeClub!.id, ...data}
       },
-      processResult: (data) {
-        _writeClubSummaryUpdateAndBroadcast(data.updateClub);
-      },
-      broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(_activeClub!.id)],
+      broadcastQueryIds: [
+        GQLVarParamKeys.clubSummary(_activeClub!.id),
+        GQLOpNames.userClubs
+      ],
     );
 
     setState(() => _savingToDB = false);
@@ -224,11 +191,11 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
       /// Roll back the changes.
       setState(() {
-        _activeClub = Club.fromJson(_activeClubBackup);
+        _activeClub = ClubSummary.fromJson(_activeClubBackup);
       });
     }, onSuccess: () {
       setState(() {
-        _activeClub = result.data!.updateClub;
+        _activeClub = result.data!.updateClubSummary;
       });
 
       /// Update the backup data.
@@ -236,225 +203,99 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     });
   }
 
-  /// Methods to handle ClubInviteToken CRUD. ClubInviteTokens are nested within Clubs so a manual store write is required to ensure that all the UI updates correctly.
-  /// Adds the new or updated token (which was created in [ClubInviteTokenCreator]) to local state - _activeClub.
-  /// Then write the updated club to global GraphQLStore and re-broadcast as necessary.
-  void _addNewInviteTokenToState(ClubInviteToken token) {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._addNewInviteTokenToState: [_activeClub] has not been initialized.');
-    }
-    setState(() {
-      _activeClub!.clubInviteTokens!.add(token);
-    });
+  // /// Methods to handle ClubInviteToken CRUD. ClubInviteTokens are nested within Clubs so a manual store write is required to ensure that all the UI updates correctly.
+  // /// Adds the new or updated token (which was created in [ClubInviteTokenCreator]) to local state - _activeClub.
+  // /// Then write the updated club to global GraphQLStore and re-broadcast as necessary.
+  // void _addNewInviteTokenToState(ClubInviteToken token) {
+  //   if (_activeClub == null) {
+  //     throw Exception(
+  //         'ClubCreatorPage._addNewInviteTokenToState: [_activeClub] has not been initialized.');
+  //   }
+  //   setState(() {
+  //     _activeClub!.clubInviteTokens!.add(token);
+  //   });
 
-    _writeClubToGraphQLStore(_activeClub!);
-  }
+  //   _writeClubToGraphQLStore(_activeClub!);
+  // }
 
-  void _addUpdatedInviteTokenToState(ClubInviteToken token) {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._addUpdatedInviteTokenToState: [_activeClub] has not been initialized.');
-    }
+  // void _addUpdatedInviteTokenToState(ClubInviteToken token) {
+  //   if (_activeClub == null) {
+  //     throw Exception(
+  //         'ClubCreatorPage._addUpdatedInviteTokenToState: [_activeClub] has not been initialized.');
+  //   }
 
-    setState(() {
-      _activeClub!.clubInviteTokens = _activeClub!.clubInviteTokens!
-          .map((original) => token.id == original.id ? token : original)
-          .toList();
-    });
+  //   setState(() {
+  //     _activeClub!.clubInviteTokens = _activeClub!.clubInviteTokens!
+  //         .map((original) => token.id == original.id ? token : original)
+  //         .toList();
+  //   });
 
-    _writeClubToGraphQLStore(_activeClub!);
-  }
+  //   _writeClubToGraphQLStore(_activeClub!);
+  // }
 
-  Future<void> _deleteClubInviteToken(ClubInviteToken token) async {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._saveUpdateToDB: [_activeClub] has not been initialized.');
-    }
+  // Future<void> _deleteClubInviteToken(ClubInviteToken token) async {
+  //   if (_activeClub == null) {
+  //     throw Exception(
+  //         'ClubCreatorPage._saveUpdateToDB: [_activeClub] has not been initialized.');
+  //   }
 
-    setState(() => _savingToDB = true);
+  //   setState(() => _savingToDB = true);
 
-    final variables = DeleteClubInviteTokenByIdArguments(id: token.id);
+  //   final variables = DeleteClubInviteTokenByIdArguments(id: token.id);
 
-    final result = await context.graphQLStore.delete<
-            DeleteClubInviteTokenById$Mutation,
-            DeleteClubInviteTokenByIdArguments>(
-        mutation: DeleteClubInviteTokenByIdMutation(variables: variables),
-        objectId: token.id,
-        typename: kClubInviteTokenTypeName,
-        removeAllRefsToId: true);
+  //   final result = await context.graphQLStore.delete<
+  //           DeleteClubInviteTokenById$Mutation,
+  //           DeleteClubInviteTokenByIdArguments>(
+  //       mutation: DeleteClubInviteTokenByIdMutation(variables: variables),
+  //       objectId: token.id,
+  //       typename: kClubInviteTokenTypeName,
+  //       removeAllRefsToId: true);
 
-    setState(() => _savingToDB = false);
+  //   setState(() => _savingToDB = false);
 
-    if (result.hasErrors ||
-        result.data?.deleteClubInviteTokenById != token.id) {
-      context.showErrorAlert(
-          'Sorry there was a problem, the invite link was not deleted.');
-    } else {
-      setState(() {
-        _activeClub!.clubInviteTokens =
-            _activeClub!.clubInviteTokens!.toggleItem(token);
-      });
+  //   if (result.hasErrors ||
+  //       result.data?.deleteClubInviteTokenById != token.id) {
+  //     context.showErrorAlert(
+  //         'Sorry there was a problem, the invite link was not deleted.');
+  //   } else {
+  //     setState(() {
+  //       _activeClub!.clubInviteTokens =
+  //           _activeClub!.clubInviteTokens!.toggleItem(token);
+  //     });
 
-      /// Update the backup data.
-      _activeClubBackup = _activeClub!.toJson();
-    }
-  }
-
-  Future<void> _giveMemberAdminStatus(String userId) async {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._giveMemberAdminStatus: [_activeClub] has not been initialized.');
-    }
-
-    try {
-      setState(() => _savingToDB = true);
-
-      final result = await context.graphQLStore.mutate<
-              GiveMemberAdminStatus$Mutation, GiveMemberAdminStatusArguments>(
-          mutation: GiveMemberAdminStatusMutation(
-              variables: GiveMemberAdminStatusArguments(
-                  userId: userId, clubId: _activeClub!.id)),
-          processResult: (data) {
-            _writeClubSummaryUpdateAndBroadcast(data.giveMemberAdminStatus);
-          },
-          broadcastQueryIds: [
-            GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-          ]);
-
-      setState(() {
-        _activeClub = result.data!.giveMemberAdminStatus;
-      });
-      context.showToast(
-        message: 'Member given admin status.',
-      );
-    } catch (e) {
-      printLog(e.toString());
-      context.showToast(
-          message: 'Sorry, there was a problem adding admin status!',
-          toastType: ToastType.destructive);
-    } finally {
-      setState(() => _savingToDB = false);
-    }
-
-    /// Update the backup data.
-    _activeClubBackup = _activeClub!.toJson();
-  }
-
-  Future<void> _removeMemberAdminStatus(String userId) async {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._removeMemberAdminStatus: [_activeClub] has not been initialized.');
-    }
-
-    try {
-      setState(() => _savingToDB = true);
-
-      final result = await context.graphQLStore.mutate<
-              RemoveMemberAdminStatus$Mutation,
-              RemoveMemberAdminStatusArguments>(
-          mutation: RemoveMemberAdminStatusMutation(
-              variables: RemoveMemberAdminStatusArguments(
-                  userId: userId, clubId: _activeClub!.id)),
-          processResult: (data) {
-            _writeClubSummaryUpdateAndBroadcast(data.removeMemberAdminStatus);
-          },
-          broadcastQueryIds: [
-            GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-          ]);
-
-      setState(() {
-        _activeClub = result.data!.removeMemberAdminStatus;
-      });
-      context.showToast(
-        message: 'Member admin status removed.',
-      );
-    } catch (e) {
-      printLog(e.toString());
-      context.showToast(
-          message: 'Sorry, there was a problem removing admin status!',
-          toastType: ToastType.destructive);
-    } finally {
-      setState(() => _savingToDB = false);
-    }
-
-    /// Update the backup data.
-    _activeClubBackup = _activeClub!.toJson();
-  }
-
-  Future<void> _removeUserFromClub(
-      String userId, ClubMemberType memberType) async {
-    if (_activeClub == null) {
-      throw Exception(
-          'ClubCreatorPage._removeUserFromClub: [_activeClub] has not been initialized.');
-    }
-    if (memberType == ClubMemberType.owner) {
-      throw Exception(
-          'ClubCreatorPage._removeUserFromClub: Cannot remove and Owner from the club.');
-    }
-    try {
-      setState(() => _savingToDB = true);
-      final result = await context.graphQLStore
-          .mutate<RemoveUserFromClub$Mutation, RemoveUserFromClubArguments>(
-              mutation: RemoveUserFromClubMutation(
-                  variables: RemoveUserFromClubArguments(
-                      userToRemoveId: userId, clubId: _activeClub!.id)),
-              processResult: (data) {
-                _writeClubSummaryUpdateAndBroadcast(data.removeUserFromClub);
-              },
-              broadcastQueryIds: [
-            GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-          ]);
-
-      setState(() {
-        _activeClub = result.data!.removeUserFromClub;
-      });
-
-      context.showToast(
-        message: 'Member removed from club.',
-      );
-    } catch (e) {
-      printLog(e.toString());
-      context.showToast(
-          message:
-              'Sorry, there was a problem removing this person from the club!',
-          toastType: ToastType.destructive);
-    } finally {
-      setState(() => _savingToDB = false);
-    }
-
-    /// Update the backup data.
-    _activeClubBackup = _activeClub!.toJson();
-  }
+  //     /// Update the backup data.
+  //     _activeClubBackup = _activeClub!.toJson();
+  //   }
+  // }
 
   /// Manual writes to store for [Club] and [ClubSummary] objects ///
   /// Also rebroadcasts the correct queries.
-  void _writeClubToGraphQLStore(Club club) {
-    final success = context.graphQLStore.writeDataToStore(
-      data: _activeClub!.toJson(),
-      broadcastQueryIds: [
-        GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-      ],
-    );
+  // void _writeClubToGraphQLStore(Club club) {
+  //   final success = context.graphQLStore.writeDataToStore(
+  //     data: _activeClub!.toJson(),
+  //     broadcastQueryIds: [
+  //       GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
+  //     ],
+  //   );
 
-    if (!success) {
-      context.showErrorAlert(
-          'Sorry there was a problem. The changes were not updated correctly!');
-    }
-  }
+  //   if (!success) {
+  //     context.showErrorAlert(
+  //         'Sorry there was a problem. The changes were not updated correctly!');
+  //   }
+  // }
 
-  void _writeClubSummaryUpdateAndBroadcast(Club club,
-      {bool addRefToQuery = false}) {
-    final success = context.graphQLStore.writeDataToStore(
-        data: club.summary.toJson(),
-        addRefToQueries: addRefToQuery ? [GQLOpNames.userClubsQuery] : [],
-        broadcastQueryIds: addRefToQuery ? [] : [GQLOpNames.userClubsQuery]);
+  // void _writeClubSummaryUpdateAndBroadcast(ClubSummary club,
+  //     {bool addRefToQuery = false}) {
+  //   final success = context.graphQLStore.writeDataToStore(
+  //       data: club.summary.toJson(),
+  //       addRefToQueries: addRefToQuery ? [GQLOpNames.userClubsQuery] : [],
+  //       broadcastQueryIds: addRefToQuery ? [] : [GQLOpNames.userClubsQuery]);
 
-    if (!success) {
-      context.showErrorAlert(
-          'Sorry there was a problem. The changes were not updated correctly!');
-    }
-  }
+  //   if (!success) {
+  //     context.showErrorAlert(
+  //         'Sorry there was a problem. The changes were not updated correctly!');
+  //   }
+  // }
 
   /// Will not save anything.
   void _close() {
@@ -472,124 +313,117 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilderHandler<bool>(
-      future: _retrieveClubData,
-      builder: (data) => MyPageScaffold(
-        navigationBar: MyNavBar(
-          withoutLeading: true,
-          middle: Row(
-            children: [
-              NavBarLargeTitle(_isCreate ? 'Create Club' : 'Manage Club'),
-            ],
-          ),
-          trailing: _savingToDB
-              ? const NavBarTrailingRow(
-                  children: [
-                    NavBarLoadingDots(),
-                  ],
-                )
-              : _activeClub == null
-                  ? NavBarCancelButton(_close)
-                  : NavBarTextButton(_close, 'Done'),
-        ),
-        child: Column(
+    return MyPageScaffold(
+      navigationBar: MyNavBar(
+        withoutLeading: true,
+        middle: Row(
           children: [
-            SizedBox(
-              height: 80,
-              child: AnimatedSwitcher(
-                duration: kStandardAnimationDuration,
-                child: _uploadingMedia
-                    ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          MyText('Uploading media'),
-                          SizedBox(width: 6),
-                          NavBarLoadingDots()
-                        ],
-                      )
-                    : _activeClub == null
-                        ? PrimaryButton(
-                            text: 'Create Club',
-                            onPressed: _createClub,
-                            prefixIconData: CupertinoIcons.add,
-                            disabled: !_nameIsValid || !_nameIsAvailable,
-                            loading: _savingToDB,
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: MySlidingSegmentedControl<int>(
-                                  value: _activePageIndex,
-                                  updateValue: _updatePageIndex,
-                                  children: const {
-                                    0: 'Info',
-                                    1: 'Media',
-                                    2: 'Members',
-                                  }),
-                            ),
-                          ),
-              ),
-            ),
-            if (_activeClub == null)
-              Expanded(
-                child: _PreCreateInputUI(
-                  descriptionController: _descriptionController,
-                  nameIsValid: _nameIsValid,
-                  nameIsAvailable: _nameIsAvailable,
-                  locationController: _locationController,
-                  nameController: _nameController,
-                ),
-              )
-            else
-              Expanded(
-                child: IndexedStack(
-                  index: _activePageIndex,
-                  children: [
-                    ClubCreatorInfo(
-                      club: _activeClub!,
-                      updateClub: _updateClub,
-                    ),
-                    ClubCreatorMedia(
-                      coverImageUri: _activeClub?.coverImageUri,
-                      onImageUploaded: (imageUri) =>
-                          _onMediaUploadComplete({'coverImageUri': imageUri}),
-                      removeImage: (_) =>
-                          _onMediaUploadComplete({'coverImageUri': null}),
-                      introVideoUri: _activeClub?.introVideoUri,
-                      introVideoThumbUri: _activeClub?.introVideoThumbUri,
-                      onVideoUploaded: (videoUri, thumbUri) =>
-                          _onMediaUploadComplete({
-                        'introVideoUri': videoUri,
-                        'introVideoThumbUri': thumbUri
-                      }),
-                      removeVideo: () => _onMediaUploadComplete(
-                          {'introVideoUri': null, 'introVideoThumbUri': null}),
-                      introAudioUri: _activeClub?.introAudioUri,
-                      onAudioUploaded: (audioUri) =>
-                          _onMediaUploadComplete({'introAudioUri': audioUri}),
-                      removeAudio: () =>
-                          _onMediaUploadComplete({'introAudioUri': null}),
-                      onMediaUploadStart: () =>
-                          setState(() => _uploadingMedia = true),
-                      onMediaUploadFail: () =>
-                          setState(() => _uploadingMedia = false),
-                    ),
-                    ClubCreatorMembers(
-                      club: _activeClub!,
-                      onCreateInviteToken: _addNewInviteTokenToState,
-                      onUpdateInviteToken: _addUpdatedInviteTokenToState,
-                      deleteClubInviteToken: (token) =>
-                          _deleteClubInviteToken(token),
-                      giveMemberAdminStatus: _giveMemberAdminStatus,
-                      removeMemberAdminStatus: _removeMemberAdminStatus,
-                      removeUserFromClub: _removeUserFromClub,
-                    ),
-                  ],
-                ),
-              ),
+            NavBarLargeTitle(_isCreate ? 'Create Club' : 'Manage Club'),
           ],
         ),
+        trailing: _savingToDB
+            ? const NavBarTrailingRow(
+                children: [
+                  NavBarLoadingDots(),
+                ],
+              )
+            : _activeClub == null
+                ? NavBarCancelButton(_close)
+                : NavBarTextButton(_close, 'Done'),
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 80,
+            child: AnimatedSwitcher(
+              duration: kStandardAnimationDuration,
+              child: _uploadingMedia
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        MyText('Uploading media'),
+                        SizedBox(width: 6),
+                        NavBarLoadingDots()
+                      ],
+                    )
+                  : _activeClub == null
+                      ? PrimaryButton(
+                          text: 'Create Club',
+                          onPressed: _createClub,
+                          prefixIconData: CupertinoIcons.add,
+                          disabled: !_nameIsValid || !_nameIsAvailable,
+                          loading: _savingToDB,
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: MySlidingSegmentedControl<int>(
+                                value: _activePageIndex,
+                                updateValue: _updatePageIndex,
+                                children: const {
+                                  0: 'About',
+                                  1: 'Media',
+                                }),
+                          ),
+                        ),
+            ),
+          ),
+          if (_activeClub == null)
+            Expanded(
+              child: _PreCreateInputUI(
+                descriptionController: _descriptionController,
+                nameIsValid: _nameIsValid,
+                nameIsAvailable: _nameIsAvailable,
+                locationController: _locationController,
+                nameController: _nameController,
+              ),
+            )
+          else
+            Expanded(
+              child: IndexedStack(
+                index: _activePageIndex,
+                children: [
+                  ClubCreatorInfo(
+                    club: _activeClub!,
+                    updateClub: _updateClub,
+                  ),
+                  ClubCreatorMedia(
+                    coverImageUri: _activeClub?.coverImageUri,
+                    onImageUploaded: (imageUri) =>
+                        _onMediaUploadComplete({'coverImageUri': imageUri}),
+                    removeImage: (_) =>
+                        _onMediaUploadComplete({'coverImageUri': null}),
+                    introVideoUri: _activeClub?.introVideoUri,
+                    introVideoThumbUri: _activeClub?.introVideoThumbUri,
+                    onVideoUploaded: (videoUri, thumbUri) =>
+                        _onMediaUploadComplete({
+                      'introVideoUri': videoUri,
+                      'introVideoThumbUri': thumbUri
+                    }),
+                    removeVideo: () => _onMediaUploadComplete(
+                        {'introVideoUri': null, 'introVideoThumbUri': null}),
+                    introAudioUri: _activeClub?.introAudioUri,
+                    onAudioUploaded: (audioUri) =>
+                        _onMediaUploadComplete({'introAudioUri': audioUri}),
+                    removeAudio: () =>
+                        _onMediaUploadComplete({'introAudioUri': null}),
+                    onMediaUploadStart: () =>
+                        setState(() => _uploadingMedia = true),
+                    onMediaUploadFail: () =>
+                        setState(() => _uploadingMedia = false),
+                  ),
+                  // ClubCreatorInvites(
+                  //   club: _activeClub!,
+                  //   onCreateInviteToken: _addNewInviteTokenToState,
+                  //   onUpdateInviteToken: _addUpdatedInviteTokenToState,
+                  //   deleteClubInviteToken: (token) =>
+                  //       _deleteClubInviteToken(token),
+                  // ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

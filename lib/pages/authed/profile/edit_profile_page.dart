@@ -59,7 +59,7 @@ class EditProfilePage extends StatelessWidget {
 
       context.graphQLStore.writeDataToStore(
           data: updated,
-          broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(id)]);
+          broadcastQueryIds: [GQLVarParamKeys.userProfileById(id)]);
     });
   }
 

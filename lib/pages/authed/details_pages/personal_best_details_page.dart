@@ -56,7 +56,7 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
               variables: UserBenchmarkByIdArguments(id: widget.id)))
         ],
         removeRefFromQueries: [
-          GQLOpNames.userBenchmarksQuery
+          GQLOpNames.userBenchmarks
         ]);
 
     if (result.hasErrors || result.data?.deleteUserBenchmarkById != widget.id) {
@@ -169,8 +169,8 @@ class __PersonalBestEntrieslistState extends State<_PersonalBestEntrieslist> {
         objectId: entry.id,
         typename: kUserBenchmarkEntryTypename,
         broadcastQueryIds: [
-          GQLVarParamKeys.userBenchmarkByIdQuery(widget.userBenchmark.id),
-          GQLOpNames.userBenchmarksQuery,
+          GQLVarParamKeys.userBenchmarkById(widget.userBenchmark.id),
+          GQLOpNames.userBenchmarks,
         ],
         removeAllRefsToId: true);
 

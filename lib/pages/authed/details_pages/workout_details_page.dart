@@ -65,7 +65,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                   DuplicateWorkoutById$Mutation, DuplicateWorkoutByIdArguments>(
               mutation: DuplicateWorkoutByIdMutation(
                   variables: DuplicateWorkoutByIdArguments(id: id)),
-              addRefToQueries: [GQLOpNames.userWorkoutsQuery]);
+              addRefToQueries: [GQLOpNames.userWorkouts]);
 
           checkOperationResult(context, result,
               onSuccess: () => context.showToast(
@@ -111,21 +111,18 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
 
               // Rebroadcast all queries that may be affected.
               context.graphQLStore.broadcastQueriesByIds([
-                GQLOpNames.userWorkoutsQuery,
-                GQLOpNames.userCollectionsQuery,
-                GQLOpNames.userScheduledWorkoutsQuery,
-                GQLOpNames.userClubsQuery,
+                GQLOpNames.userWorkouts,
+                GQLOpNames.userCollections,
+                GQLOpNames.userScheduledWorkouts,
+                GQLOpNames.userClubs,
               ]);
 
               // Update Workout and workoutById query
-              context.graphQLStore.writeDataToStore(data: {
-                ...workout.summary.toJson(),
-                'archived': true
-              }, broadcastQueryIds: [
-                GQLVarParamKeys.workoutByIdQuery(widget.id)
-              ]);
+              context.graphQLStore.writeDataToStore(
+                  data: {...workout.summary.toJson(), 'archived': true},
+                  broadcastQueryIds: [GQLVarParamKeys.workoutById(widget.id)]);
             },
-            addRefToQueries: [GQLOpNames.userArchivedWorkoutsQuery],
+            addRefToQueries: [GQLOpNames.userArchivedWorkouts],
           );
 
           checkOperationResult(context, result,
@@ -151,7 +148,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
               // Add a WorkoutSummary to store and to userWorkoutsQuery
               context.graphQLStore.writeDataToStore(
                 data: data.unarchiveWorkoutById.summary.toJson(),
-                addRefToQueries: [GQLOpNames.userWorkoutsQuery],
+                addRefToQueries: [GQLOpNames.userWorkouts],
               );
 
               final archivedWorkout = {
@@ -165,10 +162,10 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
 
               context.graphQLStore.removeRefFromQueryData(
                   data: archivedWorkout,
-                  queryIds: [GQLOpNames.userArchivedWorkoutsQuery]);
+                  queryIds: [GQLOpNames.userArchivedWorkouts]);
             },
             broadcastQueryIds: [
-              GQLVarParamKeys.workoutByIdQuery(widget.id),
+              GQLVarParamKeys.workoutById(widget.id),
             ],
           );
 
@@ -278,9 +275,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                   imageUri: workout.coverImageUri,
                                 ),
                                 items: [
-                                  if (!isOwner &&
-                                      workout.user.userProfileScope ==
-                                          UserProfileScope.public)
+                                  if (!isOwner)
                                     BottomSheetMenuItem(
                                         text: 'View creator',
                                         icon: const Icon(

@@ -62,7 +62,7 @@ class _SkillsManagerState extends State<SkillsManager> {
           context.graphQLStore.writeDataToStore(
               data: profile.toJson(),
               broadcastQueryIds: [
-                GQLVarParamKeys.userProfileByIdQuery(authedUserId)
+                GQLVarParamKeys.userProfileById(authedUserId)
               ]);
         });
   }
@@ -157,9 +157,7 @@ class _SkillsManagerState extends State<SkillsManager> {
 
     context.graphQLStore.writeDataToStore(
         data: profile.toJson(),
-        broadcastQueryIds: [
-          GQLVarParamKeys.userProfileByIdQuery(authedUserId)
-        ]);
+        broadcastQueryIds: [GQLVarParamKeys.userProfileById(authedUserId)]);
   }
 
   @override

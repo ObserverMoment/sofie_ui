@@ -1,5 +1,5 @@
 query clubWorkouts($clubId: ID!) {
   clubWorkouts(clubId: $clubId) {
-    ...WorkoutSummary
+    ...ClubWorkouts
   }
 }

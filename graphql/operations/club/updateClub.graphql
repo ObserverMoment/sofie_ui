@@ -1,23 +1,11 @@
-mutation updateClub($data: UpdateClubInput!) {
-  updateClub(data: $data) {
-    ...Club
+mutation updateClubSummary($data: UpdateClubSummaryInput!) {
+  updateClubSummary(data: $data) {
+    ...ClubSummary
     Owner {
       ...UserAvatarData
     }
     Admins {
       ...UserAvatarData
-    }
-    Members {
-      ...UserAvatarData
-    }
-    ClubInviteTokens {
-      ...ClubInviteToken
-    }
-    Workouts {
-      ...WorkoutSummary
-    }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
     }
   }
 }

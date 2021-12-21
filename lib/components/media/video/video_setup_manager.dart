@@ -59,9 +59,11 @@ class VideoSetupManager {
     final String? subtitle,
   }) async {
     final controller = await initializeVideoPlayer(
+
+        /// TODO....
         uri: videoUri,
-        autoLoop: autoLoop,
-        autoPlay: autoPlay,
+        autoLoop: false,
+        autoPlay: false,
         startAt: startAt);
 
     final aspectRatio = controller.value.aspectRatio;

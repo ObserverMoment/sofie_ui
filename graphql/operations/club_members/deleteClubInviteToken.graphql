@@ -1,0 +1,3 @@
+mutation deleteClubInviteToken($id: ID!) {
+  deleteClubInviteToken(id: $id)
+}

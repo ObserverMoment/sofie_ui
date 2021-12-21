@@ -3,8 +3,8 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
 import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/constants.dart';
@@ -194,10 +194,14 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
       ),
       child: Column(
         children: [
-          MyTabBarNav(
-              activeTabIndex: _activeTabIndex,
-              titles: const ['Details', 'Equipment'],
-              handleTabChange: _handleTabChange),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            width: double.infinity,
+            child: MySlidingSegmentedControl<int>(
+                value: _activeTabIndex,
+                children: const {0: 'Details', 1: 'Equipment'},
+                updateValue: _handleTabChange),
+          ),
           Expanded(
             child: IndexedStack(
               index: _activeTabIndex,

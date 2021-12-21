@@ -164,7 +164,7 @@ class _ClubPostCreatorPageState extends State<ClubPostCreatorPage> {
     setState(() => _activePageIndex = index);
   }
 
-  UserSummary _getSelectedObjectCreator() {
+  UserAvatarData _getSelectedObjectCreator() {
     switch (_selectedObjectType) {
       case TimelinePostType.workout:
         return _workout!.user;

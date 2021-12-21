@@ -4,7 +4,6 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_uploader.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/number_picker_row_tap_to_edit.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
@@ -157,10 +156,14 @@ class _BodyTrackingEntryCreatorPageState
       ),
       child: Column(
         children: [
-          MyTabBarNav(
-              titles: const ['Stats', 'Photos'],
-              handleTabChange: _updateTabIndex,
-              activeTabIndex: _activeTabIndex),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            width: double.infinity,
+            child: MySlidingSegmentedControl<int>(
+                value: _activeTabIndex,
+                children: const {0: 'Stats', 1: 'Photos'},
+                updateValue: _updateTabIndex),
+          ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),

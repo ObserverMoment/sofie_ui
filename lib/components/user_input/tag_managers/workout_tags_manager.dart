@@ -86,7 +86,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
             mutation: UpdateWorkoutTagMutation(variables: variables),
             broadcastQueryIds: [
           UserWorkoutTagsQuery().operationName,
-          GQLOpNames.workoutByIdQuery,
+          GQLOpNames.workoutById,
         ]);
 
     setState(() => _isLoading = false);

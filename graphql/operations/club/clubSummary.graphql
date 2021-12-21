@@ -1,5 +1,5 @@
-query clubSummariesById($ids: [ID!]!) {
-  clubSummariesById(ids: $ids) {
+query clubSummary($id: ID!) {
+  clubSummary(id: $id) {
     ...ClubSummary
     Owner {
       ...UserAvatarData

@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/club/club_details_info.dart';
+import 'package:sofie_ui/components/club/club_details_people.dart';
 import 'package:sofie_ui/components/club/club_details_timeline.dart';
 import 'package:sofie_ui/components/club/club_details_workout_plans.dart';
 import 'package:sofie_ui/components/club/club_details_workouts.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
@@ -17,12 +17,12 @@ import 'package:auto_route/auto_route.dart';
 
 class ClubDetailsMembersPage extends StatefulWidget {
   final ClubSummary club;
-  final bool isOwnerOrAdmin;
+  final UserClubMemberStatus authedUserMemberType;
   final bool stopPollingFeed;
   const ClubDetailsMembersPage({
     Key? key,
     required this.club,
-    required this.isOwnerOrAdmin,
+    required this.authedUserMemberType,
     required this.stopPollingFeed,
   }) : super(key: key);
 
@@ -32,6 +32,11 @@ class ClubDetailsMembersPage extends StatefulWidget {
 
 class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
   int _activeTabIndex = 0;
+
+  bool get _userIsOwnerOrAdmin => [
+        UserClubMemberStatus.owner,
+        UserClubMemberStatus.admin,
+      ].contains(widget.authedUserMemberType);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +55,7 @@ class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
                   ),
                 _ClubSectionButtons(
                   club: widget.club,
-                  isOwnerOrAdmin: widget.isOwnerOrAdmin,
+                  authedUserMemberType: widget.authedUserMemberType,
                 ),
               ]))
             ],
@@ -74,7 +79,7 @@ class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
                     children: [
                       ClubDetailsTimeline(
                         club: widget.club,
-                        isOwnerOrAdmin: widget.isOwnerOrAdmin,
+                        isOwnerOrAdmin: _userIsOwnerOrAdmin,
                         stopPollingFeed: widget.stopPollingFeed,
                       ),
                       ClubDetailsInfo(
@@ -92,12 +97,17 @@ class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
 
 class _ClubSectionButtons extends StatelessWidget {
   final ClubSummary club;
-  final bool isOwnerOrAdmin;
+  final UserClubMemberStatus authedUserMemberType;
   const _ClubSectionButtons(
-      {Key? key, required this.club, required this.isOwnerOrAdmin})
+      {Key? key, required this.club, required this.authedUserMemberType})
       : super(key: key);
 
   double get _iconSize => 32;
+
+  bool get _userIsOwnerOrAdmin => [
+        UserClubMemberStatus.owner,
+        UserClubMemberStatus.admin,
+      ].contains(authedUserMemberType);
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +122,11 @@ class _ClubSectionButtons extends StatelessWidget {
           label: 'People',
           icon: Icon(CupertinoIcons.person_2_alt, size: _iconSize),
           count: club.memberCount,
-          onTap: () => print('open members list'),
+          onTap: () => context.push(
+              child: ClubDetailsPeople(
+            authedUserMemberType: authedUserMemberType,
+            clubId: club.id,
+          )),
         ),
         _ClubSectionButton(
           label: 'Workouts',
@@ -125,7 +139,7 @@ class _ClubSectionButtons extends StatelessWidget {
           count: club.workoutCount,
           onTap: () => context.push(
               child: ClubDetailsWorkouts(
-            isOwnerOrAdmin: isOwnerOrAdmin,
+            isOwnerOrAdmin: _userIsOwnerOrAdmin,
             clubId: club.id,
           )),
         ),
@@ -140,7 +154,7 @@ class _ClubSectionButtons extends StatelessWidget {
             count: club.planCount,
             onTap: () => context.push(
                     child: ClubDetailsWorkoutPlans(
-                  isOwnerOrAdmin: isOwnerOrAdmin,
+                  isOwnerOrAdmin: _userIsOwnerOrAdmin,
                   clubId: club.id,
                 ))),
         _ClubSectionButton(
