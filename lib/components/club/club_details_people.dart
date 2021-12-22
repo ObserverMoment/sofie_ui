@@ -4,6 +4,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
+import 'package:sofie_ui/components/club/invites/club_details_invites_manager.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
@@ -206,8 +207,10 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
                                 )
                               : _userIsOwnerOrAdmin
                                   ? TertiaryButton(
-                                      onPressed: () =>
-                                          print('open invite manager'),
+                                      onPressed: () => context.push(
+                                          child: ClubDetailsInvitesManager(
+                                        clubId: widget.clubId,
+                                      )),
                                       prefixIconData:
                                           CupertinoIcons.envelope_open,
                                       iconSize: 12,
@@ -403,8 +406,8 @@ class _ClubAdminSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      backgroundColor: context.theme.cardBackground.withOpacity(0.3),
+    return ContentBox(
+      backgroundColor: context.theme.cardBackground.withOpacity(0.4),
       child: Stack(
         clipBehavior: Clip.none,
         fit: StackFit.expand,
@@ -456,8 +459,8 @@ class _ClubMemberSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      backgroundColor: context.theme.cardBackground.withOpacity(0.3),
+    return ContentBox(
+      backgroundColor: context.theme.cardBackground.withOpacity(0.4),
       child: Stack(
         clipBehavior: Clip.none,
         fit: StackFit.expand,
@@ -468,7 +471,7 @@ class _ClubMemberSummaryCard extends StatelessWidget {
             children: [
               UserAvatar(avatarUri: member.avatarUri, size: 80),
               Padding(
-                padding: const EdgeInsets.all(2.0),
+                padding: const EdgeInsets.only(top: 4.0),
                 child: MyText(
                   member.displayName,
                   size: FONTSIZE.one,

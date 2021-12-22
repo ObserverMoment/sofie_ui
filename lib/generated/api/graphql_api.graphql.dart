@@ -7400,6 +7400,26 @@ class ClubInviteToken extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClubInviteTokens extends JsonSerializable with EquatableMixin {
+  ClubInviteTokens();
+
+  factory ClubInviteTokens.fromJson(Map<String, dynamic> json) =>
+      _$ClubInviteTokensFromJson(json);
+
+  @JsonKey(name: '__typename')
+  String? $$typename;
+
+  late String id;
+
+  late List<ClubInviteToken> tokens;
+
+  @override
+  List<Object?> get props => [$$typename, id, tokens];
+  @override
+  Map<String, dynamic> toJson() => _$ClubInviteTokensToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class UpdateClubInviteToken$Mutation extends JsonSerializable
     with EquatableMixin {
   UpdateClubInviteToken$Mutation();
@@ -7407,7 +7427,7 @@ class UpdateClubInviteToken$Mutation extends JsonSerializable
   factory UpdateClubInviteToken$Mutation.fromJson(Map<String, dynamic> json) =>
       _$UpdateClubInviteToken$MutationFromJson(json);
 
-  late ClubInviteToken updateClubInviteToken;
+  late ClubInviteTokens updateClubInviteToken;
 
   @override
   List<Object?> get props => [updateClubInviteToken];
@@ -7418,12 +7438,18 @@ class UpdateClubInviteToken$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class UpdateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   UpdateClubInviteTokenInput(
-      {this.active, required this.id, this.inviteLimit, this.name});
+      {this.active,
+      required this.clubId,
+      required this.id,
+      this.inviteLimit,
+      this.name});
 
   factory UpdateClubInviteTokenInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateClubInviteTokenInputFromJson(json);
 
   bool? active;
+
+  late String clubId;
 
   late String id;
 
@@ -7432,7 +7458,7 @@ class UpdateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   String? name;
 
   @override
-  List<Object?> get props => [active, id, inviteLimit, name];
+  List<Object?> get props => [active, clubId, id, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$UpdateClubInviteTokenInputToJson(this);
 }
@@ -7461,7 +7487,7 @@ class CreateClubInviteToken$Mutation extends JsonSerializable
   factory CreateClubInviteToken$Mutation.fromJson(Map<String, dynamic> json) =>
       _$CreateClubInviteToken$MutationFromJson(json);
 
-  late ClubInviteToken createClubInviteToken;
+  late ClubInviteTokens createClubInviteToken;
 
   @override
   List<Object?> get props => [createClubInviteToken];
@@ -7472,20 +7498,19 @@ class CreateClubInviteToken$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   CreateClubInviteTokenInput(
-      {required this.club, required this.inviteLimit, required this.name});
+      {required this.clubId, required this.inviteLimit, required this.name});
 
   factory CreateClubInviteTokenInput.fromJson(Map<String, dynamic> json) =>
       _$CreateClubInviteTokenInputFromJson(json);
 
-  @JsonKey(name: 'Club')
-  late ConnectRelationInput club;
+  late String clubId;
 
   late int inviteLimit;
 
   late String name;
 
   @override
-  List<Object?> get props => [club, inviteLimit, name];
+  List<Object?> get props => [clubId, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
 }
@@ -7536,26 +7561,6 @@ class ClubSummaries$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class ClubInviteTokens extends JsonSerializable with EquatableMixin {
-  ClubInviteTokens();
-
-  factory ClubInviteTokens.fromJson(Map<String, dynamic> json) =>
-      _$ClubInviteTokensFromJson(json);
-
-  @JsonKey(name: '__typename')
-  String? $$typename;
-
-  late String id;
-
-  late List<ClubInviteToken> tokens;
-
-  @override
-  List<Object?> get props => [$$typename, id, tokens];
-  @override
-  Map<String, dynamic> toJson() => _$ClubInviteTokensToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class ClubInviteTokens$Query extends JsonSerializable with EquatableMixin {
   ClubInviteTokens$Query();
 
@@ -7578,12 +7583,29 @@ class DeleteClubInviteToken$Mutation extends JsonSerializable
   factory DeleteClubInviteToken$Mutation.fromJson(Map<String, dynamic> json) =>
       _$DeleteClubInviteToken$MutationFromJson(json);
 
-  late String deleteClubInviteToken;
+  late ClubInviteTokens deleteClubInviteToken;
 
   @override
   List<Object?> get props => [deleteClubInviteToken];
   @override
   Map<String, dynamic> toJson() => _$DeleteClubInviteToken$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteClubInviteTokenInput extends JsonSerializable with EquatableMixin {
+  DeleteClubInviteTokenInput({required this.clubId, required this.tokenId});
+
+  factory DeleteClubInviteTokenInput.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubInviteTokenInputFromJson(json);
+
+  late String clubId;
+
+  late String tokenId;
+
+  @override
+  List<Object?> get props => [clubId, tokenId];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteClubInviteTokenInputToJson(this);
 }
 
 enum ContentAccessScope {
@@ -48031,8 +48053,28 @@ final UPDATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubInviteToken'), directives: [])
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubInviteToken'),
+                        directives: [])
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -48321,8 +48363,28 @@ final CREATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubInviteToken'), directives: [])
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubInviteToken'),
+                        directives: [])
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -49014,16 +49076,16 @@ class ClubInviteTokensQuery
 @JsonSerializable(explicitToJson: true)
 class DeleteClubInviteTokenArguments extends JsonSerializable
     with EquatableMixin {
-  DeleteClubInviteTokenArguments({required this.id});
+  DeleteClubInviteTokenArguments({required this.data});
 
   @override
   factory DeleteClubInviteTokenArguments.fromJson(Map<String, dynamic> json) =>
       _$DeleteClubInviteTokenArgumentsFromJson(json);
 
-  late String id;
+  late DeleteClubInviteTokenInput data;
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [data];
   @override
   Map<String, dynamic> toJson() => _$DeleteClubInviteTokenArgumentsToJson(this);
 }
@@ -49034,8 +49096,10 @@ final DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
       name: NameNode(value: 'deleteClubInviteToken'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'DeleteClubInviteTokenInput'),
+                isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
@@ -49046,9 +49110,82 @@ final DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
             ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubInviteToken'),
+                        directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubInviteToken'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'active'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'inviteLimit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'joinedUserIds'),
+            alias: null,
+            arguments: [],
             directives: [],
             selectionSet: null)
       ]))

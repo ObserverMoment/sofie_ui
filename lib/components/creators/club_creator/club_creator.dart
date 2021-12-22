@@ -62,7 +62,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     if (_isCreate) {
       _initPreCreateDataFields();
     } else {
-      _activeClub == widget.clubSummary;
+      _activeClub = widget.clubSummary;
       _activeClubBackup = _activeClub!.toJson();
     }
 
@@ -119,8 +119,9 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     setState(() => _savingToDB = false);
 
     checkOperationResult(context, result,
-        onFail: () => context.showErrorAlert(
-            'Sorry there was a problem, the Club was not created.'),
+        onFail: () => context.showToast(
+            message: 'Sorry there was a problem, the Club was not created.',
+            toastType: ToastType.destructive),
         onSuccess: () {
           setState(() {
             _activeClub = result.data!.createClub;
@@ -186,8 +187,9 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
     setState(() => _savingToDB = false);
 
     checkOperationResult(context, result, onFail: () {
-      context.showErrorAlert(
-          'Sorry there was a problem, the Club was not updated.');
+      context.showToast(
+          message: 'Sorry there was a problem updating the Club.',
+          toastType: ToastType.destructive);
 
       /// Roll back the changes.
       setState(() {
@@ -202,100 +204,6 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
       _activeClubBackup = _activeClub!.toJson();
     });
   }
-
-  // /// Methods to handle ClubInviteToken CRUD. ClubInviteTokens are nested within Clubs so a manual store write is required to ensure that all the UI updates correctly.
-  // /// Adds the new or updated token (which was created in [ClubInviteTokenCreator]) to local state - _activeClub.
-  // /// Then write the updated club to global GraphQLStore and re-broadcast as necessary.
-  // void _addNewInviteTokenToState(ClubInviteToken token) {
-  //   if (_activeClub == null) {
-  //     throw Exception(
-  //         'ClubCreatorPage._addNewInviteTokenToState: [_activeClub] has not been initialized.');
-  //   }
-  //   setState(() {
-  //     _activeClub!.clubInviteTokens!.add(token);
-  //   });
-
-  //   _writeClubToGraphQLStore(_activeClub!);
-  // }
-
-  // void _addUpdatedInviteTokenToState(ClubInviteToken token) {
-  //   if (_activeClub == null) {
-  //     throw Exception(
-  //         'ClubCreatorPage._addUpdatedInviteTokenToState: [_activeClub] has not been initialized.');
-  //   }
-
-  //   setState(() {
-  //     _activeClub!.clubInviteTokens = _activeClub!.clubInviteTokens!
-  //         .map((original) => token.id == original.id ? token : original)
-  //         .toList();
-  //   });
-
-  //   _writeClubToGraphQLStore(_activeClub!);
-  // }
-
-  // Future<void> _deleteClubInviteToken(ClubInviteToken token) async {
-  //   if (_activeClub == null) {
-  //     throw Exception(
-  //         'ClubCreatorPage._saveUpdateToDB: [_activeClub] has not been initialized.');
-  //   }
-
-  //   setState(() => _savingToDB = true);
-
-  //   final variables = DeleteClubInviteTokenByIdArguments(id: token.id);
-
-  //   final result = await context.graphQLStore.delete<
-  //           DeleteClubInviteTokenById$Mutation,
-  //           DeleteClubInviteTokenByIdArguments>(
-  //       mutation: DeleteClubInviteTokenByIdMutation(variables: variables),
-  //       objectId: token.id,
-  //       typename: kClubInviteTokenTypeName,
-  //       removeAllRefsToId: true);
-
-  //   setState(() => _savingToDB = false);
-
-  //   if (result.hasErrors ||
-  //       result.data?.deleteClubInviteTokenById != token.id) {
-  //     context.showErrorAlert(
-  //         'Sorry there was a problem, the invite link was not deleted.');
-  //   } else {
-  //     setState(() {
-  //       _activeClub!.clubInviteTokens =
-  //           _activeClub!.clubInviteTokens!.toggleItem(token);
-  //     });
-
-  //     /// Update the backup data.
-  //     _activeClubBackup = _activeClub!.toJson();
-  //   }
-  // }
-
-  /// Manual writes to store for [Club] and [ClubSummary] objects ///
-  /// Also rebroadcasts the correct queries.
-  // void _writeClubToGraphQLStore(Club club) {
-  //   final success = context.graphQLStore.writeDataToStore(
-  //     data: _activeClub!.toJson(),
-  //     broadcastQueryIds: [
-  //       GQLVarParamKeys.clubByIdQuery(_activeClub!.id),
-  //     ],
-  //   );
-
-  //   if (!success) {
-  //     context.showErrorAlert(
-  //         'Sorry there was a problem. The changes were not updated correctly!');
-  //   }
-  // }
-
-  // void _writeClubSummaryUpdateAndBroadcast(ClubSummary club,
-  //     {bool addRefToQuery = false}) {
-  //   final success = context.graphQLStore.writeDataToStore(
-  //       data: club.summary.toJson(),
-  //       addRefToQueries: addRefToQuery ? [GQLOpNames.userClubsQuery] : [],
-  //       broadcastQueryIds: addRefToQuery ? [] : [GQLOpNames.userClubsQuery]);
-
-  //   if (!success) {
-  //     context.showErrorAlert(
-  //         'Sorry there was a problem. The changes were not updated correctly!');
-  //   }
-  // }
 
   /// Will not save anything.
   void _close() {

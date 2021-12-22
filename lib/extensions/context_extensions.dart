@@ -312,7 +312,7 @@ extension BuildContextExtension on BuildContext {
         : readTheme.primary;
 
     Flushbar(
-            backgroundColor: readTheme.cardBackground.withOpacity(0.90),
+            backgroundColor: readTheme.cardBackground,
             flushbarPosition: flushbarPosition,
             flushbarStyle: FlushbarStyle.FLOATING,
             animationDuration: const Duration(milliseconds: 300),

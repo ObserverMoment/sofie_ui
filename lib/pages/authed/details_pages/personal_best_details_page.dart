@@ -48,23 +48,21 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
     final variables = DeleteUserBenchmarkByIdArguments(id: widget.id);
 
     final result = await context.graphQLStore.delete(
-        mutation: DeleteUserBenchmarkByIdMutation(variables: variables),
-        objectId: widget.id,
-        typename: kUserBenchmarkTypename,
-        clearQueryDataAtKeys: [
-          getParameterizedQueryId(UserBenchmarkByIdQuery(
-              variables: UserBenchmarkByIdArguments(id: widget.id)))
-        ],
-        removeRefFromQueries: [
-          GQLOpNames.userBenchmarks
-        ]);
+      mutation: DeleteUserBenchmarkByIdMutation(variables: variables),
+      objectId: widget.id,
+      typename: kUserBenchmarkTypename,
+      clearQueryDataAtKeys: [
+        getParameterizedQueryId(UserBenchmarkByIdQuery(
+            variables: UserBenchmarkByIdArguments(id: widget.id)))
+      ],
+      removeRefFromQueries: [GQLOpNames.userBenchmarks],
+    );
 
-    if (result.hasErrors || result.data?.deleteUserBenchmarkById != widget.id) {
-      context.showToast(
-          message: "Sorry, that didn't work", toastType: ToastType.destructive);
-    } else {
-      context.pop(); // Screen
-    }
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: "Sorry, that didn't work",
+            toastType: ToastType.destructive),
+        onSuccess: context.pop);
   }
 
   @override
@@ -174,12 +172,13 @@ class __PersonalBestEntrieslistState extends State<_PersonalBestEntrieslist> {
         ],
         removeAllRefsToId: true);
 
-    if (result.hasErrors ||
-        result.data?.deleteUserBenchmarkEntryById != entry.id) {
-      context.showToast(
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
           message: 'Sorry, there was a problem deleting this entry.',
-          toastType: ToastType.destructive);
-    }
+          toastType: ToastType.destructive),
+    );
   }
 
   List<UserBenchmarkEntry> _sortEntries() {

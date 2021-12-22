@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
@@ -30,7 +29,7 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           decoration: BoxDecoration(
               boxShadow: kElevation[2],
-              color: context.theme.background,
+              color: context.theme.primary.withOpacity(0.8),
               borderRadius: BorderRadius.circular(30)),
           child: Row(
             children: [
@@ -40,12 +39,12 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
                       benchmark.loadUnit,
                       benchmarkEntry),
                   size: fontSize,
-                  color: Styles.primaryAccent),
+                  color: context.theme.background),
               if (Utils.textNotNull(benchmarkEntry.videoUri))
-                const Padding(
-                  padding: EdgeInsets.only(left: 6.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0),
                   child: Icon(CupertinoIcons.film,
-                      color: Styles.primaryAccent, size: 18),
+                      color: context.theme.background, size: 18),
                 )
             ],
           ),

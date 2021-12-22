@@ -39,6 +39,10 @@ class DiscoverClubs extends StatelessWidget {
                     key: Key(
                         'DiscoverClubs- ${PublicClubsQuery().operationName}'),
                     query: PublicClubsQuery(),
+                    loadingIndicator: const ShimmerCardList(
+                      itemCount: 8,
+                      cardHeight: 180,
+                    ),
                     builder: (data) {
                       return ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),

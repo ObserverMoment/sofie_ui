@@ -102,7 +102,7 @@ class _ClubSectionButtons extends StatelessWidget {
       {Key? key, required this.club, required this.authedUserMemberType})
       : super(key: key);
 
-  double get _iconSize => 32;
+  double get _iconSize => 26;
 
   bool get _userIsOwnerOrAdmin => [
         UserClubMemberStatus.owner,
@@ -111,6 +111,7 @@ class _ClubSectionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = context.theme.primary.withOpacity(0.9);
     return GridView.count(
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -120,7 +121,11 @@ class _ClubSectionButtons extends StatelessWidget {
       children: [
         _ClubSectionButton(
           label: 'People',
-          icon: Icon(CupertinoIcons.person_2_alt, size: _iconSize),
+          icon: Icon(
+            CupertinoIcons.person_2_fill,
+            size: _iconSize,
+            color: iconColor,
+          ),
           count: club.memberCount,
           onTap: () => context.push(
               child: ClubDetailsPeople(
@@ -131,10 +136,10 @@ class _ClubSectionButtons extends StatelessWidget {
         _ClubSectionButton(
           label: 'Workouts',
           icon: SvgPicture.asset(
-            'assets/category_icons/workouts.svg',
+            'assets/graphics/dumbbell.svg',
             height: _iconSize,
-            fit: BoxFit.cover,
-            color: context.theme.primary,
+            fit: BoxFit.fitHeight,
+            color: iconColor,
           ),
           count: club.workoutCount,
           onTap: () => context.push(
@@ -145,12 +150,8 @@ class _ClubSectionButtons extends StatelessWidget {
         ),
         _ClubSectionButton(
             label: 'Plans',
-            icon: SvgPicture.asset(
-              'assets/category_icons/plans.svg',
-              height: _iconSize,
-              fit: BoxFit.cover,
-              color: context.theme.primary,
-            ),
+            icon: Icon(CupertinoIcons.calendar,
+                size: _iconSize, color: iconColor),
             count: club.planCount,
             onTap: () => context.push(
                     child: ClubDetailsWorkoutPlans(
@@ -160,10 +161,10 @@ class _ClubSectionButtons extends StatelessWidget {
         _ClubSectionButton(
           label: 'Throwdowns',
           icon: SvgPicture.asset(
-            'assets/category_icons/events.svg',
+            'assets/graphics/medal.svg',
             height: _iconSize,
-            fit: BoxFit.cover,
-            color: context.theme.primary,
+            fit: BoxFit.fitHeight,
+            color: iconColor,
           ),
           count: 0,
           onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
@@ -173,6 +174,7 @@ class _ClubSectionButtons extends StatelessWidget {
           icon: Icon(
             CupertinoIcons.shopping_cart,
             size: _iconSize,
+            color: iconColor,
           ),
           count: 0,
           onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
@@ -180,8 +182,9 @@ class _ClubSectionButtons extends StatelessWidget {
         _ClubSectionButton(
           label: 'Chat',
           icon: Icon(
-            CupertinoIcons.chat_bubble_2_fill,
+            CupertinoIcons.chat_bubble_text_fill,
             size: _iconSize,
+            color: iconColor,
           ),
           count: 0,
           onTap: () =>

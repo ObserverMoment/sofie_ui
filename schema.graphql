@@ -226,7 +226,7 @@ input CreateClubInput {
 }
 
 input CreateClubInviteTokenInput {
-  Club: ConnectRelationInput!
+  clubId: ID!
   inviteLimit: Int!
   name: String!
 }
@@ -442,6 +442,11 @@ input CreateWorkoutTagInput {
 
 scalar DateTime
 
+input DeleteClubInviteTokenInput {
+  clubId: ID!
+  tokenId: ID!
+}
+
 input DeleteCompletedWorkoutPlanDayWorkoutInput {
   workoutPlanDayWorkoutId: ID!
   workoutPlanEnrolmentId: ID!
@@ -623,7 +628,7 @@ type Mutation {
     data: CreateBodyTrackingEntryInput!
   ): BodyTrackingEntry!
   createClub(data: CreateClubInput!): ClubSummary!
-  createClubInviteToken(data: CreateClubInviteTokenInput!): ClubInviteToken!
+  createClubInviteToken(data: CreateClubInviteTokenInput!): ClubInviteTokens!
   createClubTimelinePost(
     data: CreateClubTimelinePostInput!
   ): TimelinePostFullData!
@@ -668,7 +673,7 @@ type Mutation {
   createWorkoutTag(data: CreateWorkoutTagInput!): WorkoutTag!
   deleteBodyTrackingEntryById(id: ID!): ID!
   deleteClub(id: ID!): ID!
-  deleteClubInviteToken(id: ID!): ID!
+  deleteClubInviteToken(data: DeleteClubInviteTokenInput!): ClubInviteTokens!
   deleteClubTimelinePost(activityId: ID!): ID!
   deleteCollectionById(id: ID!): ID!
   deleteCompletedWorkoutPlanDayWorkout(
@@ -728,7 +733,7 @@ type Mutation {
   updateBodyTrackingEntry(
     data: UpdateBodyTrackingEntryInput!
   ): BodyTrackingEntry!
-  updateClubInviteToken(data: UpdateClubInviteTokenInput!): ClubInviteToken!
+  updateClubInviteToken(data: UpdateClubInviteTokenInput!): ClubInviteTokens!
   updateClubSummary(data: UpdateClubSummaryInput!): ClubSummary!
   updateCollection(data: UpdateCollectionInput!): Collection!
   updateEquipment(data: UpdateEquipmentInput!): Equipment
@@ -963,6 +968,7 @@ input UpdateBodyTrackingEntryInput {
 
 input UpdateClubInviteTokenInput {
   active: Boolean
+  clubId: ID!
   id: ID!
   inviteLimit: Int
   name: String
