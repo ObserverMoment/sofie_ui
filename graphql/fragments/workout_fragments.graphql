@@ -16,7 +16,7 @@ fragment WorkoutData on Workout {
   introVideoThumbUri
   introAudioUri
   User {
-    ...UserSummary
+    ...UserAvatarData
   }
   WorkoutGoals {
     ...WorkoutGoal
@@ -82,7 +82,7 @@ fragment WorkoutSummary on WorkoutSummary {
   archived
   name
   User {
-    ...UserSummary
+    ...UserAvatarData
   }
   lengthMinutes
   coverImageUri

@@ -60,6 +60,9 @@ class WorkoutCard extends StatelessWidget {
     const borderRadius = 8.0;
     const infoFontColor = Styles.white;
 
+    /// Don't show 'Custom' as a tag.
+    final tagsToDisplay = workout.tags.where((t) => t != 'Custom').toList();
+
     return Card(
       elevation: 2,
       padding: EdgeInsets.zero,
@@ -145,7 +148,8 @@ class WorkoutCard extends StatelessWidget {
                 borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(borderRadius),
                     bottomLeft: Radius.circular(borderRadius))),
-            padding: const EdgeInsets.all(16),
+            padding:
+                const EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -174,15 +178,16 @@ class WorkoutCard extends StatelessWidget {
                 ),
                 if (Utils.textNotNull(workout.description))
                   Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
+                    padding: const EdgeInsets.only(top: 4.0),
                     child: MyText(workout.description!, color: infoFontColor),
                   ),
-                if (workout.tags.isNotEmpty)
+                if (tagsToDisplay.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 6.0),
                     child: CommaSeparatedList(
-                        workout.tags.where((t) => t != 'Custom').toList(),
-                        textColor: Styles.primaryAccent),
+                      tagsToDisplay,
+                      textColor: infoFontColor,
+                    ),
                   )
               ],
             ),

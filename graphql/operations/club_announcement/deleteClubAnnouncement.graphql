@@ -1,0 +1,3 @@
+mutation deleteClubAnnouncement($id: ID!) {
+  deleteClubAnnouncement(id: $id)
+}

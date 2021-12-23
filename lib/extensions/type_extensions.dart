@@ -26,7 +26,7 @@ extension HexColor on Color {
       '${blue.toRadixString(16).padLeft(2, '0')}';
 }
 
-extension DateTimeFormatting on DateTime {
+extension DateTimeExtension on DateTime {
   String get timeString => DateFormat.jm().format(this);
   String get timeString24 => DateFormat('HH:mm').format(this);
 
@@ -37,6 +37,8 @@ extension DateTimeFormatting on DateTime {
   String get minimalDateStringYear => DateFormat('MMM d, yy').format(this);
   String get minimalDateString => DateFormat('MMM d').format(this);
   String get dateAndTime => '$minimalDateString, $timeString';
+
+  String get monthAbbrev => DateFormat('MMM').format(this);
 
   String get daysAgo => isToday
       ? 'Today'
@@ -61,6 +63,10 @@ extension DateTimeFormatting on DateTime {
     return tomorrow.day == day &&
         tomorrow.month == month &&
         tomorrow.year == year;
+  }
+
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
   }
 }
 

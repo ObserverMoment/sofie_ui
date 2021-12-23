@@ -166,7 +166,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
     setState(() => _activePageIndex = index);
   }
 
-  UserSummary _getSelectedObjectCreator() {
+  UserAvatarData _getSelectedObjectCreator() {
     switch (_selectedObjectType) {
       case TimelinePostType.workout:
         return _workout!.user;

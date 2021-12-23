@@ -45,40 +45,38 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
   }
 
   Future<void> _deleteBenchmark() async {
-    final variables = DeleteUserBenchmarkByIdArguments(id: widget.id);
+    final variables = DeleteUserBenchmarkArguments(id: widget.id);
 
     final result = await context.graphQLStore.delete(
-        mutation: DeleteUserBenchmarkByIdMutation(variables: variables),
-        objectId: widget.id,
-        typename: kUserBenchmarkTypename,
-        clearQueryDataAtKeys: [
-          getParameterizedQueryId(UserBenchmarkByIdQuery(
-              variables: UserBenchmarkByIdArguments(id: widget.id)))
-        ],
-        removeRefFromQueries: [
-          GQLOpNames.userBenchmarksQuery
-        ]);
+      mutation: DeleteUserBenchmarkMutation(variables: variables),
+      objectId: widget.id,
+      typename: kUserBenchmarkTypename,
+      clearQueryDataAtKeys: [
+        getParameterizedQueryId(UserBenchmarkQuery(
+            variables: UserBenchmarkArguments(id: widget.id)))
+      ],
+      removeRefFromQueries: [GQLOpNames.userBenchmarks],
+    );
 
-    if (result.hasErrors || result.data?.deleteUserBenchmarkById != widget.id) {
-      context.showToast(
-          message: "Sorry, that didn't work", toastType: ToastType.destructive);
-    } else {
-      context.pop(); // Screen
-    }
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: "Sorry, that didn't work",
+            toastType: ToastType.destructive),
+        onSuccess: context.pop);
   }
 
   @override
   Widget build(BuildContext context) {
-    final query = UserBenchmarkByIdQuery(
-        variables: UserBenchmarkByIdArguments(id: widget.id));
+    final query =
+        UserBenchmarkQuery(variables: UserBenchmarkArguments(id: widget.id));
 
-    return QueryObserver<UserBenchmarkById$Query, UserBenchmarkByIdArguments>(
+    return QueryObserver<UserBenchmark$Query, UserBenchmarkArguments>(
         key: Key(
             'PersonalBestDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          final benchmark = data.userBenchmarkById;
+          final benchmark = data.userBenchmark;
           return MyPageScaffold(
             navigationBar: MyNavBar(
               middle: NavBarLargeTitle(benchmark.name),
@@ -120,7 +118,7 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
                                       child: Icon(
                                         CupertinoIcons.cube,
                                         size: 16,
-                                        color: Styles.secondaryAccent,
+                                        color: Styles.primaryAccent,
                                       ),
                                     ),
                                     MyText(
@@ -128,7 +126,7 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
                                       maxLines: 10,
                                       textAlign: TextAlign.center,
                                       lineHeight: 1,
-                                      color: Styles.secondaryAccent,
+                                      color: Styles.primaryAccent,
                                     ),
                                   ],
                                 ),
@@ -162,24 +160,25 @@ class __PersonalBestEntrieslistState extends State<_PersonalBestEntrieslist> {
   ScoreSortBy _sortBy = ScoreSortBy.best;
 
   Future<void> _deleteBenchmarkEntry(UserBenchmarkEntry entry) async {
-    final variables = DeleteUserBenchmarkEntryByIdArguments(id: entry.id);
+    final variables = DeleteUserBenchmarkEntryArguments(id: entry.id);
 
     final result = await context.graphQLStore.delete(
-        mutation: DeleteUserBenchmarkEntryByIdMutation(variables: variables),
+        mutation: DeleteUserBenchmarkEntryMutation(variables: variables),
         objectId: entry.id,
         typename: kUserBenchmarkEntryTypename,
         broadcastQueryIds: [
-          GQLVarParamKeys.userBenchmarkByIdQuery(widget.userBenchmark.id),
-          GQLOpNames.userBenchmarksQuery,
+          GQLVarParamKeys.userBenchmark(widget.userBenchmark.id),
+          GQLOpNames.userBenchmarks,
         ],
         removeAllRefsToId: true);
 
-    if (result.hasErrors ||
-        result.data?.deleteUserBenchmarkEntryById != entry.id) {
-      context.showToast(
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
           message: 'Sorry, there was a problem deleting this entry.',
-          toastType: ToastType.destructive);
-    }
+          toastType: ToastType.destructive),
+    );
   }
 
   List<UserBenchmarkEntry> _sortEntries() {

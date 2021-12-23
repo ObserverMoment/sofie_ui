@@ -9,23 +9,22 @@ import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart
 import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/default_object_factory.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-/// Creates the invite token and then passes it back up to parent so that it can be added to the club and the store + UI (for the club) can be updated.
+/// Creates or updates an invite token via the API and then updates the client store with [ClubInviteTokens] object that is returned.
 class ClubInviteTokenCreator extends StatefulWidget {
-  /// When creating [token] should be null but the parent [club] is required.
-  /// When editing just the [token] is required. (updates just require the object ID)
+  /// When creating [token] should be null.
   final ClubInviteToken? token;
-  final Club? club;
-  final void Function(ClubInviteToken token)? onUpdateComplete;
+  final String clubId;
   const ClubInviteTokenCreator({
     Key? key,
     this.token,
-    this.club,
-    this.onUpdateComplete,
-  })  : assert(token != null || club != null),
-        super(key: key);
+    required this.clubId,
+  }) : super(key: key);
 
   @override
   _ClubInviteTokenCreatorState createState() => _ClubInviteTokenCreatorState();
@@ -73,56 +72,55 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
     });
   }
 
-  Future<void> _handleCreate() async {
-    if (widget.club == null) {
-      throw Exception(
-          'ClubInviteTokenCreator._handleCreate: Cannot create a ClubInviteToken without the parent Club');
-    }
+  Future<void> _createClubInviteToken() async {
     setState(() => _savingToDB = true);
 
     final variables = CreateClubInviteTokenArguments(
         data: CreateClubInviteTokenInput(
             name: _activeToken.name,
-            club: ConnectRelationInput(id: widget.club!.id),
-            inviteLimit: _enableInviteLimit ? _activeToken.inviteLimit : 0));
+            inviteLimit: _enableInviteLimit ? _activeToken.inviteLimit : 0,
+            clubId: widget.clubId));
 
     final result = await context.graphQLStore
-        .create<CreateClubInviteToken$Mutation, CreateClubInviteTokenArguments>(
-            mutation: CreateClubInviteTokenMutation(variables: variables));
+        .mutate<CreateClubInviteToken$Mutation, CreateClubInviteTokenArguments>(
+            mutation: CreateClubInviteTokenMutation(variables: variables),
+            broadcastQueryIds: [
+          GQLVarParamKeys.clubInviteTokens(widget.clubId)
+        ]);
 
     setState(() => _savingToDB = false);
 
-    if (result.hasErrors || result.data == null) {
-      context.showErrorAlert(
-          'Sorry there was a problem, the invite link was not created.');
-    } else {
-      widget.onUpdateComplete?.call(result.data!.createClubInviteToken);
-      context.pop();
-    }
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry there was a problem creating the invite link.',
+            toastType: ToastType.destructive),
+        onSuccess: context.pop);
   }
 
-  Future<void> _handleUpdate() async {
+  Future<void> _updateClubInviteToken() async {
     setState(() => _savingToDB = true);
 
     final variables = UpdateClubInviteTokenArguments(
         data: UpdateClubInviteTokenInput(
             name: _activeToken.name,
             inviteLimit: _enableInviteLimit ? _activeToken.inviteLimit : 0,
-            id: _activeToken.id));
+            id: _activeToken.id,
+            clubId: widget.clubId));
 
     final result = await context.graphQLStore
         .mutate<UpdateClubInviteToken$Mutation, UpdateClubInviteTokenArguments>(
-            mutation: UpdateClubInviteTokenMutation(variables: variables));
+            mutation: UpdateClubInviteTokenMutation(variables: variables),
+            broadcastQueryIds: [
+          GQLVarParamKeys.clubInviteTokens(widget.clubId)
+        ]);
 
     setState(() => _savingToDB = false);
 
-    if (result.hasErrors || result.data == null) {
-      context.showErrorAlert(
-          'Sorry there was a problem, the invite link was not updated.');
-    } else {
-      widget.onUpdateComplete?.call(result.data!.updateClubInviteToken);
-      context.pop();
-    }
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry there was a problem updating the invite link.',
+            toastType: ToastType.destructive),
+        onSuccess: context.pop);
   }
 
   bool get _validToSubmit =>
@@ -211,8 +209,8 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
                       _isCreate ? CupertinoIcons.add : CupertinoIcons.pencil,
                   text: _isCreate ? 'Create Invite Link' : 'Update Invite Link',
                   onPressed: _isCreate
-                      ? () => _handleCreate()
-                      : () => _handleUpdate()),
+                      ? _createClubInviteToken
+                      : _updateClubInviteToken),
             )
         ],
       ),

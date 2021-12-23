@@ -55,7 +55,7 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
               getParameterizedQueryId(LoggedWorkoutByIdQuery(
                   variables: LoggedWorkoutByIdArguments(id: id)))
             ],
-            removeRefFromQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery],
+            removeRefFromQueries: [GQLNullVarsKeys.userLoggedWorkouts],
           );
 
           if (result.hasErrors) {
@@ -274,8 +274,9 @@ class _LoggedWorkoutSectionDisplay extends StatelessWidget {
           Padding(
             padding:
                 const EdgeInsets.only(left: 4.0, top: 4, right: 4, bottom: 6),
-            child: MyText(loggedWorkoutSection.workoutSectionType.name,
-                color: Styles.secondaryAccent),
+            child: MyText(
+              loggedWorkoutSection.workoutSectionType.name,
+            ),
           ),
           if (Utils.textNotNull(loggedWorkoutSection.name))
             Padding(

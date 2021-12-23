@@ -8,8 +8,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 class AwardIcon extends StatelessWidget {
   final double size;
   final Color color;
-  const AwardIcon(
-      {Key? key, this.size = 24, this.color = Styles.secondaryAccent})
+  const AwardIcon({Key? key, this.size = 24, this.color = Styles.primaryAccent})
       : super(key: key);
 
   @override

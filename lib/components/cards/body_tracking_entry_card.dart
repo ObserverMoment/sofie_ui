@@ -150,7 +150,7 @@ class BodyTrackingEntryCard extends StatelessWidget {
                           top: -10,
                           right: -2,
                           child: CircularBox(
-                            gradient: Styles.secondaryAccentGradient,
+                            gradient: Styles.primaryAccentGradient,
                             padding: const EdgeInsets.all(7),
                             child: MyText(
                               bodyTrackingEntry.photoUris.length.toString(),

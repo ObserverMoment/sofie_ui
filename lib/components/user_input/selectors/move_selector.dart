@@ -163,7 +163,7 @@ class _MoveSelectorState extends State<MoveSelector> {
                                 ? null
                                 : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
                             contentColor: moveFiltersBloc.hasActiveFilters
-                                ? Styles.secondaryAccent
+                                ? Styles.primaryAccent
                                 : null,
                             icon: CupertinoIcons.slider_horizontal_3),
                       ],

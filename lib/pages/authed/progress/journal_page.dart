@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/journal/journal_goals.dart';
+import 'package:sofie_ui/components/journal/journal_graphs.dart';
 import 'package:sofie_ui/components/journal/journal_moods.dart';
 import 'package:sofie_ui/components/journal/journal_notes.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class JournalPage extends StatefulWidget {
   const JournalPage({Key? key}) : super(key: key);
@@ -24,8 +25,16 @@ class _JournalPageState extends State<JournalPage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       child: NestedScrollView(
-          headerSliverBuilder: (c, i) =>
-              [const MySliverNavbar(title: 'Journal')],
+          headerSliverBuilder: (c, i) => [
+                MySliverNavbar(
+                  title: 'Journal',
+                  trailing: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => context.push(child: const JournalGraphs()),
+                    child: const Icon(CupertinoIcons.chart_bar_fill),
+                  ),
+                )
+              ],
           body: Column(
             children: [
               Container(

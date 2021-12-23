@@ -64,7 +64,7 @@ class VideoThumbnailPlayer extends StatelessWidget {
                     ],
                   )
                 : Icon(
-                    CupertinoIcons.film,
+                    CupertinoIcons.tv,
                     size: displaySize.width / 2.5,
                     color: _background.withOpacity(0.4),
                   ),

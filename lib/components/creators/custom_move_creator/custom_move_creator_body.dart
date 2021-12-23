@@ -60,7 +60,7 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
                     padding: EdgeInsets.only(top: 4, bottom: 8.0),
                     child: MyText(
                       'Non specified. Tap Body Area to edit scores',
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                       lineHeight: 1.3,
                       size: FONTSIZE.two,
                     ),

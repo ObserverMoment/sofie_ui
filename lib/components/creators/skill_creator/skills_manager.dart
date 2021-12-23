@@ -61,9 +61,7 @@ class _SkillsManagerState extends State<SkillsManager> {
 
           context.graphQLStore.writeDataToStore(
               data: profile.toJson(),
-              broadcastQueryIds: [
-                GQLVarParamKeys.userProfileByIdQuery(authedUserId)
-              ]);
+              broadcastQueryIds: [GQLVarParamKeys.userProfile(authedUserId)]);
         });
   }
 
@@ -157,24 +155,22 @@ class _SkillsManagerState extends State<SkillsManager> {
 
     context.graphQLStore.writeDataToStore(
         data: profile.toJson(),
-        broadcastQueryIds: [
-          GQLVarParamKeys.userProfileByIdQuery(authedUserId)
-        ]);
+        broadcastQueryIds: [GQLVarParamKeys.userProfile(authedUserId)]);
   }
 
   @override
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-    final query = UserProfileByIdQuery(
-        variables: UserProfileByIdArguments(userId: authedUserId));
+    final query =
+        UserProfileQuery(variables: UserProfileArguments(userId: authedUserId));
 
-    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
+    return QueryObserver<UserProfile$Query, UserProfileArguments>(
       key: Key('SkillsManager-${query.operationName}'),
       query: query,
       parameterizeQuery: true,
       fetchPolicy: QueryFetchPolicy.storeFirst,
       builder: (data) {
-        final skills = data.userProfileById.skills;
+        final skills = data.userProfile.skills;
 
         return MyPageScaffold(
             child: NestedScrollView(

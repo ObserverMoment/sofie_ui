@@ -304,7 +304,7 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
                           onPressed: _unfollowOtherUser,
                           iconSize: widget.iconSize,
                           fontSize: widget.fontSize,
-                          backgroundColor: Styles.infoBlue,
+                          backgroundColor: Styles.primaryAccent,
                           textColor: Styles.white)
                       : TertiaryButton(
                           prefixIconData: CupertinoIcons.person,

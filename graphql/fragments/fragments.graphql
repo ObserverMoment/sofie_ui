@@ -64,8 +64,8 @@ fragment TimelinePostObjectDataObject on TimelinePostObjectDataObject {
   id
   type
   name
-  introAudioUri
-  coverImageUri
-  introVideoUri
-  introVideoThumbUri
+  audioUri
+  imageUri
+  videoUri
+  videoThumbUri
 }

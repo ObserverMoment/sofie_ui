@@ -86,7 +86,7 @@ class DateTimePickerDisplayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color highlightColor = Styles.secondaryAccent;
+    const Color highlightColor = Styles.primaryAccent;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -310,8 +310,7 @@ class _DatePickerCalendarState extends State<DatePickerCalendar> {
                       DateFormat('MMMM yyyy').format(_focusedDay),
                       weight: FontWeight.bold,
                       size: FONTSIZE.four,
-                      color:
-                          _activeTabIndex == 1 ? Styles.secondaryAccent : null,
+                      color: _activeTabIndex == 1 ? Styles.primaryAccent : null,
                     ),
                     const SizedBox(width: 4),
                     MyAnimatedRotation(
@@ -320,9 +319,8 @@ class _DatePickerCalendarState extends State<DatePickerCalendar> {
                       child: Icon(
                         CupertinoIcons.chevron_right,
                         size: 18,
-                        color: _activeTabIndex == 1
-                            ? Styles.secondaryAccent
-                            : null,
+                        color:
+                            _activeTabIndex == 1 ? Styles.primaryAccent : null,
                       ),
                     )
                   ],
@@ -628,7 +626,7 @@ class DateRangePickerRow extends StatelessWidget {
                       color: !selectedDateIsValid
                           ? Styles.errorRed
                           : pickerActive
-                              ? Styles.secondaryAccent
+                              ? Styles.primaryAccent
                               : null,
                       weight:
                           pickerActive ? FontWeight.bold : FontWeight.normal,

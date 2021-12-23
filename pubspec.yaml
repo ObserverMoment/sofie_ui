@@ -17,6 +17,7 @@ dependencies:
   collection: ^1.15.0
   cupertino_icons: ^1.0.3
   custom_pop_up_menu: ^1.2.0
+  dotted_line: ^3.1.0
   email_validator: ^2.0.1
   equatable: ^2.0.0
   file_picker: ^4.2.7
@@ -80,7 +81,7 @@ dependencies:
   uni_links: ^0.5.1
   uploadcare_flutter: ^2.0.1
   uuid: ^3.0.5
-  video_player: ^2.2.7
+  video_player: ^2.2.9
   wakelock: ^0.5.6
   xml: ^5.3.0
 

@@ -46,7 +46,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     final writeWorkoutSuccess = context.graphQLStore.writeDataToStore(
       data: workout.toJson(),
       broadcastQueryIds: [
-        GQLVarParamKeys.workoutByIdQuery(workout.id),
+        GQLVarParamKeys.workoutById(workout.id),
       ],
     );
 
@@ -54,10 +54,10 @@ class WorkoutCreatorBloc extends ChangeNotifier {
       final success = context.graphQLStore.writeDataToStore(
         data: workout.summary.toJson(),
         broadcastQueryIds: [
-          GQLOpNames.userScheduledWorkoutsQuery,
-          GQLOpNames.userWorkoutsQuery,
-          GQLOpNames.userCollectionsQuery,
-          GQLOpNames.userClubsQuery
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.userWorkouts,
+          GQLOpNames.userCollections,
+          GQLOpNames.userClubs
         ],
       );
       return success;

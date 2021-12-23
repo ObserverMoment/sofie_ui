@@ -9,7 +9,9 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class JournalGoalCard extends StatelessWidget {
@@ -33,7 +35,8 @@ class JournalGoalCard extends StatelessWidget {
       journalGoal: journalGoal,
       onUpdateComplete: (result) {
         context.pop();
-        _checkResult(context, result);
+        checkOperationResult(context, result,
+            onFail: () => _showErrorToast(context));
       },
     ));
   }
@@ -50,107 +53,104 @@ class JournalGoalCard extends StatelessWidget {
 
           final result = await context.graphQLStore.mutate(
               mutation: UpdateJournalGoalMutation(variables: variables),
-              broadcastQueryIds: [JournalGoalsQuery().operationName]);
-          _checkResult(context, result);
+              broadcastQueryIds: [GQLOpNames.journalGoals]);
+
+          checkOperationResult(context, result,
+              onFail: () => _showErrorToast(context));
         });
   }
 
-  void _checkResult(BuildContext context, OperationResult? result) {
-    if (result?.data == null || result!.hasErrors) {
-      context.showToast(
-          message: 'Sorry, there was an issue updating this goal.',
-          toastType: ToastType.destructive);
-    }
-  }
+  void _showErrorToast(BuildContext context) => context.showToast(
+      message: 'Sorry, there was an issue updating this goal.',
+      toastType: ToastType.destructive);
 
   @override
   Widget build(BuildContext context) {
     final isComplete = journalGoal.completedDate != null;
 
-    return AnimatedOpacity(
-      opacity: isComplete ? 0.7 : 1,
-      duration: kStandardAnimationDuration,
-      child: ContentBox(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        MyText(
+    return ContentBox(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  child: AnimatedSwitcher(
+                      duration: kStandardAnimationDuration,
+                      child: isComplete
+                          ? const Icon(
+                              CupertinoIcons.checkmark_alt_circle_fill,
+                              size: 48,
+                              color: Styles.primaryAccent,
+                            )
+                          : const Icon(
+                              CupertinoIcons.circle,
+                              size: 48,
+                            )),
+                  onPressed: () => _toggleComplete(context)),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: MyText(
                           journalGoal.name,
                           lineHeight: 1.3,
+                          maxLines: 2,
+                          size: FONTSIZE.four,
                           decoration:
                               isComplete ? TextDecoration.lineThrough : null,
-                        ),
-                        if (!isComplete && journalGoal.deadline != null)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: MyText(
-                              'by ${journalGoal.deadline!.compactDateString}',
-                              size: FONTSIZE.two,
-                              decoration: isComplete
-                                  ? TextDecoration.lineThrough
-                                  : null,
-                              color:
-                                  journalGoal.deadline!.isBefore(DateTime.now())
-                                      ? Styles.errorRed
-                                      : Styles.primaryAccent,
-                            ),
-                          ),
-                        if (isComplete)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: MyText(
-                              'Completed ${journalGoal.completedDate!.compactDateString}',
-                              color: Styles.primaryAccent,
-                              size: FONTSIZE.two,
-                            ),
-                          )
-                      ],
-                    ),
-                    if (Utils.textNotNull(journalGoal.description))
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            right: 6.0, top: 6, bottom: 6),
-                        child: MyText(
-                          journalGoal.description!,
-                          maxLines: 10,
-                          lineHeight: 1.3,
-                          decoration:
-                              isComplete ? TextDecoration.lineThrough : null,
-                          size: FONTSIZE.two,
                         ),
                       ),
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      child: AnimatedSwitcher(
-                          duration: kStandardAnimationDuration,
-                          child: isComplete
-                              ? const Icon(
-                                  CupertinoIcons.checkmark_alt_circle_fill,
-                                  size: 40,
-                                  color: Styles.primaryAccent,
-                                )
-                              : const Icon(
-                                  CupertinoIcons.circle,
-                                  size: 40,
-                                )),
-                      onPressed: () => _toggleComplete(context))
+                      if (!isComplete && journalGoal.deadline != null)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: MyText(
+                            journalGoal.deadline!.minimalDateString,
+                            size: FONTSIZE.two,
+                            decoration:
+                                isComplete ? TextDecoration.lineThrough : null,
+                            color:
+                                journalGoal.deadline!.isBefore(DateTime.now())
+                                    ? Styles.errorRed
+                                    : Styles.primaryAccent,
+                          ),
+                        ),
+                      if (isComplete)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6.0),
+                          child: MyText(
+                            'Completed ${journalGoal.completedDate!.compactDateString}',
+                            color: Styles.primaryAccent,
+                            size: FONTSIZE.two,
+                          ),
+                        )
+                    ],
+                  ),
+                  if (Utils.textNotNull(journalGoal.description))
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(right: 6.0, top: 6, bottom: 6),
+                      child: MyText(
+                        journalGoal.description!,
+                        maxLines: 10,
+                        lineHeight: 1.3,
+                        decoration:
+                            isComplete ? TextDecoration.lineThrough : null,
+                        size: FONTSIZE.two,
+                      ),
+                    ),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -184,7 +184,7 @@ class __MarkGoalCompletedBottomSheetState
 
     final result = await context.graphQLStore.mutate(
         mutation: UpdateJournalGoalMutation(variables: variables),
-        broadcastQueryIds: [JournalGoalsQuery().operationName]);
+        broadcastQueryIds: [GQLOpNames.journalGoals]);
 
     setState(() => _loading = false);
 

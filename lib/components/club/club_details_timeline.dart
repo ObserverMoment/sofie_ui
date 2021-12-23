@@ -15,7 +15,7 @@ import 'package:sofie_ui/services/utils.dart';
 
 /// NOTE: Logic in this widget is simlar to that in [AuthedUserTimeline] in [FeedsAndFollows]. Except there is no sharing of posts to club feeds - they are club specific. Plus we may add some additional functionality - such as comments / threads to timeline posts here.
 class ClubDetailsTimeline extends StatefulWidget {
-  final Club club;
+  final ClubSummary club;
   final bool isOwnerOrAdmin;
   final bool stopPollingFeed;
   const ClubDetailsTimeline({
@@ -64,7 +64,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   /// TODO: Upgrade this polling functionality to use a websocket.
   void _initPollingForNewPosts() {
     _pollingTimer =
-        Timer.periodic(const Duration(seconds: 10), (Timer t) async {
+        Timer.periodic(const Duration(seconds: 30), (Timer t) async {
       if (widget.stopPollingFeed) {
         _pollingTimer.cancel();
       } else {

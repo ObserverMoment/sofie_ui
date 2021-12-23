@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/discover_club_card.dart';
+import 'package:sofie_ui/components/cards/club_card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -12,9 +12,6 @@ import 'package:auto_route/auto_route.dart';
 class DiscoverClubs extends StatelessWidget {
   const DiscoverClubs({Key? key}) : super(key: key);
 
-  double get cardHeight => 280.0;
-  double cardWidth(BoxConstraints constraints) => constraints.maxWidth / 2.1;
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -22,11 +19,15 @@ class DiscoverClubs extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0, top: 6, bottom: 10),
+                  padding:
+                      const EdgeInsets.only(left: 12.0, top: 16, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const MyHeaderText('Clubs'),
+                      const MyHeaderText(
+                        'Clubs',
+                        size: FONTSIZE.five,
+                      ),
                       IconButton(
                           iconData: CupertinoIcons.compass,
                           onPressed: () =>
@@ -38,29 +39,22 @@ class DiscoverClubs extends StatelessWidget {
                     key: Key(
                         'DiscoverClubs- ${PublicClubsQuery().operationName}'),
                     query: PublicClubsQuery(),
-                    loadingIndicator: Container(
-                      height: cardHeight,
-                      padding: const EdgeInsets.only(top: 2.0, left: 4.0),
-                      child: ShimmerHorizontalCardList(
-                        cardWidth: cardWidth(constraints),
-                      ),
+                    loadingIndicator: const ShimmerCardList(
+                      itemCount: 8,
+                      cardHeight: 180,
                     ),
                     builder: (data) {
-                      return Container(
-                        height: cardHeight,
-                        padding: const EdgeInsets.only(top: 2.0, left: 4.0),
-                        child: ListView.builder(
-                          itemCount: data.publicClubs.length,
-                          scrollDirection: Axis.horizontal,
-                          shrinkWrap: true,
-                          itemBuilder: (c, i) => GestureDetector(
+                      return ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: data.publicClubs.length,
+                        shrinkWrap: true,
+                        itemBuilder: (c, i) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: GestureDetector(
                             onTap: () => context.navigateTo(
                                 ClubDetailsRoute(id: data.publicClubs[i].id)),
-                            child: SizedBox(
-                              width: cardWidth(constraints),
-                              child: DiscoverClubCard(
-                                club: data.publicClubs[i],
-                              ),
+                            child: ClubCard(
+                              club: data.publicClubs[i],
                             ),
                           ),
                         ),

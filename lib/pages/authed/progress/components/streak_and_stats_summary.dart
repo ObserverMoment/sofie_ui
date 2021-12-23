@@ -110,7 +110,7 @@ class RecentLogDots extends StatelessWidget {
               shape: BoxShape.circle,
               color:
                   hasLogOnDay ? null : context.theme.primary.withOpacity(0.1),
-              gradient: hasLogOnDay ? Styles.secondaryAccentGradient : null,
+              gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
             ),
           );
         }));

@@ -171,7 +171,7 @@ class _VideoUploaderState extends State<VideoUploader> {
                   : hasVideo
                       ? SizedUploadcareImage(widget.videoThumbUri!)
                       : Icon(
-                          CupertinoIcons.film,
+                          CupertinoIcons.tv,
                           size: widget.displaySize.width / 2.5,
                           color: primary.withOpacity(0.3),
                         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -12,6 +13,8 @@ class ClubCard extends StatelessWidget {
   final ClubSummary club;
   const ClubCard({Key? key, required this.club}) : super(key: key);
 
+  double get _iconSize => 12.0;
+
   @override
   Widget build(BuildContext context) {
     // Calc the ideal image size based on the display size.
@@ -21,8 +24,6 @@ class ClubCard extends StatelessWidget {
     final Dimensions dimensions = Dimensions.square((width * 1.5).toInt());
     final Color contentOverlayColor =
         Styles.black.withOpacity(kImageOverlayOpacity);
-    const overlayContentPadding =
-        EdgeInsets.symmetric(vertical: 4, horizontal: 8);
 
     /// The lower section seems to need to have a border radius of one lower than that of the whole card to avoid a small peak of the underlying image - why does the corner get cut by 1 px?
     const borderRadius = 8.0;
@@ -49,50 +50,36 @@ class ClubCard extends StatelessWidget {
                   padding: const EdgeInsets.all(6),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 6.0),
-                        child: ContentBox(
-                          backgroundColor: contentOverlayColor,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(CupertinoIcons.person_2_fill,
-                                      size: 12, color: infoFontColor),
-                                  const SizedBox(width: 6),
-                                  MyText(club.memberCount.toString(),
-                                      size: FONTSIZE.two, color: infoFontColor)
-                                ],
-                              ),
-                              const MyText('Members',
-                                  size: FONTSIZE.one, color: infoFontColor)
-                            ],
-                          ),
-                        ),
+                      _StatSummaryTag(
+                        contentOverlayColor: contentOverlayColor,
+                        count: club.memberCount,
+                        icon: Icon(CupertinoIcons.person_2_fill,
+                            size: _iconSize, color: infoFontColor),
+                        infoFontColor: infoFontColor,
+                        label: 'People',
                       ),
-                      if (Utils.textNotNull(club.location))
-                        ContentBox(
-                          backgroundColor: contentOverlayColor,
-                          padding: overlayContentPadding,
-                          borderRadius: 4,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(CupertinoIcons.location,
-                                  size: 13, color: Styles.secondaryAccent),
-                              const SizedBox(width: 2),
-                              MyText(
-                                club.location!,
-                                color: Styles.secondaryAccent,
-                                size: FONTSIZE.two,
-                              )
-                            ],
-                          ),
+                      _StatSummaryTag(
+                        contentOverlayColor: contentOverlayColor,
+                        count: club.workoutCount,
+                        icon: SvgPicture.asset(
+                          'assets/graphics/dumbbell.svg',
+                          height: 12,
+                          fit: BoxFit.cover,
+                          color: infoFontColor,
                         ),
+                        infoFontColor: infoFontColor,
+                        label: 'WODs',
+                      ),
+                      _StatSummaryTag(
+                        contentOverlayColor: contentOverlayColor,
+                        count: club.planCount,
+                        icon: Icon(CupertinoIcons.calendar,
+                            size: _iconSize, color: infoFontColor),
+                        infoFontColor: infoFontColor,
+                        label: 'Plans',
+                      ),
                     ],
                   ),
                 )),
@@ -112,15 +99,38 @@ class ClubCard extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MyHeaderText(
-                              club.name,
-                              weight: FontWeight.bold,
-                              color: infoFontColor,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MyHeaderText(
+                                  club.name,
+                                  weight: FontWeight.bold,
+                                  color: infoFontColor,
+                                ),
+                                if (Utils.textNotNull(club.location))
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(CupertinoIcons.location,
+                                            size: 13),
+                                        const SizedBox(width: 2),
+                                        MyText(
+                                          club.location!,
+                                          size: FONTSIZE.two,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
                             const SizedBox(height: 6),
                             MyText(
                               club.owner.displayName.toUpperCase(),
                               color: infoFontColor,
+                              size: FONTSIZE.two,
                             ),
                           ],
                         ),
@@ -143,5 +153,46 @@ class ClubCard extends StatelessWidget {
             )
           ],
         ));
+  }
+}
+
+class _StatSummaryTag extends StatelessWidget {
+  final Color contentOverlayColor;
+  final Color infoFontColor;
+  final Widget icon;
+  final int count;
+  final String label;
+  const _StatSummaryTag(
+      {Key? key,
+      required this.contentOverlayColor,
+      required this.infoFontColor,
+      required this.icon,
+      required this.count,
+      required this.label})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 6.0),
+      child: ContentBox(
+        backgroundColor: contentOverlayColor,
+        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                icon,
+                const SizedBox(width: 6),
+                MyText(count.toString(),
+                    size: FONTSIZE.two, color: infoFontColor)
+              ],
+            ),
+            MyText(label, size: FONTSIZE.one, color: infoFontColor)
+          ],
+        ),
+      ),
+    );
   }
 }

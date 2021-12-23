@@ -58,24 +58,23 @@ class EditProfilePage extends StatelessWidget {
       }
 
       context.graphQLStore.writeDataToStore(
-          data: updated,
-          broadcastQueryIds: [GQLVarParamKeys.userProfileByIdQuery(id)]);
+          data: updated, broadcastQueryIds: [GQLVarParamKeys.userProfile(id)]);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-    final query = UserProfileByIdQuery(
-        variables: UserProfileByIdArguments(userId: authedUserId));
+    final query =
+        UserProfileQuery(variables: UserProfileArguments(userId: authedUserId));
 
-    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
+    return QueryObserver<UserProfile$Query, UserProfileArguments>(
         key: Key('EditProfilePage - ${query.operationName}'),
         query: query,
         parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final userProfile = data.userProfileById;
+          final userProfile = data.userProfile;
 
           return MyPageScaffold(
               child: NestedScrollView(

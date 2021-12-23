@@ -331,7 +331,6 @@ class GraphQLStore {
   Future<OperationResult<TData>?>
       query<TData, TVars extends json.JsonSerializable>({
     required GraphQLQuery<TData, TVars> query,
-    // bool writeToStore = true,
     List<String> broadcastQueryIds = const [],
   }) async {
     final response = await execute(query);
@@ -344,20 +343,13 @@ class GraphQLStore {
       });
     }
 
-    final result = OperationResult<TData>(
-        data: query.parse(response.data ?? {}), errors: response.errors);
-
-    if (!result.hasErrors && result.data != null) {
-      /// Check for a top level field alias - these are needed sometimes due to the way Artemis generates return types for operations.
-      final alias = extractRootFieldAliasFromOperation(query);
-      final data = response.data![alias ?? query.operationName];
-
+    if (!hasErrors) {
       /// Important! [normalizeOperation.variables] is by default in alphabetical order.
       /// i.e. [userPublicProfiles({"cursor":null,"take":null})]
       /// vs [userPublicProfiles({"take":null,"cursor":null})]
       /// These will be different keys as far as the store is concerned.
       normalizeOperation(
-          data: data,
+          data: response.data ?? {},
           document: query.document,
           variables: query.getVariablesMap(),
           typePolicies: _typePolicies,
@@ -368,6 +360,9 @@ class GraphQLStore {
         broadcastQueriesByIds(broadcastQueryIds);
       }
     }
+
+    final result = OperationResult<TData>(
+        data: query.parse(response.data ?? {}), errors: response.errors);
 
     return result;
   }

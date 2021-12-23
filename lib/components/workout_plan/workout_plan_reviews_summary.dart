@@ -35,9 +35,9 @@ class WorkoutPlanReviewsSummary extends StatelessWidget {
                     rating: reviewScore,
                     itemBuilder: (context, index) => const Icon(
                       CupertinoIcons.star_fill,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                     ),
-                    unratedColor: Styles.secondaryAccent.withOpacity(0.15),
+                    unratedColor: Styles.primaryAccent.withOpacity(0.15),
                     itemCount: starCount,
                     itemSize: starSize,
                   ),

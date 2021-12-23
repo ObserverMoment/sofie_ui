@@ -37,8 +37,8 @@ class PersonalBestEntryCard extends StatelessWidget {
           }
         },
         broadcastQueryIds: [
-          GQLOpNames.userBenchmarksQuery,
-          GQLVarParamKeys.userBenchmarkByIdQuery(benchmark.id)
+          GQLOpNames.userBenchmarks,
+          GQLVarParamKeys.userBenchmark(benchmark.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -62,8 +62,8 @@ class PersonalBestEntryCard extends StatelessWidget {
           'data': {'id': entry.id, 'videoUri': null, 'videoThumbUri': null}
         },
         broadcastQueryIds: [
-          GQLOpNames.userBenchmarksQuery,
-          GQLVarParamKeys.userBenchmarkByIdQuery(benchmark.id)
+          GQLOpNames.userBenchmarks,
+          GQLVarParamKeys.userBenchmark(benchmark.id)
         ]);
 
     if (result.hasErrors || result.data == null) {

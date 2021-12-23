@@ -94,8 +94,8 @@ class _CircleTimerDisplay extends StatelessWidget {
             value: (1 - (secondsToNextCheckpoint / _currentCheckpointLength))
                 .clamp(0.0, 1.0),
             fullBackground: true,
-            progressColor: Styles.secondaryAccent,
-            backgroundColor: Styles.secondaryAccent.withOpacity(0.3)),
+            progressColor: Styles.primaryAccent,
+            backgroundColor: Styles.primaryAccent.withOpacity(0.3)),
         MyText(
           displayTime,
           size: FONTSIZE.five,

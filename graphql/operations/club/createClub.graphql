@@ -1,23 +1,11 @@
 mutation createClub($data: CreateClubInput!) {
   createClub(data: $data) {
-    ...Club
+    ...ClubSummary
     Owner {
-      ...UserSummary
+      ...UserAvatarData
     }
     Admins {
-      ...UserSummary
-    }
-    Members {
-      ...UserSummary
-    }
-    ClubInviteTokens {
-      ...ClubInviteToken
-    }
-    Workouts {
-      ...WorkoutSummary
-    }
-    WorkoutPlans {
-      ...WorkoutPlanSummary
+      ...UserAvatarData
     }
   }
 }

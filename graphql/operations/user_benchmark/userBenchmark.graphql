@@ -1,5 +1,5 @@
-query userBenchmarkById($id: ID!) {
-  userBenchmarkById(id: $id) {
+query userBenchmark($id: ID!) {
+  userBenchmark(id: $id) {
     ...UserBenchmark
     UserBenchmarkEntries {
       ...UserBenchmarkEntry

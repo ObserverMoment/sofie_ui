@@ -1,5 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/cards/journal_goal_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
@@ -8,10 +11,13 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 class JournalGoals extends StatelessWidget {
   const JournalGoals({Key? key}) : super(key: key);
@@ -24,15 +30,14 @@ class JournalGoals extends StatelessWidget {
         objectId: id,
         typename: kJournalGoalTypename,
         broadcastQueryIds: [
-          JournalGoalsQuery().operationName,
+          GQLOpNames.journalGoals,
         ],
         removeAllRefsToId: true);
 
-    if (result.hasErrors || result.data?.deleteJournalGoalById != id) {
-      context.showToast(
-          message: 'Sorry, there was a problem deleting this goal.',
-          toastType: ToastType.destructive);
-    }
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry, there was a problem deleting this goal.',
+            toastType: ToastType.destructive));
   }
 
   @override
@@ -54,29 +59,52 @@ class JournalGoals extends StatelessWidget {
                       'Set yourself realistic goals to track your progress and keep yourself motivated.',
                   actions: [
                       EmptyPlaceholderAction(
-                          action: () => print('create goal'),
+                          action: () =>
+                              context.navigateTo(JournalGoalCreatorRoute()),
                           buttonIcon: CupertinoIcons.add,
                           buttonText: 'Add Goal'),
                     ])
               : FABPage(
-                  child: ListView.builder(
-                      itemCount: sortedGoals.length,
-                      itemBuilder: (c, i) => GestureDetector(
-                          onTap: () => print('edit goal'),
-                          child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: AnimatedSlidable(
-                                  key: Key('journal-goal-${sortedGoals[i].id}'),
-                                  index: i,
-                                  itemType: 'Journal Goal',
-                                  itemName: sortedGoals[i].createdAt.dateString,
-                                  removeItem: (index) => _deleteJournalGoal(
-                                      context, sortedGoals[i].id),
-                                  secondaryActions: const [],
-                                  child: JournalGoalCard(
-                                    journalGoal: sortedGoals[i],
-                                  ))))));
+                  rowButtons: [
+                    FloatingButton(
+                      gradient: Styles.primaryAccentGradient,
+                      contentColor: Styles.white,
+                      iconSize: 20,
+                      text: 'Add Goal',
+                      onTap: () =>
+                          context.navigateTo(JournalGoalCreatorRoute()),
+                      icon: CupertinoIcons.add,
+                    ),
+                  ],
+                  child: ImplicitlyAnimatedList<JournalGoal>(
+                      padding: const EdgeInsets.only(
+                          left: 4, top: 4, right: 4, bottom: 60),
+                      items: sortedGoals,
+                      areItemsTheSame: (a, b) => a.id == b.id,
+                      itemBuilder: (context, animation, goal, index) =>
+                          SizeFadeTransition(
+                            animation: animation,
+                            sizeFraction: 0.7,
+                            curve: Curves.easeInOut,
+                            child: GestureDetector(
+                                onTap: () => context.navigateTo(
+                                    JournalGoalCreatorRoute(journalGoal: goal)),
+                                child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    child: MySlidable(
+                                        key: Key('journal-goal-${goal.id}'),
+                                        index: index,
+                                        itemType: 'Journal Goal',
+                                        itemName: goal.name,
+                                        removeItem: (index) =>
+                                            _deleteJournalGoal(
+                                                context, goal.id),
+                                        secondaryActions: const [],
+                                        child: JournalGoalCard(
+                                          journalGoal: goal,
+                                        )))),
+                          )),
+                );
         });
   }
 }

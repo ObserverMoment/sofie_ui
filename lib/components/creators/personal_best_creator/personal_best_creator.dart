@@ -68,10 +68,10 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
       final result = await context.graphQLStore.mutate(
           mutation: UpdateUserBenchmarkMutation(variables: variables),
           broadcastQueryIds: [
-            GQLOpNames.userBenchmarksQuery,
-            getParameterizedQueryId(UserBenchmarkByIdQuery(
+            GQLOpNames.userBenchmarks,
+            getParameterizedQueryId(UserBenchmarkQuery(
                 variables:
-                    UserBenchmarkByIdArguments(id: widget.userBenchmark!.id)))
+                    UserBenchmarkArguments(id: widget.userBenchmark!.id)))
           ]);
 
       setState(() => _loading = false);
@@ -95,7 +95,7 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
 
       final result = await context.graphQLStore.create(
           mutation: CreateUserBenchmarkMutation(variables: variables),
-          addRefToQueries: [GQLOpNames.userBenchmarksQuery]);
+          addRefToQueries: [GQLOpNames.userBenchmarks]);
 
       setState(() => _loading = false);
 

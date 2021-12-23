@@ -231,7 +231,7 @@ class LeadingNavBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Row(
         children: [
           MyHeaderText(
@@ -269,62 +269,6 @@ class RequiredSuperText extends StatelessWidget {
         CupertinoIcons.exclamationmark_circle_fill,
         size: 14,
         color: Styles.errorRed,
-      ),
-    );
-  }
-}
-
-/// Should be the same as MyNavBar style.
-class UnderlineTitle extends StatefulWidget {
-  final String text;
-  const UnderlineTitle(this.text, {Key? key}) : super(key: key);
-
-  @override
-  _UnderlineTitleState createState() => _UnderlineTitleState();
-}
-
-class _UnderlineTitleState extends State<UnderlineTitle> {
-  // Create global key that can track the actual rendered size of the text.
-  late GlobalKey globalTextBoxKey;
-  double? renderedWidth;
-
-  @override
-  void initState() {
-    super.initState();
-    globalTextBoxKey = GlobalKey();
-
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      // Get renderBox widths of the text elements.
-      renderedWidth = globalTextBoxKey.currentContext!.size!.width;
-      setState(() {});
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(3.0),
-      child: Row(
-        key: globalTextBoxKey,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Column(
-            children: [
-              MyHeaderText(
-                widget.text,
-                lineHeight: 1.3,
-              ),
-              Container(
-                height: 2.5,
-                width: renderedWidth ?? 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Styles.primaryAccent,
-                ),
-              )
-            ],
-          ),
-        ],
       ),
     );
   }

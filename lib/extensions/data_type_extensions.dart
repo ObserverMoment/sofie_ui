@@ -9,23 +9,7 @@ import 'package:supercharged/supercharged.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
-/// Extensions which pertain to the processing of fitness related data (i.e. the graphql types.)
-extension ClubExtension on Club {
-  int get totalMembers => 1 + admins.length + members.length;
-
-  ClubSummary get summary => ClubSummary()
-    ..$$typename = kClubSummaryTypeName
-    ..id = id
-    ..name = name
-    ..createdAt = createdAt
-    ..description = description
-    ..coverImageUri = coverImageUri
-    ..location = location
-    ..owner = owner
-    ..memberCount = totalMembers;
-}
-
-extension ClubMembersExtension on ClubMembers {
+extension ClubChatSummaryExtension on ClubChatSummary {
   int get totalMembers => 1 + admins.length + members.length;
 }
 

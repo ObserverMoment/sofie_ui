@@ -1,12 +1,17 @@
 import 'package:flutter/cupertino.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
+import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
+import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:collection/collection.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class JournalMoodCard extends StatelessWidget {
   final JournalMood journalMood;
@@ -15,70 +20,58 @@ class JournalMoodCard extends StatelessWidget {
     required this.journalMood,
   }) : super(key: key);
 
-  int get kMaxScore => 10;
+  int get kMaxScore => 4;
 
-  double _calcOverallAverage() {
-    final scores = [
-      for (final s in [
-        journalMood.moodScore,
-        journalMood.energyScore,
-        journalMood.motivationScore,
-        journalMood.confidenceScore,
-      ])
-        if (s != null) s
-    ];
-    return scores.average;
-  }
+  double get kScoreDisplayDiameter => 60.0;
 
-  bool _hasSubmittedScores() => [
-        journalMood.moodScore,
-        journalMood.energyScore,
-        journalMood.motivationScore,
-        journalMood.confidenceScore
-      ].any((s) => s != null);
-
-  List<Widget> _buildScoreIndicators() {
-    final tags = ['Mood', 'Energy', 'Motivation', 'Confidence'];
+  List<Widget> _buildScoreIndicators(BuildContext context) {
+    final tags = ['Mood', 'Energy'];
 
     return [
-      for (final s in [
-        journalMood.moodScore,
-        journalMood.energyScore,
-        journalMood.motivationScore,
-        journalMood.confidenceScore,
-      ])
-        if (s != null) s
+      journalMood.moodScore,
+      journalMood.energyScore,
     ]
-        .mapIndexed((i, s) => Stack(
-              alignment: Alignment.bottomCenter,
+        .mapIndexed((index, score) => Column(
               children: [
                 Padding(
                   padding:
                       const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 3),
-                  child: CircularPercentIndicator(
-                    startAngle: 180,
-                    backgroundColor: Styles.primaryAccent.withOpacity(0.35),
-                    circularStrokeCap: CircularStrokeCap.round,
-                    arcType: ArcType.HALF,
-                    radius: 40.0,
-                    lineWidth: 3.0,
-                    percent: s / kMaxScore,
-                    center: MyText(
-                      s.toInt().toString(),
-                      lineHeight: 1,
-                      weight: FontWeight.bold,
-                      size: FONTSIZE.two,
+                  child: ClipOval(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          height: kScoreDisplayDiameter,
+                          width: kScoreDisplayDiameter,
+                          color: context.theme.background,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            height: kScoreDisplayDiameter * (score / kMaxScore),
+                            width: kScoreDisplayDiameter,
+                            color: Color.lerp(kBadScoreColor, kGoodScoreColor,
+                                score / kMaxScore),
+                          ),
+                        ),
+                        Opacity(
+                          opacity: 0.6,
+                          child: score > 2
+                              ? const Icon(CupertinoIcons.checkmark_alt)
+                              : score == 2
+                                  ? null
+                                  : const Icon(
+                                      CupertinoIcons
+                                          .exclamationmark_triangle_fill,
+                                      color: Styles.errorRed,
+                                    ),
+                        )
+                      ],
                     ),
-                    progressColor: Color.lerp(
-                        kBadScoreColor, kGoodScoreColor, s / kMaxScore),
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: MyText(
-                    tags[i],
-                    size: FONTSIZE.one,
-                  ),
+                MyText(
+                  tags[index],
                 ),
               ],
             ))
@@ -88,57 +81,73 @@ class JournalMoodCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      padding: const EdgeInsets.all(8),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: Row(
-                      children: [
-                        MyText(
-                          journalMood.createdAt.compactDateString,
-                          weight: FontWeight.bold,
-                          subtext: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    alignment: WrapAlignment.spaceEvenly,
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: _buildScoreIndicators(),
-                  )
-                ],
-              ),
-              if (_hasSubmittedScores())
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6.0),
-                  child: CircularPercentIndicator(
-                    startAngle: 180,
-                    backgroundColor: Styles.primaryAccent.withOpacity(0.35),
-                    circularStrokeCap: CircularStrokeCap.round,
-                    radius: 60.0,
-                    lineWidth: 9.0,
-                    percent: _calcOverallAverage() / kMaxScore,
-                    center: MyText(
-                      _calcOverallAverage().toInt().toString(),
-                      lineHeight: 1,
-                      weight: FontWeight.bold,
-                    ),
-                    progressColor: Color.lerp(kBadScoreColor, kGoodScoreColor,
-                        _calcOverallAverage() / kMaxScore),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ContentBox(
+                  backgroundColor: context.theme.background,
+                  child: MyText(
+                    journalMood.createdAt.minimalDateString,
                   ),
                 ),
-            ],
+                Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: _buildScoreIndicators(context),
+                ),
+              ],
+            ),
           ),
+          if (journalMood.tags.isNotEmpty)
+            Column(
+              children: [
+                const HorizontalLine(),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 4.0, top: 16, right: 4, bottom: 4),
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceEvenly,
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: journalMood.tags
+                        .map((t) => kGoodFeelings.contains(t)
+                            ? Tag(
+                                textColor: Styles.white,
+                                color: kGoodScoreColor,
+                                fontSize: FONTSIZE.three,
+                                tag: t,
+                              )
+                            : Tag(
+                                tag: t,
+                                color: material.Colors.transparent,
+                                textColor: context.theme.primary,
+                              ))
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
+          if (Utils.textNotNull(journalMood.textNote))
+            Column(
+              children: [
+                const HorizontalLine(
+                  verticalPadding: 12,
+                ),
+                MyText(
+                  journalMood.textNote!,
+                  maxLines: 4,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            )
         ],
       ),
     );

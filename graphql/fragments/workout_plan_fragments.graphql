@@ -14,7 +14,7 @@ fragment WorkoutPlanData on WorkoutPlan {
   introAudioUri
   contentAccessScope
   User {
-    ...UserSummary
+    ...UserAvatarData
   }
   WorkoutPlanDays {
     ...WorkoutPlanDay
@@ -28,7 +28,7 @@ fragment WorkoutPlanData on WorkoutPlan {
   WorkoutPlanReviews {
     ...WorkoutPlanReview
     User {
-      ...UserSummary
+      ...UserAvatarData
     }
   }
   WorkoutTags {
@@ -40,7 +40,7 @@ fragment WorkoutPlanData on WorkoutPlan {
       ...CompletedWorkoutPlanDayWorkout
     }
     User {
-      ...UserSummary
+      ...UserAvatarData
     }
   }
 }
@@ -73,7 +73,7 @@ fragment WorkoutPlanSummary on WorkoutPlanSummary {
   daysPerWeek
   workoutsCount
   User {
-    ...UserSummary
+    ...UserAvatarData
   }
   enrolmentsCount
   goals {

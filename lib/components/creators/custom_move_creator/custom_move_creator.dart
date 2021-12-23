@@ -5,10 +5,10 @@ import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_cre
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator_equipment.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator_meta.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/move_type_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -161,12 +161,13 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
           ),
           if (_activeMove?.moveType != null)
             FadeIn(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: MyTabBarNav(
-                    titles: const ['Info', 'Equipment', 'Body'],
-                    handleTabChange: _changeTab,
-                    activeTabIndex: _activeTabIndex),
+              child: Container(
+                padding: const EdgeInsets.only(top: 8),
+                width: double.infinity,
+                child: MySlidingSegmentedControl<int>(
+                    value: _activeTabIndex,
+                    children: const {0: 'Info', 1: 'Equipment', 2: 'Body'},
+                    updateValue: _changeTab),
               ),
             ),
           if (_activeMove?.moveType != null)

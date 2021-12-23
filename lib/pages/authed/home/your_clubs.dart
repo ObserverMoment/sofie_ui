@@ -86,7 +86,6 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
                   padding: EdgeInsets.zero,
                   child: MySlidingSegmentedControl<ClubMemberTypeFilter>(
                       margin: EdgeInsets.zero,
-                      activeColor: Styles.secondaryAccent,
                       childPadding: const EdgeInsets.symmetric(vertical: 7.5),
                       value: _memberTypeFilter,
                       updateValue: (t) => setState(() => _memberTypeFilter = t),

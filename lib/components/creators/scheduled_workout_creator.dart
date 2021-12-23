@@ -80,7 +80,7 @@ class _ScheduledWorkoutCreatorPageState
 
       final result = await context.graphQLStore.create(
           mutation: CreateScheduledWorkoutMutation(variables: createVariables),
-          addRefToQueries: [GQLOpNames.userScheduledWorkoutsQuery]);
+          addRefToQueries: [GQLOpNames.userScheduledWorkouts]);
 
       if (result.hasErrors || result.data == null) {
         context.showErrorAlert(
@@ -100,7 +100,7 @@ class _ScheduledWorkoutCreatorPageState
 
       final result = await context.graphQLStore.mutate(
           mutation: UpdateScheduledWorkoutMutation(variables: updateVariables),
-          broadcastQueryIds: [GQLOpNames.userScheduledWorkoutsQuery]);
+          broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
 
       if (result.hasErrors || result.data == null) {
         context.showErrorAlert(
@@ -135,7 +135,7 @@ class _ScheduledWorkoutCreatorPageState
           mutation: DeleteScheduledWorkoutByIdMutation(variables: variables),
           objectId: widget.scheduledWorkout!.id,
           typename: kScheduledWorkoutTypename,
-          removeRefFromQueries: [GQLOpNames.userScheduledWorkoutsQuery]);
+          removeRefFromQueries: [GQLOpNames.userScheduledWorkouts]);
 
       if (result.hasErrors) {
         context.showErrorAlert(

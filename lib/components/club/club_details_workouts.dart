@@ -4,26 +4,25 @@ import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
-import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
 class ClubDetailsWorkouts extends StatefulWidget {
-  final Club club;
-  final List<WorkoutSummary> workouts;
+  final String clubId;
   final bool isOwnerOrAdmin;
   const ClubDetailsWorkouts(
-      {Key? key,
-      required this.workouts,
-      required this.isOwnerOrAdmin,
-      required this.club})
+      {Key? key, required this.isOwnerOrAdmin, required this.clubId})
       : super(key: key);
 
   @override
@@ -78,22 +77,23 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
       _loading = true;
     });
 
-    final variables = AddWorkoutToClubArguments(
-        clubId: widget.club.id, workoutId: workout.id);
+    final variables =
+        AddWorkoutToClubArguments(clubId: widget.clubId, workoutId: workout.id);
 
     final result = await context.graphQLStore
         .mutate<AddWorkoutToClub$Mutation, AddWorkoutToClubArguments>(
             mutation: AddWorkoutToClubMutation(variables: variables),
-            broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.club.id)]);
+            refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
+            broadcastQueryIds: [GQLVarParamKeys.clubWorkouts(widget.clubId)]);
 
     setState(() {
       _loading = false;
     });
 
     checkOperationResult(context, result,
-        onSuccess: () => context.showToast(message: 'Workout added.'),
+        onSuccess: () => context.showToast(message: 'Workout Added'),
         onFail: () => context.showToast(
-            message: 'Sorry there was a problem.',
+            message: 'Sorry there was a problem',
             toastType: ToastType.destructive));
   }
 
@@ -104,7 +104,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
         itemType: 'Workout',
         itemName: workout.name,
         message:
-            'Club members will no longer have access to this workout via your club.',
+            'Club members will no longer have access to this workout via your club',
         onConfirm: () => _removeWorkoutFromClub(context, workout));
   }
 
@@ -115,70 +115,93 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     });
 
     final variables = RemoveWorkoutFromClubArguments(
-        clubId: widget.club.id, workoutId: workout.id);
+        clubId: widget.clubId, workoutId: workout.id);
 
     final result = await context.graphQLStore
         .mutate<RemoveWorkoutFromClub$Mutation, RemoveWorkoutFromClubArguments>(
             mutation: RemoveWorkoutFromClubMutation(variables: variables),
-            broadcastQueryIds: [GQLVarParamKeys.clubByIdQuery(widget.club.id)]);
+            refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
+            broadcastQueryIds: [GQLVarParamKeys.clubWorkouts(widget.clubId)]);
 
     setState(() {
       _loading = false;
     });
 
     checkOperationResult(context, result,
-        onSuccess: () => context.showToast(message: 'Workout removed.'),
+        onSuccess: () => context.showToast(message: 'Workout Removed'),
         onFail: () => context.showToast(
-            message: 'Sorry there was a problem.',
+            message: 'Sorry there was a problem',
             toastType: ToastType.destructive));
   }
 
-  Widget get _placeholder => const SizedBox(
-        height: 100,
-        child: Center(
-          child: MyText(
-            'No Workouts',
-            subtext: true,
-          ),
-        ),
-      );
+  @override
+  Widget build(BuildContext context) {
+    final query = ClubWorkoutsQuery(
+        variables: ClubWorkoutsArguments(clubId: widget.clubId));
+
+    return QueryObserver<ClubWorkouts$Query, ClubWorkoutsArguments>(
+        key: Key('ClubDetailsWorkouts - ${query.operationName}'),
+        query: query,
+        parameterizeQuery: true,
+        builder: (data) {
+          final workouts = data.clubWorkouts.workouts;
+
+          return MyPageScaffold(
+              child: NestedScrollView(
+            headerSliverBuilder: (c, i) =>
+                [const MySliverNavbar(title: 'Workouts')],
+            body: widget.isOwnerOrAdmin
+                ? FABPage(
+                    rowButtonsAlignment: MainAxisAlignment.center,
+                    rowButtons: [
+                      FloatingIconButton(
+                        text: 'Add Workout',
+                        onPressed: _openWorkoutFinder,
+                        loading: _loading,
+                        iconData: CupertinoIcons.add,
+                      )
+                    ],
+                    child: _ClubWorkoutsList(
+                      handleWorkoutTap: _handleWorkoutTap,
+                      workouts: workouts,
+                    ))
+                : _ClubWorkoutsList(
+                    handleWorkoutTap: _handleWorkoutTap,
+                    workouts: workouts,
+                  ),
+          ));
+        });
+  }
+}
+
+class _ClubWorkoutsList extends StatelessWidget {
+  final List<WorkoutSummary> workouts;
+  final void Function(WorkoutSummary workout) handleWorkoutTap;
+  const _ClubWorkoutsList(
+      {Key? key, required this.workouts, required this.handleWorkoutTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      alignment: Alignment.topCenter,
-      children: [
-        widget.workouts.isEmpty
-            ? _placeholder
-            : ImplicitlyAnimatedList<WorkoutSummary>(
-                padding: const EdgeInsets.only(
-                    top: 8, bottom: kAssumedFloatingButtonHeight),
-                shrinkWrap: true,
-                items: widget.workouts,
-                itemBuilder: (context, animation, workout, index) =>
-                    SizeFadeTransition(
-                      animation: animation,
-                      sizeFraction: 0.7,
-                      curve: Curves.easeInOut,
-                      child: GestureDetector(
-                          onTap: () => _handleWorkoutTap(workout),
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: WorkoutCard(workout),
-                          )),
-                    ),
-                areItemsTheSame: (a, b) => a == b),
-        if (widget.isOwnerOrAdmin)
-          Positioned(
-              bottom: 12,
-              child: FloatingIconButton(
-                text: 'Add Workout',
-                onPressed: _openWorkoutFinder,
-                loading: _loading,
-                iconData: CupertinoIcons.add,
-              ))
-      ],
-    );
+    return workouts.isEmpty
+        ? const YourContentEmptyPlaceholder(message: 'No Workouts', actions: [])
+        : ImplicitlyAnimatedList<WorkoutSummary>(
+            padding: const EdgeInsets.only(
+                top: 8, bottom: kAssumedFloatingButtonHeight),
+            shrinkWrap: true,
+            items: workouts,
+            itemBuilder: (context, animation, workout, index) =>
+                SizeFadeTransition(
+                  animation: animation,
+                  sizeFraction: 0.7,
+                  curve: Curves.easeInOut,
+                  child: GestureDetector(
+                      onTap: () => handleWorkoutTap(workout),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: WorkoutCard(workout),
+                      )),
+                ),
+            areItemsTheSame: (a, b) => a == b);
   }
 }

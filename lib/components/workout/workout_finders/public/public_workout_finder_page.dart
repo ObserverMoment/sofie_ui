@@ -176,7 +176,7 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
                           ? null
                           : '${_bloc.numActiveFilters} ${_bloc.numActiveFilters == 1 ? "filter" : "filters"}',
                       contentColor: _bloc.numActiveFilters > 0
-                          ? Styles.secondaryAccent
+                          ? Styles.primaryAccent
                           : null,
                       icon: CupertinoIcons.slider_horizontal_3),
                 ],

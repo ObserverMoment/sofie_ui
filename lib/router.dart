@@ -4,6 +4,8 @@ import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
 import 'package:sofie_ui/components/creators/gym_profile_creator.dart';
+import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creator_page.dart';
+import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_post_creator.dart';
@@ -158,6 +160,8 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/collection', page: CollectionCreatorPage),
           AutoRoute(path: 'create/custom-move', page: CustomMoveCreatorPage),
           AutoRoute(path: 'create/gym-profile', page: GymProfileCreatorPage),
+          AutoRoute(path: 'create/journal-goal', page: JournalGoalCreatorPage),
+          AutoRoute(path: 'create/journal-mood', page: JournalMoodCreatorPage),
           AutoRoute(
               path: 'create/personal-best', page: PersonalBestCreatorPage),
           AutoRoute(path: 'create/post', page: PostCreatorPage),

@@ -3,51 +3,52 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_champions.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_clubs.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_creators.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_live.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_plans.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_throwdowns.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_workouts.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class DiscoverPage extends StatelessWidget {
   const DiscoverPage({Key? key}) : super(key: key);
 
   Widget _verticalPadding({required Widget child}) =>
-      Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: child);
+      Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: child);
 
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-      child: ListView(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              DiscoverPageButton(
-                  text: 'Workouts',
-                  onPressed: () =>
-                      context.navigateTo(PublicWorkoutFinderRoute())),
-              DiscoverPageButton(
-                  text: 'Plans',
-                  onPressed: () =>
-                      context.navigateTo(PublicWorkoutPlanFinderRoute())),
-              DiscoverPageButton(
-                  text: 'Throwdowns',
-                  onPressed: () =>
-                      context.showAlertDialog(title: 'Coming Soon!')),
-            ],
-          ),
-          _verticalPadding(child: const DiscoverCreators()),
-          _verticalPadding(child: const DiscoverClubs()),
-          _verticalPadding(child: const DiscoverWorkouts()),
-          _verticalPadding(child: const DiscoverWorkoutPlans()),
-          _verticalPadding(child: const DiscoverThrowdowns()),
-          _verticalPadding(child: const DiscoverLive()),
-          _verticalPadding(child: const DiscoverChampions()),
-        ],
+      child: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DiscoverPageButton(
+                    text: 'Workouts',
+                    onPressed: () =>
+                        context.navigateTo(PublicWorkoutFinderRoute())),
+                DiscoverPageButton(
+                    text: 'Plans',
+                    onPressed: () =>
+                        context.navigateTo(PublicWorkoutPlanFinderRoute())),
+                DiscoverPageButton(
+                    text: 'Throwdowns',
+                    onPressed: () =>
+                        context.showAlertDialog(title: 'Coming Soon!')),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: [
+                  _verticalPadding(child: const DiscoverCreators()),
+                  _verticalPadding(child: const DiscoverClubs()),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -63,10 +64,10 @@ class DiscoverPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 3),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: context.theme.cardBackground,
+        color: context.theme.primary,
         borderRadius: BorderRadius.circular(60),
       ),
       child: CupertinoButton(
@@ -75,6 +76,7 @@ class DiscoverPageButton extends StatelessWidget {
         child: MyHeaderText(
           text,
           size: FONTSIZE.two,
+          color: context.theme.background,
         ),
       ),
     );

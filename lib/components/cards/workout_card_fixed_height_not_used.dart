@@ -159,8 +159,9 @@ class WorkoutCardFixedHeight extends StatelessWidget {
                 if (allTags.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: CommaSeparatedList(allTags,
-                        textColor: Styles.secondaryAccent),
+                    child: CommaSeparatedList(
+                      allTags,
+                    ),
                   )
               ],
             ),

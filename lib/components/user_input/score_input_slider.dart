@@ -12,6 +12,7 @@ class ScoreInputSlider extends StatelessWidget {
   final double max;
   final int? divisions;
   final Function(double v) saveValue;
+  final List<String> labels;
 
   const ScoreInputSlider(
       {Key? key,
@@ -20,7 +21,8 @@ class ScoreInputSlider extends StatelessWidget {
       this.min = 0.0,
       this.max = 1.0,
       this.divisions,
-      required this.saveValue})
+      required this.saveValue,
+      this.labels = const []})
       : super(key: key);
 
   @override
@@ -41,16 +43,17 @@ class ScoreInputSlider extends StatelessWidget {
             ],
           ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+          padding: const EdgeInsets.only(left: 4, top: 8, right: 4, bottom: 4),
           child: Row(
             children: [
               Expanded(
                 child: material.Material(
                   color: material.Colors.transparent,
                   child: material.SliderTheme(
-                    data: const material.SliderThemeData(
+                    data: material.SliderThemeData(
                       trackHeight: 20.0,
-                      thumbShape: material.RoundSliderThumbShape(
+                      overlayShape: material.SliderComponentShape.noOverlay,
+                      thumbShape: const material.RoundSliderThumbShape(
                           enabledThumbRadius: 11),
                     ),
                     child: material.Slider(
@@ -59,7 +62,7 @@ class ScoreInputSlider extends StatelessWidget {
                       divisions: divisions,
                       value: value,
                       onChanged: saveValue,
-                      activeColor: Styles.secondaryAccent,
+                      activeColor: Styles.primaryAccent,
                       inactiveColor: context.theme.primary.withOpacity(0.08),
                     ),
                   ),
@@ -67,7 +70,16 @@ class ScoreInputSlider extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
+        if (labels.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:
+                  labels.map((l) => MyText(l, size: FONTSIZE.two)).toList(),
+            ),
+          )
       ],
     );
   }
