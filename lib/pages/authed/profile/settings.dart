@@ -8,8 +8,6 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/components/user_input/tag_managers/progress_journal_goal_tags_manager.dart';
-import 'package:sofie_ui/components/user_input/tag_managers/user_benchmark_tags_manager.dart';
 import 'package:sofie_ui/components/user_input/tag_managers/workout_tags_manager.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -94,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MyHeaderText(
-                      'MANAGE TAGS',
+                      'DATA',
                       color: _headingColor,
                     ),
                     _spacer(),
@@ -105,33 +103,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: const WorkoutTagsManager(
                               allowCreateTagOnly: false)),
                     ),
-                    PageLink(
-                      linkText: 'Journal Goal Tags',
-                      icon: CupertinoIcons.tag,
-                      onPress: () => context.push(
-                          child: const ProgressJournalGoalTagsManager(
-                              allowCreateTagOnly: false)),
-                    ),
-                    PageLink(
-                      linkText: 'Personal Best Tags',
-                      icon: CupertinoIcons.tag,
-                      separator: false,
-                      onPress: () => context.push(
-                          child: const UserBenchmarkTagsManager(
-                              allowCreateTagOnly: false)),
-                    ),
-                  ],
-                )),
-                _spacer(),
-                ContentBox(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MyHeaderText(
-                      'DATA',
-                      color: _headingColor,
-                    ),
-                    _spacer(),
                     PageLink(
                       linkText: 'View Archive',
                       onPress: () => context.navigateTo(const ArchiveRoute()),

@@ -162,6 +162,24 @@ class EditableWorkoutPlanDayCard extends StatelessWidget {
                           icon: CupertinoIcons.arrow_down,
                           onTap: () => reorderWorkoutPlanDayWorkouts(i, i + 1),
                         ),
+                      // if (i != 0)
+                      //   SlidableAction(
+                      //     label: 'Move up',
+                      //     backgroundColor: Styles.primaryAccent,
+                      //     foregroundColor: Styles.white,
+                      //     icon: CupertinoIcons.arrow_up,
+                      //     onPressed: (_) =>
+                      //         reorderWorkoutPlanDayWorkouts(i, i - 1),
+                      //   ),
+                      // if (i != sortedWorkoutPlanDayWorkouts.length - 1)
+                      //   SlidableAction(
+                      //     label: 'Move down',
+                      //     backgroundColor: Styles.primaryAccent,
+                      //     foregroundColor: Styles.white,
+                      //     icon: CupertinoIcons.arrow_down,
+                      //     onPressed: (_) =>
+                      //         reorderWorkoutPlanDayWorkouts(i, i + 1),
+                      //   ),
                     ],
                     child: Padding(
                       padding: const EdgeInsets.symmetric(

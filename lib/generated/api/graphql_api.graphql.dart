@@ -8,14 +8,66 @@ import 'package:gql/ast.dart';
 import 'package:sofie_ui/coercers.dart';
 part 'graphql_api.graphql.g.dart';
 
-mixin UserSummaryMixin {
+mixin JournalMoodMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late int moodScore;
+  late int energyScore;
+  late List<String> tags;
+  String? textNote;
+}
+mixin JournalGoalMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String name;
+  String? description;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? deadline;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? completedDate;
+}
+mixin JournalNoteMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  String? textNote;
+  String? voiceNoteUri;
+}
+mixin ClubChatSummaryMixin {
+  late String id;
+  late String name;
+  String? coverImageUri;
+  @JsonKey(name: 'Owner')
+  late UserAvatarData owner;
+  @JsonKey(name: 'Admins')
+  late List<UserAvatarData> admins;
+  @JsonKey(name: 'Members')
+  late List<UserAvatarData> members;
+}
+mixin UserAvatarDataMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
   late String id;
   String? avatarUri;
   late String displayName;
-  @JsonKey(unknownEnumValue: UserProfileScope.artemisUnknown)
-  late UserProfileScope userProfileScope;
 }
 mixin ClubSummaryMixin {
   @JsonKey(name: '__typename')
@@ -28,123 +80,15 @@ mixin ClubSummaryMixin {
   late String name;
   String? description;
   String? coverImageUri;
-  String? location;
-  late int memberCount;
-}
-mixin ClubInviteTokenMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String name;
-  late bool active;
-  late int inviteLimit;
-  late List<String> joinedUserIds;
-}
-mixin JoinClubInviteMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? respondedAt;
-  @JsonKey(unknownEnumValue: JoinClubRequestStatus.artemisUnknown)
-  late JoinClubRequestStatus status;
-}
-mixin JoinClubRequestMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? respondedAt;
-  @JsonKey(unknownEnumValue: JoinClubRequestStatus.artemisUnknown)
-  late JoinClubRequestStatus status;
-}
-mixin WorkoutSummaryMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late bool archived;
-  late String name;
-  @JsonKey(name: 'User')
-  late UserSummary user;
-  int? lengthMinutes;
-  String? coverImageUri;
-  String? description;
-  @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
-  late DifficultyLevel difficultyLevel;
-  late int loggedSessionsCount;
-  late bool hasClassVideo;
-  late bool hasClassAudio;
-  late List<String> equipments;
-  late List<String> tags;
-}
-mixin WorkoutPlanSummaryMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late bool archived;
-  late String name;
-  String? description;
-  String? coverImageUri;
-  late int lengthWeeks;
-  late int daysPerWeek;
-  late int workoutsCount;
-  @JsonKey(name: 'User')
-  late UserSummary user;
-  late int enrolmentsCount;
-  late List<WorkoutGoal> goals;
-  late List<String> tags;
-  double? reviewScore;
-  late int reviewCount;
-}
-mixin WorkoutGoalMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  late String name;
-  late String description;
-  late String hexColor;
-}
-mixin ClubMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String name;
-  String? description;
-  String? location;
-  String? coverImageUri;
   String? introVideoUri;
   String? introVideoThumbUri;
   String? introAudioUri;
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   late ContentAccessScope contentAccessScope;
+  String? location;
+  late int memberCount;
+  late int workoutCount;
+  late int planCount;
 }
 mixin BodyTrackingEntryMixin {
   @JsonKey(name: '__typename')
@@ -216,6 +160,60 @@ mixin WorkoutMoveMixin {
   @JsonKey(unknownEnumValue: TimeUnit.artemisUnknown)
   late TimeUnit timeUnit;
 }
+mixin WorkoutSummaryMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late bool archived;
+  late String name;
+  @JsonKey(name: 'User')
+  late UserAvatarData user;
+  int? lengthMinutes;
+  String? coverImageUri;
+  String? description;
+  @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
+  DifficultyLevel? difficultyLevel;
+  late int loggedSessionsCount;
+  late bool hasClassVideo;
+  late bool hasClassAudio;
+  late List<String> equipments;
+  late List<String> tags;
+}
+mixin WorkoutPlanSummaryMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late bool archived;
+  late String name;
+  String? description;
+  String? coverImageUri;
+  late int lengthWeeks;
+  late int daysPerWeek;
+  late int workoutsCount;
+  @JsonKey(name: 'User')
+  late UserAvatarData user;
+  late int enrolmentsCount;
+  late List<WorkoutGoal> goals;
+  late List<String> tags;
+  double? reviewScore;
+  late int reviewCount;
+}
+mixin WorkoutGoalMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late String name;
+  late String description;
+  late String hexColor;
+}
 mixin CollectionMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -240,7 +238,7 @@ mixin WorkoutDataMixin {
   String? description;
   int? lengthMinutes;
   @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
-  late DifficultyLevel difficultyLevel;
+  DifficultyLevel? difficultyLevel;
   String? coverImageUri;
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   late ContentAccessScope contentAccessScope;
@@ -248,7 +246,7 @@ mixin WorkoutDataMixin {
   String? introVideoThumbUri;
   String? introAudioUri;
   @JsonKey(name: 'User')
-  late UserSummary user;
+  late UserAvatarData user;
   @JsonKey(name: 'WorkoutGoals')
   late List<WorkoutGoal> workoutGoals;
   @JsonKey(name: 'WorkoutTags')
@@ -348,7 +346,7 @@ mixin WorkoutPlanDataMixin {
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   late ContentAccessScope contentAccessScope;
   @JsonKey(name: 'User')
-  late UserSummary user;
+  late UserAvatarData user;
   @JsonKey(name: 'WorkoutPlanDays')
   late List<WorkoutPlanDay> workoutPlanDays;
   @JsonKey(name: 'WorkoutPlanReviews')
@@ -375,63 +373,6 @@ mixin WorkoutPlanReviewMixin {
   late DateTime createdAt;
   late double score;
   String? comment;
-}
-mixin ProgressJournalGoalTagMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String tag;
-  late String hexColor;
-}
-mixin ProgressJournalEntryMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  String? note;
-  String? voiceNoteUri;
-  double? moodScore;
-  double? energyScore;
-  double? confidenceScore;
-  double? motivationScore;
-}
-mixin ProgressJournalGoalMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String name;
-  String? description;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? deadline;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? completedDate;
-}
-mixin ProgressJournalMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String name;
-  String? description;
-  String? coverImageUri;
 }
 mixin GymProfileMixin {
   @JsonKey(name: '__typename')
@@ -467,6 +408,18 @@ mixin LifetimeLogStatsSummaryMixin {
   late int minutesWorked;
   late int sessionsLogged;
 }
+mixin ClubWorkoutsMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late List<WorkoutSummary> workouts;
+}
+mixin ClubWorkoutPlansMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late List<WorkoutPlanSummary> workoutPlans;
+}
 mixin WorkoutPlanMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -486,13 +439,6 @@ mixin WorkoutPlanMixin {
   String? introAudioUri;
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   late ContentAccessScope contentAccessScope;
-}
-mixin UserAvatarDataMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  String? avatarUri;
-  late String displayName;
 }
 mixin UserProfileSummaryMixin {
   @JsonKey(name: '__typename')
@@ -633,13 +579,6 @@ mixin UserProfileMixin {
   int? workoutCount;
   int? planCount;
 }
-mixin UserBenchmarkTagMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  late String name;
-  String? description;
-}
 mixin UserBenchmarkMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -688,10 +627,10 @@ mixin TimelinePostObjectDataObjectMixin {
   @JsonKey(unknownEnumValue: TimelinePostType.artemisUnknown)
   late TimelinePostType type;
   late String name;
-  String? introAudioUri;
-  String? coverImageUri;
-  String? introVideoUri;
-  String? introVideoThumbUri;
+  String? audioUri;
+  String? imageUri;
+  String? videoUri;
+  String? videoThumbUri;
 }
 mixin WorkoutMixin {
   @JsonKey(name: '__typename')
@@ -706,13 +645,24 @@ mixin WorkoutMixin {
   String? description;
   int? lengthMinutes;
   @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
-  late DifficultyLevel difficultyLevel;
+  DifficultyLevel? difficultyLevel;
   String? coverImageUri;
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   late ContentAccessScope contentAccessScope;
   String? introVideoUri;
   String? introVideoThumbUri;
   String? introAudioUri;
+}
+mixin ClubMemberSummaryMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late String displayName;
+  String? avatarUri;
+  String? townCity;
+  String? countryCode;
+  String? tagline;
+  late List<String> skills;
 }
 mixin ClubInviteTokenDataMixin {
   @JsonKey(name: '__typename')
@@ -724,20 +674,466 @@ mixin InviteTokenErrorMixin {
   String? $$typename;
   late String message;
 }
+mixin ClubInviteTokenMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String name;
+  late bool active;
+  late int inviteLimit;
+  late List<String> joinedUserIds;
+}
+mixin ClubAnnouncementMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String description;
+  String? imageUri;
+  String? audioUri;
+  String? videoUri;
+  String? videoThumbUri;
+  @JsonKey(name: 'User')
+  late UserAvatarData user;
+}
 
 @JsonSerializable(explicitToJson: true)
-class UserSummary extends JsonSerializable
-    with EquatableMixin, UserSummaryMixin {
-  UserSummary();
+class DeleteJournalGoalById$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteJournalGoalById$Mutation();
 
-  factory UserSummary.fromJson(Map<String, dynamic> json) =>
-      _$UserSummaryFromJson(json);
+  factory DeleteJournalGoalById$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteJournalGoalById$MutationFromJson(json);
+
+  late String deleteJournalGoalById;
+
+  @override
+  List<Object?> get props => [deleteJournalGoalById];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteJournalGoalById$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class JournalMood extends JsonSerializable
+    with EquatableMixin, JournalMoodMixin {
+  JournalMood();
+
+  factory JournalMood.fromJson(Map<String, dynamic> json) =>
+      _$JournalMoodFromJson(json);
 
   @override
   List<Object?> get props =>
-      [$$typename, id, avatarUri, displayName, userProfileScope];
+      [$$typename, id, createdAt, moodScore, energyScore, tags, textNote];
   @override
-  Map<String, dynamic> toJson() => _$UserSummaryToJson(this);
+  Map<String, dynamic> toJson() => _$JournalMoodToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class JournalMoods$Query extends JsonSerializable with EquatableMixin {
+  JournalMoods$Query();
+
+  factory JournalMoods$Query.fromJson(Map<String, dynamic> json) =>
+      _$JournalMoods$QueryFromJson(json);
+
+  late List<JournalMood> journalMoods;
+
+  @override
+  List<Object?> get props => [journalMoods];
+  @override
+  Map<String, dynamic> toJson() => _$JournalMoods$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalMood$Mutation extends JsonSerializable with EquatableMixin {
+  UpdateJournalMood$Mutation();
+
+  factory UpdateJournalMood$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalMood$MutationFromJson(json);
+
+  late JournalMood updateJournalMood;
+
+  @override
+  List<Object?> get props => [updateJournalMood];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalMood$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalMoodInput extends JsonSerializable with EquatableMixin {
+  UpdateJournalMoodInput(
+      {this.energyScore,
+      required this.id,
+      this.moodScore,
+      this.tags,
+      this.textNote});
+
+  factory UpdateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalMoodInputFromJson(json);
+
+  int? energyScore;
+
+  late String id;
+
+  int? moodScore;
+
+  List<String>? tags;
+
+  String? textNote;
+
+  @override
+  List<Object?> get props => [energyScore, id, moodScore, tags, textNote];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalMoodInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class JournalGoal extends JsonSerializable
+    with EquatableMixin, JournalGoalMixin {
+  JournalGoal();
+
+  factory JournalGoal.fromJson(Map<String, dynamic> json) =>
+      _$JournalGoalFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, name, description, deadline, completedDate];
+  @override
+  Map<String, dynamic> toJson() => _$JournalGoalToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class JournalGoals$Query extends JsonSerializable with EquatableMixin {
+  JournalGoals$Query();
+
+  factory JournalGoals$Query.fromJson(Map<String, dynamic> json) =>
+      _$JournalGoals$QueryFromJson(json);
+
+  late List<JournalGoal> journalGoals;
+
+  @override
+  List<Object?> get props => [journalGoals];
+  @override
+  Map<String, dynamic> toJson() => _$JournalGoals$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalGoal$Mutation extends JsonSerializable with EquatableMixin {
+  CreateJournalGoal$Mutation();
+
+  factory CreateJournalGoal$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalGoal$MutationFromJson(json);
+
+  late JournalGoal createJournalGoal;
+
+  @override
+  List<Object?> get props => [createJournalGoal];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalGoal$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalGoalInput extends JsonSerializable with EquatableMixin {
+  CreateJournalGoalInput({this.deadline, this.description, required this.name});
+
+  factory CreateJournalGoalInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalGoalInputFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? deadline;
+
+  String? description;
+
+  late String name;
+
+  @override
+  List<Object?> get props => [deadline, description, name];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalGoalInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteJournalNoteById$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteJournalNoteById$Mutation();
+
+  factory DeleteJournalNoteById$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteJournalNoteById$MutationFromJson(json);
+
+  late String deleteJournalNoteById;
+
+  @override
+  List<Object?> get props => [deleteJournalNoteById];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteJournalNoteById$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class JournalNote extends JsonSerializable
+    with EquatableMixin, JournalNoteMixin {
+  JournalNote();
+
+  factory JournalNote.fromJson(Map<String, dynamic> json) =>
+      _$JournalNoteFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, textNote, voiceNoteUri];
+  @override
+  Map<String, dynamic> toJson() => _$JournalNoteToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalNote$Mutation extends JsonSerializable with EquatableMixin {
+  UpdateJournalNote$Mutation();
+
+  factory UpdateJournalNote$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalNote$MutationFromJson(json);
+
+  late JournalNote updateJournalNote;
+
+  @override
+  List<Object?> get props => [updateJournalNote];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalNote$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalNoteInput extends JsonSerializable with EquatableMixin {
+  UpdateJournalNoteInput({required this.id, this.textNote, this.voiceNoteUri});
+
+  factory UpdateJournalNoteInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalNoteInputFromJson(json);
+
+  late String id;
+
+  String? textNote;
+
+  String? voiceNoteUri;
+
+  @override
+  List<Object?> get props => [id, textNote, voiceNoteUri];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalNoteInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteJournalMoodById$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteJournalMoodById$Mutation();
+
+  factory DeleteJournalMoodById$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteJournalMoodById$MutationFromJson(json);
+
+  late String deleteJournalMoodById;
+
+  @override
+  List<Object?> get props => [deleteJournalMoodById];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteJournalMoodById$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalGoal$Mutation extends JsonSerializable with EquatableMixin {
+  UpdateJournalGoal$Mutation();
+
+  factory UpdateJournalGoal$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalGoal$MutationFromJson(json);
+
+  late JournalGoal updateJournalGoal;
+
+  @override
+  List<Object?> get props => [updateJournalGoal];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalGoal$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalGoalInput extends JsonSerializable with EquatableMixin {
+  UpdateJournalGoalInput(
+      {this.completedDate,
+      this.deadline,
+      this.description,
+      required this.id,
+      this.name});
+
+  factory UpdateJournalGoalInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalGoalInputFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? completedDate;
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? deadline;
+
+  String? description;
+
+  late String id;
+
+  String? name;
+
+  @override
+  List<Object?> get props => [completedDate, deadline, description, id, name];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalGoalInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalMood$Mutation extends JsonSerializable with EquatableMixin {
+  CreateJournalMood$Mutation();
+
+  factory CreateJournalMood$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalMood$MutationFromJson(json);
+
+  late JournalMood createJournalMood;
+
+  @override
+  List<Object?> get props => [createJournalMood];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalMood$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalMoodInput extends JsonSerializable with EquatableMixin {
+  CreateJournalMoodInput(
+      {required this.energyScore,
+      required this.moodScore,
+      this.tags,
+      this.textNote});
+
+  factory CreateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalMoodInputFromJson(json);
+
+  late int energyScore;
+
+  late int moodScore;
+
+  List<String>? tags;
+
+  String? textNote;
+
+  @override
+  List<Object?> get props => [energyScore, moodScore, tags, textNote];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalMoodInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalNote$Mutation extends JsonSerializable with EquatableMixin {
+  CreateJournalNote$Mutation();
+
+  factory CreateJournalNote$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalNote$MutationFromJson(json);
+
+  late JournalNote createJournalNote;
+
+  @override
+  List<Object?> get props => [createJournalNote];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalNote$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalNoteInput extends JsonSerializable with EquatableMixin {
+  CreateJournalNoteInput({this.textNote, this.voiceNoteUri});
+
+  factory CreateJournalNoteInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalNoteInputFromJson(json);
+
+  String? textNote;
+
+  String? voiceNoteUri;
+
+  @override
+  List<Object?> get props => [textNote, voiceNoteUri];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalNoteInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class JournalNotes$Query extends JsonSerializable with EquatableMixin {
+  JournalNotes$Query();
+
+  factory JournalNotes$Query.fromJson(Map<String, dynamic> json) =>
+      _$JournalNotes$QueryFromJson(json);
+
+  late List<JournalNote> journalNotes;
+
+  @override
+  List<Object?> get props => [journalNotes];
+  @override
+  Map<String, dynamic> toJson() => _$JournalNotes$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubChatSummary extends JsonSerializable
+    with EquatableMixin, ClubChatSummaryMixin {
+  ClubChatSummary();
+
+  factory ClubChatSummary.fromJson(Map<String, dynamic> json) =>
+      _$ClubChatSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [id, name, coverImageUri, owner, admins, members];
+  @override
+  Map<String, dynamic> toJson() => _$ClubChatSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubChatSummary$Query extends JsonSerializable with EquatableMixin {
+  ClubChatSummary$Query();
+
+  factory ClubChatSummary$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubChatSummary$QueryFromJson(json);
+
+  late ClubChatSummary clubChatSummary;
+
+  @override
+  List<Object?> get props => [clubChatSummary];
+  @override
+  Map<String, dynamic> toJson() => _$ClubChatSummary$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubChatSummaryMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  ClubChatSummaryMixin$UserAvatarData();
+
+  factory ClubChatSummaryMixin$UserAvatarData.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClubChatSummaryMixin$UserAvatarDataFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClubChatSummaryMixin$UserAvatarDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  UserAvatarData();
+
+  factory UserAvatarData.fromJson(Map<String, dynamic> json) =>
+      _$UserAvatarDataFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
+  @override
+  Map<String, dynamic> toJson() => _$UserAvatarDataToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -749,180 +1145,10 @@ class ClubSummary extends JsonSerializable
       _$ClubSummaryFromJson(json);
 
   @JsonKey(name: 'Owner')
-  late UserSummary owner;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        name,
-        description,
-        coverImageUri,
-        location,
-        memberCount,
-        owner
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$ClubSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ClubSummariesById$Query extends JsonSerializable with EquatableMixin {
-  ClubSummariesById$Query();
-
-  factory ClubSummariesById$Query.fromJson(Map<String, dynamic> json) =>
-      _$ClubSummariesById$QueryFromJson(json);
-
-  late List<ClubSummary> clubSummariesById;
-
-  @override
-  List<Object?> get props => [clubSummariesById];
-  @override
-  Map<String, dynamic> toJson() => _$ClubSummariesById$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ClubInviteToken extends JsonSerializable
-    with EquatableMixin, ClubInviteTokenMixin {
-  ClubInviteToken();
-
-  factory ClubInviteToken.fromJson(Map<String, dynamic> json) =>
-      _$ClubInviteTokenFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, name, active, inviteLimit, joinedUserIds];
-  @override
-  Map<String, dynamic> toJson() => _$ClubInviteTokenToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JoinClubInvite extends JsonSerializable
-    with EquatableMixin, JoinClubInviteMixin {
-  JoinClubInvite();
-
-  factory JoinClubInvite.fromJson(Map<String, dynamic> json) =>
-      _$JoinClubInviteFromJson(json);
-
-  @JsonKey(name: 'Invited')
-  late UserSummary invited;
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, respondedAt, status, invited];
-  @override
-  Map<String, dynamic> toJson() => _$JoinClubInviteToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JoinClubRequest extends JsonSerializable
-    with EquatableMixin, JoinClubRequestMixin {
-  JoinClubRequest();
-
-  factory JoinClubRequest.fromJson(Map<String, dynamic> json) =>
-      _$JoinClubRequestFromJson(json);
-
-  @JsonKey(name: 'Applicant')
-  late UserSummary applicant;
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, respondedAt, status, applicant];
-  @override
-  Map<String, dynamic> toJson() => _$JoinClubRequestToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WorkoutSummary extends JsonSerializable
-    with EquatableMixin, WorkoutSummaryMixin {
-  WorkoutSummary();
-
-  factory WorkoutSummary.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutSummaryFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        archived,
-        name,
-        user,
-        lengthMinutes,
-        coverImageUri,
-        description,
-        difficultyLevel,
-        loggedSessionsCount,
-        hasClassVideo,
-        hasClassAudio,
-        equipments,
-        tags
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$WorkoutSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WorkoutPlanSummary extends JsonSerializable
-    with EquatableMixin, WorkoutPlanSummaryMixin {
-  WorkoutPlanSummary();
-
-  factory WorkoutPlanSummary.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutPlanSummaryFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        archived,
-        name,
-        description,
-        coverImageUri,
-        lengthWeeks,
-        daysPerWeek,
-        workoutsCount,
-        user,
-        enrolmentsCount,
-        goals,
-        tags,
-        reviewScore,
-        reviewCount
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$WorkoutPlanSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class Club extends JsonSerializable with EquatableMixin, ClubMixin {
-  Club();
-
-  factory Club.fromJson(Map<String, dynamic> json) => _$ClubFromJson(json);
-
-  @JsonKey(name: 'Owner')
-  late UserSummary owner;
+  late UserAvatarData owner;
 
   @JsonKey(name: 'Admins')
-  late List<UserSummary> admins;
-
-  @JsonKey(name: 'Members')
-  late List<UserSummary> members;
-
-  @JsonKey(name: 'ClubInviteTokens')
-  List<ClubInviteToken>? clubInviteTokens;
-
-  @JsonKey(name: 'JoinClubInvites')
-  List<JoinClubInvite>? joinClubInvites;
-
-  @JsonKey(name: 'JoinClubRequests')
-  List<JoinClubRequest>? joinClubRequests;
-
-  @JsonKey(name: 'Workouts')
-  List<WorkoutSummary>? workouts;
-
-  @JsonKey(name: 'WorkoutPlans')
-  List<WorkoutPlanSummary>? workoutPlans;
+  late List<UserAvatarData> admins;
 
   @override
   List<Object?> get props => [
@@ -931,23 +1157,20 @@ class Club extends JsonSerializable with EquatableMixin, ClubMixin {
         createdAt,
         name,
         description,
-        location,
         coverImageUri,
         introVideoUri,
         introVideoThumbUri,
         introAudioUri,
         contentAccessScope,
+        location,
+        memberCount,
+        workoutCount,
+        planCount,
         owner,
-        admins,
-        members,
-        clubInviteTokens,
-        joinClubInvites,
-        joinClubRequests,
-        workouts,
-        workoutPlans
+        admins
       ];
   @override
-  Map<String, dynamic> toJson() => _$ClubToJson(this);
+  Map<String, dynamic> toJson() => _$ClubSummaryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -957,61 +1180,12 @@ class CreateClub$Mutation extends JsonSerializable with EquatableMixin {
   factory CreateClub$Mutation.fromJson(Map<String, dynamic> json) =>
       _$CreateClub$MutationFromJson(json);
 
-  late Club createClub;
+  late ClubSummary createClub;
 
   @override
   List<Object?> get props => [createClub];
   @override
   Map<String, dynamic> toJson() => _$CreateClub$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WorkoutSummaryMixin$UserSummary extends JsonSerializable
-    with EquatableMixin, UserSummaryMixin {
-  WorkoutSummaryMixin$UserSummary();
-
-  factory WorkoutSummaryMixin$UserSummary.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutSummaryMixin$UserSummaryFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, avatarUri, displayName, userProfileScope];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$WorkoutSummaryMixin$UserSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WorkoutPlanSummaryMixin$UserSummary extends JsonSerializable
-    with EquatableMixin, UserSummaryMixin {
-  WorkoutPlanSummaryMixin$UserSummary();
-
-  factory WorkoutPlanSummaryMixin$UserSummary.fromJson(
-          Map<String, dynamic> json) =>
-      _$WorkoutPlanSummaryMixin$UserSummaryFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, avatarUri, displayName, userProfileScope];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$WorkoutPlanSummaryMixin$UserSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WorkoutPlanSummaryMixin$WorkoutGoal extends JsonSerializable
-    with EquatableMixin, WorkoutGoalMixin {
-  WorkoutPlanSummaryMixin$WorkoutGoal();
-
-  factory WorkoutPlanSummaryMixin$WorkoutGoal.fromJson(
-          Map<String, dynamic> json) =>
-      _$WorkoutPlanSummaryMixin$WorkoutGoalFromJson(json);
-
-  @override
-  List<Object?> get props => [$$typename, id, name, description, hexColor];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$WorkoutPlanSummaryMixin$WorkoutGoalToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -1049,38 +1223,23 @@ class PublicClubs$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteClubById$Mutation extends JsonSerializable with EquatableMixin {
-  DeleteClubById$Mutation();
+class UpdateClubSummary$Mutation extends JsonSerializable with EquatableMixin {
+  UpdateClubSummary$Mutation();
 
-  factory DeleteClubById$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$DeleteClubById$MutationFromJson(json);
+  factory UpdateClubSummary$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubSummary$MutationFromJson(json);
 
-  late String deleteClubById;
+  late ClubSummary updateClubSummary;
 
   @override
-  List<Object?> get props => [deleteClubById];
+  List<Object?> get props => [updateClubSummary];
   @override
-  Map<String, dynamic> toJson() => _$DeleteClubById$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$UpdateClubSummary$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class UpdateClub$Mutation extends JsonSerializable with EquatableMixin {
-  UpdateClub$Mutation();
-
-  factory UpdateClub$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClub$MutationFromJson(json);
-
-  late Club updateClub;
-
-  @override
-  List<Object?> get props => [updateClub];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateClub$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateClubInput extends JsonSerializable with EquatableMixin {
-  UpdateClubInput(
+class UpdateClubSummaryInput extends JsonSerializable with EquatableMixin {
+  UpdateClubSummaryInput(
       {this.contentAccessScope,
       this.coverImageUri,
       this.description,
@@ -1091,8 +1250,8 @@ class UpdateClubInput extends JsonSerializable with EquatableMixin {
       this.location,
       this.name});
 
-  factory UpdateClubInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClubInputFromJson(json);
+  factory UpdateClubSummaryInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubSummaryInputFromJson(json);
 
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   ContentAccessScope? contentAccessScope;
@@ -1126,22 +1285,7 @@ class UpdateClubInput extends JsonSerializable with EquatableMixin {
         name
       ];
   @override
-  Map<String, dynamic> toJson() => _$UpdateClubInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ClubById$Query extends JsonSerializable with EquatableMixin {
-  ClubById$Query();
-
-  factory ClubById$Query.fromJson(Map<String, dynamic> json) =>
-      _$ClubById$QueryFromJson(json);
-
-  late Club clubById;
-
-  @override
-  List<Object?> get props => [clubById];
-  @override
-  Map<String, dynamic> toJson() => _$ClubById$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$UpdateClubSummaryInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -1736,6 +1880,67 @@ class DeleteCollectionById$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class WorkoutSummary extends JsonSerializable
+    with EquatableMixin, WorkoutSummaryMixin {
+  WorkoutSummary();
+
+  factory WorkoutSummary.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        archived,
+        name,
+        user,
+        lengthMinutes,
+        coverImageUri,
+        description,
+        difficultyLevel,
+        loggedSessionsCount,
+        hasClassVideo,
+        hasClassAudio,
+        equipments,
+        tags
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$WorkoutSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutPlanSummary extends JsonSerializable
+    with EquatableMixin, WorkoutPlanSummaryMixin {
+  WorkoutPlanSummary();
+
+  factory WorkoutPlanSummary.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutPlanSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        archived,
+        name,
+        description,
+        coverImageUri,
+        lengthWeeks,
+        daysPerWeek,
+        workoutsCount,
+        user,
+        enrolmentsCount,
+        goals,
+        tags,
+        reviewScore,
+        reviewCount
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$WorkoutPlanSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class Collection extends JsonSerializable with EquatableMixin, CollectionMixin {
   Collection();
 
@@ -1771,6 +1976,54 @@ class AddWorkoutPlanToCollection$Mutation extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$AddWorkoutPlanToCollection$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutSummaryMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  WorkoutSummaryMixin$UserAvatarData();
+
+  factory WorkoutSummaryMixin$UserAvatarData.fromJson(
+          Map<String, dynamic> json) =>
+      _$WorkoutSummaryMixin$UserAvatarDataFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$WorkoutSummaryMixin$UserAvatarDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutPlanSummaryMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  WorkoutPlanSummaryMixin$UserAvatarData();
+
+  factory WorkoutPlanSummaryMixin$UserAvatarData.fromJson(
+          Map<String, dynamic> json) =>
+      _$WorkoutPlanSummaryMixin$UserAvatarDataFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$WorkoutPlanSummaryMixin$UserAvatarDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutPlanSummaryMixin$WorkoutGoal extends JsonSerializable
+    with EquatableMixin, WorkoutGoalMixin {
+  WorkoutPlanSummaryMixin$WorkoutGoal();
+
+  factory WorkoutPlanSummaryMixin$WorkoutGoal.fromJson(
+          Map<String, dynamic> json) =>
+      _$WorkoutPlanSummaryMixin$WorkoutGoalFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, name, description, hexColor];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$WorkoutPlanSummaryMixin$WorkoutGoalToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2091,18 +2344,18 @@ class CreateWorkoutPlanDayWorkout$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class WorkoutDataMixin$UserSummary extends JsonSerializable
-    with EquatableMixin, UserSummaryMixin {
-  WorkoutDataMixin$UserSummary();
+class WorkoutDataMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  WorkoutDataMixin$UserAvatarData();
 
-  factory WorkoutDataMixin$UserSummary.fromJson(Map<String, dynamic> json) =>
-      _$WorkoutDataMixin$UserSummaryFromJson(json);
+  factory WorkoutDataMixin$UserAvatarData.fromJson(Map<String, dynamic> json) =>
+      _$WorkoutDataMixin$UserAvatarDataFromJson(json);
 
   @override
-  List<Object?> get props =>
-      [$$typename, id, avatarUri, displayName, userProfileScope];
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
   @override
-  Map<String, dynamic> toJson() => _$WorkoutDataMixin$UserSummaryToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$WorkoutDataMixin$UserAvatarDataToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2402,7 +2655,7 @@ class WorkoutPlanEnrolment extends JsonSerializable
   late List<CompletedWorkoutPlanDayWorkout> completedWorkoutPlanDayWorkouts;
 
   @JsonKey(name: 'User')
-  late UserSummary user;
+  late UserAvatarData user;
 
   @override
   List<Object?> get props =>
@@ -2484,20 +2737,19 @@ class WorkoutPlanEnrolmentById$Query extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class WorkoutPlanDataMixin$UserSummary extends JsonSerializable
-    with EquatableMixin, UserSummaryMixin {
-  WorkoutPlanDataMixin$UserSummary();
+class WorkoutPlanDataMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  WorkoutPlanDataMixin$UserAvatarData();
 
-  factory WorkoutPlanDataMixin$UserSummary.fromJson(
+  factory WorkoutPlanDataMixin$UserAvatarData.fromJson(
           Map<String, dynamic> json) =>
-      _$WorkoutPlanDataMixin$UserSummaryFromJson(json);
+      _$WorkoutPlanDataMixin$UserAvatarDataFromJson(json);
 
   @override
-  List<Object?> get props =>
-      [$$typename, id, avatarUri, displayName, userProfileScope];
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
   @override
   Map<String, dynamic> toJson() =>
-      _$WorkoutPlanDataMixin$UserSummaryToJson(this);
+      _$WorkoutPlanDataMixin$UserAvatarDataToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2530,7 +2782,7 @@ class WorkoutPlanDataMixin$WorkoutPlanReview extends JsonSerializable
       _$WorkoutPlanDataMixin$WorkoutPlanReviewFromJson(json);
 
   @JsonKey(name: 'User')
-  late UserSummary user;
+  late UserAvatarData user;
 
   @override
   List<Object?> get props => [id, $$typename, createdAt, score, comment, user];
@@ -2567,7 +2819,7 @@ class WorkoutPlanDataMixin$WorkoutPlanEnrolment extends JsonSerializable
   late List<CompletedWorkoutPlanDayWorkout> completedWorkoutPlanDayWorkouts;
 
   @JsonKey(name: 'User')
-  late UserSummary user;
+  late UserAvatarData user;
 
   @override
   List<Object?> get props =>
@@ -2575,6 +2827,24 @@ class WorkoutPlanDataMixin$WorkoutPlanEnrolment extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$WorkoutPlanDataMixin$WorkoutPlanEnrolmentToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClearScheduleForPlanEnrolment$Mutation extends JsonSerializable
+    with EquatableMixin {
+  ClearScheduleForPlanEnrolment$Mutation();
+
+  factory ClearScheduleForPlanEnrolment$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClearScheduleForPlanEnrolment$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment clearScheduleForPlanEnrolment;
+
+  @override
+  List<Object?> get props => [clearScheduleForPlanEnrolment];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClearScheduleForPlanEnrolment$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2596,604 +2866,147 @@ class CreateWorkoutPlanEnrolment$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class ProgressJournalGoalTag extends JsonSerializable
-    with EquatableMixin, ProgressJournalGoalTagMixin {
-  ProgressJournalGoalTag();
-
-  factory ProgressJournalGoalTag.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalGoalTagFromJson(json);
-
-  @override
-  List<Object?> get props => [$$typename, id, createdAt, tag, hexColor];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalGoalTagToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalGoalTag$Mutation extends JsonSerializable
+class DeleteCompletedWorkoutPlanDayWorkout$Mutation extends JsonSerializable
     with EquatableMixin {
-  UpdateProgressJournalGoalTag$Mutation();
+  DeleteCompletedWorkoutPlanDayWorkout$Mutation();
 
-  factory UpdateProgressJournalGoalTag$Mutation.fromJson(
+  factory DeleteCompletedWorkoutPlanDayWorkout$Mutation.fromJson(
           Map<String, dynamic> json) =>
-      _$UpdateProgressJournalGoalTag$MutationFromJson(json);
+      _$DeleteCompletedWorkoutPlanDayWorkout$MutationFromJson(json);
 
-  late ProgressJournalGoalTag updateProgressJournalGoalTag;
+  late WorkoutPlanEnrolment deleteCompletedWorkoutPlanDayWorkout;
 
   @override
-  List<Object?> get props => [updateProgressJournalGoalTag];
+  List<Object?> get props => [deleteCompletedWorkoutPlanDayWorkout];
   @override
   Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalGoalTag$MutationToJson(this);
+      _$DeleteCompletedWorkoutPlanDayWorkout$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalGoalTagInput extends JsonSerializable
+class DeleteCompletedWorkoutPlanDayWorkoutInput extends JsonSerializable
     with EquatableMixin {
-  UpdateProgressJournalGoalTagInput(
-      {this.hexColor, required this.id, this.tag});
+  DeleteCompletedWorkoutPlanDayWorkoutInput(
+      {required this.workoutPlanDayWorkoutId,
+      required this.workoutPlanEnrolmentId});
 
-  factory UpdateProgressJournalGoalTagInput.fromJson(
+  factory DeleteCompletedWorkoutPlanDayWorkoutInput.fromJson(
           Map<String, dynamic> json) =>
-      _$UpdateProgressJournalGoalTagInputFromJson(json);
+      _$DeleteCompletedWorkoutPlanDayWorkoutInputFromJson(json);
 
-  String? hexColor;
+  late String workoutPlanDayWorkoutId;
 
-  late String id;
-
-  String? tag;
+  late String workoutPlanEnrolmentId;
 
   @override
-  List<Object?> get props => [hexColor, id, tag];
+  List<Object?> get props => [workoutPlanDayWorkoutId, workoutPlanEnrolmentId];
   @override
   Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalGoalTagInputToJson(this);
+      _$DeleteCompletedWorkoutPlanDayWorkoutInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class ProgressJournalEntry extends JsonSerializable
-    with EquatableMixin, ProgressJournalEntryMixin {
-  ProgressJournalEntry();
-
-  factory ProgressJournalEntry.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalEntryFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        note,
-        voiceNoteUri,
-        moodScore,
-        energyScore,
-        confidenceScore,
-        motivationScore
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalEntryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ProgressJournalGoal extends JsonSerializable
-    with EquatableMixin, ProgressJournalGoalMixin {
-  ProgressJournalGoal();
-
-  factory ProgressJournalGoal.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalGoalFromJson(json);
-
-  @JsonKey(name: 'ProgressJournalGoalTags')
-  late List<ProgressJournalGoalTag> progressJournalGoalTags;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        name,
-        description,
-        deadline,
-        completedDate,
-        progressJournalGoalTags
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalGoalToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ProgressJournal extends JsonSerializable
-    with EquatableMixin, ProgressJournalMixin {
-  ProgressJournal();
-
-  factory ProgressJournal.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalFromJson(json);
-
-  @JsonKey(name: 'ProgressJournalEntries')
-  late List<ProgressJournalEntry> progressJournalEntries;
-
-  @JsonKey(name: 'ProgressJournalGoals')
-  late List<ProgressJournalGoal> progressJournalGoals;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        name,
-        description,
-        coverImageUri,
-        progressJournalEntries,
-        progressJournalGoals
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ProgressJournalById$Query extends JsonSerializable with EquatableMixin {
-  ProgressJournalById$Query();
-
-  factory ProgressJournalById$Query.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalById$QueryFromJson(json);
-
-  late ProgressJournal progressJournalById;
-
-  @override
-  List<Object?> get props => [progressJournalById];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalById$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalEntry$Mutation extends JsonSerializable
+class ClearWorkoutPlanEnrolmentProgress$Mutation extends JsonSerializable
     with EquatableMixin {
-  CreateProgressJournalEntry$Mutation();
+  ClearWorkoutPlanEnrolmentProgress$Mutation();
 
-  factory CreateProgressJournalEntry$Mutation.fromJson(
+  factory ClearWorkoutPlanEnrolmentProgress$Mutation.fromJson(
           Map<String, dynamic> json) =>
-      _$CreateProgressJournalEntry$MutationFromJson(json);
+      _$ClearWorkoutPlanEnrolmentProgress$MutationFromJson(json);
 
-  late ProgressJournalEntry createProgressJournalEntry;
+  late WorkoutPlanEnrolment clearWorkoutPlanEnrolmentProgress;
 
   @override
-  List<Object?> get props => [createProgressJournalEntry];
+  List<Object?> get props => [clearWorkoutPlanEnrolmentProgress];
   @override
   Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalEntry$MutationToJson(this);
+      _$ClearWorkoutPlanEnrolmentProgress$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateProgressJournalEntryInput extends JsonSerializable
+class CreateScheduleForPlanEnrolment$Mutation extends JsonSerializable
     with EquatableMixin {
-  CreateProgressJournalEntryInput(
-      {required this.progressJournal,
-      this.confidenceScore,
-      this.energyScore,
-      this.moodScore,
-      this.motivationScore,
-      this.note,
-      this.voiceNoteUri});
+  CreateScheduleForPlanEnrolment$Mutation();
 
-  factory CreateProgressJournalEntryInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateProgressJournalEntryInputFromJson(json);
-
-  @JsonKey(name: 'ProgressJournal')
-  late ConnectRelationInput progressJournal;
-
-  double? confidenceScore;
-
-  double? energyScore;
-
-  double? moodScore;
-
-  double? motivationScore;
-
-  String? note;
-
-  String? voiceNoteUri;
-
-  @override
-  List<Object?> get props => [
-        progressJournal,
-        confidenceScore,
-        energyScore,
-        moodScore,
-        motivationScore,
-        note,
-        voiceNoteUri
-      ];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalEntryInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalById$Mutation();
-
-  factory DeleteProgressJournalById$Mutation.fromJson(
+  factory CreateScheduleForPlanEnrolment$Mutation.fromJson(
           Map<String, dynamic> json) =>
-      _$DeleteProgressJournalById$MutationFromJson(json);
+      _$CreateScheduleForPlanEnrolment$MutationFromJson(json);
 
-  late String deleteProgressJournalById;
+  late WorkoutPlanEnrolment createScheduleForPlanEnrolment;
 
   @override
-  List<Object?> get props => [deleteProgressJournalById];
+  List<Object?> get props => [createScheduleForPlanEnrolment];
   @override
   Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalById$MutationToJson(this);
+      _$CreateScheduleForPlanEnrolment$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateProgressJournal$Mutation extends JsonSerializable
+class CreateScheduleForPlanEnrolmentInput extends JsonSerializable
     with EquatableMixin {
-  CreateProgressJournal$Mutation();
+  CreateScheduleForPlanEnrolmentInput(
+      {required this.startDate, required this.workoutPlanEnrolmentId});
 
-  factory CreateProgressJournal$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$CreateProgressJournal$MutationFromJson(json);
-
-  late ProgressJournal createProgressJournal;
-
-  @override
-  List<Object?> get props => [createProgressJournal];
-  @override
-  Map<String, dynamic> toJson() => _$CreateProgressJournal$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalInput extends JsonSerializable with EquatableMixin {
-  CreateProgressJournalInput(
-      {this.coverImageUri, this.description, required this.name});
-
-  factory CreateProgressJournalInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateProgressJournalInputFromJson(json);
-
-  String? coverImageUri;
-
-  String? description;
-
-  late String name;
-
-  @override
-  List<Object?> get props => [coverImageUri, description, name];
-  @override
-  Map<String, dynamic> toJson() => _$CreateProgressJournalInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournal$Mutation extends JsonSerializable
-    with EquatableMixin {
-  UpdateProgressJournal$Mutation();
-
-  factory UpdateProgressJournal$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateProgressJournal$MutationFromJson(json);
-
-  late ProgressJournal updateProgressJournal;
-
-  @override
-  List<Object?> get props => [updateProgressJournal];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateProgressJournal$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalInput extends JsonSerializable with EquatableMixin {
-  UpdateProgressJournalInput(
-      {this.coverImageUri, this.description, required this.id, this.name});
-
-  factory UpdateProgressJournalInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateProgressJournalInputFromJson(json);
-
-  String? coverImageUri;
-
-  String? description;
-
-  late String id;
-
-  String? name;
-
-  @override
-  List<Object?> get props => [coverImageUri, description, id, name];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateProgressJournalInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalEntryById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalEntryById$Mutation();
-
-  factory DeleteProgressJournalEntryById$Mutation.fromJson(
+  factory CreateScheduleForPlanEnrolmentInput.fromJson(
           Map<String, dynamic> json) =>
-      _$DeleteProgressJournalEntryById$MutationFromJson(json);
-
-  late String deleteProgressJournalEntryById;
-
-  @override
-  List<Object?> get props => [deleteProgressJournalEntryById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalEntryById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalEntry$Mutation extends JsonSerializable
-    with EquatableMixin {
-  UpdateProgressJournalEntry$Mutation();
-
-  factory UpdateProgressJournalEntry$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$UpdateProgressJournalEntry$MutationFromJson(json);
-
-  late ProgressJournalEntry updateProgressJournalEntry;
-
-  @override
-  List<Object?> get props => [updateProgressJournalEntry];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalEntry$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalEntryInput extends JsonSerializable
-    with EquatableMixin {
-  UpdateProgressJournalEntryInput(
-      {this.confidenceScore,
-      this.energyScore,
-      required this.id,
-      this.moodScore,
-      this.motivationScore,
-      this.note,
-      this.voiceNoteUri});
-
-  factory UpdateProgressJournalEntryInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateProgressJournalEntryInputFromJson(json);
-
-  double? confidenceScore;
-
-  double? energyScore;
-
-  late String id;
-
-  double? moodScore;
-
-  double? motivationScore;
-
-  String? note;
-
-  String? voiceNoteUri;
-
-  @override
-  List<Object?> get props => [
-        confidenceScore,
-        energyScore,
-        id,
-        moodScore,
-        motivationScore,
-        note,
-        voiceNoteUri
-      ];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalEntryInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalGoal$Mutation extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalGoal$Mutation();
-
-  factory CreateProgressJournalGoal$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateProgressJournalGoal$MutationFromJson(json);
-
-  late ProgressJournalGoal createProgressJournalGoal;
-
-  @override
-  List<Object?> get props => [createProgressJournalGoal];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalGoal$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalGoalInput extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalGoalInput(
-      {required this.progressJournal,
-      this.progressJournalGoalTags,
-      this.deadline,
-      this.description,
-      required this.name});
-
-  factory CreateProgressJournalGoalInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateProgressJournalGoalInputFromJson(json);
-
-  @JsonKey(name: 'ProgressJournal')
-  late ConnectRelationInput progressJournal;
-
-  @JsonKey(name: 'ProgressJournalGoalTags')
-  List<ConnectRelationInput>? progressJournalGoalTags;
+      _$CreateScheduleForPlanEnrolmentInputFromJson(json);
 
   @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? deadline;
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime startDate;
 
-  String? description;
+  late String workoutPlanEnrolmentId;
 
-  late String name;
+  @override
+  List<Object?> get props => [startDate, workoutPlanEnrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateScheduleForPlanEnrolmentInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateCompletedWorkoutPlanDayWorkout$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateCompletedWorkoutPlanDayWorkout$Mutation();
+
+  factory CreateCompletedWorkoutPlanDayWorkout$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateCompletedWorkoutPlanDayWorkout$MutationFromJson(json);
+
+  late WorkoutPlanEnrolment createCompletedWorkoutPlanDayWorkout;
+
+  @override
+  List<Object?> get props => [createCompletedWorkoutPlanDayWorkout];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateCompletedWorkoutPlanDayWorkout$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateCompletedWorkoutPlanDayWorkoutInput extends JsonSerializable
+    with EquatableMixin {
+  CreateCompletedWorkoutPlanDayWorkoutInput(
+      {required this.loggedWorkoutId,
+      required this.workoutPlanDayWorkoutId,
+      required this.workoutPlanEnrolmentId});
+
+  factory CreateCompletedWorkoutPlanDayWorkoutInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateCompletedWorkoutPlanDayWorkoutInputFromJson(json);
+
+  late String loggedWorkoutId;
+
+  late String workoutPlanDayWorkoutId;
+
+  late String workoutPlanEnrolmentId;
 
   @override
   List<Object?> get props =>
-      [progressJournal, progressJournalGoalTags, deadline, description, name];
-  @override
-  Map<String, dynamic> toJson() => _$CreateProgressJournalGoalInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserProgressJournals$Query extends JsonSerializable with EquatableMixin {
-  UserProgressJournals$Query();
-
-  factory UserProgressJournals$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserProgressJournals$QueryFromJson(json);
-
-  late List<ProgressJournal> userProgressJournals;
-
-  @override
-  List<Object?> get props => [userProgressJournals];
-  @override
-  Map<String, dynamic> toJson() => _$UserProgressJournals$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalGoal$Mutation extends JsonSerializable
-    with EquatableMixin {
-  UpdateProgressJournalGoal$Mutation();
-
-  factory UpdateProgressJournalGoal$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$UpdateProgressJournalGoal$MutationFromJson(json);
-
-  late ProgressJournalGoal updateProgressJournalGoal;
-
-  @override
-  List<Object?> get props => [updateProgressJournalGoal];
+      [loggedWorkoutId, workoutPlanDayWorkoutId, workoutPlanEnrolmentId];
   @override
   Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalGoal$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalGoalInput extends JsonSerializable
-    with EquatableMixin {
-  UpdateProgressJournalGoalInput(
-      {this.progressJournalGoalTags,
-      this.completedDate,
-      this.deadline,
-      this.description,
-      required this.id,
-      this.name});
-
-  factory UpdateProgressJournalGoalInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateProgressJournalGoalInputFromJson(json);
-
-  @JsonKey(name: 'ProgressJournalGoalTags')
-  List<ConnectRelationInput>? progressJournalGoalTags;
-
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? completedDate;
-
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? deadline;
-
-  String? description;
-
-  late String id;
-
-  String? name;
-
-  @override
-  List<Object?> get props =>
-      [progressJournalGoalTags, completedDate, deadline, description, id, name];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateProgressJournalGoalInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalGoalTag$Mutation extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalGoalTag$Mutation();
-
-  factory CreateProgressJournalGoalTag$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateProgressJournalGoalTag$MutationFromJson(json);
-
-  late ProgressJournalGoalTag createProgressJournalGoalTag;
-
-  @override
-  List<Object?> get props => [createProgressJournalGoalTag];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalGoalTag$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalGoalTagInput extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalGoalTagInput(
-      {required this.hexColor, required this.tag});
-
-  factory CreateProgressJournalGoalTagInput.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateProgressJournalGoalTagInputFromJson(json);
-
-  late String hexColor;
-
-  late String tag;
-
-  @override
-  List<Object?> get props => [hexColor, tag];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalGoalTagInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalGoalById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalGoalById$Mutation();
-
-  factory DeleteProgressJournalGoalById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteProgressJournalGoalById$MutationFromJson(json);
-
-  late String deleteProgressJournalGoalById;
-
-  @override
-  List<Object?> get props => [deleteProgressJournalGoalById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalGoalById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalGoalTagById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalGoalTagById$Mutation();
-
-  factory DeleteProgressJournalGoalTagById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteProgressJournalGoalTagById$MutationFromJson(json);
-
-  late String deleteProgressJournalGoalTagById;
-
-  @override
-  List<Object?> get props => [deleteProgressJournalGoalTagById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalGoalTagById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ProgressJournalGoalTags$Query extends JsonSerializable
-    with EquatableMixin {
-  ProgressJournalGoalTags$Query();
-
-  factory ProgressJournalGoalTags$Query.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalGoalTags$QueryFromJson(json);
-
-  late List<ProgressJournalGoalTag> progressJournalGoalTags;
-
-  @override
-  List<Object?> get props => [progressJournalGoalTags];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalGoalTags$QueryToJson(this);
+      _$CreateCompletedWorkoutPlanDayWorkoutInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -3516,7 +3329,7 @@ class LoggedWorkout extends JsonSerializable
       _$LoggedWorkoutFromJson(json);
 
   @JsonKey(name: 'User')
-  late UserSummary user;
+  UserAvatarData? user;
 
   @JsonKey(name: 'GymProfile')
   GymProfile? gymProfile;
@@ -4016,7 +3829,7 @@ class WorkoutPlanReview extends JsonSerializable
       _$WorkoutPlanReviewFromJson(json);
 
   @JsonKey(name: 'User')
-  late UserSummary user;
+  late UserAvatarData user;
 
   @override
   List<Object?> get props => [id, $$typename, createdAt, score, comment, user];
@@ -4103,6 +3916,20 @@ class CreateWorkoutPlanReviewInput extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClubWorkouts extends JsonSerializable
+    with EquatableMixin, ClubWorkoutsMixin {
+  ClubWorkouts();
+
+  factory ClubWorkouts.fromJson(Map<String, dynamic> json) =>
+      _$ClubWorkoutsFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, workouts];
+  @override
+  Map<String, dynamic> toJson() => _$ClubWorkoutsToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class RemoveWorkoutFromClub$Mutation extends JsonSerializable
     with EquatableMixin {
   RemoveWorkoutFromClub$Mutation();
@@ -4110,12 +3937,58 @@ class RemoveWorkoutFromClub$Mutation extends JsonSerializable
   factory RemoveWorkoutFromClub$Mutation.fromJson(Map<String, dynamic> json) =>
       _$RemoveWorkoutFromClub$MutationFromJson(json);
 
-  late Club removeWorkoutFromClub;
+  late ClubWorkouts removeWorkoutFromClub;
 
   @override
   List<Object?> get props => [removeWorkoutFromClub];
   @override
   Map<String, dynamic> toJson() => _$RemoveWorkoutFromClub$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubWorkoutsMixin$WorkoutSummary extends JsonSerializable
+    with EquatableMixin, WorkoutSummaryMixin {
+  ClubWorkoutsMixin$WorkoutSummary();
+
+  factory ClubWorkoutsMixin$WorkoutSummary.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClubWorkoutsMixin$WorkoutSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        archived,
+        name,
+        user,
+        lengthMinutes,
+        coverImageUri,
+        description,
+        difficultyLevel,
+        loggedSessionsCount,
+        hasClassVideo,
+        hasClassAudio,
+        equipments,
+        tags
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClubWorkoutsMixin$WorkoutSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubWorkoutPlans extends JsonSerializable
+    with EquatableMixin, ClubWorkoutPlansMixin {
+  ClubWorkoutPlans();
+
+  factory ClubWorkoutPlans.fromJson(Map<String, dynamic> json) =>
+      _$ClubWorkoutPlansFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, workoutPlans];
+  @override
+  Map<String, dynamic> toJson() => _$ClubWorkoutPlansToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -4127,7 +4000,7 @@ class RemoveWorkoutPlanFromClub$Mutation extends JsonSerializable
           Map<String, dynamic> json) =>
       _$RemoveWorkoutPlanFromClub$MutationFromJson(json);
 
-  late Club removeWorkoutPlanFromClub;
+  late ClubWorkoutPlans removeWorkoutPlanFromClub;
 
   @override
   List<Object?> get props => [removeWorkoutPlanFromClub];
@@ -4137,13 +4010,46 @@ class RemoveWorkoutPlanFromClub$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClubWorkoutPlansMixin$WorkoutPlanSummary extends JsonSerializable
+    with EquatableMixin, WorkoutPlanSummaryMixin {
+  ClubWorkoutPlansMixin$WorkoutPlanSummary();
+
+  factory ClubWorkoutPlansMixin$WorkoutPlanSummary.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClubWorkoutPlansMixin$WorkoutPlanSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        archived,
+        name,
+        description,
+        coverImageUri,
+        lengthWeeks,
+        daysPerWeek,
+        workoutsCount,
+        user,
+        enrolmentsCount,
+        goals,
+        tags,
+        reviewScore,
+        reviewCount
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClubWorkoutPlansMixin$WorkoutPlanSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class AddWorkoutToClub$Mutation extends JsonSerializable with EquatableMixin {
   AddWorkoutToClub$Mutation();
 
   factory AddWorkoutToClub$Mutation.fromJson(Map<String, dynamic> json) =>
       _$AddWorkoutToClub$MutationFromJson(json);
 
-  late Club addWorkoutToClub;
+  late ClubWorkouts addWorkoutToClub;
 
   @override
   List<Object?> get props => [addWorkoutToClub];
@@ -4159,12 +4065,42 @@ class AddWorkoutPlanToClub$Mutation extends JsonSerializable
   factory AddWorkoutPlanToClub$Mutation.fromJson(Map<String, dynamic> json) =>
       _$AddWorkoutPlanToClub$MutationFromJson(json);
 
-  late Club addWorkoutPlanToClub;
+  late ClubWorkoutPlans addWorkoutPlanToClub;
 
   @override
   List<Object?> get props => [addWorkoutPlanToClub];
   @override
   Map<String, dynamic> toJson() => _$AddWorkoutPlanToClub$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubWorkouts$Query extends JsonSerializable with EquatableMixin {
+  ClubWorkouts$Query();
+
+  factory ClubWorkouts$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubWorkouts$QueryFromJson(json);
+
+  late ClubWorkouts clubWorkouts;
+
+  @override
+  List<Object?> get props => [clubWorkouts];
+  @override
+  Map<String, dynamic> toJson() => _$ClubWorkouts$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubWorkoutPlans$Query extends JsonSerializable with EquatableMixin {
+  ClubWorkoutPlans$Query();
+
+  factory ClubWorkoutPlans$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubWorkoutPlans$QueryFromJson(json);
+
+  late ClubWorkoutPlans clubWorkoutPlans;
+
+  @override
+  List<Object?> get props => [clubWorkoutPlans];
+  @override
+  Map<String, dynamic> toJson() => _$ClubWorkoutPlans$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -4410,20 +4346,6 @@ class CreateWorkoutPlanInput extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [contentAccessScope, name];
   @override
   Map<String, dynamic> toJson() => _$CreateWorkoutPlanInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserAvatarData extends JsonSerializable
-    with EquatableMixin, UserAvatarDataMixin {
-  UserAvatarData();
-
-  factory UserAvatarData.fromJson(Map<String, dynamic> json) =>
-      _$UserAvatarDataFromJson(json);
-
-  @override
-  List<Object?> get props => [$$typename, id, avatarUri, displayName];
-  @override
-  Map<String, dynamic> toJson() => _$UserAvatarDataToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -5284,18 +5206,18 @@ class UserProfile extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserProfileById$Query extends JsonSerializable with EquatableMixin {
-  UserProfileById$Query();
+class UserProfile$Query extends JsonSerializable with EquatableMixin {
+  UserProfile$Query();
 
-  factory UserProfileById$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileById$QueryFromJson(json);
+  factory UserProfile$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserProfile$QueryFromJson(json);
 
-  late UserProfile userProfileById;
+  late UserProfile userProfile;
 
   @override
-  List<Object?> get props => [userProfileById];
+  List<Object?> get props => [userProfile];
   @override
-  Map<String, dynamic> toJson() => _$UserProfileById$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$UserProfile$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -5745,24 +5667,6 @@ class Equipments$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkTagById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkTagById$Mutation();
-
-  factory DeleteUserBenchmarkTagById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkTagById$MutationFromJson(json);
-
-  late String deleteUserBenchmarkTagById;
-
-  @override
-  List<Object?> get props => [deleteUserBenchmarkTagById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkTagById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class CreateUserBenchmarkEntry$Mutation extends JsonSerializable
     with EquatableMixin {
   CreateUserBenchmarkEntry$Mutation();
@@ -5815,105 +5719,6 @@ class CreateUserBenchmarkEntryInput extends JsonSerializable
       [userBenchmark, completedOn, note, score, videoThumbUri, videoUri];
   @override
   Map<String, dynamic> toJson() => _$CreateUserBenchmarkEntryInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkTag extends JsonSerializable
-    with EquatableMixin, UserBenchmarkTagMixin {
-  UserBenchmarkTag();
-
-  factory UserBenchmarkTag.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkTagFromJson(json);
-
-  @override
-  List<Object?> get props => [$$typename, id, name, description];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkTagToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateUserBenchmarkTag$Mutation extends JsonSerializable
-    with EquatableMixin {
-  CreateUserBenchmarkTag$Mutation();
-
-  factory CreateUserBenchmarkTag$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$CreateUserBenchmarkTag$MutationFromJson(json);
-
-  late UserBenchmarkTag createUserBenchmarkTag;
-
-  @override
-  List<Object?> get props => [createUserBenchmarkTag];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateUserBenchmarkTag$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateUserBenchmarkTagInput extends JsonSerializable with EquatableMixin {
-  CreateUserBenchmarkTagInput({this.description, required this.name});
-
-  factory CreateUserBenchmarkTagInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateUserBenchmarkTagInputFromJson(json);
-
-  String? description;
-
-  late String name;
-
-  @override
-  List<Object?> get props => [description, name];
-  @override
-  Map<String, dynamic> toJson() => _$CreateUserBenchmarkTagInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkTags$Query extends JsonSerializable with EquatableMixin {
-  UserBenchmarkTags$Query();
-
-  factory UserBenchmarkTags$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkTags$QueryFromJson(json);
-
-  late List<UserBenchmarkTag> userBenchmarkTags;
-
-  @override
-  List<Object?> get props => [userBenchmarkTags];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkTags$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateUserBenchmarkTag$Mutation extends JsonSerializable
-    with EquatableMixin {
-  UpdateUserBenchmarkTag$Mutation();
-
-  factory UpdateUserBenchmarkTag$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateUserBenchmarkTag$MutationFromJson(json);
-
-  late UserBenchmarkTag updateUserBenchmarkTag;
-
-  @override
-  List<Object?> get props => [updateUserBenchmarkTag];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateUserBenchmarkTag$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateUserBenchmarkTagInput extends JsonSerializable with EquatableMixin {
-  UpdateUserBenchmarkTagInput({this.description, required this.id, this.name});
-
-  factory UpdateUserBenchmarkTagInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateUserBenchmarkTagInputFromJson(json);
-
-  String? description;
-
-  late String id;
-
-  String? name;
-
-  @override
-  List<Object?> get props => [description, id, name];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateUserBenchmarkTagInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -5971,24 +5776,6 @@ class UpdateUserBenchmarkEntryInput extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkEntryById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkEntryById$Mutation();
-
-  factory DeleteUserBenchmarkEntryById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkEntryById$MutationFromJson(json);
-
-  late String deleteUserBenchmarkEntryById;
-
-  @override
-  List<Object?> get props => [deleteUserBenchmarkEntryById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkEntryById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UserBenchmark extends JsonSerializable
     with EquatableMixin, UserBenchmarkMixin {
   UserBenchmark();
@@ -5998,9 +5785,6 @@ class UserBenchmark extends JsonSerializable
 
   @JsonKey(name: 'UserBenchmarkEntries')
   late List<UserBenchmarkEntry> userBenchmarkEntries;
-
-  @JsonKey(name: 'UserBenchmarkTags')
-  late List<UserBenchmarkTag> userBenchmarkTags;
 
   @override
   List<Object?> get props => [
@@ -6013,8 +5797,7 @@ class UserBenchmark extends JsonSerializable
         equipmentInfo,
         benchmarkType,
         loadUnit,
-        userBenchmarkEntries,
-        userBenchmarkTags
+        userBenchmarkEntries
       ];
   @override
   Map<String, dynamic> toJson() => _$UserBenchmarkToJson(this);
@@ -6039,8 +5822,7 @@ class UpdateUserBenchmark$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class UpdateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
   UpdateUserBenchmarkInput(
-      {this.userBenchmarkTags,
-      required this.benchmarkType,
+      {required this.benchmarkType,
       this.description,
       this.equipmentInfo,
       required this.id,
@@ -6049,9 +5831,6 @@ class UpdateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
 
   factory UpdateUserBenchmarkInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateUserBenchmarkInputFromJson(json);
-
-  @JsonKey(name: 'UserBenchmarkTags')
-  List<ConnectRelationInput>? userBenchmarkTags;
 
   @JsonKey(unknownEnumValue: BenchmarkType.artemisUnknown)
   late BenchmarkType benchmarkType;
@@ -6068,15 +5847,8 @@ class UpdateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
   String? name;
 
   @override
-  List<Object?> get props => [
-        userBenchmarkTags,
-        benchmarkType,
-        description,
-        equipmentInfo,
-        id,
-        loadUnit,
-        name
-      ];
+  List<Object?> get props =>
+      [benchmarkType, description, equipmentInfo, id, loadUnit, name];
   @override
   Map<String, dynamic> toJson() => _$UpdateUserBenchmarkInputToJson(this);
 }
@@ -6100,8 +5872,7 @@ class CreateUserBenchmark$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class CreateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
   CreateUserBenchmarkInput(
-      {this.userBenchmarkTags,
-      required this.benchmarkType,
+      {required this.benchmarkType,
       this.description,
       this.equipmentInfo,
       this.loadUnit,
@@ -6109,9 +5880,6 @@ class CreateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
 
   factory CreateUserBenchmarkInput.fromJson(Map<String, dynamic> json) =>
       _$CreateUserBenchmarkInputFromJson(json);
-
-  @JsonKey(name: 'UserBenchmarkTags')
-  List<ConnectRelationInput>? userBenchmarkTags;
 
   @JsonKey(unknownEnumValue: BenchmarkType.artemisUnknown)
   late BenchmarkType benchmarkType;
@@ -6126,34 +5894,10 @@ class CreateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
   late String name;
 
   @override
-  List<Object?> get props => [
-        userBenchmarkTags,
-        benchmarkType,
-        description,
-        equipmentInfo,
-        loadUnit,
-        name
-      ];
+  List<Object?> get props =>
+      [benchmarkType, description, equipmentInfo, loadUnit, name];
   @override
   Map<String, dynamic> toJson() => _$CreateUserBenchmarkInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkById$Mutation();
-
-  factory DeleteUserBenchmarkById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkById$MutationFromJson(json);
-
-  late String deleteUserBenchmarkById;
-
-  @override
-  List<Object?> get props => [deleteUserBenchmarkById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkById$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -6169,21 +5913,6 @@ class UserBenchmarks$Query extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [userBenchmarks];
   @override
   Map<String, dynamic> toJson() => _$UserBenchmarks$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkById$Query extends JsonSerializable with EquatableMixin {
-  UserBenchmarkById$Query();
-
-  factory UserBenchmarkById$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkById$QueryFromJson(json);
-
-  late UserBenchmark userBenchmarkById;
-
-  @override
-  List<Object?> get props => [userBenchmarkById];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkById$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -6736,16 +6465,8 @@ class TimelinePostObjectDataObject extends JsonSerializable
       _$TimelinePostObjectDataObjectFromJson(json);
 
   @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        type,
-        name,
-        introAudioUri,
-        coverImageUri,
-        introVideoUri,
-        introVideoThumbUri
-      ];
+  List<Object?> get props =>
+      [$$typename, id, type, name, audioUri, imageUri, videoUri, videoThumbUri];
   @override
   Map<String, dynamic> toJson() => _$TimelinePostObjectDataObjectToJson(this);
 }
@@ -7174,7 +6895,7 @@ class CreateWorkout$Mutation extends JsonSerializable with EquatableMixin {
 class CreateWorkoutInput extends JsonSerializable with EquatableMixin {
   CreateWorkoutInput(
       {required this.contentAccessScope,
-      required this.difficultyLevel,
+      this.difficultyLevel,
       required this.name});
 
   factory CreateWorkoutInput.fromJson(Map<String, dynamic> json) =>
@@ -7184,7 +6905,7 @@ class CreateWorkoutInput extends JsonSerializable with EquatableMixin {
   late ContentAccessScope contentAccessScope;
 
   @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
-  late DifficultyLevel difficultyLevel;
+  DifficultyLevel? difficultyLevel;
 
   late String name;
 
@@ -7380,6 +7101,56 @@ class UpdateSkillInput extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClubMemberSummary extends JsonSerializable
+    with EquatableMixin, ClubMemberSummaryMixin {
+  ClubMemberSummary();
+
+  factory ClubMemberSummary.fromJson(Map<String, dynamic> json) =>
+      _$ClubMemberSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        displayName,
+        avatarUri,
+        townCity,
+        countryCode,
+        tagline,
+        skills
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$ClubMemberSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubMembers extends JsonSerializable with EquatableMixin {
+  ClubMembers();
+
+  factory ClubMembers.fromJson(Map<String, dynamic> json) =>
+      _$ClubMembersFromJson(json);
+
+  @JsonKey(name: '__typename')
+  String? $$typename;
+
+  late String id;
+
+  @JsonKey(name: 'Owner')
+  late ClubMemberSummary owner;
+
+  @JsonKey(name: 'Admins')
+  late List<ClubMemberSummary> admins;
+
+  @JsonKey(name: 'Members')
+  late List<ClubMemberSummary> members;
+
+  @override
+  List<Object?> get props => [$$typename, id, owner, admins, members];
+  @override
+  Map<String, dynamic> toJson() => _$ClubMembersToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class RemoveMemberAdminStatus$Mutation extends JsonSerializable
     with EquatableMixin {
   RemoveMemberAdminStatus$Mutation();
@@ -7388,7 +7159,7 @@ class RemoveMemberAdminStatus$Mutation extends JsonSerializable
           Map<String, dynamic> json) =>
       _$RemoveMemberAdminStatus$MutationFromJson(json);
 
-  late Club removeMemberAdminStatus;
+  late ClubMembers removeMemberAdminStatus;
 
   @override
   List<Object?> get props => [removeMemberAdminStatus];
@@ -7406,7 +7177,7 @@ class AddUserToClubViaInviteToken$Mutation extends JsonSerializable
           Map<String, dynamic> json) =>
       _$AddUserToClubViaInviteToken$MutationFromJson(json);
 
-  late Club addUserToClubViaInviteToken;
+  late String addUserToClubViaInviteToken;
 
   @override
   List<Object?> get props => [addUserToClubViaInviteToken];
@@ -7439,10 +7210,23 @@ class ClubInviteTokenData extends CheckClubInviteTokenResult
       _$ClubInviteTokenDataFromJson(json);
 
   @JsonKey(name: 'Club')
-  late Club club;
+  late ClubSummary club;
+
+  String? introVideoUri;
+
+  String? introVideoThumbUri;
+
+  String? introAudioUri;
 
   @override
-  List<Object?> get props => [$$typename, token, club];
+  List<Object?> get props => [
+        $$typename,
+        token,
+        club,
+        introVideoUri,
+        introVideoThumbUri,
+        introAudioUri
+      ];
   @override
   Map<String, dynamic> toJson() => _$ClubInviteTokenDataToJson(this);
 }
@@ -7516,7 +7300,7 @@ class RemoveUserFromClub$Mutation extends JsonSerializable with EquatableMixin {
   factory RemoveUserFromClub$Mutation.fromJson(Map<String, dynamic> json) =>
       _$RemoveUserFromClub$MutationFromJson(json);
 
-  late Club removeUserFromClub;
+  late ClubMembers removeUserFromClub;
 
   @override
   List<Object?> get props => [removeUserFromClub];
@@ -7525,40 +7309,21 @@ class RemoveUserFromClub$Mutation extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class ClubMembers extends JsonSerializable with EquatableMixin, ClubMixin {
-  ClubMembers();
+class CheckUserClubMemberStatus$Query extends JsonSerializable
+    with EquatableMixin {
+  CheckUserClubMemberStatus$Query();
 
-  factory ClubMembers.fromJson(Map<String, dynamic> json) =>
-      _$ClubMembersFromJson(json);
+  factory CheckUserClubMemberStatus$Query.fromJson(Map<String, dynamic> json) =>
+      _$CheckUserClubMemberStatus$QueryFromJson(json);
 
-  @JsonKey(name: 'Owner')
-  late UserSummary owner;
-
-  @JsonKey(name: 'Admins')
-  late List<UserSummary> admins;
-
-  @JsonKey(name: 'Members')
-  late List<UserSummary> members;
+  @JsonKey(unknownEnumValue: UserClubMemberStatus.artemisUnknown)
+  late UserClubMemberStatus checkUserClubMemberStatus;
 
   @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        name,
-        description,
-        location,
-        coverImageUri,
-        introVideoUri,
-        introVideoThumbUri,
-        introAudioUri,
-        contentAccessScope,
-        owner,
-        admins,
-        members
-      ];
+  List<Object?> get props => [checkUserClubMemberStatus];
   @override
-  Map<String, dynamic> toJson() => _$ClubMembersToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$CheckUserClubMemberStatus$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -7577,6 +7342,41 @@ class ClubMembers$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClubInviteToken extends JsonSerializable
+    with EquatableMixin, ClubInviteTokenMixin {
+  ClubInviteToken();
+
+  factory ClubInviteToken.fromJson(Map<String, dynamic> json) =>
+      _$ClubInviteTokenFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, name, active, inviteLimit, joinedUserIds];
+  @override
+  Map<String, dynamic> toJson() => _$ClubInviteTokenToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubInviteTokens extends JsonSerializable with EquatableMixin {
+  ClubInviteTokens();
+
+  factory ClubInviteTokens.fromJson(Map<String, dynamic> json) =>
+      _$ClubInviteTokensFromJson(json);
+
+  @JsonKey(name: '__typename')
+  String? $$typename;
+
+  late String id;
+
+  late List<ClubInviteToken> tokens;
+
+  @override
+  List<Object?> get props => [$$typename, id, tokens];
+  @override
+  Map<String, dynamic> toJson() => _$ClubInviteTokensToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class UpdateClubInviteToken$Mutation extends JsonSerializable
     with EquatableMixin {
   UpdateClubInviteToken$Mutation();
@@ -7584,7 +7384,7 @@ class UpdateClubInviteToken$Mutation extends JsonSerializable
   factory UpdateClubInviteToken$Mutation.fromJson(Map<String, dynamic> json) =>
       _$UpdateClubInviteToken$MutationFromJson(json);
 
-  late ClubInviteToken updateClubInviteToken;
+  late ClubInviteTokens updateClubInviteToken;
 
   @override
   List<Object?> get props => [updateClubInviteToken];
@@ -7595,12 +7395,18 @@ class UpdateClubInviteToken$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class UpdateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   UpdateClubInviteTokenInput(
-      {this.active, required this.id, this.inviteLimit, this.name});
+      {this.active,
+      required this.clubId,
+      required this.id,
+      this.inviteLimit,
+      this.name});
 
   factory UpdateClubInviteTokenInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateClubInviteTokenInputFromJson(json);
 
   bool? active;
+
+  late String clubId;
 
   late String id;
 
@@ -7609,7 +7415,7 @@ class UpdateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   String? name;
 
   @override
-  List<Object?> get props => [active, id, inviteLimit, name];
+  List<Object?> get props => [active, clubId, id, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$UpdateClubInviteTokenInputToJson(this);
 }
@@ -7622,7 +7428,7 @@ class GiveMemberAdminStatus$Mutation extends JsonSerializable
   factory GiveMemberAdminStatus$Mutation.fromJson(Map<String, dynamic> json) =>
       _$GiveMemberAdminStatus$MutationFromJson(json);
 
-  late Club giveMemberAdminStatus;
+  late ClubMembers giveMemberAdminStatus;
 
   @override
   List<Object?> get props => [giveMemberAdminStatus];
@@ -7638,7 +7444,7 @@ class CreateClubInviteToken$Mutation extends JsonSerializable
   factory CreateClubInviteToken$Mutation.fromJson(Map<String, dynamic> json) =>
       _$CreateClubInviteToken$MutationFromJson(json);
 
-  late ClubInviteToken createClubInviteToken;
+  late ClubInviteTokens createClubInviteToken;
 
   @override
   List<Object?> get props => [createClubInviteToken];
@@ -7649,241 +7455,326 @@ class CreateClubInviteToken$Mutation extends JsonSerializable
 @JsonSerializable(explicitToJson: true)
 class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   CreateClubInviteTokenInput(
-      {required this.club, required this.inviteLimit, required this.name});
+      {required this.clubId, required this.inviteLimit, required this.name});
 
   factory CreateClubInviteTokenInput.fromJson(Map<String, dynamic> json) =>
       _$CreateClubInviteTokenInputFromJson(json);
 
-  @JsonKey(name: 'Club')
-  late ConnectRelationInput club;
+  late String clubId;
 
   late int inviteLimit;
 
   late String name;
 
   @override
-  List<Object?> get props => [club, inviteLimit, name];
+  List<Object?> get props => [clubId, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteClubInviteTokenById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteClubInviteTokenById$Mutation();
+class DeleteClub$Mutation extends JsonSerializable with EquatableMixin {
+  DeleteClub$Mutation();
 
-  factory DeleteClubInviteTokenById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteClubInviteTokenById$MutationFromJson(json);
+  factory DeleteClub$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClub$MutationFromJson(json);
 
-  late String deleteClubInviteTokenById;
+  late String deleteClub;
 
   @override
-  List<Object?> get props => [deleteClubInviteTokenById];
+  List<Object?> get props => [deleteClub];
   @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteClubInviteTokenById$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$DeleteClub$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class ClearScheduleForPlanEnrolment$Mutation extends JsonSerializable
-    with EquatableMixin {
-  ClearScheduleForPlanEnrolment$Mutation();
+class ClubSummary$Query extends JsonSerializable with EquatableMixin {
+  ClubSummary$Query();
 
-  factory ClearScheduleForPlanEnrolment$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$ClearScheduleForPlanEnrolment$MutationFromJson(json);
+  factory ClubSummary$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubSummary$QueryFromJson(json);
 
-  late WorkoutPlanEnrolment clearScheduleForPlanEnrolment;
+  late ClubSummary clubSummary;
 
   @override
-  List<Object?> get props => [clearScheduleForPlanEnrolment];
+  List<Object?> get props => [clubSummary];
   @override
-  Map<String, dynamic> toJson() =>
-      _$ClearScheduleForPlanEnrolment$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$ClubSummary$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteCompletedWorkoutPlanDayWorkout$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteCompletedWorkoutPlanDayWorkout$Mutation();
+class ClubSummaries$Query extends JsonSerializable with EquatableMixin {
+  ClubSummaries$Query();
 
-  factory DeleteCompletedWorkoutPlanDayWorkout$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteCompletedWorkoutPlanDayWorkout$MutationFromJson(json);
+  factory ClubSummaries$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubSummaries$QueryFromJson(json);
 
-  late WorkoutPlanEnrolment deleteCompletedWorkoutPlanDayWorkout;
+  late List<ClubSummary> clubSummaries;
 
   @override
-  List<Object?> get props => [deleteCompletedWorkoutPlanDayWorkout];
+  List<Object?> get props => [clubSummaries];
   @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteCompletedWorkoutPlanDayWorkout$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$ClubSummaries$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteCompletedWorkoutPlanDayWorkoutInput extends JsonSerializable
-    with EquatableMixin {
-  DeleteCompletedWorkoutPlanDayWorkoutInput(
-      {required this.workoutPlanDayWorkoutId,
-      required this.workoutPlanEnrolmentId});
+class ClubInviteTokens$Query extends JsonSerializable with EquatableMixin {
+  ClubInviteTokens$Query();
 
-  factory DeleteCompletedWorkoutPlanDayWorkoutInput.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteCompletedWorkoutPlanDayWorkoutInputFromJson(json);
+  factory ClubInviteTokens$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubInviteTokens$QueryFromJson(json);
 
-  late String workoutPlanDayWorkoutId;
-
-  late String workoutPlanEnrolmentId;
+  late ClubInviteTokens clubInviteTokens;
 
   @override
-  List<Object?> get props => [workoutPlanDayWorkoutId, workoutPlanEnrolmentId];
+  List<Object?> get props => [clubInviteTokens];
   @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteCompletedWorkoutPlanDayWorkoutInputToJson(this);
+  Map<String, dynamic> toJson() => _$ClubInviteTokens$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class ClearWorkoutPlanEnrolmentProgress$Mutation extends JsonSerializable
+class DeleteClubInviteToken$Mutation extends JsonSerializable
     with EquatableMixin {
-  ClearWorkoutPlanEnrolmentProgress$Mutation();
+  DeleteClubInviteToken$Mutation();
 
-  factory ClearWorkoutPlanEnrolmentProgress$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$ClearWorkoutPlanEnrolmentProgress$MutationFromJson(json);
+  factory DeleteClubInviteToken$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubInviteToken$MutationFromJson(json);
 
-  late WorkoutPlanEnrolment clearWorkoutPlanEnrolmentProgress;
+  late ClubInviteTokens deleteClubInviteToken;
 
   @override
-  List<Object?> get props => [clearWorkoutPlanEnrolmentProgress];
+  List<Object?> get props => [deleteClubInviteToken];
   @override
-  Map<String, dynamic> toJson() =>
-      _$ClearWorkoutPlanEnrolmentProgress$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$DeleteClubInviteToken$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateScheduleForPlanEnrolment$Mutation extends JsonSerializable
-    with EquatableMixin {
-  CreateScheduleForPlanEnrolment$Mutation();
+class DeleteClubInviteTokenInput extends JsonSerializable with EquatableMixin {
+  DeleteClubInviteTokenInput({required this.clubId, required this.tokenId});
 
-  factory CreateScheduleForPlanEnrolment$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateScheduleForPlanEnrolment$MutationFromJson(json);
+  factory DeleteClubInviteTokenInput.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubInviteTokenInputFromJson(json);
 
-  late WorkoutPlanEnrolment createScheduleForPlanEnrolment;
+  late String clubId;
+
+  late String tokenId;
 
   @override
-  List<Object?> get props => [createScheduleForPlanEnrolment];
+  List<Object?> get props => [clubId, tokenId];
   @override
-  Map<String, dynamic> toJson() =>
-      _$CreateScheduleForPlanEnrolment$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$DeleteClubInviteTokenInputToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateScheduleForPlanEnrolmentInput extends JsonSerializable
+class DeleteUserBenchmarkEntry$Mutation extends JsonSerializable
     with EquatableMixin {
-  CreateScheduleForPlanEnrolmentInput(
-      {required this.startDate, required this.workoutPlanEnrolmentId});
+  DeleteUserBenchmarkEntry$Mutation();
 
-  factory CreateScheduleForPlanEnrolmentInput.fromJson(
+  factory DeleteUserBenchmarkEntry$Mutation.fromJson(
           Map<String, dynamic> json) =>
-      _$CreateScheduleForPlanEnrolmentInputFromJson(json);
+      _$DeleteUserBenchmarkEntry$MutationFromJson(json);
 
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime startDate;
-
-  late String workoutPlanEnrolmentId;
+  late String deleteUserBenchmarkEntry;
 
   @override
-  List<Object?> get props => [startDate, workoutPlanEnrolmentId];
+  List<Object?> get props => [deleteUserBenchmarkEntry];
   @override
   Map<String, dynamic> toJson() =>
-      _$CreateScheduleForPlanEnrolmentInputToJson(this);
+      _$DeleteUserBenchmarkEntry$MutationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateCompletedWorkoutPlanDayWorkout$Mutation extends JsonSerializable
-    with EquatableMixin {
-  CreateCompletedWorkoutPlanDayWorkout$Mutation();
+class UserBenchmark$Query extends JsonSerializable with EquatableMixin {
+  UserBenchmark$Query();
 
-  factory CreateCompletedWorkoutPlanDayWorkout$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateCompletedWorkoutPlanDayWorkout$MutationFromJson(json);
+  factory UserBenchmark$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmark$QueryFromJson(json);
 
-  late WorkoutPlanEnrolment createCompletedWorkoutPlanDayWorkout;
+  late UserBenchmark userBenchmark;
 
   @override
-  List<Object?> get props => [createCompletedWorkoutPlanDayWorkout];
+  List<Object?> get props => [userBenchmark];
   @override
-  Map<String, dynamic> toJson() =>
-      _$CreateCompletedWorkoutPlanDayWorkout$MutationToJson(this);
+  Map<String, dynamic> toJson() => _$UserBenchmark$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateCompletedWorkoutPlanDayWorkoutInput extends JsonSerializable
+class DeleteUserBenchmark$Mutation extends JsonSerializable
     with EquatableMixin {
-  CreateCompletedWorkoutPlanDayWorkoutInput(
-      {required this.loggedWorkoutId,
-      required this.workoutPlanDayWorkoutId,
-      required this.workoutPlanEnrolmentId});
+  DeleteUserBenchmark$Mutation();
 
-  factory CreateCompletedWorkoutPlanDayWorkoutInput.fromJson(
+  factory DeleteUserBenchmark$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserBenchmark$MutationFromJson(json);
+
+  late String deleteUserBenchmark;
+
+  @override
+  List<Object?> get props => [deleteUserBenchmark];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserBenchmark$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubAnnouncement extends JsonSerializable
+    with EquatableMixin, ClubAnnouncementMixin {
+  ClubAnnouncement();
+
+  factory ClubAnnouncement.fromJson(Map<String, dynamic> json) =>
+      _$ClubAnnouncementFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        description,
+        imageUri,
+        audioUri,
+        videoUri,
+        videoThumbUri,
+        user
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$ClubAnnouncementToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubAnnouncement$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateClubAnnouncement$Mutation();
+
+  factory UpdateClubAnnouncement$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubAnnouncement$MutationFromJson(json);
+
+  late ClubAnnouncement updateClubAnnouncement;
+
+  @override
+  List<Object?> get props => [updateClubAnnouncement];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateClubAnnouncement$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubAnnouncementMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  ClubAnnouncementMixin$UserAvatarData();
+
+  factory ClubAnnouncementMixin$UserAvatarData.fromJson(
           Map<String, dynamic> json) =>
-      _$CreateCompletedWorkoutPlanDayWorkoutInputFromJson(json);
+      _$ClubAnnouncementMixin$UserAvatarDataFromJson(json);
 
-  late String loggedWorkoutId;
+  @override
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClubAnnouncementMixin$UserAvatarDataToJson(this);
+}
 
-  late String workoutPlanDayWorkoutId;
+@JsonSerializable(explicitToJson: true)
+class UpdateClubAnnouncementInput extends JsonSerializable with EquatableMixin {
+  UpdateClubAnnouncementInput(
+      {this.audioUri,
+      this.description,
+      required this.id,
+      this.imageUri,
+      this.videoThumbUri,
+      this.videoUri});
 
-  late String workoutPlanEnrolmentId;
+  factory UpdateClubAnnouncementInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubAnnouncementInputFromJson(json);
+
+  String? audioUri;
+
+  String? description;
+
+  late String id;
+
+  String? imageUri;
+
+  String? videoThumbUri;
+
+  String? videoUri;
 
   @override
   List<Object?> get props =>
-      [loggedWorkoutId, workoutPlanDayWorkoutId, workoutPlanEnrolmentId];
+      [audioUri, description, id, imageUri, videoThumbUri, videoUri];
   @override
-  Map<String, dynamic> toJson() =>
-      _$CreateCompletedWorkoutPlanDayWorkoutInputToJson(this);
+  Map<String, dynamic> toJson() => _$UpdateClubAnnouncementInputToJson(this);
 }
 
-enum UserProfileScope {
-  @JsonValue('PRIVATE')
-  private,
-  @JsonValue('PUBLIC')
-  public,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
+@JsonSerializable(explicitToJson: true)
+class CreateClubAnnouncement$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateClubAnnouncement$Mutation();
+
+  factory CreateClubAnnouncement$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubAnnouncement$MutationFromJson(json);
+
+  late ClubAnnouncement createClubAnnouncement;
+
+  @override
+  List<Object?> get props => [createClubAnnouncement];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateClubAnnouncement$MutationToJson(this);
 }
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubAnnouncementInput extends JsonSerializable with EquatableMixin {
+  CreateClubAnnouncementInput(
+      {required this.club,
+      this.audioUri,
+      required this.description,
+      this.imageUri,
+      this.videoThumbUri,
+      this.videoUri});
+
+  factory CreateClubAnnouncementInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubAnnouncementInputFromJson(json);
+
+  @JsonKey(name: 'Club')
+  late ConnectRelationInput club;
+
+  String? audioUri;
+
+  late String description;
+
+  String? imageUri;
+
+  String? videoThumbUri;
+
+  String? videoUri;
+
+  @override
+  List<Object?> get props =>
+      [club, audioUri, description, imageUri, videoThumbUri, videoUri];
+  @override
+  Map<String, dynamic> toJson() => _$CreateClubAnnouncementInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteClubAnnouncement$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteClubAnnouncement$Mutation();
+
+  factory DeleteClubAnnouncement$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubAnnouncement$MutationFromJson(json);
+
+  late String deleteClubAnnouncement;
+
+  @override
+  List<Object?> get props => [deleteClubAnnouncement];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteClubAnnouncement$MutationToJson(this);
+}
+
 enum ContentAccessScope {
   @JsonValue('PRIVATE')
   private,
   @JsonValue('PUBLIC')
   public,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-enum JoinClubRequestStatus {
-  @JsonValue('ACCEPTED')
-  accepted,
-  @JsonValue('PENDING')
-  pending,
-  @JsonValue('REJECTED')
-  rejected,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-enum DifficultyLevel {
-  @JsonValue('ADVANCED')
-  advanced,
-  @JsonValue('CHALLENGING')
-  challenging,
-  @JsonValue('ELITE')
-  elite,
-  @JsonValue('INTERMEDIATE')
-  intermediate,
-  @JsonValue('LIGHT')
-  light,
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
@@ -7969,6 +7860,28 @@ enum BodyAreaUpperLower {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+enum DifficultyLevel {
+  @JsonValue('ADVANCED')
+  advanced,
+  @JsonValue('CHALLENGING')
+  challenging,
+  @JsonValue('ELITE')
+  elite,
+  @JsonValue('INTERMEDIATE')
+  intermediate,
+  @JsonValue('LIGHT')
+  light,
+  @JsonValue('ARTEMIS_UNKNOWN')
+  artemisUnknown,
+}
+enum UserProfileScope {
+  @JsonValue('PRIVATE')
+  private,
+  @JsonValue('PUBLIC')
+  public,
+  @JsonValue('ARTEMIS_UNKNOWN')
+  artemisUnknown,
+}
 enum Gender {
   @JsonValue('FEMALE')
   female,
@@ -7996,6 +7909,8 @@ enum BenchmarkType {
   artemisUnknown,
 }
 enum TimelinePostType {
+  @JsonValue('ANNOUNCEMENT')
+  announcement,
   @JsonValue('WORKOUT')
   workout,
   @JsonValue('WORKOUTPLAN')
@@ -8003,33 +7918,193 @@ enum TimelinePostType {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
-
-@JsonSerializable(explicitToJson: true)
-class ClubSummariesByIdArguments extends JsonSerializable with EquatableMixin {
-  ClubSummariesByIdArguments({required this.ids});
-
-  @override
-  factory ClubSummariesByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$ClubSummariesByIdArgumentsFromJson(json);
-
-  late List<String> ids;
-
-  @override
-  List<Object?> get props => [ids];
-  @override
-  Map<String, dynamic> toJson() => _$ClubSummariesByIdArgumentsToJson(this);
+enum UserClubMemberStatus {
+  @JsonValue('ADMIN')
+  admin,
+  @JsonValue('MEMBER')
+  member,
+  @JsonValue('NONE')
+  none,
+  @JsonValue('OWNER')
+  owner,
+  @JsonValue('ARTEMIS_UNKNOWN')
+  artemisUnknown,
 }
 
-final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
+@JsonSerializable(explicitToJson: true)
+class DeleteJournalGoalByIdArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteJournalGoalByIdArguments({required this.id});
+
+  @override
+  factory DeleteJournalGoalByIdArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteJournalGoalByIdArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteJournalGoalByIdArgumentsToJson(this);
+}
+
+final DELETE_JOURNAL_GOAL_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'clubSummariesById'),
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteJournalGoalById'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'ids')),
-            type: ListTypeNode(
-                type:
-                    NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteJournalGoalById'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteJournalGoalByIdMutation extends GraphQLQuery<
+    DeleteJournalGoalById$Mutation, DeleteJournalGoalByIdArguments> {
+  DeleteJournalGoalByIdMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_JOURNAL_GOAL_BY_ID_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteJournalGoalById';
+
+  @override
+  final DeleteJournalGoalByIdArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteJournalGoalById$Mutation parse(Map<String, dynamic> json) =>
+      DeleteJournalGoalById$Mutation.fromJson(json);
+}
+
+final JOURNAL_MOODS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'journalMoods'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'journalMoods'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalMood'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalMood'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalMood'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'moodScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'energyScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'textNote'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class JournalMoodsQuery
+    extends GraphQLQuery<JournalMoods$Query, JsonSerializable> {
+  JournalMoodsQuery();
+
+  @override
+  final DocumentNode document = JOURNAL_MOODS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'journalMoods';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  JournalMoods$Query parse(Map<String, dynamic> json) =>
+      JournalMoods$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalMoodArguments extends JsonSerializable with EquatableMixin {
+  UpdateJournalMoodArguments({required this.data});
+
+  @override
+  factory UpdateJournalMoodArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalMoodArgumentsFromJson(json);
+
+  late UpdateJournalMoodInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalMoodArgumentsToJson(this);
+}
+
+final UPDATE_JOURNAL_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateJournalMood'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateJournalMoodInput'),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -8037,33 +8112,1039 @@ final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'clubSummariesById'),
+            name: NameNode(value: 'updateJournalMood'),
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'ids'),
-                  value: VariableNode(name: NameNode(value: 'ids')))
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'ClubSummary'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ]))
+                  name: NameNode(value: 'JournalMood'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'JournalMood'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'JournalMood'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'moodScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'energyScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'textNote'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateJournalMoodMutation extends GraphQLQuery<UpdateJournalMood$Mutation,
+    UpdateJournalMoodArguments> {
+  UpdateJournalMoodMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_JOURNAL_MOOD_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateJournalMood';
+
+  @override
+  final UpdateJournalMoodArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateJournalMood$Mutation parse(Map<String, dynamic> json) =>
+      UpdateJournalMood$Mutation.fromJson(json);
+}
+
+final JOURNAL_GOALS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'journalGoals'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'journalGoals'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalGoal'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'deadline'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class JournalGoalsQuery
+    extends GraphQLQuery<JournalGoals$Query, JsonSerializable> {
+  JournalGoalsQuery();
+
+  @override
+  final DocumentNode document = JOURNAL_GOALS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'journalGoals';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  JournalGoals$Query parse(Map<String, dynamic> json) =>
+      JournalGoals$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalGoalArguments extends JsonSerializable with EquatableMixin {
+  CreateJournalGoalArguments({required this.data});
+
+  @override
+  factory CreateJournalGoalArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalGoalArgumentsFromJson(json);
+
+  late CreateJournalGoalInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalGoalArgumentsToJson(this);
+}
+
+final CREATE_JOURNAL_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createJournalGoal'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateJournalGoalInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createJournalGoal'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalGoal'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'deadline'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateJournalGoalMutation extends GraphQLQuery<CreateJournalGoal$Mutation,
+    CreateJournalGoalArguments> {
+  CreateJournalGoalMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_JOURNAL_GOAL_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createJournalGoal';
+
+  @override
+  final CreateJournalGoalArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateJournalGoal$Mutation parse(Map<String, dynamic> json) =>
+      CreateJournalGoal$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteJournalNoteByIdArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteJournalNoteByIdArguments({required this.id});
+
+  @override
+  factory DeleteJournalNoteByIdArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteJournalNoteByIdArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteJournalNoteByIdArgumentsToJson(this);
+}
+
+final DELETE_JOURNAL_NOTE_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteJournalNoteById'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteJournalNoteById'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteJournalNoteByIdMutation extends GraphQLQuery<
+    DeleteJournalNoteById$Mutation, DeleteJournalNoteByIdArguments> {
+  DeleteJournalNoteByIdMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_JOURNAL_NOTE_BY_ID_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteJournalNoteById';
+
+  @override
+  final DeleteJournalNoteByIdArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteJournalNoteById$Mutation parse(Map<String, dynamic> json) =>
+      DeleteJournalNoteById$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalNoteArguments extends JsonSerializable with EquatableMixin {
+  UpdateJournalNoteArguments({required this.data});
+
+  @override
+  factory UpdateJournalNoteArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalNoteArgumentsFromJson(json);
+
+  late UpdateJournalNoteInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalNoteArgumentsToJson(this);
+}
+
+final UPDATE_JOURNAL_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateJournalNote'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateJournalNoteInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateJournalNote'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalNote'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalNote'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalNote'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'textNote'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'voiceNoteUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateJournalNoteMutation extends GraphQLQuery<UpdateJournalNote$Mutation,
+    UpdateJournalNoteArguments> {
+  UpdateJournalNoteMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_JOURNAL_NOTE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateJournalNote';
+
+  @override
+  final UpdateJournalNoteArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateJournalNote$Mutation parse(Map<String, dynamic> json) =>
+      UpdateJournalNote$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteJournalMoodByIdArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteJournalMoodByIdArguments({required this.id});
+
+  @override
+  factory DeleteJournalMoodByIdArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteJournalMoodByIdArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteJournalMoodByIdArgumentsToJson(this);
+}
+
+final DELETE_JOURNAL_MOOD_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteJournalMoodById'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteJournalMoodById'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteJournalMoodByIdMutation extends GraphQLQuery<
+    DeleteJournalMoodById$Mutation, DeleteJournalMoodByIdArguments> {
+  DeleteJournalMoodByIdMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_JOURNAL_MOOD_BY_ID_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteJournalMoodById';
+
+  @override
+  final DeleteJournalMoodByIdArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteJournalMoodById$Mutation parse(Map<String, dynamic> json) =>
+      DeleteJournalMoodById$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateJournalGoalArguments extends JsonSerializable with EquatableMixin {
+  UpdateJournalGoalArguments({required this.data});
+
+  @override
+  factory UpdateJournalGoalArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateJournalGoalArgumentsFromJson(json);
+
+  late UpdateJournalGoalInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateJournalGoalArgumentsToJson(this);
+}
+
+final UPDATE_JOURNAL_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateJournalGoal'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateJournalGoalInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateJournalGoal'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalGoal'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'deadline'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateJournalGoalMutation extends GraphQLQuery<UpdateJournalGoal$Mutation,
+    UpdateJournalGoalArguments> {
+  UpdateJournalGoalMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_JOURNAL_GOAL_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateJournalGoal';
+
+  @override
+  final UpdateJournalGoalArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateJournalGoal$Mutation parse(Map<String, dynamic> json) =>
+      UpdateJournalGoal$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalMoodArguments extends JsonSerializable with EquatableMixin {
+  CreateJournalMoodArguments({required this.data});
+
+  @override
+  factory CreateJournalMoodArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalMoodArgumentsFromJson(json);
+
+  late CreateJournalMoodInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalMoodArgumentsToJson(this);
+}
+
+final CREATE_JOURNAL_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createJournalMood'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateJournalMoodInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createJournalMood'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalMood'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalMood'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalMood'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'moodScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'energyScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'textNote'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateJournalMoodMutation extends GraphQLQuery<CreateJournalMood$Mutation,
+    CreateJournalMoodArguments> {
+  CreateJournalMoodMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_JOURNAL_MOOD_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createJournalMood';
+
+  @override
+  final CreateJournalMoodArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateJournalMood$Mutation parse(Map<String, dynamic> json) =>
+      CreateJournalMood$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateJournalNoteArguments extends JsonSerializable with EquatableMixin {
+  CreateJournalNoteArguments({required this.data});
+
+  @override
+  factory CreateJournalNoteArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateJournalNoteArgumentsFromJson(json);
+
+  late CreateJournalNoteInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateJournalNoteArgumentsToJson(this);
+}
+
+final CREATE_JOURNAL_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createJournalNote'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateJournalNoteInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createJournalNote'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalNote'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalNote'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalNote'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'textNote'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'voiceNoteUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateJournalNoteMutation extends GraphQLQuery<CreateJournalNote$Mutation,
+    CreateJournalNoteArguments> {
+  CreateJournalNoteMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_JOURNAL_NOTE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createJournalNote';
+
+  @override
+  final CreateJournalNoteArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateJournalNote$Mutation parse(Map<String, dynamic> json) =>
+      CreateJournalNote$Mutation.fromJson(json);
+}
+
+final JOURNAL_NOTES_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'journalNotes'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'journalNotes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'JournalNote'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'JournalNote'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'JournalNote'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'textNote'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'voiceNoteUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class JournalNotesQuery
+    extends GraphQLQuery<JournalNotes$Query, JsonSerializable> {
+  JournalNotesQuery();
+
+  @override
+  final DocumentNode document = JOURNAL_NOTES_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'journalNotes';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  JournalNotes$Query parse(Map<String, dynamic> json) =>
+      JournalNotes$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubChatSummaryArguments extends JsonSerializable with EquatableMixin {
+  ClubChatSummaryArguments({required this.clubId});
+
+  @override
+  factory ClubChatSummaryArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubChatSummaryArgumentsFromJson(json);
+
+  late String clubId;
+
+  @override
+  List<Object?> get props => [clubId];
+  @override
+  Map<String, dynamic> toJson() => _$ClubChatSummaryArgumentsToJson(this);
+}
+
+final CLUB_CHAT_SUMMARY_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'clubChatSummary'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'clubId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clubChatSummary'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubChatSummary'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubChatSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubChatSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Owner'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Admins'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Members'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -8089,9 +9170,119 @@ final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClubChatSummaryQuery
+    extends GraphQLQuery<ClubChatSummary$Query, ClubChatSummaryArguments> {
+  ClubChatSummaryQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CLUB_CHAT_SUMMARY_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'clubChatSummary';
+
+  @override
+  final ClubChatSummaryArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClubChatSummary$Query parse(Map<String, dynamic> json) =>
+      ClubChatSummary$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubArguments extends JsonSerializable with EquatableMixin {
+  CreateClubArguments({required this.data});
+
+  @override
+  factory CreateClubArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubArgumentsFromJson(json);
+
+  late CreateClubInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateClubArgumentsToJson(this);
+}
+
+final CREATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createClub'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateClubInput'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createClub'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubSummary'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'Owner'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'Admins'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'userProfileScope'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
@@ -8141,641 +9332,6 @@ final CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'memberCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class ClubSummariesByIdQuery
-    extends GraphQLQuery<ClubSummariesById$Query, ClubSummariesByIdArguments> {
-  ClubSummariesByIdQuery({required this.variables});
-
-  @override
-  final DocumentNode document = CLUB_SUMMARIES_BY_ID_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'clubSummariesById';
-
-  @override
-  final ClubSummariesByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  ClubSummariesById$Query parse(Map<String, dynamic> json) =>
-      ClubSummariesById$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateClubArguments extends JsonSerializable with EquatableMixin {
-  CreateClubArguments({required this.data});
-
-  @override
-  factory CreateClubArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateClubArgumentsFromJson(json);
-
-  late CreateClubInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$CreateClubArgumentsToJson(this);
-}
-
-final CREATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createClub'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateClubInput'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createClub'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
             name: NameNode(value: 'introVideoUri'),
             alias: null,
             arguments: [],
@@ -8795,6 +9351,30 @@ final CREATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -8844,15 +9424,24 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'Admins'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -8875,12 +9464,6 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -8930,6 +9513,30 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'introVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introAudioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
@@ -8937,6 +9544,18 @@ final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -8962,99 +9581,38 @@ class PublicClubsQuery
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteClubByIdArguments extends JsonSerializable with EquatableMixin {
-  DeleteClubByIdArguments({required this.id});
+class UpdateClubSummaryArguments extends JsonSerializable with EquatableMixin {
+  UpdateClubSummaryArguments({required this.data});
 
   @override
-  factory DeleteClubByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$DeleteClubByIdArgumentsFromJson(json);
+  factory UpdateClubSummaryArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubSummaryArgumentsFromJson(json);
 
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteClubByIdArgumentsToJson(this);
-}
-
-final DELETE_CLUB_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteClubById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteClubById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteClubByIdMutation
-    extends GraphQLQuery<DeleteClubById$Mutation, DeleteClubByIdArguments> {
-  DeleteClubByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_CLUB_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteClubById';
-
-  @override
-  final DeleteClubByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteClubById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteClubById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateClubArguments extends JsonSerializable with EquatableMixin {
-  UpdateClubArguments({required this.data});
-
-  @override
-  factory UpdateClubArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClubArgumentsFromJson(json);
-
-  late UpdateClubInput data;
+  late UpdateClubSummaryInput data;
 
   @override
   List<Object?> get props => [data];
   @override
-  Map<String, dynamic> toJson() => _$UpdateClubArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$UpdateClubSummaryArgumentsToJson(this);
 }
 
-final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
+final UPDATE_CLUB_SUMMARY_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'updateClub'),
+      name: NameNode(value: 'updateClubSummary'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
-                name: NameNode(value: 'UpdateClubInput'), isNonNull: true),
+                name: NameNode(value: 'UpdateClubSummaryInput'),
+                isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
       ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'updateClub'),
+            name: NameNode(value: 'updateClubSummary'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -9063,7 +9621,8 @@ final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubSummary'), directives: []),
               FieldNode(
                   name: NameNode(value: 'Owner'),
                   alias: null,
@@ -9071,7 +9630,7 @@ final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Admins'),
@@ -9080,93 +9639,15 @@ final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -9192,393 +9673,13 @@ final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
+      name: NameNode(value: 'ClubSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
+              name: NameNode(value: 'ClubSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -9607,12 +9708,6 @@ final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
             directives: [],
@@ -9646,616 +9741,6 @@ final UPDATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateClubMutation
-    extends GraphQLQuery<UpdateClub$Mutation, UpdateClubArguments> {
-  UpdateClubMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_CLUB_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateClub';
-
-  @override
-  final UpdateClubArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateClub$Mutation parse(Map<String, dynamic> json) =>
-      UpdateClub$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ClubByIdArguments extends JsonSerializable with EquatableMixin {
-  ClubByIdArguments({required this.id});
-
-  @override
-  factory ClubByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$ClubByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$ClubByIdArgumentsToJson(this);
-}
-
-final CLUB_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'clubById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'clubById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'location'),
@@ -10264,31 +9749,19 @@ final CLUB_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'memberCount'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'workoutCount'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -10296,23 +9769,24 @@ final CLUB_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class ClubByIdQuery extends GraphQLQuery<ClubById$Query, ClubByIdArguments> {
-  ClubByIdQuery({required this.variables});
+class UpdateClubSummaryMutation extends GraphQLQuery<UpdateClubSummary$Mutation,
+    UpdateClubSummaryArguments> {
+  UpdateClubSummaryMutation({required this.variables});
 
   @override
-  final DocumentNode document = CLUB_BY_ID_QUERY_DOCUMENT;
+  final DocumentNode document = UPDATE_CLUB_SUMMARY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'clubById';
+  final String operationName = 'updateClubSummary';
 
   @override
-  final ClubByIdArguments variables;
+  final UpdateClubSummaryArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  ClubById$Query parse(Map<String, dynamic> json) =>
-      ClubById$Query.fromJson(json);
+  UpdateClubSummary$Mutation parse(Map<String, dynamic> json) =>
+      UpdateClubSummary$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -10401,15 +9875,24 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'Admins'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -10432,12 +9915,6 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -10487,6 +9964,30 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'introVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introAudioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
@@ -10494,6 +9995,18 @@ final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -12723,7 +12236,7 @@ final ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -12781,10 +12294,10 @@ final ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -12807,12 +12320,6 @@ final ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -12892,7 +12399,7 @@ final ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -13135,7 +12642,7 @@ final CREATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -13193,10 +12700,10 @@ final CREATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -13219,12 +12726,6 @@ final CREATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13304,7 +12805,7 @@ final CREATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -13544,7 +13045,7 @@ final USER_COLLECTION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -13602,10 +13103,10 @@ final USER_COLLECTION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -13628,12 +13129,6 @@ final USER_COLLECTION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13713,7 +13208,7 @@ final USER_COLLECTION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -13957,7 +13452,7 @@ final ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -14015,10 +13510,10 @@ final ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -14041,12 +13536,6 @@ final ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14126,7 +13615,7 @@ final ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -14340,7 +13829,7 @@ final USER_COLLECTIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -14398,10 +13887,10 @@ final USER_COLLECTIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -14424,12 +13913,6 @@ final USER_COLLECTIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14509,7 +13992,7 @@ final USER_COLLECTIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -14748,7 +14231,7 @@ final UPDATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -14806,10 +14289,10 @@ final UPDATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -14832,12 +14315,6 @@ final UPDATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14917,7 +14394,7 @@ final UPDATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -15163,7 +14640,7 @@ final REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -15221,10 +14698,10 @@ final REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -15247,12 +14724,6 @@ final REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15332,7 +14803,7 @@ final REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -15580,7 +15051,7 @@ final REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -15638,10 +15109,10 @@ final REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -15664,12 +15135,6 @@ final REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15749,7 +15214,7 @@ final REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -16121,7 +15586,7 @@ final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -16257,10 +15722,10 @@ final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -16283,12 +15748,6 @@ final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -16953,7 +16412,7 @@ final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -17089,10 +16548,10 @@ final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -17115,12 +16574,6 @@ final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -17904,7 +17357,7 @@ final WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -17941,10 +17394,10 @@ final WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -17967,12 +17420,6 @@ final WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18111,7 +17558,7 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
+                              name: NameNode(value: 'UserAvatarData'),
                               directives: [])
                         ]))
                   ])),
@@ -18161,10 +17608,10 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -18187,12 +17634,6 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18316,7 +17757,7 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutPlanDays'),
@@ -18362,7 +17803,7 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ])),
         FieldNode(
@@ -18400,7 +17841,7 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
@@ -18496,7 +17937,7 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -19208,6 +18649,188 @@ class WorkoutPlanEnrolmentByIdQuery extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClearScheduleForPlanEnrolmentArguments extends JsonSerializable
+    with EquatableMixin {
+  ClearScheduleForPlanEnrolmentArguments({required this.enrolmentId});
+
+  @override
+  factory ClearScheduleForPlanEnrolmentArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClearScheduleForPlanEnrolmentArgumentsFromJson(json);
+
+  late String enrolmentId;
+
+  @override
+  List<Object?> get props => [enrolmentId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClearScheduleForPlanEnrolmentArgumentsToJson(this);
+}
+
+final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'clearScheduleForPlanEnrolment'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'enrolmentId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clearScheduleForPlanEnrolment'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'enrolmentId'),
+                  value: VariableNode(name: NameNode(value: 'enrolmentId')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
+              FieldNode(
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'startDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClearScheduleForPlanEnrolmentMutation extends GraphQLQuery<
+    ClearScheduleForPlanEnrolment$Mutation,
+    ClearScheduleForPlanEnrolmentArguments> {
+  ClearScheduleForPlanEnrolmentMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'clearScheduleForPlanEnrolment';
+
+  @override
+  final ClearScheduleForPlanEnrolmentArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClearScheduleForPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
+      ClearScheduleForPlanEnrolment$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
 class CreateWorkoutPlanEnrolmentArguments extends JsonSerializable
     with EquatableMixin {
   CreateWorkoutPlanEnrolmentArguments({required this.workoutPlanId});
@@ -19284,7 +18907,7 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
+                              name: NameNode(value: 'UserAvatarData'),
                               directives: [])
                         ]))
                   ])),
@@ -19334,10 +18957,10 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -19360,12 +18983,6 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19489,7 +19106,7 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutPlanDays'),
@@ -19535,7 +19152,7 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ])),
         FieldNode(
@@ -19573,7 +19190,7 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
@@ -19669,7 +19286,7 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -20381,34 +19998,35 @@ class CreateWorkoutPlanEnrolmentMutation extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalGoalTagArguments extends JsonSerializable
+class DeleteCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
     with EquatableMixin {
-  UpdateProgressJournalGoalTagArguments({required this.data});
+  DeleteCompletedWorkoutPlanDayWorkoutArguments({required this.data});
 
   @override
-  factory UpdateProgressJournalGoalTagArguments.fromJson(
+  factory DeleteCompletedWorkoutPlanDayWorkoutArguments.fromJson(
           Map<String, dynamic> json) =>
-      _$UpdateProgressJournalGoalTagArgumentsFromJson(json);
+      _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsFromJson(json);
 
-  late UpdateProgressJournalGoalTagInput data;
+  late DeleteCompletedWorkoutPlanDayWorkoutInput data;
 
   @override
   List<Object?> get props => [data];
   @override
   Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalGoalTagArgumentsToJson(this);
+      _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
 }
 
-final UPDATE_PROGRESS_JOURNAL_GOAL_TAG_MUTATION_DOCUMENT =
+final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'updateProgressJournalGoalTag'),
+      name: NameNode(value: 'deleteCompletedWorkoutPlanDayWorkout'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
-                name: NameNode(value: 'UpdateProgressJournalGoalTagInput'),
+                name: NameNode(
+                    value: 'DeleteCompletedWorkoutPlanDayWorkoutInput'),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -20416,7 +20034,7 @@ final UPDATE_PROGRESS_JOURNAL_GOAL_TAG_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'updateProgressJournalGoalTag'),
+            name: NameNode(value: 'deleteCompletedWorkoutPlanDayWorkout'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -20426,214 +20044,34 @@ final UPDATE_PROGRESS_JOURNAL_GOAL_TAG_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalGoalTag'),
-                  directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateProgressJournalGoalTagMutation extends GraphQLQuery<
-    UpdateProgressJournalGoalTag$Mutation,
-    UpdateProgressJournalGoalTagArguments> {
-  UpdateProgressJournalGoalTagMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      UPDATE_PROGRESS_JOURNAL_GOAL_TAG_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateProgressJournalGoalTag';
-
-  @override
-  final UpdateProgressJournalGoalTagArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateProgressJournalGoalTag$Mutation parse(Map<String, dynamic> json) =>
-      UpdateProgressJournalGoalTag$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ProgressJournalByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  ProgressJournalByIdArguments({required this.id});
-
-  @override
-  factory ProgressJournalByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$ProgressJournalByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$ProgressJournalByIdArgumentsToJson(this);
-}
-
-final PROGRESS_JOURNAL_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'progressJournalById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'progressJournalById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournal'), directives: []),
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalEntries'),
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalEntry'),
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
                         directives: [])
                   ])),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalGoals'),
+                  name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalGoal'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'ProgressJournalGoalTags'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'ProgressJournalGoalTag'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalEntry'),
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'confidenceScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'motivationScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
               isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
@@ -20650,29 +20088,23 @@ final PROGRESS_JOURNAL_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoal'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoal'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -20688,41 +20120,23 @@ final PROGRESS_JOURNAL_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournal'),
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournal'), isNonNull: false)),
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -20738,25 +20152,7 @@ final PROGRESS_JOURNAL_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'startDate'),
             alias: null,
             arguments: [],
             directives: [],
@@ -20764,186 +20160,56 @@ final PROGRESS_JOURNAL_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class ProgressJournalByIdQuery extends GraphQLQuery<ProgressJournalById$Query,
-    ProgressJournalByIdArguments> {
-  ProgressJournalByIdQuery({required this.variables});
+class DeleteCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
+    DeleteCompletedWorkoutPlanDayWorkout$Mutation,
+    DeleteCompletedWorkoutPlanDayWorkoutArguments> {
+  DeleteCompletedWorkoutPlanDayWorkoutMutation({required this.variables});
 
   @override
-  final DocumentNode document = PROGRESS_JOURNAL_BY_ID_QUERY_DOCUMENT;
+  final DocumentNode document =
+      DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'progressJournalById';
+  final String operationName = 'deleteCompletedWorkoutPlanDayWorkout';
 
   @override
-  final ProgressJournalByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  ProgressJournalById$Query parse(Map<String, dynamic> json) =>
-      ProgressJournalById$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalEntryArguments extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalEntryArguments({required this.data});
-
-  @override
-  factory CreateProgressJournalEntryArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateProgressJournalEntryArgumentsFromJson(json);
-
-  late CreateProgressJournalEntryInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalEntryArgumentsToJson(this);
-}
-
-final CREATE_PROGRESS_JOURNAL_ENTRY_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createProgressJournalEntry'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateProgressJournalEntryInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createProgressJournalEntry'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalEntry'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalEntry'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'confidenceScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'motivationScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateProgressJournalEntryMutation extends GraphQLQuery<
-    CreateProgressJournalEntry$Mutation, CreateProgressJournalEntryArguments> {
-  CreateProgressJournalEntryMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_PROGRESS_JOURNAL_ENTRY_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createProgressJournalEntry';
-
-  @override
-  final CreateProgressJournalEntryArguments variables;
+  final DeleteCompletedWorkoutPlanDayWorkoutArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  CreateProgressJournalEntry$Mutation parse(Map<String, dynamic> json) =>
-      CreateProgressJournalEntry$Mutation.fromJson(json);
+  DeleteCompletedWorkoutPlanDayWorkout$Mutation parse(
+          Map<String, dynamic> json) =>
+      DeleteCompletedWorkoutPlanDayWorkout$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalByIdArguments extends JsonSerializable
+class ClearWorkoutPlanEnrolmentProgressArguments extends JsonSerializable
     with EquatableMixin {
-  DeleteProgressJournalByIdArguments({required this.id});
+  ClearWorkoutPlanEnrolmentProgressArguments({required this.enrolmentId});
 
   @override
-  factory DeleteProgressJournalByIdArguments.fromJson(
+  factory ClearWorkoutPlanEnrolmentProgressArguments.fromJson(
           Map<String, dynamic> json) =>
-      _$DeleteProgressJournalByIdArgumentsFromJson(json);
+      _$ClearWorkoutPlanEnrolmentProgressArgumentsFromJson(json);
 
-  late String id;
+  late String enrolmentId;
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [enrolmentId];
   @override
   Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalByIdArgumentsToJson(this);
+      _$ClearWorkoutPlanEnrolmentProgressArgumentsToJson(this);
 }
 
-final DELETE_PROGRESS_JOURNAL_BY_ID_MUTATION_DOCUMENT =
+final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'deleteProgressJournalById'),
+      name: NameNode(value: 'clearWorkoutPlanEnrolmentProgress'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
+            variable: VariableNode(name: NameNode(value: 'enrolmentId')),
             type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -20951,181 +20217,44 @@ final DELETE_PROGRESS_JOURNAL_BY_ID_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'deleteProgressJournalById'),
+            name: NameNode(value: 'clearWorkoutPlanEnrolmentProgress'),
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteProgressJournalByIdMutation extends GraphQLQuery<
-    DeleteProgressJournalById$Mutation, DeleteProgressJournalByIdArguments> {
-  DeleteProgressJournalByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_PROGRESS_JOURNAL_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteProgressJournalById';
-
-  @override
-  final DeleteProgressJournalByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteProgressJournalById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteProgressJournalById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalArguments extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalArguments({required this.data});
-
-  @override
-  factory CreateProgressJournalArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateProgressJournalArgumentsFromJson(json);
-
-  late CreateProgressJournalInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$CreateProgressJournalArgumentsToJson(this);
-}
-
-final CREATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createProgressJournal'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateProgressJournalInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createProgressJournal'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
+                  name: NameNode(value: 'enrolmentId'),
+                  value: VariableNode(name: NameNode(value: 'enrolmentId')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournal'), directives: []),
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalEntries'),
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalEntry'),
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
                         directives: [])
                   ])),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalGoals'),
+                  name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalGoal'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'ProgressJournalGoalTags'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'ProgressJournalGoalTag'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalEntry'),
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'confidenceScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'motivationScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
               isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
@@ -21142,29 +20271,23 @@ final CREATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoal'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoal'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -21180,41 +20303,23 @@ final CREATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournal'),
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournal'), isNonNull: false)),
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -21230,25 +20335,7 @@ final CREATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'startDate'),
             alias: null,
             arguments: [],
             directives: [],
@@ -21256,52 +20343,57 @@ final CREATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class CreateProgressJournalMutation extends GraphQLQuery<
-    CreateProgressJournal$Mutation, CreateProgressJournalArguments> {
-  CreateProgressJournalMutation({required this.variables});
+class ClearWorkoutPlanEnrolmentProgressMutation extends GraphQLQuery<
+    ClearWorkoutPlanEnrolmentProgress$Mutation,
+    ClearWorkoutPlanEnrolmentProgressArguments> {
+  ClearWorkoutPlanEnrolmentProgressMutation({required this.variables});
 
   @override
-  final DocumentNode document = CREATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT;
+  final DocumentNode document =
+      CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createProgressJournal';
+  final String operationName = 'clearWorkoutPlanEnrolmentProgress';
 
   @override
-  final CreateProgressJournalArguments variables;
+  final ClearWorkoutPlanEnrolmentProgressArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  CreateProgressJournal$Mutation parse(Map<String, dynamic> json) =>
-      CreateProgressJournal$Mutation.fromJson(json);
+  ClearWorkoutPlanEnrolmentProgress$Mutation parse(Map<String, dynamic> json) =>
+      ClearWorkoutPlanEnrolmentProgress$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalArguments extends JsonSerializable
+class CreateScheduleForPlanEnrolmentArguments extends JsonSerializable
     with EquatableMixin {
-  UpdateProgressJournalArguments({required this.data});
+  CreateScheduleForPlanEnrolmentArguments({required this.data});
 
   @override
-  factory UpdateProgressJournalArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateProgressJournalArgumentsFromJson(json);
+  factory CreateScheduleForPlanEnrolmentArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateScheduleForPlanEnrolmentArgumentsFromJson(json);
 
-  late UpdateProgressJournalInput data;
+  late CreateScheduleForPlanEnrolmentInput data;
 
   @override
   List<Object?> get props => [data];
   @override
-  Map<String, dynamic> toJson() => _$UpdateProgressJournalArgumentsToJson(this);
+  Map<String, dynamic> toJson() =>
+      _$CreateScheduleForPlanEnrolmentArgumentsToJson(this);
 }
 
-final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
+final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'updateProgressJournal'),
+      name: NameNode(value: 'createScheduleForPlanEnrolment'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
-                name: NameNode(value: 'UpdateProgressJournalInput'),
+                name: NameNode(value: 'CreateScheduleForPlanEnrolmentInput'),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -21309,7 +20401,7 @@ final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'updateProgressJournal'),
+            name: NameNode(value: 'createScheduleForPlanEnrolment'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -21319,106 +20411,34 @@ final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournal'), directives: []),
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalEntries'),
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalEntry'),
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
                         directives: [])
                   ])),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalGoals'),
+                  name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalGoal'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'ProgressJournalGoalTags'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'ProgressJournalGoalTag'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalEntry'),
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'confidenceScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'motivationScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
               isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
@@ -21435,29 +20455,23 @@ final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoal'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoal'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -21473,41 +20487,23 @@ final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournal'),
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournal'), isNonNull: false)),
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -21523,25 +20519,7 @@ final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'startDate'),
             alias: null,
             arguments: [],
             directives: [],
@@ -21549,123 +20527,58 @@ final UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class UpdateProgressJournalMutation extends GraphQLQuery<
-    UpdateProgressJournal$Mutation, UpdateProgressJournalArguments> {
-  UpdateProgressJournalMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_PROGRESS_JOURNAL_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateProgressJournal';
-
-  @override
-  final UpdateProgressJournalArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateProgressJournal$Mutation parse(Map<String, dynamic> json) =>
-      UpdateProgressJournal$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalEntryByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalEntryByIdArguments({required this.id});
-
-  @override
-  factory DeleteProgressJournalEntryByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteProgressJournalEntryByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalEntryByIdArgumentsToJson(this);
-}
-
-final DELETE_PROGRESS_JOURNAL_ENTRY_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteProgressJournalEntryById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteProgressJournalEntryById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteProgressJournalEntryByIdMutation extends GraphQLQuery<
-    DeleteProgressJournalEntryById$Mutation,
-    DeleteProgressJournalEntryByIdArguments> {
-  DeleteProgressJournalEntryByIdMutation({required this.variables});
+class CreateScheduleForPlanEnrolmentMutation extends GraphQLQuery<
+    CreateScheduleForPlanEnrolment$Mutation,
+    CreateScheduleForPlanEnrolmentArguments> {
+  CreateScheduleForPlanEnrolmentMutation({required this.variables});
 
   @override
   final DocumentNode document =
-      DELETE_PROGRESS_JOURNAL_ENTRY_BY_ID_MUTATION_DOCUMENT;
+      CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteProgressJournalEntryById';
+  final String operationName = 'createScheduleForPlanEnrolment';
 
   @override
-  final DeleteProgressJournalEntryByIdArguments variables;
+  final CreateScheduleForPlanEnrolmentArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  DeleteProgressJournalEntryById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteProgressJournalEntryById$Mutation.fromJson(json);
+  CreateScheduleForPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
+      CreateScheduleForPlanEnrolment$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalEntryArguments extends JsonSerializable
+class CreateCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
     with EquatableMixin {
-  UpdateProgressJournalEntryArguments({required this.data});
+  CreateCompletedWorkoutPlanDayWorkoutArguments({required this.data});
 
   @override
-  factory UpdateProgressJournalEntryArguments.fromJson(
+  factory CreateCompletedWorkoutPlanDayWorkoutArguments.fromJson(
           Map<String, dynamic> json) =>
-      _$UpdateProgressJournalEntryArgumentsFromJson(json);
+      _$CreateCompletedWorkoutPlanDayWorkoutArgumentsFromJson(json);
 
-  late UpdateProgressJournalEntryInput data;
+  late CreateCompletedWorkoutPlanDayWorkoutInput data;
 
   @override
   List<Object?> get props => [data];
   @override
   Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalEntryArgumentsToJson(this);
+      _$CreateCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
 }
 
-final UPDATE_PROGRESS_JOURNAL_ENTRY_MUTATION_DOCUMENT =
+final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'updateProgressJournalEntry'),
+      name: NameNode(value: 'createCompletedWorkoutPlanDayWorkout'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
-                name: NameNode(value: 'UpdateProgressJournalEntryInput'),
+                name: NameNode(
+                    value: 'CreateCompletedWorkoutPlanDayWorkoutInput'),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -21673,7 +20586,7 @@ final UPDATE_PROGRESS_JOURNAL_ENTRY_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'updateProgressJournalEntry'),
+            name: NameNode(value: 'createCompletedWorkoutPlanDayWorkout'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -21683,377 +20596,34 @@ final UPDATE_PROGRESS_JOURNAL_ENTRY_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalEntry'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalEntry'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'confidenceScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'motivationScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateProgressJournalEntryMutation extends GraphQLQuery<
-    UpdateProgressJournalEntry$Mutation, UpdateProgressJournalEntryArguments> {
-  UpdateProgressJournalEntryMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_PROGRESS_JOURNAL_ENTRY_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateProgressJournalEntry';
-
-  @override
-  final UpdateProgressJournalEntryArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateProgressJournalEntry$Mutation parse(Map<String, dynamic> json) =>
-      UpdateProgressJournalEntry$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalGoalArguments extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalGoalArguments({required this.data});
-
-  @override
-  factory CreateProgressJournalGoalArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateProgressJournalGoalArgumentsFromJson(json);
-
-  late CreateProgressJournalGoalInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalGoalArgumentsToJson(this);
-}
-
-final CREATE_PROGRESS_JOURNAL_GOAL_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createProgressJournalGoal'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateProgressJournalGoalInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createProgressJournalGoal'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalGoal'), directives: []),
+                  name: NameNode(value: 'WorkoutPlanEnrolment'),
+                  directives: []),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalGoalTags'),
+                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalGoalTag'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateProgressJournalGoalMutation extends GraphQLQuery<
-    CreateProgressJournalGoal$Mutation, CreateProgressJournalGoalArguments> {
-  CreateProgressJournalGoalMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_PROGRESS_JOURNAL_GOAL_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createProgressJournalGoal';
-
-  @override
-  final CreateProgressJournalGoalArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CreateProgressJournalGoal$Mutation parse(Map<String, dynamic> json) =>
-      CreateProgressJournalGoal$Mutation.fromJson(json);
-}
-
-final USER_PROGRESS_JOURNALS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'userProgressJournals'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'userProgressJournals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournal'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'ProgressJournalEntries'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalEntry'),
+                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
                         directives: [])
                   ])),
               FieldNode(
-                  name: NameNode(value: 'ProgressJournalGoals'),
+                  name: NameNode(value: 'User'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalGoal'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'ProgressJournalGoalTags'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'ProgressJournalGoalTag'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalEntry'),
+      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'confidenceScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'motivationScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
+              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
               isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
@@ -22070,29 +20640,23 @@ final USER_PROGRESS_JOURNALS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'loggedWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
+            name: NameNode(value: 'workoutPlanDayWorkoutId'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoal'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoal'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -22108,41 +20672,23 @@ final USER_PROGRESS_JOURNALS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournal'),
+      name: NameNode(value: 'WorkoutPlanEnrolment'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournal'), isNonNull: false)),
+              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -22158,25 +20704,7 @@ final USER_PROGRESS_JOURNALS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'startDate'),
             alias: null,
             arguments: [],
             directives: [],
@@ -22184,516 +20712,27 @@ final USER_PROGRESS_JOURNALS_QUERY_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class UserProgressJournalsQuery
-    extends GraphQLQuery<UserProgressJournals$Query, JsonSerializable> {
-  UserProgressJournalsQuery();
-
-  @override
-  final DocumentNode document = USER_PROGRESS_JOURNALS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'userProgressJournals';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  UserProgressJournals$Query parse(Map<String, dynamic> json) =>
-      UserProgressJournals$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateProgressJournalGoalArguments extends JsonSerializable
-    with EquatableMixin {
-  UpdateProgressJournalGoalArguments({required this.data});
-
-  @override
-  factory UpdateProgressJournalGoalArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$UpdateProgressJournalGoalArgumentsFromJson(json);
-
-  late UpdateProgressJournalGoalInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateProgressJournalGoalArgumentsToJson(this);
-}
-
-final UPDATE_PROGRESS_JOURNAL_GOAL_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateProgressJournalGoal'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateProgressJournalGoalInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateProgressJournalGoal'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalGoal'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'ProgressJournalGoalTags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ProgressJournalGoalTag'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateProgressJournalGoalMutation extends GraphQLQuery<
-    UpdateProgressJournalGoal$Mutation, UpdateProgressJournalGoalArguments> {
-  UpdateProgressJournalGoalMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_PROGRESS_JOURNAL_GOAL_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateProgressJournalGoal';
-
-  @override
-  final UpdateProgressJournalGoalArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateProgressJournalGoal$Mutation parse(Map<String, dynamic> json) =>
-      UpdateProgressJournalGoal$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateProgressJournalGoalTagArguments extends JsonSerializable
-    with EquatableMixin {
-  CreateProgressJournalGoalTagArguments({required this.data});
-
-  @override
-  factory CreateProgressJournalGoalTagArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateProgressJournalGoalTagArgumentsFromJson(json);
-
-  late CreateProgressJournalGoalTagInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateProgressJournalGoalTagArgumentsToJson(this);
-}
-
-final CREATE_PROGRESS_JOURNAL_GOAL_TAG_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createProgressJournalGoalTag'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateProgressJournalGoalTagInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createProgressJournalGoalTag'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalGoalTag'),
-                  directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateProgressJournalGoalTagMutation extends GraphQLQuery<
-    CreateProgressJournalGoalTag$Mutation,
-    CreateProgressJournalGoalTagArguments> {
-  CreateProgressJournalGoalTagMutation({required this.variables});
+class CreateCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
+    CreateCompletedWorkoutPlanDayWorkout$Mutation,
+    CreateCompletedWorkoutPlanDayWorkoutArguments> {
+  CreateCompletedWorkoutPlanDayWorkoutMutation({required this.variables});
 
   @override
   final DocumentNode document =
-      CREATE_PROGRESS_JOURNAL_GOAL_TAG_MUTATION_DOCUMENT;
+      CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createProgressJournalGoalTag';
+  final String operationName = 'createCompletedWorkoutPlanDayWorkout';
 
   @override
-  final CreateProgressJournalGoalTagArguments variables;
+  final CreateCompletedWorkoutPlanDayWorkoutArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  CreateProgressJournalGoalTag$Mutation parse(Map<String, dynamic> json) =>
-      CreateProgressJournalGoalTag$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalGoalByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalGoalByIdArguments({required this.id});
-
-  @override
-  factory DeleteProgressJournalGoalByIdArguments.fromJson(
+  CreateCompletedWorkoutPlanDayWorkout$Mutation parse(
           Map<String, dynamic> json) =>
-      _$DeleteProgressJournalGoalByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalGoalByIdArgumentsToJson(this);
-}
-
-final DELETE_PROGRESS_JOURNAL_GOAL_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteProgressJournalGoalById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteProgressJournalGoalById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteProgressJournalGoalByIdMutation extends GraphQLQuery<
-    DeleteProgressJournalGoalById$Mutation,
-    DeleteProgressJournalGoalByIdArguments> {
-  DeleteProgressJournalGoalByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      DELETE_PROGRESS_JOURNAL_GOAL_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteProgressJournalGoalById';
-
-  @override
-  final DeleteProgressJournalGoalByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteProgressJournalGoalById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteProgressJournalGoalById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteProgressJournalGoalTagByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteProgressJournalGoalTagByIdArguments({required this.id});
-
-  @override
-  factory DeleteProgressJournalGoalTagByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteProgressJournalGoalTagByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteProgressJournalGoalTagByIdArgumentsToJson(this);
-}
-
-final DELETE_PROGRESS_JOURNAL_GOAL_TAG_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteProgressJournalGoalTagById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteProgressJournalGoalTagById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteProgressJournalGoalTagByIdMutation extends GraphQLQuery<
-    DeleteProgressJournalGoalTagById$Mutation,
-    DeleteProgressJournalGoalTagByIdArguments> {
-  DeleteProgressJournalGoalTagByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      DELETE_PROGRESS_JOURNAL_GOAL_TAG_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteProgressJournalGoalTagById';
-
-  @override
-  final DeleteProgressJournalGoalTagByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteProgressJournalGoalTagById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteProgressJournalGoalTagById$Mutation.fromJson(json);
-}
-
-final PROGRESS_JOURNAL_GOAL_TAGS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'progressJournalGoalTags'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'progressJournalGoalTags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ProgressJournalGoalTag'),
-                  directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ProgressJournalGoalTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ProgressJournalGoalTag'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tag'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class ProgressJournalGoalTagsQuery
-    extends GraphQLQuery<ProgressJournalGoalTags$Query, JsonSerializable> {
-  ProgressJournalGoalTagsQuery();
-
-  @override
-  final DocumentNode document = PROGRESS_JOURNAL_GOAL_TAGS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'progressJournalGoalTags';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  ProgressJournalGoalTags$Query parse(Map<String, dynamic> json) =>
-      ProgressJournalGoalTags$Query.fromJson(json);
+      CreateCompletedWorkoutPlanDayWorkout$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -22857,7 +20896,7 @@ final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -22993,10 +21032,10 @@ final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -23019,12 +21058,6 @@ final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -23798,7 +21831,7 @@ final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -23934,10 +21967,10 @@ final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -23960,12 +21993,6 @@ final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -24670,7 +22697,7 @@ final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -24806,10 +22833,10 @@ final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -24832,12 +22859,6 @@ final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -25544,7 +23565,7 @@ final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -25680,10 +23701,10 @@ final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -25706,12 +23727,6 @@ final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -26305,7 +24320,7 @@ final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'GymProfile'),
@@ -26422,10 +24437,10 @@ final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -26448,12 +24463,6 @@ final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -26989,7 +24998,7 @@ final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'GymProfile'),
@@ -27106,10 +25115,10 @@ final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -27132,12 +25141,6 @@ final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -27626,7 +25629,7 @@ final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'GymProfile'),
@@ -27743,10 +25746,10 @@ final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -27769,12 +25772,6 @@ final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -28580,15 +26577,15 @@ final UPDATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -28611,12 +26608,6 @@ final UPDATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -28735,15 +26726,15 @@ final CREATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -28766,12 +26757,6 @@ final CREATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -28888,110 +26873,15 @@ final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubWorkouts'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubWorkouts'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubWorkouts'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -29007,149 +26897,14 @@ final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'avatarUri'),
+            name: NameNode(value: 'workouts'),
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutSummary'), directives: [])
+            ]))
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutSummary'),
@@ -29195,7 +26950,7 @@ final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -29253,10 +27008,10 @@ final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -29272,202 +27027,13 @@ final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
@@ -29549,110 +27115,15 @@ final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT =
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubWorkoutPlans'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubWorkoutPlans'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubWorkoutPlans'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -29668,250 +27139,14 @@ final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
+            name: NameNode(value: 'workoutPlans'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
+                  name: NameNode(value: 'WorkoutPlanSummary'), directives: [])
+            ]))
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutPlanSummary'),
@@ -29987,7 +27222,7 @@ final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -30018,6 +27253,38 @@ final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'reviewCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
@@ -30056,79 +27323,6 @@ final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -30205,110 +27399,15 @@ final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubWorkouts'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubWorkouts'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubWorkouts'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -30324,149 +27423,14 @@ final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'avatarUri'),
+            name: NameNode(value: 'workouts'),
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutSummary'), directives: [])
+            ]))
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutSummary'),
@@ -30512,7 +27476,7 @@ final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -30570,10 +27534,10 @@ final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -30589,202 +27553,13 @@ final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
@@ -30863,110 +27638,15 @@ final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubWorkoutPlans'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubWorkoutPlans'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubWorkoutPlans'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -30982,250 +27662,14 @@ final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
+            name: NameNode(value: 'workoutPlans'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
+                  name: NameNode(value: 'WorkoutPlanSummary'), directives: [])
+            ]))
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'WorkoutPlanSummary'),
@@ -31301,7 +27745,7 @@ final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -31332,6 +27776,38 @@ final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'reviewCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
             alias: null,
             arguments: [],
             directives: [],
@@ -31374,79 +27850,6 @@ final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             arguments: [],
             directives: [],
             selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ]))
 ]);
 
@@ -31468,6 +27871,507 @@ class AddWorkoutPlanToClubMutation extends GraphQLQuery<
   @override
   AddWorkoutPlanToClub$Mutation parse(Map<String, dynamic> json) =>
       AddWorkoutPlanToClub$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubWorkoutsArguments extends JsonSerializable with EquatableMixin {
+  ClubWorkoutsArguments({required this.clubId});
+
+  @override
+  factory ClubWorkoutsArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubWorkoutsArgumentsFromJson(json);
+
+  late String clubId;
+
+  @override
+  List<Object?> get props => [clubId];
+  @override
+  Map<String, dynamic> toJson() => _$ClubWorkoutsArgumentsToJson(this);
+}
+
+final CLUB_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'clubWorkouts'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'clubId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clubWorkouts'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubWorkouts'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubWorkouts'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubWorkouts'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workouts'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutSummary'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'archived'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'lengthMinutes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'difficultyLevel'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedSessionsCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hasClassVideo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hasClassAudio'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'equipments'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClubWorkoutsQuery
+    extends GraphQLQuery<ClubWorkouts$Query, ClubWorkoutsArguments> {
+  ClubWorkoutsQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CLUB_WORKOUTS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'clubWorkouts';
+
+  @override
+  final ClubWorkoutsArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClubWorkouts$Query parse(Map<String, dynamic> json) =>
+      ClubWorkouts$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubWorkoutPlansArguments extends JsonSerializable with EquatableMixin {
+  ClubWorkoutPlansArguments({required this.clubId});
+
+  @override
+  factory ClubWorkoutPlansArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubWorkoutPlansArgumentsFromJson(json);
+
+  late String clubId;
+
+  @override
+  List<Object?> get props => [clubId];
+  @override
+  Map<String, dynamic> toJson() => _$ClubWorkoutPlansArgumentsToJson(this);
+}
+
+final CLUB_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'clubWorkoutPlans'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'clubId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clubWorkoutPlans'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubWorkoutPlans'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubWorkoutPlans'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubWorkoutPlans'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutPlans'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutPlanSummary'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutPlanSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'archived'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'lengthWeeks'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'daysPerWeek'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutsCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'enrolmentsCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'goals'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutGoal'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reviewScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reviewCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hexColor'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClubWorkoutPlansQuery
+    extends GraphQLQuery<ClubWorkoutPlans$Query, ClubWorkoutPlansArguments> {
+  ClubWorkoutPlansQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CLUB_WORKOUT_PLANS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'clubWorkoutPlans';
+
+  @override
+  final ClubWorkoutPlansArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClubWorkoutPlans$Query parse(Map<String, dynamic> json) =>
+      ClubWorkoutPlans$Query.fromJson(json);
 }
 
 final USER_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
@@ -31561,7 +28465,7 @@ final USER_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -31598,10 +28502,10 @@ final USER_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -31624,12 +28528,6 @@ final USER_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -31831,7 +28729,7 @@ final PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -31868,10 +28766,10 @@ final PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -31894,12 +28792,6 @@ final PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -32100,7 +28992,7 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutPlanDays'),
@@ -32146,7 +29038,7 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ])),
         FieldNode(
@@ -32184,15 +29076,15 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -32215,12 +29107,6 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -32318,7 +29204,7 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -33395,7 +30281,7 @@ final USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -33432,10 +30318,10 @@ final USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -33458,12 +30344,6 @@ final USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -33666,7 +30546,7 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutPlanDays'),
@@ -33712,7 +30592,7 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ])),
         FieldNode(
@@ -33750,15 +30630,15 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -33781,12 +30661,6 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -33884,7 +30758,7 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -34817,17 +31691,27 @@ final USER_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
+                              name: NameNode(value: 'UserAvatarData'),
+                              directives: [])
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'Admins'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'UserAvatarData'),
                               directives: [])
                         ]))
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -34850,12 +31734,6 @@ final USER_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -34905,6 +31783,30 @@ final USER_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'introVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introAudioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
@@ -34912,6 +31814,18 @@ final USER_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -35152,7 +32066,7 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutPlanDays'),
@@ -35198,7 +32112,7 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ])),
         FieldNode(
@@ -35236,15 +32150,15 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -35267,12 +32181,6 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -35370,7 +32278,7 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -36728,7 +33636,7 @@ final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -36864,10 +33772,10 @@ final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -36890,12 +33798,6 @@ final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -39334,25 +36236,25 @@ class UpdateUserProfileMutation extends GraphQLQuery<UpdateUserProfile$Mutation,
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserProfileByIdArguments extends JsonSerializable with EquatableMixin {
-  UserProfileByIdArguments({required this.userId});
+class UserProfileArguments extends JsonSerializable with EquatableMixin {
+  UserProfileArguments({required this.userId});
 
   @override
-  factory UserProfileByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileByIdArgumentsFromJson(json);
+  factory UserProfileArguments.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileArgumentsFromJson(json);
 
   late String userId;
 
   @override
   List<Object?> get props => [userId];
   @override
-  Map<String, dynamic> toJson() => _$UserProfileByIdArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$UserProfileArgumentsToJson(this);
 }
 
-final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
+final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'userProfileById'),
+      name: NameNode(value: 'userProfile'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'userId')),
@@ -39363,7 +36265,7 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'userProfileById'),
+            name: NameNode(value: 'userProfile'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -39389,7 +36291,17 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
+                              name: NameNode(value: 'UserAvatarData'),
+                              directives: [])
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'Admins'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'UserAvatarData'),
                               directives: [])
                         ]))
                   ])),
@@ -39442,10 +36354,10 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -39468,12 +36380,6 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -39523,6 +36429,30 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'introVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introAudioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
@@ -39530,6 +36460,18 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -39859,24 +36801,24 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class UserProfileByIdQuery
-    extends GraphQLQuery<UserProfileById$Query, UserProfileByIdArguments> {
-  UserProfileByIdQuery({required this.variables});
+class UserProfileQuery
+    extends GraphQLQuery<UserProfile$Query, UserProfileArguments> {
+  UserProfileQuery({required this.variables});
 
   @override
-  final DocumentNode document = USER_PROFILE_BY_ID_QUERY_DOCUMENT;
+  final DocumentNode document = USER_PROFILE_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userProfileById';
+  final String operationName = 'userProfile';
 
   @override
-  final UserProfileByIdArguments variables;
+  final UserProfileArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  UserProfileById$Query parse(Map<String, dynamic> json) =>
-      UserProfileById$Query.fromJson(json);
+  UserProfile$Query parse(Map<String, dynamic> json) =>
+      UserProfile$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -42058,73 +39000,6 @@ class EquipmentsQuery extends GraphQLQuery<Equipments$Query, JsonSerializable> {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkTagByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkTagByIdArguments({required this.id});
-
-  @override
-  factory DeleteUserBenchmarkTagByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkTagByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkTagByIdArgumentsToJson(this);
-}
-
-final DELETE_USER_BENCHMARK_TAG_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteUserBenchmarkTagById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteUserBenchmarkTagById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteUserBenchmarkTagByIdMutation extends GraphQLQuery<
-    DeleteUserBenchmarkTagById$Mutation, DeleteUserBenchmarkTagByIdArguments> {
-  DeleteUserBenchmarkTagByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      DELETE_USER_BENCHMARK_TAG_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteUserBenchmarkTagById';
-
-  @override
-  final DeleteUserBenchmarkTagByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteUserBenchmarkTagById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteUserBenchmarkTagById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
 class CreateUserBenchmarkEntryArguments extends JsonSerializable
     with EquatableMixin {
   CreateUserBenchmarkEntryArguments({required this.data});
@@ -42249,276 +39124,6 @@ class CreateUserBenchmarkEntryMutation extends GraphQLQuery<
   @override
   CreateUserBenchmarkEntry$Mutation parse(Map<String, dynamic> json) =>
       CreateUserBenchmarkEntry$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateUserBenchmarkTagArguments extends JsonSerializable
-    with EquatableMixin {
-  CreateUserBenchmarkTagArguments({required this.data});
-
-  @override
-  factory CreateUserBenchmarkTagArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateUserBenchmarkTagArgumentsFromJson(json);
-
-  late CreateUserBenchmarkTagInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$CreateUserBenchmarkTagArgumentsToJson(this);
-}
-
-final CREATE_USER_BENCHMARK_TAG_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createUserBenchmarkTag'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateUserBenchmarkTagInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createUserBenchmarkTag'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserBenchmarkTag'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateUserBenchmarkTagMutation extends GraphQLQuery<
-    CreateUserBenchmarkTag$Mutation, CreateUserBenchmarkTagArguments> {
-  CreateUserBenchmarkTagMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_USER_BENCHMARK_TAG_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createUserBenchmarkTag';
-
-  @override
-  final CreateUserBenchmarkTagArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CreateUserBenchmarkTag$Mutation parse(Map<String, dynamic> json) =>
-      CreateUserBenchmarkTag$Mutation.fromJson(json);
-}
-
-final USER_BENCHMARK_TAGS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'userBenchmarkTags'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'userBenchmarkTags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserBenchmarkTag'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UserBenchmarkTagsQuery
-    extends GraphQLQuery<UserBenchmarkTags$Query, JsonSerializable> {
-  UserBenchmarkTagsQuery();
-
-  @override
-  final DocumentNode document = USER_BENCHMARK_TAGS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'userBenchmarkTags';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  UserBenchmarkTags$Query parse(Map<String, dynamic> json) =>
-      UserBenchmarkTags$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateUserBenchmarkTagArguments extends JsonSerializable
-    with EquatableMixin {
-  UpdateUserBenchmarkTagArguments({required this.data});
-
-  @override
-  factory UpdateUserBenchmarkTagArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateUserBenchmarkTagArgumentsFromJson(json);
-
-  late UpdateUserBenchmarkTagInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UpdateUserBenchmarkTagArgumentsToJson(this);
-}
-
-final UPDATE_USER_BENCHMARK_TAG_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateUserBenchmarkTag'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateUserBenchmarkTagInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateUserBenchmarkTag'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserBenchmarkTag'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateUserBenchmarkTagMutation extends GraphQLQuery<
-    UpdateUserBenchmarkTag$Mutation, UpdateUserBenchmarkTagArguments> {
-  UpdateUserBenchmarkTagMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_USER_BENCHMARK_TAG_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateUserBenchmarkTag';
-
-  @override
-  final UpdateUserBenchmarkTagArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateUserBenchmarkTag$Mutation parse(Map<String, dynamic> json) =>
-      UpdateUserBenchmarkTag$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -42649,74 +39254,6 @@ class UpdateUserBenchmarkEntryMutation extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkEntryByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkEntryByIdArguments({required this.id});
-
-  @override
-  factory DeleteUserBenchmarkEntryByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkEntryByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkEntryByIdArgumentsToJson(this);
-}
-
-final DELETE_USER_BENCHMARK_ENTRY_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteUserBenchmarkEntryById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteUserBenchmarkEntryById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteUserBenchmarkEntryByIdMutation extends GraphQLQuery<
-    DeleteUserBenchmarkEntryById$Mutation,
-    DeleteUserBenchmarkEntryByIdArguments> {
-  DeleteUserBenchmarkEntryByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      DELETE_USER_BENCHMARK_ENTRY_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteUserBenchmarkEntryById';
-
-  @override
-  final DeleteUserBenchmarkEntryByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteUserBenchmarkEntryById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteUserBenchmarkEntryById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UpdateUserBenchmarkArguments extends JsonSerializable
     with EquatableMixin {
   UpdateUserBenchmarkArguments({required this.data});
@@ -42768,16 +39305,6 @@ final UPDATE_USER_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'UserBenchmarkEntry'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'UserBenchmarkTags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserBenchmarkTag'),
                         directives: [])
                   ]))
             ]))
@@ -42833,38 +39360,6 @@ final UPDATE_USER_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'videoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
             alias: null,
             arguments: [],
             directives: [],
@@ -43007,16 +39502,6 @@ final CREATE_USER_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'UserBenchmarkEntry'),
                         directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'UserBenchmarkTags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserBenchmarkTag'),
-                        directives: [])
                   ]))
             ]))
       ])),
@@ -43071,38 +39556,6 @@ final CREATE_USER_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'videoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
             alias: null,
             arguments: [],
             directives: [],
@@ -43192,72 +39645,6 @@ class CreateUserBenchmarkMutation extends GraphQLQuery<
       CreateUserBenchmark$Mutation.fromJson(json);
 }
 
-@JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkByIdArguments({required this.id});
-
-  @override
-  factory DeleteUserBenchmarkByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkByIdArgumentsToJson(this);
-}
-
-final DELETE_USER_BENCHMARK_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteUserBenchmarkById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteUserBenchmarkById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteUserBenchmarkByIdMutation extends GraphQLQuery<
-    DeleteUserBenchmarkById$Mutation, DeleteUserBenchmarkByIdArguments> {
-  DeleteUserBenchmarkByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_USER_BENCHMARK_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteUserBenchmarkById';
-
-  @override
-  final DeleteUserBenchmarkByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteUserBenchmarkById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteUserBenchmarkById$Mutation.fromJson(json);
-}
-
 final USER_BENCHMARKS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -43281,16 +39668,6 @@ final USER_BENCHMARKS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'UserBenchmarkEntry'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'UserBenchmarkTags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserBenchmarkTag'),
                         directives: [])
                   ]))
             ]))
@@ -43346,38 +39723,6 @@ final USER_BENCHMARKS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'videoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
             alias: null,
             arguments: [],
             directives: [],
@@ -43462,241 +39807,6 @@ class UserBenchmarksQuery
   @override
   UserBenchmarks$Query parse(Map<String, dynamic> json) =>
       UserBenchmarks$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkByIdArguments extends JsonSerializable with EquatableMixin {
-  UserBenchmarkByIdArguments({required this.id});
-
-  @override
-  factory UserBenchmarkByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkByIdArgumentsToJson(this);
-}
-
-final USER_BENCHMARK_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'userBenchmarkById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'userBenchmarkById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserBenchmark'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'UserBenchmarkEntries'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserBenchmarkEntry'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'UserBenchmarkTags'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserBenchmarkTag'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkEntry'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedOn'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'score'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkTag'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkTag'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmark'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmark'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lastEntryAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipmentInfo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'benchmarkType'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadUnit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UserBenchmarkByIdQuery
-    extends GraphQLQuery<UserBenchmarkById$Query, UserBenchmarkByIdArguments> {
-  UserBenchmarkByIdQuery({required this.variables});
-
-  @override
-  final DocumentNode document = USER_BENCHMARK_BY_ID_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'userBenchmarkById';
-
-  @override
-  final UserBenchmarkByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UserBenchmarkById$Query parse(Map<String, dynamic> json) =>
-      UserBenchmarkById$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -43819,7 +39929,7 @@ final TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'enrolmentsCount'),
@@ -43856,10 +39966,10 @@ final TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -43882,12 +39992,6 @@ final TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -44127,7 +40231,7 @@ final TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -44185,10 +40289,10 @@ final TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -44211,12 +40315,6 @@ final TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -45350,7 +41448,7 @@ final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -45408,10 +41506,10 @@ final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -45434,12 +41532,6 @@ final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -45706,7 +41798,7 @@ final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -45764,10 +41856,10 @@ final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -45790,12 +41882,6 @@ final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -46032,7 +42118,7 @@ final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -46090,10 +42176,10 @@ final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -46116,12 +42202,6 @@ final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -46498,25 +42578,25 @@ final CREATE_CLUB_TIMELINE_POST_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introAudioUri'),
+            name: NameNode(value: 'audioUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'imageUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'videoUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -46756,25 +42836,25 @@ final TIMELINE_POSTS_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introAudioUri'),
+            name: NameNode(value: 'audioUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'imageUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'videoUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -46985,25 +43065,25 @@ final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introAudioUri'),
+            name: NameNode(value: 'audioUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'imageUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'videoUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -47139,7 +43219,7 @@ final PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -47197,10 +43277,10 @@ final PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -47223,12 +43303,6 @@ final PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -47551,7 +43625,7 @@ final USER_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -47609,10 +43683,10 @@ final USER_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -47635,12 +43709,6 @@ final USER_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -47801,7 +43869,7 @@ final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -47937,10 +44005,10 @@ final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -47963,12 +44031,6 @@ final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -48534,7 +44596,7 @@ final USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'lengthMinutes'),
@@ -48592,10 +44654,10 @@ final USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -48618,12 +44680,6 @@ final USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -48787,7 +44843,7 @@ final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -48923,10 +44979,10 @@ final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -48949,12 +45005,6 @@ final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49568,7 +45618,7 @@ final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
             ])),
         FieldNode(
             name: NameNode(value: 'WorkoutGoals'),
@@ -49704,10 +45754,10 @@ final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -49730,12 +45780,6 @@ final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
             alias: null,
             arguments: [],
             directives: [],
@@ -50838,7 +46882,18 @@ final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'Owner'),
                   alias: null,
@@ -50846,7 +46901,8 @@ final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Admins'),
@@ -50855,7 +46911,8 @@ final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Members'),
@@ -50864,84 +46921,16 @@ final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
+                        name: NameNode(value: 'ClubMemberSummary'),
                         directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubMemberSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubMemberSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -50952,12 +46941,6 @@ final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -50969,455 +46952,31 @@ final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'id'),
+            name: NameNode(value: 'townCity'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'countryCode'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
+            name: NameNode(value: 'tagline'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'skills'),
             alias: null,
             arguments: [],
             directives: [],
@@ -51498,590 +47057,6 @@ final ADD_USER_TO_CLUB_VIA_INVITE_TOKEN_MUTATION_DOCUMENT =
                   value:
                       VariableNode(name: NameNode(value: 'clubInviteTokenId')))
             ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'Owner'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Admins'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Members'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
-            alias: null,
-            arguments: [],
             directives: [],
             selectionSet: null)
       ]))
@@ -52234,7 +47209,8 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Club'), directives: []),
+                              name: NameNode(value: 'ClubSummary'),
+                              directives: []),
                           FieldNode(
                               name: NameNode(value: 'Owner'),
                               alias: null,
@@ -52242,7 +47218,7 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
                               directives: [],
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
-                                    name: NameNode(value: 'UserSummary'),
+                                    name: NameNode(value: 'UserAvatarData'),
                                     directives: [])
                               ])),
                           FieldNode(
@@ -52252,90 +47228,28 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
                               directives: [],
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
-                                    name: NameNode(value: 'UserSummary'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'Members'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'UserSummary'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'ClubInviteTokens'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'ClubInviteToken'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'JoinClubInvites'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'JoinClubInvite'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'Invited'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'UserSummary'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'JoinClubRequests'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'JoinClubRequest'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'Applicant'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'UserSummary'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'Workouts'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'WorkoutSummary'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'WorkoutPlans'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'WorkoutPlanSummary'),
+                                    name: NameNode(value: 'UserAvatarData'),
                                     directives: [])
                               ]))
-                        ]))
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'introVideoUri'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null),
+                    FieldNode(
+                        name: NameNode(value: 'introVideoThumbUri'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null),
+                    FieldNode(
+                        name: NameNode(value: 'introAudioUri'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
                   ])),
               InlineFragmentNode(
                   typeCondition: TypeConditionNode(
@@ -52351,10 +47265,10 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -52380,393 +47294,13 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
+      name: NameNode(value: 'ClubSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
+              name: NameNode(value: 'ClubSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -52795,12 +47329,6 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
             alias: null,
             arguments: [],
             directives: [],
@@ -52831,6 +47359,30 @@ final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -52948,7 +47500,18 @@ final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'Owner'),
                   alias: null,
@@ -52956,7 +47519,8 @@ final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Admins'),
@@ -52965,7 +47529,8 @@ final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Members'),
@@ -52974,84 +47539,16 @@ final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
+                        name: NameNode(value: 'ClubMemberSummary'),
                         directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubMemberSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubMemberSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -53062,12 +47559,6 @@ final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -53079,455 +47570,31 @@ final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'id'),
+            name: NameNode(value: 'townCity'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'countryCode'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
+            name: NameNode(value: 'tagline'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'skills'),
             alias: null,
             arguments: [],
             directives: [],
@@ -53556,17 +47623,82 @@ class RemoveUserFromClubMutation extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
+class CheckUserClubMemberStatusArguments extends JsonSerializable
+    with EquatableMixin {
+  CheckUserClubMemberStatusArguments({required this.clubId});
+
+  @override
+  factory CheckUserClubMemberStatusArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CheckUserClubMemberStatusArgumentsFromJson(json);
+
+  late String clubId;
+
+  @override
+  List<Object?> get props => [clubId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CheckUserClubMemberStatusArgumentsToJson(this);
+}
+
+final CHECK_USER_CLUB_MEMBER_STATUS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'checkUserClubMemberStatus'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'clubId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'checkUserClubMemberStatus'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CheckUserClubMemberStatusQuery extends GraphQLQuery<
+    CheckUserClubMemberStatus$Query, CheckUserClubMemberStatusArguments> {
+  CheckUserClubMemberStatusQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CHECK_USER_CLUB_MEMBER_STATUS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'checkUserClubMemberStatus';
+
+  @override
+  final CheckUserClubMemberStatusArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CheckUserClubMemberStatus$Query parse(Map<String, dynamic> json) =>
+      CheckUserClubMemberStatus$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
 class ClubMembersArguments extends JsonSerializable with EquatableMixin {
-  ClubMembersArguments({required this.id});
+  ClubMembersArguments({required this.clubId});
 
   @override
   factory ClubMembersArguments.fromJson(Map<String, dynamic> json) =>
       _$ClubMembersArgumentsFromJson(json);
 
-  late String id;
+  late String clubId;
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [clubId];
   @override
   Map<String, dynamic> toJson() => _$ClubMembersArgumentsToJson(this);
 }
@@ -53577,7 +47709,7 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
       name: NameNode(value: 'clubMembers'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
+            variable: VariableNode(name: NameNode(value: 'clubId')),
             type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -53585,16 +47717,27 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'clubById'),
-            alias: NameNode(value: 'clubMembers'),
+            name: NameNode(value: 'clubMembers'),
+            alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'Owner'),
                   alias: null,
@@ -53602,7 +47745,8 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Admins'),
@@ -53611,7 +47755,8 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Members'),
@@ -53620,15 +47765,16 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubMemberSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubMemberSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -53639,12 +47785,6 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -53656,80 +47796,31 @@ final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'id'),
+            name: NameNode(value: 'townCity'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'countryCode'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
+            name: NameNode(value: 'tagline'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'skills'),
             alias: null,
             arguments: [],
             directives: [],
@@ -53799,8 +47890,28 @@ final UPDATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubInviteToken'), directives: [])
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubInviteToken'),
+                        directives: [])
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -53925,7 +48036,18 @@ final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Club'), directives: []),
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
               FieldNode(
                   name: NameNode(value: 'Owner'),
                   alias: null,
@@ -53933,7 +48055,8 @@ final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Admins'),
@@ -53942,7 +48065,8 @@ final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'ClubMemberSummary'),
+                        directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Members'),
@@ -53951,84 +48075,16 @@ final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'ClubInviteTokens'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'ClubInviteToken'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubInvites'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubInvite'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Invited'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'JoinClubRequests'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'JoinClubRequest'),
-                        directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'Applicant'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserSummary'),
-                              directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'Workouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutSummary'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'WorkoutPlans'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'WorkoutPlanSummary'),
+                        name: NameNode(value: 'ClubMemberSummary'),
                         directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'ClubMemberSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'ClubMemberSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -54039,12 +48095,6 @@ final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -54056,455 +48106,31 @@ final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubInviteToken'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
+            name: NameNode(value: 'avatarUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'id'),
+            name: NameNode(value: 'townCity'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'createdAt'),
+            name: NameNode(value: 'countryCode'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'name'),
+            name: NameNode(value: 'tagline'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'active'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'inviteLimit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'joinedUserIds'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubInvite'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubInvite'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JoinClubRequest'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JoinClubRequest'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'respondedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'status'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'lengthMinutes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'difficultyLevel'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedSessionsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassVideo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hasClassAudio'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipments'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'archived'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lengthWeeks'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'daysPerWeek'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'User'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserSummary'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'enrolmentsCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'goals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutGoal'), directives: [])
-            ])),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'reviewCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'hexColor'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Club'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Club'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'location'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'coverImageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'introAudioUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'contentAccessScope'),
+            name: NameNode(value: 'skills'),
             alias: null,
             arguments: [],
             directives: [],
@@ -54574,8 +48200,28 @@ final CREATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubInviteToken'), directives: [])
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubInviteToken'),
+                        directives: [])
+                  ]))
             ]))
       ])),
   FragmentDefinitionNode(
@@ -54651,29 +48297,25 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteClubInviteTokenByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteClubInviteTokenByIdArguments({required this.id});
+class DeleteClubArguments extends JsonSerializable with EquatableMixin {
+  DeleteClubArguments({required this.id});
 
   @override
-  factory DeleteClubInviteTokenByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteClubInviteTokenByIdArgumentsFromJson(json);
+  factory DeleteClubArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubArgumentsFromJson(json);
 
   late String id;
 
   @override
   List<Object?> get props => [id];
   @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteClubInviteTokenByIdArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$DeleteClubArgumentsToJson(this);
 }
 
-final DELETE_CLUB_INVITE_TOKEN_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
+final DELETE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'deleteClubInviteTokenById'),
+      name: NameNode(value: 'deleteClub'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'id')),
@@ -54684,7 +48326,7 @@ final DELETE_CLUB_INVITE_TOKEN_BY_ID_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'deleteClubInviteTokenById'),
+            name: NameNode(value: 'deleteClub'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -54696,54 +48338,49 @@ final DELETE_CLUB_INVITE_TOKEN_BY_ID_MUTATION_DOCUMENT =
       ]))
 ]);
 
-class DeleteClubInviteTokenByIdMutation extends GraphQLQuery<
-    DeleteClubInviteTokenById$Mutation, DeleteClubInviteTokenByIdArguments> {
-  DeleteClubInviteTokenByIdMutation({required this.variables});
+class DeleteClubMutation
+    extends GraphQLQuery<DeleteClub$Mutation, DeleteClubArguments> {
+  DeleteClubMutation({required this.variables});
 
   @override
-  final DocumentNode document =
-      DELETE_CLUB_INVITE_TOKEN_BY_ID_MUTATION_DOCUMENT;
+  final DocumentNode document = DELETE_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteClubInviteTokenById';
+  final String operationName = 'deleteClub';
 
   @override
-  final DeleteClubInviteTokenByIdArguments variables;
+  final DeleteClubArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  DeleteClubInviteTokenById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteClubInviteTokenById$Mutation.fromJson(json);
+  DeleteClub$Mutation parse(Map<String, dynamic> json) =>
+      DeleteClub$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class ClearScheduleForPlanEnrolmentArguments extends JsonSerializable
-    with EquatableMixin {
-  ClearScheduleForPlanEnrolmentArguments({required this.enrolmentId});
+class ClubSummaryArguments extends JsonSerializable with EquatableMixin {
+  ClubSummaryArguments({required this.id});
 
   @override
-  factory ClearScheduleForPlanEnrolmentArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$ClearScheduleForPlanEnrolmentArgumentsFromJson(json);
+  factory ClubSummaryArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubSummaryArgumentsFromJson(json);
 
-  late String enrolmentId;
+  late String id;
 
   @override
-  List<Object?> get props => [enrolmentId];
+  List<Object?> get props => [id];
   @override
-  Map<String, dynamic> toJson() =>
-      _$ClearScheduleForPlanEnrolmentArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$ClubSummaryArgumentsToJson(this);
 }
 
-final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
+final CLUB_SUMMARY_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'clearScheduleForPlanEnrolment'),
+      type: OperationType.query,
+      name: NameNode(value: 'clubSummary'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'enrolmentId')),
+            variable: VariableNode(name: NameNode(value: 'id')),
             type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -54751,77 +48388,42 @@ final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'clearScheduleForPlanEnrolment'),
+            name: NameNode(value: 'clubSummary'),
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'enrolmentId'),
-                  value: VariableNode(name: NameNode(value: 'enrolmentId')))
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutPlanEnrolment'),
-                  directives: []),
+                  name: NameNode(value: 'ClubSummary'), directives: []),
               FieldNode(
-                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  name: NameNode(value: 'Owner'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-                        directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ])),
               FieldNode(
-                  name: NameNode(value: 'User'),
+                  name: NameNode(value: 'Admins'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedWorkoutId'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutPlanDayWorkoutId'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -54847,19 +48449,13 @@ final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      name: NameNode(value: 'ClubSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+              name: NameNode(value: 'ClubSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -54875,7 +48471,73 @@ final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'startDate'),
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introAudioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -54883,58 +48545,52 @@ final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
       ]))
 ]);
 
-class ClearScheduleForPlanEnrolmentMutation extends GraphQLQuery<
-    ClearScheduleForPlanEnrolment$Mutation,
-    ClearScheduleForPlanEnrolmentArguments> {
-  ClearScheduleForPlanEnrolmentMutation({required this.variables});
+class ClubSummaryQuery
+    extends GraphQLQuery<ClubSummary$Query, ClubSummaryArguments> {
+  ClubSummaryQuery({required this.variables});
 
   @override
-  final DocumentNode document =
-      CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
+  final DocumentNode document = CLUB_SUMMARY_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clearScheduleForPlanEnrolment';
+  final String operationName = 'clubSummary';
 
   @override
-  final ClearScheduleForPlanEnrolmentArguments variables;
+  final ClubSummaryArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  ClearScheduleForPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
-      ClearScheduleForPlanEnrolment$Mutation.fromJson(json);
+  ClubSummary$Query parse(Map<String, dynamic> json) =>
+      ClubSummary$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteCompletedWorkoutPlanDayWorkoutArguments({required this.data});
+class ClubSummariesArguments extends JsonSerializable with EquatableMixin {
+  ClubSummariesArguments({required this.ids});
 
   @override
-  factory DeleteCompletedWorkoutPlanDayWorkoutArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsFromJson(json);
+  factory ClubSummariesArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubSummariesArgumentsFromJson(json);
 
-  late DeleteCompletedWorkoutPlanDayWorkoutInput data;
+  late List<String> ids;
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [ids];
   @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$ClubSummariesArgumentsToJson(this);
 }
 
-final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
+final CLUB_SUMMARIES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteCompletedWorkoutPlanDayWorkout'),
+      type: OperationType.query,
+      name: NameNode(value: 'clubSummaries'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(
-                    value: 'DeleteCompletedWorkoutPlanDayWorkoutInput'),
+            variable: VariableNode(name: NameNode(value: 'ids')),
+            type: ListTypeNode(
+                type:
+                    NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -54942,77 +48598,42 @@ final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'deleteCompletedWorkoutPlanDayWorkout'),
+            name: NameNode(value: 'clubSummaries'),
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
+                  name: NameNode(value: 'ids'),
+                  value: VariableNode(name: NameNode(value: 'ids')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutPlanEnrolment'),
-                  directives: []),
+                  name: NameNode(value: 'ClubSummary'), directives: []),
               FieldNode(
-                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  name: NameNode(value: 'Owner'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-                        directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ])),
               FieldNode(
-                  name: NameNode(value: 'User'),
+                  name: NameNode(value: 'Admins'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-              isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loggedWorkoutId'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutPlanDayWorkoutId'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55038,19 +48659,13 @@ final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanEnrolment'),
+      name: NameNode(value: 'ClubSummary'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+              name: NameNode(value: 'ClubSummary'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55066,7 +48681,73 @@ final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'startDate'),
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'introAudioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'contentAccessScope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'location'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'memberCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'planCount'),
             alias: null,
             arguments: [],
             directives: [],
@@ -55074,56 +48755,49 @@ final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
       ]))
 ]);
 
-class DeleteCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
-    DeleteCompletedWorkoutPlanDayWorkout$Mutation,
-    DeleteCompletedWorkoutPlanDayWorkoutArguments> {
-  DeleteCompletedWorkoutPlanDayWorkoutMutation({required this.variables});
+class ClubSummariesQuery
+    extends GraphQLQuery<ClubSummaries$Query, ClubSummariesArguments> {
+  ClubSummariesQuery({required this.variables});
 
   @override
-  final DocumentNode document =
-      DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
+  final DocumentNode document = CLUB_SUMMARIES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'deleteCompletedWorkoutPlanDayWorkout';
+  final String operationName = 'clubSummaries';
 
   @override
-  final DeleteCompletedWorkoutPlanDayWorkoutArguments variables;
+  final ClubSummariesArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  DeleteCompletedWorkoutPlanDayWorkout$Mutation parse(
-          Map<String, dynamic> json) =>
-      DeleteCompletedWorkoutPlanDayWorkout$Mutation.fromJson(json);
+  ClubSummaries$Query parse(Map<String, dynamic> json) =>
+      ClubSummaries$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class ClearWorkoutPlanEnrolmentProgressArguments extends JsonSerializable
-    with EquatableMixin {
-  ClearWorkoutPlanEnrolmentProgressArguments({required this.enrolmentId});
+class ClubInviteTokensArguments extends JsonSerializable with EquatableMixin {
+  ClubInviteTokensArguments({required this.clubId});
 
   @override
-  factory ClearWorkoutPlanEnrolmentProgressArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$ClearWorkoutPlanEnrolmentProgressArgumentsFromJson(json);
+  factory ClubInviteTokensArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubInviteTokensArgumentsFromJson(json);
 
-  late String enrolmentId;
+  late String clubId;
 
   @override
-  List<Object?> get props => [enrolmentId];
+  List<Object?> get props => [clubId];
   @override
-  Map<String, dynamic> toJson() =>
-      _$ClearWorkoutPlanEnrolmentProgressArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$ClubInviteTokensArgumentsToJson(this);
 }
 
-final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
+final CLUB_INVITE_TOKENS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'clearWorkoutPlanEnrolmentProgress'),
+      type: OperationType.query,
+      name: NameNode(value: 'clubInviteTokens'),
       variableDefinitions: [
         VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'enrolmentId')),
+            variable: VariableNode(name: NameNode(value: 'clubId')),
             type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -55131,45 +48805,44 @@ final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'clearWorkoutPlanEnrolmentProgress'),
+            name: NameNode(value: 'clubInviteTokens'),
             alias: null,
             arguments: [
               ArgumentNode(
-                  name: NameNode(value: 'enrolmentId'),
-                  value: VariableNode(name: NameNode(value: 'enrolmentId')))
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId')))
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutPlanEnrolment'),
-                  directives: []),
               FieldNode(
-                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
                   alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+                        name: NameNode(value: 'ClubInviteToken'),
                         directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
                   ]))
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      name: NameNode(value: 'ClubInviteToken'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-              isNonNull: false)),
+              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55185,77 +48858,31 @@ final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'loggedWorkoutId'),
+            name: NameNode(value: 'createdAt'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'workoutPlanDayWorkoutId'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
+            name: NameNode(value: 'name'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'id'),
+            name: NameNode(value: 'active'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'avatarUri'),
+            name: NameNode(value: 'inviteLimit'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanEnrolment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'startDate'),
+            name: NameNode(value: 'joinedUserIds'),
             alias: null,
             arguments: [],
             directives: [],
@@ -55263,57 +48890,52 @@ final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
       ]))
 ]);
 
-class ClearWorkoutPlanEnrolmentProgressMutation extends GraphQLQuery<
-    ClearWorkoutPlanEnrolmentProgress$Mutation,
-    ClearWorkoutPlanEnrolmentProgressArguments> {
-  ClearWorkoutPlanEnrolmentProgressMutation({required this.variables});
+class ClubInviteTokensQuery
+    extends GraphQLQuery<ClubInviteTokens$Query, ClubInviteTokensArguments> {
+  ClubInviteTokensQuery({required this.variables});
 
   @override
-  final DocumentNode document =
-      CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT;
+  final DocumentNode document = CLUB_INVITE_TOKENS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clearWorkoutPlanEnrolmentProgress';
+  final String operationName = 'clubInviteTokens';
 
   @override
-  final ClearWorkoutPlanEnrolmentProgressArguments variables;
+  final ClubInviteTokensArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  ClearWorkoutPlanEnrolmentProgress$Mutation parse(Map<String, dynamic> json) =>
-      ClearWorkoutPlanEnrolmentProgress$Mutation.fromJson(json);
+  ClubInviteTokens$Query parse(Map<String, dynamic> json) =>
+      ClubInviteTokens$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateScheduleForPlanEnrolmentArguments extends JsonSerializable
+class DeleteClubInviteTokenArguments extends JsonSerializable
     with EquatableMixin {
-  CreateScheduleForPlanEnrolmentArguments({required this.data});
+  DeleteClubInviteTokenArguments({required this.data});
 
   @override
-  factory CreateScheduleForPlanEnrolmentArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateScheduleForPlanEnrolmentArgumentsFromJson(json);
+  factory DeleteClubInviteTokenArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubInviteTokenArgumentsFromJson(json);
 
-  late CreateScheduleForPlanEnrolmentInput data;
+  late DeleteClubInviteTokenInput data;
 
   @override
   List<Object?> get props => [data];
   @override
-  Map<String, dynamic> toJson() =>
-      _$CreateScheduleForPlanEnrolmentArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$DeleteClubInviteTokenArgumentsToJson(this);
 }
 
-final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
+final DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'createScheduleForPlanEnrolment'),
+      name: NameNode(value: 'deleteClubInviteToken'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
-                name: NameNode(value: 'CreateScheduleForPlanEnrolmentInput'),
+                name: NameNode(value: 'DeleteClubInviteTokenInput'),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -55321,7 +48943,468 @@ final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'createScheduleForPlanEnrolment'),
+            name: NameNode(value: 'deleteClubInviteToken'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FieldNode(
+                  name: NameNode(value: '__typename'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'id'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: null),
+              FieldNode(
+                  name: NameNode(value: 'tokens'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ClubInviteToken'),
+                        directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubInviteToken'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubInviteToken'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'active'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'inviteLimit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'joinedUserIds'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteClubInviteTokenMutation extends GraphQLQuery<
+    DeleteClubInviteToken$Mutation, DeleteClubInviteTokenArguments> {
+  DeleteClubInviteTokenMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteClubInviteToken';
+
+  @override
+  final DeleteClubInviteTokenArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
+      DeleteClubInviteToken$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserBenchmarkEntryArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserBenchmarkEntryArguments({required this.id});
+
+  @override
+  factory DeleteUserBenchmarkEntryArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserBenchmarkEntryArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserBenchmarkEntryArgumentsToJson(this);
+}
+
+final DELETE_USER_BENCHMARK_ENTRY_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserBenchmarkEntry'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserBenchmarkEntry'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserBenchmarkEntryMutation extends GraphQLQuery<
+    DeleteUserBenchmarkEntry$Mutation, DeleteUserBenchmarkEntryArguments> {
+  DeleteUserBenchmarkEntryMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_BENCHMARK_ENTRY_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserBenchmarkEntry';
+
+  @override
+  final DeleteUserBenchmarkEntryArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserBenchmarkEntry$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserBenchmarkEntry$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserBenchmarkArguments extends JsonSerializable with EquatableMixin {
+  UserBenchmarkArguments({required this.id});
+
+  @override
+  factory UserBenchmarkArguments.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmarkArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmarkArgumentsToJson(this);
+}
+
+final USER_BENCHMARK_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userBenchmark'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userBenchmark'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserBenchmark'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'UserBenchmarkEntries'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserBenchmarkEntry'),
+                        directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserBenchmarkEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserBenchmarkEntry'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserBenchmark'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserBenchmark'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'lastEntryAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'equipmentInfo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'benchmarkType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserBenchmarkQuery
+    extends GraphQLQuery<UserBenchmark$Query, UserBenchmarkArguments> {
+  UserBenchmarkQuery({required this.variables});
+
+  @override
+  final DocumentNode document = USER_BENCHMARK_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userBenchmark';
+
+  @override
+  final UserBenchmarkArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UserBenchmark$Query parse(Map<String, dynamic> json) =>
+      UserBenchmark$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserBenchmarkArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserBenchmarkArguments({required this.id});
+
+  @override
+  factory DeleteUserBenchmarkArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserBenchmarkArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserBenchmarkArgumentsToJson(this);
+}
+
+final DELETE_USER_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserBenchmark'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserBenchmark'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserBenchmarkMutation extends GraphQLQuery<
+    DeleteUserBenchmark$Mutation, DeleteUserBenchmarkArguments> {
+  DeleteUserBenchmarkMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_BENCHMARK_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserBenchmark';
+
+  @override
+  final DeleteUserBenchmarkArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserBenchmark$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserBenchmark$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubAnnouncementArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateClubAnnouncementArguments({required this.data});
+
+  @override
+  factory UpdateClubAnnouncementArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubAnnouncementArgumentsFromJson(json);
+
+  late UpdateClubAnnouncementInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateClubAnnouncementArgumentsToJson(this);
+}
+
+final UPDATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateClubAnnouncement'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateClubAnnouncementInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateClubAnnouncement'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -55331,35 +49414,14 @@ final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutPlanEnrolment'),
-                  directives: []),
-              FieldNode(
-                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ]))
+                  name: NameNode(value: 'ClubAnnouncement'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      name: NameNode(value: 'ClubAnnouncement'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-              isNonNull: false)),
+              name: NameNode(value: 'ClubAnnouncement'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55375,23 +49437,56 @@ final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'loggedWorkoutId'),
+            name: NameNode(value: 'createdAt'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            name: NameNode(value: 'description'),
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null)
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'audioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55417,94 +49512,57 @@ final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanEnrolment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null)
       ]))
 ]);
 
-class CreateScheduleForPlanEnrolmentMutation extends GraphQLQuery<
-    CreateScheduleForPlanEnrolment$Mutation,
-    CreateScheduleForPlanEnrolmentArguments> {
-  CreateScheduleForPlanEnrolmentMutation({required this.variables});
+class UpdateClubAnnouncementMutation extends GraphQLQuery<
+    UpdateClubAnnouncement$Mutation, UpdateClubAnnouncementArguments> {
+  UpdateClubAnnouncementMutation({required this.variables});
 
   @override
-  final DocumentNode document =
-      CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
+  final DocumentNode document = UPDATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createScheduleForPlanEnrolment';
+  final String operationName = 'updateClubAnnouncement';
 
   @override
-  final CreateScheduleForPlanEnrolmentArguments variables;
+  final UpdateClubAnnouncementArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  CreateScheduleForPlanEnrolment$Mutation parse(Map<String, dynamic> json) =>
-      CreateScheduleForPlanEnrolment$Mutation.fromJson(json);
+  UpdateClubAnnouncement$Mutation parse(Map<String, dynamic> json) =>
+      UpdateClubAnnouncement$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
-class CreateCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
+class CreateClubAnnouncementArguments extends JsonSerializable
     with EquatableMixin {
-  CreateCompletedWorkoutPlanDayWorkoutArguments({required this.data});
+  CreateClubAnnouncementArguments({required this.data});
 
   @override
-  factory CreateCompletedWorkoutPlanDayWorkoutArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$CreateCompletedWorkoutPlanDayWorkoutArgumentsFromJson(json);
+  factory CreateClubAnnouncementArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubAnnouncementArgumentsFromJson(json);
 
-  late CreateCompletedWorkoutPlanDayWorkoutInput data;
+  late CreateClubAnnouncementInput data;
 
   @override
   List<Object?> get props => [data];
   @override
   Map<String, dynamic> toJson() =>
-      _$CreateCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
+      _$CreateClubAnnouncementArgumentsToJson(this);
 }
 
-final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
+final CREATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
-      name: NameNode(value: 'createCompletedWorkoutPlanDayWorkout'),
+      name: NameNode(value: 'createClubAnnouncement'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'data')),
             type: NamedTypeNode(
-                name: NameNode(
-                    value: 'CreateCompletedWorkoutPlanDayWorkoutInput'),
+                name: NameNode(value: 'CreateClubAnnouncementInput'),
                 isNonNull: true),
             defaultValue: DefaultValueNode(value: null),
             directives: [])
@@ -55512,7 +49570,7 @@ final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'createCompletedWorkoutPlanDayWorkout'),
+            name: NameNode(value: 'createClubAnnouncement'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -55522,35 +49580,14 @@ final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: SelectionSetNode(selections: [
               FragmentSpreadNode(
-                  name: NameNode(value: 'WorkoutPlanEnrolment'),
-                  directives: []),
-              FieldNode(
-                  name: NameNode(value: 'CompletedWorkoutPlanDayWorkouts'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-                        directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserSummary'), directives: [])
-                  ]))
+                  name: NameNode(value: 'ClubAnnouncement'), directives: [])
             ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
+      name: NameNode(value: 'ClubAnnouncement'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'CompletedWorkoutPlanDayWorkout'),
-              isNonNull: false)),
+              name: NameNode(value: 'ClubAnnouncement'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55566,23 +49603,56 @@ final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'loggedWorkoutId'),
+            name: NameNode(value: 'createdAt'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'workoutPlanDayWorkoutId'),
+            name: NameNode(value: 'description'),
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null)
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'audioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ]))
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'UserSummary'),
+      name: NameNode(value: 'UserAvatarData'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
-              name: NameNode(value: 'UserSummary'), isNonNull: false)),
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -55608,61 +49678,90 @@ final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'userProfileScope'),
-            alias: null,
-            arguments: [],
-            directives: [],
             selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WorkoutPlanEnrolment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WorkoutPlanEnrolment'), isNonNull: false)),
+      ]))
+]);
+
+class CreateClubAnnouncementMutation extends GraphQLQuery<
+    CreateClubAnnouncement$Mutation, CreateClubAnnouncementArguments> {
+  CreateClubAnnouncementMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createClubAnnouncement';
+
+  @override
+  final CreateClubAnnouncementArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateClubAnnouncement$Mutation parse(Map<String, dynamic> json) =>
+      CreateClubAnnouncement$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteClubAnnouncementArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteClubAnnouncementArguments({required this.id});
+
+  @override
+  factory DeleteClubAnnouncementArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubAnnouncementArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteClubAnnouncementArgumentsToJson(this);
+}
+
+final DELETE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteClubAnnouncement'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: '__typename'),
+            name: NameNode(value: 'deleteClubAnnouncement'),
             alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'startDate'),
-            alias: null,
-            arguments: [],
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
             directives: [],
             selectionSet: null)
       ]))
 ]);
 
-class CreateCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
-    CreateCompletedWorkoutPlanDayWorkout$Mutation,
-    CreateCompletedWorkoutPlanDayWorkoutArguments> {
-  CreateCompletedWorkoutPlanDayWorkoutMutation({required this.variables});
+class DeleteClubAnnouncementMutation extends GraphQLQuery<
+    DeleteClubAnnouncement$Mutation, DeleteClubAnnouncementArguments> {
+  DeleteClubAnnouncementMutation({required this.variables});
 
   @override
-  final DocumentNode document =
-      CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
+  final DocumentNode document = DELETE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createCompletedWorkoutPlanDayWorkout';
+  final String operationName = 'deleteClubAnnouncement';
 
   @override
-  final CreateCompletedWorkoutPlanDayWorkoutArguments variables;
+  final DeleteClubAnnouncementArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  CreateCompletedWorkoutPlanDayWorkout$Mutation parse(
-          Map<String, dynamic> json) =>
-      CreateCompletedWorkoutPlanDayWorkout$Mutation.fromJson(json);
+  DeleteClubAnnouncement$Mutation parse(Map<String, dynamic> json) =>
+      DeleteClubAnnouncement$Mutation.fromJson(json);
 }

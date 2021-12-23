@@ -2,10 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/personal_best/entry_top_score_display.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -82,23 +80,6 @@ class PersonalBestCard extends StatelessWidget {
                 maxLines: 3,
                 size: FONTSIZE.two,
                 lineHeight: 1.4,
-              ),
-            ),
-          if (userBenchmark.userBenchmarkTags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 6, bottom: 8),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: userBenchmark.userBenchmarkTags
-                    .map(
-                      (tag) => Tag(
-                        tag: tag.name,
-                        color: context.theme.background,
-                        textColor: context.theme.primary,
-                      ),
-                    )
-                    .toList(),
               ),
             ),
         ],

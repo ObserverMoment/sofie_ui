@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -36,9 +35,9 @@ class WorkoutPlanReviewsSummary extends StatelessWidget {
                     rating: reviewScore,
                     itemBuilder: (context, index) => const Icon(
                       CupertinoIcons.star_fill,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                     ),
-                    unratedColor: Styles.secondaryAccent.withOpacity(0.15),
+                    unratedColor: Styles.primaryAccent.withOpacity(0.15),
                     itemCount: starCount,
                     itemSize: starSize,
                   ),

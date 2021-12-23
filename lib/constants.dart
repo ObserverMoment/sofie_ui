@@ -75,10 +75,9 @@ const kLoggedWorkoutSectionTypename = 'LoggedWorkoutSection';
 const kLoggedWorkoutSetTypename = 'LoggedWorkoutSet';
 const kLoggedWorkoutMoveTypename = 'LoggedWorkoutMove';
 
-const kProgressJournalTypename = 'ProgressJournal';
-const kProgressJournalEntryTypename = 'ProgressJournalEntry';
-const kProgressJournalGoalTypename = 'ProgressJournalGoal';
-const kProgressJournalGoalTagTypename = 'ProgressJournalGoalTag';
+const kJournalNoteTypename = 'JournalNote';
+const kJournalMoodTypename = 'JournalMood';
+const kJournalGoalTypename = 'JournalGoal';
 
 const kSkillTypeName = 'Skill';
 

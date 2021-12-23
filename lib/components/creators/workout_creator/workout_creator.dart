@@ -7,9 +7,9 @@ import 'package:sofie_ui/components/creators/workout_creator/workout_creator_inf
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_creator_structure.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/difficulty_level_selector.dart';
 import 'package:sofie_ui/constants.dart';
@@ -59,7 +59,7 @@ class _WorkoutCreatorPageState extends State<WorkoutCreatorPage> {
         // The WorkoutSummary gets immediately added to the userWorkouts query when a workout is created.
         context.graphQLStore.writeDataToStore(
             data: data.createWorkout.summary.toJson(),
-            addRefToQueries: [GQLOpNames.userWorkoutsQuery]);
+            addRefToQueries: [GQLOpNames.userWorkouts]);
       },
     );
 
@@ -105,7 +105,6 @@ class __PreCreateUIState extends State<_PreCreateUI> {
     super.initState();
     _createWorkoutInput = CreateWorkoutInput(
         name: 'Workout ${DateTime.now().dateString}',
-        difficultyLevel: DifficultyLevel.challenging,
         contentAccessScope: ContentAccessScope.private);
   }
 
@@ -137,6 +136,7 @@ class __PreCreateUIState extends State<_PreCreateUI> {
         ),
         DifficultyLevelSelectorRow(
           difficultyLevel: _createWorkoutInput.difficultyLevel,
+          unselectedLabel: 'Not Specified',
           updateDifficultyLevel: (level) =>
               setState(() => _createWorkoutInput.difficultyLevel = level),
         ),
@@ -219,11 +219,19 @@ class __MainUIState extends State<_MainUI> {
                             MyText('Uploading media, please wait...'),
                           ],
                         ))
-                    : MyTabBarNav(
-                        titles: const ['Info', 'Structure', 'Media'],
-                        handleTabChange: (i) =>
-                            setState(() => _activeTabIndex = i),
-                        activeTabIndex: _activeTabIndex),
+                    : Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        width: double.infinity,
+                        child: MySlidingSegmentedControl<int>(
+                            children: const {
+                              0: 'Info',
+                              1: 'Structure',
+                              2: 'Media'
+                            },
+                            updateValue: (i) =>
+                                setState(() => _activeTabIndex = i),
+                            value: _activeTabIndex),
+                      ),
               ),
               Expanded(
                 child: IndexedStack(

@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
@@ -50,7 +50,7 @@ class MyTabBarNav extends StatelessWidget {
                           borderRadius: BorderRadius.circular(60),
                           color: index == activeTabIndex
                               ? cardColor
-                              : Colors.transparent,
+                              : material.Colors.transparent,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

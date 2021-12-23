@@ -188,7 +188,6 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: MySlidingSegmentedControl<int>(
-                                    activeColor: Styles.secondaryAccent,
                                     value: _activeTabIndex,
                                     updateValue: _handleTabChange,
                                     children: _segmentChildren),

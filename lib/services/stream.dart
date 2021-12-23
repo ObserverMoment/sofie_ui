@@ -18,7 +18,6 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:stream_feed/src/client/flat_feed.dart';
 import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart';
 
@@ -177,7 +176,10 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
             behavior: HitTestBehavior.opaque,
             onTap: () => context.pushRoute(const ChatsOverviewRoute()),
             child: const FABPageButtonContainer(
-                child: Icon(CupertinoIcons.chat_bubble, size: 25))),
+                child: Icon(
+              CupertinoIcons.chat_bubble,
+              size: 25,
+            ))),
         if (_unreadCount > 0)
           Positioned(
             top: 4,
@@ -185,7 +187,7 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
             child: FadeInUp(
                 key: Key(_unreadCount.toString()),
                 child: Dot(
-                  diameter: 14,
+                  diameter: 18,
                   border: Border.all(color: context.theme.background, width: 2),
                   color: Styles.primaryAccent,
                 )),
@@ -302,7 +304,7 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
                           onPressed: _unfollowOtherUser,
                           iconSize: widget.iconSize,
                           fontSize: widget.fontSize,
-                          backgroundColor: Styles.infoBlue,
+                          backgroundColor: Styles.primaryAccent,
                           textColor: Styles.white)
                       : TertiaryButton(
                           prefixIconData: CupertinoIcons.person,

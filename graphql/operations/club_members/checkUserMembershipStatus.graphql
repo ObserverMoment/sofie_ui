@@ -1,0 +1,3 @@
+query checkUserClubMemberStatus($clubId: ID!) {
+  checkUserClubMemberStatus(clubId: $clubId)
+}

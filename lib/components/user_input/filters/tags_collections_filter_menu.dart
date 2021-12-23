@@ -67,56 +67,58 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopoverMenu(
-        button: FABPageButtonContainer(
-          child: Row(
-            children: [
-              if (filterMenuType == FilterMenuType.tag)
-                AnimatedSwitcher(
-                    duration: kStandardAnimationDuration,
-                    child: selectedTag == null
-                        ? Row(
-                            children: const [
-                              MyText('Tags'),
-                              SizedBox(width: 8),
-                              Icon(
-                                CupertinoIcons.tag,
-                                size: 16,
+    return allTags.isEmpty && allCollections.isEmpty
+        ? Container()
+        : PopoverMenu(
+            button: FABPageButtonContainer(
+              child: Row(
+                children: [
+                  if (filterMenuType == FilterMenuType.tag)
+                    AnimatedSwitcher(
+                        duration: kStandardAnimationDuration,
+                        child: selectedTag == null
+                            ? Row(
+                                children: const [
+                                  MyText('Tags'),
+                                  SizedBox(width: 8),
+                                  Icon(
+                                    CupertinoIcons.tag,
+                                    size: 16,
+                                  )
+                                ],
                               )
-                            ],
-                          )
-                        : Row(
-                            children: [
-                              MyText(selectedTag!,
-                                  weight: FontWeight.bold,
-                                  color: Styles.secondaryAccent),
-                            ],
-                          )),
-              if (filterMenuType == FilterMenuType.collection)
-                AnimatedSwitcher(
-                    duration: kStandardAnimationDuration,
-                    child: selectedCollection == null
-                        ? Row(
-                            children: const [
-                              MyText('Collections'),
-                              SizedBox(width: 8),
-                              Icon(
-                                CupertinoIcons.collections,
-                                size: 16,
+                            : Row(
+                                children: [
+                                  MyText(selectedTag!,
+                                      weight: FontWeight.bold,
+                                      color: Styles.primaryAccent),
+                                ],
+                              )),
+                  if (filterMenuType == FilterMenuType.collection)
+                    AnimatedSwitcher(
+                        duration: kStandardAnimationDuration,
+                        child: selectedCollection == null
+                            ? Row(
+                                children: const [
+                                  MyText('Collections'),
+                                  SizedBox(width: 8),
+                                  Icon(
+                                    CupertinoIcons.collections,
+                                    size: 16,
+                                  )
+                                ],
                               )
-                            ],
-                          )
-                        : Row(
-                            children: [
-                              MyText(selectedCollection!.name,
-                                  weight: FontWeight.bold,
-                                  color: Styles.secondaryAccent),
-                            ],
-                          )),
-            ],
-          ),
-        ),
-        items: _buildMenuItems);
+                            : Row(
+                                children: [
+                                  MyText(selectedCollection!.name,
+                                      weight: FontWeight.bold,
+                                      color: Styles.primaryAccent),
+                                ],
+                              )),
+                ],
+              ),
+            ),
+            items: _buildMenuItems);
   }
 }
 
@@ -134,48 +136,50 @@ class TagsFilterMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopoverMenu(
-        button: FABPageButtonContainer(
-          child: Row(
-            children: [
-              AnimatedSwitcher(
-                  duration: kStandardAnimationDuration,
-                  child: selectedTag == null
-                      ? Row(
-                          children: const [
-                            MyText('Tags'),
-                            SizedBox(width: 8),
-                            Icon(
-                              CupertinoIcons.tag,
-                              size: 16,
+    return allTags.isEmpty
+        ? Container()
+        : PopoverMenu(
+            button: FABPageButtonContainer(
+              child: Row(
+                children: [
+                  AnimatedSwitcher(
+                      duration: kStandardAnimationDuration,
+                      child: selectedTag == null
+                          ? Row(
+                              children: const [
+                                MyText('Tags'),
+                                SizedBox(width: 8),
+                                Icon(
+                                  CupertinoIcons.tag,
+                                  size: 16,
+                                )
+                              ],
                             )
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            MyText(selectedTag!,
-                                weight: FontWeight.bold,
-                                color: Styles.secondaryAccent),
-                          ],
-                        )),
-            ],
-          ),
-        ),
-        items: [
-          ...allTags
-              .map((t) => PopoverMenuItem(
-                    onTap: () => updateSelectedTag(t),
-                    text: t,
-                    isActive: selectedTag == t,
-                  ))
-              .toList(),
-          if (selectedTag != null)
-            PopoverMenuItem(
-              iconData: CupertinoIcons.clear,
-              onTap: () => updateSelectedTag(null),
-              isActive: false,
-              text: 'Clear Filter',
-            )
-        ]);
+                          : Row(
+                              children: [
+                                MyText(selectedTag!,
+                                    weight: FontWeight.bold,
+                                    color: Styles.primaryAccent),
+                              ],
+                            )),
+                ],
+              ),
+            ),
+            items: [
+                ...allTags
+                    .map((t) => PopoverMenuItem(
+                          onTap: () => updateSelectedTag(t),
+                          text: t,
+                          isActive: selectedTag == t,
+                        ))
+                    .toList(),
+                if (selectedTag != null)
+                  PopoverMenuItem(
+                    iconData: CupertinoIcons.clear,
+                    onTap: () => updateSelectedTag(null),
+                    isActive: false,
+                    text: 'Clear Filter',
+                  )
+              ]);
   }
 }

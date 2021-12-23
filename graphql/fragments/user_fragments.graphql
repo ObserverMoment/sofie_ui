@@ -4,6 +4,7 @@ fragment UserAvatarData on UserAvatarData {
   avatarUri
   displayName
 }
+
 fragment UserBenchmarkSummary on UserBenchmarkSummary {
   __typename
   id
@@ -35,13 +36,6 @@ fragment UserBenchmarkEntry on UserBenchmarkEntry {
   note
   videoUri
   videoThumbUri
-}
-
-fragment UserBenchmarkTag on UserBenchmarkTag {
-  __typename
-  id
-  name
-  description
 }
 
 fragment UserProfile on UserProfile {
@@ -102,12 +96,4 @@ fragment UserProfileSummary on UserProfileSummary {
   workoutCount
   planCount
   skills
-}
-
-fragment UserSummary on UserSummary {
-  __typename
-  id
-  avatarUri
-  displayName
-  userProfileScope
 }

@@ -11,7 +11,7 @@ import 'package:sofie_ui/services/utils.dart';
 
 const kStoreReferenceKey = '\$ref';
 
-void checkOperationResult<T>(BuildContext context, OperationResult<T> result,
+bool checkOperationResult<T>(BuildContext context, OperationResult<T> result,
     {VoidCallback? onSuccess, VoidCallback? onFail}) {
   if (result.hasErrors || result.data == null) {
     result.errors?.forEach((e) {
@@ -23,10 +23,12 @@ void checkOperationResult<T>(BuildContext context, OperationResult<T> result,
       // Default to showing a generic error toast.
       context.showToast(message: "Sorry, there was a problem, it didn't work!");
     }
+    return false;
   } else {
     if (onSuccess != null) {
       onSuccess();
     }
+    return true;
   }
 }
 

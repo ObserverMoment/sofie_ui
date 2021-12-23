@@ -222,7 +222,7 @@ class MyTextAreaFormFieldRow extends StatelessWidget {
         if (validator != null && validator!())
           const Positioned(
               right: 10,
-              bottom: 10,
+              top: 10,
               child: FadeIn(
                   child: Icon(
                 CupertinoIcons.check_mark_circled,

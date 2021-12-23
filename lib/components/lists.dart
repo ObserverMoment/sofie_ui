@@ -6,8 +6,12 @@ class CommaSeparatedList extends StatelessWidget {
   final FONTSIZE fontSize;
   final Color? textColor;
   final bool withFullStop;
+  final WrapAlignment alignment;
+  final double runSpacing;
   const CommaSeparatedList(this.names,
       {Key? key,
+      this.alignment = WrapAlignment.start,
+      this.runSpacing = 3,
       this.fontSize = FONTSIZE.two,
       this.textColor,
       this.withFullStop = false})
@@ -16,8 +20,9 @@ class CommaSeparatedList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      alignment: alignment,
       spacing: 1,
-      runSpacing: 5,
+      runSpacing: runSpacing,
       children: names
           .asMap()
           .map((index, name) => MapEntry(

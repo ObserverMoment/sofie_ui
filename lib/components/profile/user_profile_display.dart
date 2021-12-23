@@ -6,13 +6,13 @@ import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/profile/bio.dart';
 import 'package:sofie_ui/components/profile/club_summaries_list.dart';
 import 'package:sofie_ui/components/profile/personal_bests_grid.dart';
 import 'package:sofie_ui/components/profile/skills_list.dart';
 import 'package:sofie_ui/components/profile/social_media_links.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -57,7 +57,8 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
     final hasCountry = Utils.textNotNull(profile.countryCode);
     final hasTown = Utils.textNotNull(profile.townCity);
 
-    return profile.userProfileScope == UserProfileScope.private
+    return !isAuthedUserProfile &&
+            profile.userProfileScope == UserProfileScope.private
         ? _PrivateProfilePlaceholder(profile: profile)
         : NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
@@ -86,32 +87,34 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
                               ),
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              if (!isAuthedUserProfile)
-                                _ProfileButtons(
-                                  profile: profile,
-                                ),
-                              if (followerCount > 0)
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      MyText('$followerCount',
-                                          size: FONTSIZE.one,
-                                          weight: FontWeight.bold),
-                                      const SizedBox(width: 3),
-                                      const MyText(
-                                        'FOLLOWERS',
-                                        size: FONTSIZE.one,
-                                      )
-                                    ],
+                          if (!isAuthedUserProfile || followerCount > 0)
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                if (!isAuthedUserProfile)
+                                  _ProfileButtons(
+                                    profile: profile,
                                   ),
-                                ),
-                            ],
-                          ),
+                                if (followerCount > 0)
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        MyText('$followerCount',
+                                            size: FONTSIZE.one,
+                                            weight: FontWeight.bold),
+                                        const SizedBox(width: 3),
+                                        const MyText(
+                                          'FOLLOWERS',
+                                          size: FONTSIZE.one,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
@@ -195,11 +198,20 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
                         ),
                       ),
                     const SizedBox(height: 4),
-                    MyTabBarNav(
-                        titles: const ['Bio', 'Bests', 'Skills', 'Clubs'],
-                        handleTabChange: (i) =>
-                            setState(() => _activeTabIndex = i),
-                        activeTabIndex: _activeTabIndex),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      width: double.infinity,
+                      child: MySlidingSegmentedControl<int>(
+                          value: _activeTabIndex,
+                          children: const {
+                            0: 'Bio',
+                            1: 'Bests',
+                            2: 'Skills',
+                            3: 'Clubs'
+                          },
+                          updateValue: (i) =>
+                              setState(() => _activeTabIndex = i)),
+                    ),
                     const SizedBox(height: 16),
                   ]))
                 ],

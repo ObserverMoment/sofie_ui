@@ -55,10 +55,10 @@ class _ClubChatsChannelListState extends State<ClubChatsChannelList> {
     final clubIds = channels.map((c) => c.id!).toList();
 
     /// Then call our API to get UserAvatarData[]
-    final result = await context.graphQLStore.networkOnlyOperation<
-            ClubSummariesById$Query, ClubSummariesByIdArguments>(
-        operation: ClubSummariesByIdQuery(
-            variables: ClubSummariesByIdArguments(ids: clubIds)));
+    final result = await context.graphQLStore
+        .networkOnlyOperation<ClubSummaries$Query, ClubSummariesArguments>(
+            operation: ClubSummariesQuery(
+                variables: ClubSummariesArguments(ids: clubIds)));
 
     if (result.hasErrors || result.data == null) {
       result.errors?.forEach((e) {
@@ -67,7 +67,7 @@ class _ClubChatsChannelListState extends State<ClubChatsChannelList> {
       context.showToast(
           message: 'Sorry, there was a problem loading chat info');
     } else {
-      final allSummaries = result.data!.clubSummariesById;
+      final allSummaries = result.data!.clubSummaries;
 
       _channelsWithClubSummaryData = channels
           .map((channel) => ChannelWithClubSummaryData(

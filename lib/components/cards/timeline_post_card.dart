@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
@@ -169,7 +168,6 @@ class TimelinePostCard extends StatelessWidget {
                             .whereType<String>()
                             .map((tag) => MyText(
                                   '#$tag',
-                                  color: Styles.primaryAccent,
                                   weight: FontWeight.bold,
                                 ))
                             .toList(),
@@ -244,12 +242,12 @@ class TimelinePostCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        if (objectData.object.coverImageUri != null)
+        if (objectData.object.imageUri != null)
           ClipRRect(
             borderRadius: BorderRadius.circular(6),
             child: SizedBox(
                 height: 200,
-                child: SizedUploadcareImage(objectData.object.coverImageUri!)),
+                child: SizedUploadcareImage(objectData.object.imageUri!)),
           ),
         SizedBox(
           height: 60,
@@ -359,7 +357,7 @@ class _TimelinePostEllipsisMenu extends StatelessWidget {
               header: BottomSheetMenuHeader(
                   name: '${object.name} by ${creator.displayName}',
                   subtitle: 'Posted by ${poster.displayName}',
-                  imageUri: object.coverImageUri),
+                  imageUri: object.imageUri),
               items: [
                 BottomSheetMenuItem(
                     text: 'View ${object.type.display}',

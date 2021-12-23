@@ -1,0 +1,5 @@
+mutation createJournalMood($data: CreateJournalMoodInput!) {
+  createJournalMood(data: $data) {
+    ...JournalMood
+  }
+}

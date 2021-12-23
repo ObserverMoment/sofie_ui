@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -15,6 +14,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class PersonalBestEntryCreator extends StatefulWidget {
@@ -92,35 +92,36 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
 
     setState(() => _loading = false);
 
-    if (result.hasErrors || result.data == null) {
-      context.showToast(
-          message: "Sorry, that didn't work.",
-          toastType: ToastType.destructive);
-    } else {
-      /// As the benchmarkEntry exists both normalized and also as a nested object ({$ref}) within a field of the parent benchmark, we will need to overwrite the entire benchmark in the store, with the new entry added to field [UserBenchmarkEntries] so that when we rebroadcast the queries it is included in the retireved data.
-      final parentBenchmarkData = context.graphQLStore.readDenomalized(
-        '$kUserBenchmarkTypename:${widget.userBenchmark.id}',
-      );
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: "Sorry, there was a problem creating this PB.",
+            toastType: ToastType.destructive),
+        onSuccess: () {
+          /// As the benchmarkEntry exists both normalized and also as a nested object ({$ref}) within a field of the parent benchmark, we will need to overwrite the entire benchmark in the store, with the new entry added to field [UserBenchmarkEntries] so that when we rebroadcast the queries it is included in the retireved data.
+          final parentBenchmarkData = context.graphQLStore.readDenomalized(
+            '$kUserBenchmarkTypename:${widget.userBenchmark.id}',
+          );
 
-      final entry = result.data!.createUserBenchmarkEntry;
-      final parentBenchmark = UserBenchmark.fromJson(parentBenchmarkData);
-      parentBenchmark.userBenchmarkEntries.add(entry);
+          final entry = result.data!.createUserBenchmarkEntry;
+          final parentBenchmark = UserBenchmark.fromJson(parentBenchmarkData);
+          parentBenchmark.userBenchmarkEntries.add(entry);
 
-      final success = context.graphQLStore.writeDataToStore(
-        data: parentBenchmark.toJson(),
-        broadcastQueryIds: [
-          GQLVarParamKeys.userBenchmarkByIdQuery(widget.userBenchmark.id),
-          GQLOpNames.userBenchmarksQuery
-        ],
-      );
+          final success = context.graphQLStore.writeDataToStore(
+            data: parentBenchmark.toJson(),
+            broadcastQueryIds: [
+              GQLVarParamKeys.userBenchmark(widget.userBenchmark.id),
+              GQLOpNames.userBenchmarks,
+            ],
+          );
 
-      if (!success) {
-        context.showToast(
-            message: kDefaultErrorMessage, toastType: ToastType.destructive);
-      } else {
-        context.pop();
-      }
-    }
+          if (!success) {
+            context.showToast(
+                message: kDefaultErrorMessage,
+                toastType: ToastType.destructive);
+          } else {
+            context.pop();
+          }
+        });
   }
 
   Future<void> _update() async {
@@ -140,18 +141,16 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
     final result = await context.graphQLStore.mutate(
         mutation: UpdateUserBenchmarkEntryMutation(variables: variables),
         broadcastQueryIds: [
-          GQLOpNames.userBenchmarksQuery,
-          GQLVarParamKeys.userBenchmarkByIdQuery(widget.userBenchmark.id)
+          GQLOpNames.userBenchmarks,
+          GQLVarParamKeys.userBenchmark(widget.userBenchmark.id)
         ]);
 
     setState(() => _loading = false);
 
-    if (result.hasErrors || result.data == null) {
-      context.showToast(
-          message: kDefaultErrorMessage, toastType: ToastType.destructive);
-    } else {
-      context.pop();
-    }
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: kDefaultErrorMessage, toastType: ToastType.destructive),
+        onSuccess: context.pop);
   }
 
   void _handleCancel() {

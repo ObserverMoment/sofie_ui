@@ -19,6 +19,7 @@ class AnimatedSlidable extends StatefulWidget {
 
   /// Remove is added by default - just provide a removeItem callback
   final List<IconSlideAction> secondaryActions;
+  // final List<SlidableAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;
   final String itemType;
@@ -161,6 +162,33 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
         ),
       ),
     );
+    // return SizeTransition(
+    //   sizeFactor: _scaleAnimation,
+    //   child: SlideTransition(
+    //     position: _slideAnimation,
+    //     child: IconTheme(
+    //       data: IconThemeData(color: Styles.white, size: _iconSize),
+    //       child: Slidable(
+    //         key: widget.key,
+    //         startActionPane: ActionPane(
+    //             extentRatio: 0.20,
+    //             motion: const DrawerMotion(),
+    //             children: <SlidableAction>[
+    //               ...widget.secondaryActions,
+    //               SlidableAction(
+    //                 label: widget.verb,
+    //                 backgroundColor: Styles.errorRed,
+    //                 foregroundColor: Styles.white,
+    //                 icon: widget.iconData,
+    //                 onPressed: (_) => _confirmRemoveItem(),
+    //               ),
+    //             ]),
+    //         enabled: widget.enabled,
+    //         child: widget.child,
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }
 
@@ -171,6 +199,7 @@ class MySlidable extends StatelessWidget {
   final Widget child;
 
   /// Remove is added by default - just provide a removeItem callback
+  // final List<SlidableAction> secondaryActions;
   final List<IconSlideAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;

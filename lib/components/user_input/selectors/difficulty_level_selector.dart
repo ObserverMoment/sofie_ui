@@ -13,9 +13,13 @@ import 'package:collection/collection.dart';
 
 class DifficultyLevelSelectorRow extends StatelessWidget {
   final DifficultyLevel? difficultyLevel;
-  final void Function(DifficultyLevel level) updateDifficultyLevel;
+  final void Function(DifficultyLevel? level) updateDifficultyLevel;
+  final String unselectedLabel;
   const DifficultyLevelSelectorRow(
-      {Key? key, this.difficultyLevel, required this.updateDifficultyLevel})
+      {Key? key,
+      this.difficultyLevel,
+      required this.updateDifficultyLevel,
+      this.unselectedLabel = ' - '})
       : super(key: key);
 
   @override
@@ -27,6 +31,7 @@ class DifficultyLevelSelectorRow extends StatelessWidget {
                   child: DifficultyLevelSelector(
                 difficultyLevel: difficultyLevel,
                 updateDifficultyLevel: updateDifficultyLevel,
+                unselectedLabel: unselectedLabel,
               )),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,7 +75,7 @@ class DifficultyLevelSelectorRow extends StatelessWidget {
               else
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.0),
-                  child: MyText('Select', subtext: true),
+                  child: MyText('Select (optional)', subtext: true),
                 ),
             ],
           )),
@@ -80,9 +85,13 @@ class DifficultyLevelSelectorRow extends StatelessWidget {
 
 class DifficultyLevelSelector extends StatefulWidget {
   final DifficultyLevel? difficultyLevel;
-  final void Function(DifficultyLevel updated) updateDifficultyLevel;
+  final void Function(DifficultyLevel? updated) updateDifficultyLevel;
+  final String unselectedLabel;
   const DifficultyLevelSelector(
-      {Key? key, this.difficultyLevel, required this.updateDifficultyLevel})
+      {Key? key,
+      this.difficultyLevel,
+      required this.updateDifficultyLevel,
+      this.unselectedLabel = ' - '})
       : super(key: key);
   @override
   _DifficultyLevelSelectorState createState() =>
@@ -98,11 +107,11 @@ class _DifficultyLevelSelectorState extends State<DifficultyLevelSelector> {
     _activeDifficultyLevel = widget.difficultyLevel;
   }
 
-  void _handleUpdateSelected(DifficultyLevel tapped) {
+  void _handleUpdateSelected(DifficultyLevel? tapped) {
     setState(() {
       _activeDifficultyLevel = tapped;
     });
-    widget.updateDifficultyLevel(_activeDifficultyLevel!);
+    widget.updateDifficultyLevel(_activeDifficultyLevel);
   }
 
   @override
@@ -118,17 +127,26 @@ class _DifficultyLevelSelectorState extends State<DifficultyLevelSelector> {
         middle: const LeadingNavBarTitle('Difficulty Level'),
       ),
       child: ListView(
-        children: DifficultyLevel.values
-            .where((d) => d != DifficultyLevel.artemisUnknown)
-            .sortedBy<num>((v) => v.numericValue)
-            .map((l) => Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: SelectableBoxExpanded(
-                      isSelected: _activeDifficultyLevel == l,
-                      onPressed: () => _handleUpdateSelected(l),
-                      text: l.display),
-                ))
-            .toList(),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: SelectableBoxExpanded(
+                isSelected: _activeDifficultyLevel == null,
+                onPressed: () => _handleUpdateSelected(null),
+                text: widget.unselectedLabel),
+          ),
+          ...DifficultyLevel.values
+              .where((d) => d != DifficultyLevel.artemisUnknown)
+              .sortedBy<num>((v) => v.numericValue)
+              .map((l) => Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SelectableBoxExpanded(
+                        isSelected: _activeDifficultyLevel == l,
+                        onPressed: () => _handleUpdateSelected(l),
+                        text: l.display),
+                  ))
+              .toList()
+        ],
       ),
     );
   }

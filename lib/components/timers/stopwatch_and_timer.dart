@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/timers/countdown_timer.dart';
 import 'package:sofie_ui/components/timers/stopwatch_with_laps.dart';

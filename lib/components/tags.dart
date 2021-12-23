@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -407,7 +406,7 @@ class DurationTag extends StatelessWidget {
 }
 
 class ProgressJournalGoalAndTagsTag extends StatelessWidget {
-  final ProgressJournalGoal progressJournalGoal;
+  final JournalGoal progressJournalGoal;
   const ProgressJournalGoalAndTagsTag(this.progressJournalGoal, {Key? key})
       : super(key: key);
 
@@ -429,22 +428,6 @@ class ProgressJournalGoalAndTagsTag extends StatelessWidget {
                 ? TextDecoration.lineThrough
                 : null,
           ),
-          if (progressJournalGoal.progressJournalGoalTags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: progressJournalGoal.progressJournalGoalTags
-                    .map((t) => Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Dot(
-                              diameter: 10,
-                              color: HexColor.fromHex(t.hexColor)),
-                        ))
-                    .toList(),
-              ),
-            )
         ],
       ),
     );

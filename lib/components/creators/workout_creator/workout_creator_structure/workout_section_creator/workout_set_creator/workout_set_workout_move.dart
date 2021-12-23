@@ -46,6 +46,13 @@ class WorkoutSetWorkoutMove extends StatelessWidget {
             iconWidget: const Icon(CupertinoIcons.plus_square_on_square),
             onTap: () => duplicateWorkoutMove(workoutMove.sortPosition),
           ),
+          // SlidableAction(
+          //   label: 'Duplicate',
+          //   backgroundColor: Styles.primaryAccent,
+          //   foregroundColor: Styles.white,
+          //   icon: CupertinoIcons.plus_square_on_square,
+          //   onPressed: (_) => duplicateWorkoutMove(workoutMove.sortPosition),
+          // ),
         ],
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),

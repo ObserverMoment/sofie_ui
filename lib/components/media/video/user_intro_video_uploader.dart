@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
@@ -165,7 +163,7 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
                   : Utils.textNotNull(widget.introVideoThumbUri)
                       ? SizedUploadcareImage(widget.introVideoThumbUri!)
                       : Icon(
-                          CupertinoIcons.film,
+                          CupertinoIcons.tv,
                           size: widget.displaySize.width / 2.5,
                           color: primary.withOpacity(0.3),
                         ),

@@ -43,9 +43,9 @@ class WorkoutPlanReviewCard extends StatelessWidget {
                       rating: review.score,
                       itemBuilder: (context, index) => const Icon(
                         CupertinoIcons.star_fill,
-                        color: Styles.secondaryAccent,
+                        color: Styles.primaryAccent,
                       ),
-                      unratedColor: Styles.secondaryAccent.withOpacity(0.2),
+                      unratedColor: Styles.primaryAccent.withOpacity(0.2),
                       itemSize: 20,
                     ),
                     const SizedBox(

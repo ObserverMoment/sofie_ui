@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
@@ -85,12 +83,13 @@ class WorkoutCardFixedHeight extends StatelessWidget {
                               textColor: infoFontColor,
                             ),
                           ),
-                        DifficultyLevelTag(
-                          difficultyLevel: workout.difficultyLevel,
-                          fontSize: FONTSIZE.one,
-                          backgroundColor: contentOverlayColor,
-                          textColor: infoFontColor,
-                        ),
+                        if (workout.difficultyLevel != null)
+                          DifficultyLevelTag(
+                            difficultyLevel: workout.difficultyLevel!,
+                            fontSize: FONTSIZE.one,
+                            backgroundColor: contentOverlayColor,
+                            textColor: infoFontColor,
+                          ),
                       ],
                     ),
                   ],
@@ -160,8 +159,9 @@ class WorkoutCardFixedHeight extends StatelessWidget {
                 if (allTags.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: CommaSeparatedList(allTags,
-                        textColor: Styles.secondaryAccent),
+                    child: CommaSeparatedList(
+                      allTags,
+                    ),
                   )
               ],
             ),

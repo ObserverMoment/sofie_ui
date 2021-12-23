@@ -21,16 +21,16 @@ class UserPublicProfileDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = UserProfileByIdQuery(
-        variables: UserProfileByIdArguments(userId: userId));
+    final query =
+        UserProfileQuery(variables: UserProfileArguments(userId: userId));
 
-    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
+    return QueryObserver<UserProfile$Query, UserProfileArguments>(
         key: Key(
             'UserPublicProfileDetailsPage - ${query.operationName}-$userId'),
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          final userPublicProfile = data.userProfileById;
+          final userPublicProfile = data.userProfile;
 
           final profileIsPublic =
               userPublicProfile.userProfileScope == UserProfileScope.public;

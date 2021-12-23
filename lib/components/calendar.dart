@@ -16,7 +16,7 @@ class CalendarUI {
             TextStyle(color: context.theme.primary, height: 1, fontSize: 15));
     return CalendarStyle(
         markerDecoration: const BoxDecoration(
-            color: Styles.secondaryAccent, shape: BoxShape.circle),
+            color: Styles.primaryAccent, shape: BoxShape.circle),
         // https://github.com/aleksanderwozniak/table_calendar/issues/498
         defaultDecoration: kDefaultDecoration,
         weekendDecoration: kDefaultDecoration,

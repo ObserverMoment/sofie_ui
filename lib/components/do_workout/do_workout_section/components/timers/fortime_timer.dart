@@ -107,8 +107,7 @@ class ForTimeTimer extends StatelessWidget {
                                   ),
                                   backgroundColor:
                                       context.theme.primary.withOpacity(0.15),
-                                  linearGradient:
-                                      Styles.secondaryAccentGradient,
+                                  linearGradient: Styles.primaryAccentGradient,
                                   circularStrokeCap: CircularStrokeCap.round,
                                   percent: remainingOfCurrentMinute,
                                   radius: constraints.maxWidth / 1.6),

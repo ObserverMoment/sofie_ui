@@ -9,23 +9,7 @@ import 'package:supercharged/supercharged.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
-/// Extensions which pertain to the processing of fitness related data (i.e. the graphql types.)
-extension ClubExtension on Club {
-  int get totalMembers => 1 + admins.length + members.length;
-
-  ClubSummary get summary => ClubSummary()
-    ..$$typename = kClubSummaryTypeName
-    ..id = id
-    ..name = name
-    ..createdAt = createdAt
-    ..description = description
-    ..coverImageUri = coverImageUri
-    ..location = location
-    ..owner = owner
-    ..memberCount = totalMembers;
-}
-
-extension ClubMembersExtension on ClubMembers {
+extension ClubChatSummaryExtension on ClubChatSummary {
   int get totalMembers => 1 + admins.length + members.length;
 }
 
@@ -46,6 +30,15 @@ extension LoggedWorkoutExtension on LoggedWorkout {
 }
 
 extension MoveExtension on Move {
+  WorkoutMoveRepType get initialRepType =>
+      validRepTypes.contains(WorkoutMoveRepType.reps)
+          ? WorkoutMoveRepType.reps
+          : validRepTypes.contains(WorkoutMoveRepType.calories)
+              ? WorkoutMoveRepType.calories
+              : validRepTypes.contains(WorkoutMoveRepType.distance)
+                  ? WorkoutMoveRepType.distance
+                  : WorkoutMoveRepType.time;
+
   /// Can any of its equipments have a load input. [loadAdjustable] = true.
   bool get isLoadAdjustable =>
       requiredEquipments.any((e) => e.loadAdjustable) ||
@@ -139,7 +132,9 @@ extension WorkoutPlanExtension on WorkoutPlan {
     if (workouts.isEmpty) {
       return null;
     }
-    final average = workouts.averageBy((w) => w.difficultyLevel.numericValue);
+    final average = workouts
+        .where((w) => w.difficultyLevel != null)
+        .averageBy((w) => w.difficultyLevel!.numericValue);
     return DifficultyLevelExtension.levelFromNumber(average!);
   }
 
@@ -206,7 +201,9 @@ extension WorkoutPlanDayExtension on WorkoutPlanDay {
     if (workouts.isEmpty) {
       return null;
     }
-    final average = workouts.averageBy((w) => w.difficultyLevel.numericValue);
+    final average = workouts
+        .where((w) => w.difficultyLevel != null)
+        .averageBy((w) => w.difficultyLevel!.numericValue);
     return DifficultyLevelExtension.levelFromNumber(average!);
   }
 }

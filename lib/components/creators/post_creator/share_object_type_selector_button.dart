@@ -32,8 +32,8 @@ class ShareObjectTypeSelectorButton extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(60),
               child: SizedBox(
-                height: 100,
-                width: 100,
+                height: 90,
+                width: 90,
                 child: Image.asset(
                   assetImageUri,
                   fit: BoxFit.cover,

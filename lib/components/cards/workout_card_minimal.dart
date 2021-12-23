@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -71,8 +70,10 @@ class MinimalWorkoutCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                        DifficultyLevelDot(
-                            difficultyLevel: workout.difficultyLevel, size: 12),
+                        if (workout.difficultyLevel != null)
+                          DifficultyLevelDot(
+                              difficultyLevel: workout.difficultyLevel!,
+                              size: 12),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -92,7 +93,6 @@ class MinimalWorkoutCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 6.0),
                         child: CommaSeparatedList(
                           workout.equipments,
-                          textColor: Styles.primaryAccent,
                         ),
                       ),
                   ]),

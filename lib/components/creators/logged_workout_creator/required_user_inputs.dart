@@ -102,7 +102,7 @@ class _RequiredUserInputsState extends State<RequiredUserInputs> {
                           ),
                           MyText(
                             w.workoutSection.workoutSectionType.name,
-                            color: Styles.secondaryAccent,
+                            color: Styles.primaryAccent,
                             lineHeight: 1.5,
                           ),
                           Padding(

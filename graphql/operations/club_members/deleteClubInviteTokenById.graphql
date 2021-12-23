@@ -1,3 +1,0 @@
-mutation deleteClubInviteTokenById($id: ID!) {
-  deleteClubInviteTokenById(id: $id)
-}

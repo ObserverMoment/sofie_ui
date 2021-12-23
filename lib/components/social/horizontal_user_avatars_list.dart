@@ -5,7 +5,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class HorizontalUserAvatarsList extends StatelessWidget {
-  final List<UserSummary> users;
+  final List<UserAvatarData> users;
   final double avatarSize;
   const HorizontalUserAvatarsList(
       {Key? key, required this.users, this.avatarSize = 70.0})

@@ -7,7 +7,7 @@ mutation createWorkoutPlanEnrolment($workoutPlanId: ID!) {
         ...CompletedWorkoutPlanDayWorkout
       }
       User {
-        ...UserSummary
+        ...UserAvatarData
       }
     }
     WorkoutPlan {

@@ -16,14 +16,20 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 /// Allows the user to CRUD their set of [WorkoutTags]
 /// Works via a [QueryObserver] and the [GraphQL store] directly to update state.
 class WorkoutTagsManager extends StatefulWidget {
   /// When accessing this widget during the flow of adding tags to some other object we do not need the user to be able to update / delete all of their tags.
-  /// However, if being accessed from their profile or similar (i.e. they want to really manage their tags rather than just add a new tag to something) then this can be set false to give full functionality.
+  /// However, if being accessed from their profile or similar (i.e. they want to really manage their tags rather than just add a new tag to something) then this can be set false to give full functionality. Defaults to [true].
   final bool allowCreateTagOnly;
-  const WorkoutTagsManager({Key? key, this.allowCreateTagOnly = true})
+
+  /// Run after creating a tag - pass back to the calling widget.
+  /// i.e. When user is creating a workout tag it is expected that the new tag will be auto selected on return to the process.
+  final Function(WorkoutTag newTag)? onCreateNewTag;
+  const WorkoutTagsManager(
+      {Key? key, this.allowCreateTagOnly = true, this.onCreateNewTag})
       : super(key: key);
 
   @override
@@ -53,26 +59,27 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
 
     final result = await context.graphQLStore.create(
         mutation: CreateWorkoutTagMutation(variables: variables),
-        addRefToQueries: [UserWorkoutTagsQuery().operationName]);
+        addRefToQueries: [GQLOpNames.userWorkoutTags]);
 
     setState(() => _isLoading = false);
 
-    if (result.hasErrors || result.data == null) {
-      context.showToast(
-          message: 'Sorry, there was a problem creating the tag',
-          toastType: ToastType.destructive);
-    } else {
-      /// When creating only it makes sense to leave as soon as this is done.
-      if (widget.allowCreateTagOnly) {
-        context.pop();
-      } else {
-        context.showToast(
-            message: 'New tag created!', toastType: ToastType.success);
-        setState(() {
-          _tagNameController.text = '';
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry, there was a problem creating the tag',
+            toastType: ToastType.destructive),
+        onSuccess: () {
+          /// When creating only (i.e. not "managing tags" usually as part of a create workout / plan flow) it makes sense to leave as soon as this is done.
+          if (widget.allowCreateTagOnly) {
+            widget.onCreateNewTag?.call(result.data!.createWorkoutTag);
+            context.pop();
+          } else {
+            context.showToast(
+                message: 'New tag created!', toastType: ToastType.success);
+            setState(() {
+              _tagNameController.text = '';
+            });
+          }
         });
-      }
-    }
   }
 
   Future<void> _updateTag(WorkoutTag tag) async {
@@ -86,7 +93,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
             mutation: UpdateWorkoutTagMutation(variables: variables),
             broadcastQueryIds: [
           UserWorkoutTagsQuery().operationName,
-          GQLOpNames.workoutByIdQuery,
+          GQLOpNames.workoutById,
         ]);
 
     setState(() => _isLoading = false);
@@ -177,6 +184,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: MyTextFormFieldRow(
+                    autofocus: widget.allowCreateTagOnly,
                     backgroundColor: context.theme.cardBackground,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.text,

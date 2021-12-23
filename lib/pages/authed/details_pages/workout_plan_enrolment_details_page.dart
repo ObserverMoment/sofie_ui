@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
@@ -74,11 +73,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
     final result = await context.graphQLStore.mutate(
         mutation: CreateScheduleForPlanEnrolmentMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.userScheduledWorkoutsQuery,
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     checkOperationResult(
@@ -109,11 +108,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
     final result = await context.graphQLStore.mutate(
         mutation: ClearScheduleForPlanEnrolmentMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.userScheduledWorkoutsQuery,
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     checkOperationResult(
@@ -145,10 +144,10 @@ class _WorkoutPlanEnrolmentDetailsPageState
         mutation:
             ClearWorkoutPlanEnrolmentProgressMutation(variables: variables),
         refetchQueryIds: [
-          GQLOpNames.workoutPlanEnrolmentsQuery
+          GQLOpNames.workoutPlanEnrolments
         ],
         broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     checkOperationResult(
@@ -205,11 +204,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
           context.graphQLStore.writeDataToStore(data: plan.toJson());
         },
         broadcastQueryIds: [
-          GQLOpNames.workoutPlanEnrolmentsQuery,
-          GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id)
+          GQLOpNames.workoutPlanEnrolments,
+          GQLVarParamKeys.workoutPlanById(workoutPlan.id)
         ],
         clearQueryDataAtKeys: [
-          GQLVarParamKeys.workoutPlanEnrolmentByIdQuery(widget.id),
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
         ]);
 
     if (result.hasErrors) {
@@ -382,7 +381,7 @@ class _YourReviewDisplay extends StatelessWidget {
                   mini: true,
                   prefix: const Icon(
                     CupertinoIcons.star_fill,
-                    color: Styles.secondaryAccent,
+                    color: Styles.primaryAccent,
                     size: 14,
                   ),
                   text: 'Edit Review',
@@ -415,7 +414,7 @@ class _YourReviewDisplay extends StatelessWidget {
                     mini: true,
                     prefix: const Icon(
                       CupertinoIcons.star_fill,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                       size: 14,
                     ),
                     text: 'Leave Review',

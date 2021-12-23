@@ -88,9 +88,7 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
         ..reps = _activeWorkoutMove!.reps
         ..repType = move.validRepTypes.contains(_activeWorkoutMove!.repType)
             ? _activeWorkoutMove!.repType
-            : move.validRepTypes.contains(WorkoutMoveRepType.reps)
-                ? WorkoutMoveRepType.reps
-                : move.validRepTypes.first
+            : move.initialRepType
         ..distanceUnit = _activeWorkoutMove!.distanceUnit
         ..loadUnit = _activeWorkoutMove!.loadUnit
         ..timeUnit = _activeWorkoutMove!.timeUnit

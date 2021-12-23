@@ -36,7 +36,7 @@ class LogCountByWorkoutOverlayDisplay extends StatelessWidget {
   final int count;
   final double opacity;
   const LogCountByWorkoutOverlayDisplay(
-      {Key? key, required this.count, this.opacity = 0.6})
+      {Key? key, required this.count, this.opacity = 0.75})
       : super(key: key);
 
   @override

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -28,9 +27,13 @@ class ParticipantCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      UserAvatar(
-                        size: 40,
-                        avatarUri: user.avatarUri,
+                      GestureDetector(
+                        onTap: () => context.navigateTo(
+                            UserPublicProfileDetailsRoute(userId: user.id)),
+                        child: UserAvatar(
+                          size: 40,
+                          avatarUri: user.avatarUri,
+                        ),
                       ),
                       const SizedBox(width: 12),
                       Flexible(
@@ -51,12 +54,6 @@ class ParticipantCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (user.userProfileScope == UserProfileScope.public)
-                  BorderButton(
-                      mini: true,
-                      text: 'Profile',
-                      onPressed: () => context.navigateTo(
-                          UserPublicProfileDetailsRoute(userId: user.id)))
               ],
             ),
             const SizedBox(height: 4),

@@ -37,6 +37,7 @@ class ClubCreatorMedia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       shrinkWrap: true,
       children: [
         const SizedBox(height: 6),

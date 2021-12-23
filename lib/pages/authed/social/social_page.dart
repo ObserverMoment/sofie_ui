@@ -20,7 +20,6 @@ class SocialPage extends StatelessWidget {
               const ChatsIconButton(),
               const SizedBox(width: 16),
               FloatingButton(
-                  contentColor: Styles.white,
                   onTap: () => context.navigateTo(const YourPostsRoute()),
                   icon: CupertinoIcons.tray_arrow_up),
               const SizedBox(width: 16),

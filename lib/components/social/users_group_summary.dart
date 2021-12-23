@@ -7,7 +7,7 @@ import 'package:sofie_ui/services/utils.dart';
 /// Displays a horizontal list of small user avatars, up to a maximum, then + more indicator.
 /// Standard for showing members of a group / enrolments etc.
 class UsersGroupSummary extends StatelessWidget {
-  final List<UserSummary> users;
+  final List<UserAvatarData> users;
   final int showMax;
   final String? subtitle;
   final double avatarSize;

@@ -5,7 +5,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:collection/collection.dart';
 
-/// Converts a workout to a logged workout.
+/// Converts a workout to a logged workout - with the currently logged in User.
 LoggedWorkout loggedWorkoutFromWorkout(
     {required Workout workout,
     ScheduledWorkout? scheduledWorkout,
@@ -27,6 +27,7 @@ LoggedWorkout loggedWorkoutFromWorkout(
                 loggedWorkoutSectionFromWorkoutSection(workoutSection: ws))
             .toList()
         : []
+    // ..user = work
     ..workoutGoals = workout.workoutGoals;
 }
 

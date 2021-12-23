@@ -1,5 +1,0 @@
-query userBenchmarkTags {
-  userBenchmarkTags {
-    ...UserBenchmarkTag
-  }
-}

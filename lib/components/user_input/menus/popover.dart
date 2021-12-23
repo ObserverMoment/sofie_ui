@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:popover/popover.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
@@ -12,7 +9,12 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 class PopoverMenu extends StatelessWidget {
   final Widget button;
   final List<PopoverMenuItem> items;
-  const PopoverMenu({Key? key, required this.button, required this.items})
+  final PopoverDirection popoverDirection;
+  const PopoverMenu(
+      {Key? key,
+      required this.button,
+      required this.items,
+      this.popoverDirection = PopoverDirection.bottom})
       : super(key: key);
 
   @override
@@ -21,23 +23,21 @@ class PopoverMenu extends StatelessWidget {
         context.theme.cardBackground.withOpacity(0.99);
     return GestureDetector(
       child: button,
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         showPopover(
           context: context,
           transitionDuration: const Duration(milliseconds: 150),
           bodyBuilder: (context) => ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-              child: PopoverMenuContainer(
-                items: items,
-              ),
+            child: PopoverMenuContainer(
+              items: items,
             ),
           ),
           backgroundColor: backgroundColor,
-          barrierColor: Colors.transparent,
+          barrierColor: Styles.black.withOpacity(0.2),
           radius: 16,
-          direction: PopoverDirection.top,
+          direction: popoverDirection,
           arrowHeight: 10,
           arrowWidth: 0,
         );
@@ -93,7 +93,7 @@ class PopoverMenuItem extends StatelessWidget {
       this.confirm = false,
       this.isLast = false,
       this.destructive = false,
-      required this.isActive})
+      this.isActive = false})
       : assert(!(confirm && destructive)),
         super(key: key);
 
@@ -125,7 +125,7 @@ class PopoverMenuItem extends StatelessWidget {
                     child: Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Icon(CupertinoIcons.circle_fill,
-                      size: 10, color: Styles.secondaryAccent),
+                      size: 10, color: Styles.primaryAccent),
                 ))
             ],
           ),

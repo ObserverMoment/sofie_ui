@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/user_input/selectors/collection_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 
@@ -45,8 +46,12 @@ class CollectionManager {
         child: CollectionSelector(
             title: 'Save to Collection',
             selectCollection: (collection) {
-              if (object is WorkoutSummary) {
+              if (object is Workout) {
+                addWorkoutToCollection(context, collection, object.summary);
+              } else if (object is WorkoutSummary) {
                 addWorkoutToCollection(context, collection, object);
+              } else if (object is WorkoutPlan) {
+                addWorkoutPlanToCollection(context, collection, object.summary);
               } else if (object is WorkoutPlanSummary) {
                 addWorkoutPlanToCollection(context, collection, object);
               } else {
@@ -67,8 +72,13 @@ class CollectionManager {
         verb: 'Remove',
         isDestructive: true,
         onConfirm: () {
-          if (object is WorkoutSummary) {
+          if (object is Workout) {
+            removeWorkoutFromCollection(context, collection, object.summary);
+          } else if (object is WorkoutSummary) {
             removeWorkoutFromCollection(context, collection, object);
+          } else if (object is WorkoutPlan) {
+            removeWorkoutPlanFromCollection(
+                context, collection, object.summary);
           } else if (object is WorkoutPlanSummary) {
             removeWorkoutPlanFromCollection(context, collection, object);
           } else {
@@ -94,7 +104,7 @@ class CollectionManager {
         mutation: AddWorkoutToCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -123,7 +133,7 @@ class CollectionManager {
         mutation: RemoveWorkoutFromCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -154,7 +164,7 @@ class CollectionManager {
         mutation: AddWorkoutPlanToCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -183,7 +193,7 @@ class CollectionManager {
         mutation: RemoveWorkoutPlanFromCollectionMutation(variables: variables),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {

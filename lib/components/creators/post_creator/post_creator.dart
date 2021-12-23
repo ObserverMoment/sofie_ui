@@ -166,7 +166,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
     setState(() => _activePageIndex = index);
   }
 
-  UserSummary _getSelectedObjectCreator() {
+  UserAvatarData _getSelectedObjectCreator() {
     switch (_selectedObjectType) {
       case TimelinePostType.workout:
         return _workout!.user;
@@ -316,9 +316,9 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
                           assetImageUri: 'assets/placeholder_images/plan.jpg',
                           onPressed: () => context.navigateTo(
                                 YourPlansRoute(
-                                    selectPlan: _selectWorkoutPlan,
-                                    showCreateButton: true,
-                                    showJoined: false),
+                                  selectPlan: _selectWorkoutPlan,
+                                  showCreateButton: true,
+                                ),
                               ))
                     ],
                   ),

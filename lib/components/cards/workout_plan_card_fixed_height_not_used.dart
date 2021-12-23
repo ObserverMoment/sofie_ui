@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
@@ -152,7 +150,7 @@ class WorkoutPlanCardFixedHeight extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: CommaSeparatedList(allTags,
-                              textColor: Styles.secondaryAccent),
+                              textColor: Styles.primaryAccent),
                         ),
                       if (workoutPlan.workoutPlanDays.isNotEmpty)
                         Padding(

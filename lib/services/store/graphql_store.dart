@@ -288,6 +288,14 @@ class GraphQLStore {
   }) async {
     final response = await execute(mutation);
 
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
+
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
@@ -323,25 +331,25 @@ class GraphQLStore {
   Future<OperationResult<TData>?>
       query<TData, TVars extends json.JsonSerializable>({
     required GraphQLQuery<TData, TVars> query,
-    // bool writeToStore = true,
     List<String> broadcastQueryIds = const [],
   }) async {
     final response = await execute(query);
 
-    final result = OperationResult<TData>(
-        data: query.parse(response.data ?? {}), errors: response.errors);
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
 
-    if (!result.hasErrors && result.data != null) {
-      /// Check for a top level field alias - these are needed sometimes due to the way Artemis generates return types for operations.
-      final alias = extractRootFieldAliasFromOperation(query);
-      final data = response.data![alias ?? query.operationName];
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
+    if (!hasErrors) {
       /// Important! [normalizeOperation.variables] is by default in alphabetical order.
       /// i.e. [userPublicProfiles({"cursor":null,"take":null})]
       /// vs [userPublicProfiles({"take":null,"cursor":null})]
       /// These will be different keys as far as the store is concerned.
       normalizeOperation(
-          data: data,
+          data: response.data ?? {},
           document: query.document,
           variables: query.getVariablesMap(),
           typePolicies: _typePolicies,
@@ -352,6 +360,9 @@ class GraphQLStore {
         broadcastQueriesByIds(broadcastQueryIds);
       }
     }
+
+    final result = OperationResult<TData>(
+        data: query.parse(response.data ?? {}), errors: response.errors);
 
     return result;
   }
@@ -462,6 +473,14 @@ class GraphQLStore {
       List<String> broadcastQueryIds = const []}) async {
     final response = await execute(mutation);
 
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
+
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
@@ -507,6 +526,14 @@ class GraphQLStore {
       List<String> clearQueryDataAtKeys = const [],
       List<String> broadcastQueryIds = const []}) async {
     final response = await execute(mutation);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
 
     /// [result][data][operationName] should always be a list of deleted IDs being returned from the API.
     final result = OperationResult<TData>(

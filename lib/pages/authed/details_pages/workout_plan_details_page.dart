@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
@@ -60,7 +59,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
 
           context.graphQLStore.writeDataToStore(
             data: enrolmentSummary.toJson(),
-            addRefToQueries: [GQLOpNames.workoutPlanEnrolmentsQuery],
+            addRefToQueries: [GQLOpNames.workoutPlanEnrolments],
           );
 
           /// Write the workoutPlan with the updated enrolment to store.
@@ -69,9 +68,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             data: data.createWorkoutPlanEnrolment.workoutPlan.toJson(),
           );
         },
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id)
-        ]);
+        broadcastQueryIds: [GQLVarParamKeys.workoutPlanById(workoutPlan.id)]);
 
     checkOperationResult(context, result,
         onSuccess: () =>
@@ -108,9 +105,9 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
 
               // Rebroadcast all queries that may be affected.
               context.graphQLStore.broadcastQueriesByIds([
-                GQLOpNames.userWorkoutPlansQuery,
-                GQLOpNames.userCollectionsQuery,
-                GQLOpNames.userClubsQuery,
+                GQLOpNames.userWorkoutPlans,
+                GQLOpNames.userCollections,
+                GQLOpNames.userClubs,
               ]);
 
               // Update WorkoutPlan and workoutPlanById query
@@ -118,10 +115,10 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                 ...workoutPlan.summary.toJson(),
                 'archived': true
               }, broadcastQueryIds: [
-                GQLVarParamKeys.workoutPlanByIdQuery(widget.id)
+                GQLVarParamKeys.workoutPlanById(widget.id)
               ]);
             },
-            addRefToQueries: [GQLOpNames.userArchivedWorkoutPlansQuery],
+            addRefToQueries: [GQLOpNames.userArchivedWorkoutPlans],
           );
 
           checkOperationResult(context, result,
@@ -149,7 +146,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
               // Add a WorkoutPlanSummary to store and to userWorkoutPlansQuery
               context.graphQLStore.writeDataToStore(
                 data: data.unarchiveWorkoutPlanById.summary.toJson(),
-                addRefToQueries: [GQLOpNames.userWorkoutPlansQuery],
+                addRefToQueries: [GQLOpNames.userWorkoutPlans],
               );
 
               final archivedWorkoutPlan = {
@@ -163,10 +160,10 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
 
               context.graphQLStore.removeRefFromQueryData(
                   data: archivedWorkoutPlan,
-                  queryIds: [GQLOpNames.userArchivedWorkoutPlansQuery]);
+                  queryIds: [GQLOpNames.userArchivedWorkoutPlans]);
             },
             broadcastQueryIds: [
-              GQLVarParamKeys.workoutPlanByIdQuery(widget.id),
+              GQLVarParamKeys.workoutPlanById(widget.id),
             ],
           );
 
@@ -281,9 +278,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                   imageUri: workoutPlan.coverImageUri,
                                 ),
                                 items: [
-                                  if (!isOwner &&
-                                      workoutPlan.user.userProfileScope ==
-                                          UserProfileScope.public)
+                                  if (!isOwner)
                                     BottomSheetMenuItem(
                                         text: 'View creator',
                                         icon: const Icon(

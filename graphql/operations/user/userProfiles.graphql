@@ -6,7 +6,10 @@ query userProfiles($cursor: ID, $take: Int) {
     Clubs {
       ...ClubSummary
       Owner {
-        ...UserSummary
+        ...UserAvatarData
+      }
+      Admins {
+        ...UserAvatarData
       }
     }
   }

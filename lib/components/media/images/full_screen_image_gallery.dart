@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -36,11 +38,19 @@ class FullScreenImageGallery extends StatefulWidget {
 class _FullScreenImageGalleryState extends State<FullScreenImageGallery> {
   late PageController _pageController;
   late int _activeIndex;
+  bool _showSwipeIndicator = false;
 
   @override
   void initState() {
     _pageController = PageController(initialPage: widget.initialPageIndex);
     _activeIndex = widget.initialPageIndex;
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      setState(() => _showSwipeIndicator = true);
+      Future.delayed(const Duration(milliseconds: 1500),
+          () => setState(() => _showSwipeIndicator = false));
+    });
+
     super.initState();
   }
 
@@ -62,48 +72,76 @@ class _FullScreenImageGalleryState extends State<FullScreenImageGallery> {
                 middle: NavBarTitle(widget.pageTitle),
               )
             : null,
-        child: Column(
+        child: Stack(
+          alignment: Alignment.center,
           children: [
-            Expanded(
-              child: PhotoViewGallery.builder(
-                pageController: _pageController,
-                onPageChanged: (newIndex) =>
-                    setState(() => _activeIndex = newIndex),
-                scrollPhysics: const BouncingScrollPhysics(),
-                scrollDirection: widget.scrollDirection,
-                backgroundDecoration:
-                    BoxDecoration(color: context.theme.background),
-                gaplessPlayback: true,
-                builder: (context, index) {
-                  return PhotoViewGalleryPageOptions(
-                    imageProvider: UploadcareImageProvider(
-                        widget.fileIds[index],
-                        transformations: [
-                          PreviewTransformation(
-                              Dimensions(width.toInt(), height.toInt()))
-                        ]),
-                    initialScale: PhotoViewComputedScale.contained,
-                  );
-                },
-                itemCount: widget.fileIds.length,
-                loadingBuilder: (context, event) => const Center(
-                  child: SizedBox(
-                    width: 20.0,
-                    height: 20.0,
-                    child: LoadingCircle(),
+            Column(
+              children: [
+                Expanded(
+                  child: PhotoViewGallery.builder(
+                    pageController: _pageController,
+                    onPageChanged: (newIndex) =>
+                        setState(() => _activeIndex = newIndex),
+                    scrollPhysics: const BouncingScrollPhysics(),
+                    scrollDirection: widget.scrollDirection,
+                    backgroundDecoration:
+                        BoxDecoration(color: context.theme.background),
+                    gaplessPlayback: true,
+                    builder: (context, index) {
+                      return PhotoViewGalleryPageOptions(
+                        imageProvider: UploadcareImageProvider(
+                            widget.fileIds[index],
+                            transformations: [
+                              PreviewTransformation(
+                                  Dimensions(width.toInt(), height.toInt()))
+                            ]),
+                        initialScale: PhotoViewComputedScale.contained,
+                      );
+                    },
+                    itemCount: widget.fileIds.length,
+                    loadingBuilder: (context, event) => const Center(
+                      child: SizedBox(
+                        width: 20.0,
+                        height: 20.0,
+                        child: LoadingCircle(),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                if (widget.showProgressDots)
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: BasicProgressDots(
+                      numDots: widget.fileIds.length,
+                      currentIndex: _activeIndex,
+                      dotSize: 16,
+                    ),
+                  )
+              ],
             ),
-            if (widget.showProgressDots)
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: BasicProgressDots(
-                  numDots: widget.fileIds.length,
-                  currentIndex: _activeIndex,
-                  dotSize: 16,
-                ),
-              )
+            if (_showSwipeIndicator)
+              SizeFadeIn(
+                  duration: 500,
+                  child: ContentBox(
+                      backgroundColor: Styles.black.withOpacity(0.7),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          MyText(
+                            widget.scrollDirection == Axis.horizontal
+                                ? 'SWIPE RIGHT'
+                                : 'SWIPE DOWN',
+                            color: Styles.white,
+                          ),
+                          const SizedBox(width: 6, height: 6),
+                          Icon(
+                            widget.scrollDirection == Axis.horizontal
+                                ? CupertinoIcons.arrow_right
+                                : CupertinoIcons.arrow_down,
+                            color: Styles.white,
+                          )
+                        ],
+                      )))
           ],
         ));
   }

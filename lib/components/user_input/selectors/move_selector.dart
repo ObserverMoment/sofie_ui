@@ -3,10 +3,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/move_list_item.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/move_filters_bloc.dart';
@@ -130,110 +132,112 @@ class _MoveSelectorState extends State<MoveSelector> {
                       /// Required because in [WorkoutMoveCreator] this [MoveSelecter] sits as a sibling to another widget which also has a [CupertinoNavBar] - which was causing an 'identical hero tags in tree error'.
                       transitionBetweenRoutes: false,
                       leading: NavBarCancelButton(widget.onCancel),
-                      middle: NavBarTitle(widget.pageTitle),
-                      trailing: NavBarTrailingRow(children: [
-                        FilterButton(
-                          hasActiveFilters: moveFiltersBloc.hasActiveFilters,
-                          onPressed: () => context.push(
-                              fullscreenDialog: true,
-                              child: const MoveFiltersScreen()),
-                        ),
-                        if (widget.showCreateCustomMoveButton)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: CreateIconButton(
-                                onPressed: () => _openCustomMoveCreator(null)),
-                          ),
-                      ]),
+                      middle: NavBarLargeTitle(widget.pageTitle),
                     ),
-                    child: Column(
-                      children: [
-                        if (widget.includeCustomMoves)
+                    child: FABPage(
+                      rowButtonsAlignment: MainAxisAlignment.end,
+                      columnButtons: [
+                        FloatingButton(
+                            gradient: Styles.primaryAccentGradient,
+                            contentColor: Styles.white,
+                            icon: CupertinoIcons.add,
+                            onTap: () =>
+                                context.navigateTo(CustomMoveCreatorRoute())),
+                      ],
+                      rowButtons: [
+                        if (moveFiltersBloc.hasActiveFilters)
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Row(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: FadeInUp(
+                              child: FloatingButton(
+                                  onTap: () => context
+                                      .read<MoveFiltersBloc>()
+                                      .clearAllFilters(),
+                                  icon: CupertinoIcons.clear),
+                            ),
+                          ),
+                        FloatingButton(
+                            onTap: () =>
+                                context.push(child: const MoveFiltersScreen()),
+                            text: moveFiltersBloc.numActiveFilters == 0
+                                ? null
+                                : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
+                            contentColor: moveFiltersBloc.hasActiveFilters
+                                ? Styles.primaryAccent
+                                : null,
+                            icon: CupertinoIcons.slider_horizontal_3),
+                      ],
+                      child: Column(
+                        children: [
+                          if (widget.includeCustomMoves)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: MySlidingSegmentedControl<int>(
+                                          value: _activeTabIndex,
+                                          children: const {
+                                            0: 'Standard',
+                                            1: 'Custom'
+                                          },
+                                          updateValue: (i) => setState(
+                                              () => _activeTabIndex = i)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: MyCupertinoSearchTextField(
+                              placeholder: 'Search moves library',
+                              onChanged: (value) => setState(
+                                  () => _searchString = value.toLowerCase()),
+                            ),
+                          ),
+                          if (filteredMoves.isEmpty)
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: MySlidingSegmentedControl<int>(
-                                        value: _activeTabIndex,
-                                        children: const {
-                                          0: 'Standard',
-                                          1: 'Custom'
-                                        },
-                                        updateValue: (i) => setState(
-                                            () => _activeTabIndex = i)),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: MyText(
+                                    _activeTabIndex == 0
+                                        ? 'No moves found. Create a custom move?'
+                                        : 'No moves found',
+                                    maxLines: 3,
+                                    subtext: true,
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: MyCupertinoSearchTextField(
-                            placeholder: 'Search moves library',
-                            onChanged: (value) => setState(
-                                () => _searchString = value.toLowerCase()),
-                          ),
-                        ),
-                        GrowInOut(
-                            show: moveFiltersBloc.hasActiveFilters,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TertiaryButton(
-                                  onPressed: () => context.push(
-                                      child: const MoveFiltersScreen()),
-                                  text: 'Update Filters',
-                                ),
-                                const SizedBox(width: 8),
-                                TertiaryButton(
-                                  onPressed: () => context
-                                      .read<MoveFiltersBloc>()
-                                      .clearAllFilters(),
-                                  text: 'Clear Filters',
-                                ),
-                              ],
-                            )),
-                        if (filteredMoves.isEmpty)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: MyText(
-                                  _activeTabIndex == 0
-                                      ? 'No moves found. Create a custom move?'
-                                      : 'No moves found',
-                                  maxLines: 3,
-                                  subtext: true,
+                            )
+                          else
+                            Expanded(
+                              child: FadeIn(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  children: filteredMoves
+                                      .sortedBy<String>((move) => move.name)
+                                      .map((move) => GestureDetector(
+                                          onTap: () {
+                                            Utils.hideKeyboard(context);
+                                            widget.selectMove(move);
+                                          },
+                                          child: MoveListItem(
+                                              move: move,
+                                              optionalButton:
+                                                  _buildButton(move))))
+                                      .toList(),
                                 ),
                               ),
-                            ],
-                          )
-                        else
-                          Expanded(
-                            child: FadeIn(
-                              child: ListView(
-                                shrinkWrap: true,
-                                children: filteredMoves
-                                    .sortedBy<String>((move) => move.name)
-                                    .map((move) => GestureDetector(
-                                        onTap: () {
-                                          Utils.hideKeyboard(context);
-                                          widget.selectMove(move);
-                                        },
-                                        child: MoveListItem(
-                                            move: move,
-                                            optionalButton:
-                                                _buildButton(move))))
-                                    .toList(),
-                              ),
                             ),
-                          ),
-                      ],
+                        ],
+                      ),
                     ));
               });
         });

@@ -77,10 +77,13 @@ class WorkoutTagsSelectorRow extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 16.0, bottom: 2),
                 child: Wrap(
-                  spacing: 4,
-                  runSpacing: 4,
+                  spacing: 6,
+                  runSpacing: 6,
                   children: selectedWorkoutTags
-                      .map((g) => FadeIn(child: Tag(tag: g.tag)))
+                      .map((g) => FadeIn(
+                              child: Tag(
+                            tag: g.tag,
+                          )))
                       .toList(),
                 ),
               ))
@@ -122,7 +125,10 @@ class _WorkoutTagsSelectorState extends State<WorkoutTagsSelector> {
   }
 
   void _openCreateNewTag() {
-    context.push(child: const WorkoutTagsManager());
+    context.push(
+        child: WorkoutTagsManager(
+      onCreateNewTag: (tag) => _updateSelected(tag),
+    ));
   }
 
   @override
@@ -197,7 +203,7 @@ class _SelectableWorkoutTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),

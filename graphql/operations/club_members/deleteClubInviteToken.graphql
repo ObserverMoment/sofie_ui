@@ -1,0 +1,9 @@
+mutation deleteClubInviteToken($data: DeleteClubInviteTokenInput!) {
+  deleteClubInviteToken(data: $data) {
+    __typename
+    id
+    tokens {
+      ...ClubInviteToken
+    }
+  }
+}

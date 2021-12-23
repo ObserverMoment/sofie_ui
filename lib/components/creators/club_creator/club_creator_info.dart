@@ -8,7 +8,7 @@ import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class ClubCreatorInfo extends StatelessWidget {
-  final Club club;
+  final ClubSummary club;
   final void Function(Map<String, dynamic> data) updateClub;
 
   const ClubCreatorInfo(
