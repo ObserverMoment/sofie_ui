@@ -627,10 +627,10 @@ mixin TimelinePostObjectDataObjectMixin {
   @JsonKey(unknownEnumValue: TimelinePostType.artemisUnknown)
   late TimelinePostType type;
   late String name;
-  String? introAudioUri;
-  String? coverImageUri;
-  String? introVideoUri;
-  String? introVideoThumbUri;
+  String? audioUri;
+  String? imageUri;
+  String? videoUri;
+  String? videoThumbUri;
 }
 mixin WorkoutMixin {
   @JsonKey(name: '__typename')
@@ -686,6 +686,22 @@ mixin ClubInviteTokenMixin {
   late bool active;
   late int inviteLimit;
   late List<String> joinedUserIds;
+}
+mixin ClubAnnouncementMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String description;
+  String? imageUri;
+  String? audioUri;
+  String? videoUri;
+  String? videoThumbUri;
+  @JsonKey(name: 'User')
+  late UserAvatarData user;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -5190,18 +5206,18 @@ class UserProfile extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserProfileById$Query extends JsonSerializable with EquatableMixin {
-  UserProfileById$Query();
+class UserProfile$Query extends JsonSerializable with EquatableMixin {
+  UserProfile$Query();
 
-  factory UserProfileById$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileById$QueryFromJson(json);
+  factory UserProfile$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserProfile$QueryFromJson(json);
 
-  late UserProfile userProfileById;
+  late UserProfile userProfile;
 
   @override
-  List<Object?> get props => [userProfileById];
+  List<Object?> get props => [userProfile];
   @override
-  Map<String, dynamic> toJson() => _$UserProfileById$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$UserProfile$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -5760,24 +5776,6 @@ class UpdateUserBenchmarkEntryInput extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkEntryById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkEntryById$Mutation();
-
-  factory DeleteUserBenchmarkEntryById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkEntryById$MutationFromJson(json);
-
-  late String deleteUserBenchmarkEntryById;
-
-  @override
-  List<Object?> get props => [deleteUserBenchmarkEntryById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkEntryById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UserBenchmark extends JsonSerializable
     with EquatableMixin, UserBenchmarkMixin {
   UserBenchmark();
@@ -5903,24 +5901,6 @@ class CreateUserBenchmarkInput extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkById$Mutation();
-
-  factory DeleteUserBenchmarkById$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkById$MutationFromJson(json);
-
-  late String deleteUserBenchmarkById;
-
-  @override
-  List<Object?> get props => [deleteUserBenchmarkById];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UserBenchmarks$Query extends JsonSerializable with EquatableMixin {
   UserBenchmarks$Query();
 
@@ -5933,21 +5913,6 @@ class UserBenchmarks$Query extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [userBenchmarks];
   @override
   Map<String, dynamic> toJson() => _$UserBenchmarks$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkById$Query extends JsonSerializable with EquatableMixin {
-  UserBenchmarkById$Query();
-
-  factory UserBenchmarkById$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkById$QueryFromJson(json);
-
-  late UserBenchmark userBenchmarkById;
-
-  @override
-  List<Object?> get props => [userBenchmarkById];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkById$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -6500,16 +6465,8 @@ class TimelinePostObjectDataObject extends JsonSerializable
       _$TimelinePostObjectDataObjectFromJson(json);
 
   @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        type,
-        name,
-        introAudioUri,
-        coverImageUri,
-        introVideoUri,
-        introVideoThumbUri
-      ];
+  List<Object?> get props =>
+      [$$typename, id, type, name, audioUri, imageUri, videoUri, videoThumbUri];
   @override
   Map<String, dynamic> toJson() => _$TimelinePostObjectDataObjectToJson(this);
 }
@@ -7608,6 +7565,211 @@ class DeleteClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$DeleteClubInviteTokenInputToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class DeleteUserBenchmarkEntry$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserBenchmarkEntry$Mutation();
+
+  factory DeleteUserBenchmarkEntry$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserBenchmarkEntry$MutationFromJson(json);
+
+  late String deleteUserBenchmarkEntry;
+
+  @override
+  List<Object?> get props => [deleteUserBenchmarkEntry];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserBenchmarkEntry$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserBenchmark$Query extends JsonSerializable with EquatableMixin {
+  UserBenchmark$Query();
+
+  factory UserBenchmark$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmark$QueryFromJson(json);
+
+  late UserBenchmark userBenchmark;
+
+  @override
+  List<Object?> get props => [userBenchmark];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmark$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserBenchmark$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserBenchmark$Mutation();
+
+  factory DeleteUserBenchmark$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserBenchmark$MutationFromJson(json);
+
+  late String deleteUserBenchmark;
+
+  @override
+  List<Object?> get props => [deleteUserBenchmark];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserBenchmark$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubAnnouncement extends JsonSerializable
+    with EquatableMixin, ClubAnnouncementMixin {
+  ClubAnnouncement();
+
+  factory ClubAnnouncement.fromJson(Map<String, dynamic> json) =>
+      _$ClubAnnouncementFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        description,
+        imageUri,
+        audioUri,
+        videoUri,
+        videoThumbUri,
+        user
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$ClubAnnouncementToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubAnnouncement$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateClubAnnouncement$Mutation();
+
+  factory UpdateClubAnnouncement$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubAnnouncement$MutationFromJson(json);
+
+  late ClubAnnouncement updateClubAnnouncement;
+
+  @override
+  List<Object?> get props => [updateClubAnnouncement];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateClubAnnouncement$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubAnnouncementMixin$UserAvatarData extends JsonSerializable
+    with EquatableMixin, UserAvatarDataMixin {
+  ClubAnnouncementMixin$UserAvatarData();
+
+  factory ClubAnnouncementMixin$UserAvatarData.fromJson(
+          Map<String, dynamic> json) =>
+      _$ClubAnnouncementMixin$UserAvatarDataFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, avatarUri, displayName];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$ClubAnnouncementMixin$UserAvatarDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubAnnouncementInput extends JsonSerializable with EquatableMixin {
+  UpdateClubAnnouncementInput(
+      {this.audioUri,
+      this.description,
+      required this.id,
+      this.imageUri,
+      this.videoThumbUri,
+      this.videoUri});
+
+  factory UpdateClubAnnouncementInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubAnnouncementInputFromJson(json);
+
+  String? audioUri;
+
+  String? description;
+
+  late String id;
+
+  String? imageUri;
+
+  String? videoThumbUri;
+
+  String? videoUri;
+
+  @override
+  List<Object?> get props =>
+      [audioUri, description, id, imageUri, videoThumbUri, videoUri];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateClubAnnouncementInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubAnnouncement$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateClubAnnouncement$Mutation();
+
+  factory CreateClubAnnouncement$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubAnnouncement$MutationFromJson(json);
+
+  late ClubAnnouncement createClubAnnouncement;
+
+  @override
+  List<Object?> get props => [createClubAnnouncement];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateClubAnnouncement$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubAnnouncementInput extends JsonSerializable with EquatableMixin {
+  CreateClubAnnouncementInput(
+      {required this.club,
+      this.audioUri,
+      required this.description,
+      this.imageUri,
+      this.videoThumbUri,
+      this.videoUri});
+
+  factory CreateClubAnnouncementInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubAnnouncementInputFromJson(json);
+
+  @JsonKey(name: 'Club')
+  late ConnectRelationInput club;
+
+  String? audioUri;
+
+  late String description;
+
+  String? imageUri;
+
+  String? videoThumbUri;
+
+  String? videoUri;
+
+  @override
+  List<Object?> get props =>
+      [club, audioUri, description, imageUri, videoThumbUri, videoUri];
+  @override
+  Map<String, dynamic> toJson() => _$CreateClubAnnouncementInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteClubAnnouncement$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteClubAnnouncement$Mutation();
+
+  factory DeleteClubAnnouncement$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubAnnouncement$MutationFromJson(json);
+
+  late String deleteClubAnnouncement;
+
+  @override
+  List<Object?> get props => [deleteClubAnnouncement];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteClubAnnouncement$MutationToJson(this);
+}
+
 enum ContentAccessScope {
   @JsonValue('PRIVATE')
   private,
@@ -7747,6 +7909,8 @@ enum BenchmarkType {
   artemisUnknown,
 }
 enum TimelinePostType {
+  @JsonValue('ANNOUNCEMENT')
+  announcement,
   @JsonValue('WORKOUT')
   workout,
   @JsonValue('WORKOUTPLAN')
@@ -36072,25 +36236,25 @@ class UpdateUserProfileMutation extends GraphQLQuery<UpdateUserProfile$Mutation,
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserProfileByIdArguments extends JsonSerializable with EquatableMixin {
-  UserProfileByIdArguments({required this.userId});
+class UserProfileArguments extends JsonSerializable with EquatableMixin {
+  UserProfileArguments({required this.userId});
 
   @override
-  factory UserProfileByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileByIdArgumentsFromJson(json);
+  factory UserProfileArguments.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileArgumentsFromJson(json);
 
   late String userId;
 
   @override
   List<Object?> get props => [userId];
   @override
-  Map<String, dynamic> toJson() => _$UserProfileByIdArgumentsToJson(this);
+  Map<String, dynamic> toJson() => _$UserProfileArgumentsToJson(this);
 }
 
-final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
+final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'userProfileById'),
+      name: NameNode(value: 'userProfile'),
       variableDefinitions: [
         VariableDefinitionNode(
             variable: VariableNode(name: NameNode(value: 'userId')),
@@ -36101,7 +36265,7 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
-            name: NameNode(value: 'userProfileById'),
+            name: NameNode(value: 'userProfile'),
             alias: null,
             arguments: [
               ArgumentNode(
@@ -36637,24 +36801,24 @@ final USER_PROFILE_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class UserProfileByIdQuery
-    extends GraphQLQuery<UserProfileById$Query, UserProfileByIdArguments> {
-  UserProfileByIdQuery({required this.variables});
+class UserProfileQuery
+    extends GraphQLQuery<UserProfile$Query, UserProfileArguments> {
+  UserProfileQuery({required this.variables});
 
   @override
-  final DocumentNode document = USER_PROFILE_BY_ID_QUERY_DOCUMENT;
+  final DocumentNode document = USER_PROFILE_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userProfileById';
+  final String operationName = 'userProfile';
 
   @override
-  final UserProfileByIdArguments variables;
+  final UserProfileArguments variables;
 
   @override
   List<Object?> get props => [document, operationName, variables];
   @override
-  UserProfileById$Query parse(Map<String, dynamic> json) =>
-      UserProfileById$Query.fromJson(json);
+  UserProfile$Query parse(Map<String, dynamic> json) =>
+      UserProfile$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -39090,74 +39254,6 @@ class UpdateUserBenchmarkEntryMutation extends GraphQLQuery<
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkEntryByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkEntryByIdArguments({required this.id});
-
-  @override
-  factory DeleteUserBenchmarkEntryByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkEntryByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkEntryByIdArgumentsToJson(this);
-}
-
-final DELETE_USER_BENCHMARK_ENTRY_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteUserBenchmarkEntryById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteUserBenchmarkEntryById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteUserBenchmarkEntryByIdMutation extends GraphQLQuery<
-    DeleteUserBenchmarkEntryById$Mutation,
-    DeleteUserBenchmarkEntryByIdArguments> {
-  DeleteUserBenchmarkEntryByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      DELETE_USER_BENCHMARK_ENTRY_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteUserBenchmarkEntryById';
-
-  @override
-  final DeleteUserBenchmarkEntryByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteUserBenchmarkEntryById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteUserBenchmarkEntryById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UpdateUserBenchmarkArguments extends JsonSerializable
     with EquatableMixin {
   UpdateUserBenchmarkArguments({required this.data});
@@ -39549,72 +39645,6 @@ class CreateUserBenchmarkMutation extends GraphQLQuery<
       CreateUserBenchmark$Mutation.fromJson(json);
 }
 
-@JsonSerializable(explicitToJson: true)
-class DeleteUserBenchmarkByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserBenchmarkByIdArguments({required this.id});
-
-  @override
-  factory DeleteUserBenchmarkByIdArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteUserBenchmarkByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteUserBenchmarkByIdArgumentsToJson(this);
-}
-
-final DELETE_USER_BENCHMARK_BY_ID_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteUserBenchmarkById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteUserBenchmarkById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteUserBenchmarkByIdMutation extends GraphQLQuery<
-    DeleteUserBenchmarkById$Mutation, DeleteUserBenchmarkByIdArguments> {
-  DeleteUserBenchmarkByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_USER_BENCHMARK_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteUserBenchmarkById';
-
-  @override
-  final DeleteUserBenchmarkByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteUserBenchmarkById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteUserBenchmarkById$Mutation.fromJson(json);
-}
-
 final USER_BENCHMARKS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -39777,199 +39807,6 @@ class UserBenchmarksQuery
   @override
   UserBenchmarks$Query parse(Map<String, dynamic> json) =>
       UserBenchmarks$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkByIdArguments extends JsonSerializable with EquatableMixin {
-  UserBenchmarkByIdArguments({required this.id});
-
-  @override
-  factory UserBenchmarkByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkByIdArgumentsToJson(this);
-}
-
-final USER_BENCHMARK_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'userBenchmarkById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'userBenchmarkById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'UserBenchmark'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'UserBenchmarkEntries'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserBenchmarkEntry'),
-                        directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkEntry'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedOn'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'score'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoThumbUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmark'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmark'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lastEntryAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipmentInfo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'benchmarkType'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadUnit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UserBenchmarkByIdQuery
-    extends GraphQLQuery<UserBenchmarkById$Query, UserBenchmarkByIdArguments> {
-  UserBenchmarkByIdQuery({required this.variables});
-
-  @override
-  final DocumentNode document = USER_BENCHMARK_BY_ID_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'userBenchmarkById';
-
-  @override
-  final UserBenchmarkByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UserBenchmarkById$Query parse(Map<String, dynamic> json) =>
-      UserBenchmarkById$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -42741,25 +42578,25 @@ final CREATE_CLUB_TIMELINE_POST_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introAudioUri'),
+            name: NameNode(value: 'audioUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'imageUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'videoUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -42999,25 +42836,25 @@ final TIMELINE_POSTS_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introAudioUri'),
+            name: NameNode(value: 'audioUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'imageUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'videoUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -43228,25 +43065,25 @@ final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introAudioUri'),
+            name: NameNode(value: 'audioUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'coverImageUri'),
+            name: NameNode(value: 'imageUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoUri'),
+            name: NameNode(value: 'videoUri'),
             alias: null,
             arguments: [],
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'introVideoThumbUri'),
+            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49209,4 +49046,722 @@ class DeleteClubInviteTokenMutation extends GraphQLQuery<
   @override
   DeleteClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       DeleteClubInviteToken$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserBenchmarkEntryArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserBenchmarkEntryArguments({required this.id});
+
+  @override
+  factory DeleteUserBenchmarkEntryArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserBenchmarkEntryArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserBenchmarkEntryArgumentsToJson(this);
+}
+
+final DELETE_USER_BENCHMARK_ENTRY_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserBenchmarkEntry'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserBenchmarkEntry'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserBenchmarkEntryMutation extends GraphQLQuery<
+    DeleteUserBenchmarkEntry$Mutation, DeleteUserBenchmarkEntryArguments> {
+  DeleteUserBenchmarkEntryMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_BENCHMARK_ENTRY_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserBenchmarkEntry';
+
+  @override
+  final DeleteUserBenchmarkEntryArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserBenchmarkEntry$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserBenchmarkEntry$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserBenchmarkArguments extends JsonSerializable with EquatableMixin {
+  UserBenchmarkArguments({required this.id});
+
+  @override
+  factory UserBenchmarkArguments.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmarkArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmarkArgumentsToJson(this);
+}
+
+final USER_BENCHMARK_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userBenchmark'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userBenchmark'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserBenchmark'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'UserBenchmarkEntries'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserBenchmarkEntry'),
+                        directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserBenchmarkEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserBenchmarkEntry'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserBenchmark'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserBenchmark'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'lastEntryAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'equipmentInfo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'benchmarkType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserBenchmarkQuery
+    extends GraphQLQuery<UserBenchmark$Query, UserBenchmarkArguments> {
+  UserBenchmarkQuery({required this.variables});
+
+  @override
+  final DocumentNode document = USER_BENCHMARK_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userBenchmark';
+
+  @override
+  final UserBenchmarkArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UserBenchmark$Query parse(Map<String, dynamic> json) =>
+      UserBenchmark$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserBenchmarkArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserBenchmarkArguments({required this.id});
+
+  @override
+  factory DeleteUserBenchmarkArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserBenchmarkArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserBenchmarkArgumentsToJson(this);
+}
+
+final DELETE_USER_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserBenchmark'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserBenchmark'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserBenchmarkMutation extends GraphQLQuery<
+    DeleteUserBenchmark$Mutation, DeleteUserBenchmarkArguments> {
+  DeleteUserBenchmarkMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_BENCHMARK_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserBenchmark';
+
+  @override
+  final DeleteUserBenchmarkArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserBenchmark$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserBenchmark$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubAnnouncementArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateClubAnnouncementArguments({required this.data});
+
+  @override
+  factory UpdateClubAnnouncementArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubAnnouncementArgumentsFromJson(json);
+
+  late UpdateClubAnnouncementInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateClubAnnouncementArgumentsToJson(this);
+}
+
+final UPDATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateClubAnnouncement'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateClubAnnouncementInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateClubAnnouncement'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubAnnouncement'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubAnnouncement'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubAnnouncement'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'audioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateClubAnnouncementMutation extends GraphQLQuery<
+    UpdateClubAnnouncement$Mutation, UpdateClubAnnouncementArguments> {
+  UpdateClubAnnouncementMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateClubAnnouncement';
+
+  @override
+  final UpdateClubAnnouncementArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateClubAnnouncement$Mutation parse(Map<String, dynamic> json) =>
+      UpdateClubAnnouncement$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubAnnouncementArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateClubAnnouncementArguments({required this.data});
+
+  @override
+  factory CreateClubAnnouncementArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubAnnouncementArgumentsFromJson(json);
+
+  late CreateClubAnnouncementInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateClubAnnouncementArgumentsToJson(this);
+}
+
+final CREATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createClubAnnouncement'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateClubAnnouncementInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createClubAnnouncement'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubAnnouncement'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubAnnouncement'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubAnnouncement'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'audioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateClubAnnouncementMutation extends GraphQLQuery<
+    CreateClubAnnouncement$Mutation, CreateClubAnnouncementArguments> {
+  CreateClubAnnouncementMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createClubAnnouncement';
+
+  @override
+  final CreateClubAnnouncementArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateClubAnnouncement$Mutation parse(Map<String, dynamic> json) =>
+      CreateClubAnnouncement$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteClubAnnouncementArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteClubAnnouncementArguments({required this.id});
+
+  @override
+  factory DeleteClubAnnouncementArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteClubAnnouncementArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteClubAnnouncementArgumentsToJson(this);
+}
+
+final DELETE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteClubAnnouncement'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteClubAnnouncement'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteClubAnnouncementMutation extends GraphQLQuery<
+    DeleteClubAnnouncement$Mutation, DeleteClubAnnouncementArguments> {
+  DeleteClubAnnouncementMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_CLUB_ANNOUNCEMENT_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteClubAnnouncement';
+
+  @override
+  final DeleteClubAnnouncementArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteClubAnnouncement$Mutation parse(Map<String, dynamic> json) =>
+      DeleteClubAnnouncement$Mutation.fromJson(json);
 }

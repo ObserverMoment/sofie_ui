@@ -29,7 +29,7 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           decoration: BoxDecoration(
               boxShadow: kElevation[2],
-              color: context.theme.primary.withOpacity(0.8),
+              color: context.theme.primary,
               borderRadius: BorderRadius.circular(30)),
           child: Row(
             children: [
@@ -39,6 +39,7 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
                       benchmark.loadUnit,
                       benchmarkEntry),
                   size: fontSize,
+                  weight: FontWeight.bold,
                   color: context.theme.background),
               if (Utils.textNotNull(benchmarkEntry.videoUri))
                 Padding(

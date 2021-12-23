@@ -45,15 +45,15 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
   }
 
   Future<void> _deleteBenchmark() async {
-    final variables = DeleteUserBenchmarkByIdArguments(id: widget.id);
+    final variables = DeleteUserBenchmarkArguments(id: widget.id);
 
     final result = await context.graphQLStore.delete(
-      mutation: DeleteUserBenchmarkByIdMutation(variables: variables),
+      mutation: DeleteUserBenchmarkMutation(variables: variables),
       objectId: widget.id,
       typename: kUserBenchmarkTypename,
       clearQueryDataAtKeys: [
-        getParameterizedQueryId(UserBenchmarkByIdQuery(
-            variables: UserBenchmarkByIdArguments(id: widget.id)))
+        getParameterizedQueryId(UserBenchmarkQuery(
+            variables: UserBenchmarkArguments(id: widget.id)))
       ],
       removeRefFromQueries: [GQLOpNames.userBenchmarks],
     );
@@ -67,16 +67,16 @@ class _PersonalBestDetailsPageState extends State<PersonalBestDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final query = UserBenchmarkByIdQuery(
-        variables: UserBenchmarkByIdArguments(id: widget.id));
+    final query =
+        UserBenchmarkQuery(variables: UserBenchmarkArguments(id: widget.id));
 
-    return QueryObserver<UserBenchmarkById$Query, UserBenchmarkByIdArguments>(
+    return QueryObserver<UserBenchmark$Query, UserBenchmarkArguments>(
         key: Key(
             'PersonalBestDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          final benchmark = data.userBenchmarkById;
+          final benchmark = data.userBenchmark;
           return MyPageScaffold(
             navigationBar: MyNavBar(
               middle: NavBarLargeTitle(benchmark.name),
@@ -160,14 +160,14 @@ class __PersonalBestEntrieslistState extends State<_PersonalBestEntrieslist> {
   ScoreSortBy _sortBy = ScoreSortBy.best;
 
   Future<void> _deleteBenchmarkEntry(UserBenchmarkEntry entry) async {
-    final variables = DeleteUserBenchmarkEntryByIdArguments(id: entry.id);
+    final variables = DeleteUserBenchmarkEntryArguments(id: entry.id);
 
     final result = await context.graphQLStore.delete(
-        mutation: DeleteUserBenchmarkEntryByIdMutation(variables: variables),
+        mutation: DeleteUserBenchmarkEntryMutation(variables: variables),
         objectId: entry.id,
         typename: kUserBenchmarkEntryTypename,
         broadcastQueryIds: [
-          GQLVarParamKeys.userBenchmarkById(widget.userBenchmark.id),
+          GQLVarParamKeys.userBenchmark(widget.userBenchmark.id),
           GQLOpNames.userBenchmarks,
         ],
         removeAllRefsToId: true);

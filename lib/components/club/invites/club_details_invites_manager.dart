@@ -4,7 +4,6 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/club/invites/club_invite_token_creator.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';

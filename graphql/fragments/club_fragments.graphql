@@ -11,6 +11,19 @@ fragment Club on Club {
   introAudioUri
   contentAccessScope
 }
+fragment ClubAnnouncement on ClubAnnouncement {
+  __typename
+  id
+  createdAt
+  description
+  imageUri
+  audioUri
+  videoUri
+  videoThumbUri
+  User {
+    ...UserAvatarData
+  }
+}
 
 fragment ClubSummary on ClubSummary {
   __typename

@@ -12,6 +12,7 @@ import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:collection/collection.dart';
 
 class PersonalBestsGrid extends StatelessWidget {
   final List<UserBenchmarkWithBestEntry> benchmarks;
@@ -36,6 +37,8 @@ class PersonalBestsGrid extends StatelessWidget {
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             children: benchmarks
+                .sortedBy<DateTime>((b) => b.userBenchmarkSummary.lastEntryAt)
+                .reversed
                 .map(
                   (b) => _PersonalBestScoreIcon(userBenchmarkWithBestEntry: b),
                 )
@@ -115,7 +118,7 @@ class _PersonalBestScoreIcon extends StatelessWidget {
                               vertical: 6, horizontal: 10),
                           decoration: BoxDecoration(
                               boxShadow: kElevation[2],
-                              color: context.theme.primary.withOpacity(0.8),
+                              color: context.theme.primary,
                               borderRadius: BorderRadius.circular(50)),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -127,6 +130,7 @@ class _PersonalBestScoreIcon extends StatelessWidget {
                                     bestEntry),
                                 color: context.theme.background,
                                 size: FONTSIZE.two,
+                                weight: FontWeight.bold,
                               ),
                             ],
                           ),

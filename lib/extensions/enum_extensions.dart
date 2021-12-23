@@ -182,6 +182,8 @@ extension TimelinePostTypeExtension on TimelinePostType {
 
   String get display {
     switch (this) {
+      case TimelinePostType.announcement:
+        return 'Announcement';
       case TimelinePostType.workout:
         return 'Workout';
       case TimelinePostType.workoutplan:

@@ -26,7 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _updateProfileData() {
     context.graphQLStore
-        .refetchQueriesByIds([GQLVarParamKeys.userProfileById(_authedUserId)]);
+        .refetchQueriesByIds([GQLVarParamKeys.userProfile(_authedUserId)]);
   }
 
   @override
@@ -65,16 +65,16 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final query = UserProfileByIdQuery(
-        variables: UserProfileByIdArguments(userId: _authedUserId));
+    final query = UserProfileQuery(
+        variables: UserProfileArguments(userId: _authedUserId));
 
-    return QueryObserver<UserProfileById$Query, UserProfileByIdArguments>(
+    return QueryObserver<UserProfile$Query, UserProfileArguments>(
         key: Key('ProfilePage - ${query.operationName}'),
         query: query,
         parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final profile = data.userProfileById;
+          final profile = data.userProfile;
 
           return MyPageScaffold(
               navigationBar: MyNavBar(

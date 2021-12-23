@@ -1,5 +1,5 @@
-query userProfileById($userId: ID!) {
-  userProfileById(userId: $userId) {
+query userProfile($userId: ID!) {
+  userProfile(userId: $userId) {
     ...UserProfile
     Clubs {
       ...ClubSummary

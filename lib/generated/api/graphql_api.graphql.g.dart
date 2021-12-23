@@ -4105,16 +4105,14 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
           instance.benchmarksWithBestEntries.map((e) => e.toJson()).toList(),
     };
 
-UserProfileById$Query _$UserProfileById$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserProfileById$Query()
-      ..userProfileById =
-          UserProfile.fromJson(json['userProfileById'] as Map<String, dynamic>);
+UserProfile$Query _$UserProfile$QueryFromJson(Map<String, dynamic> json) =>
+    UserProfile$Query()
+      ..userProfile =
+          UserProfile.fromJson(json['userProfile'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$UserProfileById$QueryToJson(
-        UserProfileById$Query instance) =>
+Map<String, dynamic> _$UserProfile$QueryToJson(UserProfile$Query instance) =>
     <String, dynamic>{
-      'userProfileById': instance.userProfileById.toJson(),
+      'userProfile': instance.userProfile.toJson(),
     };
 
 DeleteWorkoutTagById$Mutation _$DeleteWorkoutTagById$MutationFromJson(
@@ -4544,19 +4542,6 @@ Map<String, dynamic> _$UpdateUserBenchmarkEntryInputToJson(
       'videoUri': instance.videoUri,
     };
 
-DeleteUserBenchmarkEntryById$Mutation
-    _$DeleteUserBenchmarkEntryById$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserBenchmarkEntryById$Mutation()
-          ..deleteUserBenchmarkEntryById =
-              json['deleteUserBenchmarkEntryById'] as String;
-
-Map<String, dynamic> _$DeleteUserBenchmarkEntryById$MutationToJson(
-        DeleteUserBenchmarkEntryById$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserBenchmarkEntryById': instance.deleteUserBenchmarkEntryById,
-    };
-
 UserBenchmark _$UserBenchmarkFromJson(Map<String, dynamic> json) =>
     UserBenchmark()
       ..$$typename = json['__typename'] as String?
@@ -4661,17 +4646,6 @@ Map<String, dynamic> _$CreateUserBenchmarkInputToJson(
       'name': instance.name,
     };
 
-DeleteUserBenchmarkById$Mutation _$DeleteUserBenchmarkById$MutationFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserBenchmarkById$Mutation()
-      ..deleteUserBenchmarkById = json['deleteUserBenchmarkById'] as String;
-
-Map<String, dynamic> _$DeleteUserBenchmarkById$MutationToJson(
-        DeleteUserBenchmarkById$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserBenchmarkById': instance.deleteUserBenchmarkById,
-    };
-
 UserBenchmarks$Query _$UserBenchmarks$QueryFromJson(
         Map<String, dynamic> json) =>
     UserBenchmarks$Query()
@@ -4683,18 +4657,6 @@ Map<String, dynamic> _$UserBenchmarks$QueryToJson(
         UserBenchmarks$Query instance) =>
     <String, dynamic>{
       'userBenchmarks': instance.userBenchmarks.map((e) => e.toJson()).toList(),
-    };
-
-UserBenchmarkById$Query _$UserBenchmarkById$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserBenchmarkById$Query()
-      ..userBenchmarkById = UserBenchmark.fromJson(
-          json['userBenchmarkById'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UserBenchmarkById$QueryToJson(
-        UserBenchmarkById$Query instance) =>
-    <String, dynamic>{
-      'userBenchmarkById': instance.userBenchmarkById.toJson(),
     };
 
 TextSearchWorkoutPlans$Query _$TextSearchWorkoutPlans$QueryFromJson(
@@ -5140,10 +5102,10 @@ TimelinePostObjectDataObject _$TimelinePostObjectDataObjectFromJson(
       ..type = $enumDecode(_$TimelinePostTypeEnumMap, json['type'],
           unknownValue: TimelinePostType.artemisUnknown)
       ..name = json['name'] as String
-      ..introAudioUri = json['introAudioUri'] as String?
-      ..coverImageUri = json['coverImageUri'] as String?
-      ..introVideoUri = json['introVideoUri'] as String?
-      ..introVideoThumbUri = json['introVideoThumbUri'] as String?;
+      ..audioUri = json['audioUri'] as String?
+      ..imageUri = json['imageUri'] as String?
+      ..videoUri = json['videoUri'] as String?
+      ..videoThumbUri = json['videoThumbUri'] as String?;
 
 Map<String, dynamic> _$TimelinePostObjectDataObjectToJson(
         TimelinePostObjectDataObject instance) =>
@@ -5152,13 +5114,14 @@ Map<String, dynamic> _$TimelinePostObjectDataObjectToJson(
       'id': instance.id,
       'type': _$TimelinePostTypeEnumMap[instance.type],
       'name': instance.name,
-      'introAudioUri': instance.introAudioUri,
-      'coverImageUri': instance.coverImageUri,
-      'introVideoUri': instance.introVideoUri,
-      'introVideoThumbUri': instance.introVideoThumbUri,
+      'audioUri': instance.audioUri,
+      'imageUri': instance.imageUri,
+      'videoUri': instance.videoUri,
+      'videoThumbUri': instance.videoThumbUri,
     };
 
 const _$TimelinePostTypeEnumMap = {
+  TimelinePostType.announcement: 'ANNOUNCEMENT',
   TimelinePostType.workout: 'WORKOUT',
   TimelinePostType.workoutplan: 'WORKOUTPLAN',
   TimelinePostType.artemisUnknown: 'ARTEMIS_UNKNOWN',
@@ -6008,6 +5971,160 @@ Map<String, dynamic> _$DeleteClubInviteTokenInputToJson(
     <String, dynamic>{
       'clubId': instance.clubId,
       'tokenId': instance.tokenId,
+    };
+
+DeleteUserBenchmarkEntry$Mutation _$DeleteUserBenchmarkEntry$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserBenchmarkEntry$Mutation()
+      ..deleteUserBenchmarkEntry = json['deleteUserBenchmarkEntry'] as String;
+
+Map<String, dynamic> _$DeleteUserBenchmarkEntry$MutationToJson(
+        DeleteUserBenchmarkEntry$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserBenchmarkEntry': instance.deleteUserBenchmarkEntry,
+    };
+
+UserBenchmark$Query _$UserBenchmark$QueryFromJson(Map<String, dynamic> json) =>
+    UserBenchmark$Query()
+      ..userBenchmark =
+          UserBenchmark.fromJson(json['userBenchmark'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UserBenchmark$QueryToJson(
+        UserBenchmark$Query instance) =>
+    <String, dynamic>{
+      'userBenchmark': instance.userBenchmark.toJson(),
+    };
+
+DeleteUserBenchmark$Mutation _$DeleteUserBenchmark$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserBenchmark$Mutation()
+      ..deleteUserBenchmark = json['deleteUserBenchmark'] as String;
+
+Map<String, dynamic> _$DeleteUserBenchmark$MutationToJson(
+        DeleteUserBenchmark$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserBenchmark': instance.deleteUserBenchmark,
+    };
+
+ClubAnnouncement _$ClubAnnouncementFromJson(Map<String, dynamic> json) =>
+    ClubAnnouncement()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..description = json['description'] as String
+      ..imageUri = json['imageUri'] as String?
+      ..audioUri = json['audioUri'] as String?
+      ..videoUri = json['videoUri'] as String?
+      ..videoThumbUri = json['videoThumbUri'] as String?
+      ..user = UserAvatarData.fromJson(json['User'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$ClubAnnouncementToJson(ClubAnnouncement instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'description': instance.description,
+      'imageUri': instance.imageUri,
+      'audioUri': instance.audioUri,
+      'videoUri': instance.videoUri,
+      'videoThumbUri': instance.videoThumbUri,
+      'User': instance.user.toJson(),
+    };
+
+UpdateClubAnnouncement$Mutation _$UpdateClubAnnouncement$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateClubAnnouncement$Mutation()
+      ..updateClubAnnouncement = ClubAnnouncement.fromJson(
+          json['updateClubAnnouncement'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateClubAnnouncement$MutationToJson(
+        UpdateClubAnnouncement$Mutation instance) =>
+    <String, dynamic>{
+      'updateClubAnnouncement': instance.updateClubAnnouncement.toJson(),
+    };
+
+ClubAnnouncementMixin$UserAvatarData
+    _$ClubAnnouncementMixin$UserAvatarDataFromJson(Map<String, dynamic> json) =>
+        ClubAnnouncementMixin$UserAvatarData()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..avatarUri = json['avatarUri'] as String?
+          ..displayName = json['displayName'] as String;
+
+Map<String, dynamic> _$ClubAnnouncementMixin$UserAvatarDataToJson(
+        ClubAnnouncementMixin$UserAvatarData instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'avatarUri': instance.avatarUri,
+      'displayName': instance.displayName,
+    };
+
+UpdateClubAnnouncementInput _$UpdateClubAnnouncementInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateClubAnnouncementInput(
+      audioUri: json['audioUri'] as String?,
+      description: json['description'] as String?,
+      id: json['id'] as String,
+      imageUri: json['imageUri'] as String?,
+      videoThumbUri: json['videoThumbUri'] as String?,
+      videoUri: json['videoUri'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateClubAnnouncementInputToJson(
+        UpdateClubAnnouncementInput instance) =>
+    <String, dynamic>{
+      'audioUri': instance.audioUri,
+      'description': instance.description,
+      'id': instance.id,
+      'imageUri': instance.imageUri,
+      'videoThumbUri': instance.videoThumbUri,
+      'videoUri': instance.videoUri,
+    };
+
+CreateClubAnnouncement$Mutation _$CreateClubAnnouncement$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateClubAnnouncement$Mutation()
+      ..createClubAnnouncement = ClubAnnouncement.fromJson(
+          json['createClubAnnouncement'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateClubAnnouncement$MutationToJson(
+        CreateClubAnnouncement$Mutation instance) =>
+    <String, dynamic>{
+      'createClubAnnouncement': instance.createClubAnnouncement.toJson(),
+    };
+
+CreateClubAnnouncementInput _$CreateClubAnnouncementInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateClubAnnouncementInput(
+      club: ConnectRelationInput.fromJson(json['Club'] as Map<String, dynamic>),
+      audioUri: json['audioUri'] as String?,
+      description: json['description'] as String,
+      imageUri: json['imageUri'] as String?,
+      videoThumbUri: json['videoThumbUri'] as String?,
+      videoUri: json['videoUri'] as String?,
+    );
+
+Map<String, dynamic> _$CreateClubAnnouncementInputToJson(
+        CreateClubAnnouncementInput instance) =>
+    <String, dynamic>{
+      'Club': instance.club.toJson(),
+      'audioUri': instance.audioUri,
+      'description': instance.description,
+      'imageUri': instance.imageUri,
+      'videoThumbUri': instance.videoThumbUri,
+      'videoUri': instance.videoUri,
+    };
+
+DeleteClubAnnouncement$Mutation _$DeleteClubAnnouncement$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteClubAnnouncement$Mutation()
+      ..deleteClubAnnouncement = json['deleteClubAnnouncement'] as String;
+
+Map<String, dynamic> _$DeleteClubAnnouncement$MutationToJson(
+        DeleteClubAnnouncement$Mutation instance) =>
+    <String, dynamic>{
+      'deleteClubAnnouncement': instance.deleteClubAnnouncement,
     };
 
 DeleteJournalGoalByIdArguments _$DeleteJournalGoalByIdArgumentsFromJson(
@@ -7101,14 +7218,14 @@ Map<String, dynamic> _$UpdateUserProfileArgumentsToJson(
       'data': instance.data.toJson(),
     };
 
-UserProfileByIdArguments _$UserProfileByIdArgumentsFromJson(
+UserProfileArguments _$UserProfileArgumentsFromJson(
         Map<String, dynamic> json) =>
-    UserProfileByIdArguments(
+    UserProfileArguments(
       userId: json['userId'] as String,
     );
 
-Map<String, dynamic> _$UserProfileByIdArgumentsToJson(
-        UserProfileByIdArguments instance) =>
+Map<String, dynamic> _$UserProfileArgumentsToJson(
+        UserProfileArguments instance) =>
     <String, dynamic>{
       'userId': instance.userId,
     };
@@ -7268,19 +7385,6 @@ Map<String, dynamic> _$UpdateUserBenchmarkEntryArgumentsToJson(
       'data': instance.data.toJson(),
     };
 
-DeleteUserBenchmarkEntryByIdArguments
-    _$DeleteUserBenchmarkEntryByIdArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserBenchmarkEntryByIdArguments(
-          id: json['id'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserBenchmarkEntryByIdArgumentsToJson(
-        DeleteUserBenchmarkEntryByIdArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
 UpdateUserBenchmarkArguments _$UpdateUserBenchmarkArgumentsFromJson(
         Map<String, dynamic> json) =>
     UpdateUserBenchmarkArguments(
@@ -7305,30 +7409,6 @@ Map<String, dynamic> _$CreateUserBenchmarkArgumentsToJson(
         CreateUserBenchmarkArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
-    };
-
-DeleteUserBenchmarkByIdArguments _$DeleteUserBenchmarkByIdArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserBenchmarkByIdArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$DeleteUserBenchmarkByIdArgumentsToJson(
-        DeleteUserBenchmarkByIdArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-UserBenchmarkByIdArguments _$UserBenchmarkByIdArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    UserBenchmarkByIdArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$UserBenchmarkByIdArgumentsToJson(
-        UserBenchmarkByIdArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
     };
 
 TextSearchWorkoutPlansArguments _$TextSearchWorkoutPlansArgumentsFromJson(
@@ -7856,4 +7936,78 @@ Map<String, dynamic> _$DeleteClubInviteTokenArgumentsToJson(
         DeleteClubInviteTokenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
+    };
+
+DeleteUserBenchmarkEntryArguments _$DeleteUserBenchmarkEntryArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserBenchmarkEntryArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteUserBenchmarkEntryArgumentsToJson(
+        DeleteUserBenchmarkEntryArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+UserBenchmarkArguments _$UserBenchmarkArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UserBenchmarkArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$UserBenchmarkArgumentsToJson(
+        UserBenchmarkArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DeleteUserBenchmarkArguments _$DeleteUserBenchmarkArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserBenchmarkArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteUserBenchmarkArgumentsToJson(
+        DeleteUserBenchmarkArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+UpdateClubAnnouncementArguments _$UpdateClubAnnouncementArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateClubAnnouncementArguments(
+      data: UpdateClubAnnouncementInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateClubAnnouncementArgumentsToJson(
+        UpdateClubAnnouncementArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateClubAnnouncementArguments _$CreateClubAnnouncementArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateClubAnnouncementArguments(
+      data: CreateClubAnnouncementInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateClubAnnouncementArgumentsToJson(
+        CreateClubAnnouncementArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteClubAnnouncementArguments _$DeleteClubAnnouncementArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteClubAnnouncementArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteClubAnnouncementArgumentsToJson(
+        DeleteClubAnnouncementArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

@@ -19,8 +19,8 @@ class GQLOpNames {
       WorkoutPlanEnrolmentsQuery().operationName;
 
   /// TODO: Does this key trigger all userBenchmarkByIdQuery queries?
-  static String get userBenchmarkById =>
-      UserBenchmarkByIdQuery(variables: UserBenchmarkByIdArguments(id: ''))
+  static String get userBenchmark =>
+      UserBenchmarkQuery(variables: UserBenchmarkArguments(id: ''))
           .operationName;
 
   /// List type queries where variables are not used.
@@ -37,6 +37,7 @@ class GQLOpNames {
       WorkoutByIdQuery(variables: WorkoutByIdArguments(id: '')).operationName;
 
   static String get userWorkouts => UserWorkoutsQuery().operationName;
+  static String get userWorkoutTags => UserWorkoutTagsQuery().operationName;
 
   static String get userWorkoutPlans => UserWorkoutPlansQuery().operationName;
 
@@ -79,14 +80,14 @@ class GQLVarParamKeys {
   static String clubWorkoutPlans(String id) => getParameterizedQueryId(
       ClubWorkoutPlansQuery(variables: ClubWorkoutPlansArguments(clubId: id)));
 
-  static String userBenchmarkById(String id) => getParameterizedQueryId(
-      UserBenchmarkByIdQuery(variables: UserBenchmarkByIdArguments(id: id)));
+  static String userBenchmark(String id) => getParameterizedQueryId(
+      UserBenchmarkQuery(variables: UserBenchmarkArguments(id: id)));
 
   static String userCollectionById(String id) => getParameterizedQueryId(
       UserCollectionByIdQuery(variables: UserCollectionByIdArguments(id: id)));
 
-  static String userProfileById(String id) => getParameterizedQueryId(
-      UserProfileByIdQuery(variables: UserProfileByIdArguments(userId: id)));
+  static String userProfile(String id) => getParameterizedQueryId(
+      UserProfileQuery(variables: UserProfileArguments(userId: id)));
 
   static String workoutById(String id) => getParameterizedQueryId(
       WorkoutByIdQuery(variables: WorkoutByIdArguments(id: id)));

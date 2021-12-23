@@ -109,7 +109,7 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
           final success = context.graphQLStore.writeDataToStore(
             data: parentBenchmark.toJson(),
             broadcastQueryIds: [
-              GQLVarParamKeys.userBenchmarkById(widget.userBenchmark.id),
+              GQLVarParamKeys.userBenchmark(widget.userBenchmark.id),
               GQLOpNames.userBenchmarks,
             ],
           );
@@ -142,7 +142,7 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
         mutation: UpdateUserBenchmarkEntryMutation(variables: variables),
         broadcastQueryIds: [
           GQLOpNames.userBenchmarks,
-          GQLVarParamKeys.userBenchmarkById(widget.userBenchmark.id)
+          GQLVarParamKeys.userBenchmark(widget.userBenchmark.id)
         ]);
 
     setState(() => _loading = false);

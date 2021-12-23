@@ -237,7 +237,8 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
                   autofocus: true,
                   maxLines: widget.maxInputLines,
                   backgroundColor: material.Colors.transparent,
-                  padding: const EdgeInsets.all(16),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
                   disableSuffix: true,
                   controller: _controller),
               Padding(
@@ -257,7 +258,7 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
                       ),
                     if (widget.validationMessage != null)
                       Padding(
-                        padding: const EdgeInsets.only(left: 3, top: 5.0),
+                        padding: const EdgeInsets.only(left: 10, top: 5.0),
                         child: MyText(
                           '(${widget.validationMessage})',
                           size: FONTSIZE.two,

@@ -157,7 +157,7 @@ class _SkillCreatorState extends State<SkillCreator> {
 
     context.graphQLStore.writeDataToStore(
         data: profile.toJson(),
-        broadcastQueryIds: [GQLVarParamKeys.userProfileById(_authedUserId)]);
+        broadcastQueryIds: [GQLVarParamKeys.userProfile(_authedUserId)]);
   }
 
   /// Will not save anything as saving is incremental once we are post-create.

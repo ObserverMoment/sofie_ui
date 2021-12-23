@@ -106,6 +106,17 @@ type Club {
   name: String!
 }
 
+type ClubAnnouncement {
+  User: UserAvatarData!
+  audioUri: String
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  imageUri: String
+  videoThumbUri: String
+  videoUri: String
+}
+
 type ClubChatSummary {
   Admins: [UserAvatarData!]!
   Members: [UserAvatarData!]!
@@ -217,6 +228,15 @@ input CreateBodyTrackingEntryInput {
   fatPercent: Float
   note: String
   photoUris: [String!]
+}
+
+input CreateClubAnnouncementInput {
+  Club: ConnectRelationInput!
+  audioUri: String
+  description: String!
+  imageUri: String
+  videoThumbUri: String
+  videoUri: String
 }
 
 input CreateClubInput {
@@ -628,6 +648,7 @@ type Mutation {
     data: CreateBodyTrackingEntryInput!
   ): BodyTrackingEntry!
   createClub(data: CreateClubInput!): ClubSummary!
+  createClubAnnouncement(data: CreateClubAnnouncementInput!): ClubAnnouncement!
   createClubInviteToken(data: CreateClubInviteTokenInput!): ClubInviteTokens!
   createClubTimelinePost(
     data: CreateClubTimelinePostInput!
@@ -673,6 +694,7 @@ type Mutation {
   createWorkoutTag(data: CreateWorkoutTagInput!): WorkoutTag!
   deleteBodyTrackingEntryById(id: ID!): ID!
   deleteClub(id: ID!): ID!
+  deleteClubAnnouncement(id: ID!): ID!
   deleteClubInviteToken(data: DeleteClubInviteTokenInput!): ClubInviteTokens!
   deleteClubTimelinePost(activityId: ID!): ID!
   deleteCollectionById(id: ID!): ID!
@@ -686,8 +708,8 @@ type Mutation {
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
-  deleteUserBenchmarkById(id: ID!): ID!
-  deleteUserBenchmarkEntryById(id: ID!): ID!
+  deleteUserBenchmark(id: ID!): ID!
+  deleteUserBenchmarkEntry(id: ID!): ID!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
   deleteWorkoutPlanDaysById(ids: [ID!]!): [ID!]!
@@ -733,6 +755,7 @@ type Mutation {
   updateBodyTrackingEntry(
     data: UpdateBodyTrackingEntryInput!
   ): BodyTrackingEntry!
+  updateClubAnnouncement(data: UpdateClubAnnouncementInput!): ClubAnnouncement!
   updateClubInviteToken(data: UpdateClubInviteTokenInput!): ClubInviteTokens!
   updateClubSummary(data: UpdateClubSummaryInput!): ClubSummary!
   updateCollection(data: UpdateCollectionInput!): Collection!
@@ -824,14 +847,14 @@ type Query {
   userArchivedWorkouts: [Workout!]!
   userAvatarById(id: ID!): UserAvatarData!
   userAvatars(ids: [ID!]!): [UserAvatarData!]!
-  userBenchmarkById(id: ID!): UserBenchmark!
+  userBenchmark(id: ID!): UserBenchmark!
   userBenchmarks: [UserBenchmark!]!
   userClubs: [ClubSummary!]!
   userCollectionById(id: ID!): Collection!
   userCollections: [Collection!]!
   userCustomMoves: [Move!]!
   userLoggedWorkouts(take: Int): [LoggedWorkout!]!
-  userProfileById(userId: ID!): UserProfile!
+  userProfile(userId: ID!): UserProfile!
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
@@ -937,13 +960,13 @@ type TimelinePostObjectData {
 }
 
 type TimelinePostObjectDataObject {
-  coverImageUri: String
+  audioUri: String
   id: ID!
-  introAudioUri: String
-  introVideoThumbUri: String
-  introVideoUri: String
+  imageUri: String
   name: String!
   type: TimelinePostType!
+  videoThumbUri: String
+  videoUri: String
 }
 
 type TimelinePostObjectDataUser {
@@ -953,6 +976,7 @@ type TimelinePostObjectDataUser {
 }
 
 enum TimelinePostType {
+  ANNOUNCEMENT
   WORKOUT
   WORKOUTPLAN
 }
@@ -964,6 +988,15 @@ input UpdateBodyTrackingEntryInput {
   id: ID!
   note: String
   photoUris: [String!]
+}
+
+input UpdateClubAnnouncementInput {
+  audioUri: String
+  description: String
+  id: ID!
+  imageUri: String
+  videoThumbUri: String
+  videoUri: String
 }
 
 input UpdateClubInviteTokenInput {

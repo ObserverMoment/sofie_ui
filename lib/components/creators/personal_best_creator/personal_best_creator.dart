@@ -69,9 +69,9 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
           mutation: UpdateUserBenchmarkMutation(variables: variables),
           broadcastQueryIds: [
             GQLOpNames.userBenchmarks,
-            getParameterizedQueryId(UserBenchmarkByIdQuery(
+            getParameterizedQueryId(UserBenchmarkQuery(
                 variables:
-                    UserBenchmarkByIdArguments(id: widget.userBenchmark!.id)))
+                    UserBenchmarkArguments(id: widget.userBenchmark!.id)))
           ]);
 
       setState(() => _loading = false);

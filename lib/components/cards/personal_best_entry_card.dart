@@ -38,7 +38,7 @@ class PersonalBestEntryCard extends StatelessWidget {
         },
         broadcastQueryIds: [
           GQLOpNames.userBenchmarks,
-          GQLVarParamKeys.userBenchmarkById(benchmark.id)
+          GQLVarParamKeys.userBenchmark(benchmark.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -63,7 +63,7 @@ class PersonalBestEntryCard extends StatelessWidget {
         },
         broadcastQueryIds: [
           GQLOpNames.userBenchmarks,
-          GQLVarParamKeys.userBenchmarkById(benchmark.id)
+          GQLVarParamKeys.userBenchmark(benchmark.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
