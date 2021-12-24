@@ -78,36 +78,44 @@ class JournalGraphs extends StatelessWidget {
                     ),
                   ),
                   const HorizontalLine(),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: moods.length * 2,
+                  moods.length == 1
+                      ? _TimelineCard(
+                          mood: moods[0],
+                          dateWidth: dateWidth,
+                          scoreWidth: scoreWidth,
+                          dotWidth: dotWidth,
+                          iconWidth: iconWidth,
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: moods.length * 2,
 
-                      /// In between each date input you will want to draw a dotted line, by the dotted line it should state the number of days passed since the last input.
-                      itemBuilder: (c, i) {
-                        if (i == 1) {
-                          return _DottedLine(
-                            prev: moods[0].createdAt,
-                            next: moods[1].createdAt,
-                            dateWidth: dateWidth,
-                          );
-                        } else if (i == (moods.length * 2) - 1) {
-                          return const HorizontalLine();
-                        } else if (i % 2 == 0) {
-                          return _TimelineCard(
-                            mood: moods[i ~/ 2],
-                            dateWidth: dateWidth,
-                            scoreWidth: scoreWidth,
-                            dotWidth: dotWidth,
-                            iconWidth: iconWidth,
-                          );
-                        } else {
-                          return _DottedLine(
-                            prev: moods[(i ~/ 2) - 1].createdAt,
-                            next: moods[(i ~/ 2) + 1].createdAt,
-                            dateWidth: dateWidth,
-                          );
-                        }
-                      }),
+                          /// In between each date input you will want to draw a dotted line, by the dotted line it should state the number of days passed since the last input.
+                          itemBuilder: (c, i) {
+                            if (i == 1) {
+                              return _DottedLine(
+                                prev: moods[0].createdAt,
+                                next: moods[1].createdAt,
+                                dateWidth: dateWidth,
+                              );
+                            } else if (i == (moods.length * 2) - 1) {
+                              return const HorizontalLine();
+                            } else if (i % 2 == 0) {
+                              return _TimelineCard(
+                                mood: moods[i ~/ 2],
+                                dateWidth: dateWidth,
+                                scoreWidth: scoreWidth,
+                                dotWidth: dotWidth,
+                                iconWidth: iconWidth,
+                              );
+                            } else {
+                              return _DottedLine(
+                                prev: moods[(i ~/ 2) - 1].createdAt,
+                                next: moods[(i ~/ 2) + 1].createdAt,
+                                dateWidth: dateWidth,
+                              );
+                            }
+                          }),
                 ],
               );
             }),
