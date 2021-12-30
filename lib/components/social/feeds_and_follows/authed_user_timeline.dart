@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/timeline_post_card.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
@@ -344,9 +344,9 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
           Positioned(
               top: 8,
               child: SizeFadeIn(
-                  child: FloatingIconButton(
-                iconData: CupertinoIcons.news,
-                onPressed: _prependNewPosts,
+                  child: FloatingButton(
+                icon: CupertinoIcons.news,
+                onTap: _prependNewPosts,
                 text:
                     '${_newActivitiesWithObjectData.length} new ${_newActivitiesWithObjectData.length == 1 ? "post" : "posts"}',
               )))

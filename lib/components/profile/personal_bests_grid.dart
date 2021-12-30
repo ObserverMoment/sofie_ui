@@ -118,7 +118,10 @@ class _PersonalBestScoreIcon extends StatelessWidget {
                               vertical: 6, horizontal: 10),
                           decoration: BoxDecoration(
                               boxShadow: kElevation[2],
-                              color: context.theme.primary,
+                              color: context.theme.background,
+                              border: Border.all(
+                                color: context.theme.primary,
+                              ),
                               borderRadius: BorderRadius.circular(50)),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -128,7 +131,6 @@ class _PersonalBestScoreIcon extends StatelessWidget {
                                     benchmark.benchmarkType,
                                     benchmark.loadUnit,
                                     bestEntry),
-                                color: context.theme.background,
                                 size: FONTSIZE.two,
                                 weight: FontWeight.bold,
                               ),

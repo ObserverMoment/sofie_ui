@@ -214,14 +214,13 @@ class _ClubSectionButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Card(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MyText(
                 label,
-                weight: FontWeight.bold,
                 maxLines: 2,
               ),
               Row(

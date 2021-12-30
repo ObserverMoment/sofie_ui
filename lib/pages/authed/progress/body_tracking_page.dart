@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
@@ -93,12 +92,10 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
                           ),
                         ],
                     body: FABPage(
-                      rowButtons: [
+                      columnButtons: [
                         if ((_activeTabIndex == 0 && entries.isNotEmpty) ||
                             (_activeTabIndex == 1 && allPhotoUris.isNotEmpty))
                           FloatingButton(
-                              gradient: Styles.primaryAccentGradient,
-                              contentColor: Styles.white,
                               iconSize: 20,
                               padding: const EdgeInsets.symmetric(
                                   vertical: 11, horizontal: 16),

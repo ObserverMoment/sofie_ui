@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/move_list_item.dart';
 import 'package:sofie_ui/components/fab_page.dart';
@@ -96,8 +95,6 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
                       rowButtonsAlignment: MainAxisAlignment.end,
                       columnButtons: [
                         FloatingButton(
-                            gradient: Styles.primaryAccentGradient,
-                            contentColor: Styles.white,
                             icon: CupertinoIcons.add,
                             onTap: () =>
                                 context.navigateTo(CustomMoveCreatorRoute())),
@@ -120,9 +117,6 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
                             text: moveFiltersBloc.numActiveFilters == 0
                                 ? null
                                 : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
-                            contentColor: moveFiltersBloc.hasActiveFilters
-                                ? Styles.primaryAccent
-                                : null,
                             icon: CupertinoIcons.slider_horizontal_3),
                       ],
                       child: Column(

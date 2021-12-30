@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/navigation.dart';
@@ -325,21 +326,22 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                 ])),
                       ),
                     ),
-                    child: StackAndFloatingButton(
-                      pageHasBottomNavBar: false,
-                      onPressed: enrolmentInPlan != null
-                          ? () => context.navigateTo(
-                              WorkoutPlanEnrolmentDetailsRoute(
-                                  id: enrolmentInPlan.id))
-                          : () => _createWorkoutPlanEnrolment(workoutPlan),
-                      buttonIconData: enrolmentInPlan != null
-                          ? CupertinoIcons.chart_bar_square
-                          : CupertinoIcons.plus,
-                      buttonText: enrolmentInPlan != null
-                          ? 'View Progress'
-                          : 'Join Plan',
-                      buttonInternalPadding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 36),
+                    child: FABPage(
+                      columnButtons: [
+                        FloatingButton(
+                          text: enrolmentInPlan != null
+                              ? 'View Progress'
+                              : 'Join Plan',
+                          icon: enrolmentInPlan != null
+                              ? CupertinoIcons.chart_bar_square
+                              : CupertinoIcons.plus,
+                          onTap: enrolmentInPlan != null
+                              ? () => context.navigateTo(
+                                  WorkoutPlanEnrolmentDetailsRoute(
+                                      id: enrolmentInPlan.id))
+                              : () => _createWorkoutPlanEnrolment(workoutPlan),
+                        )
+                      ],
                       child: Utils.textNotNull(workoutPlan.coverImageUri)
                           ? NestedScrollView(
                               headerSliverBuilder:

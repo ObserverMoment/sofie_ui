@@ -65,18 +65,16 @@ class DiscoverPageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 3),
-      alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: context.theme.primary,
+        border: Border.all(color: context.theme.primary, width: 2),
         borderRadius: BorderRadius.circular(60),
       ),
       child: CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         onPressed: onPressed,
         child: MyHeaderText(
           text,
           size: FONTSIZE.two,
-          color: context.theme.background,
         ),
       ),
     );

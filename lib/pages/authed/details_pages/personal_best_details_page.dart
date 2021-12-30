@@ -228,8 +228,6 @@ class __PersonalBestEntrieslistState extends State<_PersonalBestEntrieslist> {
             rowButtonsAlignment: MainAxisAlignment.end,
             rowButtons: [
               FloatingButton(
-                  gradient: Styles.primaryAccentGradient,
-                  contentColor: Styles.white,
                   icon: CupertinoIcons.add,
                   onTap: () => context.push(
                           child: PersonalBestEntryCreator(

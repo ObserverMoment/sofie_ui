@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/timeline_post_card.dart';
@@ -175,8 +174,6 @@ class _YourPostsPageState extends State<YourPostsPage> {
           : FABPage(
               rowButtons: [
                 FloatingButton(
-                    gradient: Styles.primaryAccentGradient,
-                    contentColor: Styles.white,
                     padding: const EdgeInsets.symmetric(
                         vertical: 11, horizontal: 16),
                     text: 'New Post',

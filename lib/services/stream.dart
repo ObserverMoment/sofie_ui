@@ -178,7 +178,7 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
             child: const FABPageButtonContainer(
                 child: Icon(
               CupertinoIcons.chat_bubble,
-              size: 25,
+              size: 22,
             ))),
         if (_unreadCount > 0)
           Positioned(

@@ -29,23 +29,21 @@ class UserBenchmarkScoreDisplay extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           decoration: BoxDecoration(
               boxShadow: kElevation[2],
-              color: context.theme.primary,
+              color: context.theme.background,
+              border: Border.all(color: context.theme.primary),
               borderRadius: BorderRadius.circular(30)),
           child: Row(
             children: [
               MyText(
-                  DataUtils.buildBenchmarkEntryScoreText(
-                      benchmark.benchmarkType,
-                      benchmark.loadUnit,
-                      benchmarkEntry),
-                  size: fontSize,
-                  weight: FontWeight.bold,
-                  color: context.theme.background),
+                DataUtils.buildBenchmarkEntryScoreText(benchmark.benchmarkType,
+                    benchmark.loadUnit, benchmarkEntry),
+                size: fontSize,
+                weight: FontWeight.bold,
+              ),
               if (Utils.textNotNull(benchmarkEntry.videoUri))
-                Padding(
-                  padding: const EdgeInsets.only(left: 6.0),
-                  child: Icon(CupertinoIcons.film,
-                      color: context.theme.background, size: 18),
+                const Padding(
+                  padding: EdgeInsets.only(left: 6.0),
+                  child: Icon(CupertinoIcons.film, size: 18),
                 )
             ],
           ),

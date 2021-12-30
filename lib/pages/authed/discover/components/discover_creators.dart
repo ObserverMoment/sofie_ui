@@ -71,7 +71,7 @@ class DiscoverCreators extends StatelessWidget {
                     crossAxisSpacing: 2,
                     scrollDirection: Axis.horizontal,
                     crossAxisCount: 2,
-                    children: [...data.userProfiles, ...data.userProfiles]
+                    children: data.userProfiles
                         .map((p) => SizedBox(
                               width: tileWidth,
                               height: _tileHeight,
