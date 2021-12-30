@@ -9,8 +9,8 @@ import 'package:auto_route/auto_route.dart';
 /// A [WorkoutCard ContextMenus] if it is.
 class SelectableWorkoutCard extends StatelessWidget {
   final int index;
-  final Workout workout;
-  final void Function(Workout workout)? selectWorkout;
+  final WorkoutSummary workout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
   final String? heroTagKey;
   const SelectableWorkoutCard(
       {Key? key,
@@ -20,7 +20,7 @@ class SelectableWorkoutCard extends StatelessWidget {
       required this.index})
       : super(key: key);
 
-  void _openWorkoutDetailsPage(BuildContext context, Workout workout) =>
+  void _openWorkoutDetailsPage(BuildContext context, WorkoutSummary workout) =>
       context.navigateTo(WorkoutDetailsRoute(id: workout.id));
 
   @override

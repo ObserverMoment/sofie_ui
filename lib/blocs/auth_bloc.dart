@@ -7,16 +7,26 @@ import 'package:http/http.dart' as http;
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-enum AuthState { unauthed, authed, registering, validating, error, unknown }
+enum InternalAuthState {
+  unauthed,
+  authed,
+  registering,
+  validating,
+  error,
+  unknown
+}
+enum AuthState { unauthed, authed, loading }
 
 class AuthedUser {
   String id;
+  String displayName;
   bool hasOnboarded;
   String streamChatToken;
   String streamFeedToken;
 
   AuthedUser(
       {required this.id,
+      required this.displayName,
       required this.hasOnboarded,
       required this.streamChatToken,
       required this.streamFeedToken});
@@ -24,6 +34,7 @@ class AuthedUser {
   factory AuthedUser.fromJson(Map<String, dynamic> json) {
     return AuthedUser(
         id: json['id'] as String,
+        displayName: json['displayName'] as String,
         hasOnboarded: json['hasOnboarded'] as bool,
         streamChatToken: json['streamChatToken'] as String,
         streamFeedToken: json['streamFeedToken'] as String);
@@ -31,10 +42,12 @@ class AuthedUser {
 }
 
 /// Only ever register this as a global singleton via Get.It. Do not instantiate multiple times.
-class AuthBloc {
+class AuthBloc extends ChangeNotifier {
   final FirebaseAuth _firebaseClient = FirebaseAuth.instance;
   bool _firebaseAuthed = false;
-  AuthedUser? _authedUser;
+  AuthedUser? authedUser;
+  InternalAuthState internalState = InternalAuthState.unknown;
+  AuthState authState = AuthState.loading;
   int _validationAttempts = 0;
   final int _maxFailedAttempts = 10;
 
@@ -42,28 +55,28 @@ class AuthBloc {
     _firebaseClient.authStateChanges().listen((User? user) async {
       if (user?.uid != null) {
         _firebaseAuthed = true;
-        if (_authedUser?.id == null) {
-          if (![AuthState.registering, AuthState.validating]
-              .contains(authState.value)) {
+        if (authedUser?.id == null) {
+          if (![InternalAuthState.registering, InternalAuthState.validating]
+              .contains(internalState)) {
             await validateUserAgainstFirebaseUid();
           }
+        } else {
+          _checkAuthStatus();
         }
       } else {
         _firebaseAuthed = false;
-        _authedUser = null;
-        authState.value = AuthState.unauthed;
+        authedUser = null;
+        internalState = InternalAuthState.unauthed;
+        authState = AuthState.unauthed;
+        _checkAuthStatus();
       }
     });
   }
 
-  AuthedUser? get authedUser => _authedUser;
-
-  ValueNotifier<AuthState> authState = ValueNotifier(AuthState.unknown);
-
   Future<void> registerWithEmailAndPassword(
-      String email, String password) async {
+      String displayName, String email, String password) async {
     try {
-      authState.value = AuthState.registering;
+      internalState = InternalAuthState.registering;
       final UserCredential user = await _firebaseClient
           .createUserWithEmailAndPassword(email: email, password: password);
 
@@ -71,21 +84,24 @@ class AuthBloc {
         final token = await getIdToken();
         final endpoint = EnvironmentConfig.getRestApiEndpoint('user/register');
 
-        final res = await http.post(
-          endpoint,
-          headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
-        );
+        // https://docs.flutter.dev/cookbook/networking/send-data
+        final res = await http.post(endpoint,
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $token',
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode({'name': displayName}));
 
         final String body = res.body;
         final Map<String, dynamic> json =
             jsonDecode(body) as Map<String, dynamic>;
 
         if (json['id'] != null) {
-          _authedUser = AuthedUser.fromJson(json);
+          authedUser = AuthedUser.fromJson(json);
         } else {
           printLog(
               'No valid user ID was returned when trying to register a new user.');
-          _authedUser = null;
+          authedUser = null;
           throw Exception('Sorry, there was an issue registering.');
         }
       } else {
@@ -163,11 +179,11 @@ class AuthBloc {
   }
 
   Future<void> validateUserAgainstFirebaseUid() async {
-    authState.value = AuthState.validating;
+    internalState = InternalAuthState.validating;
     final token = await getIdToken();
     final endpoint = EnvironmentConfig.getRestApiEndpoint('user/current');
 
-    final res = await http.post(
+    final res = await http.get(
       endpoint,
       headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
     );
@@ -176,11 +192,11 @@ class AuthBloc {
     final Map<String, dynamic> json = jsonDecode(body) as Map<String, dynamic>;
 
     if (json['id'] != null) {
-      _authedUser = AuthedUser.fromJson(json);
+      authedUser = AuthedUser.fromJson(json);
       await _checkAuthStatus();
     } else {
       printLog('No valid user ID was returned when trying to validate user.');
-      _authedUser = null;
+      authedUser = null;
       await signOut();
     }
   }
@@ -188,31 +204,42 @@ class AuthBloc {
   Future<void> _checkAuthStatus() async {
     if (_validationAttempts > _maxFailedAttempts) {
       printLog('Too many failed attempts to validate the user. Signing out.');
+      authState = AuthState.unauthed;
       await signOut();
       _validationAttempts = 0;
-    } else if (_firebaseAuthed && _authedUser?.id != null) {
-      authState.value = AuthState.authed;
+    } else if (_firebaseAuthed && authedUser?.id != null) {
+      authState = AuthState.authed;
       _validationAttempts = 0;
-    } else if (!_firebaseAuthed && _authedUser?.id == null) {
-      authState.value = AuthState.unauthed;
+    } else if (!_firebaseAuthed && authedUser?.id == null) {
+      authState = AuthState.unauthed;
       _validationAttempts = 0;
-    } else if (_firebaseAuthed && _authedUser?.id == null) {
+    } else if (_firebaseAuthed && authedUser?.id == null) {
       // Try and validate the user based on the firebase auth, if not already.
-      if (![AuthState.registering, AuthState.validating]
-          .contains(authState.value)) {
-        authState.value = AuthState.validating;
+      if (![InternalAuthState.registering, InternalAuthState.validating]
+          .contains(internalState)) {
         _validationAttempts++;
         await validateUserAgainstFirebaseUid();
       }
-    } else if (!_firebaseAuthed && _authedUser?.id != null) {
+    } else if (!_firebaseAuthed && authedUser?.id != null) {
       printLog(
           'Should not be possible for an AuthUser to be present when firebase is not authed. Signing out.');
+      authState = AuthState.unauthed;
       await signOut();
       _validationAttempts = 0;
     }
+
+    notifyListeners();
   }
 
-  void dispose() {
-    authState.dispose();
+  static Future<bool> displayNameAvailableCheck(String name) async {
+    final endpoint = EnvironmentConfig.getRestApiEndpoint('user/name-check',
+        params: {'name': name});
+
+    final res = await http.get(endpoint);
+
+    final String body = res.body;
+    final Map<String, dynamic> json = jsonDecode(body) as Map<String, dynamic>;
+
+    return json['isAvailable'];
   }
 }

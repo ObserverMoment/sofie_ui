@@ -34,10 +34,10 @@ class StageProgressIndicator extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: isComplete ? Styles.secondaryAccentGradient : null,
+                gradient: isComplete ? Styles.primaryAccentGradient : null,
                 border: Border.all(
                     color: isComplete || isActive
-                        ? Styles.secondaryAccent
+                        ? Styles.primaryAccent
                         : CupertinoTheme.of(context).primaryColor)),
             child: AnimatedSwitcher(
               duration: animationDuration,
@@ -74,12 +74,12 @@ class StageProgressIndicator extends StatelessWidget {
             beforeLineStyle: LineStyle(
                 thickness: 2,
                 color: _isComplete || _isActive
-                    ? Styles.secondaryAccent
+                    ? Styles.primaryAccent
                     : CupertinoColors.inactiveGray),
             afterLineStyle: LineStyle(
                 thickness: 2,
                 color: _isComplete
-                    ? Styles.secondaryAccent
+                    ? Styles.primaryAccent
                     : CupertinoColors.inactiveGray),
             indicatorStyle: IndicatorStyle(
                 height: 40,
@@ -172,6 +172,20 @@ class LoadingCircle extends StatelessWidget {
   }
 }
 
+class LoadingSpinningLines extends StatelessWidget {
+  final Color? color;
+  final double? size;
+  const LoadingSpinningLines({Key? key, this.color, this.size})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return SpinKitSpinningLines(
+        lineWidth: 2,
+        color: color ?? CupertinoTheme.of(context).primaryColor,
+        size: size ?? 30);
+  }
+}
+
 class LinearProgressIndicator extends StatelessWidget {
   final double progress;
   final double width;
@@ -216,7 +230,7 @@ class LinearProgressIndicator extends StatelessWidget {
               duration: animationDuration,
               decoration: BoxDecoration(
                   borderRadius: _borderRadius,
-                  gradient: gradient ?? Styles.secondaryAccentGradient),
+                  gradient: gradient ?? Styles.primaryAccentGradient),
             ),
           ),
         ],

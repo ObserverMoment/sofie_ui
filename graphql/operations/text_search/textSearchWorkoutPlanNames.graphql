@@ -1,0 +1,7 @@
+query textSearchWorkoutPlanNames($text: String!) {
+  textSearchWorkoutPlanNames(text: $text) {
+    id
+    __typename
+    name
+  }
+}

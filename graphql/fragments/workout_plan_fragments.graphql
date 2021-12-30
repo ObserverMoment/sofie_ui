@@ -1,0 +1,114 @@
+# Full data tree including all descendents
+fragment WorkoutPlanData on WorkoutPlan {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  lengthWeeks
+  daysPerWeek
+  coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  contentAccessScope
+  User {
+    ...UserAvatarData
+  }
+  WorkoutPlanDays {
+    ...WorkoutPlanDay
+    WorkoutPlanDayWorkouts {
+      ...WorkoutPlanDayWorkout
+      Workout {
+        ...WorkoutData
+      }
+    }
+  }
+  WorkoutPlanReviews {
+    ...WorkoutPlanReview
+    User {
+      ...UserAvatarData
+    }
+  }
+  WorkoutTags {
+    ...WorkoutTag
+  }
+  WorkoutPlanEnrolments {
+    ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
+    User {
+      ...UserAvatarData
+    }
+  }
+}
+
+fragment WorkoutPlan on WorkoutPlan {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  lengthWeeks
+  daysPerWeek
+  coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  contentAccessScope
+}
+
+fragment WorkoutPlanSummary on WorkoutPlanSummary {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  coverImageUri
+  lengthWeeks
+  daysPerWeek
+  workoutsCount
+  User {
+    ...UserAvatarData
+  }
+  enrolmentsCount
+  goals {
+    ...WorkoutGoal
+  }
+  tags
+  reviewScore
+  reviewCount
+}
+
+fragment ArchivedWorkoutPlan on WorkoutPlan {
+  __typename
+  id
+  name
+  archived
+}
+
+fragment WorkoutPlanDay on WorkoutPlanDay {
+  id
+  __typename
+  note
+  dayNumber
+}
+
+fragment WorkoutPlanDayWorkout on WorkoutPlanDayWorkout {
+  id
+  __typename
+  note
+  sortPosition
+}
+
+fragment WorkoutPlanReview on WorkoutPlanReview {
+  id
+  __typename
+  createdAt
+  score
+  comment
+}

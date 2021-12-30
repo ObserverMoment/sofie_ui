@@ -1,0 +1,8 @@
+mutation updateGymProfile($data: UpdateGymProfileInput!) {
+  updateGymProfile(data: $data) {
+    ...GymProfile
+    Equipments {
+      ...Equipment
+    }
+  }
+}

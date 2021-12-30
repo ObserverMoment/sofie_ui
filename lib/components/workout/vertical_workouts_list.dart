@@ -10,8 +10,8 @@ import 'package:collection/collection.dart';
 /// A list of standard cards if [selectWorkout] is not provided.
 /// A list of [WorkoutCard ContextMenus] if it is.
 class VerticalWorkoutsList extends StatelessWidget {
-  final List<Workout> workouts;
-  final void Function(Workout workout)? selectWorkout;
+  final List<WorkoutSummary> workouts;
+  final void Function(WorkoutSummary workout)? selectWorkout;
   final bool scrollable;
   final bool avoidBottomNavBar;
 
@@ -40,7 +40,7 @@ class VerticalWorkoutsList extends StatelessWidget {
                 subtext: true,
               ),
             ))
-        : ImplicitlyAnimatedList<Workout>(
+        : ImplicitlyAnimatedList<WorkoutSummary>(
             padding: avoidBottomNavBar
                 ? EdgeInsets.only(bottom: EnvironmentConfig.bottomNavBarHeight)
                 : null,
@@ -50,7 +50,7 @@ class VerticalWorkoutsList extends StatelessWidget {
                 .sortedBy<DateTime>((w) => w.createdAt)
                 .reversed
                 .toList(),
-            itemBuilder: (context, animation, Workout workout, i) =>
+            itemBuilder: (context, animation, WorkoutSummary workout, i) =>
                 SizeFadeTransition(
                   sizeFraction: 0.7,
                   curve: Curves.easeInOut,

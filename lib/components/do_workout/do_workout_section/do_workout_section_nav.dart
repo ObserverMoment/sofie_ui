@@ -81,7 +81,7 @@ class NavItem extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
       child: ClipOval(
         child: Container(
-          color: context.theme.cardBackground.withOpacity(0.5),
+          color: context.theme.primary,
           child: CupertinoButton(
             padding: EdgeInsets.zero,
             pressedOpacity: 0.9,
@@ -95,10 +95,12 @@ class NavItem extends StatelessWidget {
                       ? Icon(
                           activeIconData,
                           size: iconSize,
+                          color: context.theme.background,
                         )
                       : Icon(
                           inactiveIconData,
                           size: iconSize,
+                          color: context.theme.background.withOpacity(0.8),
                         )),
             ),
           ),

@@ -180,8 +180,7 @@ class _SingleRoundData extends StatelessWidget {
                         decoration: BoxDecoration(
                             border: Border(
                                 bottom: BorderSide(
-                                    color: context.theme.background
-                                        .withOpacity(0.7)))),
+                                    color: context.theme.background))),
                         child: _SingleSetData(
                             index: i,
                             setData: roundData.sets[i],
@@ -228,7 +227,7 @@ class _SingleSetData extends StatelessWidget {
             children: movesList
                 .map(
                   (m) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
+                    padding: const EdgeInsets.only(top: 2, bottom: 6.0),
                     child: Row(
                       children: [
                         Expanded(

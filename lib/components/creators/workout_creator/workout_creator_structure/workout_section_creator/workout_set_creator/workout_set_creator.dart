@@ -1,22 +1,21 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/animated/dragged_item.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_workout_move.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/nav_bar_ellipsis_menu.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/components/user_input/pickers/round_picker.dart';
 import 'package:sofie_ui/components/user_input/pyramid_generator.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -47,7 +46,6 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
   late List<WorkoutMove> _sortedWorkoutMoves;
   late WorkoutSet _workoutSet;
   late WorkoutCreatorBloc _bloc;
-  late bool _showFullSetInfo;
   late WorkoutSectionType _workoutSectionType;
   bool _shouldRebuild = false;
 
@@ -56,11 +54,6 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
         _bloc.workout.workoutSections[widget.sectionIndex].workoutSectionType) {
       _workoutSectionType =
           _bloc.workout.workoutSections[widget.sectionIndex].workoutSectionType;
-      _shouldRebuild = true;
-    }
-
-    if (_showFullSetInfo != _bloc.showFullSetInfo) {
-      _showFullSetInfo = _bloc.showFullSetInfo;
       _shouldRebuild = true;
     }
 
@@ -93,8 +86,6 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
   void initState() {
     super.initState();
     _bloc = context.read<WorkoutCreatorBloc>();
-
-    _showFullSetInfo = _bloc.showFullSetInfo;
 
     _workoutSectionType =
         _bloc.workout.workoutSections[widget.sectionIndex].workoutSectionType;
@@ -212,6 +203,45 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
     _bloc.reorderWorkoutMoves(widget.sectionIndex, widget.setIndex, from, to);
   }
 
+  Widget _minimizeExpandButton(bool isMinimized) => CupertinoButton(
+      padding: isMinimized ? EdgeInsets.zero : const EdgeInsets.only(right: 16),
+      child: Icon(
+          isMinimized
+              ? CupertinoIcons.fullscreen
+              : CupertinoIcons.fullscreen_exit,
+          size: 20),
+      onPressed: () => context.read<WorkoutCreatorBloc>().toggleMinimizeSetInfo(
+            _workoutSet.id,
+          ));
+
+  Widget get _buildEllipsisMenu => NavBarEllipsisMenu(items: [
+        if (widget.allowReorder)
+          ContextMenuItem(
+              text: 'Move Up',
+              iconData: CupertinoIcons.up_arrow,
+              onTap: _moveWorkoutSetUpOne),
+        if (widget.allowReorder)
+          ContextMenuItem(
+              text: 'Move Down',
+              iconData: CupertinoIcons.down_arrow,
+              onTap: _moveWorkoutSetDownOne),
+        ContextMenuItem(
+            text: 'Duplicate',
+            iconData: CupertinoIcons.plus_rectangle_on_rectangle,
+            onTap: _duplicateWorkoutSet),
+        if (_workoutSectionType.canPyramid)
+          ContextMenuItem(
+              text: 'Pyramid',
+              iconData: CupertinoIcons.triangle_righthalf_fill,
+              onTap: _generateSequenceForPyramid),
+        ContextMenuItem(
+          text: 'Delete',
+          iconData: CupertinoIcons.delete_simple,
+          onTap: _deleteWorkoutSet,
+          destructive: true,
+        ),
+      ]);
+
   @override
   void dispose() {
     _bloc.removeListener(_checkForNewData);
@@ -220,10 +250,40 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
 
   @override
   Widget build(BuildContext context) {
+    final isMinimized = context.select<WorkoutCreatorBloc, bool>(
+        (b) => b.displayMinimizedSetIds.contains(_workoutSet.id));
+
+    final uniqueMoves =
+        _sortedWorkoutMoves.map((wm) => wm.move).toSet().toList();
+
+    if (isMinimized) {
+      return FadeIn(
+        child: ContentBox(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: CommaSeparatedList(uniqueMoves.map((m) => m.name).toList(),
+                  fontSize: FONTSIZE.three),
+            ),
+            Column(
+              children: [
+                _buildEllipsisMenu,
+                _minimizeExpandButton(isMinimized),
+              ],
+            )
+          ],
+        )),
+      );
+    }
     // Don't show reps when user is doing a timed workout and when there is only one move in the set.
     // The user will just do single workout move for as long as workoutSet.duration, so reps are ignored.
     final ignoreReps = !_workoutSectionType.showReps(_workoutSet);
-    return Card(
+
+    final isMultiMoveSet = _workoutSet.isMultiMoveSet;
+
+    return ContentBox(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -260,7 +320,7 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
                         rounds: _workoutSet.rounds,
                         saveValue: _updateRounds,
                         padding: const EdgeInsets.all(4)),
-                  if (!_workoutSet.isRestSet)
+                  if (!_workoutSet.isRestSet && isMultiMoveSet)
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
                       child: WorkoutSetDefinition(workoutSet: _workoutSet),
@@ -271,80 +331,43 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
+                    padding: const EdgeInsets.only(right: 10.0),
                     child: _workoutSet.isRestSet
                         ? const MyText(
                             'REST',
                             size: FONTSIZE.four,
                           )
-                        : CreateTextIconButton(
-                            text: 'Move',
+                        : IconButton(
+                            iconData: CupertinoIcons.add,
+                            size: 22,
                             onPressed: _openAddWorkoutMoveToSet,
                           ),
                   ),
-                  NavBarEllipsisMenu(items: [
-                    if (widget.allowReorder)
-                      ContextMenuItem(
-                          text: 'Move Up',
-                          iconData: CupertinoIcons.up_arrow,
-                          onTap: _moveWorkoutSetUpOne),
-                    if (widget.allowReorder)
-                      ContextMenuItem(
-                          text: 'Move Down',
-                          iconData: CupertinoIcons.down_arrow,
-                          onTap: _moveWorkoutSetDownOne),
-                    ContextMenuItem(
-                        text: 'Duplicate',
-                        iconData: CupertinoIcons.plus_rectangle_on_rectangle,
-                        onTap: _duplicateWorkoutSet),
-                    if (_workoutSectionType.canPyramid)
-                      ContextMenuItem(
-                          text: 'Pyramid',
-                          iconData: CupertinoIcons.triangle_righthalf_fill,
-                          onTap: _generateSequenceForPyramid),
-                    ContextMenuItem(
-                      text: 'Delete',
-                      iconData: CupertinoIcons.delete_simple,
-                      onTap: _deleteWorkoutSet,
-                      destructive: true,
-                    ),
-                  ]),
+                  _minimizeExpandButton(isMinimized),
+                  _buildEllipsisMenu
                 ],
               )
             ],
           ),
           if (!_workoutSet.isRestSet)
-            _showFullSetInfo
-                ? AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    height:
-                        _sortedWorkoutMoves.length * kWorkoutMoveListItemHeight,
-                    child: material.ReorderableListView.builder(
-                        proxyDecorator: (child, index, animation) =>
-                            DraggedItem(child: child),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _sortedWorkoutMoves.length,
-                        itemBuilder: (context, index) => WorkoutSetWorkoutMove(
-                              key: Key(
-                                  '$index-workout_set_creator-${_sortedWorkoutMoves[index].id}'),
-                              workoutMove: _sortedWorkoutMoves[index],
-                              deleteWorkoutMove: _deleteWorkoutMove,
-                              duplicateWorkoutMove: _duplicateWorkoutMove,
-                              openEditWorkoutMove: (wm) =>
-                                  _openEditWorkoutMove(wm, ignoreReps),
-                              showReps: !ignoreReps,
-                              isLast: index == _sortedWorkoutMoves.length - 1,
-                            ),
-                        onReorder: _reorderWorkoutMoves),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: CommaSeparatedList(
-                        _sortedWorkoutMoves.map((wm) => wm.move.name).toList(),
-                        fontSize: FONTSIZE.three),
-                  )
+            material.ReorderableListView.builder(
+                proxyDecorator: (child, index, animation) =>
+                    DraggedItem(child: child),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _sortedWorkoutMoves.length,
+                itemBuilder: (context, index) => WorkoutSetWorkoutMove(
+                    key: Key(
+                        '$index-workout_set_creator-${_sortedWorkoutMoves[index].id}'),
+                    workoutMove: _sortedWorkoutMoves[index],
+                    deleteWorkoutMove: _deleteWorkoutMove,
+                    duplicateWorkoutMove: _duplicateWorkoutMove,
+                    openEditWorkoutMove: (wm) =>
+                        _openEditWorkoutMove(wm, ignoreReps),
+                    showReps: !ignoreReps,
+                    isLast: index == _sortedWorkoutMoves.length - 1,
+                    isPartOfSuperSet: isMultiMoveSet),
+                onReorder: _reorderWorkoutMoves)
           else
             Container()
         ],

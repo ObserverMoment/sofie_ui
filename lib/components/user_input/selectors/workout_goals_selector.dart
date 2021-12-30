@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -141,13 +142,11 @@ class _WorkoutGoalsSelectorState extends State<WorkoutGoalsSelector> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
         withoutLeading: true,
-        trailing: CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: const MyText(
-              'Done',
-              weight: FontWeight.bold,
-            ),
-            onPressed: () => Navigator.pop(context)),
+        trailing: TertiaryButton(
+            backgroundGradient: Styles.primaryAccentGradient,
+            textColor: Styles.white,
+            text: 'Done',
+            onPressed: context.pop),
         middle: const LeadingNavBarTitle(
           'Workout Goals',
         ),
@@ -162,42 +161,39 @@ class _WorkoutGoalsSelectorState extends State<WorkoutGoalsSelector> {
             cardHeight: 50,
           ),
           builder: (data) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                children: [
-                  if (widget.max != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MyText(
-                          'Select up to ${widget.max!} goals - ',
-                        ),
-                        MyText(
-                          '${_activeSelectedWorkoutGoals.length} selected',
-                          color: Styles.secondaryAccent,
-                        ),
-                      ],
-                    ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: ListView(
-                      children: data.workoutGoals
-                          .map((goal) => Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: SelectableBoxExpanded(
-                                  onPressed: () => _handleUpdateSelected(goal),
-                                  height: 50,
-                                  isSelected: _activeSelectedWorkoutGoals
-                                      .contains(goal),
-                                  text: goal.name,
-                                ),
-                              ))
-                          .toList(),
-                    ),
+            return Column(
+              children: [
+                if (widget.max != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MyText(
+                        'Select up to ${widget.max!} goals - ',
+                      ),
+                      MyText(
+                        '${_activeSelectedWorkoutGoals.length} selected',
+                        color: Styles.primaryAccent,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView(
+                    children: data.workoutGoals
+                        .map((goal) => Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: SelectableBoxExpanded(
+                                onPressed: () => _handleUpdateSelected(goal),
+                                height: 50,
+                                isSelected:
+                                    _activeSelectedWorkoutGoals.contains(goal),
+                                text: goal.name,
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                ),
+              ],
             );
           }),
     );

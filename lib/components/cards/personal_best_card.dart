@@ -1,9 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/personal_best/entry_top_score_display.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -50,16 +48,14 @@ class PersonalBestCard extends StatelessWidget {
                     ),
                     MyText(
                       userBenchmark.benchmarkType.display,
-                      color: Styles.secondaryAccent,
+                      weight: FontWeight.bold,
                     ),
                     const SizedBox(height: 6),
                     if (Utils.textNotNull(userBenchmark.equipmentInfo))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 6),
-                        child: MyText(
-                          userBenchmark.equipmentInfo!,
-                          maxLines: 5,
-                        ),
+                        child: MyText(userBenchmark.equipmentInfo!,
+                            maxLines: 5, weight: FontWeight.bold),
                       ),
                   ],
                 ),
@@ -84,21 +80,6 @@ class PersonalBestCard extends StatelessWidget {
                 maxLines: 3,
                 size: FONTSIZE.two,
                 lineHeight: 1.4,
-              ),
-            ),
-          if (userBenchmark.userBenchmarkTags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 6, bottom: 8),
-              child: Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: userBenchmark.userBenchmarkTags
-                    .map(
-                      (tag) => Tag(
-                        tag: tag.name,
-                      ),
-                    )
-                    .toList(),
               ),
             ),
         ],

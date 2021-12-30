@@ -1,0 +1,3 @@
+mutation deleteJournalNoteById($id: ID!) {
+  deleteJournalNoteById(id: $id)
+}

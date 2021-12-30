@@ -9,6 +9,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/calendar.dart';
 import 'package:sofie_ui/components/cards/scheduled_workout_card.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
@@ -32,7 +33,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
   final ScrollController _scrollController = ScrollController();
   late DateTime _selectedDay;
   late DateTime _focusedDay;
-  CalendarFormat _calendarFormat = CalendarFormat.week;
+  CalendarFormat _calendarFormat = CalendarFormat.month;
 
   @override
   void initState() {
@@ -57,7 +58,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
         ? Styles.primaryAccent // Done
         : scheduled.scheduledAt.isBefore(DateTime.now())
             ? Styles.errorRed // Missed
-            : Styles.secondaryAccent; // Upcoming
+            : Styles.primaryAccent; // Upcoming
     return Container(
         height: 8,
         width: 8,
@@ -73,15 +74,17 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
           items: [
             BottomSheetMenuItem(
                 text: 'Your Workouts',
-                onPressed: () => context.navigateTo(PrivateWorkoutFinderRoute(
-                    selectWorkout: (w) => _openScheduleWorkout(w)))),
+                onPressed: () => context.navigateTo(YourWorkoutsRoute(
+                    selectWorkout: (w) => _openScheduleWorkout(w),
+                    showCreateButton: true,
+                    pageTitle: 'Select Workout'))),
             BottomSheetMenuItem(
                 text: 'Public Workouts',
                 onPressed: () => context.navigateTo(PublicWorkoutFinderRoute(
                     selectWorkout: (w) => _openScheduleWorkout(w)))),
           ]));
 
-  Future<void> _openScheduleWorkout(Workout workout) async {
+  Future<void> _openScheduleWorkout(WorkoutSummary workout) async {
     final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
         workout: workout,
         // Open at the selected day and at the current time by combining _selectedDay and DateTime.now().
@@ -136,98 +139,84 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
                         ? const Icon(CupertinoIcons.square_grid_4x3_fill)
                         : const Icon(CupertinoIcons.rectangle_split_3x1),
                   ),
-                  const SizedBox(width: 8),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () => context.push(
-                        child: YourScheduleTextSearch(
-                      allScheduledWorkouts: allScheduled,
-                    )),
-                    child: const Icon(CupertinoIcons.search),
-                  ),
-                  const SizedBox(width: 12),
-                  CreateIconButton(onPressed: _findWorkoutToSchedule),
                 ],
               ),
             ),
-            child: NestedScrollView(
-                controller: _scrollController,
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverToBoxAdapter(
-                      child: Material(
-                        color: context.theme.background,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: TableCalendar(
-                              headerVisible: false,
-                              firstDay: DateTime.utc(2021),
-                              lastDay: DateTime(DateTime.now().year + 10),
-                              focusedDay: _focusedDay,
-                              selectedDayPredicate: (day) {
-                                return isSameDay(_selectedDay, day);
-                              },
-                              onDaySelected: (selectedDay, focusedDay) {
-                                _onDaySelected(
-                                    selectedDay, focusedDay, allScheduled);
-                              },
-                              onPageChanged: (focusedDay) {
-                                setState(() {
-                                  _focusedDay = focusedDay;
-                                });
-                              },
-                              calendarFormat: _calendarFormat,
-                              onFormatChanged: (format) {
-                                setState(() {
-                                  _calendarFormat = format;
-                                });
-                              },
-                              eventLoader: (day) {
-                                return allScheduled
-                                    .where((s) => isSameDay(s.scheduledAt, day))
-                                    .toList();
-                              },
-                              calendarBuilders:
-                                  CalendarBuilders<List<ScheduledWorkout>>(
-                                      singleMarkerBuilder: _buildSingleMarker),
-                              daysOfWeekStyle:
-                                  CalendarUI.daysOfWeekStyle(context),
-                              calendarStyle: CalendarUI.calendarStyle(context)),
-                        ),
-                      ),
-                    )
-                  ];
-                },
-                body: selectedDayScheduled.isEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(32),
-                        child: ListView(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                MyText('Nothing planned...'),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            SecondaryButton(
-                                prefixIconData:
-                                    CupertinoIcons.calendar_badge_plus,
-                                text: 'Plan Something',
-                                onPressed: _findWorkoutToSchedule),
-                          ],
+            child: FABPage(
+              columnButtons: [
+                FloatingButton(
+                    icon: CupertinoIcons.add, onTap: _findWorkoutToSchedule),
+                FloatingButton(
+                    icon: CupertinoIcons.search,
+                    onTap: () => context.push(
+                            child: YourScheduleTextSearch(
+                          allScheduledWorkouts: allScheduled,
+                        ))),
+              ],
+              child: NestedScrollView(
+                  controller: _scrollController,
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return [
+                      SliverToBoxAdapter(
+                        child: Material(
+                          color: context.theme.background,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: TableCalendar(
+                                headerVisible: false,
+                                firstDay: DateTime.utc(2021),
+                                lastDay: DateTime(DateTime.now().year + 10),
+                                focusedDay: _focusedDay,
+                                selectedDayPredicate: (day) {
+                                  return isSameDay(_selectedDay, day);
+                                },
+                                onDaySelected: (selectedDay, focusedDay) {
+                                  _onDaySelected(
+                                      selectedDay, focusedDay, allScheduled);
+                                },
+                                onPageChanged: (focusedDay) {
+                                  setState(() {
+                                    _focusedDay = focusedDay;
+                                  });
+                                },
+                                calendarFormat: _calendarFormat,
+                                onFormatChanged: (format) {
+                                  setState(() {
+                                    _calendarFormat = format;
+                                  });
+                                },
+                                eventLoader: (day) {
+                                  return allScheduled
+                                      .where(
+                                          (s) => isSameDay(s.scheduledAt, day))
+                                      .toList();
+                                },
+                                calendarBuilders:
+                                    CalendarBuilders<List<ScheduledWorkout>>(
+                                        singleMarkerBuilder:
+                                            _buildSingleMarker),
+                                daysOfWeekStyle:
+                                    CalendarUI.daysOfWeekStyle(context),
+                                calendarStyle:
+                                    CalendarUI.calendarStyle(context)),
+                          ),
                         ),
                       )
-                    : ListView(
-                        children: selectedDayScheduled
-                            .map((s) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 4),
-                                  child:
-                                      ScheduledWorkoutCard(scheduledWorkout: s),
-                                ))
-                            .toList(),
-                      )));
+                    ];
+                  },
+                  body: selectedDayScheduled.isEmpty
+                      ? const Center(child: MyText('Nothing planned'))
+                      : ListView(
+                          children: selectedDayScheduled
+                              .map((s) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 4),
+                                    child: ScheduledWorkoutCard(
+                                        scheduledWorkout: s),
+                                  ))
+                              .toList(),
+                        )),
+            ));
       },
     );
   }
@@ -250,8 +239,7 @@ class _YourScheduleTextSearchState extends State<YourScheduleTextSearch> {
     return scheduledWorkout.workout != null &&
         [
           scheduledWorkout.workout!.name,
-          ...scheduledWorkout.workout!.workoutGoals.map((g) => g.name).toList(),
-          ...scheduledWorkout.workout!.workoutTags.map((t) => t.tag).toList()
+          ...scheduledWorkout.workout!.tags,
         ]
             .where((t) => Utils.textNotNull(t))
             .map((t) => t.toLowerCase())
@@ -271,7 +259,7 @@ class _YourScheduleTextSearchState extends State<YourScheduleTextSearch> {
       navigationBar: MyNavBar(
         withoutLeading: true,
         middle: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          padding: const EdgeInsets.only(right: 10.0),
           child: MyCupertinoSearchTextField(
             placeholder: 'Search your schedule',
             autofocus: true,
@@ -281,34 +269,37 @@ class _YourScheduleTextSearchState extends State<YourScheduleTextSearch> {
         ),
         trailing: NavBarTextButton(context.pop, 'Close'),
       ),
-      child: _searchString.length > 2
-          ? filteredScheduledWorkouts.isEmpty
-              ? const Center(
-                  child: MyText(
-                  'No results.',
-                  subtext: true,
-                ))
-              : ListView(
-                  shrinkWrap: true,
-                  children: filteredScheduledWorkouts
-                      .sortedBy<num>((scheduledWorkout) =>
-                          scheduledWorkout.scheduledAt.millisecondsSinceEpoch)
-                      .reversed
-                      .map((scheduledWorkout) => SizeFadeIn(
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 4, right: 4, bottom: 8.0),
-                              child: ScheduledWorkoutCard(
-                                  scheduledWorkout: scheduledWorkout),
-                            ),
-                          ))
-                      .toList(),
-                )
-          : const Center(
-              child: MyText(
-              'Enter at least 3 characters.',
-              subtext: true,
-            )),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: _searchString.length > 2
+            ? filteredScheduledWorkouts.isEmpty
+                ? const Center(
+                    child: MyText(
+                    'No results',
+                    subtext: true,
+                  ))
+                : ListView(
+                    shrinkWrap: true,
+                    children: filteredScheduledWorkouts
+                        .sortedBy<num>((scheduledWorkout) =>
+                            scheduledWorkout.scheduledAt.millisecondsSinceEpoch)
+                        .reversed
+                        .map((scheduledWorkout) => SizeFadeIn(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 4, right: 4, bottom: 8.0),
+                                child: ScheduledWorkoutCard(
+                                    scheduledWorkout: scheduledWorkout),
+                              ),
+                            ))
+                        .toList(),
+                  )
+            : const Center(
+                child: MyText(
+                'Enter at least 3 characters',
+                subtext: true,
+              )),
+      ),
     );
   }
 }

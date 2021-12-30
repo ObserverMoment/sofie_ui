@@ -1,0 +1,14 @@
+query userScheduledWorkouts {
+  userScheduledWorkouts {
+    ...ScheduledWorkout
+    Workout {
+      ...WorkoutSummary
+    }
+    GymProfile {
+      ...GymProfile
+      Equipments {
+        ...Equipment
+      }
+    }
+  }
+}

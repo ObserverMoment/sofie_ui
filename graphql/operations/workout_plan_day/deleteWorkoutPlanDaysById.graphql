@@ -1,0 +1,5 @@
+# Note that this actually batch deletes WorkoutPlanDays
+# and all their WorkoutPlanDayWorkouts
+mutation deleteWorkoutPlanDaysById($ids: [ID!]!) {
+  deleteWorkoutPlanDaysById(ids: $ids)
+}

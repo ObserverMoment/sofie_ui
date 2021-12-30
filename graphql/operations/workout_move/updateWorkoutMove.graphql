@@ -1,0 +1,26 @@
+mutation updateWorkoutMove($data: UpdateWorkoutMoveInput!) {
+  updateWorkoutMove(data: $data) {
+    ...WorkoutMove
+    Equipment {
+      ...Equipment
+    }
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+  }
+}

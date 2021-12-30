@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
@@ -187,8 +187,9 @@ class _WorkoutSetInMovesList extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: kStandardCardBorderRadius,
             border: Border.all(
-                color:
-                    isCurrentSet ? Styles.primaryAccent : Colors.transparent)),
+                color: isCurrentSet
+                    ? Styles.primaryAccent
+                    : material.Colors.transparent)),
         child: state.secondsToNextCheckpoint != null &&
                 workoutSectionType.isTimed &&
                 isCurrentSet

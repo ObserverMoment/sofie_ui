@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:flutter/widgets.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
@@ -210,9 +207,15 @@ class TertiaryButton extends StatelessWidget {
   final IconData? suffixIconData;
   final void Function() onPressed;
   final bool disabled;
-  final EdgeInsets? padding;
+  final EdgeInsets padding;
   final Color? textColor;
+  final FONTSIZE fontSize;
+  final FontWeight fontWeight;
+  final double iconSize;
   final Color? backgroundColor;
+
+  /// [backgroundGradient] will override [backgroundColor].
+  final Gradient? backgroundGradient;
 
   const TertiaryButton(
       {Key? key,
@@ -221,9 +224,13 @@ class TertiaryButton extends StatelessWidget {
       this.suffixIconData,
       required this.onPressed,
       this.disabled = false,
-      this.padding,
+      this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       this.textColor,
-      this.backgroundColor})
+      this.backgroundColor,
+      this.fontSize = FONTSIZE.two,
+      this.backgroundGradient,
+      this.iconSize = 16,
+      this.fontWeight = FontWeight.normal})
       : super(key: key);
 
   @override
@@ -236,33 +243,44 @@ class TertiaryButton extends StatelessWidget {
         onPressed: disabled ? null : onPressed,
         pressedOpacity: 0.9,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          padding: padding,
           decoration: BoxDecoration(
-              color: backgroundColor ?? context.theme.cardBackground,
+              gradient: backgroundGradient,
+              color: backgroundGradient != null
+                  ? null
+                  : backgroundColor ?? context.theme.cardBackground,
               borderRadius: BorderRadius.circular(kStandardButtonBorderRadius)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               if (prefixIconData != null)
-                Icon(
-                  prefixIconData,
-                  color: textColor,
-                  size: 16,
+                Padding(
+                  padding: const EdgeInsets.only(left: 6.0, right: 4),
+                  child: Icon(
+                    prefixIconData,
+                    color: textColor,
+                    size: iconSize,
+                  ),
                 ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: MyText(
                   text.toUpperCase(),
                   color: textColor,
-                  size: FONTSIZE.two,
+                  size: fontSize,
+                  lineHeight: 1.1,
+                  weight: fontWeight,
                 ),
               ),
               if (suffixIconData != null)
-                Icon(
-                  suffixIconData,
-                  color: textColor,
-                  size: 16,
+                Padding(
+                  padding: const EdgeInsets.only(left: 4.0, right: 6),
+                  child: Icon(
+                    suffixIconData,
+                    color: textColor,
+                    size: iconSize,
+                  ),
                 ),
             ],
           ),
@@ -416,63 +434,8 @@ class FloatingActionButtonContainer extends StatelessWidget {
       decoration: BoxDecoration(
           boxShadow: kElevation[6],
           gradient: Styles.primaryAccentGradient,
-          borderRadius: BorderRadius.circular(30)),
+          borderRadius: BorderRadius.circular(60)),
       child: child,
-    );
-  }
-}
-
-class FloatingIconButton extends StatelessWidget {
-  final IconData iconData;
-  final String text;
-  final void Function() onPressed;
-  final bool loading;
-  final EdgeInsets? padding;
-
-  const FloatingIconButton(
-      {Key? key,
-      required this.iconData,
-      required this.onPressed,
-      this.loading = false,
-      required this.text,
-      this.padding})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: CupertinoButton(
-        padding: EdgeInsets.zero,
-        pressedOpacity: 0.8,
-        onPressed: () {
-          Vibrate.feedback(FeedbackType.light);
-          onPressed();
-        },
-        child: FloatingActionButtonContainer(
-          padding: padding ??
-              const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 6.0),
-                child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: loading
-                        ? const LoadingCircle(color: Styles.white, size: 12)
-                        : Icon(iconData, size: 20, color: Styles.white)),
-              ),
-              MyText(
-                text,
-                color: Styles.white,
-                size: FONTSIZE.four,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
@@ -587,9 +550,10 @@ class IconButton extends StatelessWidget {
 class PageLink extends StatelessWidget {
   final void Function() onPress;
   final String linkText;
-  final Widget? icon;
+  final IconData? icon;
   final bool infoHighlight;
   final bool destructiveHighlight;
+  final bool separator;
   final bool loading;
   final bool bold;
 
@@ -601,51 +565,59 @@ class PageLink extends StatelessWidget {
       this.infoHighlight = false,
       this.destructiveHighlight = false,
       this.loading = false,
-      this.bold = false})
+      this.bold = false,
+      this.separator = true})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: loading ? null : onPress,
       child: Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      color: context.theme.primary.withOpacity(0.06)))),
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
+          padding: const EdgeInsets.only(top: 12, left: 8, bottom: 8, right: 8),
+          child: Column(
+            children: [
               Row(
-                children: [
-                  if (icon != null)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: icon,
-                    ),
-                  MyText(
-                    linkText,
-                    color: infoHighlight
-                        ? Styles.infoBlue
-                        : destructiveHighlight
-                            ? Styles.errorRed
-                            : null,
-                    weight: bold ? FontWeight.bold : FontWeight.normal,
-                  ),
-                  if (loading)
-                    const FadeIn(
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 8.0),
-                        child: LoadingDots(
-                          size: 10,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      if (icon != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Icon(icon, size: 20),
                         ),
+                      MyText(
+                        linkText,
+                        color: infoHighlight
+                            ? Styles.infoBlue
+                            : destructiveHighlight
+                                ? Styles.errorRed
+                                : null,
+                        lineHeight: 0.6,
+                        weight: bold ? FontWeight.bold : FontWeight.normal,
                       ),
-                    ),
+                      if (loading)
+                        const FadeIn(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: LoadingDots(
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const Icon(CupertinoIcons.right_chevron, size: 18),
                 ],
               ),
-              const Icon(CupertinoIcons.right_chevron, size: 18),
+              if (separator)
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0, top: 8),
+                  child: Opacity(opacity: 0.4, child: HorizontalLine()),
+                )
             ],
           )),
     );
@@ -677,7 +649,7 @@ class TextButton extends StatelessWidget {
       this.padding,
       this.color,
       this.fontSize = FONTSIZE.three,
-      this.underline = true})
+      this.underline = false})
       : assert(!(confirm && destructive)),
         super(key: key);
 
@@ -771,7 +743,7 @@ class FilterButton extends StatelessWidget {
             right: 0,
             child: Icon(
               CupertinoIcons.checkmark_alt_circle_fill,
-              color: Styles.secondaryAccent,
+              color: Styles.primaryAccent,
               size: 16,
             ),
           )
@@ -796,7 +768,7 @@ class CreateTextIconButton extends StatelessWidget {
     return loading
         ? [
             const LoadingDots(
-              size: 14,
+              size: 10,
             ),
           ]
         : [
@@ -941,7 +913,7 @@ class InfoPopupButton extends StatelessWidget {
               ),
             ),
           )),
-      child: const Icon(CupertinoIcons.info, size: 23),
+      child: const Icon(CupertinoIcons.info),
     );
   }
 }

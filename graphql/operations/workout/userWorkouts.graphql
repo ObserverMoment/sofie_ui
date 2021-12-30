@@ -1,0 +1,6 @@
+# Summary data only - for lists and search results.
+query userWorkouts {
+  userWorkouts {
+    ...WorkoutSummary
+  }
+}

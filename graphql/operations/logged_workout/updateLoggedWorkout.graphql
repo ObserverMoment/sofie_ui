@@ -1,0 +1,5 @@
+mutation updateLoggedWorkout($data: UpdateLoggedWorkoutInput!) {
+  updateLoggedWorkout: updateLoggedWorkout(data: $data) {
+    ...LoggedWorkout
+  }
+}

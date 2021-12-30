@@ -1,0 +1,5 @@
+mutation createClubAnnouncement($data: CreateClubAnnouncementInput!) {
+  createClubAnnouncement(data: $data) {
+    ...ClubAnnouncement
+  }
+}

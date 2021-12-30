@@ -1,0 +1,28 @@
+query userProfile($userId: ID!) {
+  userProfile(userId: $userId) {
+    ...UserProfile
+    Clubs {
+      ...ClubSummary
+      Owner {
+        ...UserAvatarData
+      }
+      Admins {
+        ...UserAvatarData
+      }
+    }
+    LifetimeLogStatsSummary {
+      ...LifetimeLogStatsSummary
+    }
+    Skills {
+      ...Skill
+    }
+    BenchmarksWithBestEntries {
+      UserBenchmarkSummary {
+        ...UserBenchmarkSummary
+      }
+      BestEntry {
+        ...UserBenchmarkEntry
+      }
+    }
+  }
+}

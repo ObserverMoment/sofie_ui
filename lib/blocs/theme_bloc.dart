@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
@@ -130,8 +129,8 @@ abstract class ThemeData {
 
   static CupertinoThemeData cupertinoDarkData = CupertinoThemeData(
       brightness: Brightness.dark,
-      barBackgroundColor: const Color(0xff0a0a0a),
-      scaffoldBackgroundColor: CupertinoColors.black,
+      barBackgroundColor: const Color(0xff050505),
+      scaffoldBackgroundColor: const Color(0xff050505),
       primaryColor: CupertinoColors.white,
       primaryContrastingColor: Styles.primaryAccent,
       textTheme: CupertinoTextThemeData(
@@ -142,7 +141,7 @@ abstract class ThemeData {
 
   static CupertinoThemeData cupertinoLightData = CupertinoThemeData(
       brightness: Brightness.light,
-      barBackgroundColor: const Color(0xFFF7F7F7),
+      barBackgroundColor: CupertinoColors.systemGroupedBackground,
       scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
       primaryColor: CupertinoColors.black,
       primaryContrastingColor: Styles.primaryAccent,

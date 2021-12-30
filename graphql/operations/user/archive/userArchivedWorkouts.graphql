@@ -1,0 +1,5 @@
+query userArchivedWorkouts {
+  archivedWorkout: userArchivedWorkouts {
+    ...ArchivedWorkout
+  }
+}

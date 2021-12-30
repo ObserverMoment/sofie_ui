@@ -9,13 +9,12 @@ import 'package:supercharged/supercharged.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
-/// Extensions which pertain to the processing of fitness related data (i.e. the graphql types.)
-extension ClubExtension on Club {
+extension ClubChatSummaryExtension on ClubChatSummary {
   int get totalMembers => 1 + admins.length + members.length;
 }
 
-extension ClubMembersExtension on ClubMembers {
-  int get totalMembers => 1 + admins.length + members.length;
+extension EquipmentExtension on Equipment {
+  bool get isBodyweight => id == kBodyweightEquipmentId;
 }
 
 extension LoggedWorkoutExtension on LoggedWorkout {
@@ -31,6 +30,15 @@ extension LoggedWorkoutExtension on LoggedWorkout {
 }
 
 extension MoveExtension on Move {
+  WorkoutMoveRepType get initialRepType =>
+      validRepTypes.contains(WorkoutMoveRepType.reps)
+          ? WorkoutMoveRepType.reps
+          : validRepTypes.contains(WorkoutMoveRepType.calories)
+              ? WorkoutMoveRepType.calories
+              : validRepTypes.contains(WorkoutMoveRepType.distance)
+                  ? WorkoutMoveRepType.distance
+                  : WorkoutMoveRepType.time;
+
   /// Can any of its equipments have a load input. [loadAdjustable] = true.
   bool get isLoadAdjustable =>
       requiredEquipments.any((e) => e.loadAdjustable) ||
@@ -75,17 +83,58 @@ extension WorkoutExtension on Workout {
       }
     }
 
-    return allEquipments.toList();
+    return allEquipments.sortedBy<String>((e) => e.name).toList();
   }
+
+  WorkoutSummary get summary => WorkoutSummary()
+    ..$$typename = kWorkoutSummaryTypename
+    ..id = id
+    ..createdAt = createdAt
+    ..archived = archived
+    ..name = name
+    ..user = user
+    ..lengthMinutes = lengthMinutes
+    ..coverImageUri = coverImageUri
+    ..description = description
+    ..difficultyLevel = difficultyLevel
+    ..loggedSessionsCount = 0 // Not displayed when zero
+    ..hasClassAudio = workoutSections.any((ws) => ws.classAudioUri != null)
+    ..hasClassVideo = workoutSections.any((ws) => ws.classVideoUri != null)
+    ..equipments = allEquipment.map((e) => e.name).toList()
+    ..tags = [
+      ...workoutSections.map((ws) => ws.workoutSectionType.name),
+      ...workoutGoals.map((g) => g.name),
+      ...workoutTags.map((t) => t.tag),
+    ];
 }
 
 extension WorkoutPlanExtension on WorkoutPlan {
+  WorkoutPlanSummary get summary => WorkoutPlanSummary()
+    ..$$typename = kWorkoutPlanSummaryTypename
+    ..id = id
+    ..createdAt = createdAt
+    ..archived = archived
+    ..name = name
+    ..description = description
+    ..coverImageUri = coverImageUri
+    ..lengthWeeks = lengthWeeks
+    ..daysPerWeek = daysPerWeek
+    ..workoutsCount = workoutsInPlan.length
+    ..user = user
+    ..enrolmentsCount = workoutPlanEnrolments.length
+    ..goals = workoutGoalsInPlan
+    ..tags = workoutTags.map((t) => t.tag).toList()
+    ..reviewScore = reviewAverage
+    ..reviewCount = workoutPlanReviews.length;
+
   DifficultyLevel? get calcDifficulty {
     final workouts = workoutsInPlan;
     if (workouts.isEmpty) {
       return null;
     }
-    final average = workouts.averageBy((w) => w.difficultyLevel.numericValue);
+    final average = workouts
+        .where((w) => w.difficultyLevel != null)
+        .averageBy((w) => w.difficultyLevel!.numericValue);
     return DifficultyLevelExtension.levelFromNumber(average!);
   }
 
@@ -100,21 +149,7 @@ extension WorkoutPlanExtension on WorkoutPlan {
 
   List<WaffleChartInput> get waffleChartInputs {
     final goals = workoutGoalsInPlan;
-    final data = goals.fold<Map<WorkoutGoal, int>>({}, (acum, next) {
-      if (acum[next] != null) {
-        acum[next] = acum[next]! + 1;
-      } else {
-        acum[next] = 1;
-      }
-      return acum;
-    });
-
-    return data.entries
-        .map((e) => WaffleChartInput(
-            fraction: e.value / goals.length,
-            color: HexColor.fromHex(e.key.hexColor),
-            name: e.key.name))
-        .toList();
+    return DataUtils.waffleChartInputsFromGoals(goals);
   }
 
   /// Excludes the equipment 'Bodyweight' by its ID in [workout.allEquipment].
@@ -149,13 +184,26 @@ extension WorkoutPlanExtension on WorkoutPlan {
   }
 }
 
+extension WorkoutPlanEnrolmentWithPlanExtension
+    on WorkoutPlanEnrolmentWithPlan {
+  WorkoutPlanEnrolmentSummary get summary => WorkoutPlanEnrolmentSummary()
+    ..$$typename = kWorkoutPlanEnrolmentSummaryTypename
+    ..id = workoutPlanEnrolment.id
+    ..startDate = workoutPlanEnrolment.startDate
+    ..completedWorkoutsCount =
+        workoutPlanEnrolment.completedWorkoutPlanDayWorkouts.length
+    ..workoutPlan = workoutPlan.summary;
+}
+
 extension WorkoutPlanDayExtension on WorkoutPlanDay {
   DifficultyLevel? get calcDifficulty {
     final workouts = workoutPlanDayWorkouts.map((d) => d.workout);
     if (workouts.isEmpty) {
       return null;
     }
-    final average = workouts.averageBy((w) => w.difficultyLevel.numericValue);
+    final average = workouts
+        .where((w) => w.difficultyLevel != null)
+        .averageBy((w) => w.difficultyLevel!.numericValue);
     return DifficultyLevelExtension.levelFromNumber(average!);
   }
 }
@@ -165,7 +213,8 @@ extension WorkoutSectionExtension on WorkoutSection {
   String get nameOrTypeForDisplay =>
       Utils.textNotNull(name) ? name! : workoutSectionType.name;
 
-  bool get isFreeSession => workoutSectionType.name == kFreeSessionName;
+  bool get isLifting => workoutSectionType.name == kLiftingName;
+  bool get isCustomSession => workoutSectionType.name == kCustomSessionName;
   bool get isAMRAP => workoutSectionType.name == kAMRAPName;
   bool get isForTime => workoutSectionType.name == kForTimeName;
 
@@ -189,8 +238,8 @@ extension WorkoutSectionExtension on WorkoutSection {
           : null;
 
   /// These section types ignore rounds input - generally it should be forced to be [1] when these sections are being used.
-  bool get roundsInputAllowed =>
-      ![kAMRAPName, kFreeSessionName].contains(workoutSectionType.name);
+  bool get roundsInputAllowed => ![kAMRAPName, kCustomSessionName, kLiftingName]
+      .contains(workoutSectionType.name);
 
   List<BodyArea> get uniqueBodyAreas {
     final Set<BodyArea> sectionBodyAreas =
@@ -235,37 +284,64 @@ extension WorkoutSectionExtension on WorkoutSection {
         .toList();
   }
 
-  /// Retuns all the equipment needed for completing the section along with the load needed for each. Also removes [bodyweight] if present.
+  /// Returns all the equipment needed for completing the section along with the load needed for each. Also removes [bodyweight] if present.
   List<EquipmentWithLoad> get equipmentsWithLoad {
+    final List<WorkoutMove> workoutMoves = workoutSets
+        .fold(<WorkoutMove>[], (acum, next) => [...acum, ...next.workoutMoves]);
+
     final Set<EquipmentWithLoad> sectionEquipmentsWithLoad =
-        workoutSets.fold({}, (acum1, workoutSet) {
-      final Set<EquipmentWithLoad> setEquipments =
-          workoutSet.workoutMoves.fold({}, (acum2, workoutMove) {
-        if (workoutMove.equipment != null) {
-          acum2.add(EquipmentWithLoad(
-              equipment: workoutMove.equipment!,
-              loadAmount: workoutMove.equipment!.loadAdjustable
-                  ? workoutMove.loadAmount
-                  : null,
-              loadUnit: workoutMove.loadUnit));
-        }
-        if (workoutMove.move.requiredEquipments.isNotEmpty) {
-          acum2.addAll(workoutMove.move.requiredEquipments.map((e) =>
-              EquipmentWithLoad(
-                  equipment: e,
-                  loadAmount: e.loadAdjustable ? workoutMove.loadAmount : null,
-                  loadUnit: workoutMove.loadUnit)));
-        }
-        return acum2;
-      });
-
-      acum1.addAll(setEquipments);
-
-      return acum1;
+        workoutMoves.fold(<EquipmentWithLoad>{}, (acum, next) {
+      if (next.equipment == null && next.move.requiredEquipments.isEmpty) {
+        return acum;
+      } else {
+        final equipmentsWithLoad = [
+          next.equipment,
+          ...next.move.requiredEquipments
+        ].whereType<Equipment>().map((e) => EquipmentWithLoad(
+            equipment: e,
+            loadAmount: next.loadAmount,
+            loadUnit: next.loadUnit));
+        return {...acum, ...equipmentsWithLoad};
+      }
     });
 
     return sectionEquipmentsWithLoad
         .where((e) => e.equipment.id != kBodyweightEquipmentId)
+        .sorted((a, b) {
+      if (a.equipment.name == b.equipment.name) {
+        return (a.loadAmount ?? 0).compareTo(b.loadAmount ?? 0);
+      } else {
+        return a.equipment.name.compareTo(b.equipment.name);
+      }
+    }).toList();
+  }
+
+  /// Returns an object with Equipment + a List of load strings e.g [20kgs, 30kgs, 40kgs].
+  /// Also checks to see if the equipment is in two parts (e.g dumbbells) and if so splits the load between 2.
+  List<EquipmentWithLoadsAsStrings> get combinedEquipmentWithLoads {
+    final withLoad = equipmentsWithLoad;
+
+    final map = withLoad.fold<Map<Equipment, List<String>>>(
+        <Equipment, List<String>>{}, (acum, next) {
+      /// If load
+      if (!acum.containsKey(next.equipment)) {
+        acum[next.equipment] = <String>[];
+      }
+
+      if (next.loadAmount != null) {
+        final individualLoadAmount =
+            DataUtils.getLoadPerEquipmentUnit(next.equipment, next.loadAmount!);
+
+        acum[next.equipment]!.add(
+            '${individualLoadAmount.stringMyDouble()}${next.loadUnit.display}');
+      }
+
+      return acum;
+    });
+
+    return map.entries
+        .map((e) =>
+            EquipmentWithLoadsAsStrings(equipment: e.key, loadStrings: e.value))
         .toList();
   }
 
@@ -291,6 +367,9 @@ extension WorkoutSectionTypeExtension on WorkoutSectionType {
   bool get canPyramid => ![kHIITCircuitName, kTabataName].contains(name);
 
   bool get isAMRAP => name == kAMRAPName;
+  bool get isForTime => name == kForTimeName;
+  bool get isLifting => name == kLiftingName;
+  bool get isCustom => name == kCustomSessionName;
 
   bool get isScored => [kAMRAPName, kForTimeName].contains(name);
 
@@ -300,8 +379,7 @@ extension WorkoutSectionTypeExtension on WorkoutSectionType {
         kEMOMName,
       ].contains(name);
 
-  bool get roundsInputAllowed =>
-      [kForTimeName, kFreeSessionName].contains(name);
+  bool get roundsInputAllowed => isForTime;
 
   /// Don't show reps when the section is a HIIT or a tabata because the user just repeats the move for workoutSet.duration. UNLESS there are more than one moves, and then the user loops around these two moves for workoutSet.duration - which means you need to know how much of each move to do before moving onto the next.
   bool showReps(WorkoutSet workoutSet) =>
@@ -313,6 +391,23 @@ extension WorkoutSectionTypeExtension on WorkoutSectionType {
 }
 
 extension WorkoutSetExtension on WorkoutSet {
+  /// A unique move is where the move and the equipment are the same.
+  /// Reps and load can be different.
+  int get uniqueMovesInSet => workoutMoves
+      .map((wm) => '${wm.move.id}:${wm.equipment?.id}')
+      .toSet()
+      .length;
+
+  bool get isMultiMoveSet => uniqueMovesInSet > 1;
+
   bool get isRestSet =>
       workoutMoves.length == 1 && workoutMoves[0].move.id == kRestMoveId;
+}
+
+extension WorkoutMoveExtension on WorkoutMove {
+  String get repDisplay => repType == WorkoutMoveRepType.time
+      ? timeUnit.shortDisplay
+      : repType == WorkoutMoveRepType.distance
+          ? distanceUnit.shortDisplay
+          : repType.shortDisplay;
 }

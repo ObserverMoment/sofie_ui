@@ -26,12 +26,19 @@ class EnvironmentConfig {
           : 'http://$apiHost:4000/graphql';
 
   // Either from ENV or local (ios, web or android). Used for sign on + auth.
-  static Uri getRestApiEndpoint(String endpoint) {
+  static Uri getRestApiEndpoint(String endpoint,
+      {Map<String, dynamic>? params}) {
+    final url = 'api/$endpoint';
+
     return const bool.hasEnvironment('SOFIE_API_HOST')
-        ? Uri.https(apiHost, 'api/$endpoint')
+        ? Uri.https(apiHost, url, params)
         // Use raw Uri due to host setting issues with other constructors
         : Uri(
-            scheme: 'http', host: apiHost, port: 4000, path: '/api/$endpoint');
+            scheme: 'http',
+            host: apiHost,
+            port: 4000,
+            path: url,
+            queryParameters: params);
   }
 
   static String get uploadCarePublicKey =>

@@ -1,26 +1,27 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/countdown_animation.dart';
-import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/material_elevation.dart';
 
 class StartResumeButton extends StatelessWidget {
   final int sectionIndex;
-  final double height;
-  const StartResumeButton(
-      {Key? key, required this.sectionIndex, required this.height})
+  const StartResumeButton({Key? key, required this.sectionIndex})
       : super(key: key);
 
   /// Runs a countdown animation and THEN starts the workout.
-  void _startSectionCountdown(BuildContext context, bool isFreeSession) {
+  void _startSectionCountdown(
+      BuildContext context, bool isFreeSessionOrLifting) {
+    Vibrate.feedback(FeedbackType.light);
+
     final bloc = context.read<DoWorkoutBloc>();
     final playSection = bloc.playSection;
 
-    if (isFreeSession) {
+    if (isFreeSessionOrLifting) {
       playSection(sectionIndex);
     } else {
       /// Save refs before pushing route which will have new context which will not have access to [DoWorkoutBloc].
@@ -48,33 +49,34 @@ class StartResumeButton extends StatelessWidget {
         (b) => b.getControllerForSection(sectionIndex).sectionHasStarted);
 
     /// No countdown required for a free session.
-    final isFreeSession = context.select<DoWorkoutBloc, bool>(
-        (b) => b.activeWorkout.workoutSections[sectionIndex].isFreeSession);
+    final isFreeSessionOrLifting = context.select<DoWorkoutBloc, bool>((b) {
+      return b.activeWorkout.workoutSections[sectionIndex].isCustomSession ||
+          b.activeWorkout.workoutSections[sectionIndex].isLifting;
+    });
 
     return GestureDetector(
-      onTap: () => sectionHasStarted
-          ? context.read<DoWorkoutBloc>().playSection(sectionIndex)
-          : _startSectionCountdown(context, isFreeSession),
-      child: AnimatedContainer(
-        duration: kStandardAnimationDuration,
-        height: height,
+      onTap: sectionHasStarted
+          ? () {
+              Vibrate.feedback(FeedbackType.light);
+              context.read<DoWorkoutBloc>().playSection(sectionIndex);
+            }
+          : () => _startSectionCountdown(context, isFreeSessionOrLifting),
+      child: Container(
+        width: 160,
+        height: 160,
+        alignment: Alignment.center,
         decoration: BoxDecoration(
-          gradient: sectionHasStarted
-              ? Styles.secondaryButtonGradient
-              : Styles.primaryAccentGradient,
+          boxShadow: kElevation[5],
+          shape: BoxShape.circle,
+          gradient: Styles.primaryAccentGradient,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              CupertinoIcons.play,
-              color: Styles.white,
-            ),
-            const SizedBox(width: 6),
-            MyText(sectionHasStarted ? 'RESUME' : 'START',
-                color: Styles.white, size: FONTSIZE.five)
-          ],
+        child: const Padding(
+          padding: EdgeInsets.only(left: 12.0),
+          child: Icon(
+            CupertinoIcons.play_fill,
+            color: Styles.white,
+            size: 70,
+          ),
         ),
       ),
     );

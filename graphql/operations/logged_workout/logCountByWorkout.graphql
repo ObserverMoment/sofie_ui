@@ -1,0 +1,3 @@
+query logCountByWorkout($id: ID!) {
+  logCountByWorkout(id: $id)
+}

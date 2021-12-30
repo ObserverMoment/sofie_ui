@@ -1,0 +1,5 @@
+mutation createBodyTrackingEntry($data: CreateBodyTrackingEntryInput!) {
+  createBodyTrackingEntry(data: $data) {
+    ...BodyTrackingEntry
+  }
+}

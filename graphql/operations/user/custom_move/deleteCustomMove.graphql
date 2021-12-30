@@ -1,0 +1,3 @@
+mutation deleteMoveById($id: ID!) {
+  softDeleteMoveById(id: $id)
+}

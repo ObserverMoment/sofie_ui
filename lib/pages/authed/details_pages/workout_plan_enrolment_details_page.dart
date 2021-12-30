@@ -1,11 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/review_card.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -21,11 +19,14 @@ import 'package:sofie_ui/components/workout_plan_enrolment/workout_plan_enrolmen
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 class WorkoutPlanEnrolmentDetailsPage extends StatefulWidget {
   final String id;
@@ -47,71 +48,118 @@ class _WorkoutPlanEnrolmentDetailsPageState
     setState(() => _activeTabIndex = index);
   }
 
-  Future<void> _updateStartDate(WorkoutPlanEnrolment enrolment) async {
-    context.showBottomSheet(
-        expand: false,
-        child: DateTimePicker(
-          title: 'Change Start Date',
-          dateTime: enrolment.startDate,
-          showDate: true,
-          showTime: false,
-          saveDateTime: (newDate) async {
-            final variables = UpdateWorkoutPlanEnrolmentArguments(
-                data: UpdateWorkoutPlanEnrolmentInput(id: ''));
-
-            final result = await context.graphQLStore.mutate<
-                    UpdateWorkoutPlanEnrolment$Mutation,
-                    UpdateWorkoutPlanEnrolmentArguments>(
-                mutation:
-                    UpdateWorkoutPlanEnrolmentMutation(variables: variables),
-                broadcastQueryIds: [
-                  GQLVarParamKeys.workoutPlanByEnrolmentId(enrolment.id),
-                  EnrolledWorkoutPlansQuery().operationName,
-                ],
-                customVariablesMap: {
-                  'data': {
-                    'id': enrolment.id,
-                    'startDate': newDate.millisecondsSinceEpoch
-                  }
-                });
-
-            if (result.hasErrors) {
-              context.showErrorAlert(
-                  'Something went wrong, the update did not work.');
-            }
-          },
-        ));
-  }
-
-  void _confirmResetPlan() {
+  void _confirmSchedulePlan() {
     context.showConfirmDialog(
-        title: 'Reset Plan Progress?',
-        verb: 'Reset Progress',
-        message: 'All completed workout progress will be cleared. OK?',
-        onConfirm: _resetCompletedWorkoutPlanDayWorkoutIds);
+        title: 'Schedule Plan',
+        verb: 'Schedule Plan',
+        message:
+            'All workouts will be added to your calendar, starting from your chosen date and time. Any previous schedule will be cleared.',
+        onConfirm: () => _selectScheduleStartDate());
   }
 
-  Future<void> _resetCompletedWorkoutPlanDayWorkoutIds() async {
-    final variables = UpdateWorkoutPlanEnrolmentArguments(
-        data: UpdateWorkoutPlanEnrolmentInput(id: ''));
+  void _selectScheduleStartDate() {
+    context.showBottomSheet(
+        child: DateTimePicker(
+      saveDateTime: _createScheduleForPlanEnrolment,
+      title: 'Start Date and Time',
+    ));
+  }
 
-    final result = await context.graphQLStore.mutate<
-            UpdateWorkoutPlanEnrolment$Mutation,
-            UpdateWorkoutPlanEnrolmentArguments>(
-        mutation: UpdateWorkoutPlanEnrolmentMutation(variables: variables),
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutPlanByEnrolmentId(widget.id),
-          EnrolledWorkoutPlansQuery().operationName,
+  Future<void> _createScheduleForPlanEnrolment(DateTime startDate) async {
+    final variables = CreateScheduleForPlanEnrolmentArguments(
+        data: CreateScheduleForPlanEnrolmentInput(
+            startDate: startDate, workoutPlanEnrolmentId: widget.id));
+
+    final result = await context.graphQLStore.mutate(
+        mutation: CreateScheduleForPlanEnrolmentMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.workoutPlanEnrolments
         ],
-        customVariablesMap: {
-          'data': {'id': widget.id, 'completedPlanDayWorkoutIds': []}
-        });
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
+        ]);
 
-    if (result.hasErrors) {
-      context.showErrorAlert('Something went wrong, the update did not work.');
-    } else {
-      context.showToast(message: 'Plan progress reset');
-    }
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message:
+            'Plan scheduled! 1st workout on ${startDate.compactDateString}',
+      ),
+    );
+  }
+
+  void _confirmClearSchedule() {
+    context.showConfirmDialog(
+        title: 'Clear Plan Schedule',
+        message:
+            'All workouts from this plan will be removed from your calendar.',
+        onConfirm: _clearScheduleForPlanEnrolment);
+  }
+
+  Future<void> _clearScheduleForPlanEnrolment() async {
+    final variables =
+        ClearScheduleForPlanEnrolmentArguments(enrolmentId: widget.id);
+
+    final result = await context.graphQLStore.mutate(
+        mutation: ClearScheduleForPlanEnrolmentMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.workoutPlanEnrolments
+        ],
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
+        ]);
+
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message: 'Plan schedule removed from your calendar.',
+      ),
+    );
+  }
+
+  /// Deletes all [CompletedWorkoutplanDayWorkouts] from the enrolment - for full reset.
+  void _confirmClearAllProgress() {
+    context.showConfirmDialog(
+        title: 'Clear All Progress',
+        message:
+            'All progress will be reset. Logged workouts will not be deleted, but they will no longer count towards progress in this plan.',
+        onConfirm: _clearWorkoutPlanEnrolmentProgres);
+  }
+
+  Future<void> _clearWorkoutPlanEnrolmentProgres() async {
+    final variables =
+        ClearWorkoutPlanEnrolmentProgressArguments(enrolmentId: widget.id);
+
+    final result = await context.graphQLStore.mutate(
+        mutation:
+            ClearWorkoutPlanEnrolmentProgressMutation(variables: variables),
+        refetchQueryIds: [
+          GQLOpNames.workoutPlanEnrolments
+        ],
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
+        ]);
+
+    checkOperationResult(
+      context,
+      result,
+      onFail: () => context.showToast(
+          message: 'Sorry, there was a problem',
+          toastType: ToastType.destructive),
+      onSuccess: () => context.showToast(
+        message: 'Plan progress has been reset.',
+      ),
+    );
   }
 
   Future<void> _shareWorkoutPlan(WorkoutPlan workoutPlan) async {
@@ -119,26 +167,49 @@ class _WorkoutPlanEnrolmentDetailsPageState
         'workout-plan/${workoutPlan.id}', 'Check out this workout plan!');
   }
 
-  void _confirmLeavePlan() {
+  void _confirmLeavePlan(WorkoutPlan workoutPlan) {
     context.showConfirmDialog(
         title: 'Leave Plan?',
         message:
             'Progress within the plan will not be saved. Your logged workouts will not be affected. OK?',
         verb: 'Leave',
-        onConfirm: _deleteWorkoutPlanEnrolmentById);
+        onConfirm: () => _deleteWorkoutPlanEnrolmentById(workoutPlan));
   }
 
   /// I.e unenrol the user from the plan.
-  Future<void> _deleteWorkoutPlanEnrolmentById() async {
+  Future<void> _deleteWorkoutPlanEnrolmentById(WorkoutPlan workoutPlan) async {
     final variables = DeleteWorkoutPlanEnrolmentByIdArguments(id: widget.id);
 
     final result = await context.graphQLStore.delete<
             DeleteWorkoutPlanEnrolmentById$Mutation,
             DeleteWorkoutPlanEnrolmentByIdArguments>(
-        objectId: widget.id,
-        typename: kWorkoutPlanEnrolmentTypename,
         mutation: DeleteWorkoutPlanEnrolmentByIdMutation(variables: variables),
-        removeRefFromQueries: [EnrolledWorkoutPlansQuery().operationName]);
+        objectId: widget.id,
+        typename: kWorkoutPlanEnrolmentWithPlanTypename,
+        processResult: (data) {
+          /// Remove the [WorkoutPlanEnrolmentSummary].
+          final summaryKey =
+              '$kWorkoutPlanEnrolmentSummaryTypename:${widget.id}';
+          context.graphQLStore.deleteNormalizedObject(summaryKey);
+          context.graphQLStore.removeAllQueryRefsToId(summaryKey);
+
+          /// Remove the enrolment from the [WorkoutPlan] in store then re-write.
+          final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
+          final planKey = '$kWorkoutPlanTypename:${workoutPlan.id}';
+          final plan = WorkoutPlan.fromJson(
+              context.graphQLStore.readDenomalized(planKey));
+          plan.workoutPlanEnrolments
+              .removeWhere((e) => e.user.id == authedUserId);
+
+          context.graphQLStore.writeDataToStore(data: plan.toJson());
+        },
+        broadcastQueryIds: [
+          GQLOpNames.workoutPlanEnrolments,
+          GQLVarParamKeys.workoutPlanById(workoutPlan.id)
+        ],
+        clearQueryDataAtKeys: [
+          GQLVarParamKeys.workoutPlanEnrolmentById(widget.id),
+        ]);
 
     if (result.hasErrors) {
       context.showErrorAlert(
@@ -150,27 +221,23 @@ class _WorkoutPlanEnrolmentDetailsPageState
 
   @override
   Widget build(BuildContext context) {
-    final query = WorkoutPlanByEnrolmentIdQuery(
-        variables: WorkoutPlanByEnrolmentIdArguments(id: widget.id));
+    final query = WorkoutPlanEnrolmentByIdQuery(
+        variables: WorkoutPlanEnrolmentByIdArguments(id: widget.id));
 
-    return QueryObserver<WorkoutPlanByEnrolmentId$Query,
-            WorkoutPlanByEnrolmentIdArguments>(
+    return QueryObserver<WorkoutPlanEnrolmentById$Query,
+            WorkoutPlanEnrolmentByIdArguments>(
         key: Key(
             'WorkoutPlanEnrolmentDetailsPage - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (data) {
-          final workoutPlan = data.workoutPlanByEnrolmentId;
-
-          final enrolments = workoutPlan.workoutPlanEnrolments;
-
-          /// No else null fallback specified because the user should not be on this page if they are not enrolled in this plan.
-          final enrolment = enrolments.firstWhere((e) => e.id == widget.id);
+          final enrolmentWithPlan = data.workoutPlanEnrolmentById;
+          final enrolment = enrolmentWithPlan.workoutPlanEnrolment;
+          final workoutPlan = enrolmentWithPlan.workoutPlan;
 
           final String? authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-          final WorkoutPlanReview? authedUserReview = workoutPlan
-              .workoutPlanReviews
+          final WorkoutPlanReview? authedUserReview = enrolmentWithPlan
+              .workoutPlan.workoutPlanReviews
               .firstWhereOrNull((r) => r.user.id == authedUserId);
 
           return MyPageScaffold(
@@ -189,13 +256,24 @@ class _WorkoutPlanEnrolmentDetailsPageState
                           ),
                           items: [
                             BottomSheetMenuItem(
-                                text: 'Reset progress',
-                                icon: const Icon(CupertinoIcons.refresh_bold),
-                                onPressed: _confirmResetPlan),
-                            BottomSheetMenuItem(
-                                text: 'Change start date',
-                                icon: const Icon(CupertinoIcons.calendar_today),
-                                onPressed: () => _updateStartDate(enrolment)),
+                                text: enrolment.startDate == null
+                                    ? 'Schedule All Workouts'
+                                    : 'Re-schedule All Workouts',
+                                icon: const Icon(
+                                    CupertinoIcons.calendar_badge_plus),
+                                onPressed: _confirmSchedulePlan),
+                            if (enrolment.startDate != null)
+                              BottomSheetMenuItem(
+                                  text: 'Clear Plan Schedule',
+                                  icon: const Icon(
+                                      CupertinoIcons.calendar_badge_minus),
+                                  onPressed: _confirmClearSchedule),
+                            if (enrolment
+                                .completedWorkoutPlanDayWorkouts.isNotEmpty)
+                              BottomSheetMenuItem(
+                                  text: 'Reset progress',
+                                  icon: const Icon(CupertinoIcons.refresh_bold),
+                                  onPressed: _confirmClearAllProgress),
                             BottomSheetMenuItem(
                                 text: 'Share plan',
                                 icon: const Icon(CupertinoIcons.paperplane),
@@ -208,7 +286,8 @@ class _WorkoutPlanEnrolmentDetailsPageState
                                   CupertinoIcons.square_arrow_right,
                                   color: Styles.errorRed,
                                 ),
-                                onPressed: _confirmLeavePlan),
+                                onPressed: () =>
+                                    _confirmLeavePlan(workoutPlan)),
                           ])),
                 ),
               ),
@@ -219,7 +298,10 @@ class _WorkoutPlanEnrolmentDetailsPageState
                       vertical: 12.0,
                     ),
                     child: WorkoutPlanEnrolmentProgressSummary(
-                        workoutPlan: workoutPlan, enrolment: enrolment),
+                        completed:
+                            enrolment.completedWorkoutPlanDayWorkouts.length,
+                        startedOn: enrolment.startDate,
+                        total: workoutPlan.workoutsInPlan.length),
                   ),
                   MyTabBarNav(
                       titles: const [
@@ -227,15 +309,14 @@ class _WorkoutPlanEnrolmentDetailsPageState
                         'Info',
                         'Goals',
                         'Reviews',
-                        'Social',
+                        'People',
                       ],
                       handleTabChange: _handleTabChange,
                       activeTabIndex: _activeTabIndex),
                   Expanded(
                     child: IndexedStack(index: _activeTabIndex, children: [
-                      WorkoutPlanEnrolmentWorkoutsProgress(
-                        workoutPlan: workoutPlan,
-                        enrolment: enrolment,
+                      WorkoutPlanEnrolmentProgress(
+                        enrolmentWithPlan: enrolmentWithPlan,
                       ),
                       WorkoutPlanMeta(
                           workoutPlan: workoutPlan,
@@ -247,12 +328,11 @@ class _WorkoutPlanEnrolmentDetailsPageState
                         workoutPlan: workoutPlan,
                       ),
                       _YourReviewDisplay(
-                        workoutPlanEnrolment: enrolment,
+                        enrolmentWithPlan: enrolmentWithPlan,
                         authedUserReview: authedUserReview,
-                        workoutPlan: workoutPlan,
                       ),
                       WorkoutPlanParticipants(
-                        userSummaries: enrolments.map((e) => e.user).toList(),
+                        workoutPlan: workoutPlan,
                       )
                     ]),
                   ),
@@ -263,18 +343,19 @@ class _WorkoutPlanEnrolmentDetailsPageState
 }
 
 class _YourReviewDisplay extends StatelessWidget {
-  final WorkoutPlanEnrolment workoutPlanEnrolment;
-  final WorkoutPlan workoutPlan;
+  final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
   final WorkoutPlanReview? authedUserReview;
-  const _YourReviewDisplay(
-      {Key? key,
-      required this.workoutPlanEnrolment,
-      required this.authedUserReview,
-      required this.workoutPlan})
-      : super(key: key);
+  const _YourReviewDisplay({
+    Key? key,
+    required this.enrolmentWithPlan,
+    required this.authedUserReview,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final enrolment = enrolmentWithPlan.workoutPlanEnrolment;
+    final workoutPlan = enrolmentWithPlan.workoutPlan;
+
     final otherReviews = authedUserReview == null
         ? workoutPlan.workoutPlanReviews
         : workoutPlan.workoutPlanReviews
@@ -300,13 +381,13 @@ class _YourReviewDisplay extends StatelessWidget {
                   mini: true,
                   prefix: const Icon(
                     CupertinoIcons.star_fill,
-                    color: Styles.secondaryAccent,
+                    color: Styles.primaryAccent,
                     size: 14,
                   ),
                   text: 'Edit Review',
                   onPressed: () =>
                       context.pushRoute(WorkoutPlanReviewCreatorRoute(
-                    parentWorkoutPlanEnrolmentId: workoutPlanEnrolment.id,
+                    parentWorkoutPlanEnrolmentId: enrolment.id,
                     parentWorkoutPlanId: workoutPlan.id,
                     workoutPlanReview: authedUserReview,
                   )),
@@ -333,13 +414,13 @@ class _YourReviewDisplay extends StatelessWidget {
                     mini: true,
                     prefix: const Icon(
                       CupertinoIcons.star_fill,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                       size: 14,
                     ),
                     text: 'Leave Review',
                     onPressed: () =>
                         context.pushRoute(WorkoutPlanReviewCreatorRoute(
-                      parentWorkoutPlanEnrolmentId: workoutPlanEnrolment.id,
+                      parentWorkoutPlanEnrolmentId: enrolment.id,
                       parentWorkoutPlanId: workoutPlan.id,
                     )),
                   ),

@@ -24,6 +24,8 @@ class RepPickerDisplay extends StatelessWidget {
   final TimeUnit timeUnit;
   final void Function(TimeUnit timeUnit) updateTimeUnit;
   final bool expandPopup;
+  final FONTSIZE valueFontSize;
+  final FONTSIZE suffixFontSize;
 
   const RepPickerDisplay(
       {Key? key,
@@ -36,7 +38,9 @@ class RepPickerDisplay extends StatelessWidget {
       required this.updateDistanceUnit,
       required this.timeUnit,
       required this.updateTimeUnit,
-      this.expandPopup = false})
+      this.expandPopup = false,
+      this.valueFontSize = FONTSIZE.nine,
+      this.suffixFontSize = FONTSIZE.five})
       : super(key: key);
 
   Widget _buildRepTypeDisplay() {
@@ -44,27 +48,27 @@ class RepPickerDisplay extends StatelessWidget {
       case WorkoutMoveRepType.distance:
         return MyText(
           describeEnum(distanceUnit),
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       case WorkoutMoveRepType.time:
         return MyText(
           describeEnum(timeUnit),
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       case WorkoutMoveRepType.reps:
         return MyText(
           reps == 1 ? 'rep' : 'reps',
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       case WorkoutMoveRepType.calories:
         return MyText(
           reps == 1 ? 'cal' : 'cals',
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
       default:
         return MyText(
           describeEnum(repType),
-          size: FONTSIZE.five,
+          size: suffixFontSize,
         );
     }
   }
@@ -91,10 +95,10 @@ class RepPickerDisplay extends StatelessWidget {
           children: [
             MyText(
               reps.stringMyDouble(),
-              size: FONTSIZE.nine,
+              size: valueFontSize,
             ),
             const SizedBox(
-              width: 6,
+              width: 4,
             ),
             _buildRepTypeDisplay(),
           ],
@@ -193,13 +197,18 @@ class _RepPickerModalState extends State<RepPickerModal> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.validRepTypes.length > 1)
-                  SlidingSelect<WorkoutMoveRepType>(
+                  MySlidingSegmentedControl<WorkoutMoveRepType>(
                       value: _activeRepType,
+                      fontSize: 15,
+                      containerPadding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 2),
+                      childPadding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 8),
                       children: {
                         for (final v in WorkoutMoveRepType.values.where((v) =>
                             v != WorkoutMoveRepType.artemisUnknown &&
                             widget.validRepTypes.contains(v)))
-                          v: MyText(v.display)
+                          v: v.display
                       },
                       updateValue: (repType) =>
                           setState(() => _activeRepType = repType)),
@@ -216,12 +225,12 @@ class _RepPickerModalState extends State<RepPickerModal> {
               ),
             ),
             if (_activeRepType == WorkoutMoveRepType.time)
-              SlidingSelect<TimeUnit>(
+              MySlidingSegmentedControl<TimeUnit>(
                   value: _activeTimeUnit,
                   children: {
                     for (final v in TimeUnit.values
                         .where((v) => v != TimeUnit.artemisUnknown))
-                      v: MyText(describeEnum(v))
+                      v: describeEnum(v)
                   },
                   updateValue: (timeUnit) =>
                       setState(() => _activeTimeUnit = timeUnit)),
@@ -230,12 +239,12 @@ class _RepPickerModalState extends State<RepPickerModal> {
               FadeIn(child: MyText(_activeRepType.display)),
             if (_activeRepType == WorkoutMoveRepType.distance)
               FadeIn(
-                child: SlidingSelect<DistanceUnit>(
+                child: MySlidingSegmentedControl<DistanceUnit>(
                     value: _activeDistanceUnit,
                     children: {
                       for (final v in DistanceUnit.values
                           .where((v) => v != DistanceUnit.artemisUnknown))
-                        v: MyText(v.display)
+                        v: v.display
                     },
                     updateValue: (distanceUnit) =>
                         setState(() => _activeDistanceUnit = distanceUnit)),
@@ -278,12 +287,12 @@ class RepTimePicker extends StatelessWidget {
                 onSelectedItemChanged: (index) => updateReps(index + 1),
                 children: List<Widget>.generate(maxInput - 1,
                     (i) => Center(child: H3((i + 1).toString()))))),
-        SlidingSelect<TimeUnit>(
+        MySlidingSegmentedControl<TimeUnit>(
             value: timeUnit,
             children: {
               for (final v
                   in TimeUnit.values.where((v) => v != TimeUnit.artemisUnknown))
-                v: MyText(describeEnum(v))
+                v: describeEnum(v)
             },
             updateValue: (timeUnit) => updateTimeUnit(timeUnit)),
       ],

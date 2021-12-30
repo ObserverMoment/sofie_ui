@@ -7,9 +7,9 @@ import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_c
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator_structure.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -17,6 +17,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 class WorkoutPlanCreatorPage extends StatefulWidget {
   final WorkoutPlan? workoutPlan;
@@ -52,9 +53,14 @@ class _WorkoutPlanCreatorPageState extends State<WorkoutPlanCreatorPage> {
         .create<CreateWorkoutPlan$Mutation, CreateWorkoutPlanArguments>(
             mutation: CreateWorkoutPlanMutation(
                 variables: CreateWorkoutPlanArguments(data: input)),
-            addRefToQueries: [GQLOpNames.userWorkoutPlansQuery]);
+            processResult: (data) {
+              // The WorkoutPlanSummary gets immediately added to the userWorkoutPlans query when a workout is created.
+              context.graphQLStore.writeDataToStore(
+                  data: data.createWorkoutPlan.summary.toJson(),
+                  addRefToQueries: [GQLOpNames.userWorkoutPlans]);
+            });
 
-    await checkOperationResult(context, result, onSuccess: () {
+    checkOperationResult(context, result, onSuccess: () {
       // Only the [UserSummary] sub object is returned by the create resolver.
       // Add these other fields manually to avoid [fromJson] throwing an error.
       _initBloc(result.data!.createWorkoutPlan);
@@ -140,11 +146,19 @@ class __MainUIState extends State<_MainUI> {
                             MyText('Uploading media, please wait...'),
                           ],
                         ))
-                    : MyTabBarNav(
-                        titles: const ['Info', 'Structure', 'Media'],
-                        handleTabChange: (i) =>
-                            setState(() => _activeTabIndex = i),
-                        activeTabIndex: _activeTabIndex),
+                    : Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        width: double.infinity,
+                        child: MySlidingSegmentedControl<int>(
+                            value: _activeTabIndex,
+                            children: const {
+                              0: 'Info',
+                              1: 'Structure',
+                              2: 'Media'
+                            },
+                            updateValue: (i) =>
+                                setState(() => _activeTabIndex = i)),
+                      ),
               ),
               Expanded(
                   child: IndexedStack(

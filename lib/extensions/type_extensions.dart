@@ -26,7 +26,7 @@ extension HexColor on Color {
       '${blue.toRadixString(16).padLeft(2, '0')}';
 }
 
-extension DateTimeFormatting on DateTime {
+extension DateTimeExtension on DateTime {
   String get timeString => DateFormat.jm().format(this);
   String get timeString24 => DateFormat('HH:mm').format(this);
 
@@ -37,6 +37,8 @@ extension DateTimeFormatting on DateTime {
   String get minimalDateStringYear => DateFormat('MMM d, yy').format(this);
   String get minimalDateString => DateFormat('MMM d').format(this);
   String get dateAndTime => '$minimalDateString, $timeString';
+
+  String get monthAbbrev => DateFormat('MMM').format(this);
 
   String get daysAgo => isToday
       ? 'Today'
@@ -61,6 +63,10 @@ extension DateTimeFormatting on DateTime {
     return tomorrow.day == day &&
         tomorrow.month == month &&
         tomorrow.year == year;
+  }
+
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
   }
 }
 
@@ -188,6 +194,11 @@ extension DurationExtension on Duration {
 
 extension IntExtension on int {
   String get secondsToTimeDisplay => Duration(seconds: this).compactDisplay;
+
+  /// TODO: Requires internationalisation.
+  String get displayLong => NumberFormat(
+        "#,###,##0",
+      ).format(this);
 }
 
 extension ListExtension on List {
@@ -198,6 +209,18 @@ extension ListExtension on List {
     return (this as List<T>).contains(item)
         ? (this as List<T>).where((e) => e != item).toList()
         : <T>[...this as List<T>, item];
+  }
+
+  List<T> toggleItems<T>(List<T> items) {
+    List<T> result = [...this];
+    for (final i in items) {
+      if (result.contains(i)) {
+        result.removeWhere((o) => o == i);
+      } else {
+        result.add(i);
+      }
+    }
+    return result;
   }
 }
 

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -11,14 +9,14 @@ import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section/components/moves_lists/free_session_moves_list.dart';
+import 'package:sofie_ui/components/do_workout/do_workout_section/components/moves_lists/lifting_moves_list.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/moves_lists/main_moves_list.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section/components/start_resume_button.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/amrap_timer.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/fortime_timer.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/interval_timer.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/do_section_template_layout.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/do_workout_section_nav.dart';
+import 'package:sofie_ui/components/do_workout/do_workout_section/paused_workout_overlay.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/timers/stopwatch_and_timer.dart';
 import 'package:sofie_ui/constants.dart';
@@ -112,7 +110,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
     }
   }
 
-  Widget _sectionCompleteDialog() {
+  Widget _buildSectionCompleteDialog() {
     final bloc = context.read<DoWorkoutBloc>();
     final controller = bloc.getControllerForSection(widget.sectionIndex);
     final timer = bloc.getStopWatchTimerForSection(widget.sectionIndex);
@@ -178,7 +176,9 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
               padding: const EdgeInsets.only(top: 8.0),
               child: PrimaryButton(
                 onPressed: () {
-                  _bloc.resetSection(widget.sectionIndex);
+                  context.showConfirmDialog(
+                      title: 'Reset section?',
+                      onConfirm: () => _bloc.resetSection(widget.sectionIndex));
                 },
                 prefixIconData: CupertinoIcons.refresh_bold,
                 text: 'Reset Section',
@@ -229,25 +229,19 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                 activePageIndex: _activePageIndex,
               ),
 
-              /// Barrier before user starts the section but not when pause / resuming.
-              if (!workoutSection.isScored &&
-                  !hasStarted &&
-                  !_openCompleteModal)
+              /// Render ModalBarrier and StartResumeButton when workout is paused.
+              if (!isRunning && !_openCompleteModal)
                 ModalBarrier(
-                  color: Styles.black.withOpacity(0.2),
+                  color: Styles.black.withOpacity(0.4),
                   dismissible: false,
                 ),
-              if (!workoutSection.isScored && !isRunning && !_openCompleteModal)
-                FadeIn(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      StartResumeButton(
-                        height: 70,
-                        sectionIndex: workoutSection.sortPosition,
-                      ),
-                    ],
-                  ),
+              if (!isRunning && !_openCompleteModal)
+                FadeInUp(
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: PausedWorkoutOverlay(
+                        workoutSection: workoutSection,
+                      )),
                 ),
 
               /// Top nav items.
@@ -257,49 +251,80 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AnimatedSwitcher(
-                        duration: kStandardAnimationDuration,
-                        child: isRunning
-                            ? NavItem(
-                                activeIconData: CupertinoIcons.pause_fill,
-                                inactiveIconData: CupertinoIcons.pause_fill,
-                                isActive: true,
-                                onTap: () => context
-                                    .read<DoWorkoutBloc>()
-                                    .pauseSection(widget.sectionIndex))
-                            : Row(
-                                children: [
-                                  NavItem(
-                                      activeIconData: CupertinoIcons.arrow_left,
-                                      inactiveIconData:
-                                          CupertinoIcons.arrow_left,
-                                      isActive: true,
-                                      // Pause section and pop back to the overview page.
-                                      onTap: () {
-                                        context
-                                            .read<DoWorkoutBloc>()
-                                            .pauseSection(widget.sectionIndex);
-                                        context.pop();
-                                      }),
-                                  if (hasStarted)
-                                    NavItem(
-                                        activeIconData:
-                                            CupertinoIcons.refresh_bold,
-                                        inactiveIconData:
-                                            CupertinoIcons.refresh_bold,
-                                        isActive: true,
-                                        onTap: _handleResetRequest),
-                                ],
+                      Row(
+                        children: [
+                          AnimatedSwitcher(
+                            duration: kStandardAnimationDuration,
+                            child: isRunning
+                                ? NavItem(
+                                    activeIconData: CupertinoIcons.pause_fill,
+                                    inactiveIconData: CupertinoIcons.pause_fill,
+                                    isActive: true,
+                                    onTap: () => context
+                                        .read<DoWorkoutBloc>()
+                                        .pauseSection(widget.sectionIndex))
+                                : Row(
+                                    children: [
+                                      NavItem(
+                                          activeIconData:
+                                              CupertinoIcons.arrow_left,
+                                          inactiveIconData:
+                                              CupertinoIcons.arrow_left,
+                                          isActive: true,
+                                          // Pause section and pop back to the overview page.
+                                          onTap: () {
+                                            context
+                                                .read<DoWorkoutBloc>()
+                                                .pauseSection(
+                                                    widget.sectionIndex);
+                                            context.pop();
+                                          }),
+                                      // Don't show reset button for a FreeSession
+                                      if (!workoutSection.isCustomSession &&
+                                          hasStarted)
+                                        NavItem(
+                                            activeIconData:
+                                                CupertinoIcons.refresh_bold,
+                                            inactiveIconData:
+                                                CupertinoIcons.refresh_bold,
+                                            isActive: true,
+                                            onTap: _handleResetRequest),
+                                    ],
+                                  ),
+                          ),
+                          // Display a 'Finish' button for untimed workouts where 'completing' it is not necessary.
+                          if (workoutSection.isCustomSession ||
+                              workoutSection.isLifting)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: TertiaryButton(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 12),
+                                backgroundColor: context.theme.primary,
+                                textColor: context.theme.background,
+                                fontSize: FONTSIZE.three,
+                                text: 'Finish',
+                                onPressed: () {
+                                  // Pause and return to overview.
+                                  context.read<DoWorkoutBloc>().pauseSection(
+                                      workoutSection.sortPosition);
+                                  context.pop();
+                                },
                               ),
+                            ),
+                        ],
                       ),
-                      DoWorkoutSectionNav(
-                        activePageIndex: _activePageIndex,
-                        goToPage: _goToPage,
-                        showVideoTab:
-                            Utils.textNotNull(workoutSection.classVideoUri),
-                        showAudioTab: audioController != null,
-                        muteAudio: _muteAudio,
-                        toggleMuteAudio: _toggleMuteAudio,
+                      FadeIn(
+                        child: DoWorkoutSectionNav(
+                          activePageIndex: _activePageIndex,
+                          goToPage: _goToPage,
+                          showVideoTab:
+                              Utils.textNotNull(workoutSection.classVideoUri),
+                          showAudioTab: audioController != null,
+                          muteAudio: _muteAudio,
+                          toggleMuteAudio: _toggleMuteAudio,
+                        ),
                       ),
                     ],
                   ),
@@ -311,7 +336,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                   dismissible: false,
                 ),
               if (_openCompleteModal)
-                SizeFadeIn(child: _sectionCompleteDialog()),
+                FadeInUp(child: _buildSectionCompleteDialog()),
             ],
           );
         });
@@ -337,8 +362,9 @@ class _DoSectionTemplateSelector extends StatelessWidget {
       case kTabataName:
       case kHIITCircuitName:
         return MainMovesList(workoutSection: workoutSection, state: state);
-      case kFreeSessionName:
-        return FreeSessionMovesList(workoutSection: workoutSection);
+      case kLiftingName:
+      case kCustomSessionName:
+        return LiftingMovesList(workoutSection: workoutSection, state: state);
       default:
         throw Exception(
             'No moves list builder specified for ${workoutSection.workoutSectionType.name}');
@@ -355,11 +381,12 @@ class _DoSectionTemplateSelector extends StatelessWidget {
       case kTabataName:
       case kHIITCircuitName:
         return IntervalTimer(workoutSection: workoutSection, state: state);
-      case kFreeSessionName:
+      case kCustomSessionName:
+      case kLiftingName:
         return const StopwatchAndTimer();
       default:
         throw Exception(
-            'No moves list builder specified for ${workoutSection.workoutSectionType.name}');
+            'No timer builder specified for ${workoutSection.workoutSectionType.name}');
     }
   }
 

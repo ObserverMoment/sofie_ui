@@ -11,6 +11,8 @@ const kDeepLinkSchema = 'sofie://';
 const kTempShareImageFileName = 'temp-share-image.png';
 
 const kBodyweightEquipmentId = 'b95da267-c036-4caa-9294-d1fab9b3d2e8';
+const kDumbbellsEquipmentId = '37cf4e1e-dfcc-4895-b2c9-a9db0cc0747c';
+const kKettlebellsEquipmentId = '268ec7a0-5b4f-44e5-a716-688b9ac559d4';
 const kRestMoveId = '975a5da2-12c7-40d6-b666-eed713f0dadd';
 
 /// Layout
@@ -34,18 +36,25 @@ const kStandardAnimationDuration = Duration(milliseconds: 250);
 const kDoWorkoutWorkoutSectionTopNavHeight = 60.0;
 
 /// Opacity of overlay on top of images when readable content needs to be displayed.
-const kImageOverlayOpacity = 0.85;
+const kImageOverlayOpacity = 0.8;
 
 /// Object Type names for the store.
 /// For use in [__typename:id] normalization and store ops.
+const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
+const kCollectionSummaryTypename = 'CollectionSummary';
+
 const kClubTypeName = 'Club';
+const kClubSummaryTypeName = 'ClubSummary';
 const kClubInviteTokenTypeName = 'ClubInviteToken';
+
 const kBodyTransformationPhotoTypename = 'BodyTransformationPhoto';
 const kGymProfileTypename = 'GymProfile';
 const kMoveTypename = 'Move';
-const kUserTypename = 'User';
+const kUserProfileTypename = 'UserProfile';
 const kWorkoutTypename = 'Workout';
+const kWorkoutSummaryTypename = 'WorkoutSummary';
+const kArchivedWorkoutTypename = 'ArchivedWorkout';
 const kWorkoutTagTypename = 'WorkoutTag';
 const kScheduledWorkoutTypename = 'ScheduledWorkout';
 const kWorkoutSectionTypename = 'WorkoutSection';
@@ -54,7 +63,11 @@ const kWorkoutSetTypename = 'WorkoutSet';
 const kWorkoutMoveTypename = 'WorkoutMove';
 
 const kWorkoutPlanTypename = 'WorkoutPlan';
+const kWorkoutPlanSummaryTypename = 'WorkoutPlanSummary';
+const kArchivedWorkoutPlanTypename = 'ArchivedWorkoutPlan';
 const kWorkoutPlanEnrolmentTypename = 'WorkoutPlanEnrolment';
+const kWorkoutPlanEnrolmentWithPlanTypename = 'WorkoutPlanEnrolmentWithPlan';
+const kWorkoutPlanEnrolmentSummaryTypename = 'WorkoutPlanEnrolmentSummary';
 const kWorkoutPlanReviewTypename = 'WorkoutPlanReview';
 
 const kLoggedWorkoutTypename = 'LoggedWorkout';
@@ -62,28 +75,35 @@ const kLoggedWorkoutSectionTypename = 'LoggedWorkoutSection';
 const kLoggedWorkoutSetTypename = 'LoggedWorkoutSet';
 const kLoggedWorkoutMoveTypename = 'LoggedWorkoutMove';
 
-const kProgressJournalTypename = 'ProgressJournal';
-const kProgressJournalEntryTypename = 'ProgressJournalEntry';
-const kProgressJournalGoalTypename = 'ProgressJournalGoal';
-const kProgressJournalGoalTagTypename = 'ProgressJournalGoalTag';
+const kJournalNoteTypename = 'JournalNote';
+const kJournalMoodTypename = 'JournalMood';
+const kJournalGoalTypename = 'JournalGoal';
+
+const kSkillTypeName = 'Skill';
 
 const kUserBenchmarkTypename = 'UserBenchmark';
 const kUserBenchmarkEntryTypename = 'UserBenchmarkEntry';
 const kUserBenchmarkTagTypename = 'UserBenchmarkTag';
 
 const kExcludeFromNormalization = [
+  // Within the Workout
   kWorkoutSectionTypename,
   kWorkoutSetTypename,
   kWorkoutMoveTypename,
+  // Within the LoggedWorkout
   kLoggedWorkoutSectionTypename,
   kLoggedWorkoutSetTypename,
   kLoggedWorkoutMoveTypename,
-  kWorkoutPlanReviewTypename
+  // Within the UserProfile
+  kSkillTypeName,
+  // Within the WorkoutPlan
+  kWorkoutPlanReviewTypename,
 ];
 
 /// WorkoutSectionTypeNames
-const kFreeSessionName = 'Free Session';
+const kCustomSessionName = 'Custom';
 const kHIITCircuitName = 'HIIT Circuit';
+const kLiftingName = 'Lifting';
 const kForTimeName = 'For Time';
 const kEMOMName = 'EMOM';
 const kAMRAPName = 'AMRAP';
@@ -95,7 +115,7 @@ const kSectionTypesWithFinishLine = [
   kHIITCircuitName,
   kEMOMName,
   kTabataName,
-  kFreeSessionName
+  kCustomSessionName
 ];
 
 /// BodyArea selector SVG viewbox sizes.
@@ -142,3 +162,9 @@ const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
 
 /// Messages ///
 const String kDefaultErrorMessage = "Sorry, that didn't work";
+
+/// Other social networks - just add the handle.
+const kLinkedinBaseUrl = 'https://www.linkedin.com/in';
+const kYoutubeBaseUrl = 'https://www.youtube.com';
+const kTiktokBaseUrl = 'https://www.tiktok.com';
+const kInstagramBaseUrl = 'https://www.instagram.com';

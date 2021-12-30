@@ -1,0 +1,11 @@
+query clubSummary($id: ID!) {
+  clubSummary(id: $id) {
+    ...ClubSummary
+    Owner {
+      ...UserAvatarData
+    }
+    Admins {
+      ...UserAvatarData
+    }
+  }
+}

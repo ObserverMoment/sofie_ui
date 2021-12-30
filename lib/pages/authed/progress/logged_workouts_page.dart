@@ -2,20 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/logged_workout_card.dart';
+import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/components/user_input/pickers/date_time_pickers.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -30,7 +29,6 @@ class LoggedWorkoutsPage extends StatelessWidget {
     return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
         key: Key('LoggedWorkoutsPage - ${query.operationName}'),
         query: query,
-        loadingIndicator: const ShimmerListPage(),
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
           final logs = data.userLoggedWorkouts
@@ -39,11 +37,25 @@ class LoggedWorkoutsPage extends StatelessWidget {
               .toList();
 
           return MyPageScaffold(
-            navigationBar: const MyNavBar(
-              middle: NavBarTitle('Workout Logs'),
-            ),
-            child: FilterableLoggedWorkoutsList(logs: logs),
-          );
+              child: NestedScrollView(
+                  headerSliverBuilder: (c, i) => [
+                        const MySliverNavbar(
+                          title: 'Workout Logs',
+                        )
+                      ],
+                  body: logs.isEmpty
+                      ? YourContentEmptyPlaceholder(
+                          message: 'No workouts logged yet',
+                          explainer:
+                              'Once you have done a workout we will save the details of it here. View which workouts you did and when, check which goals and body areas they targeted and find old faves to re-do.',
+                          actions: [
+                              EmptyPlaceholderAction(
+                                  action: () => context
+                                      .navigateTo(PublicWorkoutFinderRoute()),
+                                  buttonIcon: CupertinoIcons.compass,
+                                  buttonText: 'Find a Workout'),
+                            ])
+                      : FilterableLoggedWorkoutsList(logs: logs)));
         });
   }
 }
@@ -72,46 +84,6 @@ class _FilterableLoggedWorkoutsListState
         _filterTo = null;
       });
 
-  List<Widget> _floatingButtons(int numLogs) => [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            children: [
-              DateRangePickerDisplay(
-                textColor: Styles.white,
-                from: _filterFrom,
-                to: _filterTo,
-                updateRange: (from, to) => setState(() {
-                  _filterFrom = from;
-                  _filterTo = to;
-                }),
-              ),
-              if (_filterFrom != null || _filterTo != null)
-                FadeIn(
-                    child: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: _clearDateRange,
-                  child: const Icon(
-                    CupertinoIcons.clear_thick,
-                    color: Styles.errorRed,
-                    size: 20,
-                  ),
-                ))
-            ],
-          ),
-        ),
-        CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            onPressed: () => context.push(
-                rootNavigator: true,
-                child: YourLoggedWorkoutsTextSearch(
-                    allLoggedWorkouts: widget.logs,
-                    selectLoggedWorkout: (l) =>
-                        _openLoggedWorkoutDetails(context, l.id))),
-            child: const Icon(CupertinoIcons.search,
-                color: Styles.white, size: 20))
-      ];
-
   @override
   Widget build(BuildContext context) {
     /// One day added / subtracted so as to get the range inclusively.
@@ -129,69 +101,56 @@ class _FilterableLoggedWorkoutsListState
                 l.completedOn.isBefore(_filterTo!.add(const Duration(days: 1))))
             .toList();
 
-    final buttons = _floatingButtons(filteredLogs.length);
-
-    return Stack(
-      fit: StackFit.expand,
-      clipBehavior: Clip.none,
-      alignment: Alignment.topCenter,
-      children: [
-        if (filteredLogs.isEmpty)
-          const Center(child: MyText('No logs to display...'))
-        else
-          Column(
-            children: [
-              if (_filterFrom != null || _filterTo != null)
-                FadeIn(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        MyText(
-                          'Showing ${filteredLogs.length} logs',
-                        ),
-                      ],
-                    ),
+    return FABPage(
+        rowButtonsAlignment: MainAxisAlignment.end,
+        rowButtons: [
+          if (_filterFrom != null || _filterTo != null)
+            FadeInUp(
+                child: FloatingButton(
+              onTap: _clearDateRange,
+              icon: CupertinoIcons.clear_thick,
+            )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: FABPageButtonContainer(
+              padding: EdgeInsets.zero,
+              child: Row(
+                children: [
+                  DateRangePickerDisplay(
+                    textColor: context.theme.primary,
+                    from: _filterFrom,
+                    to: _filterTo,
+                    updateRange: (from, to) => setState(() {
+                      _filterFrom = from;
+                      _filterTo = to;
+                    }),
                   ),
-                ),
-              Expanded(
-                  child: ListAvoidFAB(
-                itemBuilder: (c, i) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: GestureDetector(
-                      onTap: () => _openLoggedWorkoutDetails(
-                          context, filteredLogs[i].id),
-                      child: LoggedWorkoutCard(
-                        loggedWorkout: filteredLogs[i],
-                      )),
-                ),
-                itemCount: filteredLogs.length,
-              )),
-            ],
-          ),
-        Positioned(
-            bottom: EnvironmentConfig.bottomNavBarHeight + 6,
-            child: FloatingActionButtonContainer(
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              child: SizedBox(
-                height: 40,
-                child: ListView.separated(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (c, i) => buttons[i],
-                    separatorBuilder: (c, i) => const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 6.0),
-                          child: ButtonSeparator(
-                            color: Styles.white,
-                          ),
-                        ),
-                    itemCount: buttons.length),
+                ],
               ),
-            ))
-      ],
-    );
+            ),
+          ),
+          FloatingButton(
+              onTap: () => context.push(
+                  rootNavigator: true,
+                  child: YourLoggedWorkoutsTextSearch(
+                      allLoggedWorkouts: widget.logs,
+                      selectLoggedWorkout: (l) =>
+                          _openLoggedWorkoutDetails(context, l.id))),
+              icon: CupertinoIcons.search)
+        ],
+        child: ListView.builder(
+          padding: const EdgeInsets.only(top: 8, bottom: 60),
+          itemBuilder: (c, i) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: GestureDetector(
+                onTap: () =>
+                    _openLoggedWorkoutDetails(context, filteredLogs[i].id),
+                child: LoggedWorkoutCard(
+                  loggedWorkout: filteredLogs[i],
+                )),
+          ),
+          itemCount: filteredLogs.length,
+        ));
   }
 }
 
@@ -259,17 +218,8 @@ class _YourLoggedWorkoutsTextSearchState
                 ),
               )
             : filteredLogs.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        MyText(
-                          'No logs found...',
-                          subtext: true,
-                        ),
-                      ],
-                    ),
+                ? const Center(
+                    child: NoResultsToDisplay(),
                   )
                 : ListView(
                     shrinkWrap: true,

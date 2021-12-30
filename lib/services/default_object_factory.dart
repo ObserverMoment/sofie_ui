@@ -1,5 +1,4 @@
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
@@ -62,24 +61,5 @@ class DefaultObjectfactory {
       ..timeUnit = timeUnit
       ..loadAmount = 0
       ..move = move;
-  }
-
-  static ProgressJournal defaultProgressJournal() {
-    return ProgressJournal()
-      ..$$typename = kProgressJournalTypename
-      ..id = 'temp-$kProgressJournalTypename:${const Uuid().v1()}'
-      ..name = 'Journal ${DateTime.now().compactDateString}'
-      ..createdAt = DateTime.now()
-      ..bodyweightUnit = BodyweightUnit.kg
-      ..progressJournalGoals = [];
-  }
-
-  static ProgressJournalGoal defaultProgressJournalGoal() {
-    return ProgressJournalGoal()
-      ..$$typename = kProgressJournalGoalTypename
-      ..id = 'temp-$kProgressJournalGoalTypename:${const Uuid().v1()}'
-      ..createdAt = DateTime.now()
-      ..name = 'Goal ${DateTime.now().compactDateString}'
-      ..progressJournalGoalTags = [];
   }
 }

@@ -1,0 +1,13 @@
+mutation createCompletedWorkoutPlanDayWorkout(
+  $data: CreateCompletedWorkoutPlanDayWorkoutInput!
+) {
+  createCompletedWorkoutPlanDayWorkout(data: $data) {
+    ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
+    User {
+      ...UserAvatarData
+    }
+  }
+}

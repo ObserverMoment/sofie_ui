@@ -1,10 +1,54 @@
+import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:collection/collection.dart';
 
 class DataUtils {
+  static List<WaffleChartInput> waffleChartInputsFromGoals(
+      List<WorkoutGoal> goals) {
+    final data = goals.fold<Map<WorkoutGoal, int>>({}, (acum, next) {
+      if (acum[next] != null) {
+        acum[next] = acum[next]! + 1;
+      } else {
+        acum[next] = 1;
+      }
+      return acum;
+    });
+
+    return data.entries
+        .map((e) => WaffleChartInput(
+            fraction: e.value / goals.length,
+            color: HexColor.fromHex(e.key.hexColor),
+            name: e.key.name))
+        .toList();
+  }
+
+  /// Also sorts non bodyweight options alphabetically.
+  static List<Equipment> sortEquipmentsWithBodyWeightFirst(
+      List<Equipment> equipments) {
+    final sortedEquipments = equipments.sortedBy<String>((e) => e.name);
+    final bodyweight = sortedEquipments
+        .firstWhereOrNull((e) => e.id == kBodyweightEquipmentId);
+    return bodyweight == null
+        ? sortedEquipments
+        : [
+            bodyweight,
+            ...sortedEquipments.where((e) => e.id != kBodyweightEquipmentId),
+          ];
+  }
+
+  /// Use this to split the user inputted load amount in two when displaying info on what equipmengt is needed. Eg. Dumbbells and Kettlebells.
+  static double getLoadPerEquipmentUnit(Equipment e, double loadAmount) {
+    final isDumbbells = e.id == kDumbbellsEquipmentId;
+    final isKettleBells = e.id == kKettlebellsEquipmentId;
+    final individualLoadAmount =
+        isDumbbells || isKettleBells ? (loadAmount / 2) : loadAmount;
+    return individualLoadAmount;
+  }
+
   /// Receives any list of bodyAreaMove scores and returns a new list.
   /// Where each body area is represented only once and the score associated with it is calculated as a percentage of the whole list.
   static List<BodyAreaMoveScore> percentageBodyAreaMoveScores(
@@ -109,11 +153,11 @@ class DataUtils {
     });
   }
 
-  static String buildBenchmarkEntryScoreText(
-      UserBenchmark benchmark, UserBenchmarkEntry entry) {
-    switch (benchmark.benchmarkType) {
+  static String buildBenchmarkEntryScoreText(BenchmarkType benchmarkType,
+      LoadUnit loadUnit, UserBenchmarkEntry entry) {
+    switch (benchmarkType) {
       case BenchmarkType.maxload:
-        return '${entry.score.stringMyDouble()}${benchmark.loadUnit.display}';
+        return '${entry.score.stringMyDouble()}${loadUnit.display}';
       case BenchmarkType.fastesttime:
       case BenchmarkType.unbrokentime:
         return Duration(seconds: entry.score.round()).compactDisplay;

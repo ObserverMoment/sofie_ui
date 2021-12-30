@@ -1,0 +1,99 @@
+fragment UserAvatarData on UserAvatarData {
+  __typename
+  id
+  avatarUri
+  displayName
+}
+
+fragment UserBenchmarkSummary on UserBenchmarkSummary {
+  __typename
+  id
+  lastEntryAt
+  name
+  equipmentInfo
+  benchmarkType
+  loadUnit
+}
+
+fragment UserBenchmark on UserBenchmark {
+  __typename
+  id
+  createdAt
+  lastEntryAt
+  name
+  description
+  equipmentInfo
+  benchmarkType
+  loadUnit
+}
+
+fragment UserBenchmarkEntry on UserBenchmarkEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  score
+  note
+  videoUri
+  videoThumbUri
+}
+
+fragment UserProfile on UserProfile {
+  __typename
+  id
+  userProfileScope
+  avatarUri
+  introVideoUri
+  introVideoThumbUri
+  bio
+  tagline
+  townCity
+  instagramHandle
+  tiktokHandle
+  youtubeHandle
+  linkedinHandle
+  countryCode
+  displayName
+  gender
+  birthdate
+  followerCount
+  workoutCount
+  planCount
+}
+
+fragment UserProfileResult on UpdateUserProfileResult {
+  __typename
+  id
+  userProfileScope
+  avatarUri
+  introVideoUri
+  introVideoThumbUri
+  bio
+  tagline
+  birthdate
+  townCity
+  countryCode
+  displayName
+  instagramHandle
+  tiktokHandle
+  youtubeHandle
+  linkedinHandle
+  firstname
+  gender
+  hasOnboarded
+  lastname
+}
+
+fragment UserProfileSummary on UserProfileSummary {
+  __typename
+  userProfileScope
+  id
+  avatarUri
+  tagline
+  townCity
+  countryCode
+  displayName
+  workoutCount
+  planCount
+  skills
+}

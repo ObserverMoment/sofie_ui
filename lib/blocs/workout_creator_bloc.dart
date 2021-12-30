@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
@@ -42,15 +43,27 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   /// Store gets written and the UI gets updated when the user clicks [done].
   /// This flow should be reviewed at some point.
   bool saveAllChanges() {
-    final success = context.graphQLStore.writeDataToStore(
+    final writeWorkoutSuccess = context.graphQLStore.writeDataToStore(
       data: workout.toJson(),
       broadcastQueryIds: [
-        GQLVarParamKeys.workoutByIdQuery(workout.id),
-        GQLOpNames.userScheduledWorkoutsQuery,
-        GQLOpNames.userWorkoutsQuery,
+        GQLVarParamKeys.workoutById(workout.id),
       ],
     );
-    return success;
+
+    if (writeWorkoutSuccess) {
+      final success = context.graphQLStore.writeDataToStore(
+        data: workout.summary.toJson(),
+        broadcastQueryIds: [
+          GQLOpNames.userScheduledWorkouts,
+          GQLOpNames.userWorkouts,
+          GQLOpNames.userCollections,
+          GQLOpNames.userClubs
+        ],
+      );
+      return success;
+    }
+
+    return false;
   }
 
   /// Helpers for write methods.
@@ -72,7 +85,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(MutationResult result) {
+  bool _checkApiResult(OperationResult result) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;
@@ -81,11 +94,13 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     }
   }
 
-  /// When false workout sets are displayed as a minimal single line item.
-  /// To allow clear overview and to make re-ordering more simple.
-  bool showFullSetInfo = true;
-  void toggleShowFullSetInfo() {
-    showFullSetInfo = !showFullSetInfo;
+  /// The user can minimize how sets are displayed (for easy re-ordering or overviewing).
+  /// They can minimize whole sections or just one set at a time.
+  List<String> displayMinimizedSetIds = [];
+
+  /// Using [sectionIndex] as this is being called from [set] level and the set creator widget does not have the section ID.
+  void toggleMinimizeSetInfo(String setId) {
+    displayMinimizedSetIds = displayMinimizedSetIds.toggleItem<String>(setId);
     notifyListeners();
   }
 
@@ -249,10 +264,10 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     /// Api.
     final variables = DeleteWorkoutSectionByIdArguments(id: idToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutSectionById$Mutation,
             DeleteWorkoutSectionByIdArguments>(
-        mutation: DeleteWorkoutSectionByIdMutation(variables: variables));
+        operation: DeleteWorkoutSectionByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 
@@ -283,7 +298,64 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   /// 2. A new set is created (don't notify listeners)
   /// 3. The new workoutMove is created and added to the set (notify listeners)
   /// A workoutMove must be created within a set - so we need to create the set first. The above flow hides this from the user and makes it seem like they are just doing one action - i.e. selecting a workoutMove.
-  Future<void> createWorkoutSet(int sectionIndex,
+  Future<WorkoutSet?> createWorkoutSetWithWorkoutMoves(
+      int sectionIndex, WorkoutSet workoutSet) async {
+    _backup();
+    creatingSet = true;
+    notifyListeners();
+
+    final parentSection = workout.workoutSections[sectionIndex];
+    final newSetSortPosition = parentSection.workoutSets.length;
+
+    /// Api only for create ops.
+    final variables = CreateWorkoutSetWithWorkoutMovesArguments(
+        data: CreateWorkoutSetWithWorkoutMovesInput(
+      workoutSet: CreateWorkoutSetInput(
+          duration: workoutSet.duration,
+          rounds: workoutSet.rounds,
+          workoutSection: ConnectRelationInput(id: parentSection.id),
+          sortPosition: newSetSortPosition),
+      workoutMoves: workoutSet.workoutMoves
+          .map((wm) => CreateWorkoutMoveInSetInput(
+                sortPosition: wm.sortPosition,
+                reps: wm.reps,
+                repType: wm.repType,
+                loadAmount: wm.loadAmount,
+                loadUnit: wm.loadUnit,
+                timeUnit: wm.timeUnit,
+                equipment: wm.equipment != null
+                    ? ConnectRelationInput(id: wm.equipment!.id)
+                    : null,
+                distanceUnit: wm.distanceUnit,
+                move: ConnectRelationInput(id: wm.move.id),
+              ))
+          .toList(),
+    ));
+
+    final result = await context.graphQLStore.networkOnlyOperation<
+        CreateWorkoutSetWithWorkoutMoves$Mutation,
+        CreateWorkoutSetWithWorkoutMovesArguments>(
+      operation: CreateWorkoutSetWithWorkoutMovesMutation(variables: variables),
+    );
+
+    final success = _checkApiResult(result);
+
+    WorkoutSet? newCreatedSet;
+
+    if (success) {
+      newCreatedSet = WorkoutSet.fromJson(
+          {...result.data!.createWorkoutSetWithWorkoutMoves.toJson()});
+
+      workout.workoutSections[sectionIndex].workoutSets.add(newCreatedSet);
+    }
+
+    creatingSet = false;
+    notifyListeners();
+
+    return newCreatedSet;
+  }
+
+  Future<WorkoutSet?> createWorkoutSet(int sectionIndex,
       {int? duration, bool shouldNotifyListeners = true}) async {
     _backup();
     creatingSet = true;
@@ -310,8 +382,10 @@ class WorkoutCreatorBloc extends ChangeNotifier {
 
     final success = _checkApiResult(result);
 
+    WorkoutSet? newCreatedSet;
+
     if (success) {
-      final newCreatedSet = WorkoutSet.fromJson(
+      newCreatedSet = WorkoutSet.fromJson(
           {...result.data!.createWorkoutSet.toJson(), 'WorkoutMoves': []});
 
       workout.workoutSections[sectionIndex].workoutSets.add(newCreatedSet);
@@ -321,6 +395,8 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     if (shouldNotifyListeners) {
       notifyListeners();
     }
+
+    return newCreatedSet;
   }
 
   Future<void> editWorkoutSet(
@@ -513,9 +589,9 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     /// Api.
     final variables = DeleteWorkoutSetByIdArguments(id: idToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutSetById$Mutation, DeleteWorkoutSetByIdArguments>(
-        mutation: DeleteWorkoutSetByIdMutation(variables: variables));
+        operation: DeleteWorkoutSetByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 
@@ -578,6 +654,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// For batch updates use [editWorkoutMoves]
   Future<void> editWorkoutMove(
       int sectionIndex, int setIndex, WorkoutMove workoutMove) async {
     _backup();
@@ -608,6 +685,45 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Batch update method version of [editWorkoutMove]
+  Future<void> editWorkoutMoves(
+      int sectionIndex, int setIndex, List<WorkoutMove> workoutMoves) async {
+    _backup();
+
+    /// Client.
+    for (final wm in workoutMoves) {
+      workout.workoutSections[sectionIndex].workoutSets[setIndex]
+          .workoutMoves[wm.sortPosition] = wm;
+    }
+
+    notifyListeners();
+
+    /// Api.
+    final input = workoutMoves
+        .map((wm) => UpdateWorkoutMoveInput.fromJson(wm.toJson()))
+        .toList();
+
+    final variables = UpdateWorkoutMovesArguments(data: input);
+
+    final result = await context.graphQLStore.networkOnlyOperation<
+        UpdateWorkoutMoves$Mutation, UpdateWorkoutMovesArguments>(
+      operation: UpdateWorkoutMovesMutation(variables: variables),
+    );
+
+    final success = _checkApiResult(result);
+
+    if (success) {
+      for (final wm in result.data!.updateWorkoutMoves) {
+        workout.workoutSections[sectionIndex].workoutSets[setIndex]
+            .workoutMoves[wm.sortPosition] = WorkoutMove.fromJson(
+          wm.toJson(),
+        );
+      }
+    }
+
+    notifyListeners();
+  }
+
   Future<void> deleteWorkoutMove(
       int sectionIndex, int setIndex, int workoutMoveIndex) async {
     _backup();
@@ -627,9 +743,9 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     // Api.
     final variables = DeleteWorkoutMoveByIdArguments(id: idToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutMoveById$Mutation, DeleteWorkoutMoveByIdArguments>(
-        mutation: DeleteWorkoutMoveByIdMutation(variables: variables));
+        operation: DeleteWorkoutMoveByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 

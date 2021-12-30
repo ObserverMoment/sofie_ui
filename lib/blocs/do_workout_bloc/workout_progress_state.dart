@@ -101,15 +101,6 @@ class WorkoutSectionProgressState {
     sectionData.rounds[currentRoundIndex].sets.add(setData);
   }
 
-  /// For Free Sessions. Run this whenever a set is marked complete or incomplete.
-  void updateSectionRoundSetDataFromCompletedSets(
-      List<WorkoutSet> completedSets) {
-    sectionData.rounds[currentRoundIndex].sets = completedSets
-        .map((wSet) => loggedWorkoutSetDataFromWorkoutSet(
-            wSet, workoutSection.workoutSectionType))
-        .toList();
-  }
-
   void moveToNextSet() {
     if (currentSetIndex == numberSetsPerRound - 1) {
       currentRoundIndex++;

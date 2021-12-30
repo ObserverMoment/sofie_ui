@@ -100,6 +100,7 @@ class WorkoutFiltersInfo extends StatelessWidget {
     final _updateFilters = context.read<WorkoutFiltersBloc>().updateFilters;
 
     return ListView(
+      padding: const EdgeInsets.all(4),
       children: [
         UserInputContainer(
           child: Column(
@@ -131,8 +132,9 @@ class WorkoutFiltersInfo extends StatelessWidget {
         ),
         DifficultyLevelSelectorRow(
           difficultyLevel: difficultyLevel,
+          unselectedLabel: 'Any',
           updateDifficultyLevel: (difficultyLevel) =>
-              _updateFilters({'difficultyLevel': difficultyLevel.apiValue}),
+              _updateFilters({'difficultyLevel': difficultyLevel?.apiValue}),
         ),
         WorkoutGoalsSelectorRow(
             selectedWorkoutGoals: workoutGoals,

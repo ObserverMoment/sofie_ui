@@ -2,22 +2,30 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/tags.dart';
-import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/workout_plan/vertical_workout_plans_list.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/workout_plan/selectable_workout_plan_card.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
+import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/router.gr.dart';
 
 class YourSavedPlans extends StatelessWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
-  const YourSavedPlans({Key? key, this.selectWorkoutPlan}) : super(key: key);
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
+  final bool showDiscoverButton;
+  const YourSavedPlans(
+      {Key? key, this.selectWorkoutPlan, required this.showDiscoverButton})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return QueryObserver<UserCollections$Query, json.JsonSerializable>(
         key: Key('YourSavedPlans - ${UserCollectionsQuery().operationName}'),
         query: UserCollectionsQuery(),
+        fullScreenError: false,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         loadingIndicator: const ShimmerCardList(itemCount: 20),
         builder: (data) {
@@ -26,16 +34,21 @@ class YourSavedPlans extends StatelessWidget {
           return FilterableSavedWorkoutPlans(
             selectWorkoutPlan: selectWorkoutPlan,
             allCollections: collections,
+            showDiscoverButton: showDiscoverButton,
           );
         });
   }
 }
 
 class FilterableSavedWorkoutPlans extends StatefulWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
   final List<Collection> allCollections;
+  final bool showDiscoverButton;
   const FilterableSavedWorkoutPlans(
-      {Key? key, required this.selectWorkoutPlan, required this.allCollections})
+      {Key? key,
+      required this.selectWorkoutPlan,
+      required this.allCollections,
+      required this.showDiscoverButton})
       : super(key: key);
 
   @override
@@ -49,55 +62,77 @@ class _FilterableSavedWorkoutPlansState
 
   @override
   Widget build(BuildContext context) {
-    final selectedCollections = _selectedCollection == null
-        ? widget.allCollections
-        : [
-            widget.allCollections
-                .firstWhere((c) => c.id == _selectedCollection!.id)
-          ];
+    final filteredPlans = _selectedCollection != null
+        ? _selectedCollection!.workoutPlans
+        : widget.allCollections.fold<List<WorkoutPlanSummary>>(
+            [], (acum, next) => [...acum, ...next.workoutPlans]);
 
-    final workoutPlans = selectedCollections
-        .fold<List<WorkoutPlan>>(
-            [], (acum, next) => [...acum, ...next.workoutPlans])
-        .sortedBy<DateTime>((w) => w.createdAt)
-        .reversed
-        .toList();
+    final sortedPlans =
+        filteredPlans.sortedBy<DateTime>((w) => w.createdAt).reversed.toList();
 
     final collectionsWithPlans =
         widget.allCollections.where((c) => c.workoutPlans.isNotEmpty).toList();
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4.0, top: 8, bottom: 8),
-          child: SizedBox(
-              height: 32,
-              child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: collectionsWithPlans.length,
-                  itemBuilder: (c, i) => Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: SelectableTag(
-                          fontSize: FONTSIZE.two,
-                          text: collectionsWithPlans[i].name,
-                          isSelected:
-                              collectionsWithPlans[i] == _selectedCollection,
-                          onPressed: () => setState(() => _selectedCollection =
-                              collectionsWithPlans[i] == _selectedCollection
-                                  ? null
-                                  : collectionsWithPlans[i]),
-                        ),
-                      ))),
-        ),
-        Expanded(
-          child: VerticalWorkoutPlansList(
-            workoutPlans: workoutPlans,
-            selectWorkoutPlan: widget.selectWorkoutPlan,
-            avoidBottomNavBar: true,
-            heroTagKey: 'FilterableSavedWorkoutPlans',
-          ),
-        ),
-      ],
-    );
+    return sortedPlans.isEmpty
+        ? YourContentEmptyPlaceholder(message: 'No saved plans', actions: [
+            EmptyPlaceholderAction(
+                action: () => context.navigateTo(WorkoutPlanCreatorRoute()),
+                buttonIcon: CupertinoIcons.add,
+                buttonText: 'Create Plan'),
+            EmptyPlaceholderAction(
+                action: () =>
+                    context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                buttonIcon: CupertinoIcons.compass,
+                buttonText: 'Find Plan'),
+          ])
+        : FABPage(
+            rowButtonsAlignment: MainAxisAlignment.end,
+            rowButtons: [
+              // Collections only for saved.
+              if (collectionsWithPlans.isNotEmpty)
+                TagsCollectionsFilterMenu(
+                  filterMenuType: FilterMenuType.collection,
+                  allCollections: collectionsWithPlans,
+                  allTags: const [],
+                  selectedCollection: _selectedCollection,
+                  selectedTag: null,
+                  updateSelectedCollection: (c) =>
+                      setState(() => _selectedCollection = c),
+                  updateSelectedTag: (_) {},
+                ),
+              if (widget.showDiscoverButton)
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: FloatingButton(
+                      onTap: () =>
+                          context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                      icon: CupertinoIcons.compass),
+                ),
+              const SizedBox(width: 10),
+              FloatingButton(
+                  icon: CupertinoIcons.add,
+                  onTap: () => context.navigateTo(WorkoutPlanCreatorRoute())),
+            ],
+            child: ListView.builder(
+                padding: const EdgeInsets.only(top: 6, bottom: 60),
+                shrinkWrap: true,
+                itemCount: sortedPlans.length,
+                itemBuilder: (c, i) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: FadeInUp(
+                      key: Key(sortedPlans[i].id),
+                      delay: 5,
+                      delayBasis: 20,
+                      duration: 100,
+                      child: SelectableWorkoutPlanCard(
+                        index: i,
+                        selectWorkoutPlan: widget.selectWorkoutPlan,
+                        workoutPlan: sortedPlans[i],
+                      ),
+                    ),
+                  );
+                }),
+          );
   }
 }

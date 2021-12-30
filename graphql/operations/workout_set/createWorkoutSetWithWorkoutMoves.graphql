@@ -1,0 +1,31 @@
+mutation createWorkoutSetWithWorkoutMoves(
+  $data: CreateWorkoutSetWithWorkoutMovesInput!
+) {
+  createWorkoutSetWithWorkoutMoves(data: $data) {
+    ...WorkoutSet
+    WorkoutMoves {
+      ...WorkoutMove
+      Equipment {
+        ...Equipment
+      }
+      Move {
+        ...Move
+        MoveType {
+          ...MoveType
+        }
+        BodyAreaMoveScores {
+          score
+          BodyArea {
+            ...BodyArea
+          }
+        }
+        RequiredEquipments {
+          ...Equipment
+        }
+        SelectableEquipments {
+          ...Equipment
+        }
+      }
+    }
+  }
+}

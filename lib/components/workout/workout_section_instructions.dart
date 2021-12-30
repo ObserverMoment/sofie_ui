@@ -23,7 +23,7 @@ class WorkoutSectionInstructions extends StatelessWidget {
 
   String _buildInstructionText() {
     switch (typeName) {
-      case kFreeSessionName:
+      case kCustomSessionName:
       case kEMOMName:
       case kHIITCircuitName:
       case kTabataName:
@@ -32,6 +32,8 @@ class WorkoutSectionInstructions extends StatelessWidget {
         return 'Complete all sets ${_getRoundsText()}, as fast as possible.';
       case kAMRAPName:
         return 'Complete as many reps as possible in ${timecap!.secondsToTimeDisplay}.';
+      case kLiftingName:
+        return '';
       default:
         throw Exception(
             'WorkoutSectionInstructions: $typeName is not a valid typename.');

@@ -4,6 +4,7 @@ import 'package:sofie_ui/blocs/text_search_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -14,7 +15,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class PublicPlansTextSearch extends StatefulWidget {
-  final void Function(WorkoutPlan workoutPlan)? selectWorkoutPlan;
+  final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
 
   const PublicPlansTextSearch({Key? key, this.selectWorkoutPlan})
       : super(key: key);
@@ -27,7 +28,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
   String _searchString = '';
 
   /// Handles retrieving full workout objects from the API when the user presses submit (search) on the keyboard.
-  late TextSearchBloc<WorkoutPlan> _workoutPlansTextSearchBloc;
+  late TextSearchBloc<WorkoutPlanSummary> _workoutPlansTextSearchBloc;
 
   /// Handles retrieving just workout names (similar to a suggestions list) as the user is typing their search query.
   late TextSearchBloc<TextSearchResult> _workoutPlanNamesTextSearchBloc;
@@ -36,7 +37,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
   void initState() {
     super.initState();
     _workoutPlansTextSearchBloc =
-        TextSearchBloc<WorkoutPlan>(context, TextSearchType.workoutPlan);
+        TextSearchBloc<WorkoutPlanSummary>(context, TextSearchType.workoutPlan);
     _workoutPlanNamesTextSearchBloc = TextSearchBloc<TextSearchResult>(
         context, TextSearchType.workoutPlanName);
   }
@@ -97,8 +98,8 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                   _workoutPlanNamesTextSearchBloc.state
                 ]),
                 builder: (context, stateSnapshot) {
-                  return StreamBuilder<List<WorkoutPlan>>(
-                      initialData: const <WorkoutPlan>[],
+                  return StreamBuilder<List<WorkoutPlanSummary>>(
+                      initialData: const <WorkoutPlanSummary>[],
                       stream: _workoutPlansTextSearchBloc.results,
                       builder: (context, workoutPlansSnapshot) {
                         return StreamBuilder<List<TextSearchResult>>(
@@ -121,7 +122,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                                 // Or show placeholder message.
                                 return const Center(
                                     child: MyText(
-                                  'Enter at least 3 characters.',
+                                  'Enter at least 3 characters',
                                   subtext: true,
                                 ));
                               } else {
@@ -149,10 +150,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                                 } else {
                                   // Or show empty results message.
                                   return const Center(
-                                      child: MyText(
-                                    'No results....',
-                                    subtext: true,
-                                  ));
+                                      child: NoResultsToDisplay());
                                 }
                               }
                             });
@@ -160,7 +158,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                 })
             : const Center(
                 child: MyText(
-                'Enter at least 3 characters.',
+                'Enter at least 3 characters',
                 subtext: true,
               ))));
   }
@@ -211,7 +209,7 @@ class WorkoutFinderTextResultsNames extends StatelessWidget {
                           textStyleHighlight: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Styles.infoBlue),
+                              color: Styles.primaryAccent),
                           text: results[i].name,
                           term: searchString),
                     ],

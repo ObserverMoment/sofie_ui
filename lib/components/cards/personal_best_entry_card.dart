@@ -24,8 +24,6 @@ class PersonalBestEntryCard extends StatelessWidget {
 
   Future<void> _saveUploadedVideo(
       BuildContext context, String videoUri, String videoThumbUri) async {
-    _closeMediaUploadingAlert(context);
-
     final variables = UpdateUserBenchmarkEntryArguments(
         data: UpdateUserBenchmarkEntryInput(id: entry.id));
 
@@ -39,8 +37,8 @@ class PersonalBestEntryCard extends StatelessWidget {
           }
         },
         broadcastQueryIds: [
-          GQLOpNames.userBenchmarksQuery,
-          GQLVarParamKeys.userBenchmarkByIdQuery(benchmark.id)
+          GQLOpNames.userBenchmarks,
+          GQLVarParamKeys.userBenchmark(benchmark.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -64,8 +62,8 @@ class PersonalBestEntryCard extends StatelessWidget {
           'data': {'id': entry.id, 'videoUri': null, 'videoThumbUri': null}
         },
         broadcastQueryIds: [
-          GQLOpNames.userBenchmarksQuery,
-          GQLVarParamKeys.userBenchmarkByIdQuery(benchmark.id)
+          GQLOpNames.userBenchmarks,
+          GQLVarParamKeys.userBenchmark(benchmark.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -78,15 +76,6 @@ class PersonalBestEntryCard extends StatelessWidget {
       context.showToast(message: 'Video Deleted.');
     }
   }
-
-  void _showMediaUploadingAlert(BuildContext context) {
-    context.showLoadingAlert('Uploading Video',
-        icon: const Icon(
-          CupertinoIcons.cloud_upload,
-        ));
-  }
-
-  void _closeMediaUploadingAlert(BuildContext context) => context.pop();
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +107,6 @@ class PersonalBestEntryCard extends StatelessWidget {
                 videoUri: entry.videoUri,
                 videoThumbUri: entry.videoThumbUri,
                 displaySize: const Size(60, 60),
-                onUploadStart: () => _showMediaUploadingAlert(context),
                 onUploadSuccess: (v, t) => _saveUploadedVideo(context, v, t),
                 removeVideo: () => _deleteUploadedVideo(context),
               )

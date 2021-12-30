@@ -3,8 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -21,75 +20,67 @@ import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 /// Displays the next 5 (max) scheduled workouts and events horizontally.
 /// Scrollable forward / backward in time.
 class ComingUpList extends StatelessWidget {
-  double get kListHeight => 100.0;
-
   const ComingUpList({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return QueryObserver<UserScheduledWorkouts$Query, json.JsonSerializable>(
         key:
             Key('ComingUpList - ${UserScheduledWorkoutsQuery().operationName}'),
         query: UserScheduledWorkoutsQuery(),
-        loadingIndicator: ShimmerCard(
-          height: kListHeight,
-        ),
+        loadingIndicator: Container(),
         builder: (data) {
           final comingUp = data.userScheduledWorkouts
               .sortedBy<DateTime>((s) => s.scheduledAt)
-              .where((s) => s.scheduledAt.isAfter(DateTime.now()))
-              .where((s) => s.workout != null)
+              .where((s) =>
+                  s.workout != null &&
+                  // Don't show scheduled workouts the user has already done.
+                  s.loggedWorkoutId == null &&
+                  s.scheduledAt.isAfter(DateTime.now()))
               .take(5)
               .toList();
+
+          if (comingUp.isEmpty) return Container();
 
           final cardWidth = DisplayUtils.horizontalListItemWidth(
               context: context, targetWidth: 150, idealOverhang: 60);
 
-          final bool noPlans = comingUp.isEmpty;
-
-          return SizedBox(
-            height: kListHeight,
-            child: noPlans
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: SecondaryButton(
-                          prefixIconData: CupertinoIcons.calendar_badge_plus,
-                          text: 'Plan Something',
-                          onPressed: () => context.navigateTo(
-                              YourScheduleRoute(openAtDate: DateTime.now())),
+          return GrowIn(
+            child: SizedBox(
+              height: 146,
+              child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 10, bottom: 10, left: 8),
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: comingUp.length,
+                  itemBuilder: (c, i) {
+                    return GestureDetector(
+                      onTap: () => context.navigateTo(WorkoutDetailsRoute(
+                          id: comingUp[i].workout!.id,
+                          scheduledWorkout: comingUp[i],
+                          workoutPlanDayWorkoutId:
+                              comingUp[i].workoutPlanDayWorkoutId,
+                          workoutPlanEnrolmentId:
+                              comingUp[i].workoutPlanEnrolmentId)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: _ScheduledWorkoutReminderCard(
+                          scheduledWorkout: comingUp[i],
+                          cardWidth: cardWidth,
                         ),
                       ),
-                    ],
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.zero,
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: comingUp.length,
-                    itemBuilder: (c, i) {
-                      return GestureDetector(
-                        onTap: () => context.navigateTo(YourScheduleRoute(
-                            openAtDate: comingUp[i].scheduledAt)),
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 4.0),
-                          child: ScheduledWorkoutReminderCard(
-                            scheduledWorkout: comingUp[i],
-                            cardWidth: cardWidth,
-                          ),
-                        ),
-                      );
-                    }),
+                    );
+                  }),
+            ),
           );
         });
   }
 }
 
-class ScheduledWorkoutReminderCard extends StatelessWidget {
+class _ScheduledWorkoutReminderCard extends StatelessWidget {
   final ScheduledWorkout scheduledWorkout;
   final double cardWidth;
-  const ScheduledWorkoutReminderCard(
+  const _ScheduledWorkoutReminderCard(
       {Key? key, required this.scheduledWorkout, required this.cardWidth})
       : super(key: key);
 
@@ -148,49 +139,55 @@ class ScheduledWorkoutReminderCard extends StatelessWidget {
                             : const AssetImage(
                                 'assets/placeholder_images/workout.jpg',
                               ) as ImageProvider)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ContentBox(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 2.0, horizontal: 16),
-                      backgroundColor: Styles.black.withOpacity(0.5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: MyText(
-                              scheduledWorkout.workout!.name,
-                              textAlign: TextAlign.center,
-                              lineHeight: 1.3,
-                              maxLines: 2,
-                              color: Styles.white,
-                              weight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (scheduledWorkout.gymProfile != null)
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       ContentBox(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 2.0, horizontal: 12),
-                        backgroundColor: Styles.black.withOpacity(0.65),
+                            vertical: 2.0, horizontal: 16),
+                        backgroundColor: Styles.black.withOpacity(0.3),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            MyText(
-                              scheduledWorkout.gymProfile!.name,
-                              textAlign: TextAlign.center,
-                              color: Styles.secondaryAccent,
-                              size: FONTSIZE.two,
-                              lineHeight: 1.3,
-                              maxLines: 2,
+                            Expanded(
+                              child: MyText(
+                                scheduledWorkout.workout!.name,
+                                textAlign: TextAlign.center,
+                                lineHeight: 1.3,
+                                maxLines: 2,
+                                color: Styles.white,
+                                weight: FontWeight.bold,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                  ],
+                      if (scheduledWorkout.gymProfile != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: ContentBox(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 2.0, horizontal: 12),
+                            backgroundColor: Styles.black.withOpacity(0.55),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MyText(
+                                  scheduledWorkout.gymProfile!.name,
+                                  textAlign: TextAlign.center,
+                                  color: Styles.primaryAccent,
+                                  size: FONTSIZE.two,
+                                  lineHeight: 1.3,
+                                  maxLines: 2,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),

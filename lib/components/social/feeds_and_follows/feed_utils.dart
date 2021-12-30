@@ -111,8 +111,10 @@ class FeedUtils {
         object: data['object'] as String?,
         verb: data['verb'] as String? ?? e.verb,
         time: removeTime ? null : data['time'] as DateTime? ?? e.time,
+
+        /// TODO: Does casting here cause issues.
         extraData: data['extraData'] != null
-            ? Map.from(data['extraData'] as Map)
-            : e.extraData,
+            ? data['extraData'] as Map<String, Object>?
+            : e.extraData as Map<String, Object>?,
       );
 }

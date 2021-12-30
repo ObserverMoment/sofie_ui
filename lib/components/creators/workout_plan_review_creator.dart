@@ -64,13 +64,10 @@ class _WorkoutPlanReviewCreatorPageState
               workoutPlan:
                   ConnectRelationInput(id: widget.parentWorkoutPlanId)));
 
-      final result = await context.graphQLStore.mutate<
+      final result = await context.graphQLStore.networkOnlyOperation<
               CreateWorkoutPlanReview$Mutation,
               CreateWorkoutPlanReviewArguments>(
-          // Use _writeReviewToStore method to write to nested field
-          // within WorkoutPlan.workoutplanReviews
-          writeToStore: false,
-          mutation: CreateWorkoutPlanReviewMutation(variables: variables));
+          operation: CreateWorkoutPlanReviewMutation(variables: variables));
 
       setState(() => _loading = false);
 
@@ -96,13 +93,10 @@ class _WorkoutPlanReviewCreatorPageState
               score: _score,
               comment: _comment));
 
-      final result = await context.graphQLStore.mutate<
+      final result = await context.graphQLStore.networkOnlyOperation<
               UpdateWorkoutPlanReview$Mutation,
               UpdateWorkoutPlanReviewArguments>(
-          // Use _writeReviewToStore method to write to nested field
-          // within WorkoutPlan.workoutplanReviews
-          writeToStore: false,
-          mutation: UpdateWorkoutPlanReviewMutation(variables: variables));
+          operation: UpdateWorkoutPlanReviewMutation(variables: variables));
 
       setState(() => _loading = false);
 
@@ -144,9 +138,9 @@ class _WorkoutPlanReviewCreatorPageState
       data: updatedParentWorkoutPlan.toJson(),
       broadcastQueryIds: [
         UserWorkoutPlansQuery().operationName,
-        GQLVarParamKeys.workoutPlanByIdQuery(widget.parentWorkoutPlanId),
-        EnrolledWorkoutPlansQuery().operationName,
-        GQLVarParamKeys.workoutPlanByEnrolmentId(
+        GQLVarParamKeys.workoutPlanById(widget.parentWorkoutPlanId),
+        WorkoutPlanEnrolmentsQuery().operationName,
+        GQLVarParamKeys.workoutPlanEnrolmentById(
             widget.parentWorkoutPlanEnrolmentId),
       ],
     );
@@ -190,10 +184,10 @@ class _WorkoutPlanReviewCreatorPageState
               itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               glowRadius: 0.5,
               updateOnDrag: true,
-              unratedColor: Styles.secondaryAccent.withOpacity(0.2),
+              unratedColor: Styles.primaryAccent.withOpacity(0.2),
               itemBuilder: (context, _) => const Icon(
                 CupertinoIcons.star_fill,
-                color: Styles.secondaryAccent,
+                color: Styles.primaryAccent,
               ),
               onRatingUpdate: (rating) {
                 setState(() => _score = rating);
@@ -203,7 +197,7 @@ class _WorkoutPlanReviewCreatorPageState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircularBox(
-              color: Styles.secondaryAccent,
+              color: Styles.primaryAccent,
               child: Container(
                 height: 40,
                 alignment: Alignment.center,

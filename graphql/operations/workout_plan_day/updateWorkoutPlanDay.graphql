@@ -1,0 +1,11 @@
+mutation updateWorkoutPlanDay($data: UpdateWorkoutPlanDayInput!) {
+  updateWorkoutPlanDay(data: $data) {
+    ...WorkoutPlanDay
+    WorkoutPlanDayWorkouts {
+      ...WorkoutPlanDayWorkout
+      Workout {
+        ...WorkoutData
+      }
+    }
+  }
+}

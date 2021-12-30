@@ -1,0 +1,6 @@
+mutation reorderWorkoutSections($data: [UpdateSortPositionInput!]!) {
+  reorderWorkoutSections(data: $data) {
+    id
+    sortPosition
+  }
+}

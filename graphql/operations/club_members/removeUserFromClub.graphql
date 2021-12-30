@@ -1,0 +1,15 @@
+mutation removeUserFromClub($userToRemoveId: ID!, $clubId: ID!) {
+  removeUserFromClub(userToRemoveId: $userToRemoveId, clubId: $clubId) {
+    __typename
+    id
+    Owner {
+      ...ClubMemberSummary
+    }
+    Admins {
+      ...ClubMemberSummary
+    }
+    Members {
+      ...ClubMemberSummary
+    }
+  }
+}

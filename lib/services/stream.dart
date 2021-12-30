@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -16,7 +18,6 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:stream_feed/src/client/flat_feed.dart';
 import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart';
 
@@ -171,18 +172,22 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-            onPressed: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: const Icon(CupertinoIcons.chat_bubble)),
+        GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => context.pushRoute(const ChatsOverviewRoute()),
+            child: const FABPageButtonContainer(
+                child: Icon(
+              CupertinoIcons.chat_bubble,
+              size: 22,
+            ))),
         if (_unreadCount > 0)
           Positioned(
             top: 4,
             right: 8,
-            child: SizeFadeIn(
+            child: FadeInUp(
                 key: Key(_unreadCount.toString()),
                 child: Dot(
-                  diameter: 14,
+                  diameter: 18,
                   border: Border.all(color: context.theme.background, width: 2),
                   color: Styles.primaryAccent,
                 )),
@@ -196,7 +201,13 @@ class _ChatsIconButtonState extends State<ChatsIconButton> {
 /// Onpress it handles follow / unfollow functionality.
 class UserFeedConnectionButton extends StatefulWidget {
   final String otherUserId;
-  const UserFeedConnectionButton({Key? key, required this.otherUserId})
+  final double iconSize;
+  final FONTSIZE fontSize;
+  const UserFeedConnectionButton(
+      {Key? key,
+      required this.otherUserId,
+      this.iconSize = 20,
+      this.fontSize = FONTSIZE.three})
       : super(key: key);
 
   @override
@@ -244,6 +255,8 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
   }
 
   Future<void> _followOtherUser() async {
+    Vibrate.feedback(FeedbackType.selection);
+
     /// Optimistic: Assume succes and revert later if not.
     setState(() => _isFollowing = true);
     try {
@@ -279,23 +292,24 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
     return AnimatedSwitcher(
         duration: kStandardAnimationDuration,
         child: SizedBox(
-          width: 120,
-          height: 42,
+          height: 44,
           child: _authedUser.id == widget.otherUserId
               ? const Center(child: MyText('...'))
               : _isLoading
                   ? const Center(child: LoadingDots(size: 10))
                   : _isFollowing
-                      ? BorderButton(
+                      ? TertiaryButton(
                           text: 'Following',
+                          prefixIconData: CupertinoIcons.checkmark_alt,
                           onPressed: _unfollowOtherUser,
-                          backgroundColor: Styles.infoBlue,
+                          iconSize: widget.iconSize,
+                          fontSize: widget.fontSize,
+                          backgroundColor: Styles.primaryAccent,
                           textColor: Styles.white)
-                      : BorderButton(
-                          prefix: const Icon(
-                            CupertinoIcons.person_add,
-                            size: 15,
-                          ),
+                      : TertiaryButton(
+                          prefixIconData: CupertinoIcons.person,
+                          iconSize: widget.iconSize,
+                          fontSize: widget.fontSize,
                           text: 'Follow',
                           onPressed: _followOtherUser),
         ));

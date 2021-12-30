@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/context_menu.dart';
@@ -26,9 +27,9 @@ class FilterableCollectionWorkoutPlans extends StatefulWidget {
 
 class _FilterableCollectionWorkoutPlansState
     extends State<FilterableCollectionWorkoutPlans> {
-  WorkoutTag? _workoutTagFilter;
+  String? _workoutTagFilter;
 
-  Future<void> _moveToAnotherCollection(WorkoutPlan workoutPlan) async {
+  Future<void> _moveToAnotherCollection(WorkoutPlanSummary workoutPlan) async {
     /// Select collection to move to
     await context.push(
         child: CollectionSelector(selectCollection: (collection) async {
@@ -42,7 +43,7 @@ class _FilterableCollectionWorkoutPlansState
     }));
   }
 
-  Future<void> _copyToAnotherCollection(WorkoutPlan workoutPlan) async {
+  Future<void> _copyToAnotherCollection(WorkoutPlanSummary workoutPlan) async {
     /// Select collection to move to
     await context.push(
         child: CollectionSelector(selectCollection: (collection) async {
@@ -51,23 +52,23 @@ class _FilterableCollectionWorkoutPlansState
     }));
   }
 
-  void _confirmRemoveFromCollection(WorkoutPlan workoutPlan) {
-    CollectionManager.confirmRemoveObjectFromCollection<WorkoutPlan>(
+  void _confirmRemoveFromCollection(WorkoutPlanSummary workoutPlan) {
+    CollectionManager.confirmRemoveObjectFromCollection<WorkoutPlanSummary>(
         context, widget.collection, workoutPlan);
   }
 
   @override
   Widget build(BuildContext context) {
     final allPlans = widget.collection.workoutPlans.where((wp) => !wp.archived);
+
     final allTags = allPlans
-        .fold<List<WorkoutTag>>(
-            [], (acum, next) => [...acum, ...next.workoutTags])
+        .fold<List<String>>([], (acum, next) => [...acum, ...next.tags])
         .toSet()
         .toList();
 
     final filteredPlans = _workoutTagFilter == null
         ? allPlans
-        : allPlans.where((wp) => wp.workoutTags.contains(_workoutTagFilter));
+        : allPlans.where((wp) => wp.tags.contains(_workoutTagFilter));
 
     final sortedPlans =
         filteredPlans.sortedBy<DateTime>((w) => w.createdAt).reversed.toList();
@@ -76,7 +77,7 @@ class _FilterableCollectionWorkoutPlansState
       children: [
         if (allTags.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(left: 4.0, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(left: 4.0, top: 2, bottom: 8),
             child: SizedBox(
                 height: 32,
                 child: ListView.builder(
@@ -85,7 +86,7 @@ class _FilterableCollectionWorkoutPlansState
                     itemBuilder: (c, i) => Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: SelectableTag(
-                            text: allTags[i].tag,
+                            text: allTags[i],
                             fontSize: FONTSIZE.two,
                             selectedColor: Styles.primaryAccent,
                             isSelected: allTags[i] == _workoutTagFilter,
@@ -109,10 +110,10 @@ class _FilterableCollectionWorkoutPlansState
 }
 
 class _CollectionWorkoutPlansList extends StatelessWidget {
-  final List<WorkoutPlan> workoutPlans;
-  final void Function(WorkoutPlan workoutPlan) moveToCollection;
-  final void Function(WorkoutPlan workoutPlan) copyToCollection;
-  final void Function(WorkoutPlan workoutPlan) removeFromCollection;
+  final List<WorkoutPlanSummary> workoutPlans;
+  final void Function(WorkoutPlanSummary workoutPlan) moveToCollection;
+  final void Function(WorkoutPlanSummary workoutPlan) copyToCollection;
+  final void Function(WorkoutPlanSummary workoutPlan) removeFromCollection;
   const _CollectionWorkoutPlansList(
       {required this.workoutPlans,
       required this.moveToCollection,
@@ -122,9 +123,7 @@ class _CollectionWorkoutPlansList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return workoutPlans.isEmpty
-        ? const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: MyText('No plans')))
+        ? const Center(child: NoResultsToDisplay())
         : ListView.builder(
             shrinkWrap: true,
             itemCount: workoutPlans.length,

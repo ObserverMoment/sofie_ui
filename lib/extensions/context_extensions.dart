@@ -1,6 +1,3 @@
-// https://stackoverflow.com/questions/49172746/is-it-possible-extend-themedata-in-flutter
-import 'dart:ui';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -56,7 +53,7 @@ extension BuildContextExtension on BuildContext {
       bool rootNavigator = false}) async {
     final BuildContext context = this;
     final T? res = await Navigator.of(context, rootNavigator: rootNavigator)
-        .push(MaterialWithModalsPageRoute(
+        .push(CupertinoPageRoute(
             fullscreenDialog: fullscreenDialog, builder: (context) => child));
     return res;
   }
@@ -307,29 +304,27 @@ extension BuildContextExtension on BuildContext {
     required String message,
     Widget? icon,
     ToastType toastType = ToastType.standard,
-    TextAlign textAlign = TextAlign.start,
+    TextAlign textAlign = TextAlign.center,
     FlushbarPosition flushbarPosition = FlushbarPosition.TOP,
   }) {
     final contentColor = toastType == ToastType.destructive
         ? Styles.errorRed
         : readTheme.primary;
-    final iconData = toastType == ToastType.destructive
-        ? CupertinoIcons.exclamationmark_circle_fill
-        : CupertinoIcons.checkmark_alt_circle_fill;
 
     Flushbar(
-      backgroundColor: readTheme.cardBackground.withOpacity(0.80),
-      icon: Icon(iconData, size: 14, color: contentColor.withOpacity(0.65)),
-      flushbarPosition: flushbarPosition,
-      flushbarStyle: FlushbarStyle.GROUNDED,
-      animationDuration: const Duration(milliseconds: 300),
-      messageText: MyText(message,
-          color: contentColor, textAlign: textAlign, size: FONTSIZE.two),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      duration: const Duration(seconds: 3),
-      blockBackgroundInteraction: false,
-      isDismissible: true,
-    ).show(this);
+            backgroundColor: readTheme.cardBackground,
+            flushbarPosition: flushbarPosition,
+            flushbarStyle: FlushbarStyle.FLOATING,
+            animationDuration: const Duration(milliseconds: 300),
+            messageText:
+                MyText(message, color: contentColor, textAlign: textAlign),
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+            duration: const Duration(seconds: 3),
+            blockBackgroundInteraction: false,
+            isDismissible: true,
+            borderRadius: BorderRadius.circular(16))
+        .show(this);
   }
 
   /// Toast + more text and a button for interactivity.

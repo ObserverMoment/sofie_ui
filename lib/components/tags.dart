@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -107,7 +106,7 @@ class MoveTypeTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: context.theme.customThemeData.greyOne,
+          color: context.theme.cardBackground,
           borderRadius: BorderRadius.circular(60)),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       child: MyText(
@@ -120,18 +119,22 @@ class MoveTypeTag extends StatelessWidget {
 
 class DifficultyLevelDot extends StatelessWidget {
   final DifficultyLevel difficultyLevel;
-  const DifficultyLevelDot({Key? key, required this.difficultyLevel})
+  final double size;
+  const DifficultyLevelDot(
+      {Key? key, required this.difficultyLevel, this.size = 15})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isElite = difficultyLevel == DifficultyLevel.elite;
+    final borderColor =
+        isElite ? context.theme.primary : difficultyLevel.displayColor;
+
     return Container(
-      width: 16,
-      height: 16,
+      width: size,
+      height: size,
       decoration: BoxDecoration(
-          border: difficultyLevel == DifficultyLevel.elite
-              ? Border.all(color: Styles.white)
-              : null,
+          border: Border.all(color: borderColor),
           shape: BoxShape.circle,
           color: difficultyLevel.displayColor),
     );
@@ -206,18 +209,13 @@ class DifficultyLevelTag extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor,
         border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(3),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MyText(
-            difficultyLevel.display.toUpperCase(),
-            size: fontSize,
-            color: textColor ?? context.theme.primary,
-            lineHeight: 1.2,
-          ),
-        ],
+      child: MyText(
+        difficultyLevel.display.toUpperCase(),
+        size: fontSize,
+        color: textColor ?? context.theme.primary,
+        lineHeight: 1.2,
       ),
     );
   }
@@ -408,7 +406,7 @@ class DurationTag extends StatelessWidget {
 }
 
 class ProgressJournalGoalAndTagsTag extends StatelessWidget {
-  final ProgressJournalGoal progressJournalGoal;
+  final JournalGoal progressJournalGoal;
   const ProgressJournalGoalAndTagsTag(this.progressJournalGoal, {Key? key})
       : super(key: key);
 
@@ -430,22 +428,6 @@ class ProgressJournalGoalAndTagsTag extends StatelessWidget {
                 ? TextDecoration.lineThrough
                 : null,
           ),
-          if (progressJournalGoal.progressJournalGoalTags.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(left: 4.0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: progressJournalGoal.progressJournalGoalTags
-                    .map((t) => Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Dot(
-                              diameter: 10,
-                              color: HexColor.fromHex(t.hexColor)),
-                        ))
-                    .toList(),
-              ),
-            )
         ],
       ),
     );

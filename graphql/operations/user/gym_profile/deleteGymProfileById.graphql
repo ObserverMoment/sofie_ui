@@ -1,0 +1,3 @@
+mutation deleteGymProfileById($id: ID!) {
+  deleteGymProfileById(id: $id)
+}

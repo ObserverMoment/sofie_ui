@@ -11,14 +11,18 @@ import 'package:sofie_ui/services/utils.dart';
 
 class LoadPickerDisplay extends StatelessWidget {
   final double loadAmount;
-  final void Function(double loadAmount, LoadUnit loadUnit) updateLoad;
   final LoadUnit loadUnit;
+  final void Function(double loadAmount, LoadUnit loadUnit) updateLoad;
   final bool expandPopup;
+  final FONTSIZE valueFontSize;
+  final FONTSIZE suffixFontSize;
   const LoadPickerDisplay(
       {Key? key,
       required this.loadAmount,
       required this.updateLoad,
       required this.loadUnit,
+      this.valueFontSize = FONTSIZE.nine,
+      this.suffixFontSize = FONTSIZE.three,
       this.expandPopup = false})
       : super(key: key);
 
@@ -38,15 +42,12 @@ class LoadPickerDisplay extends StatelessWidget {
           children: [
             MyText(
               loadAmount.stringMyDouble(),
-              size: FONTSIZE.nine,
+              size: valueFontSize,
             ),
             const SizedBox(
               width: 4,
             ),
-            MyText(
-              loadUnit.display,
-              size: FONTSIZE.five,
-            )
+            MyText(loadUnit.display, size: suffixFontSize)
           ],
         ),
       ),
@@ -126,12 +127,17 @@ class _LoadPickerModalState extends State<LoadPickerModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SlidingSelect<LoadUnit>(
+              MySlidingSegmentedControl<LoadUnit>(
                   value: _activeLoadUnit,
+                  fontSize: 15,
+                  containerPadding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                  childPadding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8),
                   children: {
                     for (final v in LoadUnit.values
                         .where((v) => v != LoadUnit.artemisUnknown))
-                      v: MyText(v.display)
+                      v: v.display
                   },
                   updateValue: (loadUnit) =>
                       setState(() => _activeLoadUnit = loadUnit)),

@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
@@ -11,10 +8,10 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class WorkoutCard extends StatelessWidget {
-  final Workout workout;
+  final WorkoutSummary workout;
   final int? elevation;
   final EdgeInsets padding;
 
@@ -25,13 +22,32 @@ class WorkoutCard extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
   }) : super(key: key);
 
+  Widget _buildLoggedSessionsCount(
+          BuildContext context, int count, Color contentOverlayColor) =>
+      count > 0
+          ? Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: contentOverlayColor),
+              child: Column(
+                children: [
+                  MyText(
+                    count.displayLong,
+                    color: Styles.white,
+                  ),
+                  const MyText(
+                    'sessions',
+                    size: FONTSIZE.one,
+                    color: Styles.white,
+                  ),
+                ],
+              ),
+            )
+          : Container();
+
   @override
   Widget build(BuildContext context) {
-    final List<String> allTags = [
-      ...workout.workoutGoals.map((g) => g.name),
-      ...workout.workoutTags.map((t) => t.tag)
-    ];
-
     // Calc the ideal image size based on the display size.
     // Cards usually take up the full width.
     // // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
@@ -43,6 +59,9 @@ class WorkoutCard extends StatelessWidget {
     /// The lower section seems to need to have a border radius of one lower than that of the whole card to avoid a small peak of the underlying image - why does the corner get cut by 1 px?
     const borderRadius = 8.0;
     const infoFontColor = Styles.white;
+
+    /// Don't show 'Custom' as a tag.
+    final tagsToDisplay = workout.tags.where((t) => t != 'Custom').toList();
 
     return Card(
       elevation: 2,
@@ -69,21 +88,35 @@ class WorkoutCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      mainAxisAlignment: workout.lengthMinutes != null
-                          ? MainAxisAlignment.spaceBetween
-                          : MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (workout.lengthMinutes != null)
-                          DurationTag(
-                            duration: Duration(minutes: workout.lengthMinutes!),
-                            backgroundColor: contentOverlayColor,
-                            textColor: infoFontColor,
-                          ),
-                        DifficultyLevelTag(
-                          difficultyLevel: workout.difficultyLevel,
-                          fontSize: FONTSIZE.one,
-                          backgroundColor: contentOverlayColor,
-                          textColor: infoFontColor,
+                        _buildLoggedSessionsCount(context,
+                            workout.loggedSessionsCount, contentOverlayColor),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (workout.lengthMinutes != null)
+                              Padding(
+                                padding: const EdgeInsets.only(right: 5.0),
+                                child: DurationTag(
+                                  duration:
+                                      Duration(minutes: workout.lengthMinutes!),
+                                  backgroundColor: contentOverlayColor,
+                                  textColor: infoFontColor,
+                                ),
+                              ),
+                            if (workout.difficultyLevel != null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2.0),
+                                child: Opacity(
+                                  opacity: 0.75,
+                                  child: DifficultyLevelDot(
+                                    difficultyLevel: workout.difficultyLevel!,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ],
                     ),
@@ -92,16 +125,16 @@ class WorkoutCard extends StatelessWidget {
                       verticalDirection: VerticalDirection.up,
                       spacing: 4,
                       runSpacing: 4,
-                      children: workout.allEquipment
+                      children: workout.equipments
                           .map(
                             (e) => Container(
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: contentOverlayColor),
-                                padding: const EdgeInsets.all(5),
-                                width: 30,
-                                height: 30,
-                                child: Utils.getEquipmentIcon(context, e.name,
+                                padding: const EdgeInsets.all(3),
+                                width: 28,
+                                height: 28,
+                                child: Utils.getEquipmentIcon(context, e,
                                     color: infoFontColor)),
                           )
                           .toList(),
@@ -115,7 +148,8 @@ class WorkoutCard extends StatelessWidget {
                 borderRadius: const BorderRadius.only(
                     bottomRight: Radius.circular(borderRadius),
                     bottomLeft: Radius.circular(borderRadius))),
-            padding: const EdgeInsets.all(16),
+            padding:
+                const EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -130,7 +164,7 @@ class WorkoutCard extends StatelessWidget {
                             lineHeight: 1.3,
                             color: infoFontColor,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           MyText(
                             workout.user.displayName.toUpperCase(),
                             size: FONTSIZE.two,
@@ -142,44 +176,18 @@ class WorkoutCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (workout.workoutSections.isNotEmpty)
+                if (Utils.textNotNull(workout.description))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: MyText(workout.description!, color: infoFontColor),
+                  ),
+                if (tagsToDisplay.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 6.0),
-                    child: Wrap(
-                      spacing: 4,
-                      runSpacing: 5,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: workout.workoutSections
-                          .sortedBy<num>((section) => section.sortPosition)
-                          .mapIndexed((i, section) =>
-                              i == workout.workoutSections.length - 1
-                                  ? WorkoutSectionTypeTag(
-                                      workoutSection: section,
-                                      elevation: 0,
-                                      withBackground: false,
-                                      fontColor: infoFontColor,
-                                      fontSize: FONTSIZE.three)
-                                  : Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        WorkoutSectionTypeTag(
-                                          workoutSection: section,
-                                          elevation: 0,
-                                          fontSize: FONTSIZE.three,
-                                          fontColor: infoFontColor,
-                                          withBackground: false,
-                                        ),
-                                        const MyText(' |', color: infoFontColor)
-                                      ],
-                                    ))
-                          .toList(),
+                    child: CommaSeparatedList(
+                      tagsToDisplay,
+                      textColor: infoFontColor,
                     ),
-                  ),
-                if (allTags.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: CommaSeparatedList(allTags,
-                        textColor: Styles.secondaryAccent),
                   )
               ],
             ),

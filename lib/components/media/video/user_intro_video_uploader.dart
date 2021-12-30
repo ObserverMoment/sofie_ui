@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -22,14 +18,16 @@ class UserIntroVideoUploader extends StatefulWidget {
   final String? introVideoUri;
   final String? introVideoThumbUri;
   final Size displaySize;
-  final Function(String uploadedVideoUri, String uploadedVideoThumbUri)?
+
+  /// Pass null and the api will delete from the DB.
+  final Function(String? uploadedVideoUri, String? uploadedVideoThumbUri)
       onUploadSuccess;
   const UserIntroVideoUploader(
       {Key? key,
       this.introVideoUri,
       this.introVideoThumbUri,
       this.displaySize = const Size(120, 120),
-      this.onUploadSuccess})
+      required this.onUploadSuccess})
       : super(key: key);
 
   @override
@@ -79,8 +77,7 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
                 _uploading = false;
                 _processing = true;
               }),
-          onComplete: (String videoUri, String videoThumbUri) =>
-              _saveUrisToDB(videoUri, videoThumbUri),
+          onComplete: _saveUrisToDB,
           onFail: (e) => throw Exception(e));
     } catch (e) {
       printLog(e.toString());
@@ -91,28 +88,7 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
 
   Future<void> _saveUrisToDB(String? videoUri, String? videoThumbUri) async {
     try {
-      final input = UpdateUserInput()
-        ..introVideoUri = videoUri
-        ..introVideoThumbUri = videoThumbUri;
-      final variables = UpdateUserArguments(data: input);
-      final Map<String, dynamic> varsMap = {
-        'introVideoUri': videoUri,
-        'introVideoThumbUri': videoThumbUri
-      };
-
-      await context.graphQLStore.mutate(
-          mutation: UpdateUserMutation(variables: variables),
-          customVariablesMap: {
-            'data': varsMap
-          },
-          broadcastQueryIds: [
-            AuthedUserQuery().operationName
-          ],
-          optimisticData: {
-            '__typename': 'User',
-            'id': GetIt.I<AuthBloc>().authedUser!.id,
-            ...varsMap
-          });
+      widget.onUploadSuccess(videoUri, videoThumbUri);
     } catch (e) {
       printLog(e.toString());
       await context.showErrorAlert(e.toString());
@@ -187,7 +163,7 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
                   : Utils.textNotNull(widget.introVideoThumbUri)
                       ? SizedUploadcareImage(widget.introVideoThumbUri!)
                       : Icon(
-                          CupertinoIcons.film,
+                          CupertinoIcons.tv,
                           size: widget.displaySize.width / 2.5,
                           color: primary.withOpacity(0.3),
                         ),

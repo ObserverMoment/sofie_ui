@@ -1,13 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -29,8 +27,7 @@ Future<void> main() async {
   await Hive.openBox(kSettingsHiveBoxName);
   await Hive.openBox(GraphQLStore.boxName);
 
-  /// Once we have ensured that clean up and garbage collection is working well.
-  /// TODO: Remove this before pushing anything to production.
+  /// TODO: Remove this once we have ensured that clean up and garbage collection is working well.
   await Hive.box(GraphQLStore.boxName).clear();
 
   await Firebase.initializeApp();
@@ -81,65 +78,62 @@ class _AuthRouterState extends State<AuthRouter> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<AuthState>(
-        valueListenable: GetIt.I<AuthBloc>().authState,
-        builder: (context, authState, _) {
-          final _authedUser = GetIt.I<AuthBloc>().authedUser;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthBloc>.value(value: _authBloc),
+        ChangeNotifierProvider<ThemeBloc>(
+            create: (_) => ThemeBloc(deviceBrightness: _userDeviceBrightness)),
+        Provider<GraphQLStore>(
+          create: (_) => GraphQLStore(),
+          dispose: (context, store) => store.dispose(),
+        ),
+        ChangeNotifierProvider<MoveFiltersBloc>(
+            create: (_) => MoveFiltersBloc()),
+        ChangeNotifierProvider<WorkoutFiltersBloc>(
+            create: (_) => WorkoutFiltersBloc()),
+        ChangeNotifierProvider<WorkoutPlanFiltersBloc>(
+            create: (_) => WorkoutPlanFiltersBloc()),
+      ],
+      builder: (context, child) {
+        final authBloc = context.watch<AuthBloc>();
+        final authState = authBloc.authState;
+        final authedUser = authBloc.authedUser;
 
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider<ThemeBloc>(
-                  create: (_) =>
-                      ThemeBloc(deviceBrightness: _userDeviceBrightness)),
-              Provider<GraphQLStore>(
-                create: (_) => GraphQLStore(),
-                dispose: (context, store) => store.dispose(),
-              ),
-              ChangeNotifierProvider<MoveFiltersBloc>(
-                  create: (_) => MoveFiltersBloc()),
-              ChangeNotifierProvider<WorkoutFiltersBloc>(
-                  create: (_) => WorkoutFiltersBloc()),
-              ChangeNotifierProvider<WorkoutPlanFiltersBloc>(
-                  create: (_) => WorkoutPlanFiltersBloc()),
-            ],
-            builder: (context, child) => material.Theme(
-              data: material.ThemeData(
-                  scaffoldBackgroundColor: context.theme.background),
-              child: _Unfocus(
-                  child: CupertinoApp.router(
-                routeInformationParser:
-                    _appRouter.defaultRouteParser(includePrefixMatches: true),
-                routerDelegate: AutoRouterDelegate.declarative(
-                  _appRouter,
-                  routes: (_) => [
-                    // if the user is logged in, they may proceed to the main App
-                    if (authState == AuthState.authed && _authedUser != null)
-                      const AuthedRouter()
-                    // if they are not logged in, bring them to the Login page
-                    else if (authState == AuthState.validating ||
-                        authState == AuthState.unknown)
-                      const GlobalLoadingRoute()
-                    else
-                      const UnauthedLandingRoute(),
-                  ],
-                ),
-                debugShowCheckedModeBanner: false,
-                theme: context.theme.cupertinoThemeData,
-                localizationsDelegates: const [
-                  material.DefaultMaterialLocalizations.delegate,
-                  DefaultCupertinoLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en', 'US'),
-                  Locale('en', 'GB'),
-                ],
-              )),
+        return material.Theme(
+          data: material.ThemeData(
+              scaffoldBackgroundColor: context.theme.background),
+          child: _Unfocus(
+              child: CupertinoApp.router(
+            routeInformationParser:
+                _appRouter.defaultRouteParser(includePrefixMatches: true),
+            routerDelegate: AutoRouterDelegate.declarative(
+              _appRouter,
+              routes: (_) => [
+                if (authState == AuthState.authed && authedUser != null)
+                  const AuthedRouter()
+                else if (authState == AuthState.loading)
+                  const GlobalLoadingRoute()
+                else
+                  const UnauthedLandingRoute(),
+              ],
             ),
-          );
-        });
+            debugShowCheckedModeBanner: false,
+            theme: context.theme.cupertinoThemeData,
+            localizationsDelegates: const [
+              material.DefaultMaterialLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en', 'US'),
+              Locale('en', 'GB'),
+            ],
+          )),
+        );
+      },
+    );
   }
 }
 

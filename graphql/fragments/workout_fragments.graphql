@@ -1,0 +1,160 @@
+# Full data tree including all descendents
+# Cannot use ...Workout mixin as this was causing build to fail
+# So fields are defined explicitly / separately here an on ...Workout fragment below
+fragment WorkoutData on Workout {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  lengthMinutes
+  difficultyLevel
+  coverImageUri
+  contentAccessScope
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  User {
+    ...UserAvatarData
+  }
+  WorkoutGoals {
+    ...WorkoutGoal
+  }
+  WorkoutTags {
+    ...WorkoutTag
+  }
+  WorkoutSections {
+    ...WorkoutSection
+    WorkoutSectionType {
+      ...WorkoutSectionType
+    }
+    WorkoutSets {
+      ...WorkoutSet
+      WorkoutMoves {
+        ...WorkoutMove
+        Equipment {
+          ...Equipment
+        }
+        Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+          BodyAreaMoveScores {
+            score
+            BodyArea {
+              ...BodyArea
+            }
+          }
+          RequiredEquipments {
+            ...Equipment
+          }
+          SelectableEquipments {
+            ...Equipment
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment Workout on Workout {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  description
+  lengthMinutes
+  difficultyLevel
+  coverImageUri
+  contentAccessScope
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+}
+
+fragment WorkoutSummary on WorkoutSummary {
+  __typename
+  id
+  createdAt
+  archived
+  name
+  User {
+    ...UserAvatarData
+  }
+  lengthMinutes
+  coverImageUri
+  description
+  difficultyLevel
+  loggedSessionsCount
+  hasClassVideo
+  hasClassAudio
+  equipments
+  tags
+}
+
+fragment ArchivedWorkout on Workout {
+  __typename
+  id
+  name
+  archived
+}
+
+fragment WorkoutGoal on WorkoutGoal {
+  __typename
+  id
+  name
+  description
+  hexColor
+}
+
+fragment WorkoutSection on WorkoutSection {
+  __typename
+  id
+  name
+  note
+  rounds
+  timecap
+  sortPosition
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  classVideoUri
+  classVideoThumbUri
+  classAudioUri
+}
+
+fragment WorkoutSectionType on WorkoutSectionType {
+  __typename
+  id
+  name
+  description
+}
+
+fragment WorkoutSet on WorkoutSet {
+  __typename
+  id
+  sortPosition
+  rounds
+  duration
+}
+
+fragment WorkoutMove on WorkoutMove {
+  __typename
+  id
+  sortPosition
+  reps
+  repType
+  distanceUnit
+  loadAmount
+  loadUnit
+  timeUnit
+}
+
+fragment WorkoutTag on WorkoutTag {
+  __typename
+  id
+  tag
+}

@@ -1,31 +1,33 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/cards/participant_card.dart';
+import 'package:sofie_ui/components/cards/plan_participant_card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 class WorkoutPlanParticipants extends StatelessWidget {
-  final List<UserSummary> userSummaries;
-  const WorkoutPlanParticipants({Key? key, required this.userSummaries})
+  final WorkoutPlan workoutPlan;
+  const WorkoutPlanParticipants({Key? key, required this.workoutPlan})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(4),
-        child: userSummaries.isEmpty
-            ? const Center(
-                child: MyText(
-                'No participants yet',
-                subtext: true,
-              ))
-            : ListView(
-                children: [
-                  ...userSummaries
-                      .map((u) => ParticipantCard(userSummary: u))
-                      .toList(),
-                  const SizedBox(height: kAssumedFloatingButtonHeight),
-                ],
-              ));
+    final enrolments = workoutPlan.workoutPlanEnrolments;
+    return enrolments.isEmpty
+        ? const Center(
+            child: MyText(
+            'No participants yet',
+            subtext: true,
+          ))
+        : ListView(
+            children: [
+              ...enrolments
+                  .map((e) => ParticipantCard(
+                      enrolment: e,
+                      totalWorkouts: workoutPlan.workoutsInPlan.length))
+                  .toList(),
+              const SizedBox(height: kAssumedFloatingButtonHeight),
+            ],
+          );
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
@@ -7,17 +5,17 @@ import 'package:sofie_ui/components/data_vis/percentage_bar_chart.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_reviews_summary.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class WorkoutPlanCard extends StatelessWidget {
-  final WorkoutPlan workoutPlan;
+  final WorkoutPlanSummary workoutPlan;
   final Color? backgroundColor;
   final int? elevation;
 
@@ -28,17 +26,70 @@ class WorkoutPlanCard extends StatelessWidget {
     this.elevation,
   }) : super(key: key);
 
+  Widget _buildContentSummary(
+          BuildContext context, Color contentOverlayColor) =>
+      Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4), color: contentOverlayColor),
+        child: Row(
+          children: [
+            MyText(
+              '${workoutPlan.lengthWeeks} weeks',
+              size: FONTSIZE.two,
+              color: Styles.white,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              child: Dot(
+                diameter: 4,
+                color: Styles.white,
+              ),
+            ),
+            MyText(
+              '${workoutPlan.daysPerWeek} days / week',
+              size: FONTSIZE.two,
+              color: Styles.white,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildEnrolledCount(BuildContext context, Color contentOverlayColor) =>
+      workoutPlan.enrolmentsCount > 0
+          ? Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: contentOverlayColor),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(CupertinoIcons.person,
+                          size: 15, color: Styles.white),
+                      const SizedBox(width: 2),
+                      MyText(workoutPlan.enrolmentsCount.displayLong,
+                          color: Styles.white),
+                    ],
+                  ),
+                  const MyText('enrolled',
+                      size: FONTSIZE.one, color: Styles.white),
+                ],
+              ),
+            )
+          : Container();
+
   @override
   Widget build(BuildContext context) {
-    final allTags = workoutPlan.workoutTags.map((t) => t.tag).toList();
-
     // Calc the ideal image size based on the display size.
     // Cards usually take up the full width.
     // // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
     final double width = MediaQuery.of(context).size.width;
     Dimensions dimensions = Dimensions.square((width * 1.5).toInt());
 
-    final planDifficulty = workoutPlan.calcDifficulty;
+    // final planDifficulty = workoutPlan.calcDifficulty;
     const overlayContentPadding =
         EdgeInsets.symmetric(vertical: 4, horizontal: 8);
     final Color contentOverlayColor =
@@ -63,36 +114,38 @@ class WorkoutPlanCard extends StatelessWidget {
                   ) as ImageProvider),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           SizedBox(
-            height: 140,
+            height: 130,
             width: double.infinity,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(6.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildContentSummary(context, contentOverlayColor),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child:
+                            _buildEnrolledCount(context, contentOverlayColor),
+                      ),
+                    ],
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      if (planDifficulty != null)
-                        DifficultyLevelTag(
-                          difficultyLevel: planDifficulty,
-                          fontSize: FONTSIZE.one,
+                      if (workoutPlan.reviewCount > 0)
+                        ContentBox(
                           backgroundColor: contentOverlayColor,
-                          textColor: infoFontColor,
-                        ),
-                      if (workoutPlan.workoutPlanReviews.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 6.0),
-                          child: ContentBox(
-                            backgroundColor: contentOverlayColor,
-                            padding: overlayContentPadding,
-                            borderRadius: 4,
-                            child: WorkoutPlanReviewsSummary(
-                              reviews: workoutPlan.workoutPlanReviews,
-                              itemSize: 14,
-                              textColor: infoFontColor,
-                            ),
+                          padding: overlayContentPadding,
+                          borderRadius: 4,
+                          child: WorkoutPlanReviewsSummary(
+                            starSize: 14,
+                            textColor: infoFontColor,
+                            reviewCount: workoutPlan.reviewCount,
+                            reviewScore: workoutPlan.reviewScore ?? 0,
                           ),
                         ),
                     ],
@@ -121,7 +174,7 @@ class WorkoutPlanCard extends StatelessWidget {
                             lineHeight: 1.3,
                             color: infoFontColor,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 3),
                           MyText(
                             workoutPlan.user.displayName.toUpperCase(),
                             size: FONTSIZE.two,
@@ -132,42 +185,24 @@ class WorkoutPlanCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      children: [
-                        MyText(
-                          workoutPlan.lengthString.toUpperCase(),
-                          size: FONTSIZE.two,
-                          color: infoFontColor,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Dot(
-                            diameter: 4,
-                            color: infoFontColor,
-                          ),
-                        ),
-                        MyText(
-                          '${workoutPlan.workoutPlanDays.length} workouts'
-                              .toUpperCase(),
-                          size: FONTSIZE.two,
-                          color: infoFontColor,
-                        ),
-                      ],
+                  if (Utils.textNotNull(workoutPlan.description))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child:
+                          MyText(workoutPlan.description!, color: Styles.white),
                     ),
-                  ),
-                  if (allTags.isNotEmpty)
+                  if (workoutPlan.tags.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: CommaSeparatedList(allTags,
-                          textColor: Styles.secondaryAccent),
+                      child: CommaSeparatedList(workoutPlan.tags,
+                          textColor: Styles.primaryAccent),
                     ),
-                  if (workoutPlan.workoutPlanDays.isNotEmpty)
+                  if (workoutPlan.goals.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: PercentageBarChartSingle(
-                        inputs: workoutPlan.waffleChartInputs,
+                        inputs: DataUtils.waffleChartInputsFromGoals(
+                            workoutPlan.goals),
                         barHeight: 4,
                         textColor: infoFontColor,
                       ),

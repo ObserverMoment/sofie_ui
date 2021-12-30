@@ -5,82 +5,97 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 /// Useful for managing store state - store mutations and QueryObserver updates.
 /// Variables / args are ignored - just the operation name is returned.
 class GQLOpNames {
-  /// By Id. This will (NEEDS testing!) trigger all byId queries of this type. i.e. all of the [progressJournalById] queries or all of the [workoutByIdQueries].
-  static String get progressJournalByIdQuery =>
-      ProgressJournalByIdQuery(variables: ProgressJournalByIdArguments(id: ''))
-          .operationName;
+  /// List type queries where variables are not used.
+  static String get bodyTrackingEntries =>
+      BodyTrackingEntriesQuery().operationName;
 
-  /// TODO: Does this key trigger all workoutById queries?
-  static String get workoutByIdQuery =>
-      WorkoutByIdQuery(variables: WorkoutByIdArguments(id: '')).operationName;
+  static String get journalGoals => JournalGoalsQuery().operationName;
+
+  static String get journalMoods => JournalMoodsQuery().operationName;
+
+  static String get journalNotes => JournalNotesQuery().operationName;
+
+  static String get workoutPlanEnrolments =>
+      WorkoutPlanEnrolmentsQuery().operationName;
 
   /// TODO: Does this key trigger all userBenchmarkByIdQuery queries?
-  static String get userBenchmarkByIdQuery =>
-      UserBenchmarkByIdQuery(variables: UserBenchmarkByIdArguments(id: ''))
+  static String get userBenchmark =>
+      UserBenchmarkQuery(variables: UserBenchmarkArguments(id: ''))
           .operationName;
-
-  /// List type queries where variables are not used.
-  static String get userProgressJournalsQuery =>
-      UserProgressJournalsQuery().operationName;
 
   /// List type queries where variables are not used.
   /// Note: In the API UserBenchmarksQuery can take vars - they are optional and not currently being used.
-  static String get userBenchmarksQuery => UserBenchmarksQuery().operationName;
+  static String get userBenchmarks => UserBenchmarksQuery().operationName;
 
-  static String get userClubsQuery => UserClubsQuery().operationName;
+  static String get userClubs => UserClubsQuery().operationName;
+  static String get userCollections => UserCollectionsQuery().operationName;
 
-  static String get userCustomMovesQuery =>
-      UserCustomMovesQuery().operationName;
+  static String get userCustomMoves => UserCustomMovesQuery().operationName;
 
-  static String get userWorkoutsQuery => UserWorkoutsQuery().operationName;
+  /// TODO: Does this key trigger all workoutById queries?
+  static String get workoutById =>
+      WorkoutByIdQuery(variables: WorkoutByIdArguments(id: '')).operationName;
 
-  static String get userWorkoutPlansQuery =>
-      UserWorkoutPlansQuery().operationName;
+  static String get userWorkouts => UserWorkoutsQuery().operationName;
+  static String get userWorkoutTags => UserWorkoutTagsQuery().operationName;
 
-  static String get userScheduledWorkoutsQuery =>
+  static String get userWorkoutPlans => UserWorkoutPlansQuery().operationName;
+
+  static String get userScheduledWorkouts =>
       UserScheduledWorkoutsQuery().operationName;
 
   //// Archive Related ////
-  static String get userArchivedWorkoutsQuery =>
+  static String get userArchivedWorkouts =>
       UserArchivedWorkoutsQuery().operationName;
 
-  static String get userArchivedWorkoutPlansQuery =>
+  static String get userArchivedWorkoutPlans =>
       UserArchivedWorkoutPlansQuery().operationName;
 
-  static String get userArchivedCustomMovesQuery =>
+  static String get userArchivedCustomMoves =>
       UserArchivedCustomMovesQuery().operationName;
 }
 
 /// Observable queries whose operations can accept variables, but whose keys are being stored with the variables nulled.
 /// /// For example [workoutById({"id": null})]
 class GQLNullVarsKeys {
-  static String get userLoggedWorkoutsQuery => getNulledVarsQueryId(
+  static String get userLoggedWorkouts => getNulledVarsQueryId(
       UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments()));
 }
 
 /// Observable queries whose operations accept variables and whose keys are being generated based on the variables being passed.
 /// /// For example [workoutById({"id": 1234})]
 class GQLVarParamKeys {
-  static String clubByIdQuery(String id) => getParameterizedQueryId(
-      ClubByIdQuery(variables: ClubByIdArguments(id: id)));
+  static String clubSummary(String id) => getParameterizedQueryId(
+      ClubSummaryQuery(variables: ClubSummaryArguments(id: id)));
 
-  static String progressJournalByIdQuery(String id) =>
-      getParameterizedQueryId(ProgressJournalByIdQuery(
-          variables: ProgressJournalByIdArguments(id: id)));
+  static String clubInviteTokens(String id) => getParameterizedQueryId(
+      ClubInviteTokensQuery(variables: ClubInviteTokensArguments(clubId: id)));
 
-  static String userBenchmarkByIdQuery(String id) => getParameterizedQueryId(
-      UserBenchmarkByIdQuery(variables: UserBenchmarkByIdArguments(id: id)));
+  static String clubMembers(String id) => getParameterizedQueryId(
+      ClubMembersQuery(variables: ClubMembersArguments(clubId: id)));
 
-  static String userCollectionByIdQuery(String id) => getParameterizedQueryId(
+  static String clubWorkouts(String id) => getParameterizedQueryId(
+      ClubWorkoutsQuery(variables: ClubWorkoutsArguments(clubId: id)));
+
+  static String clubWorkoutPlans(String id) => getParameterizedQueryId(
+      ClubWorkoutPlansQuery(variables: ClubWorkoutPlansArguments(clubId: id)));
+
+  static String userBenchmark(String id) => getParameterizedQueryId(
+      UserBenchmarkQuery(variables: UserBenchmarkArguments(id: id)));
+
+  static String userCollectionById(String id) => getParameterizedQueryId(
       UserCollectionByIdQuery(variables: UserCollectionByIdArguments(id: id)));
 
-  static String workoutByIdQuery(String id) => getParameterizedQueryId(
+  static String userProfile(String id) => getParameterizedQueryId(
+      UserProfileQuery(variables: UserProfileArguments(userId: id)));
+
+  static String workoutById(String id) => getParameterizedQueryId(
       WorkoutByIdQuery(variables: WorkoutByIdArguments(id: id)));
 
-  static String workoutPlanByIdQuery(String id) => getParameterizedQueryId(
+  static String workoutPlanById(String id) => getParameterizedQueryId(
       WorkoutPlanByIdQuery(variables: WorkoutPlanByIdArguments(id: id)));
 
-  static String workoutPlanByEnrolmentId(String id) =>
-      getParameterizedQueryId(WorkoutPlanByEnrolmentIdQuery(
-          variables: WorkoutPlanByEnrolmentIdArguments(id: id)));
+  static String workoutPlanEnrolmentById(String id) =>
+      getParameterizedQueryId(WorkoutPlanEnrolmentByIdQuery(
+          variables: WorkoutPlanEnrolmentByIdArguments(id: id)));
 }

@@ -65,7 +65,7 @@ class UploadcareService {
     apiVersion: 'v0.6',
   )));
 
-  static Future<String?> getFileUrl(String fileId) async {
+  static String? getFileUrl(String fileId) {
     try {
       final CdnFile cdnFile = CdnFile(fileId);
       return cdnFile.url;
@@ -107,6 +107,10 @@ class UploadcareService {
     try {
       final String fileId = await _uploadApi.base(file,
           onProgress: onProgress, cancelToken: cancelToken);
+
+      // Check when the file is ready for use before continuing.
+      await Utils.waitWhile(() => checkFileIsReady(fileId),
+          pollIntervalMs: 1000, backoffMs: 500, maxAttempts: 20);
 
       onComplete(fileId);
     } on CancelUploadException catch (e) {

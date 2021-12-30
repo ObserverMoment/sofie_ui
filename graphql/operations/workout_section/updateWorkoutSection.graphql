@@ -1,0 +1,8 @@
+mutation updateWorkoutSection($data: UpdateWorkoutSectionInput!) {
+  updateWorkoutSection: updateWorkoutSection(data: $data) {
+    ...WorkoutSection
+    WorkoutSectionType {
+      ...WorkoutSectionType
+    }
+  }
+}

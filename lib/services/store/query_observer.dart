@@ -106,11 +106,17 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
             }
           } else {
             return widget.loadingIndicator ??
-                const Center(
-                    child: Padding(
-                  padding: EdgeInsets.all(32.0),
-                  child: LoadingCircle(),
-                ));
+                CupertinoPageScaffold(
+                    child: Center(
+                        child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    LoadingSpinningLines(size: 50),
+                    SizedBox(height: 20),
+                    MyText('One moment...'),
+                  ],
+                )));
           }
         });
   }

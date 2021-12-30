@@ -1,0 +1,13 @@
+mutation createScheduleForPlanEnrolment(
+  $data: CreateScheduleForPlanEnrolmentInput!
+) {
+  createScheduleForPlanEnrolment(data: $data) {
+    ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
+    User {
+      ...UserAvatarData
+    }
+  }
+}

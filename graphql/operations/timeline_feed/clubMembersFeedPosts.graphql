@@ -1,0 +1,17 @@
+query clubMembersFeedPosts($clubId: ID!, $limit: Int!, $offset: Int!) {
+  clubMembersFeedPosts(clubId: $clubId, limit: $limit, offset: $offset) {
+    activityId
+    postedAt
+    caption
+    tags
+    poster {
+      ...TimelinePostObjectDataUser
+    }
+    creator {
+      ...TimelinePostObjectDataUser
+    }
+    object {
+      ...TimelinePostObjectDataObject
+    }
+  }
+}

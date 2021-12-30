@@ -13,17 +13,24 @@ class WorkoutSectionTypesInfo extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const MyHeaderText('Free Session'),
-            spacer,
-            const InfoPageText(
-              'Unstructured section of the workout where you can add anything that you like. When doing this section you can also add and remove parts of it in real time. Use this for a standard straight up gym session.',
-            ),
-            spacer,
-            spacer,
             const MyHeaderText('HIIT Circuit'),
             spacer,
             const InfoPageText(
               'High Intensity Interval Training. HIIT Circuits have "stations", and you spend a fixed amount of time doing a move or set of moves at each station before moving onto the next one.',
+            ),
+            spacer,
+            spacer,
+            const MyHeaderText('Lifting'),
+            spacer,
+            const InfoPageText(
+              'Strength training that is usually structured as sets and reps. Do classic style sets such such as 3 x 10, 5 x 5 or pyramids. A great workout type which also allows you to really concentrate on specifics.',
+            ),
+            spacer,
+            spacer,
+            const MyHeaderText('AMRAP (As Many Reps as Possible)'),
+            spacer,
+            const InfoPageText(
+              'This is a scored / competitive workout type. Given a fixed amount of time (a timecap) your aim is to complete as many reps and rounds of the set of specified moves as possible. Your score at the end will be the number of reps that you managed to complete.',
             ),
             spacer,
             spacer,
@@ -41,18 +48,20 @@ class WorkoutSectionTypesInfo extends StatelessWidget {
             ),
             spacer,
             spacer,
-            const MyHeaderText('AMRAP (As Many Reps as Possible)'),
-            spacer,
-            const InfoPageText(
-              'This is a scored / competitive workout type. Given a fixed amount of time (a timecap) your aim is to complete as many reps and rounds of the set of specified moves as possible. Your score at the end will be the number of reps that you managed to complete.',
-            ),
-            spacer,
-            spacer,
             const MyHeaderText('Tabata Style'),
             spacer,
             const InfoPageText(
               'Tabata is a workout type where you alternative short sets of high intensity work with rest. The classic design is for you to go all out for 20 seconds and then rest for 10 seconds, and then repeat this 8 times for a total of 4 minutes. Of course, you can decide to use whatever time periods you want!',
             ),
+            spacer,
+            spacer,
+            const MyHeaderText('Custom'),
+            spacer,
+            const InfoPageText(
+              'Unstructured section of the workout where you can add anything that you like. When doing this section you can also add and remove parts of it in real time. Use this for your custom freestyle gym sessions.',
+            ),
+            spacer,
+            spacer,
           ],
         ),
       ),

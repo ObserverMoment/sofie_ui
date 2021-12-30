@@ -17,20 +17,6 @@ class VideoSetupManager {
     return info.width / info.height;
   }
 
-  /// VideoData includes [BetterPlayerDataSource].
-  // static Future<VideoData> getVideoData({required String videoUri}) async {
-  //   final VideoInfoEntity videoInfo = await getVideoInfo(videoUri: videoUri);
-
-  //   final BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-  //       BetterPlayerDataSourceType.network, videoInfo.url,
-  //       cacheConfiguration:
-  //           const BetterPlayerCacheConfiguration(useCache: true));
-
-  //   final double aspectRatio = videoInfo.width / videoInfo.height;
-
-  //   return VideoData(videoInfo, aspectRatio, dataSource);
-  // }
-
   /// For standard [video_player plugin].
   static Future<VideoPlayerController> initializeVideoPlayer(
       {required String uri, // Uploadcare file ID.
@@ -61,33 +47,6 @@ class VideoSetupManager {
     return controller;
   }
 
-  /// For [BetterPlayer] plugin.
-  // static Future<BetterPlayerController> initializeBetterPlayer(
-  //     {required String videoUri,
-  //     Widget Function(BetterPlayerController, dynamic Function(bool))?
-  //         customControlsBuilder,
-  //     bool autoPlay = false,
-  //     bool autoLoop = false,
-  //     bool autoDispose = true,
-  //     Duration? startAt}) async {
-  //   final videoData = await getVideoData(videoUri: videoUri);
-
-  //   return BetterPlayerController(
-  //       BetterPlayerConfiguration(
-  //         autoDispose: autoDispose,
-  //         aspectRatio: videoData.aspectRatio,
-  //         autoPlay: autoPlay,
-  //         looping: autoLoop,
-  //         startAt: startAt,
-  //         fit: BoxFit.cover,
-  //         controlsConfiguration: BetterPlayerControlsConfiguration(
-  //           playerTheme: BetterPlayerTheme.custom,
-  //           customControlsBuilder: customControlsBuilder,
-  //         ),
-  //       ),
-  //       betterPlayerDataSource: videoData.dataSource);
-  // }
-
   static Future<Duration> openFullScreenVideoPlayer({
     required BuildContext context,
     required String videoUri,
@@ -100,7 +59,10 @@ class VideoSetupManager {
     final String? subtitle,
   }) async {
     final controller = await initializeVideoPlayer(
-        uri: videoUri, autoLoop: autoLoop, startAt: startAt);
+        uri: videoUri,
+        autoLoop: autoLoop,
+        autoPlay: autoPlay,
+        startAt: startAt);
 
     final aspectRatio = controller.value.aspectRatio;
     final isPortrait = aspectRatio < 1;

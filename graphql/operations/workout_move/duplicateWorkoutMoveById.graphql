@@ -1,0 +1,26 @@
+mutation duplicateWorkoutMoveById($id: ID!) {
+  duplicateWorkoutMoveById(id: $id) {
+    ...WorkoutMove
+    Equipment {
+      ...Equipment
+    }
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+  }
+}

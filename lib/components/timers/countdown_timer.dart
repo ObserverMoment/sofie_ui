@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/timers/timer_components.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/audio_session_manager.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:audio_session/audio_session.dart';
 
 enum CountdownState { reset, started }
 
@@ -30,6 +33,13 @@ class _CountdownTimerState extends State<CountdownTimer> {
   /// Hack around this: https://stackoverflow.com/questions/62835520/flutter-cupertinodatepicker-initialdatetime-updates-only-once
   late int _timepickerKey;
 
+  /// Sound effects.
+  late AudioSession _session;
+  final AudioPlayer _toneCompletePlayer = AudioPlayer();
+
+  String get _toneCompleteAsset =>
+      'assets/audio/do_workout/chime_clickbell_octave_lo.mp3';
+
   @override
   void initState() {
     _timepickerKey = DateTime.now().millisecondsSinceEpoch;
@@ -39,7 +49,16 @@ class _CountdownTimerState extends State<CountdownTimer> {
     _stopWatchTimer.clearPresetTime();
 
     _buttonSize = widget.fullScreenDisplay ? 90.0 : 70.0;
+
+    setupAudio();
+
     super.initState();
+  }
+
+  Future<void> setupAudio() async {
+    _session = await AudioSessionManager.setupAudioSession();
+    await _toneCompletePlayer.setAsset(_toneCompleteAsset);
+    await _toneCompletePlayer.seek(Duration.zero);
   }
 
   void _handleStart() {
@@ -47,6 +66,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
         _countdownState != CountdownState.started) {
       _stopWatchTimer.clearPresetTime();
       _stopWatchTimer.setPresetTime(mSec: _countdownTime.inMilliseconds);
+
       _stopWatchTimer.onExecute.add(StopWatchExecute.start);
       setState(() => _countdownState = CountdownState.started);
     }
@@ -74,15 +94,23 @@ class _CountdownTimerState extends State<CountdownTimer> {
   void _handleComplete() {
     _stopWatchTimer.onExecute.add(StopWatchExecute.reset);
     _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+
+    _toneCompletePlayer.seek(Duration.zero);
+    _toneCompletePlayer.play();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      _session.setActive(false);
+    });
+
     setState(() {
       _countdownState = CountdownState.reset;
     });
-    print('beep beep');
   }
 
   @override
   void dispose() {
     _stopWatchTimer.dispose();
+    _toneCompletePlayer.dispose();
     super.dispose();
   }
 
@@ -129,7 +157,7 @@ class _CountdownTimerState extends State<CountdownTimer> {
                                     backgroundColor:
                                         context.theme.primary.withOpacity(0.1),
                                     linearGradient:
-                                        Styles.secondaryAccentGradient,
+                                        Styles.primaryAccentGradient,
                                     circularStrokeCap: CircularStrokeCap.round,
                                     percent: milliseconds /
                                         _countdownTime.inMilliseconds,

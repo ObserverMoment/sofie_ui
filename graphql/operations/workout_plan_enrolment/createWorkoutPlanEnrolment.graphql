@@ -1,0 +1,17 @@
+mutation createWorkoutPlanEnrolment($workoutPlanId: ID!) {
+  createWorkoutPlanEnrolment(workoutPlanId: $workoutPlanId) {
+    __typename
+    WorkoutPlanEnrolment {
+      ...WorkoutPlanEnrolment
+      CompletedWorkoutPlanDayWorkouts {
+        ...CompletedWorkoutPlanDayWorkout
+      }
+      User {
+        ...UserAvatarData
+      }
+    }
+    WorkoutPlan {
+      ...WorkoutPlanData
+    }
+  }
+}

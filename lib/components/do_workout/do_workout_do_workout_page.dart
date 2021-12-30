@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/do_workout/do_workout_overview_page.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -27,6 +28,10 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
     with WidgetsBindingObserver {
   int? _activeSectionIndex;
 
+  /// If a section is playing when a user puts the app into the background then we pause the section and set this to true.
+  /// When the user re-foregrounds the app, if this is true, we resume (play) the section and set this back to the default of false;
+  bool _sectionPausedInBackground = false;
+
   @override
   initState() {
     super.initState();
@@ -36,17 +41,26 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused && _activeSectionIndex != null) {
-      context.read<DoWorkoutBloc>().pauseSection(_activeSectionIndex!);
+      if (context
+          .read<DoWorkoutBloc>()
+          .getStopWatchTimerForSection(_activeSectionIndex!)
+          .isRunning) {
+        context.read<DoWorkoutBloc>().pauseSection(_activeSectionIndex!);
+        _sectionPausedInBackground = true;
+      }
     } else if (state == AppLifecycleState.resumed &&
-        _activeSectionIndex != null) {
+        _activeSectionIndex != null &&
+        _sectionPausedInBackground) {
       context.read<DoWorkoutBloc>().playSection(_activeSectionIndex!);
+      _sectionPausedInBackground = false;
     }
   }
 
   /// Navigating to a section is equivalent to making it "active"
-  void _navigateToSection(int sectionIndex, int numWorkoutSections) {
+  void _navigateToSection(int sectionIndex, int numWorkoutSections) async {
     final _bloc = context.read<DoWorkoutBloc>();
-    Navigator.push(
+    _activeSectionIndex = sectionIndex;
+    await Navigator.push(
       context,
       CupertinoPageRoute(
         builder: (context) => ChangeNotifierProvider<DoWorkoutBloc>.value(
@@ -58,12 +72,18 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
         ),
       ),
     );
-    _activeSectionIndex = sectionIndex;
+
+    /// Once user has popped the do section page it is no longer active.
+    _activeSectionIndex = null;
   }
 
   Future<void> _generateLog() async {
     final loggedWorkout = context.read<DoWorkoutBloc>().generateLog();
     final scheduledWorkout = context.read<DoWorkoutBloc>().scheduledWorkout;
+    final workoutPlanDayWorkoutId =
+        context.read<DoWorkoutBloc>().workoutPlanDayWorkoutId;
+    final workoutPlanEnrolmentId =
+        context.read<DoWorkoutBloc>().workoutPlanEnrolmentId;
 
     context.showConfirmDialog(
         title: 'Save Log and Exit?',
@@ -73,25 +93,38 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
         onConfirm: () async {
           /// Save log to DB.
           final input = LoggedWorkoutCreatorBloc
-              .createLoggedWorkoutInputFromLoggedWorkout(
-                  loggedWorkout, scheduledWorkout);
+              .createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
+                  scheduledWorkout: scheduledWorkout,
+                  workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+                  workoutPlanEnrolmentId: workoutPlanEnrolmentId);
 
           final variables = CreateLoggedWorkoutArguments(data: input);
 
           final result = await context.graphQLStore.create(
               mutation: CreateLoggedWorkoutMutation(variables: variables),
-              addRefToQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
+              addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
 
-          await checkOperationResult(context, result);
+          checkOperationResult(context, result,
+              onFail: () => context.showToast(
+                  message: 'Sorry, something went wrong',
+                  toastType: ToastType.destructive),
+              onSuccess: () {
+                /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
+                if (scheduledWorkout != null) {
+                  LoggedWorkoutCreatorBloc.updateScheduleWithLoggedWorkout(
+                      context,
+                      scheduledWorkout,
+                      result.data!.createLoggedWorkout);
+                }
+                if (workoutPlanDayWorkoutId != null &&
+                    workoutPlanEnrolmentId != null) {
+                  LoggedWorkoutCreatorBloc.refetchWorkoutPlanEnrolmentQueries(
+                      context, workoutPlanEnrolmentId);
+                }
 
-          /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
-          if (scheduledWorkout != null && result.data != null) {
-            LoggedWorkoutCreatorBloc.updateScheduleWithLoggedWorkout(
-                context, scheduledWorkout, result.data!.createLoggedWorkout);
-          }
-
-          context.router.popAndPush(LoggedWorkoutDetailsRoute(
-              id: result.data!.createLoggedWorkout.id));
+                context.router.popAndPush(LoggedWorkoutDetailsRoute(
+                    id: result.data!.createLoggedWorkout.id));
+              });
         });
   }
 

@@ -25,7 +25,7 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
   late chat.StreamChatClient _streamChatClient;
   late chat.Channel _channel;
   late bool _channelReady = false;
-  late ClubMembers _clubMembers;
+  late ClubChatSummary _clubChatSummary;
 
   @override
   void initState() {
@@ -38,15 +38,15 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
   Future<void> _initGetStreamChat() async {
     try {
       /// Get club and club member data.
-      final result = await context.graphQLStore
-          .networkOnlyOperation<ClubMembers$Query, ClubMembersArguments>(
-              operation: ClubMembersQuery(
-                  variables: ClubMembersArguments(id: widget.clubId)));
+      final result = await context.graphQLStore.networkOnlyOperation<
+              ClubChatSummary$Query, ClubChatSummaryArguments>(
+          operation: ClubChatSummaryQuery(
+              variables: ClubChatSummaryArguments(clubId: widget.clubId)));
 
       if (result.hasErrors || result.data == null) {
         throw Exception('Could not retrieve Club data for this chat.');
       } else {
-        _clubMembers = result.data!.clubMembers;
+        _clubChatSummary = result.data!.clubChatSummary;
       }
 
       /// Create / watch a channel consisting of the authed user and the 'other user.
@@ -67,14 +67,14 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
     if (id == null) {
       return 'Unknown';
     }
-    if (_clubMembers.owner.id == id) {
-      return '${_clubMembers.owner.displayName} (Owner)';
+    if (_clubChatSummary.owner.id == id) {
+      return '${_clubChatSummary.owner.displayName} (Owner)';
     }
-    final admin = _clubMembers.admins.firstWhereOrNull((a) => a.id == id);
+    final admin = _clubChatSummary.admins.firstWhereOrNull((a) => a.id == id);
     if (admin != null) {
       return '${admin.displayName} (Admin)';
     }
-    final member = _clubMembers.members.firstWhereOrNull((m) => m.id == id);
+    final member = _clubChatSummary.members.firstWhereOrNull((m) => m.id == id);
     if (member != null) {
       return member.displayName;
     }
@@ -94,7 +94,7 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
                     children: [
                       const NavBarTitle('Club Chat'),
                       MyText(
-                        '${_clubMembers.totalMembers} members',
+                        '${_clubChatSummary.totalMembers} members',
                         size: FONTSIZE.two,
                         subtext: true,
                         lineHeight: 1.4,
@@ -106,10 +106,10 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
                       SizedBox(
                         height: 40,
                         width: 40,
-                        child: Utils.textNotNull(_clubMembers.coverImageUri)
+                        child: Utils.textNotNull(_clubChatSummary.coverImageUri)
                             ? UserAvatar(
                                 size: 40,
-                                avatarUri: _clubMembers.coverImageUri,
+                                avatarUri: _clubChatSummary.coverImageUri,
                               )
                             : Container(
                                 decoration:
@@ -168,7 +168,7 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
               navigationBar: MyNavBar(
                 middle: NavBarTitle('Loading Chat...'),
               ),
-              child: LoadingCircle()),
+              child: LoadingSpinningLines()),
     );
   }
 }

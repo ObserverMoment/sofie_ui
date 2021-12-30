@@ -1,28 +1,26 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:supercharged/supercharged.dart';
 
 class WorkoutPlanReviewsSummary extends StatelessWidget {
-  final List<WorkoutPlanReview> reviews;
-  final double itemSize;
-  final int itemCount;
+  final double starSize;
+  final int starCount;
+  final double reviewScore;
+  final int reviewCount;
   final Color? textColor;
   const WorkoutPlanReviewsSummary(
       {Key? key,
-      required this.reviews,
-      this.itemSize = 18,
-      this.itemCount = 5,
-      this.textColor})
+      this.starSize = 18,
+      this.starCount = 5,
+      this.textColor,
+      required this.reviewScore,
+      required this.reviewCount})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final average = reviews.averageBy((r) => r.score) ?? 0.0;
-    return reviews.isEmpty
+    return reviewCount == 0
         ? MyText(
             'No reviews yet',
             subtext: true,
@@ -34,18 +32,18 @@ class WorkoutPlanReviewsSummary extends StatelessWidget {
               Row(
                 children: [
                   RatingBarIndicator(
-                    rating: average,
+                    rating: reviewScore,
                     itemBuilder: (context, index) => const Icon(
                       CupertinoIcons.star_fill,
-                      color: Styles.secondaryAccent,
+                      color: Styles.primaryAccent,
                     ),
-                    unratedColor: Styles.secondaryAccent.withOpacity(0.15),
-                    itemCount: itemCount,
-                    itemSize: itemSize,
+                    unratedColor: Styles.primaryAccent.withOpacity(0.15),
+                    itemCount: starCount,
+                    itemSize: starSize,
                   ),
                 ],
               ),
-              MyText('from ${reviews.length} reviews',
+              MyText('from $reviewCount reviews',
                   size: FONTSIZE.one, lineHeight: 1.5, color: textColor)
             ],
           );

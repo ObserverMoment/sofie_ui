@@ -39,11 +39,13 @@ class FutureBuilderHandler<T> extends StatelessWidget {
           );
         } else if (!snapshot.hasData) {
           return loadingWidget ??
-              const SafeArea(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(24.0),
-                    child: LoadingCircle(),
+              const CupertinoPageScaffold(
+                child: SafeArea(
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: LoadingSpinningLines(),
+                    ),
                   ),
                 ),
               );

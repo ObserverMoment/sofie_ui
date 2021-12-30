@@ -1,0 +1,26 @@
+fragment Move on Move {
+  __typename
+  id
+  name
+  searchTerms
+  description
+  demoVideoUri
+  demoVideoThumbUri
+  scope
+  validRepTypes
+}
+
+fragment ArchivedMove on Move {
+  __typename
+  id
+  name
+  archived
+}
+
+fragment MoveType on MoveType {
+  __typename
+  id
+  name
+  description
+  imageUri
+}

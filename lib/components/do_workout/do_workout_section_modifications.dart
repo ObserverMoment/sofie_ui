@@ -7,7 +7,6 @@ import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -88,7 +87,7 @@ class DoWorkoutSectionModifications extends StatelessWidget {
               ),
             ),
           GrowInOut(
-            show: sectionHasStarted && !activeWorkoutSection.isFreeSession,
+            show: sectionHasStarted && !activeWorkoutSection.isCustomSession,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -153,7 +152,7 @@ class DoWorkoutSectionModifications extends StatelessWidget {
               curve: Curves.easeInOut,
               animation: animation,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
+                padding: const EdgeInsets.only(bottom: 6.0),
                 child: _WorkoutSetEditor(
                   workoutSectionType: activeWorkoutSection.workoutSectionType,
                   sectionIndex: sectionIndex,
@@ -234,7 +233,7 @@ class _WorkoutSetEditor extends StatelessWidget {
     // The user will just do single workout move for as long as workoutSet.duration, so reps are ignored.
     final showReps = workoutSectionType.showReps(workoutSet);
 
-    return Card(
+    return ContentBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -287,10 +286,10 @@ class _WorkoutSetEditor extends StatelessWidget {
                   onTap: () => _confirmRemoveWorkoutSet(context),
                   behavior: HitTestBehavior.opaque,
                   child: const Padding(
-                    padding: EdgeInsets.all(4.0),
+                    padding: EdgeInsets.all(6.0),
                     child: Icon(
-                      CupertinoIcons.clear_thick,
-                      size: 22,
+                      CupertinoIcons.delete,
+                      size: 20,
                     ),
                   )),
             ],
@@ -298,10 +297,10 @@ class _WorkoutSetEditor extends StatelessWidget {
           Column(
             children: workoutSet.workoutMoves
                 .mapIndexed((i, wm) => GestureDetector(
+                    behavior: HitTestBehavior.opaque,
                     onTap: () => _openEditWorkoutMove(
                         context: context, workoutMove: wm, hideReps: !showReps),
-                    child: WorkoutMoveDisplay(wm,
-                        isLast: i == wm.sortPosition, showReps: showReps)))
+                    child: WorkoutMoveDisplay(wm, showReps: showReps)))
                 .toList(),
           ),
           const SizedBox(height: 5),

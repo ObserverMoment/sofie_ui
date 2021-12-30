@@ -1,0 +1,3 @@
+query checkUniqueDisplayName($displayName: String!) {
+  checkUniqueDisplayName(displayName: $displayName)
+}

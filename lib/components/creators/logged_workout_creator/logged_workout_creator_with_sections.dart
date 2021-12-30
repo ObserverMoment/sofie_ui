@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator_section_moves_list.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -12,6 +11,7 @@ import 'package:sofie_ui/components/user_input/pickers/number_picker.dart';
 import 'package:sofie_ui/components/user_input/selectors/gym_profile_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/workout_goals_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -93,10 +93,9 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
           Widget pageChild,
           Widget buttonChild) =>
       CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.zero,
         // https://stackoverflow.com/questions/57913888/how-to-consume-provider-after-navigating-to-another-route
         onPressed: () => context.push(
-          fullscreenDialog: true,
           child: ChangeNotifierProvider<LoggedWorkoutCreatorBloc>.value(
             value: bloc,
             child: pageChild,
@@ -112,34 +111,72 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
     final loggedWorkoutSection =
         context.select<LoggedWorkoutCreatorBloc, LoggedWorkoutSection>(
             (b) => b.loggedWorkout.loggedWorkoutSections[sectionIndex]);
+    final sectionType = loggedWorkoutSection.workoutSectionType;
 
-    return Card(
+    return ContentBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 4.0, top: 4, right: 4, bottom: 10),
+            child: MyText(
+              loggedWorkoutSection.workoutSectionType.name,
+            ),
+          ),
+          if (Utils.textNotNull(loggedWorkoutSection.name))
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 4.0, top: 0, right: 4, bottom: 10),
+              child: MyHeaderText(loggedWorkoutSection.name!,
+                  size: FONTSIZE.two, weight: FontWeight.normal),
+            ),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (Utils.textNotNull(loggedWorkoutSection.name))
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: MyHeaderText(loggedWorkoutSection.name!),
-                      ),
+              Row(
+                children: [
+                  ContentBox(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    backgroundColor: context.theme.background,
+                    child: DurationPickerDisplay(
+                        modalTitle: 'Update Duration',
+                        duration: Duration(
+                            seconds: loggedWorkoutSection.timeTakenSeconds),
+                        updateDuration: (duration) => context
+                            .read<LoggedWorkoutCreatorBloc>()
+                            .updateTimeTakenSeconds(
+                                loggedWorkoutSection.sortPosition,
+                                duration.inSeconds)),
+                  ),
+                  if (sectionType.isScored || sectionType.isLifting)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: MyText(
-                        loggedWorkoutSection.workoutSectionType.name,
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: ContentBox(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        backgroundColor: context.theme.background,
+                        child: NumberPickerInt(
+                          number: loggedWorkoutSection.repScore,
+                          saveValue: (repScore) => context
+                              .read<LoggedWorkoutCreatorBloc>()
+                              .updateRepScore(
+                                  loggedWorkoutSection.sortPosition, repScore),
+                          fontSize: FONTSIZE.five,
+                          prefix: const Icon(
+                            CupertinoIcons.chart_bar_alt_fill,
+                            size: 18,
+                          ),
+                          suffix: const MyText(
+                            'reps',
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
+                ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   _buildProviderNavigatorButton(
                       context,
@@ -154,42 +191,6 @@ class _SelectedLoggedWorkoutSection extends StatelessWidget {
                           sectionIndex: sectionIndex),
                       const Icon(CupertinoIcons.doc_chart)),
                 ],
-              )
-            ],
-          ),
-          Row(
-            children: [
-              ContentBox(
-                backgroundColor: context.theme.background,
-                child: NumberPickerInt(
-                  contentBoxColor: context.theme.background,
-                  number: loggedWorkoutSection.repScore,
-                  saveValue: (repScore) => context
-                      .read<LoggedWorkoutCreatorBloc>()
-                      .updateRepScore(
-                          loggedWorkoutSection.sortPosition, repScore),
-                  fontSize: FONTSIZE.five,
-                  prefix: const Icon(
-                    CupertinoIcons.chart_bar_alt_fill,
-                    size: 22,
-                  ),
-                  suffix: const MyText(
-                    'reps',
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              ContentBox(
-                backgroundColor: context.theme.background,
-                child: DurationPickerDisplay(
-                    modalTitle: 'Update Duration',
-                    duration: Duration(
-                        seconds: loggedWorkoutSection.timeTakenSeconds),
-                    updateDuration: (duration) => context
-                        .read<LoggedWorkoutCreatorBloc>()
-                        .updateTimeTakenSeconds(
-                            loggedWorkoutSection.sortPosition,
-                            duration.inSeconds)),
               ),
             ],
           )

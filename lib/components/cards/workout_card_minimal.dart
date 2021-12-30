@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -8,12 +7,12 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 
 /// No background image and more compact - for displaying in a plan schedule list.
 /// Title and equipment are on the top - tags on the bottom.
 class MinimalWorkoutCard extends StatelessWidget {
-  final Workout workout;
+  final WorkoutSummary workout;
   final Color? backgroundColor;
   final EdgeInsets padding;
   final bool showEquipment;
@@ -28,13 +27,6 @@ class MinimalWorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> allTags = [
-      ...workout.workoutGoals.map((g) => g.name),
-      ...workout.workoutTags.map((t) => t.tag)
-    ];
-
-    final List<Equipment> allEquipments = workout.allEquipment;
-
     return ContentBox(
       padding: padding,
       child: Row(
@@ -63,19 +55,25 @@ class MinimalWorkoutCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        DifficultyLevelTag(
-                          difficultyLevel: workout.difficultyLevel,
-                          fontSize: FONTSIZE.one,
-                        ),
                         if (workout.lengthMinutes != null)
                           Padding(
-                            padding: const EdgeInsets.only(left: 6.0),
-                            child: DurationTag(
-                              duration:
-                                  Duration(minutes: workout.lengthMinutes!),
-                              fontSize: FONTSIZE.three,
+                            padding: const EdgeInsets.only(right: 6.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(CupertinoIcons.timer, size: 15),
+                                const SizedBox(width: 4),
+                                MyText(
+                                  Duration(minutes: workout.lengthMinutes!)
+                                      .displayString,
+                                ),
+                              ],
                             ),
                           ),
+                        if (workout.difficultyLevel != null)
+                          DifficultyLevelDot(
+                              difficultyLevel: workout.difficultyLevel!,
+                              size: 12),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -83,19 +81,18 @@ class MinimalWorkoutCard extends StatelessWidget {
                       workout.name,
                       size: FONTSIZE.two,
                     ),
-                    if (allTags.isNotEmpty)
+                    if (workout.tags.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
                         child: CommaSeparatedList(
-                          allTags,
+                          workout.tags,
                         ),
                       ),
-                    if (showEquipment && allEquipments.isNotEmpty)
+                    if (showEquipment && workout.equipments.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),
                         child: CommaSeparatedList(
-                          allEquipments.map((e) => e.name).toList(),
-                          textColor: Styles.secondaryAccent,
+                          workout.equipments,
                         ),
                       ),
                   ]),

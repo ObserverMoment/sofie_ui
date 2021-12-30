@@ -1,0 +1,6 @@
+mutation addUserToClubViaInviteToken($userId: ID!, $clubInviteTokenId: ID!) {
+  addUserToClubViaInviteToken(
+    userId: $userId
+    clubInviteTokenId: $clubInviteTokenId
+  )
+}

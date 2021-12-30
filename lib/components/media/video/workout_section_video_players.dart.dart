@@ -154,7 +154,7 @@ class _WorkoutSectionVideoPlayerLandscapeState
       case kHIITCircuitName:
         return IntervalTimer(
             workoutSection: widget.workoutSection, state: widget.state);
-      case kFreeSessionName:
+      case kCustomSessionName:
         return const StopwatchAndTimer();
       default:
         throw Exception(
@@ -184,7 +184,7 @@ class _WorkoutSectionVideoPlayerLandscapeState
                               onPressed: _enterFullScreen))
                   ],
                 ),
-                if (!widget.workoutSection.isFreeSession)
+                if (!widget.workoutSection.isCustomSession)
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -241,7 +241,7 @@ class FullScreenLandscapeVideo extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               VideoPlayer(controller),
-              if (!workoutSection.isFreeSession)
+              if (!workoutSection.isCustomSession)
                 StreamBuilder<WorkoutSectionProgressState>(
                     initialData: initialState,
                     stream: context
@@ -337,7 +337,7 @@ class WorkoutSectionVideoPlayerPortrait extends StatelessWidget {
                 fit: StackFit.expand,
                 children: <Widget>[
                   buildVideoPlayer(),
-                  if (!workoutSection.isFreeSession)
+                  if (!workoutSection.isCustomSession)
                     SafeArea(
                         child: Padding(
                       padding: const EdgeInsets.only(

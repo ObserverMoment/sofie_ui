@@ -1,17 +1,18 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_like_heart.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
+import 'package:sofie_ui/components/logged_workout/log_count_by_workout.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
@@ -20,6 +21,7 @@ import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/workout/workout_details_workout_section.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -34,7 +36,19 @@ import 'package:sofie_ui/services/utils.dart';
 
 class WorkoutDetailsPage extends StatefulWidget {
   final String id;
-  const WorkoutDetailsPage({Key? key, @PathParam('id') required this.id})
+
+  /// When present these should be passed on to Do It / Log It components.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
+  final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
+  const WorkoutDetailsPage(
+      {Key? key,
+      @PathParam('id') required this.id,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : super(key: key);
 
   @override
@@ -52,9 +66,9 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                   DuplicateWorkoutById$Mutation, DuplicateWorkoutByIdArguments>(
               mutation: DuplicateWorkoutByIdMutation(
                   variables: DuplicateWorkoutByIdArguments(id: id)),
-              addRefToQueries: [GQLOpNames.userWorkoutsQuery]);
+              addRefToQueries: [GQLOpNames.userWorkouts]);
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(
                   message: 'Copy created. View in Your Workouts'),
               onFail: () => context.showErrorAlert(
@@ -62,7 +76,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         });
   }
 
-  Future<void> _openScheduleWorkout(Workout workout) async {
+  Future<void> _openScheduleWorkout(WorkoutSummary workout) async {
     final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
       workout: workout,
     ));
@@ -71,12 +85,12 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
     }
   }
 
-  Future<void> _shareWorkout(Workout workout) async {
+  Future<void> _shareWorkout() async {
     await SharingAndLinking.shareLink(
-        'workout/${workout.id}', 'Check out this workout!');
+        'workout/${widget.id}', 'Check out this workout!');
   }
 
-  Future<void> _archiveWorkout(String id) async {
+  Future<void> _archiveWorkout(Workout workout) async {
     await context.showConfirmDeleteDialog(
         verb: 'Archive',
         itemType: 'Workout',
@@ -85,26 +99,41 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         onConfirm: () async {
           final result = await context.graphQLStore
               .mutate<ArchiveWorkoutById$Mutation, ArchiveWorkoutByIdArguments>(
-                  mutation: ArchiveWorkoutByIdMutation(
-                      variables: ArchiveWorkoutByIdArguments(id: id)),
-                  removeRefFromQueries: [
-                GQLOpNames.userWorkoutsQuery
-              ],
-                  addRefToQueries: [
-                GQLOpNames.userArchivedWorkoutsQuery
-              ],
-                  broadcastQueryIds: [
-                GQLVarParamKeys.workoutByIdQuery(widget.id),
+            mutation: ArchiveWorkoutByIdMutation(
+                variables: ArchiveWorkoutByIdArguments(id: workout.id)),
+            processResult: (data) {
+              // Remove WorkoutSummary from store.
+              context.graphQLStore.deleteNormalizedObject(
+                  resolveDataId(workout.summary.toJson())!);
+
+              // Remove all refs to it from queries.
+              context.graphQLStore.removeAllQueryRefsToId(
+                  resolveDataId(workout.summary.toJson())!);
+
+              // Rebroadcast all queries that may be affected.
+              context.graphQLStore.broadcastQueriesByIds([
+                GQLOpNames.userWorkouts,
+                GQLOpNames.userCollections,
+                GQLOpNames.userScheduledWorkouts,
+                GQLOpNames.userClubs,
               ]);
 
-          await checkOperationResult(context, result,
+              // Update Workout and workoutById query
+              context.graphQLStore.writeDataToStore(
+                  data: {...workout.summary.toJson(), 'archived': true},
+                  broadcastQueryIds: [GQLVarParamKeys.workoutById(widget.id)]);
+            },
+            addRefToQueries: [GQLOpNames.userArchivedWorkouts],
+          );
+
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Workout archived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not archived correctly'));
         });
   }
 
-  Future<void> _unarchiveWorkout(String id) async {
+  Future<void> _unarchiveWorkout(Workout workout) async {
     await context.showConfirmDialog(
         title: 'Unarchive this workout?',
         verb: 'Unarchive',
@@ -113,55 +142,75 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
           final result = await context.graphQLStore.mutate<
               UnarchiveWorkoutById$Mutation, UnarchiveWorkoutByIdArguments>(
             mutation: UnarchiveWorkoutByIdMutation(
-              variables: UnarchiveWorkoutByIdArguments(id: id),
+              variables: UnarchiveWorkoutByIdArguments(id: workout.id),
             ),
-            addRefToQueries: [GQLOpNames.userWorkoutsQuery],
-            removeRefFromQueries: [GQLOpNames.userArchivedWorkoutsQuery],
+            processResult: (data) {
+              // This operation returns a full Workout object.
+              // Add a WorkoutSummary to store and to userWorkoutsQuery
+              context.graphQLStore.writeDataToStore(
+                data: data.unarchiveWorkoutById.summary.toJson(),
+                addRefToQueries: [GQLOpNames.userWorkouts],
+              );
+
+              final archivedWorkout = {
+                '__typename': kArchivedWorkoutTypename,
+                'id': workout.id
+              };
+
+              // Remove ArchivedWorkout from store and ref from userArchivedWorkoutsQuery.
+              context.graphQLStore
+                  .deleteNormalizedObject(resolveDataId(archivedWorkout)!);
+
+              context.graphQLStore.removeRefFromQueryData(
+                  data: archivedWorkout,
+                  queryIds: [GQLOpNames.userArchivedWorkouts]);
+            },
             broadcastQueryIds: [
-              GQLVarParamKeys.workoutByIdQuery(widget.id),
+              GQLVarParamKeys.workoutById(widget.id),
             ],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Workout unarchived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not unarchived correctly'));
         });
   }
 
-  Widget _buildMetaInfoRow(Workout workout, {bool centerAlign = false}) =>
-      Padding(
+  Widget _buildMetaInfoRow(Workout workout) => Padding(
         padding: const EdgeInsets.all(6.0),
-        child: Row(
-          mainAxisAlignment: centerAlign
-              ? MainAxisAlignment.center
-              : workout.archived || workout.lengthMinutes != null
-                  ? MainAxisAlignment.spaceBetween
-                  : MainAxisAlignment.end,
+        child: Column(
           children: [
-            if (workout.archived)
-              const FadeIn(
-                child: Padding(
-                  padding: EdgeInsets.only(right: 8.0),
-                  child: Icon(
-                    CupertinoIcons.archivebox_fill,
-                    color: Styles.errorRed,
+            Row(
+              mainAxisAlignment:
+                  workout.archived || workout.lengthMinutes != null
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.end,
+              children: [
+                if (workout.archived)
+                  const FadeIn(
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8.0),
+                      child: Icon(
+                        CupertinoIcons.archivebox_fill,
+                        color: Styles.errorRed,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            if (workout.lengthMinutes != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: DurationTag(
-                  fontSize: FONTSIZE.three,
-                  iconSize: 15,
-                  duration: Duration(minutes: workout.lengthMinutes!),
-                ),
-              ),
-            DifficultyLevelTag(
-              backgroundColor: context.theme.background.withOpacity(0.85),
-              difficultyLevel: workout.difficultyLevel,
-              fontSize: FONTSIZE.two,
+                if (workout.lengthMinutes != null)
+                  DurationTag(
+                    fontSize: FONTSIZE.three,
+                    iconSize: 15,
+                    backgroundColor: context.theme.background.withOpacity(0.6),
+                    duration: Duration(minutes: workout.lengthMinutes!),
+                  ),
+                if (workout.difficultyLevel != null)
+                  DifficultyLevelTag(
+                    backgroundColor: context.theme.background.withOpacity(0.6),
+                    difficultyLevel: workout.difficultyLevel!,
+                    fontSize: FONTSIZE.two,
+                  ),
+              ],
             ),
           ],
         ),
@@ -169,22 +218,20 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final query =
+    final workoutByIdQuery =
         WorkoutByIdQuery(variables: WorkoutByIdArguments(id: widget.id));
 
     return QueryObserver<WorkoutById$Query, WorkoutByIdArguments>(
-        key: Key('WorkoutDetailsPage - ${query.operationName}-${widget.id}'),
-        query: query,
+        key: Key(
+            'WorkoutDetailsPage - ${workoutByIdQuery.operationName}-${widget.id}'),
+        query: workoutByIdQuery,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (workoutData) {
           return QueryObserver<UserCollections$Query, json.JsonSerializable>(
               key: Key(
                   'WorkoutDetailsPage - ${UserCollectionsQuery().operationName}'),
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
-              loadingIndicator:
-                  const ShimmerDetailsPage(title: 'Getting Ready'),
               builder: (collectionsData) {
                 final Workout workout = workoutData.workoutById;
 
@@ -229,9 +276,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                   imageUri: workout.coverImageUri,
                                 ),
                                 items: [
-                                  if (!isOwner &&
-                                      workout.user.userProfileScope ==
-                                          UserProfileScope.public)
+                                  if (!isOwner)
                                     BottomSheetMenuItem(
                                         text: 'View creator',
                                         icon: const Icon(
@@ -239,13 +284,6 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         onPressed: () => context.navigateTo(
                                             UserPublicProfileDetailsRoute(
                                                 userId: workout.user.id))),
-                                  BottomSheetMenuItem(
-                                      text: 'Log it',
-                                      icon: const Icon(
-                                          CupertinoIcons.text_badge_checkmark),
-                                      onPressed: () => context.navigateTo(
-                                          LoggedWorkoutCreatorRoute(
-                                              workout: workout))),
                                   if (isOwner ||
                                       workout.contentAccessScope ==
                                           ContentAccessScope.public)
@@ -253,8 +291,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         text: 'Share',
                                         icon: const Icon(
                                             CupertinoIcons.paperplane),
-                                        onPressed: () =>
-                                            _shareWorkout(workout)),
+                                        onPressed: _shareWorkout),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',
@@ -290,35 +327,54 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         ),
                                         isDestructive: !workout.archived,
                                         onPressed: () => workout.archived
-                                            ? _unarchiveWorkout(workout.id)
-                                            : _archiveWorkout(workout.id)),
+                                            ? _unarchiveWorkout(workout)
+                                            : _archiveWorkout(workout)),
                                 ])),
                       ),
                     ),
-                    child: StackAndFloatingButton(
-                        onPressed: () => context
-                            .navigateTo(DoWorkoutWrapperRoute(id: widget.id)),
-                        pageHasBottomNavBar: false,
-                        buttonText: 'Do It',
-                        buttonIconData: CupertinoIcons.arrow_right_square,
-                        buttonInternalPadding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 80),
+                    child: FABPage(
+                        columnButtons: [
+                          FloatingButton(
+                            icon: CupertinoIcons.arrow_right_square,
+                            text: 'Do Workout',
+                            onTap: () => context.navigateTo(
+                                DoWorkoutWrapperRoute(
+                                    id: widget.id,
+                                    scheduledWorkout: widget.scheduledWorkout,
+                                    workoutPlanDayWorkoutId:
+                                        widget.workoutPlanDayWorkoutId,
+                                    workoutPlanEnrolmentId:
+                                        widget.workoutPlanEnrolmentId)),
+                          )
+                        ],
                         child: ListView(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           children: [
-                            if (Utils.textNotNull(workout.coverImageUri))
-                              SizedBox(
-                                height: 210,
-                                child: Stack(
-                                  alignment: Alignment.topCenter,
-                                  children: [
-                                    SizedUploadcareImage(workout.coverImageUri!,
-                                        fit: BoxFit.cover),
-                                    _buildMetaInfoRow(workout),
-                                  ],
-                                ),
+                            SizedBox(
+                              height: 150,
+                              child: Stack(
+                                alignment: Alignment.topCenter,
+                                children: [
+                                  Utils.textNotNull(workout.coverImageUri)
+                                      ? SizedUploadcareImage(
+                                          workout.coverImageUri!,
+                                          fit: BoxFit.cover)
+                                      : Image.asset(
+                                          'assets/placeholder_images/workout.jpg',
+                                          width: double.infinity,
+                                          fit: BoxFit.cover),
+                                  _buildMetaInfoRow(workout),
+                                  Positioned(
+                                    bottom: 8,
+                                    right: 8,
+                                    child: LogCountByWorkout(
+                                      workoutId: workout.id,
+                                    ),
+                                  ),
+                                ],
                               ),
+                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
@@ -331,7 +387,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                           CupertinoIcons.calendar_badge_plus),
                                       label: 'Schedule',
                                       onPressed: () =>
-                                          _openScheduleWorkout(workout),
+                                          _openScheduleWorkout(workout.summary),
                                     ),
                                     _ActionIconButton(
                                         icon: const Icon(CupertinoIcons
@@ -339,12 +395,18 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         label: 'Log It',
                                         onPressed: () => context.navigateTo(
                                             LoggedWorkoutCreatorRoute(
-                                                workout: workout))),
+                                                workoutId: workout.id,
+                                                scheduledWorkout:
+                                                    widget.scheduledWorkout,
+                                                workoutPlanDayWorkoutId: widget
+                                                    .workoutPlanDayWorkoutId,
+                                                workoutPlanEnrolmentId: widget
+                                                    .workoutPlanEnrolmentId))),
                                     if (Utils.textNotNull(
                                         workout.introVideoUri))
                                       _ActionIconButton(
                                           icon: const Icon(CupertinoIcons.tv),
-                                          label: 'Video',
+                                          label: 'Intro',
                                           onPressed: () => VideoSetupManager
                                               .openFullScreenVideoPlayer(
                                                   context: context,
@@ -359,7 +421,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                       _ActionIconButton(
                                           icon: const Icon(
                                               CupertinoIcons.headphones),
-                                          label: 'Audio',
+                                          label: 'Intro',
                                           onPressed: () => AudioPlayerController
                                               .openAudioPlayer(
                                                   context: context,
@@ -372,11 +434,15 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                     /// The heart is appearing smaller than other items for some reason - so manually making it larger and removing gap underneath between text.
                                     CupertinoButton(
                                       padding: EdgeInsets.zero,
-                                      onPressed: () => CollectionManager
-                                          .addOrRemoveObjectFromCollection(
-                                              context, workout,
-                                              alreadyInCollections:
-                                                  collections),
+                                      onPressed: () {
+                                        Vibrate.feedback(
+                                            FeedbackType.selection);
+                                        CollectionManager
+                                            .addOrRemoveObjectFromCollection(
+                                                context, workout,
+                                                alreadyInCollections:
+                                                    collections);
+                                      },
                                       child: Column(
                                         children: [
                                           AnimatedLikeHeart(
@@ -392,17 +458,6 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                   ]),
                             ),
                             const HorizontalLine(verticalPadding: 0),
-                            if (!Utils.textNotNull(workout.coverImageUri))
-                              Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                          bottom: BorderSide(
-                                              color: context.theme.primary
-                                                  .withOpacity(0.2)))),
-                                  child: _buildMetaInfoRow(workout,
-                                      centerAlign: true)),
                             if (Utils.textNotNull(workout.description))
                               _InfoSection(
                                 content: ReadMoreTextBlock(

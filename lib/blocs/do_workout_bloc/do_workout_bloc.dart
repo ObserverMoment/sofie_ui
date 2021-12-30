@@ -5,7 +5,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/amrap_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_controller.dart';
-import 'package:sofie_ui/blocs/do_workout_bloc/controllers/free_session_section_controller.dart';
+import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/timed_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
@@ -13,7 +13,9 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/audio_session_manager.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
+import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:uuid/uuid.dart';
@@ -23,7 +25,13 @@ import 'package:wakelock/wakelock.dart';
 class DoWorkoutBloc extends ChangeNotifier {
   /// Before any pre-start adjustments.
   final Workout originalWorkout;
+
+  /// When present these will be passed on to log creation function.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
 
   /// After any pre-start adjustments. Use this during.
   late Workout activeWorkout;
@@ -74,10 +82,11 @@ class DoWorkoutBloc extends ChangeNotifier {
   String get _toneCompleteAsset =>
       'assets/audio/do_workout/chime_clickbell_octave_lo.mp3';
 
-  DoWorkoutBloc({
-    required this.originalWorkout,
-    this.scheduledWorkout,
-  }) {
+  DoWorkoutBloc(
+      {required this.originalWorkout,
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId}) {
     activeWorkout = originalWorkout.copyAndSortAllChildren;
 
     final workoutSections = activeWorkout.workoutSections;
@@ -140,28 +149,10 @@ class DoWorkoutBloc extends ChangeNotifier {
   }
 
   Future<void> _setupAudioSession() async {
-    _session = await AudioSession.instance;
-
-    /// https://pub.dev/packages/audio_session
-    /// Set up the audio session. The beeps and FX should duck other sources, not stop them.
     /// TODO: need to handle the section audio with different settings.
     /// Section.classAudio should pause other sources.
     /// And internal FX should duck Section.classAudio.
-    await _session!.configure(const AudioSessionConfiguration(
-      avAudioSessionCategory: AVAudioSessionCategory.playback,
-      avAudioSessionCategoryOptions: AVAudioSessionCategoryOptions.duckOthers,
-      avAudioSessionMode: AVAudioSessionMode.defaultMode,
-      avAudioSessionRouteSharingPolicy:
-          AVAudioSessionRouteSharingPolicy.defaultPolicy,
-      avAudioSessionSetActiveOptions: AVAudioSessionSetActiveOptions.none,
-      androidAudioAttributes: AndroidAudioAttributes(
-        contentType: AndroidAudioContentType.movie,
-        flags: AndroidAudioFlags.none,
-        usage: AndroidAudioUsage.game,
-      ),
-      androidAudioFocusGainType: AndroidAudioFocusGainType.gainTransientMayDuck,
-      androidWillPauseWhenDucked: false,
-    ));
+    _session = await AudioSessionManager.setupAudioSession();
 
     audioInitSuccess = true;
     notifyListeners();
@@ -208,8 +199,9 @@ class DoWorkoutBloc extends ChangeNotifier {
           onCompleteSection: () =>
               _onSectionComplete(workoutSection.sortPosition),
         );
-      case kFreeSessionName:
-        return FreeSessionSectionController(
+      case kCustomSessionName:
+      case kLiftingName:
+        return LiftingSectionController(
           workoutSection: workoutSection,
           stopWatchTimer: _stopWatchTimers[workoutSection.sortPosition],
           onCompleteSection: () =>
@@ -348,7 +340,7 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// Clear FX audio_players and stop ducking audio sources from other apps.
   /// It is useful is user is playing music in the background via other app.
   Future<void> deactivateAudioSession() async {
-    /// This should only happen if no classAudio / videoAudio is active for the currently active section. We assume that the user does not want to hear in app audio / music plus background audio.
+    /// This should only happen if no classAudio / videoAudio is active for the currently active section. We assume that the user does not want to prioritize background audio when in app audio is present. However, they should be able to set this.
     /// TODO: Testing of the different combinations of media playing / muted etc here is required.
     bool activeClassVideo = _activeSection != null &&
         getVideoControllerForSection(_activeSection!) != null &&
@@ -378,7 +370,7 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// TODO: Quite heavy handed to reset / re-init the controller after each change the user makes. Revisit this for a better solution.
 
   /// IMPORTANT: [updateWorkoutSectionRounds] will re-initialize section controller progress.
-  /// No check for [isFreeSession] as FreeSession should never have rounds.
+  /// No check for [isCustomSession] as FreeSession should never have rounds.
   Future<void> updateWorkoutSectionRounds(int sectionIndex, int rounds) async {
     final section = WorkoutSection.fromJson(
         activeWorkout.workoutSections[sectionIndex].toJson());
@@ -394,7 +386,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   /// For AMRAPs.
   /// IMPORTANT: [updateWorkoutSectionTimecap] will re-initialize section controller progress.
-  /// No check for [isFreeSession] as FreeSession should never have rounds.
+  /// No check for [isCustomSession] as FreeSession should never have rounds.
   Future<void> updateWorkoutSectionTimecap(
       int sectionIndex, int seconds) async {
     final section = WorkoutSection.fromJson(
@@ -412,7 +404,24 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// Allows the user to add a single move set (i.e) not a SuperSet to the end of the section.
   /// Primarily for use in a Free Session so the user can extend their workout / add extra moves easily whilst they are in progress. But also available via the [DoWorkoutSectionModifications] screen.
   /// Always making a copy of the section as this is what the provider.select listener is checking.
-  /// IMPORTANT: [addWorkoutMoveToSection] will re-initialize section controller progress unless it is a FreeSession.
+  /// IMPORTANT: [addWorkoutMoveToSection] and [addWorkoutSetToSection] will re-initialize section controller progress unless it is a FreeSession or a Lifting Session.
+  Future<void> addWorkoutSetToSection(
+      int sectionIndex, WorkoutSet workoutSet) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    section.workoutSets.add(workoutSet);
+
+    activeWorkout.workoutSections[sectionIndex] = section;
+
+    if (!section.isCustomSession && !section.isLifting) {
+      /// Re-init the controller.
+      await resetSection(sectionIndex);
+    }
+
+    notifyListeners();
+  }
+
   Future<void> addWorkoutMoveToSection(
       int sectionIndex, WorkoutMove workoutMove) async {
     final section = WorkoutSection.fromJson(
@@ -429,7 +438,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     activeWorkout.workoutSections[sectionIndex] = section;
 
-    if (!section.isFreeSession) {
+    if (!section.isCustomSession && !section.isLifting) {
       /// Re-init the controller.
       await resetSection(sectionIndex);
     }
@@ -437,7 +446,7 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// IMPORTANT: [removeWorkoutSetFromSection] will re-initialize section controller progress unless it is a FreeSession.
+  /// IMPORTANT: [removeWorkoutSetFromSection] will re-initialize section controller progress.
   Future<void> removeWorkoutSetFromSection(
       int sectionIndex, int setIndex) async {
     final section = WorkoutSection.fromJson(
@@ -451,10 +460,9 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     activeWorkout.workoutSections[sectionIndex] = section;
 
-    if (!section.isFreeSession) {
-      /// Re-init the controller.
-      await resetSection(sectionIndex);
-    }
+    /// Re-init the controller.
+    await resetSection(sectionIndex);
+
     notifyListeners();
   }
 
@@ -468,7 +476,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     activeWorkout.workoutSections[sectionIndex] = section;
 
-    if (!section.isFreeSession) {
+    if (!section.isCustomSession && !section.isLifting) {
       /// Re-init the controller.
       await resetSection(sectionIndex);
     }
@@ -477,7 +485,7 @@ class DoWorkoutBloc extends ChangeNotifier {
   }
 
   /// IMPORTANT: [updateWorkoutSetDuration] will re-initialize section controller progress unless it is a FreeSession.
-  /// No check for [isFreeSession] as FreeSession should never have sets with duration (for timed types only).
+  /// No check for [isCustomSession] as FreeSession should never have sets with duration (for timed types only).
   Future<void> updateWorkoutSetDuration(
       int sectionIndex, int setIndex, int seconds) async {
     final section = WorkoutSection.fromJson(
@@ -493,7 +501,7 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a FreeSession.
+  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a Custom or Lifting section.
   Future<void> updateWorkoutMove(
       int sectionIndex, int setIndex, WorkoutMove workoutMove) async {
     final section = WorkoutSection.fromJson(
@@ -506,7 +514,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     activeWorkout.workoutSections[sectionIndex] = section;
 
-    if (!section.isFreeSession) {
+    if (!section.isCustomSession && !section.isLifting) {
       /// Re-init the controller.
       await resetSection(sectionIndex);
     }
@@ -521,21 +529,42 @@ class DoWorkoutBloc extends ChangeNotifier {
   LoggedWorkout generateLog() {
     final loggedWorkout = loggedWorkoutFromWorkout(workout: activeWorkout);
 
-    loggedWorkout.loggedWorkoutSections =
-        activeWorkout.workoutSections.map((wSection) {
+    loggedWorkout.loggedWorkoutSections = activeWorkout.workoutSections
+        .where((wSection) =>
+            getControllerForSection(wSection.sortPosition).sectionHasStarted)
+        .map((wSection) {
       final sectionIndex = wSection.sortPosition;
 
       /// If AMRAP or ForTime then save reps.
+      /// If Lifting then save reps below after completed sets and moves have been extracted.
       int? repScore;
 
-      if (wSection.workoutSectionType.isAMRAP) {
+      if (wSection.isAMRAP) {
         repScore =
             (getControllerForSection(sectionIndex) as AMRAPSectionController)
                 .repsCompleted;
-      } else if (wSection.workoutSectionType.name == kForTimeName) {
+      } else if (wSection.isForTime) {
         repScore =
             (getControllerForSection(sectionIndex) as ForTimeSectionController)
                 .repsCompleted;
+      }
+
+      /// If the section is FreeSession or Lifting then we need to check the controller to check which sets / workoutMoves have been completed.
+      if (wSection.isLifting || wSection.isCustomSession) {
+        final completedWorkoutMoveIds =
+            (getControllerForSection(sectionIndex) as LiftingSectionController)
+                .completedWorkoutMoveIds;
+
+        /// First remove all non completed workout moves
+        for (final wSet in wSection.workoutSets) {
+          wSet.workoutMoves.removeWhere(
+              (wMove) => !completedWorkoutMoveIds.contains(wMove.id));
+        }
+
+        /// Then remove all sets that are now empty / i.e. no completed workout moves.
+        wSection.workoutSets.removeWhere((wSet) => wSet.workoutMoves.isEmpty);
+
+        repScore = DataUtils.totalRepsInSection(wSection);
       }
 
       final loggedSection = loggedWorkoutSectionFromWorkoutSection(
@@ -544,9 +573,14 @@ class DoWorkoutBloc extends ChangeNotifier {
           timeTakenSeconds:
               getStopWatchTimerForSection(sectionIndex).secondTime.value);
 
-      /// Add the sectionData that was accumulated as the user did the workout.
-      loggedSection.loggedWorkoutSectionData =
-          getControllerForSection(wSection.sortPosition).state.sectionData;
+      /// Add the sectionData that was accumulated as the user did the workout or (if FreeSession or Lifting - i.e. non timed - then generate it).
+      if (wSection.isCustomSession || wSection.isLifting) {
+        loggedSection.loggedWorkoutSectionData =
+            loggedWorkoutSectionDataFromWorkoutSection(wSection);
+      } else {
+        loggedSection.loggedWorkoutSectionData =
+            getControllerForSection(wSection.sortPosition).state.sectionData;
+      }
 
       if (!wSection.workoutSectionType.isAMRAP) {
         /// In the process of the workout a new round data object is added when the last round is finished. This means that we will always end up with an extra (empty) RoundData object for timed workouts. For AMRAPs we do not need to worry, the extra data can be added to indicate that they started the next round.

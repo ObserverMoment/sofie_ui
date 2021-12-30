@@ -10,6 +10,7 @@ enum ExitAnimProps { offset, scale }
 /// Remove action is provided by default - other actions can be supplied.
 /// Initially intended for use with workoutMoves in lists.
 /// A confirmation prompt will display before running the animation and removeItem callback.
+/// See below for a non animated verion of this widget aka [MySlidable]
 class AnimatedSlidable extends StatefulWidget {
   @override
   final Key key;
@@ -18,6 +19,7 @@ class AnimatedSlidable extends StatefulWidget {
 
   /// Remove is added by default - just provide a removeItem callback
   final List<IconSlideAction> secondaryActions;
+  // final List<SlidableAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;
   final String itemType;
@@ -29,8 +31,9 @@ class AnimatedSlidable extends StatefulWidget {
   /// [verb] will also display on the [IconSlideAction].
   final String? verb;
 
-  /// For the delet action.
+  /// For the delete action.
   final IconData iconData;
+
   const AnimatedSlidable({
     required this.key,
     required this.child,
@@ -57,6 +60,8 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
   late Animation<double> _scaleAnimation;
 
   bool _deleted = false;
+
+  double get _iconSize => 18.0;
 
   @override
   void initState() {
@@ -133,7 +138,7 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
       child: SlideTransition(
         position: _slideAnimation,
         child: IconTheme(
-          data: const IconThemeData(color: Styles.white),
+          data: IconThemeData(color: Styles.white, size: _iconSize),
           child: Slidable(
             key: widget.key,
             actionPane: const SlidableDrawerActionPane(),
@@ -147,7 +152,7 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
                 foregroundColor: Styles.white,
                 iconWidget: Icon(
                   widget.iconData,
-                  size: 20,
+                  size: _iconSize,
                 ),
                 onTap: _confirmRemoveItem,
               ),
@@ -155,6 +160,107 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
             child: widget.child,
           ),
         ),
+      ),
+    );
+    // return SizeTransition(
+    //   sizeFactor: _scaleAnimation,
+    //   child: SlideTransition(
+    //     position: _slideAnimation,
+    //     child: IconTheme(
+    //       data: IconThemeData(color: Styles.white, size: _iconSize),
+    //       child: Slidable(
+    //         key: widget.key,
+    //         startActionPane: ActionPane(
+    //             extentRatio: 0.20,
+    //             motion: const DrawerMotion(),
+    //             children: <SlidableAction>[
+    //               ...widget.secondaryActions,
+    //               SlidableAction(
+    //                 label: widget.verb,
+    //                 backgroundColor: Styles.errorRed,
+    //                 foregroundColor: Styles.white,
+    //                 icon: widget.iconData,
+    //                 onPressed: (_) => _confirmRemoveItem(),
+    //               ),
+    //             ]),
+    //         enabled: widget.enabled,
+    //         child: widget.child,
+    //       ),
+    //     ),
+    //   ),
+    // );
+  }
+}
+
+class MySlidable extends StatelessWidget {
+  @override
+  final Key key;
+  final int index;
+  final Widget child;
+
+  /// Remove is added by default - just provide a removeItem callback
+  // final List<SlidableAction> secondaryActions;
+  final List<IconSlideAction> secondaryActions;
+  final Function(int index) removeItem;
+  final bool enabled;
+  final String itemType;
+  final String? itemName;
+  final String? confirmMessage;
+
+  /// Before the type. Eg Delete Workout vs Remove Workout vs Archive Workout.
+  /// [verb] [itemType] will display.
+  /// [verb] will also display on the [IconSlideAction].
+  final String? verb;
+
+  /// For the delete action.
+  final IconData iconData;
+
+  const MySlidable({
+    required this.key,
+    required this.child,
+    required this.removeItem,
+    required this.secondaryActions,
+    required this.index,
+    this.enabled = true,
+    required this.itemType,
+    this.itemName,
+    this.confirmMessage,
+    this.verb = 'Delete',
+    this.iconData = CupertinoIcons.delete,
+  }) : super(key: key);
+
+  Future<void> _confirmRemoveItem(BuildContext context) async {
+    context.showConfirmDeleteDialog(
+        itemType: itemType,
+        itemName: itemName,
+        verb: verb,
+        message: confirmMessage,
+        onConfirm: () => removeItem(index));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconTheme(
+      data: const IconThemeData(color: Styles.white),
+      child: Slidable(
+        key: key,
+        actionPane: const SlidableDrawerActionPane(),
+        enabled: enabled,
+        actionExtentRatio: 0.20,
+        secondaryActions: <IconSlideAction>[
+          ...secondaryActions,
+          IconSlideAction(
+            caption: verb,
+            color: Styles.errorRed,
+            foregroundColor: Styles.white,
+            iconWidget: Icon(
+              iconData,
+              size: 20,
+            ),
+            onTap: () => _confirmRemoveItem(context),
+          ),
+        ],
+        child: child,
       ),
     );
   }

@@ -47,10 +47,10 @@ class NowAndNextMoves extends StatelessWidget {
                       children: [
                         WorkoutSetMinimalDisplay(
                           backgroundColor:
-                              context.theme.cardBackground.withOpacity(0.65),
+                              context.theme.cardBackground.withOpacity(0.7),
                           workoutSet: workoutSet,
                           workoutSectionType: workoutSection.workoutSectionType,
-                          elevation: 1,
+                          elevation: 0,
                           displayLoad: false,
                           textSize: FONTSIZE.four,
                         ),

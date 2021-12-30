@@ -64,13 +64,12 @@ class DialogMenu extends StatelessWidget {
           if (Utils.textNotNull(message))
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: MyText(
-                message!,
-                subtext: true,
-                size: FONTSIZE.two,
-                maxLines: 4,
-                textAlign: TextAlign.center,
-              ),
+              child: MyText(message!,
+                  subtext: true,
+                  size: FONTSIZE.two,
+                  maxLines: 4,
+                  textAlign: TextAlign.center,
+                  lineHeight: 1.4),
             ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
@@ -99,7 +98,10 @@ class DialogMenuItemContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             color: context.theme.cardBackground.withOpacity(0.3),
-            border: Border.all(color: context.theme.primary),
+            border: Border.all(
+                color: action.isDestructive
+                    ? Styles.errorRed
+                    : context.theme.primary),
             borderRadius: BorderRadius.circular(30)),
         child: CupertinoButton(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),

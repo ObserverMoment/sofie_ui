@@ -69,7 +69,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
       mutation: UpdateCollectionMutation(variables: variables),
       broadcastQueryIds: [
         UserCollectionsQuery().operationName,
-        GQLVarParamKeys.userCollectionByIdQuery(widget.collection!.id)
+        GQLVarParamKeys.userCollectionById(widget.collection!.id)
       ],
     );
 
@@ -144,7 +144,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
       ),
       child: SingleChildScrollView(
           child: Padding(
-        padding: const EdgeInsets.only(top: 12.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             MyTextFormFieldRow(

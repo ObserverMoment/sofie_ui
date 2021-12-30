@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/move_type_multi_selector.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
@@ -41,10 +41,14 @@ class _LoggedWorkoutCreatorSectionDetailsState
       ),
       child: Column(
         children: [
-          MyTabBarNav(
-              titles: const ['Body Areas', 'Move Types'],
-              handleTabChange: _updatePage,
-              activeTabIndex: _activeTabIndex),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            width: double.infinity,
+            child: MySlidingSegmentedControl<int>(
+                value: _activeTabIndex,
+                children: const {0: 'Body Areas', 1: 'Move Types'},
+                updateValue: _updatePage),
+          ),
           IndexedStack(
             index: _activeTabIndex,
             children: [

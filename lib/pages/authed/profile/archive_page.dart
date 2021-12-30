@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -31,15 +31,19 @@ class _ArchivePageState extends State<ArchivePage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         navigationBar: const MyNavBar(
-          middle: NavBarTitle('Archive'),
+          middle: NavBarLargeTitle('Archive'),
         ),
         child: Column(
           children: [
-            MyTabBarNav(
-                titles: const ['Workouts', 'Plans', 'Moves'],
-                handleTabChange: _changeTab,
-                activeTabIndex: _activeTabIndex),
-            const SizedBox(height: 10),
+            MySlidingSegmentedControl(
+                value: _activeTabIndex,
+                children: const {
+                  0: 'Workouts',
+                  1: 'Plans',
+                  2: 'Moves',
+                },
+                updateValue: _changeTab),
+            const SizedBox(height: 16),
             Flexible(
               child: Padding(
                 padding:
@@ -143,11 +147,11 @@ class _ArchivedCustomMoves extends StatelessWidget {
         UnarchiveCustomMoveById$Mutation, UnarchiveCustomMoveByIdArguments>(
       mutation: UnarchiveCustomMoveByIdMutation(
           variables: UnarchiveCustomMoveByIdArguments(id: id)),
-      addRefToQueries: [GQLOpNames.userCustomMovesQuery],
-      removeRefFromQueries: [GQLOpNames.userArchivedCustomMovesQuery],
+      addRefToQueries: [GQLOpNames.userCustomMoves],
+      removeRefFromQueries: [GQLOpNames.userArchivedCustomMoves],
     );
 
-    await checkOperationResult(context, result,
+    checkOperationResult(context, result,
         onSuccess: () => context.showToast(message: 'Custom move unarchived'),
         onFail: () => context.showErrorAlert(
             'Something went wrong, the move was not unarchived correctly'));

@@ -119,8 +119,9 @@ class WorkoutPlanMeta extends StatelessWidget {
           ]),
         ),
         const HorizontalLine(verticalPadding: 0),
-        if (hasEnrolled)
-          Padding(
+        GrowInOut(
+          show: hasEnrolled,
+          child: Padding(
             padding: const EdgeInsets.only(top: 18.0, bottom: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -129,17 +130,17 @@ class WorkoutPlanMeta extends StatelessWidget {
                   padding: kDefaultTagPadding,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Styles.secondaryAccent)),
+                      border: Border.all(color: Styles.primaryAccent)),
                   child: Row(
                     children: const [
                       MyText(
                         'You have joined this plan!',
-                        color: Styles.secondaryAccent,
+                        color: Styles.primaryAccent,
                       ),
                       SizedBox(width: 4),
                       Icon(
                         CupertinoIcons.checkmark_alt,
-                        color: Styles.secondaryAccent,
+                        color: Styles.primaryAccent,
                       )
                     ],
                   ),
@@ -147,6 +148,7 @@ class WorkoutPlanMeta extends StatelessWidget {
               ],
             ),
           ),
+        ),
         if (workoutPlan.workoutPlanDays.isNotEmpty)
           _InfoSection(
             header: 'Goals',

@@ -1,0 +1,3 @@
+mutation deleteSkillById($id: ID!) {
+  deleteSkillById(id: $id)
+}

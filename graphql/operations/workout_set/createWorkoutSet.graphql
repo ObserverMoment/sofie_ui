@@ -1,0 +1,5 @@
+mutation createWorkoutSet($data: CreateWorkoutSetInput!) {
+  createWorkoutSet: createWorkoutSet(data: $data) {
+    ...WorkoutSet
+  }
+}

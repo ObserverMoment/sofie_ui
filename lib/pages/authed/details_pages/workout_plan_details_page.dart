@@ -1,12 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/navigation.dart';
@@ -17,6 +16,7 @@ import 'package:sofie_ui/components/workout_plan/workout_plan_meta.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_participants.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_reviews.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_workout_schedule.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -46,29 +46,44 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
   }
 
   /// I.e. enrol the user in the plan.
-  Future<void> _createWorkoutPlanEnrolment() async {
+  Future<void> _createWorkoutPlanEnrolment(WorkoutPlan workoutPlan) async {
     final variables =
-        CreateWorkoutPlanEnrolmentArguments(workoutPlanId: widget.id);
+        CreateWorkoutPlanEnrolmentArguments(workoutPlanId: workoutPlan.id);
 
     final result = await context.graphQLStore.mutate<
             CreateWorkoutPlanEnrolment$Mutation,
             CreateWorkoutPlanEnrolmentArguments>(
         mutation: CreateWorkoutPlanEnrolmentMutation(variables: variables),
-        addRefToQueries: [EnrolledWorkoutPlansQuery().operationName]);
+        processResult: (data) {
+          /// Add a [WorkoutPlanEnrolmentSummary] to the store and a ref to [workoutPlanEnrolmentsQuery].
+          final enrolmentSummary = data.createWorkoutPlanEnrolment.summary;
 
-    await checkOperationResult(context, result,
+          context.graphQLStore.writeDataToStore(
+            data: enrolmentSummary.toJson(),
+            addRefToQueries: [GQLOpNames.workoutPlanEnrolments],
+          );
+
+          /// Write the workoutPlan with the updated enrolment to store.
+          /// TODO: Investigate why this is necessary to do manually when I would expect that normalizing [WorkoutPlanEnrolmentWithPlan] would also write over [WorkoutPlanEnrolmentWithPlan.workoutPlan] object.
+          context.graphQLStore.writeDataToStore(
+            data: data.createWorkoutPlanEnrolment.workoutPlan.toJson(),
+          );
+        },
+        broadcastQueryIds: [GQLVarParamKeys.workoutPlanById(workoutPlan.id)]);
+
+    checkOperationResult(context, result,
         onSuccess: () =>
             context.showToast(message: 'Plan joined. Congratulations!'),
         onFail: () => context.showErrorAlert(
             'Something went wrong, there was an issue joining the plan'));
   }
 
-  Future<void> _shareWorkoutPlan(WorkoutPlan workoutPlan) async {
+  Future<void> _shareWorkoutPlan() async {
     await SharingAndLinking.shareLink(
-        'workout-plan/${workoutPlan.id}', 'Check out this workout plan!');
+        'workout-plan/${widget.id}', 'Check out this workout plan!');
   }
 
-  Future<void> _archiveWorkoutPlan(String id) async {
+  Future<void> _archiveWorkoutPlan(WorkoutPlan workoutPlan) async {
     await context.showConfirmDeleteDialog(
         verb: 'Archive',
         itemType: 'Plan',
@@ -78,18 +93,36 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
           final result = await context.graphQLStore.mutate<
               ArchiveWorkoutPlanById$Mutation, ArchiveWorkoutPlanByIdArguments>(
             mutation: ArchiveWorkoutPlanByIdMutation(
-              variables: ArchiveWorkoutPlanByIdArguments(id: id),
+              variables: ArchiveWorkoutPlanByIdArguments(id: workoutPlan.id),
             ),
-            removeRefFromQueries: [
-              GQLOpNames.userWorkoutPlansQuery,
-            ],
-            addRefToQueries: [GQLOpNames.userArchivedWorkoutPlansQuery],
-            broadcastQueryIds: [
-              GQLVarParamKeys.workoutPlanByIdQuery(widget.id),
-            ],
+            processResult: (data) {
+              // Remove WorkoutPlanSummary from store.
+              context.graphQLStore.deleteNormalizedObject(
+                  resolveDataId(workoutPlan.summary.toJson())!);
+
+              // Remove all refs to it from queries.
+              context.graphQLStore.removeAllQueryRefsToId(
+                  resolveDataId(workoutPlan.summary.toJson())!);
+
+              // Rebroadcast all queries that may be affected.
+              context.graphQLStore.broadcastQueriesByIds([
+                GQLOpNames.userWorkoutPlans,
+                GQLOpNames.userCollections,
+                GQLOpNames.userClubs,
+              ]);
+
+              // Update WorkoutPlan and workoutPlanById query
+              context.graphQLStore.writeDataToStore(data: {
+                ...workoutPlan.summary.toJson(),
+                'archived': true
+              }, broadcastQueryIds: [
+                GQLVarParamKeys.workoutPlanById(widget.id)
+              ]);
+            },
+            addRefToQueries: [GQLOpNames.userArchivedWorkoutPlans],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () =>
                   context.showToast(message: 'Workout plan archived'),
               onFail: () => context.showErrorAlert(
@@ -97,7 +130,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         });
   }
 
-  Future<void> _unarchiveWorkoutPlan(String id) async {
+  Future<void> _unarchiveWorkoutPlan(WorkoutPlan workoutPlan) async {
     await context.showConfirmDialog(
         title: 'Unarchive this workout plan?',
         message: 'It will be moved back into your plans.',
@@ -107,17 +140,35 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
               UnarchiveWorkoutPlanById$Mutation,
               UnarchiveWorkoutPlanByIdArguments>(
             mutation: UnarchiveWorkoutPlanByIdMutation(
-                variables: UnarchiveWorkoutPlanByIdArguments(id: id)),
-            addRefToQueries: [
-              GQLOpNames.userWorkoutPlansQuery,
-            ],
-            removeRefFromQueries: [GQLOpNames.userArchivedWorkoutPlansQuery],
+                variables:
+                    UnarchiveWorkoutPlanByIdArguments(id: workoutPlan.id)),
+            processResult: (data) {
+              // This operation returns a full WorkoutPlan object.
+              // Add a WorkoutPlanSummary to store and to userWorkoutPlansQuery
+              context.graphQLStore.writeDataToStore(
+                data: data.unarchiveWorkoutPlanById.summary.toJson(),
+                addRefToQueries: [GQLOpNames.userWorkoutPlans],
+              );
+
+              final archivedWorkoutPlan = {
+                '__typename': kArchivedWorkoutPlanTypename,
+                'id': workoutPlan.id
+              };
+
+              // Remove ArchivedWorkoutPlan from store and ref from userArchivedWorkoutPlansQuery.
+              context.graphQLStore
+                  .deleteNormalizedObject(resolveDataId(archivedWorkoutPlan)!);
+
+              context.graphQLStore.removeRefFromQueryData(
+                  data: archivedWorkoutPlan,
+                  queryIds: [GQLOpNames.userArchivedWorkoutPlans]);
+            },
             broadcastQueryIds: [
-              GQLVarParamKeys.workoutPlanByIdQuery(widget.id),
+              GQLVarParamKeys.workoutPlanById(widget.id),
             ],
           );
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () =>
                   context.showToast(message: 'Workout plan unarchived'),
               onFail: () => context.showErrorAlert(
@@ -125,12 +176,12 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         });
   }
 
-  Widget _buildContent(
-          {required WorkoutPlan workoutPlan,
-          required List<Equipment> allEquipment,
-          required List<Collection> collections,
-          required bool hasEnrolled,
-          required List<WorkoutPlanEnrolment> workoutPlanEnrolments}) =>
+  Widget _buildContent({
+    required WorkoutPlan workoutPlan,
+    required List<Equipment> allEquipment,
+    required List<Collection> collections,
+    required bool hasEnrolled,
+  }) =>
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -161,9 +212,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                   WorkoutPlanWorkoutSchedule(workoutPlan: workoutPlan),
                   WorkoutPlanGoals(workoutPlan: workoutPlan),
                   WorkoutPlanReviews(reviews: workoutPlan.workoutPlanReviews),
-                  WorkoutPlanParticipants(
-                      userSummaries:
-                          workoutPlanEnrolments.map((e) => e.user).toList())
+                  WorkoutPlanParticipants(workoutPlan: workoutPlan)
                 ],
               ),
             )
@@ -177,18 +226,15 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         variables: WorkoutPlanByIdArguments(id: widget.id));
 
     return QueryObserver<WorkoutPlanById$Query, WorkoutPlanByIdArguments>(
-        key: Key('YourWorkoutPlansPage - ${query.operationName}-${widget.id}'),
+        key: Key('WorkoutPlanDetails - ${query.operationName}-${widget.id}'),
         query: query,
         parameterizeQuery: true,
-        loadingIndicator: const ShimmerDetailsPage(title: 'Getting Ready'),
         builder: (workoutPlanData) {
           return QueryObserver<UserCollections$Query, json.JsonSerializable>(
               key: Key(
                   'WorkoutPlanDetailsPage - ${UserCollectionsQuery().operationName}'),
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
-              loadingIndicator:
-                  const ShimmerDetailsPage(title: 'Getting Ready'),
               builder: (collectionsData) {
                 final workoutPlan = workoutPlanData.workoutPlanById;
                 final enrolments = workoutPlan.workoutPlanEnrolments;
@@ -233,9 +279,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                   imageUri: workoutPlan.coverImageUri,
                                 ),
                                 items: [
-                                  if (!isOwner &&
-                                      workoutPlan.user.userProfileScope ==
-                                          UserProfileScope.public)
+                                  if (!isOwner)
                                     BottomSheetMenuItem(
                                         text: 'View creator',
                                         icon: const Icon(
@@ -250,8 +294,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         text: 'Share',
                                         icon: const Icon(
                                             CupertinoIcons.paperplane),
-                                        onPressed: () =>
-                                            _shareWorkoutPlan(workoutPlan)),
+                                        onPressed: _shareWorkoutPlan),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',
@@ -278,28 +321,27 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         ),
                                         isDestructive: !workoutPlan.archived,
                                         onPressed: () => workoutPlan.archived
-                                            ? _unarchiveWorkoutPlan(
-                                                workoutPlan.id)
-                                            : _archiveWorkoutPlan(
-                                                workoutPlan.id)),
+                                            ? _unarchiveWorkoutPlan(workoutPlan)
+                                            : _archiveWorkoutPlan(workoutPlan)),
                                 ])),
                       ),
                     ),
-                    child: StackAndFloatingButton(
-                      pageHasBottomNavBar: false,
-                      onPressed: enrolmentInPlan != null
-                          ? () => context.navigateTo(
-                              WorkoutPlanEnrolmentDetailsRoute(
-                                  id: enrolmentInPlan.id))
-                          : _createWorkoutPlanEnrolment,
-                      buttonIconData: enrolmentInPlan != null
-                          ? CupertinoIcons.chart_bar_square
-                          : CupertinoIcons.plus,
-                      buttonText: enrolmentInPlan != null
-                          ? 'View Progress'
-                          : 'Join Plan',
-                      buttonInternalPadding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 36),
+                    child: FABPage(
+                      columnButtons: [
+                        FloatingButton(
+                          text: enrolmentInPlan != null
+                              ? 'View Progress'
+                              : 'Join Plan',
+                          icon: enrolmentInPlan != null
+                              ? CupertinoIcons.chart_bar_square
+                              : CupertinoIcons.plus,
+                          onTap: enrolmentInPlan != null
+                              ? () => context.navigateTo(
+                                  WorkoutPlanEnrolmentDetailsRoute(
+                                      id: enrolmentInPlan.id))
+                              : () => _createWorkoutPlanEnrolment(workoutPlan),
+                        )
+                      ],
                       child: Utils.textNotNull(workoutPlan.coverImageUri)
                           ? NestedScrollView(
                               headerSliverBuilder:
@@ -320,17 +362,17 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         ]))
                                       ],
                               body: _buildContent(
-                                  workoutPlan: workoutPlan,
-                                  allEquipment: allEquipment,
-                                  collections: collections,
-                                  hasEnrolled: enrolmentInPlan != null,
-                                  workoutPlanEnrolments: enrolments))
+                                workoutPlan: workoutPlan,
+                                allEquipment: allEquipment,
+                                collections: collections,
+                                hasEnrolled: enrolmentInPlan != null,
+                              ))
                           : _buildContent(
                               workoutPlan: workoutPlan,
                               allEquipment: allEquipment,
                               collections: collections,
                               hasEnrolled: enrolmentInPlan != null,
-                              workoutPlanEnrolments: enrolments),
+                            ),
                     ));
               });
         });

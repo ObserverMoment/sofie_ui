@@ -1,0 +1,5 @@
+mutation addWorkoutToClub($workoutId: ID!, $clubId: ID!) {
+  addWorkoutToClub(workoutId: $workoutId, clubId: $clubId) {
+    ...ClubWorkouts
+  }
+}

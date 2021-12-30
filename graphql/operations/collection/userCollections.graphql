@@ -1,0 +1,11 @@
+query userCollections {
+  userCollections {
+    ...Collection
+    Workouts {
+      ...WorkoutSummary
+    }
+    WorkoutPlans {
+      ...WorkoutPlanSummary
+    }
+  }
+}

@@ -1,0 +1,5 @@
+mutation createUserBenchmarkEntry($data: CreateUserBenchmarkEntryInput!) {
+  createUserBenchmarkEntry(data: $data) {
+    ...UserBenchmarkEntry
+  }
+}

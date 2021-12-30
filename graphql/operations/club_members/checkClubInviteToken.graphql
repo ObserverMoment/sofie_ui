@@ -1,0 +1,23 @@
+query checkClubInviteToken($id: ID!) {
+  checkClubInviteToken(id: $id) {
+    __typename
+    ... on ClubInviteTokenData {
+      ...ClubInviteTokenData
+      Club {
+        ...ClubSummary
+        Owner {
+          ...UserAvatarData
+        }
+        Admins {
+          ...UserAvatarData
+        }
+      }
+      introVideoUri
+      introVideoThumbUri
+      introAudioUri
+    }
+    ... on InviteTokenError {
+      ...InviteTokenError
+    }
+  }
+}

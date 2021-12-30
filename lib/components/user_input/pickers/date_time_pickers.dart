@@ -86,7 +86,7 @@ class DateTimePickerDisplayRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Color highlightColor = Styles.secondaryAccent;
+    const Color highlightColor = Styles.primaryAccent;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -205,7 +205,7 @@ class _DateTimePickerState extends State<DateTimePicker> {
       cancel: context.pop,
       validToSave: true,
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
             DateTimePickerDisplayRow(
@@ -310,8 +310,7 @@ class _DatePickerCalendarState extends State<DatePickerCalendar> {
                       DateFormat('MMMM yyyy').format(_focusedDay),
                       weight: FontWeight.bold,
                       size: FONTSIZE.four,
-                      color:
-                          _activeTabIndex == 1 ? Styles.secondaryAccent : null,
+                      color: _activeTabIndex == 1 ? Styles.primaryAccent : null,
                     ),
                     const SizedBox(width: 4),
                     MyAnimatedRotation(
@@ -320,9 +319,8 @@ class _DatePickerCalendarState extends State<DatePickerCalendar> {
                       child: Icon(
                         CupertinoIcons.chevron_right,
                         size: 18,
-                        color: _activeTabIndex == 1
-                            ? Styles.secondaryAccent
-                            : null,
+                        color:
+                            _activeTabIndex == 1 ? Styles.primaryAccent : null,
                       ),
                     )
                   ],
@@ -451,7 +449,7 @@ class DateRangePickerDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
-      padding: EdgeInsets.zero,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       onPressed: () => context.showBottomSheet(
           child: DateRangePicker(
         from: from,
@@ -628,7 +626,7 @@ class DateRangePickerRow extends StatelessWidget {
                       color: !selectedDateIsValid
                           ? Styles.errorRed
                           : pickerActive
-                              ? Styles.secondaryAccent
+                              ? Styles.primaryAccent
                               : null,
                       weight:
                           pickerActive ? FontWeight.bold : FontWeight.normal,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/user_input/selectors/collection_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 
@@ -46,8 +47,12 @@ class CollectionManager {
             title: 'Save to Collection',
             selectCollection: (collection) {
               if (object is Workout) {
+                addWorkoutToCollection(context, collection, object.summary);
+              } else if (object is WorkoutSummary) {
                 addWorkoutToCollection(context, collection, object);
               } else if (object is WorkoutPlan) {
+                addWorkoutPlanToCollection(context, collection, object.summary);
+              } else if (object is WorkoutPlanSummary) {
                 addWorkoutPlanToCollection(context, collection, object);
               } else {
                 throw Exception(
@@ -68,8 +73,13 @@ class CollectionManager {
         isDestructive: true,
         onConfirm: () {
           if (object is Workout) {
+            removeWorkoutFromCollection(context, collection, object.summary);
+          } else if (object is WorkoutSummary) {
             removeWorkoutFromCollection(context, collection, object);
           } else if (object is WorkoutPlan) {
+            removeWorkoutPlanFromCollection(
+                context, collection, object.summary);
+          } else if (object is WorkoutPlanSummary) {
             removeWorkoutPlanFromCollection(context, collection, object);
           } else {
             throw Exception(
@@ -79,8 +89,8 @@ class CollectionManager {
   }
 
   /// Add / Remove Workout from Collection ////
-  static Future<void> addWorkoutToCollection(
-      BuildContext context, Collection collection, Workout workout) async {
+  static Future<void> addWorkoutToCollection(BuildContext context,
+      Collection collection, WorkoutSummary workout) async {
     final updatedCollection = Collection.fromJson(collection.toJson());
     updatedCollection.workouts.add(workout);
 
@@ -92,10 +102,9 @@ class CollectionManager {
     final result = await context.graphQLStore.mutate<
             AddWorkoutToCollection$Mutation, AddWorkoutToCollectionArguments>(
         mutation: AddWorkoutToCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -107,7 +116,7 @@ class CollectionManager {
   }
 
   static Future<void> removeWorkoutFromCollection(
-      BuildContext context, Collection collection, Workout workout,
+      BuildContext context, Collection collection, WorkoutSummary workout,
       {bool showToast = true}) async {
     final updatedCollection = Collection.fromJson(collection.toJson());
     updatedCollection.workouts =
@@ -122,10 +131,9 @@ class CollectionManager {
             RemoveWorkoutFromCollection$Mutation,
             RemoveWorkoutFromCollectionArguments>(
         mutation: RemoveWorkoutFromCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -141,7 +149,7 @@ class CollectionManager {
 
   /// Add / Remove WorkoutPlan from Collection ////
   static Future<void> addWorkoutPlanToCollection(BuildContext context,
-      Collection collection, WorkoutPlan workoutPlan) async {
+      Collection collection, WorkoutPlanSummary workoutPlan) async {
     final updatedCollection = Collection.fromJson(collection.toJson());
     updatedCollection.workoutPlans.add(workoutPlan);
 
@@ -154,10 +162,9 @@ class CollectionManager {
             AddWorkoutPlanToCollection$Mutation,
             AddWorkoutPlanToCollectionArguments>(
         mutation: AddWorkoutPlanToCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {
@@ -168,8 +175,8 @@ class CollectionManager {
     }
   }
 
-  static Future<void> removeWorkoutPlanFromCollection(
-      BuildContext context, Collection collection, WorkoutPlan workoutPlan,
+  static Future<void> removeWorkoutPlanFromCollection(BuildContext context,
+      Collection collection, WorkoutPlanSummary workoutPlan,
       {bool showToast = true}) async {
     final updatedCollection = Collection.fromJson(collection.toJson());
     updatedCollection.workoutPlans =
@@ -184,10 +191,9 @@ class CollectionManager {
             RemoveWorkoutPlanFromCollection$Mutation,
             RemoveWorkoutPlanFromCollectionArguments>(
         mutation: RemoveWorkoutPlanFromCollectionMutation(variables: variables),
-        optimisticData: updatedCollection.toJson(),
         broadcastQueryIds: [
           UserCollectionsQuery().operationName,
-          GQLVarParamKeys.userCollectionByIdQuery(collection.id)
+          GQLVarParamKeys.userCollectionById(collection.id)
         ]);
 
     if (result.hasErrors || result.data == null) {

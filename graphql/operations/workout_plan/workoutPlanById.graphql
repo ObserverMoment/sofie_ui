@@ -1,0 +1,5 @@
+query workoutPlanById($id: ID!) {
+  workoutPlanById(id: $id) {
+    ...WorkoutPlanData
+  }
+}

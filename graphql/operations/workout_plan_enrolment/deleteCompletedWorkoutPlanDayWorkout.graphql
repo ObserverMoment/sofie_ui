@@ -1,0 +1,13 @@
+mutation deleteCompletedWorkoutPlanDayWorkout(
+  $data: DeleteCompletedWorkoutPlanDayWorkoutInput!
+) {
+  deleteCompletedWorkoutPlanDayWorkout(data: $data) {
+    ...WorkoutPlanEnrolment
+    CompletedWorkoutPlanDayWorkouts {
+      ...CompletedWorkoutPlanDayWorkout
+    }
+    User {
+      ...UserAvatarData
+    }
+  }
+}

@@ -3,100 +3,130 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class DiscoverCreators extends StatelessWidget {
   const DiscoverCreators({Key? key}) : super(key: key);
 
+  double get _tileHeight => 178;
+  double get _avatarSize => 120;
+
   @override
   Widget build(BuildContext context) {
-    final query =
-        UserPublicProfilesQuery(variables: UserPublicProfilesArguments());
+    final query = UserProfilesQuery(variables: UserProfilesArguments());
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 6, bottom: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const MyHeaderText('Creators'),
-              IconButton(
-                  iconData: CupertinoIcons.compass,
-                  onPressed: () =>
-                      context.navigateTo(const DiscoverPeopleRoute()))
-            ],
-          ),
-        ),
-        QueryObserver<UserPublicProfiles$Query, json.JsonSerializable>(
-            key: Key('DiscoverCreators- ${query.operationName}'),
-            query: query,
-            loadingIndicator: Container(
-              height: 190,
-              padding: const EdgeInsets.only(top: 2.0, left: 12),
-              child: const ShimmerFriendsList(
-                avatarSize: 140,
-              ),
+    return LayoutBuilder(builder: (context, constraints) {
+      final screenWidth = constraints.biggest.width;
+      final tileWidth = screenWidth / 2.3;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, top: 8, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const MyHeaderText(
+                  'People',
+                  size: FONTSIZE.five,
+                ),
+                IconButton(
+                    iconData: CupertinoIcons.compass,
+                    onPressed: () =>
+                        context.navigateTo(const DiscoverPeopleRoute()))
+              ],
             ),
-            builder: (data) {
-              final profiles = data.userPublicProfiles;
-              return Container(
-                height: 200,
+          ),
+          QueryObserver<UserProfiles$Query, json.JsonSerializable>(
+              key: Key('DiscoverCreators- ${query.operationName}'),
+              query: query,
+              loadingIndicator: Container(
+                height: _tileHeight * 2,
                 padding: const EdgeInsets.only(top: 2.0, left: 12),
-                child: ListView.builder(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ShimmerFriendsList(
+                      avatarSize: _avatarSize,
+                    ),
+                    ShimmerFriendsList(
+                      avatarSize: _avatarSize,
+                    ),
+                  ],
+                ),
+              ),
+              builder: (data) {
+                return SizedBox(
+                  height: _tileHeight * 2,
+                  child: GridView.count(
+                    childAspectRatio: _tileHeight / tileWidth,
+                    padding: EdgeInsets.zero,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
                     scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemCount: profiles.length,
-                    itemBuilder: (c, i) => Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: GestureDetector(
-                            onTap: () => context.navigateTo(
-                                UserPublicProfileDetailsRoute(
-                                    userId: profiles[i].id)),
-                            child: _CreatorAvatar(
-                              profileSummary: profiles[i],
-                            ),
-                          ),
-                        )),
-              );
-            })
-      ],
-    );
+                    crossAxisCount: 2,
+                    children: data.userProfiles
+                        .map((p) => SizedBox(
+                              width: tileWidth,
+                              height: _tileHeight,
+                              child: GestureDetector(
+                                onTap: () => context.navigateTo(
+                                    UserPublicProfileDetailsRoute(
+                                        userId: p.id)),
+                                child: _CreatorCard(
+                                  profileSummary: p,
+                                  avatarSize: _avatarSize,
+                                ),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                );
+              })
+        ],
+      );
+    });
   }
 }
 
-class _CreatorAvatar extends StatelessWidget {
-  final UserPublicProfileSummary profileSummary;
-  const _CreatorAvatar({Key? key, required this.profileSummary})
+class _CreatorCard extends StatelessWidget {
+  final UserProfileSummary profileSummary;
+  final double avatarSize;
+  const _CreatorCard(
+      {Key? key, required this.profileSummary, required this.avatarSize})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 146,
-      child: Column(children: [
-        UserAvatar(
-          elevation: 0,
-          avatarUri: profileSummary.avatarUri,
-          size: 140,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 3),
+        UserAvatar(avatarUri: profileSummary.avatarUri, size: avatarSize),
+        const SizedBox(height: 3),
+        MyText(
+          profileSummary.displayName,
+          size: FONTSIZE.two,
+          weight: FontWeight.bold,
         ),
-        const SizedBox(height: 8),
-        ContentBox(
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            backgroundColor: context.theme.cardBackground.withOpacity(0.5),
-            child: MyText(
-              profileSummary.displayName,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            )),
-      ]),
+        if (profileSummary.skills.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 3.0, left: 8, right: 8),
+            child: CommaSeparatedList(
+              profileSummary.skills,
+              fontSize: FONTSIZE.one,
+              alignment: WrapAlignment.center,
+              runSpacing: 2,
+            ),
+          )
+      ],
     );
   }
 }

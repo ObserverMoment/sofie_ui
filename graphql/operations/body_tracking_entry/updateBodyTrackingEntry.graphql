@@ -1,0 +1,5 @@
+mutation updateBodyTrackingEntry($data: UpdateBodyTrackingEntryInput!) {
+  updateBodyTrackingEntry(data: $data) {
+    ...BodyTrackingEntry
+  }
+}

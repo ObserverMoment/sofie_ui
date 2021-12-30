@@ -21,7 +21,7 @@ class WorkoutSetDisplayHeader extends StatelessWidget {
       case kHIITCircuitName:
       case kTabataName:
         return 'For ${workoutSet.duration.secondsToTimeDisplay}';
-      case kFreeSessionName:
+      case kCustomSessionName:
       case kForTimeName:
       case kAMRAPName:
         return '${workoutSet.rounds} rounds of';
@@ -33,18 +33,19 @@ class WorkoutSetDisplayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMultiMoveSet = workoutSet.isMultiMoveSet;
+
     final showRoundOrTimeInfo = workoutSet.rounds > 1 ||
         workoutSet.isRestSet ||
         workoutSectionType.isTimed;
 
-    final bool definitionRequired =
-        workoutSet.isRestSet || workoutSet.workoutMoves.length > 1;
+    final bool definitionRequired = workoutSet.isRestSet ||
+        (isMultiMoveSet && workoutSet.workoutMoves.length > 1);
 
     return showRoundOrTimeInfo || definitionRequired
         ? Padding(
-            padding: const EdgeInsets.only(bottom: 6.0),
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (showRoundOrTimeInfo)
                   Padding(

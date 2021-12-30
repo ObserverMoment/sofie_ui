@@ -46,9 +46,18 @@ class StreakAndStatsSummary extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 6),
-                LifetimeLogStatsSummaryDisplay(
-                  sessionsLogged: sessionsLogged,
-                  minutesWorked: minutesWorked,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SummaryStatDisplay(
+                      label: 'sessions',
+                      number: sessionsLogged,
+                    ),
+                    SummaryStatDisplay(
+                      label: 'minutes',
+                      number: minutesWorked,
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 12),
                 Row(
@@ -101,7 +110,7 @@ class RecentLogDots extends StatelessWidget {
               shape: BoxShape.circle,
               color:
                   hasLogOnDay ? null : context.theme.primary.withOpacity(0.1),
-              gradient: hasLogOnDay ? Styles.secondaryAccentGradient : null,
+              gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
             ),
           );
         }));
@@ -112,12 +121,15 @@ class RecentLogDots extends StatelessWidget {
     final dotSize = (MediaQuery.of(context).size.width - 24) / (numDays / 1.9);
 
     final now = DateTime.now();
+    final startDay = DateTime(now.year, now.month, now.day - numDays);
 
     final logsByDay = loggedWorkouts
-        .where((l) => l.completedOn
-            .isAfter(DateTime(now.year, now.month, now.day - numDays)))
+        .where((l) => l.completedOn.isAfter(startDay))
         .groupListsBy((l) => DateTime(
             l.completedOn.year, l.completedOn.month, l.completedOn.day));
+
+    final totalSessions =
+        loggedWorkouts.where((l) => l.completedOn.isAfter(startDay)).length;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -131,9 +143,8 @@ class RecentLogDots extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             MyText(
-              '${logsByDay.keys.length} days in the last $numDays',
+              '$totalSessions sessions in the last $numDays days',
               size: FONTSIZE.two,
-              color: Styles.secondaryAccent,
             ),
           ],
         )

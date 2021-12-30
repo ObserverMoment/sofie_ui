@@ -1,0 +1,14 @@
+query timelinePostsData($postDataRequests: [TimelinePostDataRequestInput!]!) {
+  timelinePostsData(postDataRequests: $postDataRequests) {
+    activityId
+    poster {
+      ...TimelinePostObjectDataUser
+    }
+    creator {
+      ...TimelinePostObjectDataUser
+    }
+    object {
+      ...TimelinePostObjectDataObject
+    }
+  }
+}

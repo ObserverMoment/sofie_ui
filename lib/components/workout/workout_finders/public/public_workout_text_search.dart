@@ -4,6 +4,7 @@ import 'package:sofie_ui/blocs/text_search_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -14,7 +15,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:substring_highlight/substring_highlight.dart';
 
 class PublicWorkoutTextSearch extends StatefulWidget {
-  final void Function(Workout workout)? selectWorkout;
+  final void Function(WorkoutSummary workout)? selectWorkout;
 
   const PublicWorkoutTextSearch({
     Key? key,
@@ -30,7 +31,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
   String _searchString = '';
 
   /// Handles retrieving full workout objects from the API when the user presses submit (search) on the keyboard.
-  late TextSearchBloc<Workout> _workoutsTextSearchBloc;
+  late TextSearchBloc<WorkoutSummary> _workoutsTextSearchBloc;
 
   /// Handles retrieving just workout names (similar to a suggestions list) as the user is typing their search query.
   late TextSearchBloc<TextSearchResult> _workoutNamesTextSearchBloc;
@@ -39,7 +40,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
   void initState() {
     super.initState();
     _workoutsTextSearchBloc =
-        TextSearchBloc<Workout>(context, TextSearchType.workout);
+        TextSearchBloc<WorkoutSummary>(context, TextSearchType.workout);
     _workoutNamesTextSearchBloc =
         TextSearchBloc<TextSearchResult>(context, TextSearchType.workoutName);
   }
@@ -98,8 +99,8 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                 _workoutNamesTextSearchBloc.state
               ]),
               builder: (context, stateSnapshot) {
-                return StreamBuilder<List<Workout>>(
-                    initialData: const <Workout>[],
+                return StreamBuilder<List<WorkoutSummary>>(
+                    initialData: const <WorkoutSummary>[],
                     stream: _workoutsTextSearchBloc.results,
                     builder: (context, workoutsSnapshot) {
                       return StreamBuilder<List<TextSearchResult>>(
@@ -122,7 +123,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                               // Or show placeholder message.
                               return const Center(
                                   child: MyText(
-                                'Enter at least 3 characters.',
+                                'Enter at least 3 characters',
                                 subtext: true,
                               ));
                             } else {
@@ -147,10 +148,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                               } else {
                                 // Or show empty results message.
                                 return const Center(
-                                    child: MyText(
-                                  'No results....',
-                                  subtext: true,
-                                ));
+                                    child: NoResultsToDisplay());
                               }
                             }
                           });
@@ -158,7 +156,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
               })
           : const Center(
               child: MyText(
-              'Enter at least 3 characters.',
+              'Enter at least 3 characters',
               subtext: true,
             )),
     );
@@ -209,7 +207,7 @@ class WorkoutFinderTextResultsNames extends StatelessWidget {
                           textStyleHighlight: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Styles.infoBlue),
+                              color: Styles.primaryAccent),
                           text: results[i].name,
                           term: searchString),
                     ],

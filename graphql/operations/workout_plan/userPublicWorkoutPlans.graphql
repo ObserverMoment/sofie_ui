@@ -1,0 +1,5 @@
+query userPublicWorkoutPlans($userId: ID!) {
+  userPublicWorkoutPlans(userId: $userId) {
+    ...WorkoutPlanSummary
+  }
+}

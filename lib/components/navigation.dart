@@ -1,9 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 // Simple animated tabs which return a new tab index when clicked.
@@ -30,13 +28,11 @@ class MyTabBarNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color cardColor = context.theme.cardBackground;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6),
       alignment: alignment,
-      decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: context.theme.cardBackground)),
-      ),
-      height: 44,
+      height: 48,
       child: ListView(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
@@ -44,20 +40,18 @@ class MyTabBarNav extends StatelessWidget {
             .mapIndexed((index, title) => Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    CupertinoButton(
-                      padding: const EdgeInsets.only(left: 4, right: 10),
-                      pressedOpacity: 0.9,
-                      alignment: Alignment.centerLeft,
-                      onPressed: () => handleTabChange(index),
-                      child: AnimatedContainer(
-                        duration: kStandardAnimationDuration,
-                        height: 46,
+                    GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => handleTabChange(index),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        height: 40,
                         decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: index == activeTabIndex
-                                        ? Styles.primaryAccent
-                                        : Colors.transparent))),
+                          borderRadius: BorderRadius.circular(60),
+                          color: index == activeTabIndex
+                              ? cardColor
+                              : material.Colors.transparent,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,6 +62,9 @@ class MyTabBarNav extends StatelessWidget {
                               child: MyText(
                                 title.toUpperCase(),
                                 size: FONTSIZE.four,
+                                weight: index == activeTabIndex
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
                               ),
                             ),
                           ],

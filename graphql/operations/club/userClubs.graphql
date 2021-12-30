@@ -1,0 +1,11 @@
+query userClubs {
+  userClubs {
+    ...ClubSummary
+    Owner {
+      ...UserAvatarData
+    }
+    Admins {
+      ...UserAvatarData
+    }
+  }
+}

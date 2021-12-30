@@ -62,8 +62,9 @@ class WorkoutCreatorInfo extends StatelessWidget {
         ),
         DifficultyLevelSelectorRow(
           difficultyLevel: workoutData.difficultyLevel,
+          unselectedLabel: 'Not Specified',
           updateDifficultyLevel: (level) =>
-              _updateWorkoutMeta({'difficultyLevel': level.apiValue}),
+              _updateWorkoutMeta({'difficultyLevel': level?.apiValue}),
         ),
         ContentAccessScopeSelector(
             contentAccessScope: workoutData.contentAccessScope,

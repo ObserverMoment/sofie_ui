@@ -1,0 +1,9 @@
+query clubInviteTokens($clubId: ID!) {
+  clubInviteTokens(clubId: $clubId) {
+    __typename
+    id
+    tokens {
+      ...ClubInviteToken
+    }
+  }
+}

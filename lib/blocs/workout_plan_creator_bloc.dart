@@ -7,6 +7,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 /// All updates to workout plan or descendants follow this pattern.
 /// 1: Update local data
@@ -35,14 +36,25 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
   /// When updating data in this bloc we write to the bloc data and to the network only.
   /// This flow should be reviewed at some point.
   bool saveAllChanges() {
-    final success = context.graphQLStore.writeDataToStore(
+    final writePlanSuccess = context.graphQLStore.writeDataToStore(
       data: workoutPlan.toJson(),
       broadcastQueryIds: [
-        GQLVarParamKeys.workoutPlanByIdQuery(workoutPlan.id),
-        GQLOpNames.userWorkoutPlansQuery
+        GQLVarParamKeys.workoutPlanById(workoutPlan.id),
       ],
     );
-    return success;
+
+    if (writePlanSuccess) {
+      final success = context.graphQLStore.writeDataToStore(
+        data: workoutPlan.summary.toJson(),
+        broadcastQueryIds: [
+          GQLOpNames.userWorkoutPlans,
+          GQLOpNames.userCollections,
+          GQLOpNames.userClubs
+        ],
+      );
+      return success;
+    }
+    return false;
   }
 
   /// Helpers for write methods.
@@ -64,7 +76,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(MutationResult result) {
+  bool _checkApiResult(OperationResult result) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;
@@ -103,10 +115,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         data: UpdateWorkoutPlanInput.fromJson(
             {...workoutPlan.toJson(), ...data}));
 
-    final result = await context.graphQLStore
-        .mutate<UpdateWorkoutPlan$Mutation, UpdateWorkoutPlanArguments>(
-            mutation: UpdateWorkoutPlanMutation(variables: variables),
-            writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        UpdateWorkoutPlan$Mutation, UpdateWorkoutPlanArguments>(
+      operation: UpdateWorkoutPlanMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 
@@ -136,10 +148,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteWorkoutPlanDaysByIdArguments(ids: idsToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutPlanDaysById$Mutation,
             DeleteWorkoutPlanDaysByIdArguments>(
-        mutation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
+        operation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 
@@ -156,22 +168,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
   ///// WorkoutPlanDay CRUD /////
   ///////////////////////////////
   Future<void> createWorkoutPlanDayWithWorkout(
-      int dayNumber, Workout workout) async {
-    /// Client / Optimistic
+      int dayNumber, WorkoutSummary workout) async {
     _backup();
-    final tempWorkoutPlanDay = WorkoutPlanDay()
-      ..id = const Uuid().v1()
-      ..dayNumber = dayNumber
-      ..workoutPlanDayWorkouts = [
-        WorkoutPlanDayWorkout()
-          ..id = const Uuid().v1()
-          ..sortPosition = 0
-          ..workout = workout
-      ];
 
-    workoutPlan.workoutPlanDays.add(tempWorkoutPlanDay);
-    notifyListeners();
-
+    /// No client / Optimistic when creating
     /// Api.
     final variables = CreateWorkoutPlanDayWithWorkoutArguments(
         data: CreateWorkoutPlanDayWithWorkoutInput(
@@ -179,21 +179,17 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
             workout: ConnectRelationInput(id: workout.id),
             workoutPlan: ConnectRelationInput(id: workoutPlan.id)));
 
-    final result = await context.graphQLStore.mutate<
-            CreateWorkoutPlanDayWithWorkout$Mutation,
-            CreateWorkoutPlanDayWithWorkoutArguments>(
-        mutation: CreateWorkoutPlanDayWithWorkoutMutation(variables: variables),
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        CreateWorkoutPlanDayWithWorkout$Mutation,
+        CreateWorkoutPlanDayWithWorkoutArguments>(
+      operation: CreateWorkoutPlanDayWithWorkoutMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 
     if (success) {
-      workoutPlan.workoutPlanDays = workoutPlan.workoutPlanDays
-          .map((d) => d.id == tempWorkoutPlanDay.id
-              ? result.data!.createWorkoutPlanDayWithWorkout
-              : d)
-          .toList();
-
+      workoutPlan.workoutPlanDays
+          .add(result.data!.createWorkoutPlanDayWithWorkout);
       notifyListeners();
     }
   }
@@ -213,13 +209,13 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutPlanDayArguments(
         data: UpdateWorkoutPlanDayInput(id: dayToUpdate.id));
 
-    final result = await context.graphQLStore
-        .mutate<UpdateWorkoutPlanDay$Mutation, UpdateWorkoutPlanDayArguments>(
-            mutation: UpdateWorkoutPlanDayMutation(variables: variables),
-            customVariablesMap: {
-              'data': {'id': dayToUpdate.id, 'note': note}
-            },
-            writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        UpdateWorkoutPlanDay$Mutation, UpdateWorkoutPlanDayArguments>(
+      operation: UpdateWorkoutPlanDayMutation(variables: variables),
+      customVariablesMap: {
+        'data': {'id': dayToUpdate.id, 'note': note}
+      },
+    );
 
     final success = _checkApiResult(result);
 
@@ -264,11 +260,11 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         data: MoveWorkoutPlanDayToAnotherDayInput(
             id: dayToUpdate.id, moveToDay: toDayNumber));
 
-    final result = await context.graphQLStore.mutate<
-            MoveWorkoutPlanDayToAnotherDay$Mutation,
-            MoveWorkoutPlanDayToAnotherDayArguments>(
-        mutation: MoveWorkoutPlanDayToAnotherDayMutation(variables: variables),
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        MoveWorkoutPlanDayToAnotherDay$Mutation,
+        MoveWorkoutPlanDayToAnotherDayArguments>(
+      operation: MoveWorkoutPlanDayToAnotherDayMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 
@@ -319,11 +315,11 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         data: CopyWorkoutPlanDayToAnotherDayInput(
             id: originalIdToCopy, copyToDay: toDayNumber));
 
-    final result = await context.graphQLStore.mutate<
-            CopyWorkoutPlanDayToAnotherDay$Mutation,
-            CopyWorkoutPlanDayToAnotherDayArguments>(
-        mutation: CopyWorkoutPlanDayToAnotherDayMutation(variables: variables),
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        CopyWorkoutPlanDayToAnotherDay$Mutation,
+        CopyWorkoutPlanDayToAnotherDayArguments>(
+      operation: CopyWorkoutPlanDayToAnotherDayMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 
@@ -355,10 +351,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteWorkoutPlanDaysByIdArguments(ids: idsToDelete);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutPlanDaysById$Mutation,
             DeleteWorkoutPlanDaysByIdArguments>(
-        mutation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
+        operation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);
 
@@ -376,8 +372,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
   //////////////////////////////////////
   /// In an already created WorkoutPlanDay - specified by its day number in the plan.
   Future<void> createWorkoutPlanDayWorkout(
-      int dayNumber, Workout workout) async {
-    /// Client / Optimistic
+      int dayNumber, WorkoutSummary workout) async {
     _backup();
     final dayToUpdate = WorkoutPlanDay.fromJson(workoutPlan.workoutPlanDays
         .firstWhere((d) => d.dayNumber == dayNumber)
@@ -385,18 +380,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final sortPosition = dayToUpdate.workoutPlanDayWorkouts.length;
 
-    dayToUpdate.workoutPlanDayWorkouts.add(WorkoutPlanDayWorkout()
-      ..id = const Uuid().v1()
-      ..sortPosition = sortPosition
-      ..workout = workout);
-
-    workoutPlan.workoutPlanDays = workoutPlan.workoutPlanDays
-        .map((original) =>
-            original.id == dayToUpdate.id ? dayToUpdate : original)
-        .toList();
-
-    notifyListeners();
-
+    /// No client / optimistic when creating.
     /// Api
     final variables = CreateWorkoutPlanDayWorkoutArguments(
         data: CreateWorkoutPlanDayWorkoutInput(
@@ -404,11 +388,11 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
             workout: ConnectRelationInput(id: workout.id),
             workoutPlanDay: ConnectRelationInput(id: dayToUpdate.id)));
 
-    final result = await context.graphQLStore.mutate<
-            CreateWorkoutPlanDayWorkout$Mutation,
-            CreateWorkoutPlanDayWorkoutArguments>(
-        mutation: CreateWorkoutPlanDayWorkoutMutation(variables: variables),
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        CreateWorkoutPlanDayWorkout$Mutation,
+        CreateWorkoutPlanDayWorkoutArguments>(
+      operation: CreateWorkoutPlanDayWorkoutMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 
@@ -449,14 +433,14 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutPlanDayWorkoutArguments(
         data: UpdateWorkoutPlanDayWorkoutInput(id: idToUpdate));
 
-    final result = await context.graphQLStore.mutate<
-            UpdateWorkoutPlanDayWorkout$Mutation,
-            UpdateWorkoutPlanDayWorkoutArguments>(
-        mutation: UpdateWorkoutPlanDayWorkoutMutation(variables: variables),
-        customVariablesMap: {
-          'data': {'id': idToUpdate, 'note': note}
-        },
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        UpdateWorkoutPlanDayWorkout$Mutation,
+        UpdateWorkoutPlanDayWorkoutArguments>(
+      operation: UpdateWorkoutPlanDayWorkoutMutation(variables: variables),
+      customVariablesMap: {
+        'data': {'id': idToUpdate, 'note': note}
+      },
+    );
 
     final success = _checkApiResult(result);
 
@@ -494,11 +478,11 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
                 id: sw.id, sortPosition: sw.sortPosition))
             .toList());
 
-    final result = await context.graphQLStore.mutate<
-            ReorderWorkoutPlanDayWorkouts$Mutation,
-            ReorderWorkoutPlanDayWorkoutsArguments>(
-        mutation: ReorderWorkoutPlanDayWorkoutsMutation(variables: variables),
-        writeToStore: false);
+    final result = await context.graphQLStore.networkOnlyOperation<
+        ReorderWorkoutPlanDayWorkouts$Mutation,
+        ReorderWorkoutPlanDayWorkoutsArguments>(
+      operation: ReorderWorkoutPlanDayWorkoutsMutation(variables: variables),
+    );
 
     final success = _checkApiResult(result);
 
@@ -539,10 +523,10 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables =
         DeleteWorkoutPlanDayWorkoutByIdArguments(id: workoutPlanDayWorkout.id);
 
-    final result = await context.graphQLStore.networkOnlyDelete<
+    final result = await context.graphQLStore.networkOnlyOperation<
             DeleteWorkoutPlanDayWorkoutById$Mutation,
             DeleteWorkoutPlanDayWorkoutByIdArguments>(
-        mutation:
+        operation:
             DeleteWorkoutPlanDayWorkoutByIdMutation(variables: variables));
 
     final success = _checkApiResult(result);

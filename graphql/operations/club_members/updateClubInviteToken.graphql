@@ -1,0 +1,9 @@
+mutation updateClubInviteToken($data: UpdateClubInviteTokenInput!) {
+  updateClubInviteToken(data: $data) {
+    __typename
+    id
+    tokens {
+      ...ClubInviteToken
+    }
+  }
+}

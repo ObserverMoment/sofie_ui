@@ -15,7 +15,7 @@ import 'package:sofie_ui/services/utils.dart';
 
 /// NOTE: Logic in this widget is simlar to that in [AuthedUserTimeline] in [FeedsAndFollows]. Except there is no sharing of posts to club feeds - they are club specific. Plus we may add some additional functionality - such as comments / threads to timeline posts here.
 class ClubDetailsTimeline extends StatefulWidget {
-  final Club club;
+  final ClubSummary club;
   final bool isOwnerOrAdmin;
   final bool stopPollingFeed;
   const ClubDetailsTimeline({
@@ -64,7 +64,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   /// TODO: Upgrade this polling functionality to use a websocket.
   void _initPollingForNewPosts() {
     _pollingTimer =
-        Timer.periodic(const Duration(seconds: 10), (Timer t) async {
+        Timer.periodic(const Duration(seconds: 30), (Timer t) async {
       if (widget.stopPollingFeed) {
         _pollingTimer.cancel();
       } else {
@@ -98,7 +98,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                     limit: _postsPerPage,
                     offset: offset)));
 
-        await checkOperationResult(context, result,
+        checkOperationResult(context, result,
             onFail: () => throw Exception(result.errors));
 
         return result.data!.clubMembersFeedPosts;
@@ -159,7 +159,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                   variables: DeleteClubTimelinePostArguments(
                       activityId: post.activityId)));
 
-          await checkOperationResult(context, result,
+          checkOperationResult(context, result,
               onSuccess: () => context.showToast(message: 'Post deleted'),
               onFail: () => context.showToast(
                   message: 'Sorry, there was a problem deleting the post',
@@ -188,20 +188,11 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
           )
         : _pagingController.itemList == null ||
                 _pagingController.itemList!.isEmpty
-            ? ListView(
-                shrinkWrap: true,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(32.0),
-                    child: Center(
-                      child: MyText(
-                        'No posts yet..',
-                        size: FONTSIZE.four,
-                        subtext: true,
-                      ),
-                    ),
-                  )
-                ],
+            ? const Center(
+                child: MyText(
+                  'No Activity',
+                  subtext: true,
+                ),
               )
             : PagedListView<int, TimelinePostFullData>(
                 shrinkWrap: true,

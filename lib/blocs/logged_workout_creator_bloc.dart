@@ -27,7 +27,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   final LoggedWorkout? prevLoggedWorkout;
   final Workout? workout;
+
+  /// When present these will be passed on to log creation function.
+  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
+  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
   final ScheduledWorkout? scheduledWorkout;
+  final String? workoutPlanDayWorkoutId;
+  final String? workoutPlanEnrolmentId;
 
   /// Before every update we make a copy of the last workout here.
   /// If there is an issue calling the api then this is reverted to.
@@ -37,7 +43,8 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   late bool _isEditing;
 
   final List<String> typesInputRequired = [
-    kFreeSessionName,
+    kCustomSessionName,
+    kLiftingName,
     kForTimeName,
     kAMRAPName
   ];
@@ -48,11 +55,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       {required this.context,
       this.prevLoggedWorkout,
       this.workout,
-      this.scheduledWorkout})
+      this.scheduledWorkout,
+      this.workoutPlanDayWorkoutId,
+      this.workoutPlanEnrolmentId})
       : assert(
             (prevLoggedWorkout == null && workout != null) ||
                 (prevLoggedWorkout != null && workout == null),
-            'Provide a priod log to edit, or a workout to create a log from, not both, or neither') {
+            'Provide a prior log to edit, or a workout to create a log from, not both, or neither') {
     if (prevLoggedWorkout != null) {
       _isEditing = true;
       loggedWorkout = prevLoggedWorkout!.copyAndSortAllChildren;
@@ -98,7 +107,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(MutationResult result) {
+  bool _checkApiResult(OperationResult result) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;
@@ -108,21 +117,22 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   }
 
   /// Only valid when creating and when [workout] is not null.
-  /// From workout sections plus their inputs - inputted by the user.
-  /// Do not sun this before the user has added reps and timeTakenSeconds to AMRAP, ForTime and FreeSession sections.
+  /// Workout sections plus their inputs - inputted by the user.
+  /// Do not run this before the user has added reps and timeTakenSeconds to AMRAP, ForTime and FreeSession sections.
   void generateLoggedWorkoutSections(
       List<WorkoutSectionWithInput> sectionsWithInputs) {
     loggedWorkout.loggedWorkoutSections = workout!.workoutSections
         .sortedBy<num>((ws) => ws.sortPosition)
         .map((ws) {
-      if (ws.workoutSectionType.name == kAMRAPName) {
+      if (ws.workoutSectionType.isAMRAP) {
         // Get the value from the inputs
         final s =
             sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
         return loggedWorkoutSectionFromWorkoutSection(
             workoutSection: ws, repScore: s.input);
-      } else if ([kFreeSessionName, kForTimeName]
-          .contains(ws.workoutSectionType.name)) {
+      } else if (ws.workoutSectionType.isCustom ||
+          ws.workoutSectionType.isForTime ||
+          ws.workoutSectionType.isLifting) {
         // Get the value from the inputs
         final s =
             sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
@@ -145,28 +155,43 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   bool writeAllChangesToStore() {
     final success = context.graphQLStore.writeDataToStore(
         data: loggedWorkout.toJson(),
-        broadcastQueryIds: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
+        broadcastQueryIds: [GQLNullVarsKeys.userLoggedWorkouts]);
     return success;
   }
 
   /// Used when creating only - when editing we save incrementally.
-  Future<MutationResult> createAndSave(BuildContext context) async {
-    final input = createLoggedWorkoutInputFromLoggedWorkout(
-        loggedWorkout, scheduledWorkout);
+  /// When creating a log we need to check if the log should be associated with a scheduled workout and / or with a workout plan enrolment.
+  Future<OperationResult> createAndSave(BuildContext context) async {
+    final input = createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
+        scheduledWorkout: scheduledWorkout,
+        workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+        workoutPlanEnrolmentId: workoutPlanEnrolmentId);
 
     final variables = CreateLoggedWorkoutArguments(data: input);
 
     final result = await context.graphQLStore.create(
         mutation: CreateLoggedWorkoutMutation(variables: variables),
-        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkoutsQuery]);
+        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
 
-    await checkOperationResult(context, result);
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry, something went wrong',
+            toastType: ToastType.destructive),
+        onSuccess: () async {
+          /// We need to update the userEnrolmentsQuery and the enrolmentByIdQuery.
+          /// We do this via the network for simplicity.
+          if (workoutPlanDayWorkoutId != null &&
+              workoutPlanEnrolmentId != null) {
+            await refetchWorkoutPlanEnrolmentQueries(
+                context, workoutPlanEnrolmentId!);
+          }
 
-    /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
-    if (scheduledWorkout != null && result.data != null) {
-      updateScheduleWithLoggedWorkout(
-          context, scheduledWorkout!, result.data!.createLoggedWorkout);
-    }
+          /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
+          if (scheduledWorkout != null) {
+            updateScheduleWithLoggedWorkout(
+                context, scheduledWorkout!, result.data!.createLoggedWorkout);
+          }
+        });
 
     return result;
   }
@@ -467,14 +492,27 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     context.graphQLStore.writeDataToStore(
         data: updated.toJson(),
-        broadcastQueryIds: [GQLOpNames.userScheduledWorkoutsQuery]);
+        broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
   }
 
-  /// To add a gym profile to the logged workout input you can either to add it to
+  /// Refetches from the network the enrolments query (summaries) and the details query.
+  /// This would be overly complex to manage purely on the FE.
+  static Future<void> refetchWorkoutPlanEnrolmentQueries(
+      BuildContext context, String workoutPlanEnrolmentId) async {
+    await context.graphQLStore.refetchQueriesByIds([
+      GQLOpNames.workoutPlanEnrolments,
+      GQLVarParamKeys.workoutPlanEnrolmentById(workoutPlanEnrolmentId)
+    ]);
+  }
+
+  /// To add a gym profile to the logged workout input you can either add it to
   /// [scheduledWorkout.gymProfile] or to [loggedWorkout.gymProfile].
   /// [loggedWorkout.gymProfile] will take precedence over [scheduledWorkout.gymProfile].
   static CreateLoggedWorkoutInput createLoggedWorkoutInputFromLoggedWorkout(
-      LoggedWorkout loggedWorkout, ScheduledWorkout? scheduledWorkout) {
+      LoggedWorkout loggedWorkout,
+      {ScheduledWorkout? scheduledWorkout,
+      String? workoutPlanDayWorkoutId,
+      String? workoutPlanEnrolmentId}) {
     final gymProfile = loggedWorkout.gymProfile ?? scheduledWorkout?.gymProfile;
 
     return CreateLoggedWorkoutInput(
@@ -483,12 +521,21 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       scheduledWorkout: scheduledWorkout != null
           ? ConnectRelationInput(id: scheduledWorkout.id)
           : null,
+      workoutPlanDayWorkout: workoutPlanDayWorkoutId != null
+          ? ConnectRelationInput(id: workoutPlanDayWorkoutId)
+          : null,
+      workoutPlanEnrolment: workoutPlanEnrolmentId != null
+          ? ConnectRelationInput(id: workoutPlanEnrolmentId)
+          : null,
       gymProfile:
           gymProfile != null ? ConnectRelationInput(id: gymProfile.id) : null,
       workoutGoals: loggedWorkout.workoutGoals
           .map((goal) => ConnectRelationInput(id: goal.id))
           .toList(),
       completedOn: loggedWorkout.completedOn,
+      workout: loggedWorkout.workoutId != null
+          ? ConnectRelationInput(id: loggedWorkout.workoutId!)
+          : null,
       loggedWorkoutSections: loggedWorkout.loggedWorkoutSections
           .sortedBy<num>((section) => section.sortPosition)
           .mapIndexed((index, section) =>

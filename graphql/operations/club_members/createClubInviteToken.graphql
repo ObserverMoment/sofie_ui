@@ -1,0 +1,9 @@
+mutation createClubInviteToken($data: CreateClubInviteTokenInput!) {
+  createClubInviteToken(data: $data) {
+    __typename
+    id
+    tokens {
+      ...ClubInviteToken
+    }
+  }
+}

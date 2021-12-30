@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
@@ -67,15 +68,20 @@ class _CountdownAnimationState extends State<CountdownAnimation> {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
-                const MyHeaderText('GET READY!',
-                    size: FONTSIZE.five, textAlign: TextAlign.center),
+                const MyHeaderText(
+                  'GET READY!',
+                  size: FONTSIZE.six,
+                  textAlign: TextAlign.center,
+                  color: Styles.white,
+                ),
                 SizeFadeIn(
                     key: Key(_currentSeconds.toString()),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: MyHeaderText(
                         (_currentSeconds + 1).toString(),
-                        size: FONTSIZE.eleven,
+                        size: FONTSIZE.twelve,
+                        color: Styles.white,
                       ),
                     ))
               ],

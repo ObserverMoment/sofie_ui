@@ -1,0 +1,11 @@
+mutation createClub($data: CreateClubInput!) {
+  createClub(data: $data) {
+    ...ClubSummary
+    Owner {
+      ...UserAvatarData
+    }
+    Admins {
+      ...UserAvatarData
+    }
+  }
+}

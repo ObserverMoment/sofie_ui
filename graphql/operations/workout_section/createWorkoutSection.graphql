@@ -1,0 +1,35 @@
+mutation createWorkoutSection($data: CreateWorkoutSectionInput!) {
+  createWorkoutSection(data: $data) {
+    ...WorkoutSection
+    WorkoutSectionType {
+      ...WorkoutSectionType
+    }
+    WorkoutSets {
+      ...WorkoutSet
+      WorkoutMoves {
+        ...WorkoutMove
+        Equipment {
+          ...Equipment
+        }
+        Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+          BodyAreaMoveScores {
+            score
+            BodyArea {
+              ...BodyArea
+            }
+          }
+          RequiredEquipments {
+            ...Equipment
+          }
+          SelectableEquipments {
+            ...Equipment
+          }
+        }
+      }
+    }
+  }
+}

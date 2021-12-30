@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/context_menu.dart';
@@ -25,9 +26,9 @@ class FilterableCollectionWorkouts extends StatefulWidget {
 
 class _FilterableCollectionWorkoutsState
     extends State<FilterableCollectionWorkouts> {
-  WorkoutTag? _workoutTagFilter;
+  String? _workoutTagFilter;
 
-  Future<void> _moveToAnotherCollection(Workout workout) async {
+  Future<void> _moveToAnotherCollection(WorkoutSummary workout) async {
     /// Select collection to move to
     await context.push(
         child: CollectionSelector(selectCollection: (collection) async {
@@ -41,7 +42,7 @@ class _FilterableCollectionWorkoutsState
     }));
   }
 
-  Future<void> _copyToAnotherCollection(Workout workout) async {
+  Future<void> _copyToAnotherCollection(WorkoutSummary workout) async {
     /// Select collection to move to
     await context.push(
         child: CollectionSelector(selectCollection: (collection) async {
@@ -50,8 +51,8 @@ class _FilterableCollectionWorkoutsState
     }));
   }
 
-  void _confirmRemoveFromCollection(Workout workout) {
-    CollectionManager.confirmRemoveObjectFromCollection<Workout>(
+  void _confirmRemoveFromCollection(WorkoutSummary workout) {
+    CollectionManager.confirmRemoveObjectFromCollection<WorkoutSummary>(
         context, widget.collection, workout);
   }
 
@@ -59,14 +60,13 @@ class _FilterableCollectionWorkoutsState
   Widget build(BuildContext context) {
     final allWorkouts = widget.collection.workouts.where((w) => !w.archived);
     final allTags = allWorkouts
-        .fold<List<WorkoutTag>>(
-            [], (acum, next) => [...acum, ...next.workoutTags])
+        .fold<List<String>>([], (acum, next) => [...acum, ...next.tags])
         .toSet()
         .toList();
 
     final filteredWorkouts = _workoutTagFilter == null
         ? allWorkouts
-        : allWorkouts.where((w) => w.workoutTags.contains(_workoutTagFilter));
+        : allWorkouts.where((w) => w.tags.contains(_workoutTagFilter));
 
     final sortedWorkouts = filteredWorkouts
         .sortedBy<DateTime>((w) => w.createdAt)
@@ -77,7 +77,7 @@ class _FilterableCollectionWorkoutsState
       children: [
         if (allTags.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(left: 4.0, top: 8, bottom: 8),
+            padding: const EdgeInsets.only(left: 4.0, top: 2, bottom: 8),
             child: SizedBox(
                 height: 32,
                 child: ListView.builder(
@@ -86,7 +86,7 @@ class _FilterableCollectionWorkoutsState
                     itemBuilder: (c, i) => Padding(
                           padding: const EdgeInsets.only(right: 4.0),
                           child: SelectableTag(
-                            text: allTags[i].tag,
+                            text: allTags[i],
                             fontSize: FONTSIZE.two,
                             selectedColor: Styles.primaryAccent,
                             isSelected: allTags[i] == _workoutTagFilter,
@@ -110,10 +110,10 @@ class _FilterableCollectionWorkoutsState
 }
 
 class _CollectionWorkoutsList extends StatelessWidget {
-  final List<Workout> workouts;
-  final void Function(Workout workout) moveToCollection;
-  final void Function(Workout workout) copyToCollection;
-  final void Function(Workout workout) removeFromCollection;
+  final List<WorkoutSummary> workouts;
+  final void Function(WorkoutSummary workout) moveToCollection;
+  final void Function(WorkoutSummary workout) copyToCollection;
+  final void Function(WorkoutSummary workout) removeFromCollection;
   const _CollectionWorkoutsList(
       {required this.workouts,
       required this.moveToCollection,
@@ -123,9 +123,7 @@ class _CollectionWorkoutsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return workouts.isEmpty
-        ? const Padding(
-            padding: EdgeInsets.all(24),
-            child: Center(child: MyText('No workouts')))
+        ? const Center(child: NoResultsToDisplay())
         : ListView.builder(
             shrinkWrap: true,
             itemCount: workouts.length,

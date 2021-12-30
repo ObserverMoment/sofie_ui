@@ -15,10 +15,8 @@ class CollectionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Remove any archived content from the display.
-    final activeWorkouts =
-        collection.workouts.where((w) => !w.archived).toList();
-    final activeWorkoutPlans =
-        collection.workoutPlans.where((wp) => !wp.archived).toList();
+    final workoutCount = collection.workouts.length;
+    final planCount = collection.workoutPlans.length;
 
     final planWithImage = collection.workoutPlans
         .firstWhereOrNull((wp) => Utils.textNotNull(wp.coverImageUri));
@@ -84,12 +82,12 @@ class CollectionCard extends StatelessWidget {
                 runSpacing: 6,
                 children: [
                   MyText(
-                    '${activeWorkouts.length} ${activeWorkouts.length == 1 ? "workout" : "workouts"}',
-                    color: Styles.secondaryAccent,
+                    '$workoutCount ${workoutCount == 1 ? "workout" : "workouts"}',
+                    color: Styles.primaryAccent,
                   ),
                   MyText(
-                    '${activeWorkoutPlans.length} ${activeWorkoutPlans.length == 1 ? "plan" : "plans"}',
-                    color: Styles.secondaryAccent,
+                    '$planCount ${planCount == 1 ? "plan" : "plans"}',
+                    color: Styles.primaryAccent,
                   )
                 ],
               )

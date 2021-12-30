@@ -3,60 +3,52 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_champions.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_clubs.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_creators.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_live.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class DiscoverPage extends StatelessWidget {
   const DiscoverPage({Key? key}) : super(key: key);
 
   Widget _verticalPadding({required Widget child}) =>
-      Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: child);
+      Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: child);
 
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-      navigationBar: const MyNavBar(
-        withoutLeading: true,
-        middle: LeadingNavBarTitle(
-          'Discover',
-        ),
-      ),
-      child: ListView(
-        children: [
-          Container(
-              padding: const EdgeInsets.only(bottom: 8, left: 4, top: 4),
-              height: 46,
+      child: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DiscoverPageButton(
+                    text: 'Workouts',
+                    onPressed: () =>
+                        context.navigateTo(PublicWorkoutFinderRoute())),
+                DiscoverPageButton(
+                    text: 'Plans',
+                    onPressed: () =>
+                        context.navigateTo(PublicWorkoutPlanFinderRoute())),
+                DiscoverPageButton(
+                    text: 'Throwdowns',
+                    onPressed: () =>
+                        context.showAlertDialog(title: 'Coming Soon!')),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Expanded(
               child: ListView(
-                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
                 children: [
-                  DiscoverPageButton(
-                      text: 'Workouts',
-                      onPressed: () =>
-                          context.navigateTo(PublicWorkoutFinderRoute())),
-                  DiscoverPageButton(
-                      text: 'Plans',
-                      onPressed: () =>
-                          context.navigateTo(PublicWorkoutPlanFinderRoute())),
-                  DiscoverPageButton(
-                      text: 'Challenges',
-                      onPressed: () =>
-                          context.showAlertDialog(title: 'Coming Soon!')),
-                  DiscoverPageButton(
-                      text: 'Events',
-                      onPressed: () =>
-                          context.showAlertDialog(title: 'Coming Soon!')),
+                  _verticalPadding(child: const DiscoverCreators()),
+                  _verticalPadding(child: const DiscoverClubs()),
                 ],
-              )),
-          _verticalPadding(
-            child: const DiscoverCreators(),
-          ),
-          _verticalPadding(child: const DiscoverClubs()),
-          _verticalPadding(child: const DiscoverLive()),
-          _verticalPadding(child: const DiscoverChampions()),
-        ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -72,13 +64,13 @@ class DiscoverPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 8),
-      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 3),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(60),
-          border: Border.all(color: context.theme.primary)),
+        border: Border.all(color: context.theme.primary, width: 2),
+        borderRadius: BorderRadius.circular(60),
+      ),
       child: CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         onPressed: onPressed,
         child: MyHeaderText(
           text,

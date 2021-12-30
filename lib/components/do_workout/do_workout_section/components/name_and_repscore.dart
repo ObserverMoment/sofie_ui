@@ -16,14 +16,14 @@ class NameAndRepScore extends StatelessWidget {
       children: [
         MyText(
           workoutSection.workoutSectionType.name.toUpperCase(),
-          size: workoutSection.isScored ? FONTSIZE.three : FONTSIZE.four,
+          size: workoutSection.isScored ? FONTSIZE.two : FONTSIZE.three,
         ),
         if (workoutSection.isScored)
           Padding(
             padding: const EdgeInsets.only(top: 2.0),
             child: RepScoreDisplay(
               sectionIndex: workoutSection.sortPosition,
-              fontSize: FONTSIZE.five,
+              fontSize: FONTSIZE.four,
             ),
           ),
       ],

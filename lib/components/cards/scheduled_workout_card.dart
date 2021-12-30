@@ -32,11 +32,11 @@ class ScheduledWorkoutCard extends StatelessWidget {
         ? CupertinoIcons.checkmark_alt_circle_fill // Done
         : scheduledWorkout.scheduledAt.isBefore(DateTime.now())
             ? CupertinoIcons.exclamationmark_circle_fill // Missed
-            : CupertinoIcons.clock_fill; // Upcoming
+            : CupertinoIcons.clock; // Upcoming
 
     return Icon(
       icon,
-      size: 15,
+      size: 16,
       color: color,
     );
   }
@@ -75,7 +75,8 @@ class ScheduledWorkoutCard extends StatelessWidget {
     }
   }
 
-  Widget _buildCardHeader(BuildContext context, bool showNote) {
+  Widget _buildCardHeader(
+      BuildContext context, String? planName, bool showNote) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -109,11 +110,19 @@ class ScheduledWorkoutCard extends StatelessWidget {
         ),
         if (showNote && Utils.textNotNull(scheduledWorkout.note))
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
             child: ReadMoreTextBlock(
               text: scheduledWorkout.note!,
               title: 'Note',
             ),
+          ),
+        if (Utils.textNotNull(planName))
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ContentBox(
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                backgroundColor: context.theme.background,
+                child: MyText('Part of $planName')),
           ),
       ],
     );
@@ -122,7 +131,8 @@ class ScheduledWorkoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hasLog = scheduledWorkout.loggedWorkoutId != null;
-    final isPartOfPlan = scheduledWorkout.workoutPlanEnrolmentId != null;
+    final enrolmentId = scheduledWorkout.workoutPlanEnrolmentId;
+    final planName = scheduledWorkout.workoutPlanName;
 
     return ContextMenu(
       key: Key('ScheduledWorkoutCard ${scheduledWorkout.id}'),
@@ -133,7 +143,7 @@ class ScheduledWorkoutCard extends StatelessWidget {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-              child: _buildCardHeader(context, false),
+              child: _buildCardHeader(context, planName, false),
             ),
             const HorizontalLine(
               verticalPadding: 0,
@@ -153,23 +163,36 @@ class ScheduledWorkoutCard extends StatelessWidget {
             text: 'Do it',
             onTap: () => context.navigateTo(DoWorkoutWrapperRoute(
                 id: scheduledWorkout.workout!.id,
-                scheduledWorkout: scheduledWorkout)),
+                scheduledWorkout: scheduledWorkout,
+                workoutPlanDayWorkoutId:
+                    scheduledWorkout.workoutPlanDayWorkoutId,
+                workoutPlanEnrolmentId:
+                    scheduledWorkout.workoutPlanEnrolmentId)),
             iconData: CupertinoIcons.arrow_right_square,
           ),
-        if (!hasLog)
+        if (!hasLog && scheduledWorkout.workout != null)
           ContextMenuAction(
             text: 'Log it',
             onTap: () => context.navigateTo(LoggedWorkoutCreatorRoute(
-                workout: scheduledWorkout.workout!,
-                scheduledWorkout: scheduledWorkout)),
+                workoutId: scheduledWorkout.workout!.id,
+                scheduledWorkout: scheduledWorkout,
+                workoutPlanDayWorkoutId:
+                    scheduledWorkout.workoutPlanDayWorkoutId,
+                workoutPlanEnrolmentId:
+                    scheduledWorkout.workoutPlanEnrolmentId)),
             iconData: CupertinoIcons.text_badge_checkmark,
           ),
         ContextMenuAction(
             text: 'View Workout',
             iconData: CupertinoIcons.eye,
-            onTap: () => context.navigateTo(
-                WorkoutDetailsRoute(id: scheduledWorkout.workout!.id))),
-        if (isPartOfPlan)
+            onTap: () => context.navigateTo(WorkoutDetailsRoute(
+                id: scheduledWorkout.workout!.id,
+                scheduledWorkout: scheduledWorkout,
+                workoutPlanDayWorkoutId:
+                    scheduledWorkout.workoutPlanDayWorkoutId,
+                workoutPlanEnrolmentId:
+                    scheduledWorkout.workoutPlanEnrolmentId))),
+        if (enrolmentId != null)
           ContextMenuAction(
             text: 'View Plan',
             onTap: () => context.navigateTo(WorkoutPlanEnrolmentDetailsRoute(
@@ -219,7 +242,7 @@ class ScheduledWorkoutCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(
                         top: 12.0, bottom: 8, left: 12, right: 12),
-                    child: _buildCardHeader(context, true),
+                    child: _buildCardHeader(context, planName, true),
                   ),
                   const HorizontalLine(
                     verticalPadding: 0,

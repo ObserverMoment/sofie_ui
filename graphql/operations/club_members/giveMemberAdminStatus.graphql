@@ -1,0 +1,15 @@
+mutation giveMemberAdminStatus($userId: ID!, $clubId: ID!) {
+  giveMemberAdminStatus(userId: $userId, clubId: $clubId) {
+    __typename
+    id
+    Owner {
+      ...ClubMemberSummary
+    }
+    Admins {
+      ...ClubMemberSummary
+    }
+    Members {
+      ...ClubMemberSummary
+    }
+  }
+}

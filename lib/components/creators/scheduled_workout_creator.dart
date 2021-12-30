@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -20,7 +19,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 /// Otherwise it will be set as the initial date when the widget is opened.
 class ScheduledWorkoutCreatorPage extends StatefulWidget {
   final ScheduledWorkout? scheduledWorkout;
-  final Workout? workout;
+  final WorkoutSummary? workout;
   final DateTime? scheduleOn;
   final String? workoutPlanEnrolmentId;
   const ScheduledWorkoutCreatorPage({
@@ -81,7 +80,7 @@ class _ScheduledWorkoutCreatorPageState
 
       final result = await context.graphQLStore.create(
           mutation: CreateScheduledWorkoutMutation(variables: createVariables),
-          addRefToQueries: [GQLOpNames.userScheduledWorkoutsQuery]);
+          addRefToQueries: [GQLOpNames.userScheduledWorkouts]);
 
       if (result.hasErrors || result.data == null) {
         context.showErrorAlert(
@@ -101,7 +100,7 @@ class _ScheduledWorkoutCreatorPageState
 
       final result = await context.graphQLStore.mutate(
           mutation: UpdateScheduledWorkoutMutation(variables: updateVariables),
-          broadcastQueryIds: [GQLOpNames.userScheduledWorkoutsQuery]);
+          broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
 
       if (result.hasErrors || result.data == null) {
         context.showErrorAlert(
@@ -136,7 +135,7 @@ class _ScheduledWorkoutCreatorPageState
           mutation: DeleteScheduledWorkoutByIdMutation(variables: variables),
           objectId: widget.scheduledWorkout!.id,
           typename: kScheduledWorkoutTypename,
-          removeRefFromQueries: [GQLOpNames.userScheduledWorkoutsQuery]);
+          removeRefFromQueries: [GQLOpNames.userScheduledWorkouts]);
 
       if (result.hasErrors) {
         context.showErrorAlert(

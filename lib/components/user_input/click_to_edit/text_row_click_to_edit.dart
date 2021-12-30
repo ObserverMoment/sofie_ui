@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -209,64 +210,64 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
 
   @override
   Widget build(BuildContext context) {
-    return MyPageScaffold(
+    return CupertinoPageScaffold(
+        backgroundColor: context.theme.cardBackground.withOpacity(0.88),
         navigationBar: MyNavBar(
-          customLeading: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.pop(context),
-                  child: const MyText('Cancel')),
-            ],
+          customLeading: Padding(
+            padding: const EdgeInsets.only(left: 4.0),
+            child: NavBarCancelButton(context.pop, text: 'Cancel'),
           ),
-          middle: NavBarTitle(widget.title),
+          middle: NavBarLargeTitle(widget.title),
           trailing: _formIsDirty && _inputIsValid()
               ? FadeIn(
-                  child: NavBarSaveButton(
-                  _handleSave,
+                  child: TertiaryButton(
+                  backgroundColor: Styles.primaryAccent,
+                  textColor: Styles.white,
+                  onPressed: _handleSave,
+                  text: 'Save',
                 ))
               : null,
         ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MyTextField(
-                    placeholder: widget.title,
-                    autofocus: true,
-                    maxLines: widget.maxInputLines,
-                    controller: _controller),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Row(
-                    children: [
-                      if (widget.maxChars != null)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 2, top: 6.0),
-                          child: MyText(
-                            '${_controller.text.length}/${widget.maxChars}',
-                            size: FONTSIZE.two,
-                            color: _controller.text.length > widget.maxChars!
-                                ? Styles.errorRed
-                                : CupertinoTheme.of(context).primaryColor,
-                          ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MyTextField(
+                  placeholder: widget.title,
+                  autofocus: true,
+                  maxLines: widget.maxInputLines,
+                  backgroundColor: material.Colors.transparent,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+                  disableSuffix: true,
+                  controller: _controller),
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Row(
+                  children: [
+                    if (widget.maxChars != null)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2, top: 6.0),
+                        child: MyText(
+                          '${_controller.text.length}/${widget.maxChars}',
+                          size: FONTSIZE.two,
+                          color: _controller.text.length > widget.maxChars!
+                              ? Styles.errorRed
+                              : CupertinoTheme.of(context).primaryColor,
                         ),
-                      if (widget.validationMessage != null)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 3, top: 5.0),
-                          child: MyText(
-                            '(${widget.validationMessage})',
-                            size: FONTSIZE.two,
-                          ),
-                        )
-                    ],
-                  ),
+                      ),
+                    if (widget.validationMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 5.0),
+                        child: MyText(
+                          '(${widget.validationMessage})',
+                          size: FONTSIZE.two,
+                        ),
+                      )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ));
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -49,11 +50,20 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     _authedUser = GetIt.I<AuthBloc>().authedUser!;
     _streamChatClient = _createStreamChatClient;
     _streamFeedClient = _createStreamFeedClient;
-    _connectUserToChat().then((_) => _initFeeds().then((_) {
-          /// Setup [uni_links]
-          /// https://pub.dev/packages/uni_links
-          _handleIncomingLinks();
-        }));
+
+    asyncInit();
+  }
+
+  Future<void> asyncInit() async {
+    await _connectUserToChat();
+    await _initFeeds();
+    await _handleIncomingLinks();
+    setState(() {});
+
+    /// Wait until after the [AutoRoute] component has built before checking for an initialUri
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _handleInitialUri();
+    });
   }
 
   chat.StreamChatClient get _createStreamChatClient =>
@@ -73,9 +83,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       //   _streamChatClient.addDevice(token, PushProvider.firebase);
       // });
 
-      setState(() {
-        _chatInitialized = true;
-      });
+      _chatInitialized = true;
     } catch (e) {
       printLog(e.toString());
       context.showToast(message: e.toString());
@@ -108,9 +116,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       _feedSubscription =
           await _notificationFeed.subscribe(_handleNotification);
 
-      setState(() {
-        _feedsInitialized = true;
-      });
+      _feedsInitialized = true;
     } catch (e) {
       printLog(e.toString());
       context.showToast(message: e.toString());
@@ -119,22 +125,25 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   }
 
   Future<void> _handleNotification(feed.RealtimeMessage? message) async {
-    final _message =
-        message?.newActivities?[0].object?.data.toString() ?? 'No message';
-    context.showNotification(
-        title: 'Notification',
-        onPressed: () => printLog('printLog a test'),
-        message: _message);
+    // final _message =
+    //     message?.newActivities?[0].object?.data.toString() ?? 'No message';
+    // context.showNotification(
+    //     title: 'Notification',
+    //     onPressed: () => printLog('printLog a test'),
+    //     message: _message);
   }
 
   /// Handle incoming links - the ones that the app will recieve from the OS
   /// while already started.
-  void _handleIncomingLinks() {
+  Future<void> _handleIncomingLinks() async {
     if (!kIsWeb) {
       // It will handle app links while the app is already started - be it in
       // the foreground or in the background.
       _linkStreamSub = uriLinkStream.listen((Uri? uri) {
+        printLog('Uni_links._handleIncomingLinks: Incoming');
+        printLog(uri?.toString() ?? 'null link received');
         if (!mounted) return;
+
         if (uri != null) {
           _extractRouterPathNameAndPush(uri);
         }
@@ -146,10 +155,27 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     }
   }
 
+  Future<void> _handleInitialUri() async {
+    try {
+      final uri = await getInitialUri();
+      if (uri == null) {
+        printLog('Uni_links: no initial uri');
+      } else {
+        _extractRouterPathNameAndPush(uri);
+      }
+    } on PlatformException {
+      // Platform messages may fail but we ignore the exception
+      printLog('Uni_links: falied to get initial uri');
+    } on FormatException catch (err) {
+      printLog('Uni_links: malformed initial uri');
+      printLog(err.toString());
+    }
+  }
+
   void _extractRouterPathNameAndPush(Uri uri) {
-    /// Slash is required before the uri because we are above the top level authed routes router.
-    context.navigateNamedTo(
-        '/${uri.toString().replaceFirst(kDeepLinkSchema, '')}');
+    printLog('Extracting and pushing uri');
+    printLog(uri.toString());
+    context.navigateNamedTo(uri.toString().replaceFirst(kDeepLinkSchema, ''));
   }
 
   @override
@@ -200,7 +226,7 @@ class _LoadingPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
           SvgPicture.asset('assets/logos/sofie_logo.svg',
-              width: 50, color: context.theme.primary),
+              width: 46, color: context.theme.primary),
           const SizedBox(height: 8),
           Text('Sofie',
               style: GoogleFonts.voces(
@@ -208,9 +234,9 @@ class _LoadingPage extends StatelessWidget {
                 color: context.theme.primary,
               )),
           const SizedBox(height: 8),
-          LoadingDots(
+          LoadingSpinningLines(
             color: context.theme.primary,
-            size: 12,
+            size: 28,
           ),
         ]));
   }

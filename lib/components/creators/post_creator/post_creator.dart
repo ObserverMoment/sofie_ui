@@ -59,8 +59,8 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
 
   /// Only one of these should ever be not null.
   /// When saving a new one make sure you set all others null.
-  Workout? _workout;
-  WorkoutPlan? _workoutPlan;
+  WorkoutSummary? _workout;
+  WorkoutPlanSummary? _workoutPlan;
 
   final PageController _pageController = PageController();
   int _activePageIndex = 0;
@@ -91,7 +91,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
     _workoutPlan = null;
   }
 
-  void _selectWorkout(Workout w) {
+  void _selectWorkout(WorkoutSummary w) {
     _removeAllObjects();
     _workout = w;
     _selectedObjectId = w.id;
@@ -99,7 +99,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
     _changePage(1);
   }
 
-  void _selectWorkoutPlan(WorkoutPlan plan) {
+  void _selectWorkoutPlan(WorkoutPlanSummary plan) {
     _removeAllObjects();
     _workoutPlan = plan;
     _selectedObjectId = plan.id;
@@ -166,7 +166,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
     setState(() => _activePageIndex = index);
   }
 
-  UserSummary _getSelectedObjectCreator() {
+  UserAvatarData _getSelectedObjectCreator() {
     switch (_selectedObjectType) {
       case TimelinePostType.workout:
         return _workout!.user;
@@ -304,19 +304,22 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
                         description:
                             'Share a workout you have created, found or are going to do!',
                         assetImageUri: 'assets/placeholder_images/workout.jpg',
-                        onPressed: () => context.navigateTo(
-                            PrivateWorkoutFinderRoute(
-                                selectWorkout: _selectWorkout)),
+                        onPressed: () => context.navigateTo(YourWorkoutsRoute(
+                            pageTitle: 'Select Workout',
+                            showCreateButton: true,
+                            selectWorkout: _selectWorkout)),
                       ),
                       ShareObjectTypeSelectorButton(
-                        title: 'Workout Plan',
-                        description:
-                            'Share a plan you have created, found or are going to do!',
-                        assetImageUri: 'assets/placeholder_images/plan.jpg',
-                        onPressed: () => context.navigateTo(
-                            PrivateWorkoutPlanFinderRoute(
-                                selectWorkoutPlan: _selectWorkoutPlan)),
-                      )
+                          title: 'Workout Plan',
+                          description:
+                              'Share a plan you have created, found or are going to do!',
+                          assetImageUri: 'assets/placeholder_images/plan.jpg',
+                          onPressed: () => context.navigateTo(
+                                YourPlansRoute(
+                                  selectPlan: _selectWorkoutPlan,
+                                  showCreateButton: true,
+                                ),
+                              ))
                     ],
                   ),
                 )

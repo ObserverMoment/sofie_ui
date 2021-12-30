@@ -1,0 +1,11 @@
+query userCollectionById($id: ID!) {
+  userCollectionById(id: $id) {
+    ...Collection
+    Workouts {
+      ...WorkoutSummary
+    }
+    WorkoutPlans {
+      ...WorkoutPlanSummary
+    }
+  }
+}
