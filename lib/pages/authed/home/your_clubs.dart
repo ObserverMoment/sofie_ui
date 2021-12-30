@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/club_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -75,8 +74,6 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
             body: FABPage(
               columnButtons: [
                 FloatingButton(
-                    gradient: Styles.primaryAccentGradient,
-                    contentColor: Styles.white,
                     icon: CupertinoIcons.add,
                     onTap: () => context.navigateTo(ClubCreatorRoute())),
               ],

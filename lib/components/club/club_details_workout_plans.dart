@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -154,13 +153,13 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
                 [const MySliverNavbar(title: 'Plans')],
             body: widget.isOwnerOrAdmin
                 ? FABPage(
-                    rowButtonsAlignment: MainAxisAlignment.center,
+                    rowButtonsAlignment: MainAxisAlignment.end,
                     rowButtons: [
-                      FloatingIconButton(
+                      FloatingButton(
                         text: 'Add Plan',
-                        onPressed: _openWorkoutPlanFinder,
+                        onTap: _openWorkoutPlanFinder,
                         loading: _loading,
-                        iconData: CupertinoIcons.add,
+                        icon: CupertinoIcons.add,
                       )
                     ],
                     child: _ClubWorkoutPlansList(

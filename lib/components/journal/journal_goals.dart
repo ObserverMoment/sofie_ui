@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/cards/journal_goal_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
@@ -65,10 +64,8 @@ class JournalGoals extends StatelessWidget {
                           buttonText: 'Add Goal'),
                     ])
               : FABPage(
-                  rowButtons: [
+                  columnButtons: [
                     FloatingButton(
-                      gradient: Styles.primaryAccentGradient,
-                      contentColor: Styles.white,
                       iconSize: 20,
                       text: 'Add Goal',
                       onTap: () =>

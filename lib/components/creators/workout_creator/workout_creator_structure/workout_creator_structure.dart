@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/add_workout_section.dart';
@@ -81,8 +80,6 @@ class _WorkoutCreatorStructureState extends State<WorkoutCreatorStructure> {
     return FABPage(
       rowButtons: [
         FloatingButton(
-            gradient: Styles.primaryAccentGradient,
-            contentColor: Styles.white,
             text: 'Add Section',
             icon: CupertinoIcons.add,
             onTap: _openCreateSection)

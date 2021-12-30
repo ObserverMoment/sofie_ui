@@ -50,7 +50,7 @@ class StreakAndStatsSummary extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SummaryStatDisplay(
-                      label: 'session',
+                      label: 'sessions',
                       number: sessionsLogged,
                     ),
                     SummaryStatDisplay(

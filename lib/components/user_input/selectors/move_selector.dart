@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -138,8 +137,6 @@ class _MoveSelectorState extends State<MoveSelector> {
                       rowButtonsAlignment: MainAxisAlignment.end,
                       columnButtons: [
                         FloatingButton(
-                            gradient: Styles.primaryAccentGradient,
-                            contentColor: Styles.white,
                             icon: CupertinoIcons.add,
                             onTap: () =>
                                 context.navigateTo(CustomMoveCreatorRoute())),
@@ -162,9 +159,6 @@ class _MoveSelectorState extends State<MoveSelector> {
                             text: moveFiltersBloc.numActiveFilters == 0
                                 ? null
                                 : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
-                            contentColor: moveFiltersBloc.hasActiveFilters
-                                ? Styles.primaryAccent
-                                : null,
                             icon: CupertinoIcons.slider_horizontal_3),
                       ],
                       child: Column(

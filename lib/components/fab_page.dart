@@ -83,9 +83,7 @@ class FloatingButton extends StatelessWidget {
   final double iconSize;
   final EdgeInsets margin;
   final EdgeInsets padding;
-  final Color? contentColor;
-  final Color? backgroundColor;
-  final Gradient? gradient;
+
   final bool loading;
 
   const FloatingButton({
@@ -93,11 +91,8 @@ class FloatingButton extends StatelessWidget {
     this.text,
     this.icon,
     required this.onTap,
-    this.iconSize = 26,
+    this.iconSize = 24,
     this.margin = EdgeInsets.zero,
-    this.backgroundColor,
-    this.gradient,
-    this.contentColor,
     this.padding = const EdgeInsets.all(11),
     this.loading = false,
   }) : super(key: key);
@@ -110,8 +105,7 @@ class FloatingButton extends StatelessWidget {
           onTap();
         },
         child: FABPageButtonContainer(
-          color: backgroundColor,
-          gradient: gradient,
+          color: context.theme.background.withOpacity(0.9),
           padding: padding,
           margin: margin,
           child: AnimatedSwitcher(
@@ -123,53 +117,22 @@ class FloatingButton extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       if (icon != null)
-                        Icon(icon, size: iconSize, color: contentColor),
+                        Icon(
+                          icon,
+                          size: iconSize,
+                        ),
                       if (icon != null && text != null)
                         const SizedBox(width: 6),
                       if (text != null)
                         MyText(
                           text!,
                           size: FONTSIZE.four,
-                          color: contentColor,
+                          weight: FontWeight.bold,
                         ),
                     ],
                   ),
           ),
         ));
-  }
-}
-
-class FABPageCircularButtonContainer extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-
-  /// [gradient] will override [color].
-  final Gradient? gradient;
-  final Color? color;
-
-  const FABPageCircularButtonContainer(
-      {Key? key,
-      required this.child,
-      this.padding = const EdgeInsets.all(12),
-      this.gradient,
-      this.color,
-      this.margin = EdgeInsets.zero})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      margin: margin,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: kElevation[6],
-        color: gradient != null ? null : color ?? context.theme.cardBackground,
-        gradient: gradient,
-      ),
-      child: child,
-    );
   }
 }
 
@@ -185,7 +148,7 @@ class FABPageButtonContainer extends StatelessWidget {
   const FABPageButtonContainer(
       {Key? key,
       required this.child,
-      this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+      this.padding = const EdgeInsets.all(12),
       this.gradient,
       this.color,
       this.margin = EdgeInsets.zero})
@@ -198,10 +161,10 @@ class FABPageButtonContainer extends StatelessWidget {
       margin: margin,
       decoration: BoxDecoration(
           boxShadow: kElevation[6],
-          color:
-              gradient != null ? null : color ?? context.theme.cardBackground,
-          gradient: gradient,
-          border: Border.all(color: context.theme.primary.withOpacity(0.06)),
+          color: gradient != null
+              ? null
+              : color ?? context.theme.background.withOpacity(0.9),
+          border: Border.all(color: context.theme.primary, width: 2.5),
           borderRadius: BorderRadius.circular(60)),
       child: child,
     );

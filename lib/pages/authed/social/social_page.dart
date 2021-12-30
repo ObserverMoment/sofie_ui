@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/timeline_and_feed.dart';
@@ -24,8 +23,6 @@ class SocialPage extends StatelessWidget {
                   icon: CupertinoIcons.tray_arrow_up),
               const SizedBox(width: 16),
               FloatingButton(
-                  gradient: Styles.primaryAccentGradient,
-                  contentColor: Styles.white,
                   onTap: () => context.navigateTo(const PostCreatorRoute()),
                   icon: CupertinoIcons.pencil),
             ],

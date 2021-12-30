@@ -145,10 +145,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
             child: FABPage(
               columnButtons: [
                 FloatingButton(
-                    gradient: Styles.primaryAccentGradient,
-                    contentColor: Styles.white,
-                    icon: CupertinoIcons.add,
-                    onTap: _findWorkoutToSchedule),
+                    icon: CupertinoIcons.add, onTap: _findWorkoutToSchedule),
                 FloatingButton(
                     icon: CupertinoIcons.search,
                     onTap: () => context.push(

@@ -440,61 +440,6 @@ class FloatingActionButtonContainer extends StatelessWidget {
   }
 }
 
-class FloatingIconButton extends StatelessWidget {
-  final IconData iconData;
-  final String text;
-  final void Function() onPressed;
-  final bool loading;
-  final EdgeInsets? padding;
-
-  const FloatingIconButton(
-      {Key? key,
-      required this.iconData,
-      required this.onPressed,
-      this.loading = false,
-      required this.text,
-      this.padding})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: CupertinoButton(
-        padding: EdgeInsets.zero,
-        pressedOpacity: 0.8,
-        onPressed: () {
-          Vibrate.feedback(FeedbackType.light);
-          onPressed();
-        },
-        child: FloatingActionButtonContainer(
-          padding: padding ??
-              const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 6.0),
-                child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: loading
-                        ? const LoadingCircle(color: Styles.white, size: 12)
-                        : Icon(iconData, size: 20, color: Styles.white)),
-              ),
-              MyText(
-                text,
-                color: Styles.white,
-                size: FONTSIZE.four,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class SortFilterSearchFloatingButton extends StatelessWidget {
   final bool showFilter;
   final void Function()? onFilterPress;

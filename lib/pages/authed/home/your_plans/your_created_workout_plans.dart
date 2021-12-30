@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/fab_page.dart';
@@ -108,8 +107,6 @@ class _FilterableCreatedWorkoutPlansState
                 ),
               const SizedBox(width: 10),
               FloatingButton(
-                  gradient: Styles.primaryAccentGradient,
-                  contentColor: Styles.white,
                   icon: CupertinoIcons.add,
                   onTap: () => context.navigateTo(WorkoutPlanCreatorRoute())),
             ],

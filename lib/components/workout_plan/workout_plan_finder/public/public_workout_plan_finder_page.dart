@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/icons.dart';
@@ -179,9 +178,6 @@ class _PublicWorkoutPlanFinderPageState
                     text: _bloc.numActiveFilters == 0
                         ? null
                         : '${_bloc.numActiveFilters} ${_bloc.numActiveFilters == 1 ? "filter" : "filters"}',
-                    contentColor: _bloc.numActiveFilters > 0
-                        ? Styles.primaryAccent
-                        : null,
                     icon: CupertinoIcons.slider_horizontal_3),
               ],
               child: PagedListView<int, WorkoutPlanSummary>(

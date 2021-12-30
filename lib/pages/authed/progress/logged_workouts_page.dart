@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/logged_workout_card.dart';
@@ -103,6 +102,7 @@ class _FilterableLoggedWorkoutsListState
             .toList();
 
     return FABPage(
+        rowButtonsAlignment: MainAxisAlignment.end,
         rowButtons: [
           if (_filterFrom != null || _filterTo != null)
             FadeInUp(
@@ -117,7 +117,7 @@ class _FilterableLoggedWorkoutsListState
               child: Row(
                 children: [
                   DateRangePickerDisplay(
-                    textColor: Styles.white,
+                    textColor: context.theme.primary,
                     from: _filterFrom,
                     to: _filterTo,
                     updateRange: (from, to) => setState(() {

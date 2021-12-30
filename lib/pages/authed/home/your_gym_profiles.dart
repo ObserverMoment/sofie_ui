@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/gym_profile_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -40,8 +39,6 @@ class YourGymProfilesPage extends StatelessWidget {
                       : FABPage(
                           columnButtons: [
                             FloatingButton(
-                                gradient: Styles.primaryAccentGradient,
-                                contentColor: Styles.white,
                                 icon: CupertinoIcons.add,
                                 onTap: () => context
                                     .navigateTo(GymProfileCreatorRoute())),

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -135,8 +134,6 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                       columnButtons: [
                         if (widget.showCreateButton)
                           FloatingButton(
-                              gradient: Styles.primaryAccentGradient,
-                              contentColor: Styles.white,
                               icon: CupertinoIcons.add,
                               onTap: () =>
                                   context.navigateTo(WorkoutCreatorRoute())),

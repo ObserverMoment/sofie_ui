@@ -194,8 +194,6 @@ class _SkillsManagerState extends State<SkillsManager> {
                       FloatingButton(
                         icon: CupertinoIcons.add,
                         iconSize: 18,
-                        gradient: Styles.primaryAccentGradient,
-                        contentColor: Styles.white,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         text: 'Add Skill',

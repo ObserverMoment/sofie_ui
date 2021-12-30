@@ -3,7 +3,6 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 /// Box with rounded corners. No elevation. Card background color.
@@ -136,50 +135,6 @@ class HorizontalLine extends StatelessWidget {
   }
 }
 
-/// A stack which expands to fill available space with a floating action button in the bottom right.
-/// Receives a single child and specs for the button.
-/// At least one of [buttonIcon] and [buttonText] must not be null.
-class StackAndFloatingButton extends StatelessWidget {
-  final Widget child;
-  final bool pageHasBottomNavBar;
-  final IconData buttonIconData;
-  final String buttonText;
-  final void Function() onPressed;
-  final EdgeInsets? buttonInternalPadding;
-  final bool loading;
-  const StackAndFloatingButton(
-      {Key? key,
-      required this.child,
-      this.pageHasBottomNavBar = true,
-      this.buttonIconData = CupertinoIcons.plus,
-      required this.onPressed,
-      required this.buttonText,
-      this.buttonInternalPadding,
-      this.loading = false})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      alignment: Alignment.bottomCenter,
-      clipBehavior: Clip.none,
-      children: [
-        child,
-        Positioned(
-            bottom:
-                pageHasBottomNavBar ? EnvironmentConfig.bottomNavBarHeight : 12,
-            child: FloatingIconButton(
-                text: buttonText,
-                iconData: buttonIconData,
-                onPressed: onPressed,
-                padding: buttonInternalPadding,
-                loading: loading))
-      ],
-    );
-  }
-}
-
 /// Extends CupertinoNavigationBar with some defaults and extra options.
 // For use on pages where user is either creating or editing an object.
 class CreateEditPageNavBar extends CupertinoNavigationBar {
@@ -287,7 +242,10 @@ class MySliverNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoSliverNavigationBar(
         leading: const NavBarBackButton(),
-        largeTitle: Text(title),
+        largeTitle: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.normal),
+        ),
         trailing: trailing,
         border: null);
   }

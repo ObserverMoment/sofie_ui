@@ -9,6 +9,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_like_heart.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/logged_workout/log_count_by_workout.dart';
@@ -331,20 +332,21 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                 ])),
                       ),
                     ),
-                    child: StackAndFloatingButton(
-                        onPressed: () => context.navigateTo(
-                            DoWorkoutWrapperRoute(
-                                id: widget.id,
-                                scheduledWorkout: widget.scheduledWorkout,
-                                workoutPlanDayWorkoutId:
-                                    widget.workoutPlanDayWorkoutId,
-                                workoutPlanEnrolmentId:
-                                    widget.workoutPlanEnrolmentId)),
-                        pageHasBottomNavBar: false,
-                        buttonText: 'Do It',
-                        buttonIconData: CupertinoIcons.arrow_right_square,
-                        buttonInternalPadding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 80),
+                    child: FABPage(
+                        columnButtons: [
+                          FloatingButton(
+                            icon: CupertinoIcons.arrow_right_square,
+                            text: 'Do Workout',
+                            onTap: () => context.navigateTo(
+                                DoWorkoutWrapperRoute(
+                                    id: widget.id,
+                                    scheduledWorkout: widget.scheduledWorkout,
+                                    workoutPlanDayWorkoutId:
+                                        widget.workoutPlanDayWorkoutId,
+                                    workoutPlanEnrolmentId:
+                                        widget.workoutPlanEnrolmentId)),
+                          )
+                        ],
                         child: ListView(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
