@@ -191,12 +191,6 @@ class _WorkoutSetEditor extends StatelessWidget {
         sectionIndex, workoutSet.sortPosition, duration.inSeconds);
   }
 
-  void _updateSetRounds(BuildContext context, int rounds) {
-    context
-        .read<DoWorkoutBloc>()
-        .updateWorkoutSetRounds(sectionIndex, workoutSet.sortPosition, rounds);
-  }
-
   void _openEditWorkoutMove(
       {required BuildContext context,
       required WorkoutMove workoutMove,
@@ -264,12 +258,6 @@ class _WorkoutSetEditor extends StatelessWidget {
                             )
                           ],
                         )),
-                  if (workoutSectionType.roundsInputAllowed)
-                    RoundPicker(
-                        rounds: workoutSet.rounds,
-                        saveValue: (rounds) =>
-                            _updateSetRounds(context, rounds),
-                        padding: const EdgeInsets.symmetric(horizontal: 4)),
                   if (!workoutSet.isRestSet)
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),

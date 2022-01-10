@@ -312,7 +312,6 @@ class WorkoutCreatorBloc extends ChangeNotifier {
         data: CreateWorkoutSetWithWorkoutMovesInput(
       workoutSet: CreateWorkoutSetInput(
           duration: workoutSet.duration,
-          rounds: workoutSet.rounds,
           workoutSection: ConnectRelationInput(id: parentSection.id),
           sortPosition: newSetSortPosition),
       workoutMoves: workoutSet.workoutMoves
@@ -487,7 +486,6 @@ class WorkoutCreatorBloc extends ChangeNotifier {
         ..$$typename = updated.$$typename
         ..id = updated.id
         ..sortPosition = updated.sortPosition
-        ..rounds = updated.rounds
         ..duration = updated.duration
         ..workoutMoves =
             updated.workoutMoves.sortedBy<num>((wm) => wm.sortPosition);

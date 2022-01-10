@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -15,29 +14,12 @@ class WorkoutSetDisplayHeader extends StatelessWidget {
       {Key? key, required this.workoutSet, required this.workoutSectionType})
       : super(key: key);
 
-  String _buildMainText() {
-    switch (workoutSectionType.name) {
-      case kEMOMName:
-      case kHIITCircuitName:
-      case kTabataName:
-        return 'For ${workoutSet.duration.secondsToTimeDisplay}';
-      case kCustomSessionName:
-      case kForTimeName:
-      case kAMRAPName:
-        return '${workoutSet.rounds} rounds of';
-      default:
-        throw Exception(
-            'WorkoutSetDisplayHeader: ${workoutSectionType.name} is not a valid section type name.');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isMultiMoveSet = workoutSet.isMultiMoveSet;
 
-    final showRoundOrTimeInfo = workoutSet.rounds > 1 ||
-        workoutSet.isRestSet ||
-        workoutSectionType.isTimed;
+    final showRoundOrTimeInfo =
+        workoutSet.isRestSet || workoutSectionType.isTimed;
 
     final bool definitionRequired = workoutSet.isRestSet ||
         (isMultiMoveSet && workoutSet.workoutMoves.length > 1);
@@ -51,7 +33,7 @@ class WorkoutSetDisplayHeader extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: MyText(
-                      _buildMainText(),
+                      'For ${workoutSet.duration.secondsToTimeDisplay}',
                       lineHeight: 1,
                     ),
                   ),

@@ -75,7 +75,6 @@ WorkoutSectionRoundSetData loggedWorkoutSetDataFromWorkoutSet(
     WorkoutSet workoutSet, WorkoutSectionType workoutSectionType,
     {int? timeTakenseconds}) {
   return WorkoutSectionRoundSetData()
-    ..rounds = workoutSet.rounds
     ..moves = generateMovesList(workoutSet, workoutSectionType)
     ..timeTakenSeconds = timeTakenseconds ??
         workoutSetDurationOrNull(workoutSectionType, workoutSet) ??

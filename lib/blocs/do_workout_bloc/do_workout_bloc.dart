@@ -430,7 +430,6 @@ class DoWorkoutBloc extends ChangeNotifier {
     final newWorkoutSet = WorkoutSet()
       ..id = const Uuid().v1()
       ..sortPosition = section.workoutSets.length
-      ..rounds = 1
       ..duration = 60
       ..workoutMoves = [workoutMove];
 
@@ -462,24 +461,6 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     /// Re-init the controller.
     await resetSection(sectionIndex);
-
-    notifyListeners();
-  }
-
-  /// IMPORTANT: [updateWorkoutSetRounds] will re-initialize section controller progress unless it is a FreeSession.
-  Future<void> updateWorkoutSetRounds(
-      int sectionIndex, int setIndex, int rounds) async {
-    final section = WorkoutSection.fromJson(
-        activeWorkout.workoutSections[sectionIndex].toJson());
-
-    section.workoutSets[setIndex].rounds = rounds;
-
-    activeWorkout.workoutSections[sectionIndex] = section;
-
-    if (!section.isCustomSession && !section.isLifting) {
-      /// Re-init the controller.
-      await resetSection(sectionIndex);
-    }
 
     notifyListeners();
   }

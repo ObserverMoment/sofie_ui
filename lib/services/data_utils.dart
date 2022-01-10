@@ -109,18 +109,17 @@ class DataUtils {
   }
 
   static int totalRepsInSet(WorkoutSet workoutSet) {
-    return workoutSet.rounds *
-        workoutSet.workoutMoves.fold(0, (setAcum, nextMove) {
-          if ([
-            WorkoutMoveRepType.time,
-            WorkoutMoveRepType.distance,
-            WorkoutMoveRepType.artemisUnknown
-          ].contains(nextMove.repType)) {
-            return setAcum + 1;
-          } else {
-            return setAcum + nextMove.reps.round();
-          }
-        });
+    return workoutSet.workoutMoves.fold(0, (setAcum, nextMove) {
+      if ([
+        WorkoutMoveRepType.time,
+        WorkoutMoveRepType.distance,
+        WorkoutMoveRepType.artemisUnknown
+      ].contains(nextMove.repType)) {
+        return setAcum + 1;
+      } else {
+        return setAcum + nextMove.reps.round();
+      }
+    });
   }
 
   static List<BodyArea> bodyAreasInWorkoutSection(WorkoutSection section) {
