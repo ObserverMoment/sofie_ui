@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -282,8 +281,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                   if (!isOwner)
                                     BottomSheetMenuItem(
                                         text: 'View creator',
-                                        icon: const Icon(
-                                            CupertinoIcons.profile_circled),
+                                        icon: CupertinoIcons.profile_circled,
                                         onPressed: () => context.navigateTo(
                                             UserPublicProfileDetailsRoute(
                                                 userId: workoutPlan.user.id))),
@@ -292,20 +290,18 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                           ContentAccessScope.public)
                                     BottomSheetMenuItem(
                                         text: 'Share',
-                                        icon: const Icon(
-                                            CupertinoIcons.paperplane),
+                                        icon: CupertinoIcons.paperplane,
                                         onPressed: _shareWorkoutPlan),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',
-                                        icon: const Icon(CupertinoIcons.pencil),
+                                        icon: CupertinoIcons.pencil,
                                         onPressed: () => context.navigateTo(
                                             WorkoutPlanCreatorRoute(
                                                 workoutPlan: workoutPlan))),
                                   BottomSheetMenuItem(
                                       text: 'Export',
-                                      icon: const Icon(
-                                          CupertinoIcons.download_circle),
+                                      icon: CupertinoIcons.download_circle,
                                       onPressed: () => context.showAlertDialog(
                                           title: 'Coming Soon!')),
                                   if (isOwner)
@@ -313,12 +309,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                                         text: workoutPlan.archived
                                             ? 'Unarchive'
                                             : 'Archive',
-                                        icon: Icon(
-                                          CupertinoIcons.archivebox,
-                                          color: workoutPlan.archived
-                                              ? null
-                                              : Styles.errorRed,
-                                        ),
+                                        icon: CupertinoIcons.archivebox,
                                         isDestructive: !workoutPlan.archived,
                                         onPressed: () => workoutPlan.archived
                                             ? _unarchiveWorkoutPlan(workoutPlan)

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
-import 'package:sofie_ui/components/user_input/menus/context_menu.dart';
+import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
@@ -25,31 +25,30 @@ class SelectableWorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return selectWorkout != null
-        ? ContextMenu(
-            key: Key(
-                'SelectableWorkoutCard-$index-${heroTagKey ?? ""}-${workout.id}'),
-            menuChild: WorkoutCard(
-              workout,
-            ),
-            actions: [
-              if (selectWorkout != null)
-                ContextMenuAction(
-                    text: 'Select',
-                    iconData: CupertinoIcons.add,
-                    onTap: () => selectWorkout!(workout)),
-              ContextMenuAction(
-                  text: 'View',
-                  iconData: CupertinoIcons.eye,
-                  onTap: () =>
-                      context.navigateTo(WorkoutDetailsRoute(id: workout.id))),
-            ],
-            child: WorkoutCard(workout),
-          )
-        : GestureDetector(
-            key: Key(workout.id),
-            onTap: () => _openWorkoutDetailsPage(context, workout),
-            child: WorkoutCard(workout),
-          );
+    return GestureDetector(
+      onTap: selectWorkout != null
+          ? () => openBottomSheetMenu(
+              context: context,
+              child: BottomSheetMenu(
+                  header: BottomSheetMenuHeader(
+                    imageUri: workout.coverImageUri,
+                    name: workout.name,
+                    subtitle: 'WORKOUT',
+                  ),
+                  items: [
+                    if (selectWorkout != null)
+                      BottomSheetMenuItem(
+                          text: 'Select',
+                          icon: CupertinoIcons.add,
+                          onPressed: () => selectWorkout!(workout)),
+                    BottomSheetMenuItem(
+                        text: 'View',
+                        icon: CupertinoIcons.eye,
+                        onPressed: () => context
+                            .navigateTo(WorkoutDetailsRoute(id: workout.id))),
+                  ]))
+          : () => _openWorkoutDetailsPage(context, workout),
+      child: WorkoutCard(workout),
+    );
   }
 }

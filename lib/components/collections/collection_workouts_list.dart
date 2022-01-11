@@ -7,7 +7,7 @@ import 'package:sofie_ui/components/collections/collection_manager.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/context_menu.dart';
+import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/user_input/selectors/collection_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -127,35 +127,40 @@ class _CollectionWorkoutsList extends StatelessWidget {
         : ListView.builder(
             shrinkWrap: true,
             itemCount: workouts.length,
-            itemBuilder: (c, i) => ContextMenu(
-                  key: Key(workouts[i].id),
-                  actions: [
-                    ContextMenuAction(
-                        text: 'View details',
-                        iconData: CupertinoIcons.eye,
-                        onTap: () => context.navigateTo(
-                            WorkoutDetailsRoute(id: workouts[i].id))),
-                    ContextMenuAction(
-                        text: 'Move to collection',
-                        iconData: CupertinoIcons.tray_arrow_up,
-                        onTap: () => moveToCollection(workouts[i])),
-                    ContextMenuAction(
-                        text: 'Copy to collection',
-                        iconData: CupertinoIcons.plus_rectangle_on_rectangle,
-                        onTap: () => copyToCollection(workouts[i])),
-                    ContextMenuAction(
-                        text: 'Remove',
-                        iconData: CupertinoIcons.delete_simple,
-                        destructive: true,
-                        onTap: () => removeFromCollection(workouts[i]))
-                  ],
-                  menuChild: WorkoutCard(
-                    workouts[i],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: WorkoutCard(workouts[i]),
-                  ),
-                ));
+            itemBuilder: (c, i) => GestureDetector(
+              onTap: () => openBottomSheetMenu(
+                  context: context,
+                  child: BottomSheetMenu(
+                      header: BottomSheetMenuHeader(
+                        imageUri: workouts[i].coverImageUri,
+                        name: workouts[i].name,
+                        subtitle: 'WORKOUT',
+                      ),
+                      items: [
+                        BottomSheetMenuItem(
+                            text: 'View details',
+                            icon: CupertinoIcons.eye,
+                            onPressed: () => context.navigateTo(
+                                WorkoutDetailsRoute(id: workouts[i].id))),
+                        BottomSheetMenuItem(
+                            text: 'Move to other collection',
+                            icon: CupertinoIcons.tray_arrow_up,
+                            onPressed: () => moveToCollection(workouts[i])),
+                        BottomSheetMenuItem(
+                            text: 'Copy to other collection',
+                            icon: CupertinoIcons.plus_rectangle_on_rectangle,
+                            onPressed: () => copyToCollection(workouts[i])),
+                        BottomSheetMenuItem(
+                            text: 'Remove from collection',
+                            icon: CupertinoIcons.delete_simple,
+                            isDestructive: true,
+                            onPressed: () => removeFromCollection(workouts[i]))
+                      ])),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: WorkoutCard(workouts[i]),
+              ),
+            ),
+          );
   }
 }

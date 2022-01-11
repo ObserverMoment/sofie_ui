@@ -18,18 +18,21 @@ class WorkoutSetDisplayHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMultiMoveSet = workoutSet.isMultiMoveSet;
 
-    final showRoundOrTimeInfo =
+    final showSetTypeOrTime =
         workoutSet.isRestSet || workoutSectionType.isTimed;
 
     final bool definitionRequired = workoutSet.isRestSet ||
         (isMultiMoveSet && workoutSet.workoutMoves.length > 1);
 
-    return showRoundOrTimeInfo || definitionRequired
+    return showSetTypeOrTime || definitionRequired
         ? Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Row(
+              mainAxisAlignment: showSetTypeOrTime
+                  ? MainAxisAlignment.spaceBetween
+                  : MainAxisAlignment.end,
               children: [
-                if (showRoundOrTimeInfo)
+                if (showSetTypeOrTime)
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: MyText(

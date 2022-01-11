@@ -286,22 +286,21 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                             if (completedPlanDayWorkout != null) ...[
                               BottomSheetMenuItem(
                                   text: 'View Log',
-                                  icon: const Icon(CupertinoIcons.doc_chart),
+                                  icon: CupertinoIcons.doc_chart,
                                   onPressed: () => context.navigateTo(
                                       LoggedWorkoutDetailsRoute(
                                           id: completedPlanDayWorkout
                                               .loggedWorkoutId))),
                               BottomSheetMenuItem(
                                   text: 'Reset Workout',
-                                  icon: const Icon(CupertinoIcons.doc_chart),
+                                  icon: CupertinoIcons.doc_chart,
                                   onPressed: () =>
                                       _confirmDeleteCompletedWorkout(
                                           context, completedPlanDayWorkout))
                             ] else ...[
                               BottomSheetMenuItem(
                                 text: 'Do it',
-                                icon: const Icon(
-                                    CupertinoIcons.arrow_right_square),
+                                icon: CupertinoIcons.arrow_right_square,
                                 onPressed: () => context.navigateTo(
                                     DoWorkoutWrapperRoute(
                                         id: dayWorkout.workout.id,
@@ -312,21 +311,19 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                               ),
                               BottomSheetMenuItem(
                                   text: 'Log it',
-                                  icon: const Icon(
-                                      CupertinoIcons.text_badge_checkmark),
+                                  icon: CupertinoIcons.text_badge_checkmark,
                                   onPressed: () =>
                                       _handleLogWorkoutProgramWorkout(
                                           context, dayWorkout)),
                               BottomSheetMenuItem(
                                   text: 'Schedule it',
-                                  icon: const Icon(
-                                      CupertinoIcons.calendar_badge_plus),
+                                  icon: CupertinoIcons.calendar_badge_plus,
                                   onPressed: () => _openScheduleWorkout(
                                       context, dayWorkout)),
                             ],
                             BottomSheetMenuItem(
                                 text: 'View workout',
-                                icon: const Icon(CupertinoIcons.eye),
+                                icon: CupertinoIcons.eye,
                                 onPressed: () => context.navigateTo(
                                     WorkoutDetailsRoute(
                                         id: dayWorkout.workout.id,

@@ -6,7 +6,7 @@ import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/context_menu.dart';
+import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -134,110 +134,103 @@ class ScheduledWorkoutCard extends StatelessWidget {
     final enrolmentId = scheduledWorkout.workoutPlanEnrolmentId;
     final planName = scheduledWorkout.workoutPlanName;
 
-    return ContextMenu(
-      key: Key('ScheduledWorkoutCard ${scheduledWorkout.id}'),
-      menuChild: Card(
-        padding: EdgeInsets.zero,
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
-              child: _buildCardHeader(context, planName, false),
-            ),
-            const HorizontalLine(
-              verticalPadding: 0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 8),
-              child: MinimalWorkoutCard(
-                scheduledWorkout.workout!,
+    return Card(
+      padding: EdgeInsets.zero,
+      child: scheduledWorkout.workout == null
+          ? Center(
+              child: Column(
+                children: const [
+                  MyText(
+                    'No workout specified!',
+                    maxLines: 4,
+                  ),
+                  MyText(
+                    '(The workout may have been deleted)',
+                    maxLines: 4,
+                  ),
+                ],
               ),
             )
-          ],
-        ),
-      ),
-      actions: [
-        if (!hasLog)
-          ContextMenuAction(
-            text: 'Do it',
-            onTap: () => context.navigateTo(DoWorkoutWrapperRoute(
-                id: scheduledWorkout.workout!.id,
-                scheduledWorkout: scheduledWorkout,
-                workoutPlanDayWorkoutId:
-                    scheduledWorkout.workoutPlanDayWorkoutId,
-                workoutPlanEnrolmentId:
-                    scheduledWorkout.workoutPlanEnrolmentId)),
-            iconData: CupertinoIcons.arrow_right_square,
-          ),
-        if (!hasLog && scheduledWorkout.workout != null)
-          ContextMenuAction(
-            text: 'Log it',
-            onTap: () => context.navigateTo(LoggedWorkoutCreatorRoute(
-                workoutId: scheduledWorkout.workout!.id,
-                scheduledWorkout: scheduledWorkout,
-                workoutPlanDayWorkoutId:
-                    scheduledWorkout.workoutPlanDayWorkoutId,
-                workoutPlanEnrolmentId:
-                    scheduledWorkout.workoutPlanEnrolmentId)),
-            iconData: CupertinoIcons.text_badge_checkmark,
-          ),
-        ContextMenuAction(
-            text: 'View Workout',
-            iconData: CupertinoIcons.eye,
-            onTap: () => context.navigateTo(WorkoutDetailsRoute(
-                id: scheduledWorkout.workout!.id,
-                scheduledWorkout: scheduledWorkout,
-                workoutPlanDayWorkoutId:
-                    scheduledWorkout.workoutPlanDayWorkoutId,
-                workoutPlanEnrolmentId:
-                    scheduledWorkout.workoutPlanEnrolmentId))),
-        if (enrolmentId != null)
-          ContextMenuAction(
-            text: 'View Plan',
-            onTap: () => context.navigateTo(WorkoutPlanEnrolmentDetailsRoute(
-                id: scheduledWorkout.workoutPlanEnrolmentId!)),
-            iconData: CupertinoIcons.list_bullet,
-          ),
-        if (hasLog)
-          ContextMenuAction(
-            text: 'View log',
-            onTap: () => context.navigateTo(LoggedWorkoutDetailsRoute(
-                id: scheduledWorkout.loggedWorkoutId!)),
-            iconData: CupertinoIcons.doc_chart,
-          ),
-        if (!hasLog)
-          ContextMenuAction(
-            text: 'Edit Schedule',
-            onTap: () => _reschedule(context),
-            iconData: CupertinoIcons.calendar_badge_plus,
-          ),
-        if (!hasLog)
-          ContextMenuAction(
-            text: 'Unschedule',
-            onTap: () => _confirmUnschedule(context),
-            iconData: CupertinoIcons.calendar_badge_minus,
-            destructive: true,
-          )
-      ],
-      child: Card(
-        padding: EdgeInsets.zero,
-        child: scheduledWorkout.workout == null
-            ? Center(
-                child: Column(
-                  children: const [
-                    MyText(
-                      'No workout specified!',
-                      maxLines: 4,
+          : GestureDetector(
+              onTap: () => openBottomSheetMenu(
+                  context: context,
+                  child: BottomSheetMenu(
+                    header: BottomSheetMenuHeader(
+                      imageUri: scheduledWorkout.workout!.coverImageUri,
+                      name: scheduledWorkout.workout!.name,
+                      subtitle: 'WORKOUT',
                     ),
-                    MyText(
-                      '(The workout may have been deleted)',
-                      maxLines: 4,
-                    ),
-                  ],
-                ),
-              )
-            : Column(
+                    items: [
+                      if (!hasLog)
+                        BottomSheetMenuItem(
+                          text: 'Do it',
+                          onPressed: () => context.navigateTo(
+                              DoWorkoutWrapperRoute(
+                                  id: scheduledWorkout.workout!.id,
+                                  scheduledWorkout: scheduledWorkout,
+                                  workoutPlanDayWorkoutId:
+                                      scheduledWorkout.workoutPlanDayWorkoutId,
+                                  workoutPlanEnrolmentId:
+                                      scheduledWorkout.workoutPlanEnrolmentId)),
+                          icon: CupertinoIcons.arrow_right_square,
+                        ),
+                      if (!hasLog && scheduledWorkout.workout != null)
+                        BottomSheetMenuItem(
+                          text: 'Log it',
+                          onPressed: () => context.navigateTo(
+                              LoggedWorkoutCreatorRoute(
+                                  workoutId: scheduledWorkout.workout!.id,
+                                  scheduledWorkout: scheduledWorkout,
+                                  workoutPlanDayWorkoutId:
+                                      scheduledWorkout.workoutPlanDayWorkoutId,
+                                  workoutPlanEnrolmentId:
+                                      scheduledWorkout.workoutPlanEnrolmentId)),
+                          icon: CupertinoIcons.text_badge_checkmark,
+                        ),
+                      BottomSheetMenuItem(
+                          text: 'View Workout',
+                          icon: CupertinoIcons.eye,
+                          onPressed: () => context.navigateTo(
+                              WorkoutDetailsRoute(
+                                  id: scheduledWorkout.workout!.id,
+                                  scheduledWorkout: scheduledWorkout,
+                                  workoutPlanDayWorkoutId:
+                                      scheduledWorkout.workoutPlanDayWorkoutId,
+                                  workoutPlanEnrolmentId: scheduledWorkout
+                                      .workoutPlanEnrolmentId))),
+                      if (enrolmentId != null)
+                        BottomSheetMenuItem(
+                          text: 'View Plan',
+                          onPressed: () => context.navigateTo(
+                              WorkoutPlanEnrolmentDetailsRoute(
+                                  id: scheduledWorkout
+                                      .workoutPlanEnrolmentId!)),
+                          icon: CupertinoIcons.list_bullet,
+                        ),
+                      if (hasLog)
+                        BottomSheetMenuItem(
+                          text: 'View log',
+                          onPressed: () => context.navigateTo(
+                              LoggedWorkoutDetailsRoute(
+                                  id: scheduledWorkout.loggedWorkoutId!)),
+                          icon: CupertinoIcons.doc_chart,
+                        ),
+                      if (!hasLog)
+                        BottomSheetMenuItem(
+                          text: 'Edit Schedule',
+                          onPressed: () => _reschedule(context),
+                          icon: CupertinoIcons.calendar_badge_plus,
+                        ),
+                      if (!hasLog)
+                        BottomSheetMenuItem(
+                          text: 'Unschedule',
+                          onPressed: () => _confirmUnschedule(context),
+                          icon: CupertinoIcons.calendar_badge_minus,
+                          isDestructive: true,
+                        )
+                    ],
+                  )),
+              child: Column(
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(
@@ -259,7 +252,7 @@ class ScheduledWorkoutCard extends StatelessWidget {
                   )
                 ],
               ),
-      ),
+            ),
     );
   }
 }

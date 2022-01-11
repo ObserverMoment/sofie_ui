@@ -183,14 +183,14 @@ abstract class Styles {
   static const difficultyLevelFive = CupertinoColors.black; // Black
 
   // Design / Accent colors.
-  static const Color primaryAccent = Color(0xff286E6E);
+  static const Color primaryAccent = Color(0xff2c8a8a);
 
   static const LinearGradient primaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xff397382),
-      Color(0xff327D5F),
+      primaryAccent,
+      Color(0xff3aa1a1),
     ],
     stops: [0.0, 1.0],
   );

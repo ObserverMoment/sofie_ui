@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -43,13 +42,12 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
               items: [
                 BottomSheetMenuItem(
                     text: 'View',
-                    icon: const Icon(CupertinoIcons.arrow_right),
+                    icon: CupertinoIcons.arrow_right,
                     onPressed: () => _navigateToWorkoutDetails(workout)),
                 BottomSheetMenuItem(
                     text: 'Remove',
                     isDestructive: true,
-                    icon: const Icon(CupertinoIcons.delete_simple,
-                        color: Styles.errorRed),
+                    icon: CupertinoIcons.delete_simple,
                     onPressed: () =>
                         _confirmRemoveWorkoutFromClub(context, workout)),
               ]));

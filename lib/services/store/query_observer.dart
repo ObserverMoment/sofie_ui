@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -112,9 +111,14 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    LoadingSpinningLines(size: 50),
+                    CupertinoActivityIndicator(
+                      radius: 20,
+                    ),
                     SizedBox(height: 20),
-                    MyText('One moment...'),
+                    MyText(
+                      'ONE MOMENT...',
+                      subtext: true,
+                    ),
                   ],
                 )));
           }

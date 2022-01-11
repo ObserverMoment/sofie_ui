@@ -2,9 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
@@ -211,7 +209,9 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            LoadingSpinningLines(),
+            CupertinoActivityIndicator(
+              radius: 12,
+            ),
             SizedBox(height: 10),
             MyText('CHECKING MEMBERSHIP')
           ],
@@ -261,12 +261,12 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
                                   if (_userIsOwnerOrAdmin)
                                     BottomSheetMenuItem(
                                         text: 'New Post',
-                                        icon: const Icon(CupertinoIcons.add),
+                                        icon: CupertinoIcons.add,
                                         onPressed: _createNewPost),
                                   if (_userIsOwnerOrAdmin)
                                     BottomSheetMenuItem(
                                         text: 'Edit Club Info',
-                                        icon: const Icon(CupertinoIcons.pencil),
+                                        icon: CupertinoIcons.pencil,
                                         onPressed: () => context.navigateTo(
                                             ClubCreatorRoute(
                                                 clubSummary: club))),
@@ -275,34 +275,27 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
                                           ContentAccessScope.public)
                                     BottomSheetMenuItem(
                                         text: 'Join Club',
-                                        icon: const Icon(CupertinoIcons.add),
+                                        icon: CupertinoIcons.add,
                                         onPressed: () =>
                                             _addUserToPublicClub(club)),
                                   if (club.contentAccessScope ==
                                       ContentAccessScope.public)
                                     BottomSheetMenuItem(
                                         text: 'Share',
-                                        icon: const Icon(
-                                            CupertinoIcons.paperplane),
+                                        icon: CupertinoIcons.paperplane,
                                         onPressed: () => _shareClub(club)),
                                   if (!_userIsMember && !_userIsOwner)
                                     BottomSheetMenuItem(
                                         text: 'Leave Club',
                                         isDestructive: true,
-                                        icon: const Icon(
-                                          CupertinoIcons.square_arrow_right,
-                                          color: Styles.errorRed,
-                                        ),
+                                        icon: CupertinoIcons.square_arrow_right,
                                         onPressed: () =>
                                             _confirmLeaveClub(club.id)),
                                   if (_userIsOwner)
                                     BottomSheetMenuItem(
                                         text: 'Shut Down Club',
-                                        icon: const Icon(
-                                          CupertinoIcons
-                                              .exclamationmark_triangle,
-                                          color: Styles.errorRed,
-                                        ),
+                                        icon: CupertinoIcons
+                                            .exclamationmark_triangle,
                                         isDestructive: true,
                                         onPressed: () =>
                                             _confirmDeleteClub(club)),

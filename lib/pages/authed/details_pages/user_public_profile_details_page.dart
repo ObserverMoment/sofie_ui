@@ -55,8 +55,7 @@ class UserPublicProfileDetailsPage extends StatelessWidget {
                                 items: [
                                   BottomSheetMenuItem(
                                       text: 'Share',
-                                      icon:
-                                          const Icon(CupertinoIcons.paperplane),
+                                      icon: CupertinoIcons.paperplane,
                                       onPressed: () =>
                                           _shareUserProfile(userPublicProfile)),
                                 ])),

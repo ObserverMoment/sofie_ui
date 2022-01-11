@@ -361,38 +361,32 @@ class _TimelinePostEllipsisMenu extends StatelessWidget {
               items: [
                 BottomSheetMenuItem(
                     text: 'View ${object.type.display}',
-                    icon: const Icon(CupertinoIcons.eye),
+                    icon: CupertinoIcons.eye,
                     onPressed: openDetailsPage),
                 if (!userIsCreator)
                   BottomSheetMenuItem(
                       text: 'View Creator',
-                      icon: const Icon(CupertinoIcons.person_crop_rectangle),
+                      icon: CupertinoIcons.person_crop_rectangle,
                       onPressed: () => _openUserProfile(context, creator.id)),
                 if (!userIsPoster)
                   BottomSheetMenuItem(
                       text: 'View Poster',
-                      icon: const Icon(CupertinoIcons.person_crop_rectangle),
+                      icon: CupertinoIcons.person_crop_rectangle,
                       onPressed: () => _openUserProfile(context, poster.id)),
                 BottomSheetMenuItem(
                     text: 'Share ${object.type.display} to...',
-                    icon: const Icon(CupertinoIcons.paperplane),
+                    icon: CupertinoIcons.paperplane,
                     onPressed: _shareObject),
                 if (userIsPoster && handleDeletePost != null)
                   BottomSheetMenuItem(
                       text: 'Delete Post',
-                      icon: const Icon(
-                        CupertinoIcons.delete_simple,
-                        color: Styles.errorRed,
-                      ),
+                      icon: CupertinoIcons.delete_simple,
                       onPressed: handleDeletePost!,
                       isDestructive: true),
                 if (!userIsPoster)
                   BottomSheetMenuItem(
                       text: 'Report',
-                      icon: const Icon(
-                        CupertinoIcons.exclamationmark_circle,
-                        color: Styles.errorRed,
-                      ),
+                      icon: CupertinoIcons.exclamationmark_circle,
                       isDestructive: true,
                       onPressed: () => printLog('report this post')),
               ])),

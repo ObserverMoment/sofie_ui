@@ -66,10 +66,9 @@ class MainTabsPage extends StatelessWidget {
                       tabsRouter: _tabsRouter,
                       activeIndex: _tabsRouter.activeIndex,
                       tabIndex: 1,
-                      label: 'Social',
-                      inactiveIconData: CupertinoIcons.person_2_square_stack,
-                      activeIconData:
-                          CupertinoIcons.person_2_square_stack_fill),
+                      label: 'Feed',
+                      inactiveIconData: CupertinoIcons.news,
+                      activeIconData: CupertinoIcons.news_solid),
                   _buildTabItem(
                       tabsRouter: _tabsRouter,
                       activeIndex: _tabsRouter.activeIndex,

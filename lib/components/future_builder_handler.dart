@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -42,10 +41,7 @@ class FutureBuilderHandler<T> extends StatelessWidget {
               const CupertinoPageScaffold(
                 child: SafeArea(
                   child: Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(24.0),
-                      child: LoadingSpinningLines(),
-                    ),
+                    child: CupertinoActivityIndicator(),
                   ),
                 ),
               );

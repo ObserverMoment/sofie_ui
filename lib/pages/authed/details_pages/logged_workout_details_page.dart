@@ -6,7 +6,6 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator_with_sections.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -120,15 +119,11 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
                                 items: [
                                   BottomSheetMenuItem(
                                       text: 'Share',
-                                      icon:
-                                          const Icon(CupertinoIcons.paperplane),
+                                      icon: CupertinoIcons.paperplane,
                                       onPressed: _shareLoggedWorkout),
                                   BottomSheetMenuItem(
                                       text: 'Delete',
-                                      icon: const Icon(
-                                        CupertinoIcons.delete_simple,
-                                        color: Styles.errorRed,
-                                      ),
+                                      icon: CupertinoIcons.delete_simple,
                                       isDestructive: true,
                                       onPressed: () =>
                                           _deleteLoggedWorkout(context)),
