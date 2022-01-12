@@ -20,13 +20,12 @@ class DiscoverClubs extends StatelessWidget {
               children: [
                 Padding(
                   padding:
-                      const EdgeInsets.only(left: 12.0, top: 16, bottom: 10),
+                      const EdgeInsets.only(left: 6.0, top: 16, bottom: 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const MyHeaderText(
                         'Clubs',
-                        size: FONTSIZE.five,
                       ),
                       IconButton(
                           iconData: CupertinoIcons.compass,

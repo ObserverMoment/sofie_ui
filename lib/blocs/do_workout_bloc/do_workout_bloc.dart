@@ -18,6 +18,7 @@ import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workou
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
@@ -505,77 +506,70 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   /// Modify Section, Set and Move methods END////
   ////////////////////////////////////////////////
+  CreateLoggedWorkoutInput generateLogInputData() {
+    CreateLoggedWorkoutInput loggedWorkoutInput = CreateLoggedWorkoutInput(
+      completedOn: DateTime.now(),
+      gymProfile: scheduledWorkout?.gymProfile != null
+          ? ConnectRelationInput(id: scheduledWorkout!.gymProfile!.id)
+          : null,
+      name: 'Log - ${activeWorkout.name}',
+      workout: ConnectRelationInput(id: activeWorkout.id),
+      workoutPlanDayWorkout: workoutPlanDayWorkoutId != null
+          ? ConnectRelationInput(id: workoutPlanDayWorkoutId!)
+          : null,
+      workoutPlanEnrolment: workoutPlanEnrolmentId != null
+          ? ConnectRelationInput(id: workoutPlanEnrolmentId!)
+          : null,
+      workoutGoals: activeWorkout.workoutGoals
+          .map((g) => ConnectRelationInput(id: g.id))
+          .toList(),
+      loggedWorkoutSections: generateLoggedSectionsInput(),
+    );
 
-  /// Based on the state objects of all of the section controllers, generate a full workout log for this workout.
-  LoggedWorkout generateLog() {
-    final loggedWorkout = loggedWorkoutFromWorkout(workout: activeWorkout);
+    return loggedWorkoutInput;
+  }
 
-    loggedWorkout.loggedWorkoutSections = activeWorkout.workoutSections
-        .where((wSection) =>
-            getControllerForSection(wSection.sortPosition).sectionHasStarted)
-        .map((wSection) {
-      final sectionIndex = wSection.sortPosition;
+  List<CreateLoggedWorkoutSectionInLoggedWorkoutInput>
+      generateLoggedSectionsInput() {
+    return activeWorkout.workoutSections
+        .sortedBy<num>((wSection) => wSection.sortPosition)
+        .map((wSection) => getControllerForSection(wSection.sortPosition))
+        .where((controller) => controller.sectionHasStarted)
+        .mapIndexed((i, controller) {
+      /// Use [i] to assign the new sort position within the log. This is needed because the user does not have to complete all the workout sections.
 
-      /// If AMRAP or ForTime then save reps.
-      /// If Lifting then save reps below after completed sets and moves have been extracted.
-      int? repScore;
+      final workoutSection = controller.workoutSection;
+      final timeTakenSeconds = controller.stopWatchTimer.secondTime.value;
 
-      if (wSection.isAMRAP) {
-        repScore =
-            (getControllerForSection(sectionIndex) as AMRAPSectionController)
-                .repsCompleted;
-      } else if (wSection.isForTime) {
-        repScore =
-            (getControllerForSection(sectionIndex) as ForTimeSectionController)
-                .repsCompleted;
+      if (workoutSection.isLifting || workoutSection.isCustomSession) {
+        /// Converts completed sets and reps lists to proper input objects and adds to [controller.state.loggedSection]
+        (controller as LiftingSectionController).updateLoggedSectionInput();
       }
 
-      /// If the section is FreeSession or Lifting then we need to check the controller to check which sets / workoutMoves have been completed.
-      if (wSection.isLifting || wSection.isCustomSession) {
-        final completedWorkoutMoveIds =
-            (getControllerForSection(sectionIndex) as LiftingSectionController)
-                .completedWorkoutMoveIds;
+      final loggedSectionInput = controller.state.loggedSection;
+      loggedSectionInput.sortPosition = i;
+      loggedSectionInput.repScore = calculateRepScore(controller);
+      loggedSectionInput.timeTakenSeconds = timeTakenSeconds;
 
-        /// First remove all non completed workout moves
-        for (final wSet in wSection.workoutSets) {
-          wSet.workoutMoves.removeWhere(
-              (wMove) => !completedWorkoutMoveIds.contains(wMove.id));
-        }
-
-        /// Then remove all sets that are now empty / i.e. no completed workout moves.
-        wSection.workoutSets.removeWhere((wSet) => wSet.workoutMoves.isEmpty);
-
-        repScore = DataUtils.totalRepsInSection(wSection);
-      }
-
-      final loggedSection = loggedWorkoutSectionFromWorkoutSection(
-          workoutSection: wSection,
-          repScore: repScore,
-          timeTakenSeconds:
-              getStopWatchTimerForSection(sectionIndex).secondTime.value);
-
-      /// Add the sectionData that was accumulated as the user did the workout or (if FreeSession or Lifting - i.e. non timed - then generate it).
-      if (wSection.isCustomSession || wSection.isLifting) {
-        loggedSection.loggedWorkoutSectionData =
-            loggedWorkoutSectionDataFromWorkoutSection(wSection);
-      } else {
-        loggedSection.loggedWorkoutSectionData =
-            getControllerForSection(wSection.sortPosition).state.sectionData;
-      }
-
-      if (!wSection.workoutSectionType.isAMRAP) {
-        /// In the process of the workout a new round data object is added when the last round is finished. This means that we will always end up with an extra (empty) RoundData object for timed workouts. For AMRAPs we do not need to worry, the extra data can be added to indicate that they started the next round.
-        final roundsWithData = loggedSection.loggedWorkoutSectionData!.rounds
-            .where((r) => r.sets.isNotEmpty)
-            .toList();
-
-        loggedSection.loggedWorkoutSectionData!.rounds = roundsWithData;
-      }
-
-      return loggedSection;
+      return loggedSectionInput;
     }).toList();
+  }
 
-    return loggedWorkout;
+  int? calculateRepScore(WorkoutSectionController controller) {
+    final workoutSection = controller.workoutSection;
+    final loggedSectionInput = controller.state.loggedSection;
+
+    int? repScore;
+
+    if (workoutSection.isAMRAP) {
+      repScore = (controller as AMRAPSectionController).repsCompleted;
+    } else if (workoutSection.isForTime) {
+      repScore = (controller as ForTimeSectionController).repsCompleted;
+    } else if (workoutSection.isLifting) {
+      repScore = DataUtils.totalRepsInLoggedSectionInput(loggedSectionInput);
+    }
+
+    return repScore;
   }
 
   /// User Inputs End ////

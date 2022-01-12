@@ -362,9 +362,12 @@ class _WorkoutMoveInMultiMoveSet extends StatelessWidget {
   }) : super(key: key);
 
   Widget _buildRepSuffix() {
-    return MyText(
-      workoutMove.repDisplay,
-      size: FONTSIZE.two,
+    return SizedBox(
+      width: 28,
+      child: MyText(
+        workoutMove.repDisplay,
+        size: FONTSIZE.two,
+      ),
     );
   }
 

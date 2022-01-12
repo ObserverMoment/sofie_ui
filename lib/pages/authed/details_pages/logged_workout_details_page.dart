@@ -319,7 +319,9 @@ class _LoggedWorkoutSectionDisplay extends StatelessWidget {
                                 MediaQuery.of(context).size.height * 0.55,
                             handleTapBodyArea: (_) =>
                                 {}, // Noop as this is read only,
-                            selectedBodyAreas: loggedWorkoutSection.bodyAreas,
+                            selectedBodyAreas: [],
+
+                            /// TODO: New Data Structure.
                           )),
                       SvgPicture.asset(
                         'assets/body_areas/body_button.svg',
@@ -336,7 +338,9 @@ class _LoggedWorkoutSectionDisplay extends StatelessWidget {
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: loggedWorkoutSection.moveTypes
+              children: []
+
+                  /// TODO: New Data Structure.
                   .map((mType) => Tag(
                         tag: mType.name,
                         fontSize: FONTSIZE.one,

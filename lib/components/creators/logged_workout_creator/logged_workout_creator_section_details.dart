@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/move_type_multi_selector.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 class LoggedWorkoutCreatorSectionDetails extends StatefulWidget {
   final int sectionIndex;
@@ -35,6 +36,9 @@ class _LoggedWorkoutCreatorSectionDetailsState
         context.select<LoggedWorkoutCreatorBloc, LoggedWorkoutSection>(
             (b) => b.loggedWorkout.loggedWorkoutSections[widget.sectionIndex]);
 
+    final bodyAreas = loggedWorkoutSection.uniqueBodyAreas;
+    final moveTypes = loggedWorkoutSection.uniqueMoveTypes;
+
     return MyPageScaffold(
       navigationBar: const MyNavBar(
         middle: NavBarTitle('Body Areas and Move Types'),
@@ -56,18 +60,30 @@ class _LoggedWorkoutCreatorSectionDetailsState
                 builder: (context, constraints) =>
                     BodyAreaSelectorFrontBackPaged(
                   bodyGraphicHeight: MediaQuery.of(context).size.height * 0.55,
-                  handleTapBodyArea: (ba) =>
-                      bloc.toggleSectionBodyArea(widget.sectionIndex, ba),
-                  selectedBodyAreas: loggedWorkoutSection.bodyAreas,
+                  handleTapBodyArea: (_) => {},
+                  selectedBodyAreas: bodyAreas,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: MoveTypeMultiSelector(
-                  name: 'Move types in this section',
-                  selectedTypes: loggedWorkoutSection.moveTypes,
-                  updateSelectedTypes: (types) =>
-                      bloc.updateSectionMoveTypes(widget.sectionIndex, types),
+                child: Column(
+                  children: moveTypes
+                      .map((m) => Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ContentBox(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    MyText(
+                                      m.name,
+                                      size: FONTSIZE.four,
+                                    ),
+                                  ],
+                                )),
+                          ))
+                      .toList(),
                 ),
               ),
             ],

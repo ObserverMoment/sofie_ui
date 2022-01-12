@@ -26,8 +26,8 @@ class _LoggedWorkoutSectionMovesListState
   @override
   Widget build(BuildContext context) {
     final loggedWorkoutSection = widget.loggedWorkoutSection;
-    final roundData =
-        loggedWorkoutSection.loggedWorkoutSectionData?.rounds ?? [];
+
+    /// TODO: New structure.
 
     return MyPageScaffold(
       navigationBar: const MyNavBar(
@@ -63,136 +63,125 @@ class _LoggedWorkoutSectionMovesListState
               updateValue: (v) => setState(() => _showSets = v),
               value: _showSets),
           const HorizontalLine(),
-          Expanded(
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: roundData.length,
-                itemBuilder: (c, i) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2.0),
-                      child: _SingleRoundData(
-                        sectionIndex: loggedWorkoutSection.sortPosition,
-                        roundIndex: i,
-                        roundData: roundData[i],
-                        showSets: _showSets,
-                      ),
-                    )),
-          ),
+
+          /// TODO
+          MyText('New UI based on new data structure'),
         ],
       ),
     );
   }
 }
 
-class _SingleRoundData extends StatelessWidget {
-  final int sectionIndex;
-  final int roundIndex;
-  final bool showSets;
-  final WorkoutSectionRoundData roundData;
-  const _SingleRoundData(
-      {Key? key,
-      required this.roundData,
-      required this.sectionIndex,
-      required this.roundIndex,
-      required this.showSets})
-      : super(key: key);
+// class _SingleRoundData extends StatelessWidget {
+//   final int sectionIndex;
+//   final int roundIndex;
+//   final bool showSets;
+//   final WorkoutSectionRoundData roundData;
+//   const _SingleRoundData(
+//       {Key? key,
+//       required this.roundData,
+//       required this.sectionIndex,
+//       required this.roundIndex,
+//       required this.showSets})
+//       : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final sets = roundData.sets;
-    return ContentBox(
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MyText('ROUND ${roundIndex + 1}'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  _DurationDisplay(
-                    duration: Duration(seconds: roundData.timeTakenSeconds),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        GrowInOut(
-          show: showSets,
-          child: ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: sets.length,
-              itemBuilder: (c, i) => Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom:
-                                BorderSide(color: context.theme.background))),
-                    child: _SingleSetData(
-                      index: i,
-                      setData: roundData.sets[i],
-                    ),
-                  )),
-        ),
-      ]),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final sets = roundData.sets;
+//     return ContentBox(
+//       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+//         Padding(
+//           padding: const EdgeInsets.symmetric(vertical: 4.0),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               MyText('ROUND ${roundIndex + 1}'),
+//               Row(
+//                 mainAxisAlignment: MainAxisAlignment.end,
+//                 children: [
+//                   _DurationDisplay(
+//                     duration: Duration(seconds: roundData.timeTakenSeconds),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//         ),
+//         GrowInOut(
+//           show: showSets,
+//           child: ListView.builder(
+//               shrinkWrap: true,
+//               physics: const NeverScrollableScrollPhysics(),
+//               itemCount: sets.length,
+//               itemBuilder: (c, i) => Container(
+//                     padding: const EdgeInsets.symmetric(vertical: 4.0),
+//                     decoration: BoxDecoration(
+//                         border: Border(
+//                             bottom:
+//                                 BorderSide(color: context.theme.background))),
+//                     child: _SingleSetData(
+//                       index: i,
+//                       setData: roundData.sets[i],
+//                     ),
+//                   )),
+//         ),
+//       ]),
+//     );
+//   }
+// }
 
-class _SingleSetData extends StatelessWidget {
-  final int index;
-  final WorkoutSectionRoundSetData setData;
-  const _SingleSetData({
-    Key? key,
-    required this.index,
-    required this.setData,
-  }) : super(key: key);
+// class _SingleSetData extends StatelessWidget {
+//   final int index;
+//   final WorkoutSectionRoundSetData setData;
+//   const _SingleSetData({
+//     Key? key,
+//     required this.index,
+//     required this.setData,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    final movesList = setData.moves.split(',');
+//   @override
+//   Widget build(BuildContext context) {
+//     final movesList = setData.moves.split(',');
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: movesList
-                  .map(
-                    (m) => Padding(
-                      padding: const EdgeInsets.only(top: 2, bottom: 6.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: MyText(
-                            m,
-                            size: FONTSIZE.two,
-                          )),
-                        ],
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _DurationDisplay(
-                duration: Duration(seconds: setData.timeTakenSeconds),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 3.0),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: movesList
+//                   .map(
+//                     (m) => Padding(
+//                       padding: const EdgeInsets.only(top: 2, bottom: 6.0),
+//                       child: Row(
+//                         children: [
+//                           Expanded(
+//                               child: MyText(
+//                             m,
+//                             size: FONTSIZE.two,
+//                           )),
+//                         ],
+//                       ),
+//                     ),
+//                   )
+//                   .toList(),
+//             ),
+//           ),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.end,
+//             children: [
+//               _DurationDisplay(
+//                 duration: Duration(seconds: setData.timeTakenSeconds),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class _DurationDisplay extends StatelessWidget {
   final Duration duration;

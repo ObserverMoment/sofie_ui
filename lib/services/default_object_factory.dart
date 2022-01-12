@@ -33,17 +33,6 @@ class DefaultObjectfactory {
       ..loggedWorkoutSections = [];
   }
 
-  static LoggedWorkoutSection defaultLoggedWorkoutSection(
-      {required WorkoutSection workoutSection}) {
-    return LoggedWorkoutSection()
-      ..$$typename = kLoggedWorkoutSectionTypename
-      ..id = 'temp-$kLoggedWorkoutSectionTypename:${const Uuid().v1()}'
-      ..name = Utils.textNotNull(workoutSection.name)
-          ? 'Log - ${workoutSection.name}'
-          : 'Log - ${workoutSection.workoutSectionType.name}'
-      ..workoutSectionType = workoutSection.workoutSectionType;
-  }
-
   static WorkoutMove defaultRestWorkoutMove(
       {required Move move,
       required int sortPosition,

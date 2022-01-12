@@ -122,6 +122,28 @@ class DataUtils {
     });
   }
 
+  static int totalRepsInLoggedSectionInput(
+      CreateLoggedWorkoutSectionInLoggedWorkoutInput sectionInput) {
+    return sectionInput.loggedWorkoutSets.fold(0, (sectionAcum, nextSet) {
+      return sectionAcum + totalRepsInLoggedSetInput(nextSet);
+    });
+  }
+
+  static int totalRepsInLoggedSetInput(
+      CreateLoggedWorkoutSetInLoggedWorkoutSectionInput workoutSetInput) {
+    return workoutSetInput.loggedWorkoutMoves.fold(0, (setAcum, nextMove) {
+      if ([
+        WorkoutMoveRepType.time,
+        WorkoutMoveRepType.distance,
+        WorkoutMoveRepType.artemisUnknown
+      ].contains(nextMove.repType)) {
+        return setAcum + 1;
+      } else {
+        return setAcum + nextMove.reps.round();
+      }
+    });
+  }
+
   static List<BodyArea> bodyAreasInWorkoutSection(WorkoutSection section) {
     final List<BodyArea> bodyAreas = [];
     for (final s in section.workoutSets) {

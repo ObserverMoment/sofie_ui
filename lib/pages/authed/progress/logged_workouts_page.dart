@@ -101,56 +101,62 @@ class _FilterableLoggedWorkoutsListState
                 l.completedOn.isBefore(_filterTo!.add(const Duration(days: 1))))
             .toList();
 
-    return FABPage(
-        rowButtonsAlignment: MainAxisAlignment.end,
-        rowButtons: [
-          if (_filterFrom != null || _filterTo != null)
-            FadeInUp(
-                child: FloatingButton(
-              onTap: _clearDateRange,
-              icon: CupertinoIcons.clear_thick,
-            )),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
-            child: FABPageButtonContainer(
-              padding: EdgeInsets.zero,
-              child: Row(
-                children: [
-                  DateRangePickerDisplay(
-                    textColor: context.theme.primary,
-                    from: _filterFrom,
-                    to: _filterTo,
-                    updateRange: (from, to) => setState(() {
-                      _filterFrom = from;
-                      _filterTo = to;
-                    }),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          FloatingButton(
-              onTap: () => context.push(
-                  rootNavigator: true,
-                  child: YourLoggedWorkoutsTextSearch(
-                      allLoggedWorkouts: widget.logs,
-                      selectLoggedWorkout: (l) =>
-                          _openLoggedWorkoutDetails(context, l.id))),
-              icon: CupertinoIcons.search)
-        ],
-        child: ListView.builder(
-          padding: const EdgeInsets.only(top: 8, bottom: 60),
-          itemBuilder: (c, i) => Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: GestureDetector(
-                onTap: () =>
-                    _openLoggedWorkoutDetails(context, filteredLogs[i].id),
-                child: LoggedWorkoutCard(
-                  loggedWorkout: filteredLogs[i],
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ContentBox(
+        child: FABPage(
+            rowButtonsAlignment: MainAxisAlignment.end,
+            rowButtons: [
+              if (_filterFrom != null || _filterTo != null)
+                FadeInUp(
+                    child: FloatingButton(
+                  onTap: _clearDateRange,
+                  icon: CupertinoIcons.clear_thick,
                 )),
-          ),
-          itemCount: filteredLogs.length,
-        ));
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: FABPageButtonContainer(
+                  padding: EdgeInsets.zero,
+                  child: Row(
+                    children: [
+                      DateRangePickerDisplay(
+                        textColor: context.theme.primary,
+                        from: _filterFrom,
+                        to: _filterTo,
+                        updateRange: (from, to) => setState(() {
+                          _filterFrom = from;
+                          _filterTo = to;
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              FloatingButton(
+                  onTap: () => context.push(
+                      rootNavigator: true,
+                      child: YourLoggedWorkoutsTextSearch(
+                          allLoggedWorkouts: widget.logs,
+                          selectLoggedWorkout: (l) =>
+                              _openLoggedWorkoutDetails(context, l.id))),
+                  icon: CupertinoIcons.search)
+            ],
+            child: ListView.builder(
+              padding: const EdgeInsets.only(top: 8, bottom: 60),
+              itemBuilder: (c, i) => Padding(
+                padding: const EdgeInsets.only(bottom: 6.0),
+                child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () =>
+                        _openLoggedWorkoutDetails(context, filteredLogs[i].id),
+                    child: LoggedWorkoutCard(
+                      loggedWorkout: filteredLogs[i],
+                    )),
+              ),
+              itemCount: filteredLogs.length,
+            )),
+      ),
+    );
   }
 }
 
