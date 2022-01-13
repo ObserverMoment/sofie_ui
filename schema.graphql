@@ -732,6 +732,7 @@ type Mutation {
   deleteJournalMoodById(id: ID!): ID!
   deleteJournalNoteById(id: ID!): ID!
   deleteLoggedWorkoutById(id: ID!): ID!
+  deleteLoggedWorkoutMove(id: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
   deleteUserBenchmark(id: ID!): ID!

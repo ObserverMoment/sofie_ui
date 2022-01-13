@@ -14,11 +14,9 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/audio_session_manager.dart';
-import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wakelock/wakelock.dart';
@@ -512,7 +510,7 @@ class DoWorkoutBloc extends ChangeNotifier {
       gymProfile: scheduledWorkout?.gymProfile != null
           ? ConnectRelationInput(id: scheduledWorkout!.gymProfile!.id)
           : null,
-      name: 'Log - ${activeWorkout.name}',
+      name: activeWorkout.name,
       workout: ConnectRelationInput(id: activeWorkout.id),
       workoutPlanDayWorkout: workoutPlanDayWorkoutId != null
           ? ConnectRelationInput(id: workoutPlanDayWorkoutId!)
@@ -538,12 +536,19 @@ class DoWorkoutBloc extends ChangeNotifier {
         .mapIndexed((i, controller) {
       /// Use [i] to assign the new sort position within the log. This is needed because the user does not have to complete all the workout sections.
 
-      final workoutSection = controller.workoutSection;
       final timeTakenSeconds = controller.stopWatchTimer.secondTime.value;
 
-      if (workoutSection.isLifting || workoutSection.isCustomSession) {
+      if (controller.workoutSection.isLifting ||
+          controller.workoutSection.isCustomSession) {
+        /// For Lifting and Custom sessions the user can modify moves while they are working out. Modifying moves when working out does not reset the controller (as is teh case when the user is modifying moves on other workout types BEFORE they start) - so the [workoutSection] being referenced in the controller will not be getting updated. Only the [activeWorkout] is getting updated - so we must use that to generate the log section inputs.
+        final activeWorkoutSection = activeWorkout.workoutSections.firstWhere(
+            (wSection) =>
+                wSection.sortPosition ==
+                controller.workoutSection.sortPosition);
+
         /// Converts completed sets and reps lists to proper input objects and adds to [controller.state.loggedSection]
-        (controller as LiftingSectionController).updateLoggedSectionInput();
+        (controller as LiftingSectionController)
+            .updateLoggedSectionInput(activeWorkoutSection);
       }
 
       final loggedSectionInput = controller.state.loggedSection;

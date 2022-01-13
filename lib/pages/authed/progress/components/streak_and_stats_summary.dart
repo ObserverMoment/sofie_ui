@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';

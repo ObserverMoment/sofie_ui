@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -8,15 +9,16 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:collection/collection.dart';
 
-/// Converts a workout to a logged workout - with the currently logged in User.
+/// Converts a workout to a logged workout.
 LoggedWorkout loggedWorkoutFromWorkout(
     {required Workout workout,
     ScheduledWorkout? scheduledWorkout,
     bool copySections = false}) {
   final name = Utils.textNotNull(workout.name)
-      ? 'Log - ${workout.name}'
-      : 'Log - ${DateTime.now().dateString}';
+      ? 'workout.name'
+      : DateTime.now().dateString;
   return LoggedWorkout()
+    ..$$typename = kLoggedWorkoutTypename
     ..id = workout.id // Temp ID matches the workout
     ..completedOn = scheduledWorkout?.scheduledAt ?? DateTime.now()
     ..note = scheduledWorkout?.note
@@ -45,7 +47,8 @@ LoggedWorkoutSection loggedWorkoutSectionFromWorkoutSection(
   }
 
   return LoggedWorkoutSection()
-    ..id = workoutSection.id // Temp ID matches the workoutSection
+    ..$$typename = kLoggedWorkoutSectionTypename
+    ..id = workoutSection.id
     ..name = workoutSection.name
     ..repScore = repScore
     ..sortPosition = workoutSection.sortPosition
@@ -71,8 +74,10 @@ LoggedWorkoutSet loggedWorkoutSetFromWorkoutSet(
     required WorkoutSet workoutSet,
     required int roundNumber}) {
   return LoggedWorkoutSet()
+    ..$$typename = kLoggedWorkoutSetTypename
     ..id = workoutSet.id
     ..sectionRoundNumber = roundNumber
+    ..sortPosition = workoutSet.sortPosition
     ..timeTakenSeconds = workoutSetDurationOrNull(sectionType, workoutSet)
     ..loggedWorkoutMoves = workoutSet.workoutMoves
         .map((wSet) => loggedWorkoutMoveFromWorkoutMove(wSet))
@@ -81,6 +86,7 @@ LoggedWorkoutSet loggedWorkoutSetFromWorkoutSet(
 
 LoggedWorkoutMove loggedWorkoutMoveFromWorkoutMove(WorkoutMove workoutMove) {
   return LoggedWorkoutMove()
+    ..$$typename = kLoggedWorkoutMoveTypename
     ..id = workoutMove.id
     ..sortPosition = workoutMove.sortPosition
     ..repType = workoutMove.repType
@@ -91,6 +97,22 @@ LoggedWorkoutMove loggedWorkoutMoveFromWorkoutMove(WorkoutMove workoutMove) {
     ..timeUnit = workoutMove.timeUnit
     ..move = workoutMove.move
     ..equipment = workoutMove.equipment;
+}
+
+WorkoutMove workoutMoveFromLoggedWorkoutMove(
+    LoggedWorkoutMove loggedWorkoutMove) {
+  return WorkoutMove()
+    ..$$typename = kWorkoutMoveTypename
+    ..id = loggedWorkoutMove.id
+    ..sortPosition = loggedWorkoutMove.sortPosition
+    ..repType = loggedWorkoutMove.repType
+    ..reps = loggedWorkoutMove.reps
+    ..distanceUnit = loggedWorkoutMove.distanceUnit
+    ..loadAmount = loggedWorkoutMove.loadAmount
+    ..loadUnit = loggedWorkoutMove.loadUnit
+    ..timeUnit = loggedWorkoutMove.timeUnit
+    ..move = loggedWorkoutMove.move
+    ..equipment = loggedWorkoutMove.equipment;
 }
 
 //// Workout Moves List ////

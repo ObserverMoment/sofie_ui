@@ -113,21 +113,25 @@ class PopoverMenuItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              MyText(
-                text,
-                color: color,
-                textAlign: TextAlign.left,
-              ),
-              if (isActive)
-                const FadeIn(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Icon(CupertinoIcons.circle_fill,
-                      size: 10, color: Styles.primaryAccent),
-                ))
-            ],
+          Flexible(
+            child: Row(
+              children: [
+                Flexible(
+                  child: MyText(
+                    text,
+                    color: color,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+                if (isActive)
+                  const FadeIn(
+                      child: Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Icon(CupertinoIcons.circle_fill,
+                        size: 10, color: Styles.primaryAccent),
+                  ))
+              ],
+            ),
           ),
           if (iconData != null)
             Icon(

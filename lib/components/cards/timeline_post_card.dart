@@ -6,6 +6,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -150,10 +151,10 @@ class TimelinePostCard extends StatelessWidget {
                   if (activity.extraData?['caption'] is String)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
-                      child: MyText(
-                        activity.extraData?['caption'] as String? ?? '',
-                        lineHeight: 1.4,
-                        maxLines: 6,
+                      child: ReadMoreTextBlock(
+                        title: objectData.object.name,
+                        text: activity.extraData?['caption'] as String? ?? '',
+                        trimLines: 3,
                       ),
                     ),
                   // There are no type checks on the getStream side so we need to defend against anything weird being in this field.

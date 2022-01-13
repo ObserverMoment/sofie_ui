@@ -146,9 +146,10 @@ class ClubTimelinePostCard extends StatelessWidget {
                       child:
                           postData.object.type == TimelinePostType.announcement
                               ? MyHeaderText(postData.caption!, lineHeight: 1.4)
-                              : MyText(
-                                  postData.caption!,
-                                  lineHeight: 1.4,
+                              : ReadMoreTextBlock(
+                                  title: postData.object.name,
+                                  text: postData.caption ?? '',
+                                  trimLines: 3,
                                 ),
                     ),
                   if (postData.object.type == TimelinePostType.announcement)

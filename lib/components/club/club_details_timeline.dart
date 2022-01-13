@@ -188,6 +188,8 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
           )
         : _pagingController.itemList == null ||
                 _pagingController.itemList!.isEmpty
+
+            /// TODO: This needs a placeholder.
             ? const Center(
                 child: MyText(
                   'No Activity',
@@ -196,6 +198,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
               )
             : PagedListView<int, TimelinePostFullData>(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 pagingController: _pagingController,
                 builderDelegate:

@@ -6,6 +6,7 @@ import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_player.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
+import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/progress/components/lifetime_log_stats_summary.dart';
@@ -58,14 +59,24 @@ class ClubDetailsNonMembersPage extends StatelessWidget {
                     fit: BoxFit.cover),
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: club.contentAccessScope == ContentAccessScope.public
-                ? PrimaryButton(
-                    text: 'Join the Club!',
-                    prefixIconData: CupertinoIcons.checkmark_alt,
-                    onPressed: joinClub)
-                : const MyHeaderText('This Club is Private'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 24, top: 12),
+                child: club.contentAccessScope == ContentAccessScope.public
+                    ? PrimaryButton(
+                        text: 'Join the Club!',
+                        prefixIconData: CupertinoIcons.checkmark_alt,
+                        onPressed: joinClub)
+                    : const Tag(
+                        tag: 'This Club is Private',
+                        fontSize: FONTSIZE.five,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+                      ),
+              ),
+            ],
           ),
           MyHeaderText(
             club.name,

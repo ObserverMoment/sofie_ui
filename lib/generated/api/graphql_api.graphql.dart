@@ -7915,6 +7915,24 @@ class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class DeleteLoggedWorkoutMove$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteLoggedWorkoutMove$Mutation();
+
+  factory DeleteLoggedWorkoutMove$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteLoggedWorkoutMove$MutationFromJson(json);
+
+  late String deleteLoggedWorkoutMove;
+
+  @override
+  List<Object?> get props => [deleteLoggedWorkoutMove];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteLoggedWorkoutMove$MutationToJson(this);
+}
+
 enum ContentAccessScope {
   @JsonValue('PRIVATE')
   private,
@@ -50458,4 +50476,69 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   @override
   CreateClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       CreateClubInviteToken$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteLoggedWorkoutMoveArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteLoggedWorkoutMoveArguments({required this.id});
+
+  @override
+  factory DeleteLoggedWorkoutMoveArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteLoggedWorkoutMoveArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteLoggedWorkoutMoveArgumentsToJson(this);
+}
+
+final DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteLoggedWorkoutMove'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteLoggedWorkoutMove'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteLoggedWorkoutMoveMutation extends GraphQLQuery<
+    DeleteLoggedWorkoutMove$Mutation, DeleteLoggedWorkoutMoveArguments> {
+  DeleteLoggedWorkoutMoveMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteLoggedWorkoutMove';
+
+  @override
+  final DeleteLoggedWorkoutMoveArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteLoggedWorkoutMove$Mutation parse(Map<String, dynamic> json) =>
+      DeleteLoggedWorkoutMove$Mutation.fromJson(json);
 }

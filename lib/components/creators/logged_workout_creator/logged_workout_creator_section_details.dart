@@ -5,7 +5,6 @@ import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/components/user_input/selectors/move_type_multi_selector.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
@@ -30,8 +29,6 @@ class _LoggedWorkoutCreatorSectionDetailsState
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<LoggedWorkoutCreatorBloc>();
-
     final loggedWorkoutSection =
         context.select<LoggedWorkoutCreatorBloc, LoggedWorkoutSection>(
             (b) => b.loggedWorkout.loggedWorkoutSections[widget.sectionIndex]);

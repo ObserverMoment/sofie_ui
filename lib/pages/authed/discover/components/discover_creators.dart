@@ -7,8 +7,6 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -41,6 +39,8 @@ class DiscoverCreators extends StatelessWidget {
                 ),
                 IconButton(
                     iconData: CupertinoIcons.compass,
+                    size: 32,
+                    iconColor: Styles.primaryAccent,
                     onPressed: () =>
                         context.navigateTo(const DiscoverPeopleRoute()))
               ],
@@ -95,7 +95,7 @@ class _CreatorCard extends StatelessWidget {
       {Key? key, required this.profileSummary, required this.avatarSize})
       : super(key: key);
 
-  double get borderRadius => 16;
+  double get borderRadius => 12;
 
   Widget _buildAvatar(BuildContext context) => Container(
       clipBehavior: Clip.antiAlias,
@@ -121,38 +121,49 @@ class _CreatorCard extends StatelessWidget {
     return Stack(
       children: [
         _buildAvatar(context),
-        ContentBox(
-          // padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          backgroundColor: context.theme.cardBackground.withOpacity(0.9),
-          borderRadius: borderRadius,
-          child: MyText(
-            profileSummary.displayName,
-            maxLines: 2,
-            size: FONTSIZE.two,
-            weight: FontWeight.bold,
-          ),
-        ),
-        if (profileSummary.skills.isNotEmpty)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ContentBox(
-              borderRadius: borderRadius,
-              backgroundColor: context.theme.background.withOpacity(0.7),
-              padding: const EdgeInsets.all(4),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CommaSeparatedList(
-                      profileSummary.skills,
-                      fontSize: FONTSIZE.one,
-                      alignment: WrapAlignment.center,
-                      runSpacing: 2,
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ContentBox(
+                  backgroundColor:
+                      context.theme.cardBackground.withOpacity(0.95),
+                  borderRadius: borderRadius,
+                  child: MyText(
+                    profileSummary.displayName,
+                    maxLines: 2,
+                    size: FONTSIZE.two,
+                  ),
+                ),
+                if (profileSummary.skills.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0),
+                    child: ContentBox(
+                      borderRadius: borderRadius,
+                      backgroundColor:
+                          context.theme.background.withOpacity(0.9),
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: CommaSeparatedList(
+                              profileSummary.skills,
+                              fontSize: FONTSIZE.one,
+                              alignment: WrapAlignment.center,
+                              runSpacing: 2,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
+        ),
       ],
     );
   }

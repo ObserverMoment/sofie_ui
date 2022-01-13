@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
+import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
+import 'package:supercharged/supercharged.dart';
 
 /// Read only log moves list - lap / split times.
 class LoggedWorkoutSectionMovesList extends StatefulWidget {
@@ -27,7 +30,10 @@ class _LoggedWorkoutSectionMovesListState
   Widget build(BuildContext context) {
     final loggedWorkoutSection = widget.loggedWorkoutSection;
 
-    /// TODO: New structure.
+    final loggedSetsByRound = loggedWorkoutSection.loggedWorkoutSets
+        .groupBy<int, LoggedWorkoutSet>((wSet) => wSet.sectionRoundNumber);
+
+    final numRounds = loggedSetsByRound.keys.length;
 
     return MyPageScaffold(
       navigationBar: const MyNavBar(
@@ -63,125 +69,141 @@ class _LoggedWorkoutSectionMovesListState
               updateValue: (v) => setState(() => _showSets = v),
               value: _showSets),
           const HorizontalLine(),
-
-          /// TODO
-          MyText('New UI based on new data structure'),
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: numRounds,
+                itemBuilder: (c, i) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: _SingleRoundData(
+                        sectionIndex: loggedWorkoutSection.sortPosition,
+                        roundIndex: i,
+                        workoutSectionType:
+                            loggedWorkoutSection.workoutSectionType,
+                        loggedWorkoutSets: loggedSetsByRound[i]!,
+                        showSets: _showSets,
+                      ),
+                    )),
+          ),
         ],
       ),
     );
   }
 }
 
-// class _SingleRoundData extends StatelessWidget {
-//   final int sectionIndex;
-//   final int roundIndex;
-//   final bool showSets;
-//   final WorkoutSectionRoundData roundData;
-//   const _SingleRoundData(
-//       {Key? key,
-//       required this.roundData,
-//       required this.sectionIndex,
-//       required this.roundIndex,
-//       required this.showSets})
-//       : super(key: key);
+class _SingleRoundData extends StatelessWidget {
+  final int sectionIndex;
+  final int roundIndex;
+  final bool showSets;
+  final WorkoutSectionType workoutSectionType;
+  final List<LoggedWorkoutSet> loggedWorkoutSets;
+  const _SingleRoundData(
+      {Key? key,
+      required this.loggedWorkoutSets,
+      required this.sectionIndex,
+      required this.roundIndex,
+      required this.showSets,
+      required this.workoutSectionType})
+      : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final sets = roundData.sets;
-//     return ContentBox(
-//       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-//         Padding(
-//           padding: const EdgeInsets.symmetric(vertical: 4.0),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               MyText('ROUND ${roundIndex + 1}'),
-//               Row(
-//                 mainAxisAlignment: MainAxisAlignment.end,
-//                 children: [
-//                   _DurationDisplay(
-//                     duration: Duration(seconds: roundData.timeTakenSeconds),
-//                   ),
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//         GrowInOut(
-//           show: showSets,
-//           child: ListView.builder(
-//               shrinkWrap: true,
-//               physics: const NeverScrollableScrollPhysics(),
-//               itemCount: sets.length,
-//               itemBuilder: (c, i) => Container(
-//                     padding: const EdgeInsets.symmetric(vertical: 4.0),
-//                     decoration: BoxDecoration(
-//                         border: Border(
-//                             bottom:
-//                                 BorderSide(color: context.theme.background))),
-//                     child: _SingleSetData(
-//                       index: i,
-//                       setData: roundData.sets[i],
-//                     ),
-//                   )),
-//         ),
-//       ]),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    final timeTakenSeconds = loggedWorkoutSets.fold<int>(
+        0, (acum, next) => acum + (next.timeTakenSeconds ?? 0));
 
-// class _SingleSetData extends StatelessWidget {
-//   final int index;
-//   final WorkoutSectionRoundSetData setData;
-//   const _SingleSetData({
-//     Key? key,
-//     required this.index,
-//     required this.setData,
-//   }) : super(key: key);
+    /// Ensure sort position 0 goes at the top.
+    final sortedSets = loggedWorkoutSets.reversed.toList();
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final movesList = setData.moves.split(',');
+    return ContentBox(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MyText('ROUND ${roundIndex + 1}'),
+              CompactTimerIcon(duration: Duration(seconds: timeTakenSeconds)),
+            ],
+          ),
+        ),
+        GrowInOut(
+          show: showSets,
+          child: ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: loggedWorkoutSets.length,
+              itemBuilder: (c, i) => Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color:
+                                    context.theme.primary.withOpacity(0.2)))),
+                    child: _SingleSetData(
+                      index: i,
+                      workoutSectionType: workoutSectionType,
+                      loggedWorkoutSet: sortedSets[i],
+                    ),
+                  )),
+        ),
+      ]),
+    );
+  }
+}
 
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 3.0),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: movesList
-//                   .map(
-//                     (m) => Padding(
-//                       padding: const EdgeInsets.only(top: 2, bottom: 6.0),
-//                       child: Row(
-//                         children: [
-//                           Expanded(
-//                               child: MyText(
-//                             m,
-//                             size: FONTSIZE.two,
-//                           )),
-//                         ],
-//                       ),
-//                     ),
-//                   )
-//                   .toList(),
-//             ),
-//           ),
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.end,
-//             children: [
-//               _DurationDisplay(
-//                 duration: Duration(seconds: setData.timeTakenSeconds),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class _SingleSetData extends StatelessWidget {
+  final int index;
+  final WorkoutSectionType workoutSectionType;
+  final LoggedWorkoutSet loggedWorkoutSet;
+  const _SingleSetData(
+      {Key? key,
+      required this.index,
+      required this.loggedWorkoutSet,
+      required this.workoutSectionType})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    /// Ensure sort position 0 goes at the top.
+    final sortedMoves = loggedWorkoutSet.loggedWorkoutMoves.reversed.toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: sortedMoves
+          .map(
+            (lwm) => Padding(
+              padding: const EdgeInsets.only(top: 6, bottom: 6.0),
+              child: _LoggedWorkoutMoveDisplay(
+                loggedWorkoutMove: lwm,
+                loggedWorkoutSet: loggedWorkoutSet,
+                workoutSectionType: workoutSectionType,
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class _LoggedWorkoutMoveDisplay extends StatelessWidget {
+  final WorkoutSectionType workoutSectionType;
+  final LoggedWorkoutSet loggedWorkoutSet;
+  final LoggedWorkoutMove loggedWorkoutMove;
+  const _LoggedWorkoutMoveDisplay(
+      {Key? key,
+      required this.loggedWorkoutMove,
+      required this.workoutSectionType,
+      required this.loggedWorkoutSet})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return generateLoggedWorkoutMoveDisplay(
+        loggedWorkoutMove: loggedWorkoutMove,
+        loggedWorkoutSet: loggedWorkoutSet,
+        workoutSectionType: workoutSectionType);
+  }
+}
 
 class _DurationDisplay extends StatelessWidget {
   final Duration duration;

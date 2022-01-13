@@ -397,9 +397,18 @@ class DurationTag extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(CupertinoIcons.timer, size: iconSize, color: textColor),
-            const SizedBox(width: 4),
-            MyText(duration.displayString, size: fontSize, color: textColor),
+            Icon(
+              CupertinoIcons.timer,
+              size: iconSize,
+              color: textColor,
+            ),
+            const SizedBox(width: 8),
+            MyText(
+              duration.displayString,
+              size: fontSize,
+              color: textColor,
+              lineHeight: 1.25,
+            ),
           ],
         ));
   }

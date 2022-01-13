@@ -4,6 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
+import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
@@ -234,73 +236,63 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
               final club = clubData.clubSummary;
 
               return CupertinoPageScaffold(
-                  navigationBar: MyNavBar(
-                    middle: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        NavBarTitle(club.name),
-                        MyText(
-                          club.owner.displayName.toUpperCase(),
-                          size: FONTSIZE.one,
-                          subtext: true,
-                        ),
-                      ],
-                    ),
-                    trailing: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        child: const Icon(CupertinoIcons.ellipsis),
-                        onPressed: () => openBottomSheetMenu(
-                            context: context,
-                            child: BottomSheetMenu(
-                                header: BottomSheetMenuHeader(
-                                  name: club.name,
-                                  subtitle: 'Club',
-                                  imageUri: club.coverImageUri,
-                                ),
-                                items: [
-                                  if (_userIsOwnerOrAdmin)
-                                    BottomSheetMenuItem(
-                                        text: 'New Post',
-                                        icon: CupertinoIcons.add,
-                                        onPressed: _createNewPost),
-                                  if (_userIsOwnerOrAdmin)
-                                    BottomSheetMenuItem(
-                                        text: 'Edit Club Info',
-                                        icon: CupertinoIcons.pencil,
-                                        onPressed: () => context.navigateTo(
-                                            ClubCreatorRoute(
-                                                clubSummary: club))),
-                                  if (!_userIsMember &&
-                                      club.contentAccessScope ==
-                                          ContentAccessScope.public)
-                                    BottomSheetMenuItem(
-                                        text: 'Join Club',
-                                        icon: CupertinoIcons.add,
-                                        onPressed: () =>
-                                            _addUserToPublicClub(club)),
-                                  if (club.contentAccessScope ==
-                                      ContentAccessScope.public)
-                                    BottomSheetMenuItem(
-                                        text: 'Share',
-                                        icon: CupertinoIcons.paperplane,
-                                        onPressed: () => _shareClub(club)),
-                                  if (!_userIsMember && !_userIsOwner)
-                                    BottomSheetMenuItem(
-                                        text: 'Leave Club',
-                                        isDestructive: true,
-                                        icon: CupertinoIcons.square_arrow_right,
-                                        onPressed: () =>
-                                            _confirmLeaveClub(club.id)),
-                                  if (_userIsOwner)
-                                    BottomSheetMenuItem(
-                                        text: 'Shut Down Club',
-                                        icon: CupertinoIcons
-                                            .exclamationmark_triangle,
-                                        isDestructive: true,
-                                        onPressed: () =>
-                                            _confirmDeleteClub(club)),
-                                ]))),
-                  ),
+                  // navigationBar: MyNavBar(
+                  //   middle: NavBarTitle(club.name),
+                  //   trailing: CupertinoButton(
+                  //       padding: EdgeInsets.zero,
+                  //       child: const Icon(CupertinoIcons.ellipsis),
+                  //       onPressed: () => openBottomSheetMenu(
+                  //           context: context,
+                  //           child: BottomSheetMenu(
+                  //               header: BottomSheetMenuHeader(
+                  //                 name: club.name,
+                  //                 subtitle: 'Club',
+                  //                 imageUri: club.coverImageUri,
+                  //               ),
+                  //               items: [
+                  //                 if (_userIsOwnerOrAdmin)
+                  //                   BottomSheetMenuItem(
+                  //                       text: 'New Post',
+                  //                       icon: CupertinoIcons.add,
+                  //                       onPressed: _createNewPost),
+                  //                 if (_userIsOwnerOrAdmin)
+                  //                   BottomSheetMenuItem(
+                  //                       text: 'Edit Club Info',
+                  //                       icon: CupertinoIcons.pencil,
+                  //                       onPressed: () => context.navigateTo(
+                  //                           ClubCreatorRoute(
+                  //                               clubSummary: club))),
+                  //                 if (!_userIsMember &&
+                  //                     club.contentAccessScope ==
+                  //                         ContentAccessScope.public)
+                  //                   BottomSheetMenuItem(
+                  //                       text: 'Join Club',
+                  //                       icon: CupertinoIcons.add,
+                  //                       onPressed: () =>
+                  //                           _addUserToPublicClub(club)),
+                  //                 if (club.contentAccessScope ==
+                  //                     ContentAccessScope.public)
+                  //                   BottomSheetMenuItem(
+                  //                       text: 'Share',
+                  //                       icon: CupertinoIcons.paperplane,
+                  //                       onPressed: () => _shareClub(club)),
+                  //                 if (!_userIsMember && !_userIsOwner)
+                  //                   BottomSheetMenuItem(
+                  //                       text: 'Leave Club',
+                  //                       isDestructive: true,
+                  //                       icon: CupertinoIcons.square_arrow_right,
+                  //                       onPressed: () =>
+                  //                           _confirmLeaveClub(club.id)),
+                  //                 if (_userIsOwner)
+                  //                   BottomSheetMenuItem(
+                  //                       text: 'Shut Down Club',
+                  //                       icon: CupertinoIcons
+                  //                           .exclamationmark_triangle,
+                  //                       isDestructive: true,
+                  //                       onPressed: () =>
+                  //                           _confirmDeleteClub(club)),
+                  //               ]))),
+                  // ),
                   child: _userIsMember
                       ? FadeInUp(
                           child: ClubDetailsMembersPage(

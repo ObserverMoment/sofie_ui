@@ -149,6 +149,7 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
   }
 
   void _openModifyMove(BuildContext context, WorkoutMove originalWorkoutMove) {
+    Vibrate.feedback(FeedbackType.selection);
     if (workoutSectionType.isLifting) {
       /// Modify the reps and load only.
       context.showBottomSheet(
@@ -161,15 +162,16 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
       ));
     } else {
       context.push(
+          fullscreenDialog: true,
           child: WorkoutMoveCreator(
-        pageTitle: 'Modify Move',
-        workoutMove: originalWorkoutMove,
-        saveWorkoutMove: (workoutMove) {
-          context.read<DoWorkoutBloc>().updateWorkoutMove(
-              sectionIndex, workoutSet.sortPosition, workoutMove);
-        },
-        sortPosition: originalWorkoutMove.sortPosition,
-      ));
+            pageTitle: 'Modify Move',
+            workoutMove: originalWorkoutMove,
+            saveWorkoutMove: (workoutMove) {
+              context.read<DoWorkoutBloc>().updateWorkoutMove(
+                  sectionIndex, workoutSet.sortPosition, workoutMove);
+            },
+            sortPosition: originalWorkoutMove.sortPosition,
+          ));
     }
   }
 
@@ -498,7 +500,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
   @override
   void initState() {
     _repsController.text = widget.workoutMove.reps.round().toString();
-    _loadController.text = widget.workoutMove.loadAmount.round().toString();
+    _loadController.text = widget.workoutMove.loadAmount.stringMyDouble();
     _loadUnit = widget.workoutMove.loadUnit;
     super.initState();
   }
@@ -522,6 +524,8 @@ class _ModifyMoveState extends State<_ModifyMove> {
 
   @override
   Widget build(BuildContext context) {
+    final enableLoadAdjust = widget.workoutMove.loadAdjustable;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -552,6 +556,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
                 width: 160,
                 child: MyNumberInput(
                   _repsController,
+                  key: const Key('modify-move-reps'),
                   textSize: 40,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -560,8 +565,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
             ],
           ),
         ),
-        if (widget.workoutMove.equipment != null &&
-            !widget.workoutMove.equipment!.isBodyweight)
+        if (enableLoadAdjust)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: Column(
@@ -575,6 +579,7 @@ class _ModifyMoveState extends State<_ModifyMove> {
                       width: 160,
                       child: MyNumberInput(
                         _loadController,
+                        key: const Key('modify-move-load'),
                         allowDouble: true,
                         textSize: 40,
                         padding: const EdgeInsets.symmetric(

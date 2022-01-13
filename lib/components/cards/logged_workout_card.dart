@@ -1,14 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';

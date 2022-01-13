@@ -6226,6 +6226,17 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'name': instance.name,
     };
 
+DeleteLoggedWorkoutMove$Mutation _$DeleteLoggedWorkoutMove$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteLoggedWorkoutMove$Mutation()
+      ..deleteLoggedWorkoutMove = json['deleteLoggedWorkoutMove'] as String;
+
+Map<String, dynamic> _$DeleteLoggedWorkoutMove$MutationToJson(
+        DeleteLoggedWorkoutMove$Mutation instance) =>
+    <String, dynamic>{
+      'deleteLoggedWorkoutMove': instance.deleteLoggedWorkoutMove,
+    };
+
 DeleteJournalGoalByIdArguments _$DeleteJournalGoalByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     DeleteJournalGoalByIdArguments(
@@ -8135,4 +8146,16 @@ Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
+    };
+
+DeleteLoggedWorkoutMoveArguments _$DeleteLoggedWorkoutMoveArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteLoggedWorkoutMoveArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteLoggedWorkoutMoveArgumentsToJson(
+        DeleteLoggedWorkoutMoveArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/comma_separated_list_generator.dart';
+import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -86,25 +86,17 @@ class _LoggedWorkoutCreatorSectionMovesListState
             child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: numRounds,
-                itemBuilder: (c, i) => i == numRounds
-                    ? CreateTextIconButton(
-                        text: 'Add Round',
-                        onPressed: () => context
-                            .read<LoggedWorkoutCreatorBloc>()
-                            .addRoundToSection(
-                              widget.sectionIndex,
-                            ))
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
-                        child: _SingleRoundData(
-                          sectionIndex: loggedWorkoutSection.sortPosition,
-                          roundIndex: i,
-                          workoutSectionType:
-                              loggedWorkoutSection.workoutSectionType,
-                          loggedWorkoutSets: loggedSetsByRound[i]!,
-                          showSets: _showSets,
-                        ),
-                      )),
+                itemBuilder: (c, i) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: _SingleRoundData(
+                        sectionIndex: loggedWorkoutSection.sortPosition,
+                        roundIndex: i,
+                        workoutSectionType:
+                            loggedWorkoutSection.workoutSectionType,
+                        loggedWorkoutSets: loggedSetsByRound[i]!,
+                        showSets: _showSets,
+                      ),
+                    )),
           ),
         ],
       ),
@@ -133,61 +125,44 @@ class _SingleRoundData extends StatelessWidget {
     final timeTakenSeconds = loggedWorkoutSets.fold<int>(
         0, (acum, next) => acum + (next.timeTakenSeconds ?? 0));
 
+    /// Ensure sort position 0 goes at the top.
+    final sortedSets = loggedWorkoutSets.reversed.toList();
+
     return ContentBox(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            MyText('ROUND ${roundIndex + 1}'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CompactTimerIcon(duration: Duration(seconds: timeTakenSeconds)),
-                CupertinoButton(
-                  padding: const EdgeInsets.only(left: 8),
-                  onPressed: () =>
-                      bloc.removeRoundFromSection(sectionIndex, roundIndex),
-                  child: const Icon(
-                    CupertinoIcons.delete_simple,
-                    size: 20,
-                  ),
-                )
-              ],
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MyText('ROUND ${roundIndex + 1}'),
+              CompactTimerIcon(duration: Duration(seconds: timeTakenSeconds)),
+            ],
+          ),
         ),
         GrowInOut(
           show: showSets,
           child: ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: loggedWorkoutSets.length + 1,
-              itemBuilder: (c, i) => i == loggedWorkoutSets.length
-                  ? CreateTextIconButton(
-                      text: 'Add Set',
-                      onPressed: () => context
-                          .read<LoggedWorkoutCreatorBloc>()
-                          .addSetToSectionRound(sectionIndex, roundIndex),
-                    )
-                  : Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom:
-                                  BorderSide(color: context.theme.background))),
-                      child: _SingleSetData(
-                          index: i,
-                          workoutSectionType: workoutSectionType,
-                          loggedWorkoutSet: loggedWorkoutSets[i],
-                          updateDuration: (d) => bloc.updateSetTimeTakenSeconds(
-                              sectionIndex: sectionIndex,
-                              roundIndex: roundIndex,
-                              setIndex: i,
-                              seconds: d.inSeconds),
-                          removeSetFromRound: () =>
-                              bloc.removeSetFromSectionRound(
-                                  sectionIndex, roundIndex, i)),
-                    )),
+              itemCount: loggedWorkoutSets.length,
+              itemBuilder: (c, i) => Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color:
+                                    context.theme.primary.withOpacity(0.2)))),
+                    child: _SingleSetData(
+                      index: i,
+                      workoutSectionType: workoutSectionType,
+                      loggedWorkoutSet: sortedSets[i],
+                      updateDuration: (d) => bloc.updateSetTimeTakenSeconds(
+                          sectionIndex: sectionIndex,
+                          setId: sortedSets[i].id,
+                          seconds: d.inSeconds),
+                    ),
+                  )),
         ),
       ]),
     );
@@ -199,33 +174,75 @@ class _SingleSetData extends StatelessWidget {
   final WorkoutSectionType workoutSectionType;
   final LoggedWorkoutSet loggedWorkoutSet;
   final void Function(Duration duration) updateDuration;
-  final VoidCallback removeSetFromRound;
   const _SingleSetData(
       {Key? key,
       required this.index,
       required this.loggedWorkoutSet,
       required this.updateDuration,
-      required this.removeSetFromRound,
       required this.workoutSectionType})
       : super(key: key);
 
+  void _openEditLoggedMove(BuildContext context, LoggedWorkoutMove lwm) {
+    final bloc = context.read<LoggedWorkoutCreatorBloc>();
+    context.push(
+        child: WorkoutMoveCreator(
+            pageTitle: 'Edit Logged Set',
+            workoutMove: workoutMoveFromLoggedWorkoutMove(lwm),
+            sortPosition: lwm.sortPosition,
+            saveWorkoutMove: (updated) => bloc.updateLoggedWorkoutMove(
+                sectionIndex: index,
+                loggedSetId: loggedWorkoutSet.id,
+                updatedLoggedWorkoutMove:
+                    loggedWorkoutMoveFromWorkoutMove(updated))));
+  }
+
+  void _confirmDeleteLoggedMove(BuildContext context, LoggedWorkoutMove lwm) {
+    final bloc = context.read<LoggedWorkoutCreatorBloc>();
+    context.showConfirmDeleteDialog(
+        message:
+            'This cannot be undone and will affect your workout stats and data.',
+        itemType: 'Logged Set',
+        onConfirm: () {
+          bloc.deleteLoggedWorkoutMove(
+              sectionIndex: index,
+              loggedSetId: loggedWorkoutSet.id,
+              loggedMoveId: lwm.id);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
+    /// Ensure sort position 0 goes at the top.
+    final sortedMoves = loggedWorkoutSet.loggedWorkoutMoves.reversed.toList();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: loggedWorkoutSet.loggedWorkoutMoves
+            children: sortedMoves
                 .map(
-                  (lwm) => Padding(
-                    padding: const EdgeInsets.only(top: 6, bottom: 6.0),
-                    child: _LoggedWorkoutMoveDisplay(
-                      loggedWorkoutMove: lwm,
-                      loggedWorkoutSet: loggedWorkoutSet,
-                      workoutSectionType: workoutSectionType,
+                  (lwm) => PopoverMenu(
+                    button: Padding(
+                      padding: const EdgeInsets.only(top: 6, bottom: 6.0),
+                      child: _LoggedWorkoutMoveDisplay(
+                        loggedWorkoutMove: lwm,
+                        loggedWorkoutSet: loggedWorkoutSet,
+                        workoutSectionType: workoutSectionType,
+                      ),
                     ),
+                    items: [
+                      PopoverMenuItem(
+                          iconData: CupertinoIcons.pencil,
+                          text: 'Edit',
+                          onTap: () => _openEditLoggedMove(context, lwm)),
+                      PopoverMenuItem(
+                          iconData: CupertinoIcons.delete_simple,
+                          destructive: true,
+                          text: 'Delete',
+                          onTap: () => _confirmDeleteLoggedMove(context, lwm)),
+                    ],
                   ),
                 )
                 .toList(),
@@ -238,14 +255,6 @@ class _SingleSetData extends StatelessWidget {
                   Duration(seconds: loggedWorkoutSet.timeTakenSeconds ?? 0),
               updateDuration: updateDuration,
             ),
-            CupertinoButton(
-              padding: const EdgeInsets.only(left: 8),
-              onPressed: removeSetFromRound,
-              child: const Icon(
-                CupertinoIcons.delete_simple,
-                size: 20,
-              ),
-            )
           ],
         ),
       ],

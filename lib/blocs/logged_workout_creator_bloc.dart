@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/services/data_model_converters/workout_to_create_log_inputs.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -64,7 +64,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
             'Provide a prior log to edit, or a workout to create a log from, not both, or neither') {
     if (prevLoggedWorkout != null) {
       _isEditing = true;
-      loggedWorkout = prevLoggedWorkout!.copyAndSortAllChildren;
+      loggedWorkout = prevLoggedWorkout!;
     } else {
       _isEditing = false;
       loggedWorkout = loggedWorkoutFromWorkout(
@@ -76,8 +76,10 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       /// i.e. ForTIme - timeTaken
       /// If not then go ahead and form the loggedWorkoutSections.
       /// Otherwise do not.
-      if (workout!.workoutSections.none(
-          (w) => typesInputRequired.contains(w.workoutSectionType.name))) {
+      final userInputNotRequired = workout!.workoutSections
+          .none((w) => typesInputRequired.contains(w.workoutSectionType.name));
+
+      if (userInputNotRequired) {
         loggedWorkout.loggedWorkoutSections = workout!.workoutSections
             .sortedBy<num>((ws) => ws.sortPosition)
             .map((ws) =>
@@ -85,6 +87,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
             .toList();
       }
     }
+    loggedWorkout.copyAndSortAllChildren;
   }
 
   /// Helpers for write methods.
@@ -107,11 +110,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         toastType: ToastType.destructive);
   }
 
-  bool _checkApiResult(OperationResult result) {
+  bool _checkApiResult(OperationResult result,
+      {required VoidCallback onSuccess}) {
     if (result.hasErrors || result.data == null) {
       _revertChanges(result.errors);
       return false;
     } else {
+      onSuccess.call();
       return true;
     }
   }
@@ -143,6 +148,9 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         return loggedWorkoutSectionFromWorkoutSection(workoutSection: ws);
       }
     }).toList();
+
+    /// Ensure all sections and descendants correctly sorted.
+    loggedWorkout.copyAndSortAllChildren;
 
     notifyListeners();
   }
@@ -250,7 +258,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       final result = await context.graphQLStore.networkOnlyOperation(
           operation: UpdateLoggedWorkoutMutation(variables: variables));
 
-      _checkApiResult(result);
+      _checkApiResult(result, onSuccess: writeAllChangesToStore);
     } catch (e) {
       _revertChanges([e]);
     }
@@ -286,176 +294,6 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     }
   }
 
-  void updateSectionMoveTypes(int sectionIndex, List<MoveType> moveTypes) {
-    _backup();
-
-    final prev = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    final updated = moveTypes.map((m) => m.toJson()).toList();
-
-    loggedWorkout.loggedWorkoutSections[sectionIndex] =
-        LoggedWorkoutSection.fromJson({...prev.toJson(), 'MoveTypes': updated});
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  ///// LoggedWorkoutSectionData //////
-  /// Creates a new roundData object with original round data from
-  void addRoundToSection(int sectionIndex) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    // final rounds = prevSection.loggedWorkoutSectionData!.rounds;
-
-    // final roundData = rounds.isNotEmpty
-    //     ? rounds.last
-    //     : WorkoutSectionRoundData.fromJson(
-    //         {'timeTakenSeconds': 60, 'sets': []});
-
-    // prevSection.loggedWorkoutSectionData!.rounds
-    //     .add(WorkoutSectionRoundData.fromJson(roundData.toJson()));
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  void removeRoundFromSection(int sectionIndex, int roundIndex) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
-
-    // prevSection.loggedWorkoutSectionData!.rounds.removeAt(roundIndex);
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  void updateRoundTimeTakenSeconds(
-      {required int sectionIndex,
-      required int roundIndex,
-      required int seconds}) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prev = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    // prev.loggedWorkoutSectionData!.rounds[roundIndex].timeTakenSeconds =
-    //     seconds;
-
-    loggedWorkout.loggedWorkoutSections[sectionIndex] =
-        LoggedWorkoutSection.fromJson(prev.toJson());
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  void addSetToSectionRound(int sectionIndex, int roundIndex) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    // final prevRound = prevSection.loggedWorkoutSectionData!.rounds[roundIndex];
-
-    // final setData = prevRound.sets.isNotEmpty
-    //     ? prevRound.sets.last
-    //     : WorkoutSectionRoundSetData.fromJson(
-    //         {'timeTakenSeconds': 60, 'moves': '...'});
-
-    // prevSection.loggedWorkoutSectionData!.rounds[roundIndex].sets
-    //     .add(WorkoutSectionRoundSetData.fromJson(setData.toJson()));
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  void removeSetFromSectionRound(
-      int sectionIndex, int roundIndex, int setIndex) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    // prevSection.loggedWorkoutSectionData!.rounds[roundIndex].sets
-    //     .removeAt(setIndex);
-
-    /// Listeners are at the section level. So make a new one so that they know to rebuild.
-    loggedWorkout.loggedWorkoutSections[sectionIndex] =
-        LoggedWorkoutSection.fromJson(prevSection.toJson());
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  void updateSetTimeTakenSeconds(
-      {required int sectionIndex,
-      required int roundIndex,
-      required int setIndex,
-      required int seconds}) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prev = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    // prev.loggedWorkoutSectionData!.rounds[roundIndex].sets[setIndex]
-    //     .timeTakenSeconds = seconds;
-
-    /// Listeners are at the section level. So make a new one so that they know to rebuild.
-    loggedWorkout.loggedWorkoutSections[sectionIndex] =
-        LoggedWorkoutSection.fromJson(prev.toJson());
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
-  void updateSetMovesList(
-      {required int sectionIndex,
-      required int roundIndex,
-      required int setIndex,
-      required String moves}) {
-    _backup();
-
-    /// TODO: New data structure.
-
-    final prev = loggedWorkout.loggedWorkoutSections[sectionIndex];
-    // prev.loggedWorkoutSectionData!.rounds[roundIndex].sets[setIndex].moves =
-    //     moves;
-
-    /// Listeners are at the section level. So make a new one so that they know to rebuild.
-    loggedWorkout.loggedWorkoutSections[sectionIndex] =
-        LoggedWorkoutSection.fromJson(prev.toJson());
-
-    notifyListeners();
-
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
-  }
-
   /// Run at the end of any loggedWorkoutSection update IF we are editing a previous log already in the DB.
   /// If there are no errors, no action is needed. Don't write over local data with data that has returned because the user may have sent off another update already and this will lead to race.
   Future<void> _saveLoggedWorkoutSectionToDB(int sectionIndex) async {
@@ -468,9 +306,111 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       final result = await context.graphQLStore.networkOnlyOperation(
           operation: UpdateLoggedWorkoutSectionMutation(variables: variables));
 
-      _checkApiResult(result);
+      _checkApiResult(result, onSuccess: writeAllChangesToStore);
     } catch (e) {
       _revertChanges([e]);
+    }
+  }
+
+  //// Logged Workout Set CRUD ////
+  Future<void> updateSetTimeTakenSeconds(
+      {required int sectionIndex,
+      required String setId,
+      required int seconds}) async {
+    _backup();
+
+    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
+
+    final setToUpdate =
+        prevSection.loggedWorkoutSets.firstWhere((lws) => lws.id == setId);
+
+    setToUpdate.timeTakenSeconds = seconds;
+
+    /// Listeners are at the section level. So make a new one so that they know to rebuild.
+    loggedWorkout.loggedWorkoutSections[sectionIndex] =
+        LoggedWorkoutSection.fromJson(prevSection.toJson());
+
+    notifyListeners();
+
+    if (_isEditing) {
+      final variables = UpdateLoggedWorkoutSetArguments(
+          data: UpdateLoggedWorkoutSetInput(
+              id: setId, timeTakenSeconds: seconds));
+
+      final result = await context.graphQLStore.networkOnlyOperation(
+          operation: UpdateLoggedWorkoutSetMutation(variables: variables));
+
+      /// If no errors then assume update has worked, otherwise revert UI to backup.
+      _checkApiResult(result, onSuccess: writeAllChangesToStore);
+    }
+  }
+
+  //// Logged Workout Move CRUD ////
+  Future<void> updateLoggedWorkoutMove({
+    required int sectionIndex,
+    required String loggedSetId,
+    required LoggedWorkoutMove updatedLoggedWorkoutMove,
+  }) async {
+    _backup();
+
+    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
+
+    final prevSet = prevSection.loggedWorkoutSets
+        .firstWhere((lws) => lws.id == loggedSetId);
+
+    prevSet.loggedWorkoutMoves = prevSet.loggedWorkoutMoves
+        .map((lwm) => lwm.id == updatedLoggedWorkoutMove.id
+            ? updatedLoggedWorkoutMove
+            : lwm)
+        .toList();
+
+    /// Listeners are at the section level. So make a new one so that they know to rebuild.
+    loggedWorkout.loggedWorkoutSections[sectionIndex] =
+        LoggedWorkoutSection.fromJson(prevSection.toJson());
+
+    notifyListeners();
+
+    if (_isEditing) {
+      final variables = UpdateLoggedWorkoutMoveArguments(
+          data: UpdateLoggedWorkoutMoveInput.fromJson(
+              updatedLoggedWorkoutMove.toJson()));
+
+      final result = await context.graphQLStore.networkOnlyOperation(
+          operation: UpdateLoggedWorkoutMoveMutation(variables: variables));
+
+      /// If no errors then assume update has worked, otherwise revert UI to backup.
+      _checkApiResult(result, onSuccess: writeAllChangesToStore);
+    }
+  }
+
+  Future<void> deleteLoggedWorkoutMove({
+    required int sectionIndex,
+    required String loggedSetId,
+    required String loggedMoveId,
+  }) async {
+    _backup();
+
+    final prevSection = loggedWorkout.loggedWorkoutSections[sectionIndex];
+
+    final prevSet = prevSection.loggedWorkoutSets
+        .firstWhere((lws) => lws.id == loggedSetId);
+
+    prevSet.loggedWorkoutMoves.removeWhere((lwm) => lwm.id == loggedMoveId);
+
+    /// Listeners are at the section level. So make a new one so that they know to rebuild.
+    loggedWorkout.loggedWorkoutSections[sectionIndex] =
+        LoggedWorkoutSection.fromJson(prevSection.toJson());
+
+    notifyListeners();
+
+    if (_isEditing) {
+      final variables = DeleteLoggedWorkoutMoveArguments(id: loggedMoveId);
+
+      final result = await context.graphQLStore.networkOnlyOperation(
+          operation: DeleteLoggedWorkoutMoveMutation(variables: variables));
+
+      /// If no errors then assume update has worked, otherwise revert UI to backup.
+      _checkApiResult(result, onSuccess: writeAllChangesToStore);
     }
   }
 
@@ -499,63 +439,5 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       GQLOpNames.workoutPlanEnrolments,
       GQLVarParamKeys.workoutPlanEnrolmentById(workoutPlanEnrolmentId)
     ]);
-  }
-
-  /// To add a gym profile to the logged workout input you can either add it to
-  /// [scheduledWorkout.gymProfile] or to [loggedWorkout.gymProfile].
-  /// [loggedWorkout.gymProfile] will take precedence over [scheduledWorkout.gymProfile].
-  static CreateLoggedWorkoutInput createLoggedWorkoutInputFromLoggedWorkout(
-      LoggedWorkout loggedWorkout,
-      {ScheduledWorkout? scheduledWorkout,
-      String? workoutPlanDayWorkoutId,
-      String? workoutPlanEnrolmentId}) {
-    final gymProfile = loggedWorkout.gymProfile ?? scheduledWorkout?.gymProfile;
-
-    return CreateLoggedWorkoutInput(
-      name: loggedWorkout.name,
-      note: loggedWorkout.note,
-      scheduledWorkout: scheduledWorkout != null
-          ? ConnectRelationInput(id: scheduledWorkout.id)
-          : null,
-      workoutPlanDayWorkout: workoutPlanDayWorkoutId != null
-          ? ConnectRelationInput(id: workoutPlanDayWorkoutId)
-          : null,
-      workoutPlanEnrolment: workoutPlanEnrolmentId != null
-          ? ConnectRelationInput(id: workoutPlanEnrolmentId)
-          : null,
-      gymProfile:
-          gymProfile != null ? ConnectRelationInput(id: gymProfile.id) : null,
-      workoutGoals: loggedWorkout.workoutGoals
-          .map((goal) => ConnectRelationInput(id: goal.id))
-          .toList(),
-      completedOn: loggedWorkout.completedOn,
-      workout: loggedWorkout.workoutId != null
-          ? ConnectRelationInput(id: loggedWorkout.workoutId!)
-          : null,
-      loggedWorkoutSections: loggedWorkout.loggedWorkoutSections
-          .sortedBy<num>((section) => section.sortPosition)
-          .mapIndexed((index, section) =>
-              CreateLoggedWorkoutSectionInLoggedWorkoutInput(
-                name: section.name,
-                sortPosition: index,
-                // moveTypes: section.moveTypes
-                //     .map((m) => ConnectRelationInput(id: m.id))
-                //     .toList(),
-                // bodyAreas: section.bodyAreas
-                //     .map((b) => ConnectRelationInput(id: b.id))
-                //     .toList(),
-                repScore: section.repScore,
-                timeTakenSeconds: section.timeTakenSeconds,
-
-                /// TODO: New data structure.
-                loggedWorkoutSets: [],
-                // loggedWorkoutSectionData:
-                //     LoggedWorkoutSectionDataInput.fromJson(
-                //         section.loggedWorkoutSectionData?.toJson() ?? {}),
-                workoutSectionType:
-                    ConnectRelationInput(id: section.workoutSectionType.id),
-              ))
-          .toList(),
-    );
   }
 }
