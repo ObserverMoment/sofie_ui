@@ -167,8 +167,10 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
               navigationBar: MyNavBar(
                 middle: NavBarTitle('Loading Chat...'),
               ),
-              child: CupertinoActivityIndicator(
-                radius: 12,
+              child: Center(
+                child: CupertinoActivityIndicator(
+                  radius: 12,
+                ),
               )),
     );
   }

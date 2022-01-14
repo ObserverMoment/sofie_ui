@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +17,7 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -26,6 +26,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:auto_route/auto_route.dart';
 
 /// Very simlar to the LoggedWorkoutCreator.
 /// Shares most of its components and logic is handled by [LoggedWorkoutCreatorBloc].
@@ -118,6 +119,14 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
                                   subtitle: 'Logged Workout',
                                 ),
                                 items: [
+                                  if (Utils.textNotNull(
+                                      loggedWorkout.workoutId))
+                                    BottomSheetMenuItem(
+                                        text: 'View workout',
+                                        icon: CupertinoIcons.info,
+                                        onPressed: () => context.navigateTo(
+                                            WorkoutDetailsRoute(
+                                                id: loggedWorkout.workoutId!))),
                                   BottomSheetMenuItem(
                                       text: 'Share',
                                       icon: CupertinoIcons.paperplane,

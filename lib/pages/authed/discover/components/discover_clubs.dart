@@ -30,7 +30,6 @@ class DiscoverClubs extends StatelessWidget {
                       ),
                       IconButton(
                           iconData: CupertinoIcons.compass,
-                          size: 32,
                           iconColor: Styles.primaryAccent,
                           onPressed: () =>
                               context.navigateTo(const DiscoverClubsRoute()))

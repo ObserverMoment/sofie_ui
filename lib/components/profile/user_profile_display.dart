@@ -299,8 +299,11 @@ class _ProfileButtons extends StatelessWidget {
             otherUserId: profile.id,
           )),
         ),
-        UserFeedConnectionButton(
-          otherUserId: profile.id,
+        SizedBox(
+          width: 150,
+          child: UserFeedConnectionButton(
+            otherUserId: profile.id,
+          ),
         ),
       ],
     );

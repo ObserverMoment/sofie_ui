@@ -1,9 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/cards/card.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/club/club_details_info.dart';
 import 'package:sofie_ui/components/club/club_details_people.dart';
 import 'package:sofie_ui/components/club/club_details_timeline.dart';
@@ -11,23 +10,31 @@ import 'package:sofie_ui/components/club/club_details_workout_plans.dart';
 import 'package:sofie_ui/components/club/club_details_workouts.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
+import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
+import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/details_pages/club_details/utils.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/sharing_and_linking.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:json_annotation/json_annotation.dart' as json;
 
 class ClubDetailsMembersPage extends StatefulWidget {
   final ClubSummary club;
   final UserClubMemberStatus authedUserMemberType;
-  final bool stopPollingFeed;
+  final AsyncCallback checkUserMemberStatus;
   const ClubDetailsMembersPage({
     Key? key,
     required this.club,
     required this.authedUserMemberType,
-    required this.stopPollingFeed,
+    required this.checkUserMemberStatus,
   }) : super(key: key);
 
   @override
@@ -35,145 +42,287 @@ class ClubDetailsMembersPage extends StatefulWidget {
 }
 
 class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
-  int _activeTabIndex = 0;
   final ScrollController _scrollController = ScrollController();
+  double _scrollProgress = 0.0;
 
-  final _maxHeaderSize = 500.0;
-  double _progress = 0.0;
+  late double _topNavBarHeight;
+
+  bool _enableFeedPolling = true;
 
   @override
   void initState() {
     super.initState();
+    _topNavBarHeight = const CupertinoNavigationBar().preferredSize.height;
+
     _scrollController.addListener(() {
-      print(_scrollController.offset);
       setState(() {
-        _progress = (_scrollController.offset / _maxHeaderSize).clamp(0.0, 1.0);
+        _scrollProgress =
+            (_scrollController.offset / (_maxHeaderSize - 200)).clamp(0.0, 1.0);
       });
     });
   }
 
-  bool get _userIsOwnerOrAdmin => [
-        UserClubMemberStatus.owner,
-        UserClubMemberStatus.admin,
-      ].contains(widget.authedUserMemberType);
+  double get _topSafeArea => MediaQuery.of(context).padding.top;
+
+  double get _maxHeaderSize => Utils.textNotNull(widget.club.coverImageUri)
+      ? 500
+      : 250 + _topNavBarHeight + _topSafeArea;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // ListView(children: [],),
     return Stack(
       children: [
-        ListView(
-          padding: EdgeInsets.zero,
+        CustomScrollView(
           controller: _scrollController,
-          children: [
-            // SliverPersistentHeader(delegate: MyHeaderDelegate()),
-            Header(
-              authedUserMemberType: widget.authedUserMemberType,
-              club: widget.club,
+          slivers: [
+            SliverToBoxAdapter(
+              child: Header(
+                club: widget.club,
+                authedUserMemberType: widget.authedUserMemberType,
+                maxHeaderSize: _maxHeaderSize,
+              ),
             ),
-            ClubDetailsTimeline(
-              club: widget.club,
-              isOwnerOrAdmin: _userIsOwnerOrAdmin,
-              stopPollingFeed: widget.stopPollingFeed,
+            SliverToBoxAdapter(
+              child: HorizontalLine(
+                color: context.theme.cardBackground,
+                verticalPadding: 0,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: ClubDetailsTimeline(
+                club: widget.club,
+                isOwnerOrAdmin:
+                    ClubUtils.userIsOwnerOrAdmin(widget.authedUserMemberType),
+                enableFeedPolling: _enableFeedPolling,
+              ),
             ),
           ],
         ),
-        AnimatedNavBar(progress: _progress),
-      ],
-    );
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) => <Widget>[
-        SliverPersistentHeader(
-            pinned: true,
-            delegate: MyHeaderDelegate(
-                authedUserMemberType: widget.authedUserMemberType,
-                club: widget.club)),
-        // SliverList(
-        //     delegate: SliverChildListDelegate([
-        //   if (Utils.textNotNull(widget.club.coverImageUri))
-        //     SizedBox(
-        //       height: 400,
-        //       child: _ClubSectionButtons(
-        //         club: widget.club,
-        //         authedUserMemberType: widget.authedUserMemberType,
-        //       ),
-        //     ),
-        // ]))
-      ],
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: ClubDetailsTimeline(
+        AnimatedNavBar(
+          scrollProgress: _scrollProgress,
           club: widget.club,
-          isOwnerOrAdmin: _userIsOwnerOrAdmin,
-          stopPollingFeed: widget.stopPollingFeed,
+          authedUserMemberType: widget.authedUserMemberType,
+          cancelFeedPolling: () => setState(() => _enableFeedPolling = false),
+          checkUserMemberStatus: widget.checkUserMemberStatus,
+          navBarHeight: _topNavBarHeight,
+          topSafeArea: _topSafeArea,
         ),
-      ),
-      // body: SafeArea(
-      //   child: Container(
-      //     color: context.theme.background,
-      //     child: Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: Column(
-      //         children: [
-      //           Container(
-      //             padding: const EdgeInsets.only(top: 4, bottom: 12),
-      //             width: double.infinity,
-      //             child: MySlidingSegmentedControl<int>(
-      //                 children: const {0: 'Activity', 1: 'About'},
-      //                 updateValue: (i) => setState(() => _activeTabIndex = i),
-      //                 value: _activeTabIndex),
-      //           ),
-      //           Expanded(
-      //             child: IndexedStack(
-      //               index: _activeTabIndex,
-      //               children: [
-      //                 ClubDetailsTimeline(
-      //                   club: widget.club,
-      //                   isOwnerOrAdmin: _userIsOwnerOrAdmin,
-      //                   stopPollingFeed: widget.stopPollingFeed,
-      //                 ),
-      //                 ClubDetailsInfo(
-      //                   club: widget.club,
-      //                 ),
-      //               ],
-      //             ),
-      //           )
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // )
+      ],
     );
   }
 }
 
 class AnimatedNavBar extends StatelessWidget {
-  final double progress;
-  const AnimatedNavBar({Key? key, required this.progress}) : super(key: key);
+  final double scrollProgress;
+  final ClubSummary club;
+  final UserClubMemberStatus authedUserMemberType;
+  final AsyncCallback checkUserMemberStatus;
+  final VoidCallback cancelFeedPolling;
+  final double navBarHeight;
+  final double topSafeArea;
+  const AnimatedNavBar(
+      {Key? key,
+      required this.scrollProgress,
+      required this.club,
+      required this.authedUserMemberType,
+      required this.cancelFeedPolling,
+      required this.checkUserMemberStatus,
+      required this.navBarHeight,
+      required this.topSafeArea})
+      : super(key: key);
+
+  Future<void> _shareClub(ClubSummary club) async {
+    await SharingAndLinking.shareLink(
+        'club/${club.id}', 'Check out this club!');
+  }
+
+  Future<void> _createNewPost(BuildContext context) async {
+    await context.navigateTo(ClubPostCreatorRoute(
+        clubId: club.id,
+        onSuccess: (_) => context.showToast(
+            message: 'Post created. It will display shortly.')));
+  }
+
+  void _confirmDeleteClub(BuildContext context, ClubSummary club) {
+    context.showConfirmDeleteDialog(
+        message:
+            'Warning: This cannot be undone and will result in the deletion of all data, chat and timeline history from this club!',
+        itemName: club.name,
+        itemType: 'Club',
+        onConfirm: () async {
+          cancelFeedPolling();
+          try {
+            await context.graphQLStore
+                .delete<DeleteClub$Mutation, DeleteClubArguments>(
+              mutation: DeleteClubMutation(
+                  variables: DeleteClubArguments(id: club.id)),
+              objectId: club.id,
+              typename: kClubSummaryTypeName,
+              removeAllRefsToId: true,
+              processResult: (data) {
+                // Remove ClubSummary from userClubs query.
+                context.graphQLStore
+                    .deleteNormalizedObject(resolveDataId(club.toJson())!);
+
+                // Remove all refs to it from queries.
+                context.graphQLStore
+                    .removeAllQueryRefsToId(resolveDataId(club.toJson())!);
+
+                // Rebroadcast all queries that may be affected.
+                context.graphQLStore.broadcastQueriesByIds([
+                  GQLOpNames.userClubs,
+                ]);
+              },
+            );
+            context.pop();
+          } catch (e) {
+            printLog(e.toString());
+            context.showToast(
+                message: 'Sorry, there was a problem deleting this club!',
+                toastType: ToastType.destructive);
+          }
+        });
+  }
+
+  void _confirmLeaveClub(BuildContext context, String clubId) {
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+
+    context.showConfirmDialog(
+        title: 'Leave this Club?',
+        message:
+            'Are you sure you want to leave this club? You will no longer have access to club chat, feeds or content.',
+        onConfirm: () async {
+          cancelFeedPolling();
+          try {
+            final result = await context.graphQLStore.mutate<
+                RemoveUserFromClub$Mutation, RemoveUserFromClubArguments>(
+              mutation: RemoveUserFromClubMutation(
+                  variables: RemoveUserFromClubArguments(
+                      userToRemoveId: authedUserId, clubId: clubId)),
+            );
+
+            checkOperationResult(context, result,
+                onSuccess: () async {
+                  /// Update / re-run the userClubs query to get and broadcast updated list minus the club they just left.
+                  await context.graphQLStore
+                      .query<UserClubs$Query, json.JsonSerializable>(
+                          query: UserClubsQuery(),
+                          broadcastQueryIds: [GQLOpNames.userClubs]);
+
+                  await checkUserMemberStatus();
+
+                  context.showToast(
+                    message: 'You have now left this Club.',
+                  );
+                },
+                onFail: () => throw Exception('Sorry, there was a problem.'));
+          } catch (e) {
+            printLog(e.toString());
+            context.showToast(
+                message: 'Sorry, there was a problem leaving this club!',
+                toastType: ToastType.destructive);
+          }
+        });
+  }
+
+  bool get _userIsOwnerOrAdmin =>
+      ClubUtils.userIsOwnerOrAdmin(authedUserMemberType);
+  bool get _userIsOwner => ClubUtils.userIsOwner(authedUserMemberType);
+  bool get _userIsMember => ClubUtils.userIsMember(authedUserMemberType);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        /// TODO: Get the correct size based on the SafeArea padding required.
-        Opacity(
-            opacity: progress,
-            child:
-                Container(color: context.theme.modalBackground, height: 100)),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                NavBarBackButton(),
-                Opacity(opacity: progress, child: MyHeaderText('CLUB NAME')),
-                Icon(CupertinoIcons.ellipsis),
-              ],
+    final backgroundColor =
+        context.theme.background.withOpacity((1 - scrollProgress) * 0.4);
+
+    return SizedBox(
+      height: navBarHeight + topSafeArea,
+      child: Stack(
+        children: [
+          Opacity(
+              opacity: scrollProgress,
+              child: Container(
+                  color: context.theme.cupertinoThemeData.barBackgroundColor,
+                  height: navBarHeight + topSafeArea)),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CupertinoButton(
+                    onPressed: context.pop,
+                    padding: EdgeInsets.zero,
+                    child: CircularBox(
+                        color: backgroundColor,
+                        child: const Icon(
+                          CupertinoIcons.arrow_left,
+                        )),
+                  ),
+                  Opacity(
+                      opacity: scrollProgress,
+                      child: MyHeaderText(
+                        club.name,
+                      )),
+                  CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: CircularBox(
+                          color: backgroundColor,
+                          child: const Icon(CupertinoIcons.ellipsis)),
+                      onPressed: () => openBottomSheetMenu(
+                          context: context,
+                          child: BottomSheetMenu(
+                              header: BottomSheetMenuHeader(
+                                name: club.name,
+                                subtitle: 'Club',
+                                imageUri: club.coverImageUri,
+                              ),
+                              items: [
+                                if (_userIsOwnerOrAdmin)
+                                  BottomSheetMenuItem(
+                                      text: 'New Post',
+                                      icon: CupertinoIcons.add,
+                                      onPressed: () => _createNewPost(context)),
+                                if (_userIsOwnerOrAdmin)
+                                  BottomSheetMenuItem(
+                                      text: 'Edit Club Info',
+                                      icon: CupertinoIcons.pencil,
+                                      onPressed: () => context.navigateTo(
+                                          ClubCreatorRoute(clubSummary: club))),
+                                if (club.contentAccessScope ==
+                                    ContentAccessScope.public)
+                                  BottomSheetMenuItem(
+                                      text: 'Share',
+                                      icon: CupertinoIcons.paperplane,
+                                      onPressed: () => _shareClub(club)),
+                                if (!_userIsMember && !_userIsOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Leave Club',
+                                      isDestructive: true,
+                                      icon: CupertinoIcons.square_arrow_right,
+                                      onPressed: () =>
+                                          _confirmLeaveClub(context, club.id)),
+                                if (_userIsOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Shut Down Club',
+                                      icon: CupertinoIcons
+                                          .exclamationmark_triangle,
+                                      isDestructive: true,
+                                      onPressed: () =>
+                                          _confirmDeleteClub(context, club)),
+                              ]))),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -181,104 +330,82 @@ class AnimatedNavBar extends StatelessWidget {
 class Header extends StatelessWidget {
   final ClubSummary club;
   final UserClubMemberStatus authedUserMemberType;
-  const Header(
-      {Key? key, required this.club, required this.authedUserMemberType})
-      : super(key: key);
+  final double maxHeaderSize;
+  const Header({
+    Key? key,
+    required this.club,
+    required this.authedUserMemberType,
+    required this.maxHeaderSize,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        if (Utils.textNotNull(club.coverImageUri))
-          ImageFiltered(
-            imageFilter: ImageFilter.blur(),
-            child: SizedBox(
-              height: 500,
+    final gradientBasisColor = context.theme.background;
+
+    return Container(
+      color: context.theme.modalBackground,
+      height: maxHeaderSize,
+      child: Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.bottomCenter,
+        children: [
+          if (Utils.textNotNull(club.coverImageUri))
+            SizedBox(
+              height: maxHeaderSize,
               child: SizedUploadcareImage(
                 club.coverImageUri!,
                 fit: BoxFit.none,
-                displaySize: Size.square(500),
+                displaySize: Size.square(maxHeaderSize),
               ),
             ),
-          ),
-      ],
-    );
-  }
-}
-
-class MyHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final ClubSummary club;
-  final UserClubMemberStatus authedUserMemberType;
-  const MyHeaderDelegate(
-      {required this.club, required this.authedUserMemberType});
-  @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final progress = shrinkOffset / maxExtent;
-    print(shrinkOffset);
-    print(progress);
-
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        if (progress < 0.99 && Utils.textNotNull(club.coverImageUri))
-          ImageFiltered(
-            imageFilter: ImageFilter.blur(),
-            child: SizedBox(
-              height: maxExtent,
-              child: SizedUploadcareImage(
-                club.coverImageUri!,
-                fit: BoxFit.none,
-                displaySize: Size.square(maxExtent),
-              ),
+          if (Utils.textNotNull(club.coverImageUri))
+            Container(
+              height: maxHeaderSize,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                    gradientBasisColor.withOpacity(0),
+                    gradientBasisColor.withOpacity(0.7),
+                    gradientBasisColor.withOpacity(0.9),
+                    gradientBasisColor,
+                  ],
+                      stops: const [
+                    0.4,
+                    0.6,
+                    0.9,
+                    1.0,
+                  ])),
             ),
-          ),
-        // SizedBox(
-        //   height: maxExtent,
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: [
-        //       _ClubSectionButtons(
-        //         club: club,
-        //         authedUserMemberType: authedUserMemberType,
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        Opacity(
-            opacity: progress,
-            child: Container(
-              height: minExtent,
-              color: context.theme.modalBackground,
-            )),
-        SafeArea(
-          child: Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(CupertinoIcons.back),
-                Opacity(opacity: progress, child: MyHeaderText('CLUB NAME')),
-                Icon(CupertinoIcons.ellipsis),
+                MyHeaderText(club.name, size: FONTSIZE.six),
+                const SizedBox(height: 8),
+                if (Utils.textNotNull(club.description))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ReadMoreTextBlock(
+                      title: club.name,
+                      text: club.description!,
+                      trimLines: 2,
+                    ),
+                  ),
+                _ClubSectionButtons(
+                  club: club,
+                  authedUserMemberType: authedUserMemberType,
+                ),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-
-  @override
-  double get maxExtent => 500;
-
-  @override
-
-  /// TODO: Get the correct size based on the SafeArea padding required.
-  double get minExtent => 100;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
 }
 
 class _ClubSectionButtons extends StatelessWidget {
@@ -297,86 +424,113 @@ class _ClubSectionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = context.theme.primary.withOpacity(0.9);
-    return GridView.count(
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      shrinkWrap: true,
-      childAspectRatio: 1.8,
-      crossAxisCount: 3,
-      children: [
-        _ClubSectionButton(
-          label: 'People',
-          icon: Icon(
-            CupertinoIcons.person_2_fill,
-            size: _iconSize,
-            color: iconColor,
-          ),
-          count: club.memberCount,
-          onTap: () => context.push(
-              child: ClubDetailsPeople(
-            authedUserMemberType: authedUserMemberType,
-            clubId: club.id,
-          )),
-        ),
-        _ClubSectionButton(
-          label: 'Workouts',
-          icon: SvgPicture.asset(
-            'assets/graphics/dumbbell.svg',
-            height: _iconSize,
-            fit: BoxFit.fitHeight,
-            color: iconColor,
-          ),
-          count: club.workoutCount,
-          onTap: () => context.push(
-              child: ClubDetailsWorkouts(
-            isOwnerOrAdmin: _userIsOwnerOrAdmin,
-            clubId: club.id,
-          )),
-        ),
-        _ClubSectionButton(
-            label: 'Plans',
-            icon: Icon(CupertinoIcons.calendar,
-                size: _iconSize, color: iconColor),
-            count: club.planCount,
+    return Padding(
+      padding:
+          const EdgeInsets.only(top: 16.0, bottom: 24, left: 8.0, right: 8),
+      child: Wrap(
+        spacing: 36,
+        runSpacing: 24,
+        children: [
+          _ClubSectionButton(
+            label: 'People',
+            icon: Icon(
+              CupertinoIcons.person_2_fill,
+              size: _iconSize,
+            ),
+            count: club.memberCount,
             onTap: () => context.push(
-                    child: ClubDetailsWorkoutPlans(
-                  isOwnerOrAdmin: _userIsOwnerOrAdmin,
-                  clubId: club.id,
-                ))),
-        _ClubSectionButton(
-          label: 'Throwdowns',
-          icon: SvgPicture.asset(
-            'assets/graphics/medal.svg',
-            height: _iconSize,
-            fit: BoxFit.fitHeight,
-            color: iconColor,
+                child: ClubDetailsPeople(
+              authedUserMemberType: authedUserMemberType,
+              clubId: club.id,
+            )),
           ),
-          count: 0,
-          onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-        ),
-        _ClubSectionButton(
-          label: 'Shop',
-          icon: Icon(
-            CupertinoIcons.shopping_cart,
-            size: _iconSize,
-            color: iconColor,
+          _ClubSectionButton(
+            label: 'Workouts',
+            icon: SvgPicture.asset('assets/graphics/dumbbell.svg',
+                height: _iconSize,
+                fit: BoxFit.fitHeight,
+                color: context.theme.primary),
+            count: club.workoutCount,
+            onTap: () => context.push(
+                child: ClubDetailsWorkouts(
+              isOwnerOrAdmin: _userIsOwnerOrAdmin,
+              clubId: club.id,
+            )),
           ),
-          count: 0,
-          onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-        ),
-        _ClubSectionButton(
-          label: 'Chat',
-          icon: Icon(
-            CupertinoIcons.chat_bubble_text_fill,
-            size: _iconSize,
-            color: iconColor,
+          _ClubSectionButton(
+              label: 'Plans',
+              icon: Icon(CupertinoIcons.calendar, size: _iconSize),
+              count: club.planCount,
+              onTap: () => context.push(
+                      child: ClubDetailsWorkoutPlans(
+                    isOwnerOrAdmin: _userIsOwnerOrAdmin,
+                    clubId: club.id,
+                  ))),
+          _ClubSectionButton(
+            label: 'Throwdowns',
+            icon: SvgPicture.asset('assets/graphics/medal.svg',
+                height: _iconSize,
+                fit: BoxFit.fitHeight,
+                color: context.theme.primary),
+            count: 0,
+            onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
           ),
-          count: 0,
-          onTap: () =>
-              context.navigateTo(ClubMembersChatRoute(clubId: club.id)),
-        ),
-      ],
+          _ClubSectionButton(
+            label: 'Coaching',
+            icon: Icon(
+              CupertinoIcons.chart_bar_fill,
+              size: _iconSize,
+            ),
+            count: 0,
+            onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+          ),
+          _ClubSectionButton(
+            label: 'Gear',
+            icon: Icon(
+              CupertinoIcons.shopping_cart,
+              size: _iconSize,
+            ),
+            count: 0,
+            onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+          ),
+          _ClubSectionButton(
+            label: 'Chat',
+            icon: Icon(
+              CupertinoIcons.chat_bubble_text_fill,
+              size: _iconSize,
+            ),
+            count: 0,
+            onTap: () =>
+                context.navigateTo(ClubMembersChatRoute(clubId: club.id)),
+          ),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => context.push(
+                child: ClubDetailsInfo(
+              club: club,
+            )),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      CupertinoIcons.info_circle_fill,
+                      size: _iconSize + 3,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                const MyText('Club Info', maxLines: 2, size: FONTSIZE.one),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -402,21 +556,22 @@ class _ClubSectionButton extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              icon,
+              const SizedBox(width: 6),
               MyText(
                 count.toString(),
-                size: FONTSIZE.five,
+                size: FONTSIZE.six,
               ),
-              icon
             ],
           ),
-          MyText(
-            label,
-            maxLines: 2,
-          ),
+          const SizedBox(height: 2),
+          MyText(label, maxLines: 2, size: FONTSIZE.one),
         ],
       ),
     );

@@ -156,18 +156,9 @@ class RecentLogDots extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MyText(
-                '$totalSessions sessions in the last $numDays days',
-              ),
-              CupertinoButton(
-                  child: const Icon(CupertinoIcons.gear),
-                  onPressed: () =>
-                      print('open streak settings - days per week etc'))
-            ],
+          padding: const EdgeInsets.all(16.0),
+          child: MyText(
+            '$totalSessions sessions in the last $numDays days',
           ),
         ),
         _buildRow(context, dotSize, logsByDay, now, 28),

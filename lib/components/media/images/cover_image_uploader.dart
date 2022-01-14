@@ -97,7 +97,6 @@ class _CoverImageUploaderState extends State<CoverImageUploader> {
                 text: 'Remove image',
                 isDestructive: true,
                 onPressed: () {
-                  context.pop();
                   context.showConfirmDeleteDialog(
                       itemType: 'Image',
                       onConfirm: () => widget.removeImage(widget.imageUri!));
