@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/cards/card.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/progress/components/lifetime_log_stats_summary.dart';
@@ -40,39 +40,60 @@ class StreakAndStatsSummary extends StatelessWidget {
                   }) ~/
                   60;
 
-          return Card(
-            height: _cardHeight,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SummaryStatDisplay(
-                      label: 'sessions',
-                      number: sessionsLogged,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ContentBox(
+                    backgroundColor: context.theme.background,
+                    child: Column(
+                      children: [
+                        const MyText(
+                          'All Time',
+                          size: FONTSIZE.one,
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SummaryStatDisplay(
+                              label: 'sessions',
+                              number: sessionsLogged,
+                            ),
+                            const SizedBox(width: 16),
+                            SummaryStatDisplay(
+                              label: 'minutes',
+                              number: minutesWorked,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    SummaryStatDisplay(
-                      label: 'minutes',
-                      number: minutesWorked,
+                  ),
+                  ContentBox(
+                    backgroundColor: context.theme.background,
+                    child: Column(
+                      children: [
+                        const MyText(
+                          'Streak',
+                          size: FONTSIZE.one,
+                        ),
+                        const SizedBox(height: 6),
+                        StreakDisplay(
+                          loggedWorkouts: data.userLoggedWorkouts,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    StreakDisplay(
-                      loggedWorkouts: data.userLoggedWorkouts,
-                    ),
-                    RecentLogDots(
-                      loggedWorkouts: data.userLoggedWorkouts,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              RecentLogDots(
+                loggedWorkouts: data.userLoggedWorkouts,
+              ),
+            ],
           );
         });
   }
@@ -105,7 +126,7 @@ class RecentLogDots extends StatelessWidget {
             height: dotSize * 0.6,
             width: dotSize * 0.6,
             margin:
-                EdgeInsets.symmetric(horizontal: dotSize * 0.18, vertical: 6),
+                EdgeInsets.symmetric(horizontal: dotSize * 0.3, vertical: 6),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color:
@@ -118,7 +139,7 @@ class RecentLogDots extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dotSize = (MediaQuery.of(context).size.width - 24) / (numDays / 1.9);
+    final dotSize = (MediaQuery.of(context).size.width - 24) / (numDays / 3);
 
     final now = DateTime.now();
     final startDay = DateTime(now.year, now.month, now.day - numDays);
@@ -134,20 +155,17 @@ class RecentLogDots extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: MyText(
+            '$totalSessions sessions in the last $numDays days',
+          ),
+        ),
         _buildRow(context, dotSize, logsByDay, now, 28),
         _buildRow(context, dotSize, logsByDay, now, 21),
         _buildRow(context, dotSize, logsByDay, now, 14),
         _buildRow(context, dotSize, logsByDay, now, 7),
-        const SizedBox(height: 6),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MyText(
-              '$totalSessions sessions in the last $numDays days',
-              size: FONTSIZE.two,
-            ),
-          ],
-        )
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -222,42 +240,18 @@ class StreakDisplay extends StatelessWidget {
       day = DateTime(now.year, now.month, now.day + daysPast);
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.max,
       children: [
-        const MyHeaderText(
-          'Streak',
-          size: FONTSIZE.two,
+        SummaryStatDisplay(
+          label: 'current',
+          number: streakData.current,
         ),
-        const SizedBox(height: 4),
-        Column(
-          children: [
-            MyText(
-              streakData.current.toString(),
-              size: FONTSIZE.six,
-            ),
-            const MyText(
-              'CURRENT',
-              size: FONTSIZE.one,
-              subtext: true,
-              lineHeight: 1.4,
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Column(
-          children: [
-            MyText(
-              streakData.longest.toString(),
-              size: FONTSIZE.six,
-            ),
-            const MyText(
-              'LONGEST',
-              size: FONTSIZE.one,
-              subtext: true,
-              lineHeight: 1.4,
-            ),
-          ],
+        const SizedBox(width: 16),
+        SummaryStatDisplay(
+          label: 'longest',
+          number: streakData.longest,
         ),
       ],
     );

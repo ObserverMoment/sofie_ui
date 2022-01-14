@@ -28,6 +28,7 @@ class ProfilePublicWorkoutPlansPage extends StatelessWidget {
             UserPublicWorkoutPlansArguments>(
         key: Key('ProfilePublicWorkoutPlansPage - ${query.operationName}'),
         query: query,
+        parameterizeQuery: true,
         builder: (data) {
           final workoutPlans = data.userPublicWorkoutPlans;
           return CupertinoPageScaffold(

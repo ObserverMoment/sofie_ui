@@ -14,7 +14,6 @@ import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/nav_bar_ellipsis_menu.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
-import 'package:sofie_ui/components/user_input/pickers/round_picker.dart';
 import 'package:sofie_ui/components/user_input/pyramid_generator.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
@@ -155,11 +154,6 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
       context.read<WorkoutCreatorBloc>().editWorkoutSet(widget.sectionIndex,
           widget.setIndex, {'duration': duration.inSeconds});
     }
-  }
-
-  void _updateRounds(int rounds) {
-    context.read<WorkoutCreatorBloc>().editWorkoutSet(
-        widget.sectionIndex, widget.setIndex, {'rounds': rounds});
   }
 
   void _openAddWorkoutMoveToSet() {
@@ -315,11 +309,6 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
                             )
                           ],
                         )),
-                  if (_workoutSectionType.roundsInputAllowed)
-                    RoundPicker(
-                        rounds: _workoutSet.rounds,
-                        saveValue: _updateRounds,
-                        padding: const EdgeInsets.all(4)),
                   if (!_workoutSet.isRestSet && isMultiMoveSet)
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),

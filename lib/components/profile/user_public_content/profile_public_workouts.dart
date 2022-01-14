@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -27,6 +28,7 @@ class ProfilePublicWorkoutsPage extends StatelessWidget {
     return QueryObserver<UserPublicWorkouts$Query, UserPublicWorkoutsArguments>(
         key: Key('ProfilePublicWorkoutsPage - ${query.operationName}'),
         query: query,
+        parameterizeQuery: true,
         builder: (data) {
           final workouts = data.userPublicWorkouts;
 
@@ -81,7 +83,8 @@ class __FilterablePublicWorkoutsState extends State<_FilterablePublicWorkouts> {
             rowButtons: [
               if (allTags.isNotEmpty)
                 TagsFilterMenu(
-                  allTags: allTags,
+                  allTags:
+                      allTags.where((t) => t != kCustomSessionName).toList(),
                   selectedTag: _workoutTagFilter,
                   updateSelectedTag: (t) =>
                       setState(() => _workoutTagFilter = t),

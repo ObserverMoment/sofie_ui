@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
@@ -147,9 +146,10 @@ class ClubTimelinePostCard extends StatelessWidget {
                       child:
                           postData.object.type == TimelinePostType.announcement
                               ? MyHeaderText(postData.caption!, lineHeight: 1.4)
-                              : MyText(
-                                  postData.caption!,
-                                  lineHeight: 1.4,
+                              : ReadMoreTextBlock(
+                                  title: postData.object.name,
+                                  text: postData.caption ?? '',
+                                  trimLines: 3,
                                 ),
                     ),
                   if (postData.object.type == TimelinePostType.announcement)
@@ -296,15 +296,12 @@ class _ClubTimelinePostEllipsisMenu extends StatelessWidget {
               items: [
                 BottomSheetMenuItem(
                     text: 'View ${object.type.display}',
-                    icon: const Icon(CupertinoIcons.eye),
+                    icon: CupertinoIcons.eye,
                     onPressed: openDetailsPage),
                 if (userIsPoster && handleDeletePost != null)
                   BottomSheetMenuItem(
                       text: 'Delete Post',
-                      icon: const Icon(
-                        CupertinoIcons.delete_simple,
-                        color: Styles.errorRed,
-                      ),
+                      icon: CupertinoIcons.delete_simple,
                       onPressed: handleDeletePost!,
                       isDestructive: true),
                 // if (!userIsPoster)

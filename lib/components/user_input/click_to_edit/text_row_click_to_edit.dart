@@ -211,7 +211,7 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        backgroundColor: context.theme.cardBackground.withOpacity(0.88),
+        backgroundColor: context.theme.cardBackground,
         navigationBar: MyNavBar(
           customLeading: Padding(
             padding: const EdgeInsets.only(left: 4.0),

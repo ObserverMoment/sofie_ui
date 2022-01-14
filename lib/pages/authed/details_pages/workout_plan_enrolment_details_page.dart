@@ -259,33 +259,28 @@ class _WorkoutPlanEnrolmentDetailsPageState
                                 text: enrolment.startDate == null
                                     ? 'Schedule All Workouts'
                                     : 'Re-schedule All Workouts',
-                                icon: const Icon(
-                                    CupertinoIcons.calendar_badge_plus),
+                                icon: CupertinoIcons.calendar_badge_plus,
                                 onPressed: _confirmSchedulePlan),
                             if (enrolment.startDate != null)
                               BottomSheetMenuItem(
                                   text: 'Clear Plan Schedule',
-                                  icon: const Icon(
-                                      CupertinoIcons.calendar_badge_minus),
+                                  icon: CupertinoIcons.calendar_badge_minus,
                                   onPressed: _confirmClearSchedule),
                             if (enrolment
                                 .completedWorkoutPlanDayWorkouts.isNotEmpty)
                               BottomSheetMenuItem(
                                   text: 'Reset progress',
-                                  icon: const Icon(CupertinoIcons.refresh_bold),
+                                  icon: CupertinoIcons.refresh_bold,
                                   onPressed: _confirmClearAllProgress),
                             BottomSheetMenuItem(
                                 text: 'Share plan',
-                                icon: const Icon(CupertinoIcons.paperplane),
+                                icon: CupertinoIcons.paperplane,
                                 onPressed: () =>
                                     _shareWorkoutPlan(workoutPlan)),
                             BottomSheetMenuItem(
                                 text: 'Leave plan',
                                 isDestructive: true,
-                                icon: const Icon(
-                                  CupertinoIcons.square_arrow_right,
-                                  color: Styles.errorRed,
-                                ),
+                                icon: CupertinoIcons.square_arrow_right,
                                 onPressed: () =>
                                     _confirmLeavePlan(workoutPlan)),
                           ])),

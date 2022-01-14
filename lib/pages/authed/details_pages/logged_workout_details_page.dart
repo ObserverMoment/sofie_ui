@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +17,7 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -26,6 +26,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:auto_route/auto_route.dart';
 
 /// Very simlar to the LoggedWorkoutCreator.
 /// Shares most of its components and logic is handled by [LoggedWorkoutCreatorBloc].
@@ -118,17 +119,21 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
                                   subtitle: 'Logged Workout',
                                 ),
                                 items: [
+                                  if (Utils.textNotNull(
+                                      loggedWorkout.workoutId))
+                                    BottomSheetMenuItem(
+                                        text: 'View workout',
+                                        icon: CupertinoIcons.info,
+                                        onPressed: () => context.navigateTo(
+                                            WorkoutDetailsRoute(
+                                                id: loggedWorkout.workoutId!))),
                                   BottomSheetMenuItem(
                                       text: 'Share',
-                                      icon:
-                                          const Icon(CupertinoIcons.paperplane),
+                                      icon: CupertinoIcons.paperplane,
                                       onPressed: _shareLoggedWorkout),
                                   BottomSheetMenuItem(
                                       text: 'Delete',
-                                      icon: const Icon(
-                                        CupertinoIcons.delete_simple,
-                                        color: Styles.errorRed,
-                                      ),
+                                      icon: CupertinoIcons.delete_simple,
                                       isDestructive: true,
                                       onPressed: () =>
                                           _deleteLoggedWorkout(context)),
@@ -155,7 +160,7 @@ class _LoggedWorkoutReadOnly extends StatelessWidget {
         MySliverNavbar(title: loggedWorkout.user?.displayName ?? 'Log'),
         SliverToBoxAdapter(
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 19.0),
           child: MyHeaderText(loggedWorkout.name),
         ))
       ],
@@ -192,14 +197,22 @@ class _LoggedWorkoutReadOnly extends StatelessWidget {
               header: 'Goals Targeted',
             ),
           const SizedBox(height: 8),
-          ...loggedWorkout.loggedWorkoutSections
-              .map((lwSection) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: _LoggedWorkoutSectionDisplay(
-                      loggedWorkoutSection: lwSection,
-                    ),
-                  ))
-              .toList()
+          ContentBox(
+              child: ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemBuilder: (c, i) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: _LoggedWorkoutSectionDisplay(
+                          loggedWorkoutSection:
+                              loggedWorkout.loggedWorkoutSections[i],
+                        ),
+                      ),
+                  separatorBuilder: (c, i) => const HorizontalLine(
+                        verticalPadding: 0,
+                      ),
+                  itemCount: loggedWorkout.loggedWorkoutSections.length))
         ],
       ),
     ));
@@ -266,42 +279,31 @@ class _LoggedWorkoutSectionDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sectionType = loggedWorkoutSection.workoutSectionType;
+    final bodyAreas = loggedWorkoutSection.uniqueBodyAreas;
+    final moveTypes = loggedWorkoutSection.uniqueMoveTypes;
 
-    return ContentBox(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 4.0, top: 4, right: 4, bottom: 6),
-            child: MyText(
-              loggedWorkoutSection.workoutSectionType.name,
-            ),
-          ),
-          if (Utils.textNotNull(loggedWorkoutSection.name))
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 4.0, top: 0, right: 4, bottom: 10),
-              child: MyHeaderText(loggedWorkoutSection.name!,
-                  size: FONTSIZE.two, weight: FontWeight.normal),
-            ),
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4.0, right: 4),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  DurationTag(
-                    duration: Duration(
-                        seconds: loggedWorkoutSection.timeTakenSeconds),
+                  MyText(
+                    loggedWorkoutSection.workoutSectionType.name.toUpperCase(),
                   ),
-                  if (sectionType.isScored || sectionType.isLifting)
+                  if (Utils.textNotNull(loggedWorkoutSection.name))
                     Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: ContentBox(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 8),
-                        child: MyText(
-                            '${loggedWorkoutSection.repScore ?? " - "} reps'),
+                      padding: const EdgeInsets.only(top: 6),
+                      child: MyHeaderText(
+                        loggedWorkoutSection.name!,
+                        size: FONTSIZE.two,
+                        weight: FontWeight.normal,
+                        color: Styles.primaryAccent,
                       ),
                     ),
                 ],
@@ -324,7 +326,7 @@ class _LoggedWorkoutSectionDisplay extends StatelessWidget {
                                 MediaQuery.of(context).size.height * 0.55,
                             handleTapBodyArea: (_) =>
                                 {}, // Noop as this is read only,
-                            selectedBodyAreas: loggedWorkoutSection.bodyAreas,
+                            selectedBodyAreas: bodyAreas,
                           )),
                       SvgPicture.asset(
                         'assets/body_areas/body_button.svg',
@@ -336,23 +338,51 @@ class _LoggedWorkoutSectionDisplay extends StatelessWidget {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: loggedWorkoutSection.moveTypes
-                  .map((mType) => Tag(
-                        tag: mType.name,
-                        fontSize: FONTSIZE.one,
-                        color: context.theme.background,
-                        textColor: context.theme.primary,
-                      ))
-                  .toList(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                DurationTag(
+                  fontSize: FONTSIZE.four,
+                  iconSize: 16,
+                  duration:
+                      Duration(seconds: loggedWorkoutSection.timeTakenSeconds),
+                ),
+                if (sectionType.isScored || sectionType.isLifting)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: ContentBox(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 8),
+                      child: MyText(
+                        '${loggedWorkoutSection.repScore ?? " - "} reps',
+                        size: FONTSIZE.four,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          )
-        ],
-      ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: moveTypes
+                .map((mType) => Tag(
+                      tag: mType.name,
+                      fontSize: FONTSIZE.one,
+                      color: context.theme.background,
+                      textColor: context.theme.primary,
+                    ))
+                .toList(),
+          ),
+        )
+      ],
     );
   }
 }

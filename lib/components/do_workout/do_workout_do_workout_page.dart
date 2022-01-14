@@ -78,12 +78,8 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
   }
 
   Future<void> _generateLog() async {
-    final loggedWorkout = context.read<DoWorkoutBloc>().generateLog();
-    final scheduledWorkout = context.read<DoWorkoutBloc>().scheduledWorkout;
-    final workoutPlanDayWorkoutId =
-        context.read<DoWorkoutBloc>().workoutPlanDayWorkoutId;
-    final workoutPlanEnrolmentId =
-        context.read<DoWorkoutBloc>().workoutPlanEnrolmentId;
+    final loggedWorkoutInput =
+        context.read<DoWorkoutBloc>().generateLogInputData();
 
     context.showConfirmDialog(
         title: 'Save Log and Exit?',
@@ -92,13 +88,8 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
         verb: 'Save',
         onConfirm: () async {
           /// Save log to DB.
-          final input = LoggedWorkoutCreatorBloc
-              .createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
-                  scheduledWorkout: scheduledWorkout,
-                  workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
-                  workoutPlanEnrolmentId: workoutPlanEnrolmentId);
-
-          final variables = CreateLoggedWorkoutArguments(data: input);
+          final variables =
+              CreateLoggedWorkoutArguments(data: loggedWorkoutInput);
 
           final result = await context.graphQLStore.create(
               mutation: CreateLoggedWorkoutMutation(variables: variables),
@@ -110,16 +101,18 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
                   toastType: ToastType.destructive),
               onSuccess: () {
                 /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
-                if (scheduledWorkout != null) {
+
+                if (loggedWorkoutInput.scheduledWorkout != null) {
                   LoggedWorkoutCreatorBloc.updateScheduleWithLoggedWorkout(
                       context,
-                      scheduledWorkout,
+                      context.read<DoWorkoutBloc>().scheduledWorkout!,
                       result.data!.createLoggedWorkout);
                 }
-                if (workoutPlanDayWorkoutId != null &&
-                    workoutPlanEnrolmentId != null) {
+                if (loggedWorkoutInput.workoutPlanDayWorkout != null &&
+                    loggedWorkoutInput.workoutPlanEnrolment != null) {
                   LoggedWorkoutCreatorBloc.refetchWorkoutPlanEnrolmentQueries(
-                      context, workoutPlanEnrolmentId);
+                      context,
+                      context.read<DoWorkoutBloc>().workoutPlanEnrolmentId!);
                 }
 
                 context.router.popAndPush(LoggedWorkoutDetailsRoute(

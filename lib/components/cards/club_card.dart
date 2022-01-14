@@ -114,12 +114,16 @@ class ClubCard extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        const Icon(CupertinoIcons.location,
-                                            size: 13),
-                                        const SizedBox(width: 2),
+                                        const Icon(
+                                          CupertinoIcons.location,
+                                          size: 12,
+                                          color: Styles.white,
+                                        ),
+                                        const SizedBox(width: 4),
                                         MyText(
                                           club.location!,
                                           size: FONTSIZE.two,
+                                          color: Styles.white,
                                         )
                                       ],
                                     ),

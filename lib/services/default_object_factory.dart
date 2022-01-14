@@ -1,6 +1,5 @@
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
 
 class DefaultObjectfactory {
@@ -28,20 +27,9 @@ class DefaultObjectfactory {
     return LoggedWorkout()
       ..$$typename = kLoggedWorkoutTypename
       ..id = 'temp-$kLoggedWorkoutTypename:${const Uuid().v1()}'
-      ..name = 'Log - ${workout.name}'
+      ..name = workout.name
       ..completedOn = DateTime.now()
       ..loggedWorkoutSections = [];
-  }
-
-  static LoggedWorkoutSection defaultLoggedWorkoutSection(
-      {required WorkoutSection workoutSection}) {
-    return LoggedWorkoutSection()
-      ..$$typename = kLoggedWorkoutSectionTypename
-      ..id = 'temp-$kLoggedWorkoutSectionTypename:${const Uuid().v1()}'
-      ..name = Utils.textNotNull(workoutSection.name)
-          ? 'Log - ${workoutSection.name}'
-          : 'Log - ${workoutSection.workoutSectionType.name}'
-      ..workoutSectionType = workoutSection.workoutSectionType;
   }
 
   static WorkoutMove defaultRestWorkoutMove(

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -100,7 +100,7 @@ class TimedSectionController extends WorkoutSectionController {
 
       if (_hasSetChangeTimePassed(secondsElapsed, nextSetEndTime)) {
         playBeepTwo();
-        state.moveToNextSetOrSection(secondsElapsed);
+        state.moveToNextSetOrRound(secondsElapsed);
 
         /// Check for the end of the section.
         if (state.currentRoundIndex == _totalRounds) {

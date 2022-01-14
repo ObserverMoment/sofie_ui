@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
@@ -89,7 +89,7 @@ class AMRAPSectionController extends WorkoutSectionController {
         workoutSection.workoutSets[state.currentSetIndex]);
 
     final secondsElapsed = stopWatchTimer.secondTime.value;
-    state.moveToNextSetOrSection(stopWatchTimer.secondTime.value);
+    state.moveToNextSetOrRound(stopWatchTimer.secondTime.value);
 
     /// Update percentage complete.
     state.percentComplete = secondsElapsed / _timecapSeconds;

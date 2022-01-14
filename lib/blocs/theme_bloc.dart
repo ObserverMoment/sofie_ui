@@ -42,6 +42,9 @@ class ThemeBloc extends ChangeNotifier {
   Color get background => theme.cupertinoThemeData.scaffoldBackgroundColor;
   Color get cardBackground => theme.customThemeData.cardBackground;
   Color get modalBackground => theme.customThemeData.modalBackground;
+  Color get fabBackground => brightness == Brightness.dark
+      ? background.withOpacity(0.7)
+      : background.withOpacity(0.9);
   Color get barBackground => theme.cupertinoThemeData.barBackgroundColor;
   Color get navbarBottomBorder => theme.customThemeData.navbarBottomBorder;
 
@@ -113,7 +116,7 @@ abstract class ThemeData {
       greyThree: Styles.greyThree,
       greyFour: Styles.greyFour,
       cardBackground: const Color(0xff1a1a1c),
-      modalBackground: const Color(0xff1f292e),
+      modalBackground: const Color(0xff111112),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
 
@@ -123,7 +126,7 @@ abstract class ThemeData {
       greyThree: Styles.greyTwo,
       greyFour: Styles.greyOne,
       cardBackground: CupertinoColors.white,
-      modalBackground: const Color(0xffe0e7ef),
+      modalBackground: CupertinoColors.systemGroupedBackground,
       bottomNavigationBackground: const Color(0xffffffff),
       navbarBottomBorder: Styles.black.withOpacity(0.1));
 
@@ -183,14 +186,14 @@ abstract class Styles {
   static const difficultyLevelFive = CupertinoColors.black; // Black
 
   // Design / Accent colors.
-  static const Color primaryAccent = Color(0xff286E6E);
+  static const Color primaryAccent = Color(0xff2c8a8a);
 
   static const LinearGradient primaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
-      Color(0xff397382),
-      Color(0xff327D5F),
+      primaryAccent,
+      Color(0xff3aa1a1),
     ],
     stops: [0.0, 1.0],
   );

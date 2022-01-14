@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/workout/selectable_workout_card.dart';
 import 'package:sofie_ui/components/workout/workout_finders/private/private_workout_text_search.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
@@ -145,7 +146,9 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                               ? FilterMenuType.tag
                               : FilterMenuType.collection,
                           allCollections: collectionsWithWorkouts,
-                          allTags: allTags,
+                          allTags: allTags
+                              .where((t) => t != kCustomSessionName)
+                              .toList(),
                           selectedCollection: _selectedCollection,
                           selectedTag: _selectedTag,
                           updateSelectedCollection: (c) =>

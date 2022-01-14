@@ -4,6 +4,7 @@ import 'package:sofie_ui/components/text.dart';
 class CommaSeparatedList extends StatelessWidget {
   final List<String> names;
   final FONTSIZE fontSize;
+  final FontWeight fontWeight;
   final Color? textColor;
   final bool withFullStop;
   final WrapAlignment alignment;
@@ -14,7 +15,8 @@ class CommaSeparatedList extends StatelessWidget {
       this.runSpacing = 3,
       this.fontSize = FONTSIZE.two,
       this.textColor,
-      this.withFullStop = false})
+      this.withFullStop = false,
+      this.fontWeight = FontWeight.normal})
       : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class CommaSeparatedList extends StatelessWidget {
                     : '$name, ',
                 size: fontSize,
                 color: textColor,
+                weight: fontWeight,
               )))
           .values
           .toList(),

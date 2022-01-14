@@ -137,7 +137,6 @@ fragment WorkoutSet on WorkoutSet {
   __typename
   id
   sortPosition
-  rounds
   duration
 }
 

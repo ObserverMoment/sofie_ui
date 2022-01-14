@@ -19,8 +19,10 @@ class DiscoverPage extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              alignment: WrapAlignment.center,
               children: [
                 DiscoverPageButton(
                     text: 'Workouts',
@@ -34,9 +36,17 @@ class DiscoverPage extends StatelessWidget {
                     text: 'Throwdowns',
                     onPressed: () =>
                         context.showAlertDialog(title: 'Coming Soon!')),
+                DiscoverPageButton(
+                    text: 'Coaching',
+                    onPressed: () =>
+                        context.showAlertDialog(title: 'Coming Soon!')),
+                DiscoverPageButton(
+                    text: 'Gear',
+                    onPressed: () =>
+                        context.showAlertDialog(title: 'Coming Soon!')),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 6),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -66,8 +76,8 @@ class DiscoverPageButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 3),
       decoration: BoxDecoration(
-        border: Border.all(color: context.theme.primary, width: 2),
-        borderRadius: BorderRadius.circular(60),
+        color: context.theme.cardBackground,
+        borderRadius: BorderRadius.circular(6),
       ),
       child: CupertinoButton(
         padding: const EdgeInsets.symmetric(horizontal: 10),

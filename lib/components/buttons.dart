@@ -514,7 +514,7 @@ class IconButton extends StatelessWidget {
   final IconData iconData;
   final VoidCallback onPressed;
   final bool disabled;
-
+  final Color? iconColor;
   final double size;
 
   const IconButton(
@@ -522,7 +522,8 @@ class IconButton extends StatelessWidget {
       required this.iconData,
       required this.onPressed,
       this.disabled = false,
-      this.size = 28})
+      this.size = 28,
+      this.iconColor})
       : super(key: key);
 
   @override
@@ -539,6 +540,7 @@ class IconButton extends StatelessWidget {
             child: Icon(
               iconData,
               size: size,
+              color: iconColor,
             )),
       ),
     );

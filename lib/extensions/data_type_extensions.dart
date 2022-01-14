@@ -23,9 +23,102 @@ extension LoggedWorkoutExtension on LoggedWorkout {
   LoggedWorkout get copyAndSortAllChildren {
     final copy = LoggedWorkout.fromJson(toJson());
 
-    copy.loggedWorkoutSections.sortBy<num>((section) => section.sortPosition);
+    copy.loggedWorkoutSections.sortBy<num>((lws) => lws.sortPosition);
+
+    for (final loggedWorkoutSection in copy.loggedWorkoutSections) {
+      loggedWorkoutSection.loggedWorkoutSets
+          .sortBy<num>((loggedWorkoutSet) => loggedWorkoutSet.sortPosition);
+
+      for (final loggedWorkoutSet in loggedWorkoutSection.loggedWorkoutSets) {
+        loggedWorkoutSet.loggedWorkoutMoves
+            .sortBy<num>((loggedWorkoutMove) => loggedWorkoutMove.sortPosition);
+      }
+    }
 
     return copy;
+  }
+
+  /// Returns a copy, where all sort positions of children are updated to reflect the index at which the object was in the list.
+  LoggedWorkout get copyAndUpdateSortPositions {
+    final copy = LoggedWorkout.fromJson(toJson());
+
+    for (final loggedWorkoutSection in copy.loggedWorkoutSections) {
+      loggedWorkoutSection.copyAndUpdateSortPositions;
+    }
+
+    return copy;
+  }
+
+  /// Adds up all timetakenSeconds from sections.
+  Duration get totalSessionTime => loggedWorkoutSections.fold(Duration.zero,
+      (acum, next) => acum + Duration(seconds: next.timeTakenSeconds));
+}
+
+extension LoggedWorkoutSectionExtension on LoggedWorkoutSection {
+  String get nameOrType => name ?? workoutSectionType.name;
+
+  /// Returns a copy of the LoggedWorkoutSection
+  /// with its LoggedWorkoutSets and their LoggedWorkoutMoves sorted correctly by [sortPosition].
+  LoggedWorkoutSection get copyAndSortAllChildren {
+    final copy = LoggedWorkoutSection.fromJson(toJson());
+
+    copy.loggedWorkoutSets.sortBy<num>((lws) => lws.sortPosition);
+
+    for (final loggedWorkoutSet in copy.loggedWorkoutSets) {
+      loggedWorkoutSet.loggedWorkoutMoves
+          .sortBy<num>((loggedWorkoutMove) => loggedWorkoutMove.sortPosition);
+    }
+
+    return copy;
+  }
+
+  /// Returns a copy, where all sort positions of children are updated to reflect the index at which the object was in the list.
+  LoggedWorkoutSection get copyAndUpdateSortPositions {
+    final copy = LoggedWorkoutSection.fromJson(toJson());
+
+    copy.loggedWorkoutSets.forEachIndexed((i, lws) {
+      lws.sortPosition = i;
+      lws.loggedWorkoutMoves.forEachIndexed((i, lwm) {
+        lwm.sortPosition = i;
+      });
+    });
+
+    return copy;
+  }
+
+  List<BodyArea> get uniqueBodyAreas {
+    final Set<BodyArea> sectionBodyAreas =
+        loggedWorkoutSets.fold({}, (acum1, loggedWorkoutSet) {
+      final Set<BodyArea> setBodyAreas = loggedWorkoutSet.loggedWorkoutMoves
+          .fold({}, (acum2, loggedWorkoutMove) {
+        acum2.addAll(loggedWorkoutMove.move.bodyAreaMoveScores
+            .map((bams) => bams.bodyArea));
+        return acum2;
+      });
+
+      acum1.addAll(setBodyAreas);
+
+      return acum1;
+    });
+
+    return sectionBodyAreas.toList();
+  }
+
+  List<MoveType> get uniqueMoveTypes {
+    final Set<MoveType> sectionMoveTypes =
+        loggedWorkoutSets.fold({}, (acum1, loggedWorkoutSet) {
+      final Set<MoveType> setMoveTypes = loggedWorkoutSet.loggedWorkoutMoves
+          .fold({}, (acum2, loggedWorkoutMove) {
+        acum2.add(loggedWorkoutMove.move.moveType);
+        return acum2;
+      });
+
+      acum1.addAll(setMoveTypes);
+
+      return acum1;
+    });
+
+    return sectionMoveTypes.toList();
   }
 }
 
@@ -55,7 +148,7 @@ extension WorkoutExtension on Workout {
 
     for (final workoutSection in copy.workoutSections) {
       workoutSection.workoutSets
-          .sortBy<num>((workoutSets) => workoutSets.sortPosition);
+          .sortBy<num>((workoutSet) => workoutSet.sortPosition);
 
       for (final workoutSet in workoutSection.workoutSets) {
         workoutSet.workoutMoves
@@ -405,6 +498,15 @@ extension WorkoutSetExtension on WorkoutSet {
 }
 
 extension WorkoutMoveExtension on WorkoutMove {
+  bool get selectableEquipmentLoadAdjustable =>
+      equipment != null && equipment!.loadAdjustable;
+
+  bool get requiredEquipmentLoadAdjustable =>
+      move.requiredEquipments.any((e) => e.loadAdjustable);
+
+  bool get loadAdjustable =>
+      selectableEquipmentLoadAdjustable || requiredEquipmentLoadAdjustable;
+
   String get repDisplay => repType == WorkoutMoveRepType.time
       ? timeUnit.shortDisplay
       : repType == WorkoutMoveRepType.distance

@@ -9,7 +9,6 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -221,23 +220,24 @@ class _LoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-          SvgPicture.asset('assets/logos/sofie_logo.svg',
-              width: 46, color: context.theme.primary),
-          const SizedBox(height: 8),
-          Text('Sofie',
-              style: GoogleFonts.voces(
-                fontSize: 40,
-                color: context.theme.primary,
-              )),
-          const SizedBox(height: 8),
-          LoadingSpinningLines(
-            color: context.theme.primary,
-            size: 28,
-          ),
-        ]));
+        child: Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SvgPicture.asset('assets/logos/sofie_logo.svg',
+                width: 46, color: context.theme.primary),
+            const SizedBox(height: 8),
+            Text('Sofie',
+                style: GoogleFonts.voces(
+                  fontSize: 40,
+                  color: context.theme.primary,
+                )),
+            const SizedBox(height: 8),
+            const CupertinoActivityIndicator(
+              radius: 12,
+            ),
+          ]),
+    ));
   }
 }

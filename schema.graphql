@@ -312,15 +312,32 @@ input CreateLoggedWorkoutInput {
   note: String
 }
 
+input CreateLoggedWorkoutMoveInLoggedWorkoutSetInput {
+  Equipment: ConnectRelationInput
+  Move: ConnectRelationInput!
+  distanceUnit: DistanceUnit
+  loadAmount: Float
+  loadUnit: LoadUnit
+  repType: WorkoutMoveRepType!
+  reps: Float!
+  sortPosition: Int!
+  timeUnit: TimeUnit
+}
+
 input CreateLoggedWorkoutSectionInLoggedWorkoutInput {
-  BodyAreas: [ConnectRelationInput!]!
-  MoveTypes: [ConnectRelationInput!]!
+  LoggedWorkoutSets: [CreateLoggedWorkoutSetInLoggedWorkoutSectionInput!]!
   WorkoutSectionType: ConnectRelationInput!
-  loggedWorkoutSectionData: LoggedWorkoutSectionDataInput!
   name: String
   repScore: Int
   sortPosition: Int!
   timeTakenSeconds: Int!
+}
+
+input CreateLoggedWorkoutSetInLoggedWorkoutSectionInput {
+  LoggedWorkoutMoves: [CreateLoggedWorkoutMoveInLoggedWorkoutSetInput!]!
+  sectionRoundNumber: Int!
+  sortPosition: Int!
+  timeTakenSeconds: Int
 }
 
 input CreateMoveInput {
@@ -447,7 +464,6 @@ input CreateWorkoutSectionInput {
 input CreateWorkoutSetInput {
   WorkoutSection: ConnectRelationInput!
   duration: Int
-  rounds: Int
   sortPosition: Int!
 }
 
@@ -569,25 +585,35 @@ type LoggedWorkout {
   workoutId: ID
 }
 
+type LoggedWorkoutMove {
+  Equipment: Equipment
+  Move: Move!
+  distanceUnit: DistanceUnit!
+  id: ID!
+  loadAmount: Float!
+  loadUnit: LoadUnit!
+  repType: WorkoutMoveRepType!
+  reps: Float!
+  sortPosition: Int!
+  timeUnit: TimeUnit!
+}
+
 type LoggedWorkoutSection {
-  BodyAreas: [BodyArea!]!
-  LoggedWorkout: LoggedWorkout!
-  MoveTypes: [MoveType!]!
+  LoggedWorkoutSets: [LoggedWorkoutSet!]!
   WorkoutSectionType: WorkoutSectionType!
   id: ID!
-  loggedWorkoutSectionData: LoggedWorkoutSectionData
   name: String
   repScore: Int
   sortPosition: Int!
   timeTakenSeconds: Int!
 }
 
-type LoggedWorkoutSectionData {
-  rounds: [WorkoutSectionRoundData!]!
-}
-
-input LoggedWorkoutSectionDataInput {
-  rounds: [WorkoutSectionRoundDataInput!]!
+type LoggedWorkoutSet {
+  LoggedWorkoutMoves: [LoggedWorkoutMove!]!
+  id: ID!
+  sectionRoundNumber: Int!
+  sortPosition: Int!
+  timeTakenSeconds: Int
 }
 
 type Move {
@@ -706,6 +732,7 @@ type Mutation {
   deleteJournalMoodById(id: ID!): ID!
   deleteJournalNoteById(id: ID!): ID!
   deleteLoggedWorkoutById(id: ID!): ID!
+  deleteLoggedWorkoutMove(id: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
   deleteUserBenchmark(id: ID!): ID!
@@ -765,9 +792,13 @@ type Mutation {
   updateJournalMood(data: UpdateJournalMoodInput!): JournalMood!
   updateJournalNote(data: UpdateJournalNoteInput!): JournalNote!
   updateLoggedWorkout(data: UpdateLoggedWorkoutInput!): LoggedWorkout!
+  updateLoggedWorkoutMove(
+    data: UpdateLoggedWorkoutMoveInput!
+  ): LoggedWorkoutMove!
   updateLoggedWorkoutSection(
     data: UpdateLoggedWorkoutSectionInput!
   ): LoggedWorkoutSection!
+  updateLoggedWorkoutSet(data: UpdateLoggedWorkoutSetInput!): LoggedWorkoutSet!
   updateMove(data: UpdateMoveInput!): Move!
   updateScheduledWorkout(data: UpdateScheduledWorkoutInput!): ScheduledWorkout!
   updateSkill(data: UpdateSkillInput!): Skill!
@@ -1069,12 +1100,26 @@ input UpdateLoggedWorkoutInput {
   note: String
 }
 
-input UpdateLoggedWorkoutSectionInput {
-  BodyAreas: [ConnectRelationInput!]!
-  MoveTypes: [ConnectRelationInput!]!
+input UpdateLoggedWorkoutMoveInput {
+  Equipment: ConnectRelationInput
+  Move: ConnectRelationInput
+  distanceUnit: DistanceUnit
   id: ID!
-  loggedWorkoutSectionData: LoggedWorkoutSectionDataInput
+  loadAmount: Float
+  loadUnit: LoadUnit
+  repType: WorkoutMoveRepType
+  reps: Float!
+  timeUnit: TimeUnit
+}
+
+input UpdateLoggedWorkoutSectionInput {
+  id: ID!
   repScore: Int
+  timeTakenSeconds: Int
+}
+
+input UpdateLoggedWorkoutSetInput {
+  id: ID!
   timeTakenSeconds: Int
 }
 
@@ -1255,7 +1300,6 @@ input UpdateWorkoutSectionInput {
 input UpdateWorkoutSetInput {
   duration: Int
   id: ID!
-  rounds: Int
 }
 
 input UpdateWorkoutTagInput {
@@ -1522,28 +1566,6 @@ type WorkoutSection {
   timecap: Int!
 }
 
-type WorkoutSectionRoundData {
-  sets: [WorkoutSectionRoundSetData!]!
-  timeTakenSeconds: Int!
-}
-
-input WorkoutSectionRoundDataInput {
-  sets: [WorkoutSectionRoundSetDataInput!]!
-  timeTakenSeconds: Int!
-}
-
-type WorkoutSectionRoundSetData {
-  moves: String!
-  rounds: Int!
-  timeTakenSeconds: Int!
-}
-
-input WorkoutSectionRoundSetDataInput {
-  moves: String!
-  rounds: Int!
-  timeTakenSeconds: Int!
-}
-
 type WorkoutSectionType {
   LoggedWorkoutSections: [LoggedWorkoutSection!]!
   WorkoutSections: [WorkoutSection!]!
@@ -1558,7 +1580,6 @@ type WorkoutSet {
   WorkoutMoves: [WorkoutMove!]!
   duration: Int!
   id: ID!
-  rounds: Int!
   sortPosition: Int!
 }
 

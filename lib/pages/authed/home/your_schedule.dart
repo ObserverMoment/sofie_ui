@@ -69,7 +69,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
       context: context,
       child: BottomSheetMenu(
           header: const BottomSheetMenuHeader(
-            name: 'Schedule a Workout',
+            name: 'Schedule a Workout From',
           ),
           items: [
             BottomSheetMenuItem(

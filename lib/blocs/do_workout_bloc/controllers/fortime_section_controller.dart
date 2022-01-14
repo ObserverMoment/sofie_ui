@@ -67,7 +67,7 @@ class ForTimeSectionController extends WorkoutSectionController {
       state.percentComplete = repsCompleted / totalRepsToComplete;
 
       /// Move to the next set.
-      state.moveToNextSetOrSection(stopWatchTimer.secondTime.value);
+      state.moveToNextSetOrRound(stopWatchTimer.secondTime.value);
 
       /// Broadcast new state.
       progressStateController.add(state);
