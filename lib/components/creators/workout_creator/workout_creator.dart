@@ -11,7 +11,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
-import 'package:sofie_ui/components/user_input/selectors/difficulty_level_selector.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -133,12 +132,6 @@ class __PreCreateUIState extends State<_PreCreateUI> {
             maxChars: 50,
             validationMessage: 'Required. Min 3 chars. max 50',
           ),
-        ),
-        DifficultyLevelSelectorRow(
-          difficultyLevel: _createWorkoutInput.difficultyLevel,
-          unselectedLabel: 'Not Specified',
-          updateDifficultyLevel: (level) =>
-              setState(() => _createWorkoutInput.difficultyLevel = level),
         ),
         ContentAccessScopeSelector(
             contentAccessScope: _createWorkoutInput.contentAccessScope,

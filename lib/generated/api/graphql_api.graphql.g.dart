@@ -2800,6 +2800,17 @@ Map<String, dynamic> _$CreateLoggedWorkoutMoveInLoggedWorkoutSetInputToJson(
       'timeUnit': _$TimeUnitEnumMap[instance.timeUnit],
     };
 
+DeleteLoggedWorkoutMove$Mutation _$DeleteLoggedWorkoutMove$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteLoggedWorkoutMove$Mutation()
+      ..deleteLoggedWorkoutMove = json['deleteLoggedWorkoutMove'] as String;
+
+Map<String, dynamic> _$DeleteLoggedWorkoutMove$MutationToJson(
+        DeleteLoggedWorkoutMove$Mutation instance) =>
+    <String, dynamic>{
+      'deleteLoggedWorkoutMove': instance.deleteLoggedWorkoutMove,
+    };
+
 UpdateLoggedWorkoutMove _$UpdateLoggedWorkoutMoveFromJson(
         Map<String, dynamic> json) =>
     UpdateLoggedWorkoutMove()
@@ -5556,9 +5567,6 @@ UpdateWorkoutInput _$UpdateWorkoutInputFromJson(Map<String, dynamic> json) =>
           unknownValue: ContentAccessScope.artemisUnknown),
       coverImageUri: json['coverImageUri'] as String?,
       description: json['description'] as String?,
-      difficultyLevel: $enumDecodeNullable(
-          _$DifficultyLevelEnumMap, json['difficultyLevel'],
-          unknownValue: DifficultyLevel.artemisUnknown),
       id: json['id'] as String,
       introAudioUri: json['introAudioUri'] as String?,
       introVideoThumbUri: json['introVideoThumbUri'] as String?,
@@ -5575,7 +5583,6 @@ Map<String, dynamic> _$UpdateWorkoutInputToJson(UpdateWorkoutInput instance) =>
           _$ContentAccessScopeEnumMap[instance.contentAccessScope],
       'coverImageUri': instance.coverImageUri,
       'description': instance.description,
-      'difficultyLevel': _$DifficultyLevelEnumMap[instance.difficultyLevel],
       'id': instance.id,
       'introAudioUri': instance.introAudioUri,
       'introVideoThumbUri': instance.introVideoThumbUri,
@@ -5638,9 +5645,6 @@ CreateWorkoutInput _$CreateWorkoutInputFromJson(Map<String, dynamic> json) =>
       contentAccessScope: $enumDecode(
           _$ContentAccessScopeEnumMap, json['contentAccessScope'],
           unknownValue: ContentAccessScope.artemisUnknown),
-      difficultyLevel: $enumDecodeNullable(
-          _$DifficultyLevelEnumMap, json['difficultyLevel'],
-          unknownValue: DifficultyLevel.artemisUnknown),
       name: json['name'] as String,
     );
 
@@ -5648,7 +5652,6 @@ Map<String, dynamic> _$CreateWorkoutInputToJson(CreateWorkoutInput instance) =>
     <String, dynamic>{
       'contentAccessScope':
           _$ContentAccessScopeEnumMap[instance.contentAccessScope],
-      'difficultyLevel': _$DifficultyLevelEnumMap[instance.difficultyLevel],
       'name': instance.name,
     };
 
@@ -6224,17 +6227,6 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'clubId': instance.clubId,
       'inviteLimit': instance.inviteLimit,
       'name': instance.name,
-    };
-
-DeleteLoggedWorkoutMove$Mutation _$DeleteLoggedWorkoutMove$MutationFromJson(
-        Map<String, dynamic> json) =>
-    DeleteLoggedWorkoutMove$Mutation()
-      ..deleteLoggedWorkoutMove = json['deleteLoggedWorkoutMove'] as String;
-
-Map<String, dynamic> _$DeleteLoggedWorkoutMove$MutationToJson(
-        DeleteLoggedWorkoutMove$Mutation instance) =>
-    <String, dynamic>{
-      'deleteLoggedWorkoutMove': instance.deleteLoggedWorkoutMove,
     };
 
 DeleteJournalGoalByIdArguments _$DeleteJournalGoalByIdArgumentsFromJson(
@@ -6954,6 +6946,18 @@ Map<String, dynamic> _$CreateLoggedWorkoutArgumentsToJson(
         CreateLoggedWorkoutArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
+    };
+
+DeleteLoggedWorkoutMoveArguments _$DeleteLoggedWorkoutMoveArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteLoggedWorkoutMoveArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteLoggedWorkoutMoveArgumentsToJson(
+        DeleteLoggedWorkoutMoveArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };
 
 UpdateLoggedWorkoutMoveArguments _$UpdateLoggedWorkoutMoveArgumentsFromJson(
@@ -8146,16 +8150,4 @@ Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
-    };
-
-DeleteLoggedWorkoutMoveArguments _$DeleteLoggedWorkoutMoveArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteLoggedWorkoutMoveArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$DeleteLoggedWorkoutMoveArgumentsToJson(
-        DeleteLoggedWorkoutMoveArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
     };
