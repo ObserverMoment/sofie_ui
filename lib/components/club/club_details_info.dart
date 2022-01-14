@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_players.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
@@ -19,14 +20,18 @@ class ClubDetailsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return MyPageScaffold(
+        child: NestedScrollView(
+      headerSliverBuilder: (c, i) => [
+        const MySliverNavbar(title: 'About Club'),
+      ],
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           if (Utils.textNotNull(club.location))
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
                     CupertinoIcons.location,
@@ -112,6 +117,6 @@ class ClubDetailsInfo extends StatelessWidget {
                   .navigateTo(UserPublicProfileDetailsRoute(userId: userId))),
         ],
       ),
-    );
+    ));
   }
 }

@@ -16,6 +16,26 @@ fragment LoggedWorkoutSection on LoggedWorkoutSection {
   sortPosition
 }
 
+fragment LoggedWorkoutSet on LoggedWorkoutSet {
+  __typename
+  id
+  sortPosition
+  sectionRoundNumber
+  timeTakenSeconds
+}
+
+fragment LoggedWorkoutMove on LoggedWorkoutMove {
+  __typename
+  id
+  sortPosition
+  repType
+  reps
+  distanceUnit
+  loadAmount
+  loadUnit
+  timeUnit
+}
+
 fragment LifetimeLogStatsSummary on LifetimeLogStatsSummary {
   __typename
   minutesWorked

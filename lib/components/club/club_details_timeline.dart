@@ -17,12 +17,12 @@ import 'package:sofie_ui/services/utils.dart';
 class ClubDetailsTimeline extends StatefulWidget {
   final ClubSummary club;
   final bool isOwnerOrAdmin;
-  final bool stopPollingFeed;
+  final bool enableFeedPolling;
   const ClubDetailsTimeline({
     Key? key,
     required this.club,
     required this.isOwnerOrAdmin,
-    required this.stopPollingFeed,
+    required this.enableFeedPolling,
   }) : super(key: key);
 
   @override
@@ -65,7 +65,7 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   void _initPollingForNewPosts() {
     _pollingTimer =
         Timer.periodic(const Duration(seconds: 30), (Timer t) async {
-      if (widget.stopPollingFeed) {
+      if (!widget.enableFeedPolling) {
         _pollingTimer.cancel();
       } else {
         _pollForNewPosts();
@@ -181,54 +181,70 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading
-        ? const ShimmerCardList(
-            itemCount: 10,
-            cardHeight: 260,
-          )
-        : _pagingController.itemList == null ||
-                _pagingController.itemList!.isEmpty
-            ? const Center(
-                child: MyText(
-                  'No Activity',
-                  subtext: true,
-                ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: MyHeaderText(
+            'Activity',
+            size: FONTSIZE.four,
+          ),
+        ),
+        _isLoading
+            ? const ShimmerCardList(
+                itemCount: 10,
+                cardHeight: 260,
               )
-            : PagedListView<int, TimelinePostFullData>(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                pagingController: _pagingController,
-                builderDelegate:
-                    PagedChildBuilderDelegate<TimelinePostFullData>(
-                  itemBuilder: (context, postData, index) => SizeFadeIn(
-                    duration: 50,
-                    delay: index,
-                    delayBasis: 10,
-                    child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ClubTimelinePostCard(
-                          postData: postData,
-                          deletePost: widget.isOwnerOrAdmin
-                              ? (post) => _deleteActivityById(context, post)
-                              : null,
-                        )),
+            : _pagingController.itemList == null ||
+                    _pagingController.itemList!.isEmpty
+
+                /// TODO: This needs a placeholder.
+                ? const Center(
+                    child: MyText(
+                      'No Activity',
+                      subtext: true,
+                    ),
+                  )
+                : PagedListView<int, TimelinePostFullData>(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    pagingController: _pagingController,
+                    builderDelegate:
+                        PagedChildBuilderDelegate<TimelinePostFullData>(
+                      itemBuilder: (context, postData, index) => SizeFadeIn(
+                        duration: 50,
+                        delay: index,
+                        delayBasis: 10,
+                        child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: ClubTimelinePostCard(
+                              postData: postData,
+                              deletePost: widget.isOwnerOrAdmin
+                                  ? (post) => _deleteActivityById(context, post)
+                                  : null,
+                            )),
+                      ),
+                      firstPageErrorIndicatorBuilder: (context) => MyText(
+                        'Oh dear, ${_pagingController.error.toString()}',
+                        maxLines: 5,
+                        textAlign: TextAlign.center,
+                      ),
+                      newPageErrorIndicatorBuilder: (context) => MyText(
+                        'Oh dear, ${_pagingController.error.toString()}',
+                        maxLines: 5,
+                        textAlign: TextAlign.center,
+                      ),
+                      firstPageProgressIndicatorBuilder: (c) =>
+                          const LoadingCircle(),
+                      newPageProgressIndicatorBuilder: (c) =>
+                          const LoadingCircle(),
+                      noItemsFoundIndicatorBuilder: (c) =>
+                          const Center(child: MyText('No results...')),
+                    ),
                   ),
-                  firstPageErrorIndicatorBuilder: (context) => MyText(
-                    'Oh dear, ${_pagingController.error.toString()}',
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
-                  ),
-                  newPageErrorIndicatorBuilder: (context) => MyText(
-                    'Oh dear, ${_pagingController.error.toString()}',
-                    maxLines: 5,
-                    textAlign: TextAlign.center,
-                  ),
-                  firstPageProgressIndicatorBuilder: (c) =>
-                      const LoadingCircle(),
-                  newPageProgressIndicatorBuilder: (c) => const LoadingCircle(),
-                  noItemsFoundIndicatorBuilder: (c) =>
-                      const Center(child: MyText('No results...')),
-                ),
-              );
+      ],
+    );
   }
 }

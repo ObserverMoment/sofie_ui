@@ -5,13 +5,10 @@ import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_submit_button_2.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/section_video_player_screen.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -78,30 +75,62 @@ class DoSectionTemplateLayout extends StatelessWidget {
 
           /// The set complete / start / stop button is always at the bottom of this column and is part of the layout for scored workouts.
           if (workoutSection.isScored && isRunning)
-            AnimatedSubmitButtonV2(
+            _AnimatedSubmitButton(
               height: startResumeButtonHeight,
-              text: 'Set Complete',
-              onSubmit: () {
-                Vibrate.feedback(FeedbackType.light);
-                context.read<DoWorkoutBloc>().markCurrentWorkoutSetAsComplete(
-                    workoutSection.sortPosition);
-                showCupertinoModalPopup(
-                    // Explicitly setting this because we need to ensure [rootNavigator] is true when we pop it below.
-                    useRootNavigator: true,
-                    context: context,
-                    builder: (_) => const Center(
-                            child: SizeFadeIn(
-                          child: Icon(CupertinoIcons.checkmark_alt,
-                              size: 100, color: Styles.white),
-                        )));
-
-                Future.delayed(const Duration(seconds: 1),
-                    () => context.pop(rootNavigator: true));
-              },
-              borderRadius: 0,
+              sectionIndex: workoutSection.sortPosition,
             )
         ],
       ),
+    );
+  }
+}
+
+class _AnimatedSubmitButton extends StatefulWidget {
+  final double height;
+  final int sectionIndex;
+  const _AnimatedSubmitButton(
+      {Key? key, required this.height, required this.sectionIndex})
+      : super(key: key);
+
+  @override
+  __AnimatedSubmitButtonState createState() => __AnimatedSubmitButtonState();
+}
+
+class __AnimatedSubmitButtonState extends State<_AnimatedSubmitButton> {
+  bool _processing = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        AnimatedSubmitButtonV2(
+          height: widget.height,
+          text: 'Set Complete',
+          onSubmit: _processing
+              ? null
+              : () {
+                  setState(() {
+                    _processing = true;
+                  });
+
+                  Vibrate.feedback(FeedbackType.light);
+
+                  context
+                      .read<DoWorkoutBloc>()
+                      .markCurrentWorkoutSetAsComplete(widget.sectionIndex);
+
+                  Future.delayed(const Duration(seconds: 1), () {
+                    if (mounted) {
+                      setState(() {
+                        _processing = false;
+                      });
+                    }
+                  });
+                },
+          borderRadius: 0,
+        ),
+      ],
     );
   }
 }

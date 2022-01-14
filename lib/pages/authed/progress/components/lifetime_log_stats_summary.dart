@@ -49,13 +49,18 @@ class LifetimeLogStatsWrapper extends StatelessWidget {
 class SummaryStatDisplay extends StatelessWidget {
   final String label;
   final int number;
+  final Color? backgroundColor;
   const SummaryStatDisplay(
-      {Key? key, required this.label, required this.number})
+      {Key? key,
+      required this.label,
+      required this.number,
+      this.backgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ContentBox(
+      backgroundColor: backgroundColor,
       child: Column(
         children: [
           MyText(

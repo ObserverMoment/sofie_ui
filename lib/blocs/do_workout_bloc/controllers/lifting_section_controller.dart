@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/data_model_converters/workout_to_create_log_inputs.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
+import 'package:collection/collection.dart';
 
 /// Although it extends [WorkoutSectionController] it has some differences.
 /// Allows updating of sets (rounds) and moves (load and reps for moves) by updating the main [activeWorkout] object in the [DoWorkoutBloc].
@@ -12,7 +14,7 @@ class LiftingSectionController extends WorkoutSectionController
   List<String> completedWorkoutSetIds = [];
 
   /// state.percentComplete is [completedWorkoutMoveIds.length / totalWorkoutMoves]
-  /// Using sets to easily ensure ids are not duplicated when user is marking / unmarking whole set.
+  /// Using a set data type to easily ensure ids are not duplicated when user is marking / unmarking whole set.
   Set<String> completedWorkoutMoveIds = {};
 
   /// In a lifting section "sets" are workout moves and "exercises" are sets.
@@ -40,7 +42,7 @@ class LiftingSectionController extends WorkoutSectionController
     super.initialize(section);
   }
 
-  /// Should never be called in a FreeSession or Lifting!
+  /// Should never be called in a CustomSession or Lifting.
   /// Noop.
   @override
   List<WorkoutSet?> getNowAndNextSets(int qty) {
@@ -84,8 +86,66 @@ class LiftingSectionController extends WorkoutSectionController
     notifyListeners();
   }
 
+  /// Unlike other workout section types the lifting and custom sessions do not generate this data as the user progresses (they just mark sets and moves done or not) we need to run this method before generating the log at the end of the workout.
+  /// Data is added to [state.loggedSection] based on the current [completedWorkoutMoveIds] and [completedWorkoutSetIds] lists.
+  /// Pass in the [activeWorkoutSection] as this will include any in workout modifications that the user has done. ([workoutSection] stored in [this] will not as in workout modifications does not reset the controller).
+  void updateLoggedSectionInput(WorkoutSection activeWorkoutSection) {
+    state.loggedSection.timeTakenSeconds = stopWatchTimer.secondTime.value;
+
+    final completedSets = activeWorkoutSection.workoutSets
+        .where((wSet) => completedWorkoutSetIds.contains(wSet.id));
+
+    final completedSetInputs = completedSets
+        .map((wSet) => CreateLoggedWorkoutSetInLoggedWorkoutSectionInput(
+            sectionRoundNumber: 0,
+            sortPosition: wSet.sortPosition,
+            loggedWorkoutMoves: wSet.workoutMoves
+                .map(
+                    (wMove) => workoutMoveToCreateLoggedWorkoutMoveInput(wMove))
+                .toList()))
+        .toList();
+
+    final partiallyCompletedSets = activeWorkoutSection.workoutSets.where(
+        (wSet) => wSet.workoutMoves
+            .map((wMove) => wMove.id)
+            .any((id) => completedWorkoutMoveIds.contains(id)));
+
+    final partiallyCompletedSetInputs = partiallyCompletedSets
+        .map((wSet) => CreateLoggedWorkoutSetInLoggedWorkoutSectionInput(
+            sectionRoundNumber: 0,
+            sortPosition: wSet.sortPosition,
+            loggedWorkoutMoves: wSet.workoutMoves
+                .where((wMove) => completedWorkoutMoveIds.contains(wMove.id))
+                .map(
+                    (wMove) => workoutMoveToCreateLoggedWorkoutMoveInput(wMove))
+                .toList()))
+        .toList();
+
+    state.loggedSection.loggedWorkoutSets = [
+      ...completedSetInputs,
+      ...partiallyCompletedSetInputs
+    ];
+
+    /// Sort all children by their sortPosition.
+    state.loggedSection.loggedWorkoutSets
+        .sortBy<num>((lws) => lws.sortPosition);
+
+    for (final loggedWorkoutSet in state.loggedSection.loggedWorkoutSets) {
+      loggedWorkoutSet.loggedWorkoutMoves
+          .sortBy<num>((loggedWorkoutMove) => loggedWorkoutMove.sortPosition);
+    }
+
+    /// All sort positions of children are updated to reflect the index at which the object was in the list. Required because some sets and moves may not have been completed.
+    state.loggedSection.loggedWorkoutSets.forEachIndexed((i, lws) {
+      lws.sortPosition = i;
+      lws.loggedWorkoutMoves.forEachIndexed((i, lwm) {
+        lwm.sortPosition = i;
+      });
+    });
+  }
+
   @override
   void markCurrentWorkoutSetAsComplete() {
-    /// Noop. use [markWorkoutSetComplete].
+    /// Noop.
   }
 }

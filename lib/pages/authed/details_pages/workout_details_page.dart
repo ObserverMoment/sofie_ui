@@ -279,8 +279,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                   if (!isOwner)
                                     BottomSheetMenuItem(
                                         text: 'View creator',
-                                        icon: const Icon(
-                                            CupertinoIcons.profile_circled),
+                                        icon: CupertinoIcons.profile_circled,
                                         onPressed: () => context.navigateTo(
                                             UserPublicProfileDetailsRoute(
                                                 userId: workout.user.id))),
@@ -289,28 +288,26 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                           ContentAccessScope.public)
                                     BottomSheetMenuItem(
                                         text: 'Share',
-                                        icon: const Icon(
-                                            CupertinoIcons.paperplane),
+                                        icon: CupertinoIcons.paperplane,
                                         onPressed: _shareWorkout),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Edit',
-                                        icon: const Icon(CupertinoIcons.pencil),
+                                        icon: CupertinoIcons.pencil,
                                         onPressed: () => context.navigateTo(
                                             WorkoutCreatorRoute(
                                                 workout: workout))),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Copy',
-                                        icon: const Icon(CupertinoIcons
-                                            .plus_rectangle_on_rectangle),
+                                        icon: CupertinoIcons
+                                            .plus_rectangle_on_rectangle,
                                         onPressed: () =>
                                             _copyWorkout(workout.id)),
                                   if (isOwner)
                                     BottomSheetMenuItem(
                                         text: 'Export',
-                                        icon: const Icon(
-                                            CupertinoIcons.download_circle),
+                                        icon: CupertinoIcons.download_circle,
                                         onPressed: () =>
                                             context.showAlertDialog(
                                                 title: 'Coming soon!')),
@@ -319,12 +316,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         text: workout.archived
                                             ? 'Unarchive'
                                             : 'Archive',
-                                        icon: Icon(
-                                          CupertinoIcons.archivebox,
-                                          color: workout.archived
-                                              ? null
-                                              : Styles.errorRed,
-                                        ),
+                                        icon: CupertinoIcons.archivebox,
                                         isDestructive: !workout.archived,
                                         onPressed: () => workout.archived
                                             ? _unarchiveWorkout(workout)

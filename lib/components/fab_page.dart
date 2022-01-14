@@ -105,7 +105,7 @@ class FloatingButton extends StatelessWidget {
           onTap();
         },
         child: FABPageButtonContainer(
-          color: context.theme.background.withOpacity(0.9),
+          color: context.theme.fabBackground,
           padding: padding,
           margin: margin,
           child: AnimatedSwitcher(

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/collections/collection_workout_plans_list.dart';
 import 'package:sofie_ui/components/collections/collection_workouts_list.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -96,16 +95,13 @@ class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
                         items: [
                           BottomSheetMenuItem(
                               text: 'Edit',
-                              icon: const Icon(CupertinoIcons.pencil),
+                              icon: CupertinoIcons.pencil,
                               onPressed: () => context.pushRoute(
                                   CollectionCreatorRoute(
                                       collection: collection))),
                           BottomSheetMenuItem(
                               text: 'Delete',
-                              icon: const Icon(
-                                CupertinoIcons.delete_simple,
-                                color: Styles.errorRed,
-                              ),
+                              icon: CupertinoIcons.delete_simple,
                               isDestructive: true,
                               onPressed: () => _confirmDeleteCollection(
                                   context, collection)),

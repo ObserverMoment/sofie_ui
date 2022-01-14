@@ -181,8 +181,7 @@ class _WorkoutPlanCreatorStructureWeekState
                                 items: [
                                   BottomSheetMenuItem(
                                       text: 'Add workout',
-                                      icon: const Icon(
-                                          CupertinoIcons.add_circled),
+                                      icon: CupertinoIcons.add_circled,
                                       onPressed: () =>
                                           _addWorkoutToPlanDay(dayIndex)),
                                   BottomSheetMenuItem(
@@ -190,8 +189,7 @@ class _WorkoutPlanCreatorStructureWeekState
                                             byDayNumber[dayIndex]!.note)
                                         ? 'Edit day note'
                                         : 'Add day note',
-                                    icon: const Icon(
-                                        CupertinoIcons.doc_plaintext),
+                                    icon: CupertinoIcons.doc_plaintext,
                                     onPressed: () => context.push(
                                         child: FullScreenTextEditing(
                                             title: 'Note',
@@ -205,19 +203,18 @@ class _WorkoutPlanCreatorStructureWeekState
                                   ),
                                   BottomSheetMenuItem(
                                       text: 'Move to another day',
-                                      icon: const Icon(
-                                          CupertinoIcons.calendar_today),
+                                      icon: CupertinoIcons.calendar_today,
                                       onPressed: () =>
                                           _movePlanDayToAnotherDay(dayIndex)),
                                   BottomSheetMenuItem(
                                       text: 'Copy to another day',
-                                      icon: const Icon(CupertinoIcons
-                                          .plus_rectangle_on_rectangle),
+                                      icon: CupertinoIcons
+                                          .plus_rectangle_on_rectangle,
                                       onPressed: () =>
                                           _copyPlanDayToAnotherDay(dayIndex)),
                                   BottomSheetMenuItem(
                                       text: 'Convert to rest day',
-                                      icon: const Icon(CupertinoIcons.zzz),
+                                      icon: CupertinoIcons.zzz,
                                       onPressed: () =>
                                           _deleteWorkoutPlanDay(dayIndex)),
                                 ])),

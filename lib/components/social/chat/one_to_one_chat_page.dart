@@ -100,12 +100,11 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
                               items: [
                                 BottomSheetMenuItem(
                                     text: 'Block',
-                                    icon: const Icon(CupertinoIcons.nosign),
+                                    icon: CupertinoIcons.nosign,
                                     onPressed: () => printLog('block')),
                                 BottomSheetMenuItem(
                                     text: 'Report',
-                                    icon: const Icon(
-                                        CupertinoIcons.exclamationmark_circle),
+                                    icon: CupertinoIcons.exclamationmark_circle,
                                     onPressed: () => printLog('report')),
                               ])),
                       child: MyHeaderText(_displayName ?? 'Unnamed')),

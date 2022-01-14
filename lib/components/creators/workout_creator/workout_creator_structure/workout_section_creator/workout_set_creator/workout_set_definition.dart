@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -23,9 +24,9 @@ class WorkoutSetDefinition extends StatelessWidget {
 
   Widget _supersetText(String text) => MyText(
         text,
-        subtext: true,
         size: FONTSIZE.one,
         weight: FontWeight.bold,
+        color: Styles.primaryAccent,
         lineHeight: 1,
       );
 

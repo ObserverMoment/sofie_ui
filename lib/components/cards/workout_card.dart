@@ -26,7 +26,7 @@ class WorkoutCard extends StatelessWidget {
           BuildContext context, int count, Color contentOverlayColor) =>
       count > 0
           ? Container(
-              padding: const EdgeInsets.all(6),
+              padding: const EdgeInsets.all(3),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   color: contentOverlayColor),
@@ -61,7 +61,8 @@ class WorkoutCard extends StatelessWidget {
     const infoFontColor = Styles.white;
 
     /// Don't show 'Custom' as a tag.
-    final tagsToDisplay = workout.tags.where((t) => t != 'Custom').toList();
+    final tagsToDisplay =
+        workout.tags.where((t) => t != kCustomSessionName).toList();
 
     return Card(
       elevation: 2,
@@ -79,10 +80,11 @@ class WorkoutCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-              height: 150,
+              height: 112,
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.all(8),
+                padding:
+                    const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 4),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,7 +100,7 @@ class WorkoutCard extends StatelessWidget {
                           children: [
                             if (workout.lengthMinutes != null)
                               Padding(
-                                padding: const EdgeInsets.only(right: 5.0),
+                                padding: const EdgeInsets.only(right: 8.0),
                                 child: DurationTag(
                                   duration:
                                       Duration(minutes: workout.lengthMinutes!),
@@ -110,9 +112,10 @@ class WorkoutCard extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.only(top: 2.0),
                                 child: Opacity(
-                                  opacity: 0.75,
+                                  opacity: 0.85,
                                   child: DifficultyLevelDot(
                                     difficultyLevel: workout.difficultyLevel!,
+                                    size: 21,
                                   ),
                                 ),
                               ),
@@ -123,8 +126,8 @@ class WorkoutCard extends StatelessWidget {
                     Wrap(
                       alignment: WrapAlignment.end,
                       verticalDirection: VerticalDirection.up,
-                      spacing: 4,
-                      runSpacing: 4,
+                      spacing: 6,
+                      runSpacing: 5,
                       children: workout.equipments
                           .map(
                             (e) => Container(
@@ -132,8 +135,8 @@ class WorkoutCard extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     color: contentOverlayColor),
                                 padding: const EdgeInsets.all(3),
-                                width: 28,
-                                height: 28,
+                                width: 29,
+                                height: 29,
                                 child: Utils.getEquipmentIcon(context, e,
                                     color: infoFontColor)),
                           )
@@ -163,6 +166,7 @@ class WorkoutCard extends StatelessWidget {
                             workout.name,
                             lineHeight: 1.3,
                             color: infoFontColor,
+                            maxLines: 2,
                           ),
                           const SizedBox(height: 3),
                           MyText(
@@ -179,14 +183,19 @@ class WorkoutCard extends StatelessWidget {
                 if (Utils.textNotNull(workout.description))
                   Padding(
                     padding: const EdgeInsets.only(top: 4.0),
-                    child: MyText(workout.description!, color: infoFontColor),
+                    child: MyText(
+                      workout.description!,
+                      color: infoFontColor,
+                      maxLines: 3,
+                    ),
                   ),
                 if (tagsToDisplay.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
+                    padding: const EdgeInsets.only(top: 8.0),
                     child: CommaSeparatedList(
                       tagsToDisplay,
-                      textColor: infoFontColor,
+                      textColor: Styles.primaryAccent,
+                      fontWeight: FontWeight.bold,
                     ),
                   )
               ],

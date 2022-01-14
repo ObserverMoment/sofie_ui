@@ -23,6 +23,8 @@ abstract class WorkoutSectionController {
   bool sectionHasStarted = false;
   bool sectionComplete = false;
 
+  late CreateLoggedWorkoutSectionInLoggedWorkoutInput loggedSection;
+
   final VoidCallback onCompleteSection;
 
   WorkoutSectionController(

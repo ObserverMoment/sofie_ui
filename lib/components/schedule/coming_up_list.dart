@@ -177,7 +177,7 @@ class _ScheduledWorkoutReminderCard extends StatelessWidget {
                                 MyText(
                                   scheduledWorkout.gymProfile!.name,
                                   textAlign: TextAlign.center,
-                                  color: Styles.primaryAccent,
+                                  color: Styles.white,
                                   size: FONTSIZE.two,
                                   lineHeight: 1.3,
                                   maxLines: 2,

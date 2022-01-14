@@ -21,11 +21,14 @@ class ReadMoreTextBlock extends StatelessWidget {
     this.delimiterStyle,
     this.fontSize = 17,
     this.textAlign = TextAlign.start,
+    this.textColor,
   }) : super(key: key);
 
   final double fontSize;
 
   final TextAlign textAlign;
+
+  final Color? textColor;
 
   /// Used on TrimMode.length
   final int trimLength;
@@ -55,7 +58,7 @@ class ReadMoreTextBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     TextStyle? effectiveTextStyle = context
         .theme.cupertinoThemeData.textTheme.textStyle
-        .copyWith(fontSize: fontSize);
+        .copyWith(fontSize: fontSize, color: textColor);
 
     final textDirection = Directionality.of(context);
     final textScaleFactor = MediaQuery.textScaleFactorOf(context);
@@ -194,13 +197,17 @@ class TextViewer extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    child: const Icon(CupertinoIcons.clear),
-                    onPressed: context.pop)
+                GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    child: const Padding(
+                      padding: EdgeInsets.only(bottom: 16.0, top: 8),
+                      child: Icon(CupertinoIcons.chevron_down),
+                    ),
+                    onTap: context.pop)
               ],
             ),
             H2(title),

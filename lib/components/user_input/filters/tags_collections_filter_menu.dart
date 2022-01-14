@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 
 enum FilterMenuType { tag, collection }
 
@@ -71,6 +72,7 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
         ? Container()
         : PopoverMenu(
             button: FABPageButtonContainer(
+              color: context.theme.fabBackground,
               child: Row(
                 children: [
                   if (filterMenuType == FilterMenuType.tag)

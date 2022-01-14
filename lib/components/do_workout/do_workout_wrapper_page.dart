@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_do_workout_page.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -51,25 +50,28 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
   }
 
   Widget get _loadingWidget => CupertinoPageScaffold(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              'assets/logos/sofie_logo.svg',
-              width: 48,
-              color: context.theme.primary,
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: MyText('WARMING UP'),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: LoadingSpinningLines(
-                size: 28,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/logos/sofie_logo.svg',
+                width: 48,
+                color: context.theme.primary,
               ),
-            ),
-          ],
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: MyText('WARMING UP'),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CupertinoActivityIndicator(
+                  radius: 14,
+                ),
+              ),
+            ],
+          ),
         ),
       );
 
