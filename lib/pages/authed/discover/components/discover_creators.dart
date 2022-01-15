@@ -121,6 +121,7 @@ class _CreatorCard extends StatelessWidget {
                     profileSummary.displayName,
                     maxLines: 2,
                     size: FONTSIZE.two,
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 if (profileSummary.skills.isNotEmpty)
