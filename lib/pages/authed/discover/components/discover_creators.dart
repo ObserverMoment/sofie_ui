@@ -6,7 +6,7 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
-import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
+import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -48,9 +48,9 @@ class DiscoverCreators extends StatelessWidget {
           QueryObserver<UserProfiles$Query, json.JsonSerializable>(
               key: Key('DiscoverCreators- ${query.operationName}'),
               query: query,
-              loadingIndicator: ShimmerCardGrid(
+              loadingIndicator: ShimmerCirclesGrid(
                 itemCount: 4,
-                maxCardWidth: tileWidth,
+                maxDiameter: tileWidth,
               ),
               builder: (data) {
                 return Container(
@@ -96,38 +96,24 @@ class _CreatorCard extends StatelessWidget {
 
   double get borderRadius => 12;
 
-  Widget _buildAvatar(BuildContext context) => Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-          color: context.theme.cardBackground,
-          borderRadius: BorderRadius.circular(borderRadius)),
-      width: avatarSize,
-      height: avatarSize,
-      child: profileSummary.avatarUri == null
-          ? Center(
-              child: Icon(
-                CupertinoIcons.person_alt,
-                size: avatarSize / 1.5,
-              ),
-            )
-          : SizedUploadcareImage(
-              profileSummary.avatarUri!,
-              displaySize: Size.square(avatarSize * 2),
-            ));
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _buildAvatar(context),
+        UserAvatar(
+          size: avatarSize,
+          avatarUri: profileSummary.avatarUri,
+        ),
         Align(
-          alignment: Alignment.bottomLeft,
+          alignment: Alignment.bottomCenter,
           child: Padding(
             padding: const EdgeInsets.all(3.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ContentBox(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                   backgroundColor:
                       context.theme.cardBackground.withOpacity(0.95),
                   borderRadius: borderRadius,
@@ -141,16 +127,17 @@ class _CreatorCard extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 2.0),
                     child: ContentBox(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 2, horizontal: 4),
                       borderRadius: borderRadius,
                       backgroundColor:
-                          context.theme.background.withOpacity(0.9),
-                      padding: const EdgeInsets.all(4),
+                          context.theme.cardBackground.withOpacity(0.95),
                       child: Row(
                         children: [
                           Expanded(
                             child: CommaSeparatedList(
                               profileSummary.skills,
-                              fontSize: FONTSIZE.one,
+                              fontSize: FONTSIZE.zero,
                               alignment: WrapAlignment.center,
                               runSpacing: 2,
                             ),

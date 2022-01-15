@@ -45,14 +45,13 @@ class _ClubDetailsMembersPageState extends State<ClubDetailsMembersPage> {
   final ScrollController _scrollController = ScrollController();
   double _scrollProgress = 0.0;
 
-  late double _topNavBarHeight;
+  final double _topNavBarHeight = 60;
 
   bool _enableFeedPolling = true;
 
   @override
   void initState() {
     super.initState();
-    _topNavBarHeight = const CupertinoNavigationBar().preferredSize.height;
 
     _scrollController.addListener(() {
       setState(() {
@@ -244,81 +243,81 @@ class AnimatedNavBar extends StatelessWidget {
     return SizedBox(
       height: navBarHeight + topSafeArea,
       child: Stack(
+        alignment: Alignment.center,
         children: [
           Opacity(
               opacity: scrollProgress,
               child: Container(
                   color: context.theme.cupertinoThemeData.barBackgroundColor,
                   height: navBarHeight + topSafeArea)),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CupertinoButton(
-                    onPressed: context.pop,
+          Padding(
+            padding: EdgeInsets.only(left: 16.0, top: topSafeArea, right: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CupertinoButton(
+                  onPressed: context.pop,
+                  padding: EdgeInsets.zero,
+                  child: CircularBox(
+                      color: backgroundColor,
+                      child: const Icon(
+                        CupertinoIcons.arrow_left,
+                      )),
+                ),
+                Opacity(
+                    opacity: scrollProgress,
+                    child: MyHeaderText(
+                      club.name,
+                    )),
+                CupertinoButton(
                     padding: EdgeInsets.zero,
                     child: CircularBox(
                         color: backgroundColor,
-                        child: const Icon(
-                          CupertinoIcons.arrow_left,
-                        )),
-                  ),
-                  Opacity(
-                      opacity: scrollProgress,
-                      child: MyHeaderText(
-                        club.name,
-                      )),
-                  CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      child: CircularBox(
-                          color: backgroundColor,
-                          child: const Icon(CupertinoIcons.ellipsis)),
-                      onPressed: () => openBottomSheetMenu(
-                          context: context,
-                          child: BottomSheetMenu(
-                              header: BottomSheetMenuHeader(
-                                name: club.name,
-                                subtitle: 'Club',
-                                imageUri: club.coverImageUri,
-                              ),
-                              items: [
-                                if (_userIsOwnerOrAdmin)
-                                  BottomSheetMenuItem(
-                                      text: 'New Post',
-                                      icon: CupertinoIcons.add,
-                                      onPressed: () => _createNewPost(context)),
-                                if (_userIsOwnerOrAdmin)
-                                  BottomSheetMenuItem(
-                                      text: 'Edit Club Info',
-                                      icon: CupertinoIcons.pencil,
-                                      onPressed: () => context.navigateTo(
-                                          ClubCreatorRoute(clubSummary: club))),
-                                if (club.contentAccessScope ==
-                                    ContentAccessScope.public)
-                                  BottomSheetMenuItem(
-                                      text: 'Share',
-                                      icon: CupertinoIcons.paperplane,
-                                      onPressed: () => _shareClub(club)),
-                                if (!_userIsMember && !_userIsOwner)
-                                  BottomSheetMenuItem(
-                                      text: 'Leave Club',
-                                      isDestructive: true,
-                                      icon: CupertinoIcons.square_arrow_right,
-                                      onPressed: () =>
-                                          _confirmLeaveClub(context, club.id)),
-                                if (_userIsOwner)
-                                  BottomSheetMenuItem(
-                                      text: 'Shut Down Club',
-                                      icon: CupertinoIcons
-                                          .exclamationmark_triangle,
-                                      isDestructive: true,
-                                      onPressed: () =>
-                                          _confirmDeleteClub(context, club)),
-                              ]))),
-                ],
-              ),
+                        child: const Icon(CupertinoIcons.ellipsis)),
+                    onPressed: () => openBottomSheetMenu(
+                        context: context,
+                        child: BottomSheetMenu(
+                            header: BottomSheetMenuHeader(
+                              name: club.name,
+                              subtitle: 'Club',
+                              imageUri: club.coverImageUri,
+                            ),
+                            items: [
+                              if (_userIsOwnerOrAdmin)
+                                BottomSheetMenuItem(
+                                    text: 'New Post',
+                                    icon: CupertinoIcons.add,
+                                    onPressed: () => _createNewPost(context)),
+                              if (_userIsOwnerOrAdmin)
+                                BottomSheetMenuItem(
+                                    text: 'Edit Club Info',
+                                    icon: CupertinoIcons.pencil,
+                                    onPressed: () => context.navigateTo(
+                                        ClubCreatorRoute(clubSummary: club))),
+                              if (club.contentAccessScope ==
+                                  ContentAccessScope.public)
+                                BottomSheetMenuItem(
+                                    text: 'Share',
+                                    icon: CupertinoIcons.paperplane,
+                                    onPressed: () => _shareClub(club)),
+                              if (!_userIsMember && !_userIsOwner)
+                                BottomSheetMenuItem(
+                                    text: 'Leave Club',
+                                    isDestructive: true,
+                                    icon: CupertinoIcons.square_arrow_right,
+                                    onPressed: () =>
+                                        _confirmLeaveClub(context, club.id)),
+                              if (_userIsOwner)
+                                BottomSheetMenuItem(
+                                    text: 'Shut Down Club',
+                                    icon:
+                                        CupertinoIcons.exclamationmark_triangle,
+                                    isDestructive: true,
+                                    onPressed: () =>
+                                        _confirmDeleteClub(context, club)),
+                            ]))),
+              ],
             ),
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 enum FONTSIZE {
+  zero,
   one,
   two,
   three,
@@ -19,6 +20,7 @@ enum FONTSIZE {
 }
 
 Map<FONTSIZE, double> _fontSizeMap = {
+  FONTSIZE.zero: 9,
   FONTSIZE.one: 11,
   FONTSIZE.two: 14,
   FONTSIZE.three: 16,

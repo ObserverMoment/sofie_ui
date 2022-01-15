@@ -392,7 +392,6 @@ input CreateUserBenchmarkInput {
 
 input CreateWorkoutInput {
   contentAccessScope: ContentAccessScope!
-  difficultyLevel: DifficultyLevel
   name: String!
 }
 
@@ -1228,7 +1227,6 @@ input UpdateWorkoutInput {
   contentAccessScope: ContentAccessScope
   coverImageUri: String
   description: String
-  difficultyLevel: DifficultyLevel
   id: ID!
   introAudioUri: String
   introVideoThumbUri: String

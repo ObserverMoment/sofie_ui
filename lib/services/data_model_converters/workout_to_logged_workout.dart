@@ -15,7 +15,7 @@ LoggedWorkout loggedWorkoutFromWorkout(
     ScheduledWorkout? scheduledWorkout,
     bool copySections = false}) {
   final name = Utils.textNotNull(workout.name)
-      ? 'workout.name'
+      ? workout.name
       : DateTime.now().dateString;
   return LoggedWorkout()
     ..$$typename = kLoggedWorkoutTypename

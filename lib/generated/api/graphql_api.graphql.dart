@@ -3780,6 +3780,24 @@ class CreateLoggedWorkoutMoveInLoggedWorkoutSetInput extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class DeleteLoggedWorkoutMove$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteLoggedWorkoutMove$Mutation();
+
+  factory DeleteLoggedWorkoutMove$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteLoggedWorkoutMove$MutationFromJson(json);
+
+  late String deleteLoggedWorkoutMove;
+
+  @override
+  List<Object?> get props => [deleteLoggedWorkoutMove];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteLoggedWorkoutMove$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class UpdateLoggedWorkoutMove extends JsonSerializable
     with EquatableMixin, LoggedWorkoutMoveMixin {
   UpdateLoggedWorkoutMove();
@@ -7011,7 +7029,6 @@ class UpdateWorkoutInput extends JsonSerializable with EquatableMixin {
       this.contentAccessScope,
       this.coverImageUri,
       this.description,
-      this.difficultyLevel,
       required this.id,
       this.introAudioUri,
       this.introVideoThumbUri,
@@ -7035,9 +7052,6 @@ class UpdateWorkoutInput extends JsonSerializable with EquatableMixin {
 
   String? description;
 
-  @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
-  DifficultyLevel? difficultyLevel;
-
   late String id;
 
   String? introAudioUri;
@@ -7057,7 +7071,6 @@ class UpdateWorkoutInput extends JsonSerializable with EquatableMixin {
         contentAccessScope,
         coverImageUri,
         description,
-        difficultyLevel,
         id,
         introAudioUri,
         introVideoThumbUri,
@@ -7132,10 +7145,7 @@ class CreateWorkout$Mutation extends JsonSerializable with EquatableMixin {
 
 @JsonSerializable(explicitToJson: true)
 class CreateWorkoutInput extends JsonSerializable with EquatableMixin {
-  CreateWorkoutInput(
-      {required this.contentAccessScope,
-      this.difficultyLevel,
-      required this.name});
+  CreateWorkoutInput({required this.contentAccessScope, required this.name});
 
   factory CreateWorkoutInput.fromJson(Map<String, dynamic> json) =>
       _$CreateWorkoutInputFromJson(json);
@@ -7143,13 +7153,10 @@ class CreateWorkoutInput extends JsonSerializable with EquatableMixin {
   @JsonKey(unknownEnumValue: ContentAccessScope.artemisUnknown)
   late ContentAccessScope contentAccessScope;
 
-  @JsonKey(unknownEnumValue: DifficultyLevel.artemisUnknown)
-  DifficultyLevel? difficultyLevel;
-
   late String name;
 
   @override
-  List<Object?> get props => [contentAccessScope, difficultyLevel, name];
+  List<Object?> get props => [contentAccessScope, name];
   @override
   Map<String, dynamic> toJson() => _$CreateWorkoutInputToJson(this);
 }
@@ -7913,24 +7920,6 @@ class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [clubId, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteLoggedWorkoutMove$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteLoggedWorkoutMove$Mutation();
-
-  factory DeleteLoggedWorkoutMove$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteLoggedWorkoutMove$MutationFromJson(json);
-
-  late String deleteLoggedWorkoutMove;
-
-  @override
-  List<Object?> get props => [deleteLoggedWorkoutMove];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteLoggedWorkoutMove$MutationToJson(this);
 }
 
 enum ContentAccessScope {
@@ -27301,6 +27290,71 @@ class CreateLoggedWorkoutMutation extends GraphQLQuery<
   @override
   CreateLoggedWorkout$Mutation parse(Map<String, dynamic> json) =>
       CreateLoggedWorkout$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteLoggedWorkoutMoveArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteLoggedWorkoutMoveArguments({required this.id});
+
+  @override
+  factory DeleteLoggedWorkoutMoveArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteLoggedWorkoutMoveArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteLoggedWorkoutMoveArgumentsToJson(this);
+}
+
+final DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteLoggedWorkoutMove'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteLoggedWorkoutMove'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteLoggedWorkoutMoveMutation extends GraphQLQuery<
+    DeleteLoggedWorkoutMove$Mutation, DeleteLoggedWorkoutMoveArguments> {
+  DeleteLoggedWorkoutMoveMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteLoggedWorkoutMove';
+
+  @override
+  final DeleteLoggedWorkoutMoveArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteLoggedWorkoutMove$Mutation parse(Map<String, dynamic> json) =>
+      DeleteLoggedWorkoutMove$Mutation.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -50476,69 +50530,4 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   @override
   CreateClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       CreateClubInviteToken$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteLoggedWorkoutMoveArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteLoggedWorkoutMoveArguments({required this.id});
-
-  @override
-  factory DeleteLoggedWorkoutMoveArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$DeleteLoggedWorkoutMoveArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$DeleteLoggedWorkoutMoveArgumentsToJson(this);
-}
-
-final DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteLoggedWorkoutMove'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteLoggedWorkoutMove'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteLoggedWorkoutMoveMutation extends GraphQLQuery<
-    DeleteLoggedWorkoutMove$Mutation, DeleteLoggedWorkoutMoveArguments> {
-  DeleteLoggedWorkoutMoveMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteLoggedWorkoutMove';
-
-  @override
-  final DeleteLoggedWorkoutMoveArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteLoggedWorkoutMove$Mutation parse(Map<String, dynamic> json) =>
-      DeleteLoggedWorkoutMove$Mutation.fromJson(json);
 }
