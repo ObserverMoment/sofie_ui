@@ -504,9 +504,13 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   /// Modify Section, Set and Move methods END////
   ////////////////////////////////////////////////
+
   CreateLoggedWorkoutInput generateLogInputData() {
     CreateLoggedWorkoutInput loggedWorkoutInput = CreateLoggedWorkoutInput(
       completedOn: DateTime.now(),
+      scheduledWorkout: scheduledWorkout != null
+          ? ConnectRelationInput(id: scheduledWorkout!.id)
+          : null,
       gymProfile: scheduledWorkout?.gymProfile != null
           ? ConnectRelationInput(id: scheduledWorkout!.gymProfile!.id)
           : null,
