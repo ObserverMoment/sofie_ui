@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/logged_workout/logged_workout_move_display.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
@@ -15,7 +16,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:supercharged/supercharged.dart';
 
-/// Editable moves list _ lap / split times.
+/// Editable moves list _ lap / split times. Most code is duplicated in [LoggedWorkoutSectionMovesList].
 class LoggedWorkoutCreatorSectionMovesList extends StatefulWidget {
   final int sectionIndex;
   const LoggedWorkoutCreatorSectionMovesList(
@@ -226,7 +227,7 @@ class _SingleSetData extends StatelessWidget {
                   (lwm) => PopoverMenu(
                     button: Padding(
                       padding: const EdgeInsets.only(top: 6, bottom: 6.0),
-                      child: _LoggedWorkoutMoveDisplay(
+                      child: LoggedWorkoutMoveDisplay(
                         loggedWorkoutMove: lwm,
                         loggedWorkoutSet: loggedWorkoutSet,
                         workoutSectionType: workoutSectionType,
@@ -283,25 +284,5 @@ class MiniDurationPickerDisplay extends StatelessWidget {
           backgroundColor: context.theme.background,
           child: MyText(duration.compactDisplay),
         ));
-  }
-}
-
-class _LoggedWorkoutMoveDisplay extends StatelessWidget {
-  final WorkoutSectionType workoutSectionType;
-  final LoggedWorkoutSet loggedWorkoutSet;
-  final LoggedWorkoutMove loggedWorkoutMove;
-  const _LoggedWorkoutMoveDisplay(
-      {Key? key,
-      required this.loggedWorkoutMove,
-      required this.workoutSectionType,
-      required this.loggedWorkoutSet})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return generateLoggedWorkoutMoveDisplay(
-        loggedWorkoutMove: loggedWorkoutMove,
-        loggedWorkoutSet: loggedWorkoutSet,
-        workoutSectionType: workoutSectionType);
   }
 }

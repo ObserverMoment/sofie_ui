@@ -30,6 +30,9 @@ StreamChatThemeData generateStreamTheme(BuildContext context) {
   return StreamChatThemeData(
     brightness: context.theme.brightness,
     primaryIconTheme: IconThemeData(color: primary),
+
+    /// We do not want Stream to display any user image - initially used so QuotedMessage widget does not show an empty default UserAvatar circle.
+    defaultUserImage: (_, __) => Container(),
     colorTheme: isDark
         ? ColorTheme.dark(
             accentPrimary: primary,
@@ -145,16 +148,18 @@ class ChatsIconButton extends StatefulWidget {
 class _ChatsIconButtonState extends State<ChatsIconButton> {
   int _unreadCount = 0;
   late StreamSubscription _subscription;
+  late StreamChatClient _chatClient;
 
   @override
   void initState() {
     super.initState();
 
-    _unreadCount = context.streamChatClient.state.currentUser!.totalUnreadCount;
+    _chatClient = StreamChatCore.of(context).client;
+    _unreadCount = _chatClient.state.currentUser!.totalUnreadCount;
 
     /// Setup the listener for changes to the unread count.
     /// https://getstream.io/chat/docs/flutter-dart/unread/?language=dart&q=unread
-    _subscription = context.streamChatClient
+    _subscription = _chatClient
         .on()
         .where((Event event) => event.totalUnreadCount != null)
         .listen((Event event) {

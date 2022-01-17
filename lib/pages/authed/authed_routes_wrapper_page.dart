@@ -32,7 +32,6 @@ class AuthedRoutesWrapperPage extends StatefulWidget {
 class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   late AuthedUser _authedUser;
   late chat.StreamChatClient _streamChatClient;
-  late chat.OwnUser _streamChatUser;
   bool _chatInitialized = false;
 
   late feed.StreamFeedClient _streamFeedClient;
@@ -71,7 +70,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
 
   Future<void> _connectUserToChat() async {
     try {
-      _streamChatUser = await _streamChatClient.connectUser(
+      await _streamChatClient.connectUser(
         chat.User(id: _authedUser.id),
         _authedUser.streamChatToken,
       );
@@ -193,22 +192,19 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     return _chatInitialized &&
             _feedsInitialized &&
             _incomingLinkStreamInitialized
-        ? MultiProvider(
-            providers: [
-              Provider<chat.StreamChatClient>.value(
-                value: _streamChatClient,
-              ),
-              Provider<chat.OwnUser>.value(
-                value: _streamChatUser,
-              ),
-              Provider<feed.StreamFeedClient>.value(
-                value: _streamFeedClient,
-              ),
-              Provider<NotificationFeed>.value(
-                value: _notificationFeed,
-              ),
-            ],
-            child: const AutoRouter(),
+        ? chat.StreamChatCore(
+            client: _streamChatClient,
+            child: MultiProvider(
+              providers: [
+                Provider<feed.StreamFeedClient>.value(
+                  value: _streamFeedClient,
+                ),
+                Provider<NotificationFeed>.value(
+                  value: _notificationFeed,
+                ),
+              ],
+              child: const AutoRouter(),
+            ),
           )
         : const _LoadingPage();
   }

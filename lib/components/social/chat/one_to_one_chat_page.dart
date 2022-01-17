@@ -1,20 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/components/media/images/user_avatar.dart' as sofie;
+import 'package:sofie_ui/components/social/chat/message_list_view.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 /// A standalone page that can open up a one to one chat conversation.
 /// [otherUserSummary] - The UserSummary of the other user. The first user is the authed user.
@@ -31,17 +29,16 @@ class OneToOneChatPage extends StatefulWidget {
 
 class OneToOneChatPageState extends State<OneToOneChatPage> {
   late AuthedUser _authedUser;
-  late chat.StreamChatClient _streamChatClient;
-  late chat.Channel _channel;
-  String? _displayName; // Of the other person to show at the top center.
-  String? _avatarUri; // Of the other person to show at the top right.
+  late StreamChatClient _streamChatClient;
+  late Channel _channel;
+  Member? otherMember;
   late bool _channelReady = false;
 
   @override
   void initState() {
     super.initState();
     _authedUser = GetIt.I<AuthBloc>().authedUser!;
-    _streamChatClient = context.streamChatClient;
+    _streamChatClient = StreamChatCore.of(context).client;
 
     _initGetStreamChat();
   }
@@ -57,14 +54,9 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
 
       await _channel.watch();
 
-      /// Call API and get UserAvatarData[]
-      final result = await context.graphQLStore
-          .networkOnlyOperation<UserAvatarById$Query, UserAvatarByIdArguments>(
-              operation: UserAvatarByIdQuery(
-                  variables: UserAvatarByIdArguments(id: widget.otherUserId)));
-
-      _displayName = result.data?.userAvatarById.displayName;
-      _avatarUri = result.data?.userAvatarById.avatarUri;
+      otherMember = _channel.state!.members
+          .where((m) => m.userId == widget.otherUserId)
+          .toList()[0];
 
       setState(() => _channelReady = true);
     } catch (e) {
@@ -82,80 +74,10 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: kStandardAnimationDuration,
-      child: _channelReady
-          ? chat.StreamChannel(
+      child: _channelReady && otherMember != null
+          ? ChannelPage(
               channel: _channel,
-              child: CupertinoPageScaffold(
-                navigationBar: MyNavBar(
-                  middle: CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () => openBottomSheetMenu(
-                          context: context,
-                          child: BottomSheetMenu(
-                              header: BottomSheetMenuHeader(
-                                name: _displayName ?? 'Unnamed',
-                                subtitle: 'Chat',
-                                imageUri: _avatarUri,
-                              ),
-                              items: [
-                                BottomSheetMenuItem(
-                                    text: 'Block',
-                                    icon: CupertinoIcons.nosign,
-                                    onPressed: () => printLog('block')),
-                                BottomSheetMenuItem(
-                                    text: 'Report',
-                                    icon: CupertinoIcons.exclamationmark_circle,
-                                    onPressed: () => printLog('report')),
-                              ])),
-                      child: MyHeaderText(_displayName ?? 'Unnamed')),
-                  trailing: CupertinoButton(
-                    onPressed: _avatarUri != null
-                        ? () => openFullScreenImageViewer(context, _avatarUri!)
-                        : null,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: UserAvatar(
-                      size: 36,
-                      avatarUri: _avatarUri,
-                    ),
-                  ),
-                ),
-                child: chat.StreamChat(
-                  client: _streamChatClient,
-                  streamChatThemeData: generateStreamTheme(context),
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: chat.MessageListView(
-                          onMessageTap: (message) =>
-                              printLog(message.toString()),
-                          messageBuilder: (context, message, messages,
-                              defaultMessageWidget) {
-                            return defaultMessageWidget.copyWith(
-                              onLinkTap: (link) => printLog(link),
-                              onMessageActions: (context, message) =>
-                                  printLog(message.toString()),
-                              onAttachmentTap: (message, attachment) =>
-                                  printLog('View, share, save options'),
-                              showUserAvatar: chat.DisplayWidget.gone,
-                              usernameBuilder: (context, message) => Padding(
-                                padding: const EdgeInsets.only(left: 4.0),
-                                child: MyText(
-                                  _displayName ?? 'Unnamed',
-                                  color: Styles.primaryAccent,
-                                  size: FONTSIZE.two,
-                                  weight: FontWeight.bold,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      const chat.MessageInput(
-                          showCommandsButton: false, disableAttachments: true),
-                    ],
-                  ),
-                ),
-              ),
+              otherMember: otherMember!,
             )
           : const MyPageScaffold(
               navigationBar: MyNavBar(
@@ -163,5 +85,129 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
               ),
               child: LoadingCircle()),
     );
+  }
+}
+
+class ChannelPage extends StatefulWidget {
+  final Channel channel;
+  final Member otherMember;
+
+  const ChannelPage(
+      {Key? key, required this.channel, required this.otherMember})
+      : super(key: key);
+
+  @override
+  State<ChannelPage> createState() => _ChannelPageState();
+}
+
+class _ChannelPageState extends State<ChannelPage> {
+  final _messageListController = MessageListController();
+
+  @override
+  Widget build(BuildContext context) {
+    final displayName = widget.otherMember.user!.name;
+    final avatarUri = widget.otherMember.user!.image;
+    return StreamChannel(
+        channel: widget.channel,
+        child: CupertinoPageScaffold(
+            navigationBar: MyNavBar(
+              middle: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => openBottomSheetMenu(
+                      context: context,
+                      child: BottomSheetMenu(
+                          header: BottomSheetMenuHeader(
+                            name: displayName,
+                            subtitle: 'Chat',
+                            imageUri: avatarUri,
+                          ),
+                          items: [
+                            BottomSheetMenuItem(
+                                text: 'Block',
+                                icon: CupertinoIcons.nosign,
+                                onPressed: () => printLog('block')),
+                            BottomSheetMenuItem(
+                                text: 'Report',
+                                icon: CupertinoIcons.exclamationmark_circle,
+                                onPressed: () => printLog('report')),
+                          ])),
+                  child: MyHeaderText(displayName)),
+              trailing: CupertinoButton(
+                onPressed: avatarUri != null
+                    ? () => openFullScreenImageViewer(context, avatarUri)
+                    : null,
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: sofie.UserAvatar(
+                  size: 36,
+                  avatarUri: avatarUri,
+                ),
+              ),
+            ),
+            child: StreamChatCore(
+                client: widget.channel.client,
+                child: MessageListCore(
+                  messageListController: _messageListController,
+                  loadingBuilder: (context) {
+                    return const Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  },
+                  errorBuilder: (context, err) {
+                    return const Center(
+                      child: Text('Error'),
+                    );
+                  },
+                  emptyBuilder: (context) {
+                    return const Center(
+                      child: Text('Nothing here...'),
+                    );
+                  },
+                  messageListBuilder: (context, messages) => LazyLoadScrollView(
+                    onStartOfPage: () async {
+                      await _messageListController.paginateData!();
+                    },
+                    child: MessagesList(
+                      messages: messages,
+                    ),
+                  ),
+                ))));
+    //     child: StreamChat(
+    //       client: _streamChatClient,
+    //       streamChatThemeData: generateStreamTheme(context),
+    //       child: Column(
+    //         children: <Widget>[
+    //           Expanded(
+    //             child: MessageListView(
+    //               onMessageTap: (message) =>
+    //                   printLog(message.toString()),
+    //               messageBuilder: (context, message, messages,
+    //                   defaultMessageWidget) {
+    //                 return defaultMessageWidget.copyWith(
+    //                   onLinkTap: (link) => printLog(link),
+    //                   onMessageActions: (context, message) =>
+    //                       printLog(message.toString()),
+    //                   onAttachmentTap: (message, attachment) =>
+    //                       printLog('View, share, save options'),
+    //                   showUserAvatar: DisplayWidget.gone,
+    //                   usernameBuilder: (context, message) => Padding(
+    //                     padding: const EdgeInsets.only(left: 4.0),
+    //                     child: MyText(
+    //                       displayName,
+    //                       color: Styles.primaryAccent,
+    //                       size: FONTSIZE.two,
+    //                       weight: FontWeight.bold,
+    //                     ),
+    //                   ),
+    //                 );
+    //               },
+    //             ),
+    //           ),
+    //           const MessageInput(
+    //               showCommandsButton: false, disableAttachments: true),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // )
   }
 }

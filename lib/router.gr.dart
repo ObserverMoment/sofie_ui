@@ -1014,7 +1014,7 @@ class YourWorkoutsRoute extends _i62.PageRouteInfo<YourWorkoutsRouteArgs> {
       void Function(_i65.WorkoutSummary)? selectWorkout,
       bool showCreateButton = false,
       bool showDiscoverButton = false,
-      String pageTitle = 'Your Workouts',
+      String? pageTitle,
       bool showSaved = true})
       : super(YourWorkoutsRoute.name,
             path: 'your-workouts',
@@ -1035,7 +1035,7 @@ class YourWorkoutsRouteArgs {
       this.selectWorkout,
       this.showCreateButton = false,
       this.showDiscoverButton = false,
-      this.pageTitle = 'Your Workouts',
+      this.pageTitle,
       this.showSaved = true});
 
   final _i64.Key? key;
@@ -1046,7 +1046,7 @@ class YourWorkoutsRouteArgs {
 
   final bool showDiscoverButton;
 
-  final String pageTitle;
+  final String? pageTitle;
 
   final bool showSaved;
 

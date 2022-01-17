@@ -183,12 +183,13 @@ class BottomSheetAnimateInPageRoute extends PageRouteBuilder {
                     begin: const Offset(0, 1.0),
                     end: Offset.zero,
                   ).animate(
-                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                    CurvedAnimation(
+                        parent: animation, curve: Curves.easeOutCirc),
                   ),
                   child: FadeTransition(
                     opacity: Tween<double>(begin: 0, end: 1.0).animate(
                         CurvedAnimation(
-                            parent: animation, curve: Curves.easeIn)),
+                            parent: animation, curve: Curves.easeInCirc)),
                     child: child,
                   ),
                 ));

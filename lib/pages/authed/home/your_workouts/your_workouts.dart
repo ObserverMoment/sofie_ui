@@ -22,14 +22,14 @@ class YourWorkoutsPage extends StatefulWidget {
   final void Function(WorkoutSummary workout)? selectWorkout;
   final bool showCreateButton;
   final bool showDiscoverButton;
-  final String pageTitle;
+  final String? pageTitle;
   final bool showSaved;
   const YourWorkoutsPage(
       {Key? key,
       this.selectWorkout,
       this.showCreateButton = false,
       this.showDiscoverButton = false,
-      this.pageTitle = 'Your Workouts',
+      this.pageTitle,
       this.showSaved = true})
       : super(key: key);
 
@@ -129,7 +129,7 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                 return CupertinoPageScaffold(
                     child: NestedScrollView(
                   headerSliverBuilder: (c, i) =>
-                      [MySliverNavbar(title: widget.pageTitle)],
+                      [MySliverNavbar(title: widget.pageTitle ?? 'Workouts')],
                   body: FABPage(
                       rowButtonsAlignment: MainAxisAlignment.end,
                       columnButtons: [

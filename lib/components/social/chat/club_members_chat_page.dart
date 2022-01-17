@@ -1,9 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/cards/card.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
@@ -26,12 +29,16 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
   late bool _channelReady = false;
   late ClubChatSummary _clubChatSummary;
 
+  chat.Message? _quotedMessage;
+  FocusNode? _focusNode;
+
   @override
   void initState() {
     super.initState();
     _streamChatClient = context.streamChatClient;
 
     _initGetStreamChat();
+    _focusNode = FocusNode();
   }
 
   Future<void> _initGetStreamChat() async {
@@ -80,6 +87,33 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
     return 'Non-member';
   }
 
+  void _reply(chat.Message message) {
+    setState(() => _quotedMessage = message);
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      _focusNode!.requestFocus();
+    });
+  }
+
+  Radius get _radiusTight => const Radius.circular(8);
+  Radius get _radiusLoose => const Radius.circular(24);
+
+  BorderRadiusGeometry get _myChatBubbleRadius => BorderRadius.only(
+        topLeft: _radiusTight,
+        topRight: _radiusLoose,
+        bottomLeft: _radiusTight,
+      );
+  BorderRadiusGeometry get _otherChatBubbleRadius => BorderRadius.only(
+        topLeft: _radiusLoose,
+        topRight: _radiusTight,
+        bottomRight: _radiusTight,
+      );
+
+  @override
+  void dispose() {
+    _focusNode!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
@@ -89,6 +123,7 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
               channel: _channel,
               child: CupertinoPageScaffold(
                 navigationBar: MyNavBar(
+                  backgroundColor: context.theme.cardBackground,
                   middle: Column(
                     children: [
                       const NavBarTitle('Club Chat'),
@@ -130,18 +165,138 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
                     children: <Widget>[
                       Expanded(
                         child: chat.MessageListView(
-                          onMessageTap: (message) =>
-                              printLog(message.toString()),
+                          onMessageSwiped: _reply,
                           messageBuilder: (context, message, messages,
                               defaultMessageWidget) {
+                            return Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: FractionallySizedBox(
+                                widthFactor: 0.78,
+                                alignment: message.isMyMessage
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: GestureDetector(
+                                  onTap: () =>
+                                      showPopoverMenu(context: context, items: [
+                                    PopoverMenuItem(
+                                      onTap: () {},
+                                      text: 'Hi there',
+                                    )
+                                  ]),
+                                  child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                        color: context.theme.cardBackground,
+                                        borderRadius: message.isMyMessage
+                                            ? _myChatBubbleRadius
+                                            : _otherChatBubbleRadius,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (message.message.quotedMessage !=
+                                              null)
+                                            Container(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: context
+                                                      .theme.modalBackground,
+                                                  borderRadius: message
+                                                          .isMyMessage
+                                                      ? _myChatBubbleRadius
+                                                      : _otherChatBubbleRadius,
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    MyText(
+                                                      _getUserNameFromStreamId(
+                                                          message
+                                                              .message
+                                                              .quotedMessage!
+                                                              .user
+                                                              ?.id),
+                                                      weight: FontWeight.bold,
+                                                      size: FONTSIZE.two,
+                                                      subtext: true,
+                                                    ),
+                                                    const SizedBox(height: 4),
+                                                    MyText(
+                                                      message
+                                                              .message
+                                                              .quotedMessage!
+                                                              .text ??
+                                                          '...',
+                                                      subtext: true,
+                                                      maxLines: 999,
+                                                      lineHeight: 1.4,
+                                                    ),
+                                                  ],
+                                                )),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 8),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                MyText(
+                                                  _getUserNameFromStreamId(
+                                                      message.message.user?.id),
+                                                  weight: FontWeight.bold,
+                                                  size: FONTSIZE.two,
+                                                  subtext: true,
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: MyText(
+                                                        message.message.text ??
+                                                            '...',
+                                                        maxLines: 999,
+                                                        lineHeight: 1.4,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      )),
+                                ),
+                              ),
+                            );
+
                             return defaultMessageWidget.copyWith(
+                              showReplyMessage: false,
+                              // onReplyTap: _reply,
+
+                              // onMessageActions: (_, __) => openBottomSheetMenu(
+                              //   context: context,
+                              //   child: BottomSheetMenu(
+                              //     items: [
+                              //       BottomSheetMenuItem(
+                              //         onPressed: () {},
+                              //         text: 'Reply',
+                              //       ),
+                              //       BottomSheetMenuItem(
+                              //         onPressed: () {},
+                              //         isDestructive: true,
+                              //         text: 'Delete',
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 4, horizontal: 12),
                               onLinkTap: (link) => printLog(link),
-                              onMessageActions: (context, message) =>
-                                  printLog(message.toString()),
-                              onAttachmentTap: (message, attachment) =>
-                                  printLog('View, share, save options'),
+                              // onMessageActions: (context, message) =>
+                              //     print('onMessageActions - '),
                               showUserAvatar: chat.DisplayWidget.gone,
                               usernameBuilder: (context, message) => Padding(
                                 padding: const EdgeInsets.only(left: 4.0),
@@ -156,8 +311,37 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
                           },
                         ),
                       ),
-                      const chat.MessageInput(
-                          showCommandsButton: false, disableAttachments: true),
+                      chat.MessageInput(
+                        showCommandsButton: false,
+                        disableAttachments: true,
+                        focusNode: _focusNode,
+                        quotedMessage: _quotedMessage,
+                        onQuotedMessageCleared: () {
+                          setState(() => _quotedMessage = null);
+                          _focusNode!.unfocus();
+                        },
+                        userMentionsTileBuilder: (context, user) => Card(
+                          elevation: 1,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 12),
+                          child: Row(
+                            children: [
+                              MyText(
+                                '@${_getUserNameFromStreamId(user.id)}',
+                                weight: FontWeight.bold,
+                              ),
+                              if (user.online)
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 6.0),
+                                  child: Dot(
+                                    color: CupertinoColors.activeGreen,
+                                    diameter: 10,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

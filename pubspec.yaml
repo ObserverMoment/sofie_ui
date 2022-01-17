@@ -10,6 +10,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  animations: ^2.0.2
   another_flushbar: ^1.10.28
   artemis: ^7.3.0-beta
   async: ^2.8.2
