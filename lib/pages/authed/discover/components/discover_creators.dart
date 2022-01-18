@@ -129,7 +129,7 @@ class _CreatorCard extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2.0),
                     child: ContentBox(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 2, horizontal: 4),
+                          vertical: 4, horizontal: 4),
                       borderRadius: borderRadius,
                       backgroundColor:
                           context.theme.cardBackground.withOpacity(0.95),

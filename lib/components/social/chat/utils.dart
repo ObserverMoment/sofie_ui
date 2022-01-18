@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 String formatDate(DateTime date) {
   final dateFormat = DateFormat.yMd();
@@ -21,24 +21,16 @@ String formatDateMessage(DateTime date) {
   return dateFormat.format(date);
 }
 
+/// Will also try and get any of the other image urls if there is no thumb.
+String? getAttachmentThumbUrl(Attachment attachment) =>
+    attachment.thumbUrl ?? attachment.imageUrl ?? attachment.assetUrl;
+
+String? getAttachmentMainImageUrl(Attachment attachment) =>
+    attachment.imageUrl ?? attachment.assetUrl ?? attachment.thumbUrl;
+
+bool isImageMessage(Message message) =>
+    message.attachments.isNotEmpty == true &&
+    message.attachments.first.type == 'image';
+
 bool isSameWeek(DateTime timestamp) =>
     DateTime.now().difference(timestamp).inDays < 7;
-
-class Divider extends StatelessWidget {
-  const Divider({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          height: 1,
-          color: CupertinoColors.systemGrey5,
-        ),
-      ),
-    );
-  }
-}

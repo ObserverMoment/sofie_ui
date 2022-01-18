@@ -94,91 +94,97 @@ class FriendChannelPreviewTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final lastMessage = channel.state!.lastMessage;
-    final unreadCount = channel.state!.unreadCount;
     final otherMember = channel.state!.members
         .where((m) => m.userId != authedUserId)
         .toList()[0];
 
-    return GestureDetector(
-      onTap: () => context
-          .navigateTo(OneToOneChatRoute(otherUserId: otherMember.userId!)),
-      child: Container(
-        height: 74,
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0, left: 6),
-              child: avatar.UserAvatar(
-                avatarUri: otherMember.user!.image,
-                size: 40,
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: context.theme.primary.withOpacity(0.1)))),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MyText(otherMember.user!.name),
-                          if (lastMessage != null)
-                            MyText(
-                              lastMessage.updatedAt.dateAndTime,
-                              size: FONTSIZE.two,
-                              subtext: true,
-                            )
-                        ],
-                      ),
+    return StreamBuilder<int>(
+        stream: channel.state!.unreadCountStream,
+        builder: (context, snapshot) {
+          final unreadCount = snapshot.data;
+
+          return GestureDetector(
+            onTap: () => context.navigateTo(
+                OneToOneChatRoute(otherUserId: otherMember.userId!)),
+            child: Container(
+              height: 74,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0, left: 6),
+                    child: avatar.UserAvatar(
+                      avatarUri: otherMember.user!.image,
+                      size: 40,
                     ),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color:
+                                      context.theme.primary.withOpacity(0.1)))),
+                      child: Column(
                         children: [
-                          Flexible(
-                            child: MyText(
-                              lastMessage?.text ?? '...',
-                              subtext: true,
-                              size: FONTSIZE.two,
-                              maxLines: 2,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MyText(otherMember.user!.name),
+                                if (lastMessage != null)
+                                  MyText(
+                                    lastMessage.updatedAt.dateAndTime,
+                                    size: FONTSIZE.two,
+                                    subtext: true,
+                                  )
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 18,
-                            child: unreadCount > 0
-                                ? Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6),
-                                    decoration: BoxDecoration(
-                                        color: Styles.primaryAccent,
-                                        borderRadius:
-                                            BorderRadius.circular(60)),
-                                    child: Center(
-                                      child: MyText(
-                                        unreadCount.toString(),
-                                        color: Styles.white,
-                                        size: FONTSIZE.one,
-                                      ),
-                                    ))
-                                : null,
+                          Expanded(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: MyText(
+                                    lastMessage?.text ?? '...',
+                                    subtext: true,
+                                    size: FONTSIZE.two,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 18,
+                                  child: unreadCount != null && unreadCount > 0
+                                      ? Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6),
+                                          decoration: BoxDecoration(
+                                              color: Styles.primaryAccent,
+                                              borderRadius:
+                                                  BorderRadius.circular(60)),
+                                          child: Center(
+                                            child: MyText(
+                                              unreadCount.toString(),
+                                              color: Styles.white,
+                                              size: FONTSIZE.one,
+                                            ),
+                                          ))
+                                      : null,
+                                )
+                              ],
+                            ),
                           )
                         ],
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }

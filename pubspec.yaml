@@ -144,3 +144,8 @@ flutter:
     - assets/other_app_icons/
     - assets/placeholder_images/
     - assets/workout_filters_icons/
+    
+  fonts:
+  - family: MyCustomIcons
+    fonts:
+    - asset: fonts/MyCustomIcons.ttf

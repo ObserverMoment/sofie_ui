@@ -24,6 +24,10 @@ class _ProfilePageState extends State<ProfilePage> {
   late final String _routeName;
   late String _authedUserId;
 
+  /// Save a ref to avoid throwing errors when disposing (user logging in / out).
+  /// Re. To safely refer to a widget's ancestor in its dispose() method, save a reference to the ancestor by calling dependOnInheritedWidgetOfExactType() in the widget's didChangeDependencies() method
+  late StackRouter _router;
+
   void _updateProfileData() {
     context.graphQLStore
         .refetchQueriesByIds([GQLVarParamKeys.userProfile(_authedUserId)]);
@@ -33,6 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     _authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+    _router = context.router;
     _routeName = context.routeData.name;
   }
 
@@ -43,15 +48,15 @@ class _ProfilePageState extends State<ProfilePage> {
     /// Due to the complexity of the data on this page we do not want to have to run updates whenever some piece of data is updated by the user elsewhere in the app.
     /// Eg when the update a personal best score, or when they update one of their clubs.
     /// So we listen to the AutoRouter and check for when we are landing back on this page.
-    context.router.root.removeListener(_didPopOrSwitchToThisRoute);
-    context.router.root.addListener(_didPopOrSwitchToThisRoute);
+    _router.root.removeListener(_didPopOrSwitchToThisRoute);
+    _router.root.addListener(_didPopOrSwitchToThisRoute);
   }
 
   void _didPopOrSwitchToThisRoute() {
     /// We need to run two checks.
     /// 1. is the AuthedRouter [router] currently showing the [MainTabsRoute].
     /// 2. Is the active tab route [tabsRouter] the same as [_routeName]
-    if (context.router.currentChild?.name == MainTabsRoute.name &&
+    if (_router.currentChild?.name == MainTabsRoute.name &&
         _routeName == context.tabsRouter.current.name) {
       _updateProfileData();
     }
@@ -59,7 +64,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void dispose() {
-    context.router.root.removeListener(_didPopOrSwitchToThisRoute);
+    _router.root.removeListener(_didPopOrSwitchToThisRoute);
     super.dispose();
   }
 

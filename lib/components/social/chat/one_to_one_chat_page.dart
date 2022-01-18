@@ -146,68 +146,35 @@ class _ChannelPageState extends State<ChannelPage> {
             child: StreamChatCore(
                 client: widget.channel.client,
                 child: MessageListCore(
-                  messageListController: _messageListController,
-                  loadingBuilder: (context) {
-                    return const Center(
-                      child: CupertinoActivityIndicator(),
-                    );
-                  },
-                  errorBuilder: (context, err) {
-                    return const Center(
-                      child: Text('Error'),
-                    );
-                  },
-                  emptyBuilder: (context) {
-                    return const Center(
-                      child: Text('Nothing here...'),
-                    );
-                  },
-                  messageListBuilder: (context, messages) => LazyLoadScrollView(
-                    onStartOfPage: () async {
-                      await _messageListController.paginateData!();
+                    messageListController: _messageListController,
+                    loadingBuilder: (context) {
+                      return const Center(
+                        child: CupertinoActivityIndicator(),
+                      );
                     },
-                    child: MessagesList(
-                      messages: messages,
-                    ),
-                  ),
-                ))));
-    //     child: StreamChat(
-    //       client: _streamChatClient,
-    //       streamChatThemeData: generateStreamTheme(context),
-    //       child: Column(
-    //         children: <Widget>[
-    //           Expanded(
-    //             child: MessageListView(
-    //               onMessageTap: (message) =>
-    //                   printLog(message.toString()),
-    //               messageBuilder: (context, message, messages,
-    //                   defaultMessageWidget) {
-    //                 return defaultMessageWidget.copyWith(
-    //                   onLinkTap: (link) => printLog(link),
-    //                   onMessageActions: (context, message) =>
-    //                       printLog(message.toString()),
-    //                   onAttachmentTap: (message, attachment) =>
-    //                       printLog('View, share, save options'),
-    //                   showUserAvatar: DisplayWidget.gone,
-    //                   usernameBuilder: (context, message) => Padding(
-    //                     padding: const EdgeInsets.only(left: 4.0),
-    //                     child: MyText(
-    //                       displayName,
-    //                       color: Styles.primaryAccent,
-    //                       size: FONTSIZE.two,
-    //                       weight: FontWeight.bold,
-    //                     ),
-    //                   ),
-    //                 );
-    //               },
-    //             ),
-    //           ),
-    //           const MessageInput(
-    //               showCommandsButton: false, disableAttachments: true),
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    // )
+                    errorBuilder: (context, err) {
+                      return const Center(
+                        child: Text('Error'),
+                      );
+                    },
+                    emptyBuilder: (context) {
+                      return const Center(
+                        child: Text('Nothing here...'),
+                      );
+                    },
+                    messageListBuilder: (context, messages) {
+                      /// Mark channel messages as read.
+                      widget.channel.markRead();
+
+                      /// Build the list.
+                      return LazyLoadScrollView(
+                        onStartOfPage: () async {
+                          await _messageListController.paginateData!();
+                        },
+                        child: MessagesList(
+                          messages: messages,
+                        ),
+                      );
+                    }))));
   }
 }

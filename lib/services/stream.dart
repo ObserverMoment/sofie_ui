@@ -136,69 +136,43 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
 
 /// Chat bubble icon that can be used anywhere in the app.
 /// Displays a dot in top right (if there are unread messages).
-/// Requires [context.streamChatClient] via Provider + context_extensions
 /// Ontap open up the chats overview page.
-class ChatsIconButton extends StatefulWidget {
+class ChatsIconButton extends StatelessWidget {
   const ChatsIconButton({Key? key}) : super(key: key);
 
   @override
-  _ChatsIconButtonState createState() => _ChatsIconButtonState();
-}
-
-class _ChatsIconButtonState extends State<ChatsIconButton> {
-  int _unreadCount = 0;
-  late StreamSubscription _subscription;
-  late StreamChatClient _chatClient;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _chatClient = StreamChatCore.of(context).client;
-    _unreadCount = _chatClient.state.currentUser!.totalUnreadCount;
-
-    /// Setup the listener for changes to the unread count.
-    /// https://getstream.io/chat/docs/flutter-dart/unread/?language=dart&q=unread
-    _subscription = _chatClient
-        .on()
-        .where((Event event) => event.totalUnreadCount != null)
-        .listen((Event event) {
-      setState(() => _unreadCount = event.totalUnreadCount!);
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: const FABPageButtonContainer(
-                child: Icon(
-              CupertinoIcons.chat_bubble,
-              size: 22,
-            ))),
-        if (_unreadCount > 0)
-          Positioned(
-            top: 4,
-            right: 8,
-            child: FadeInUp(
-                key: Key(_unreadCount.toString()),
-                child: Dot(
-                  diameter: 18,
-                  border: Border.all(color: context.theme.background, width: 2),
-                  color: Styles.primaryAccent,
-                )),
-          ),
-      ],
-    );
+    return StreamBuilder<int>(
+        stream: StreamChatCore.of(context).client.state.totalUnreadCountStream,
+        builder: (context, snapshot) {
+          final unreadCount = snapshot.data;
+
+          return Stack(
+            children: [
+              GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => context.pushRoute(const ChatsOverviewRoute()),
+                  child: const FABPageButtonContainer(
+                      child: Icon(
+                    CupertinoIcons.chat_bubble,
+                    size: 22,
+                  ))),
+              if (unreadCount != null && unreadCount > 0)
+                Positioned(
+                  top: 8,
+                  right: 12,
+                  child: FadeInUp(
+                      key: Key(unreadCount.toString()),
+                      child: Dot(
+                        diameter: 14,
+                        border: Border.all(
+                            color: context.theme.background, width: 2),
+                        color: Styles.primaryAccent,
+                      )),
+                ),
+            ],
+          );
+        });
   }
 }
 
