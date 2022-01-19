@@ -4,7 +4,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart' as sofie;
+import 'package:sofie_ui/components/media/images/user_avatar.dart' as avatar;
 import 'package:sofie_ui/components/social/chat/message_list_view.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
@@ -14,7 +14,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
-/// A standalone page that can open up a one to one chat conversation.
+/// A standalone page for a one to one chat conversation.
 /// [otherUserSummary] - The UserSummary of the other user. The first user is the authed user.
 class OneToOneChatPage extends StatefulWidget {
   final String otherUserId;
@@ -31,7 +31,7 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
   late AuthedUser _authedUser;
   late StreamChatClient _streamChatClient;
   late Channel _channel;
-  Member? otherMember;
+  Member? _otherMember;
   late bool _channelReady = false;
 
   @override
@@ -54,7 +54,7 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
 
       await _channel.watch();
 
-      otherMember = _channel.state!.members
+      _otherMember = _channel.state!.members
           .where((m) => m.userId == widget.otherUserId)
           .toList()[0];
 
@@ -74,10 +74,10 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: kStandardAnimationDuration,
-      child: _channelReady && otherMember != null
-          ? ChannelPage(
+      child: _channelReady && _otherMember != null
+          ? OneToOneChatChannelPage(
               channel: _channel,
-              otherMember: otherMember!,
+              otherMember: _otherMember!,
             )
           : const MyPageScaffold(
               navigationBar: MyNavBar(
@@ -88,19 +88,20 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
   }
 }
 
-class ChannelPage extends StatefulWidget {
+class OneToOneChatChannelPage extends StatefulWidget {
   final Channel channel;
   final Member otherMember;
 
-  const ChannelPage(
+  const OneToOneChatChannelPage(
       {Key? key, required this.channel, required this.otherMember})
       : super(key: key);
 
   @override
-  State<ChannelPage> createState() => _ChannelPageState();
+  State<OneToOneChatChannelPage> createState() =>
+      _OneToOneChatChannelPageState();
 }
 
-class _ChannelPageState extends State<ChannelPage> {
+class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
   final _messageListController = MessageListController();
 
   @override
@@ -137,7 +138,7 @@ class _ChannelPageState extends State<ChannelPage> {
                     ? () => openFullScreenImageViewer(context, avatarUri)
                     : null,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: sofie.UserAvatar(
+                child: avatar.UserAvatar(
                   size: 36,
                   avatarUri: avatarUri,
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/social/chat/friend_chats_channel_list.dart';
+import 'package:sofie_ui/components/social/chat/clubs/club_chats_channel_list.dart';
+import 'package:sofie_ui/components/social/chat/friends/friend_chats_channel_list.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 
@@ -47,10 +48,7 @@ class _ChatsOverviewPageState extends State<ChatsOverviewPage> {
               index: _activeTabIndex,
               children: const [
                 FriendChatsChannelList(),
-                MyText('Club chats'),
-                // ClubChatsChannelList(
-                //   streamChatClient: _streamChatClient,
-                // ),
+                ClubChatsChannelList(),
               ],
             ),
           )

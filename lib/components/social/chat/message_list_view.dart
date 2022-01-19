@@ -10,6 +10,7 @@ import 'package:sofie_ui/components/social/chat/swipe_to_reply.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/components/social/chat/message_header.dart';
+import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter_core/stream_chat_flutter_core.dart'
     show Message, StreamChatCore;
 
@@ -23,7 +24,7 @@ class MessagesList extends StatefulWidget {
 
 class _MessagesListState extends State<MessagesList> {
   Message? _quotedMessage;
-  final _inputFocusNode = FocusNode();
+  late FocusNode _inputFocusNode;
 
   final _scrollController = ScrollController();
 
@@ -33,6 +34,8 @@ class _MessagesListState extends State<MessagesList> {
     _scrollController.addListener(() {
       setState(() {});
     });
+
+    _inputFocusNode = FocusNode();
   }
 
   Future<void> _copyMessageToClipboard(String messageText) async {
@@ -120,8 +123,8 @@ class _MessagesListState extends State<MessagesList> {
                                                                 _replyToMessage(
                                                                     message),
                                                             text: 'Reply'),
-                                                        if (message.text !=
-                                                            null)
+                                                        if (Utils.textNotNull(
+                                                            message.text))
                                                           BottomSheetMenuItem(
                                                               onPressed: () =>
                                                                   _copyMessageToClipboard(

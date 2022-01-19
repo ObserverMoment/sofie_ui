@@ -6,7 +6,6 @@ import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/home/components/category_link_tile.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/stream.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,8 +17,6 @@ class HomePage extends StatelessWidget {
         child: FABPage(
           rowButtonsAlignment: MainAxisAlignment.center,
           rowButtons: [
-            // const ChatsIconButton(),
-            // const SizedBox(width: 12),
             FloatingButton(
               text: 'Calendar',
               onTap: () => context.navigateTo(YourScheduleRoute()),
@@ -28,7 +25,7 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             FloatingButton(
-                text: 'Timer',
+                text: 'Timers',
                 onTap: () => context.navigateTo(const TimersRoute()),
                 iconSize: 18,
                 icon: CupertinoIcons.timer),

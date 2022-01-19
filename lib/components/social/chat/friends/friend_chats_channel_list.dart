@@ -57,7 +57,7 @@ class _FriendChatsChannelListState extends State<FriendChatsChannelList> {
                       CupertinoSliverRefreshControl(onRefresh: () async {
                         _channelListController.loadData?.call();
                       }),
-                      ChannelPage(
+                      FriendsChannelsPage(
                         channels: channels,
                       ),
                     ],
@@ -66,9 +66,10 @@ class _FriendChatsChannelListState extends State<FriendChatsChannelList> {
   }
 }
 
-class ChannelPage extends StatelessWidget {
+class FriendsChannelsPage extends StatelessWidget {
   final List<Channel> channels;
-  const ChannelPage({Key? key, required this.channels}) : super(key: key);
+  const FriendsChannelsPage({Key? key, required this.channels})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

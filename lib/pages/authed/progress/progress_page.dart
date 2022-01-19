@@ -41,7 +41,7 @@ class ProgressPage extends StatelessWidget {
                 CategoryLinkTile(
                   label: 'Workout Logs & History',
                   assetImagePath: 'logs.svg',
-                  onTap: () => context.navigateTo(const LoggedWorkoutsRoute()),
+                  onTap: () => context.navigateTo(LoggedWorkoutsRoute()),
                 ),
               ],
             ),

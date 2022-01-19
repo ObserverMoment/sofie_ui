@@ -44,37 +44,37 @@ class BottomSheetMenu extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(28.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (header != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (header != null)
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 6.0),
-                        child: header,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              if (header != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (header != null)
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: header,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
+              ...items
+                  .map((i) => BottomSheetMenuItemContainer(
+                        i,
+                      ))
+                  .toList(),
+              const SizedBox(height: 8),
+              TextButton(
+                text: 'Cancel',
+                onPressed: context.pop,
+                fontSize: FONTSIZE.four,
               ),
-            Container(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 12),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (context, index) => BottomSheetMenuItemContainer(
-                        items[index],
-                      )),
-            ),
-            TextButton(
-              text: 'Cancel',
-              onPressed: context.pop,
-              fontSize: FONTSIZE.four,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

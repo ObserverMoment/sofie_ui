@@ -172,15 +172,19 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
         showCreateButton: false,
         selectPlan: (plan) async {
           await _sendMessage(Message(
-              type: chatMessageTypeToStreamLabel[ChatMessageType.workoutPlan]!,
               extraData: _formatMessageExtraData(
                   ChatMessageType.workoutPlan, plan.id, plan.name)));
         }));
   }
 
   Future<void> _pickLoggedWorkout() async {
-    /// TODO:
-    print('not implemented');
+    context.navigateTo(LoggedWorkoutsRoute(
+        pageTitle: 'Select Log',
+        selectLoggedWorkout: (log) async {
+          await _sendMessage(Message(
+              extraData: _formatMessageExtraData(
+                  ChatMessageType.loggedWorkout, log.id, log.name)));
+        }));
   }
 
   void _sendRegularMessage() {
