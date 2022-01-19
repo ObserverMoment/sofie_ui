@@ -147,30 +147,26 @@ class ChatsIconButton extends StatelessWidget {
         builder: (context, snapshot) {
           final unreadCount = snapshot.data;
 
-          return Stack(
-            children: [
-              GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => context.pushRoute(const ChatsOverviewRoute()),
-                  child: const FABPageButtonContainer(
-                      child: Icon(
-                    CupertinoIcons.chat_bubble,
-                    size: 22,
-                  ))),
-              if (unreadCount != null && unreadCount > 0)
-                Positioned(
-                  top: 8,
-                  right: 12,
-                  child: FadeInUp(
-                      key: Key(unreadCount.toString()),
-                      child: Dot(
-                        diameter: 14,
-                        border: Border.all(
-                            color: context.theme.background, width: 2),
-                        color: Styles.primaryAccent,
-                      )),
-                ),
-            ],
+          return GestureDetector(
+            onTap: () => context.pushRoute(const ChatsOverviewRoute()),
+            child: Stack(
+              children: [
+                const Icon(CupertinoIcons.chat_bubble_2),
+                if (unreadCount != null && unreadCount > 0)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: FadeInUp(
+                        key: Key(unreadCount.toString()),
+                        child: Dot(
+                          diameter: 14,
+                          border: Border.all(
+                              color: context.theme.background, width: 2),
+                          color: Styles.primaryAccent,
+                        )),
+                  ),
+              ],
+            ),
           );
         });
   }

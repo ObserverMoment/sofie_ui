@@ -3,16 +3,6 @@
 /// [friend] is 1 - 1. [club] is a group chat for all club members.
 enum ChatType { friend, club }
 
-enum ChatMessageAttachmentType {
-  audio,
-  image,
-  video,
-  workout,
-  workoutPlan,
-  club,
-  loggedWorkout
-}
-
 enum TrialType { basic, pro }
 
 enum ToastType { standard, destructive, success }

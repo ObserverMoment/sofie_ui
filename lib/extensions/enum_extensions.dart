@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/model/enum.dart';
 
 //// String to enum parser ////
 // https://stackoverflow.com/questions/27673781/enum-from-string
@@ -17,15 +16,6 @@ extension EnumParser on String {
             e.toString().toLowerCase() ==
             'TimelinePostType.$this'.toLowerCase(), orElse: () {
       throw Exception('$this is not a valid TimelinePostType');
-    });
-  }
-
-  ChatMessageAttachmentType toChatMessageAttachmentType() {
-    return ChatMessageAttachmentType.values.firstWhere(
-        (e) =>
-            e.toString().toLowerCase() ==
-            'ChatMessageAttachmentType.$this'.toLowerCase(), orElse: () {
-      throw Exception('$this is not a valid ChatMessageAttachmentType');
     });
   }
 
@@ -72,32 +62,6 @@ extension BenchmarkTypeExtension on BenchmarkType {
         return 'Finish fixed reps or sets as fast as possible while still maintaining proper form. Score the time.';
       default:
         throw Exception('This is not a valid BenchmarkType enum: $this');
-    }
-  }
-}
-
-extension ChatMessageAttachmentTypeExtension on ChatMessageAttachmentType {
-  String get string => describeEnum(this);
-
-  String get display {
-    switch (this) {
-      case ChatMessageAttachmentType.audio:
-        return 'Audio';
-      case ChatMessageAttachmentType.image:
-        return 'Image';
-      case ChatMessageAttachmentType.video:
-        return 'Video';
-      case ChatMessageAttachmentType.workout:
-        return 'Workout';
-      case ChatMessageAttachmentType.workoutPlan:
-        return 'Plan';
-      case ChatMessageAttachmentType.club:
-        return 'Club';
-      case ChatMessageAttachmentType.loggedWorkout:
-        return 'Log';
-      default:
-        throw Exception(
-            'This is not a valid ChatMessageAttachmentType enum: $this');
     }
   }
 }

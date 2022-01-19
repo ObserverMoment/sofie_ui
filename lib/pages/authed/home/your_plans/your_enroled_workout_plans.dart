@@ -83,6 +83,13 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
           ])
         : FABPage(
             rowButtonsAlignment: MainAxisAlignment.end,
+            columnButtons: [
+              if (widget.showDiscoverButton)
+                FloatingButton(
+                    onTap: () =>
+                        context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                    icon: CupertinoIcons.compass),
+            ],
             rowButtons: [
               // Tags only for enrolments.
               if (allTags.isNotEmpty)
@@ -96,14 +103,12 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                   updateSelectedTag: (t) =>
                       setState(() => _workoutTagFilter = t),
                 ),
-              if (widget.showDiscoverButton)
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: FloatingButton(
-                      onTap: () =>
-                          context.navigateTo(PublicWorkoutPlanFinderRoute()),
-                      icon: CupertinoIcons.compass),
-                ),
+              const SizedBox(width: 10),
+              FloatingButton(
+                  icon: CupertinoIcons.add,
+                  iconSize: 19,
+                  text: 'Create Plan',
+                  onTap: () => context.navigateTo(WorkoutPlanCreatorRoute()))
             ],
             child: ListView.builder(
                 padding: const EdgeInsets.only(top: 6, bottom: 60),

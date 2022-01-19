@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/page_transitions.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class BottomSheetMenuItem {
@@ -159,38 +160,4 @@ class BottomSheetMenuItemContainer extends StatelessWidget {
       ]),
     );
   }
-}
-
-class BottomSheetAnimateInPageRoute extends PageRouteBuilder {
-  final Widget page;
-  BottomSheetAnimateInPageRoute({
-    required this.page,
-  }) : super(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) =>
-                page,
-            transitionsBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-              Widget child,
-            ) =>
-                SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 1.0),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(
-                        parent: animation, curve: Curves.easeOutCirc),
-                  ),
-                  child: FadeTransition(
-                    opacity: Tween<double>(begin: 0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: animation, curve: Curves.easeInCirc)),
-                    child: child,
-                  ),
-                ));
 }

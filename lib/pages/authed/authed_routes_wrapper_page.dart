@@ -68,18 +68,18 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       chat.StreamChatClient(EnvironmentConfig.getStreamPublicKey,
           location: chat.Location.euWest, logLevel: feed.Level.WARNING);
 
+  feed.StreamFeedClient get _createStreamFeedClient => feed.StreamFeedClient(
+        EnvironmentConfig.getStreamPublicKey,
+        appId: EnvironmentConfig.getStreamAppId,
+        logLevel: feed.Level.WARNING,
+      );
+
   Future<void> _connectUserToChat() async {
     try {
       await _streamChatClient.connectUser(
         chat.User(id: _authedUser.id),
         _authedUser.streamChatToken,
       );
-
-      /// Add the users device to Stream backend.
-      /// https://getstream.io/chat/docs/sdk/flutter/guides/adding_push_notifications/#registering-a-device-at-stream-backend
-      // FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-      //   _streamChatClient.addDevice(token, PushProvider.firebase);
-      // });
 
       _chatInitialized = true;
     } catch (e) {
@@ -88,15 +88,6 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       context.showToast(message: "Oops, couldn't initialize chat! $e");
     }
   }
-
-  feed.StreamFeedClient get _createStreamFeedClient => feed.StreamFeedClient(
-        EnvironmentConfig.getStreamPublicKey,
-        appId: EnvironmentConfig.getStreamAppId,
-        logLevel: feed.Level.WARNING,
-        token: feed.Token(
-          _authedUser.streamFeedToken,
-        ),
-      );
 
   Future<void> _initFeeds() async {
     try {

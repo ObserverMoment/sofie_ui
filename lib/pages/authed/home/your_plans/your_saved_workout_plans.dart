@@ -87,6 +87,13 @@ class _FilterableSavedWorkoutPlansState
           ])
         : FABPage(
             rowButtonsAlignment: MainAxisAlignment.end,
+            columnButtons: [
+              if (widget.showDiscoverButton)
+                FloatingButton(
+                    onTap: () =>
+                        context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                    icon: CupertinoIcons.compass),
+            ],
             rowButtons: [
               // Collections only for saved.
               if (collectionsWithPlans.isNotEmpty)
@@ -100,17 +107,11 @@ class _FilterableSavedWorkoutPlansState
                       setState(() => _selectedCollection = c),
                   updateSelectedTag: (_) {},
                 ),
-              if (widget.showDiscoverButton)
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: FloatingButton(
-                      onTap: () =>
-                          context.navigateTo(PublicWorkoutPlanFinderRoute()),
-                      icon: CupertinoIcons.compass),
-                ),
               const SizedBox(width: 10),
               FloatingButton(
                   icon: CupertinoIcons.add,
+                  iconSize: 19,
+                  text: 'Create Plan',
                   onTap: () => context.navigateTo(WorkoutPlanCreatorRoute())),
             ],
             child: ListView.builder(

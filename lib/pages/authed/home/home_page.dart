@@ -16,16 +16,21 @@ class HomePage extends StatelessWidget {
     return CupertinoPageScaffold(
       child: SafeArea(
         child: FABPage(
-          rowButtonsAlignment: MainAxisAlignment.end,
+          rowButtonsAlignment: MainAxisAlignment.center,
           rowButtons: [
-            const ChatsIconButton(),
+            // const ChatsIconButton(),
+            // const SizedBox(width: 12),
+            FloatingButton(
+              text: 'Calendar',
+              onTap: () => context.navigateTo(YourScheduleRoute()),
+              icon: CupertinoIcons.calendar,
+              iconSize: 18,
+            ),
             const SizedBox(width: 12),
             FloatingButton(
-                onTap: () => context.navigateTo(YourScheduleRoute()),
-                icon: CupertinoIcons.calendar),
-            const SizedBox(width: 12),
-            FloatingButton(
+                text: 'Timer',
                 onTap: () => context.navigateTo(const TimersRoute()),
+                iconSize: 18,
                 icon: CupertinoIcons.timer),
           ],
           child: SingleChildScrollView(

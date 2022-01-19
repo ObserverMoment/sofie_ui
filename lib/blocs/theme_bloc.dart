@@ -42,9 +42,7 @@ class ThemeBloc extends ChangeNotifier {
   Color get background => theme.cupertinoThemeData.scaffoldBackgroundColor;
   Color get cardBackground => theme.customThemeData.cardBackground;
   Color get modalBackground => theme.customThemeData.modalBackground;
-  Color get fabBackground => brightness == Brightness.dark
-      ? background.withOpacity(0.7)
-      : background.withOpacity(0.9);
+  LinearGradient get fabBackground => Styles.primaryAccentGradient;
   Color get barBackground => theme.cupertinoThemeData.barBackgroundColor;
   Color get navbarBottomBorder => theme.customThemeData.navbarBottomBorder;
 

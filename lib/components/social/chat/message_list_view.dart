@@ -4,12 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/social/chat/message/chat_message.dart';
+import 'package:sofie_ui/components/social/chat/message/chat_message_input.dart';
 import 'package:sofie_ui/components/social/chat/swipe_to_reply.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/components/social/chat/message_header.dart';
-import 'package:sofie_ui/components/social/chat/message_input.dart';
-import 'package:sofie_ui/components/social/chat/message_widget.dart';
 import 'package:stream_chat_flutter_core/stream_chat_flutter_core.dart'
     show Message, StreamChatCore;
 
@@ -47,9 +47,7 @@ class _MessagesListState extends State<MessagesList> {
     });
   }
 
-  void _onNewImageSent() {
-    _inputFocusNode.unfocus();
-
+  void _onNewMessageSent() {
     setState(() {
       _quotedMessage = null;
     });
@@ -108,69 +106,85 @@ class _MessagesListState extends State<MessagesList> {
                                         final ownMessage =
                                             isOwnMessage(message, context);
 
-                                        return GestureDetector(
-                                          onLongPress: () =>
-                                              openBottomSheetMenu(
-                                                  context: context,
-                                                  child: BottomSheetMenu(
-                                                    items: [
-                                                      BottomSheetMenuItem(
-                                                          onPressed: () =>
-                                                              _replyToMessage(
-                                                                  message),
-                                                          text: 'Reply'),
-                                                      if (message.text != null)
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 8.0),
+                                          child: GestureDetector(
+                                            onLongPress: () =>
+                                                openBottomSheetMenu(
+                                                    context: context,
+                                                    child: BottomSheetMenu(
+                                                      items: [
                                                         BottomSheetMenuItem(
                                                             onPressed: () =>
-                                                                _copyMessageToClipboard(
-                                                                    message
-                                                                        .text!),
-                                                            text: 'Copy Text'),
-                                                      if (ownMessage)
-                                                        BottomSheetMenuItem(
-                                                            isDestructive: true,
-                                                            onPressed: () =>
-                                                                _deleteMessage(
+                                                                _replyToMessage(
                                                                     message),
-                                                            text:
-                                                                'Delete Message'),
-                                                    ],
-                                                  )),
-                                          child: SwipeToReply(
-                                            onSwipe: () =>
-                                                _replyToMessage(message),
-                                            child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 4),
-                                                child: (ownMessage)
-                                                    ? MessageWidget(
-                                                        alignment:
-                                                            Alignment.topRight,
-                                                        margin: const EdgeInsets
-                                                                .fromLTRB(8.0,
-                                                            4.0, 16.0, 4.0),
-                                                        color: Styles
-                                                            .primaryAccent,
-                                                        messageColor:
-                                                            CupertinoColors
-                                                                .white,
-                                                        message: message,
-                                                        hasTail: isFinalMessage,
-                                                      )
-                                                    : MessageWidget(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        margin: const EdgeInsets
-                                                                .fromLTRB(16.0,
-                                                            4.0, 8.0, 4.0),
-                                                        color: context.theme
-                                                            .cardBackground,
-                                                        messageColor: context
-                                                            .theme.primary,
-                                                        message: message,
-                                                        hasTail: isFinalMessage,
-                                                      )),
+                                                            text: 'Reply'),
+                                                        if (message.text !=
+                                                            null)
+                                                          BottomSheetMenuItem(
+                                                              onPressed: () =>
+                                                                  _copyMessageToClipboard(
+                                                                      message
+                                                                          .text!),
+                                                              text:
+                                                                  'Copy Text'),
+                                                        if (ownMessage)
+                                                          BottomSheetMenuItem(
+                                                              isDestructive:
+                                                                  true,
+                                                              onPressed: () =>
+                                                                  _deleteMessage(
+                                                                      message),
+                                                              text:
+                                                                  'Delete Message'),
+                                                      ],
+                                                    )),
+                                            child: SwipeToReply(
+                                              onSwipe: () =>
+                                                  _replyToMessage(message),
+                                              child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 4),
+                                                  child: (ownMessage)
+                                                      ? ChatMessage(
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  14.0,
+                                                                  8.0,
+                                                                  22.0,
+                                                                  8.0),
+                                                          color: Styles
+                                                              .primaryAccent,
+                                                          messageColor:
+                                                              CupertinoColors
+                                                                  .white,
+                                                          message: message,
+                                                          hasTail:
+                                                              isFinalMessage,
+                                                        )
+                                                      : ChatMessage(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .fromLTRB(
+                                                                  22.0,
+                                                                  8.0,
+                                                                  14.0,
+                                                                  8.0),
+                                                          color: context.theme
+                                                              .cardBackground,
+                                                          messageColor: context
+                                                              .theme.primary,
+                                                          message: message,
+                                                          hasTail:
+                                                              isFinalMessage,
+                                                        )),
+                                            ),
                                           ),
                                         );
                                       },
@@ -182,10 +196,10 @@ class _MessagesListState extends State<MessagesList> {
                           }),
                     )),
               ),
-              MessageInput(
+              ChatMessageInput(
                 quotedMessage: _quotedMessage,
                 clearQuotedMessage: () => setState(() => _quotedMessage = null),
-                onNewImageSent: _onNewImageSent,
+                onNewMessageSent: _onNewMessageSent,
                 focusNode: _inputFocusNode,
               )
             ],

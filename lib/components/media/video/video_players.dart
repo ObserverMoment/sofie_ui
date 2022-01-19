@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/custom_page_transitions.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/indicators.dart';
-import 'package:sofie_ui/components/media/video/video_controls_overlay.dart';
+import 'package:sofie_ui/components/media/video/controls_overlay/video_controls_overlay.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:video_player/video_player.dart';
 

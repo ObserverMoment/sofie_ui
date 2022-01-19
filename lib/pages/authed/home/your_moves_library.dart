@@ -93,12 +93,6 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
                     ),
                     child: FABPage(
                       rowButtonsAlignment: MainAxisAlignment.end,
-                      columnButtons: [
-                        FloatingButton(
-                            icon: CupertinoIcons.add,
-                            onTap: () =>
-                                context.navigateTo(CustomMoveCreatorRoute())),
-                      ],
                       rowButtons: [
                         if (moveFiltersBloc.hasActiveFilters)
                           Padding(
@@ -118,6 +112,12 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
                                 ? null
                                 : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
                             icon: CupertinoIcons.slider_horizontal_3),
+                        const SizedBox(width: 12),
+                        FloatingButton(
+                            icon: CupertinoIcons.add,
+                            text: 'Create Move',
+                            onTap: () =>
+                                context.navigateTo(CustomMoveCreatorRoute())),
                       ],
                       child: Column(
                         children: [
