@@ -150,7 +150,8 @@ class _LiftingSectionInstructions extends StatelessWidget {
         ),
         _InstructionRow(
           icon: _buildRepsIndicator(context),
-          text: 'Long press the reps indicator circle to modify the exercise.',
+          text:
+              'Long press the reps indicator circle to modify the exercise. Cannot modify a move which you have marked as complete.',
         ),
       ],
     );

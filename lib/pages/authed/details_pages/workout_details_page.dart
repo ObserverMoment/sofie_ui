@@ -221,6 +221,8 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
     final workoutByIdQuery =
         WorkoutByIdQuery(variables: WorkoutByIdArguments(id: widget.id));
 
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return QueryObserver<WorkoutById$Query, WorkoutByIdArguments>(
         key: Key(
             'WorkoutDetailsPage - ${workoutByIdQuery.operationName}-${widget.id}'),
@@ -325,10 +327,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                       ),
                     ),
                     child: FABPage(
-                        columnButtons: [
+                        rowButtons: [
                           FloatingButton(
                             icon: CupertinoIcons.arrow_right_square,
-                            text: 'Do Workout',
+                            text: 'START WORKOUT',
+                            width: screenWidth * 0.8,
                             onTap: () => context.navigateTo(
                                 DoWorkoutWrapperRoute(
                                     id: widget.id,

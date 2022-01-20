@@ -42,8 +42,8 @@ import 'components/profile/user_public_content/profile_public_workout_plans.dart
 import 'components/profile/user_public_content/profile_public_workouts.dart'
     as _i28;
 import 'components/social/chat/chats_overview_page.dart' as _i5;
-import 'components/social/chat/club_members_chat_page.dart' as _i7;
-import 'components/social/chat/one_to_one_chat_page.dart' as _i6;
+import 'components/social/chat/clubs/club_members_chat_page.dart' as _i7;
+import 'components/social/chat/friends/one_to_one_chat_page.dart' as _i6;
 import 'components/timers/timers_page.dart' as _i14;
 import 'components/workout/workout_finders/public/public_workout_finder_page.dart'
     as _i30;
@@ -255,8 +255,14 @@ class AppRouter extends _i62.RootStackRouter {
           routeData: routeData, child: const _i26.BodyTrackingPage());
     },
     LoggedWorkoutsRoute.name: (routeData) {
+      final args = routeData.argsAs<LoggedWorkoutsRouteArgs>(
+          orElse: () => const LoggedWorkoutsRouteArgs());
       return _i62.CupertinoPageX<dynamic>(
-          routeData: routeData, child: const _i27.LoggedWorkoutsPage());
+          routeData: routeData,
+          child: _i27.LoggedWorkoutsPage(
+              key: args.key,
+              selectLoggedWorkout: args.selectLoggedWorkout,
+              pageTitle: args.pageTitle));
     },
     ProfilePublicWorkoutsRoute.name: (routeData) {
       final args = routeData.argsAs<ProfilePublicWorkoutsRouteArgs>();
@@ -1014,7 +1020,7 @@ class YourWorkoutsRoute extends _i62.PageRouteInfo<YourWorkoutsRouteArgs> {
       void Function(_i65.WorkoutSummary)? selectWorkout,
       bool showCreateButton = false,
       bool showDiscoverButton = false,
-      String pageTitle = 'Your Workouts',
+      String? pageTitle,
       bool showSaved = true})
       : super(YourWorkoutsRoute.name,
             path: 'your-workouts',
@@ -1035,7 +1041,7 @@ class YourWorkoutsRouteArgs {
       this.selectWorkout,
       this.showCreateButton = false,
       this.showDiscoverButton = false,
-      this.pageTitle = 'Your Workouts',
+      this.pageTitle,
       this.showSaved = true});
 
   final _i64.Key? key;
@@ -1046,7 +1052,7 @@ class YourWorkoutsRouteArgs {
 
   final bool showDiscoverButton;
 
-  final String pageTitle;
+  final String? pageTitle;
 
   final bool showSaved;
 
@@ -1084,11 +1090,35 @@ class BodyTrackingRoute extends _i62.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i27.LoggedWorkoutsPage]
-class LoggedWorkoutsRoute extends _i62.PageRouteInfo<void> {
-  const LoggedWorkoutsRoute()
-      : super(LoggedWorkoutsRoute.name, path: 'workout-logs');
+class LoggedWorkoutsRoute extends _i62.PageRouteInfo<LoggedWorkoutsRouteArgs> {
+  LoggedWorkoutsRoute(
+      {_i64.Key? key,
+      void Function(_i65.LoggedWorkout)? selectLoggedWorkout,
+      String pageTitle = 'Workout Logs'})
+      : super(LoggedWorkoutsRoute.name,
+            path: 'workout-logs',
+            args: LoggedWorkoutsRouteArgs(
+                key: key,
+                selectLoggedWorkout: selectLoggedWorkout,
+                pageTitle: pageTitle));
 
   static const String name = 'LoggedWorkoutsRoute';
+}
+
+class LoggedWorkoutsRouteArgs {
+  const LoggedWorkoutsRouteArgs(
+      {this.key, this.selectLoggedWorkout, this.pageTitle = 'Workout Logs'});
+
+  final _i64.Key? key;
+
+  final void Function(_i65.LoggedWorkout)? selectLoggedWorkout;
+
+  final String pageTitle;
+
+  @override
+  String toString() {
+    return 'LoggedWorkoutsRouteArgs{key: $key, selectLoggedWorkout: $selectLoggedWorkout, pageTitle: $pageTitle}';
+  }
 }
 
 /// generated route for

@@ -9,7 +9,6 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -30,6 +29,9 @@ StreamChatThemeData generateStreamTheme(BuildContext context) {
   return StreamChatThemeData(
     brightness: context.theme.brightness,
     primaryIconTheme: IconThemeData(color: primary),
+
+    /// We do not want Stream to display any user image - initially used so QuotedMessage widget does not show an empty default UserAvatar circle.
+    defaultUserImage: (_, __) => Container(),
     colorTheme: isDark
         ? ColorTheme.dark(
             accentPrimary: primary,
@@ -133,67 +135,39 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
 
 /// Chat bubble icon that can be used anywhere in the app.
 /// Displays a dot in top right (if there are unread messages).
-/// Requires [context.streamChatClient] via Provider + context_extensions
 /// Ontap open up the chats overview page.
-class ChatsIconButton extends StatefulWidget {
+class ChatsIconButton extends StatelessWidget {
   const ChatsIconButton({Key? key}) : super(key: key);
 
   @override
-  _ChatsIconButtonState createState() => _ChatsIconButtonState();
-}
-
-class _ChatsIconButtonState extends State<ChatsIconButton> {
-  int _unreadCount = 0;
-  late StreamSubscription _subscription;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _unreadCount = context.streamChatClient.state.currentUser!.totalUnreadCount;
-
-    /// Setup the listener for changes to the unread count.
-    /// https://getstream.io/chat/docs/flutter-dart/unread/?language=dart&q=unread
-    _subscription = context.streamChatClient
-        .on()
-        .where((Event event) => event.totalUnreadCount != null)
-        .listen((Event event) {
-      setState(() => _unreadCount = event.totalUnreadCount!);
-    });
-  }
-
-  @override
-  void dispose() {
-    _subscription.cancel();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GestureDetector(
-            behavior: HitTestBehavior.opaque,
+    return StreamBuilder<int>(
+        stream: StreamChatCore.of(context).client.state.totalUnreadCountStream,
+        builder: (context, snapshot) {
+          final unreadCount = snapshot.data;
+
+          return GestureDetector(
             onTap: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: const FABPageButtonContainer(
-                child: Icon(
-              CupertinoIcons.chat_bubble,
-              size: 22,
-            ))),
-        if (_unreadCount > 0)
-          Positioned(
-            top: 4,
-            right: 8,
-            child: FadeInUp(
-                key: Key(_unreadCount.toString()),
-                child: Dot(
-                  diameter: 18,
-                  border: Border.all(color: context.theme.background, width: 2),
-                  color: Styles.primaryAccent,
-                )),
-          ),
-      ],
-    );
+            child: Stack(
+              children: [
+                const Icon(CupertinoIcons.chat_bubble_2),
+                if (unreadCount != null && unreadCount > 0)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: FadeInUp(
+                        key: Key(unreadCount.toString()),
+                        child: Dot(
+                          diameter: 14,
+                          border: Border.all(
+                              color: context.theme.background, width: 2),
+                          color: Styles.primaryAccent,
+                        )),
+                  ),
+              ],
+            ),
+          );
+        });
   }
 }
 

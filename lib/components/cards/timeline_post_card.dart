@@ -70,7 +70,7 @@ class TimelinePostCard extends StatelessWidget {
             child: Row(
               children: [
                 Icon(
-                  CupertinoIcons.hand_thumbsup_fill,
+                  CupertinoIcons.heart_fill,
                   color: context.theme.primary.withOpacity(0.4),
                   size: 16,
                 ),
@@ -95,8 +95,8 @@ class TimelinePostCard extends StatelessWidget {
             children: [
               if (likeUnlikePost != null)
                 _buildReactionButton(
-                    inactiveIconData: CupertinoIcons.hand_thumbsup,
-                    activeIconData: CupertinoIcons.hand_thumbsup_fill,
+                    inactiveIconData: CupertinoIcons.heart,
+                    activeIconData: CupertinoIcons.heart_fill,
                     onPressed: likeUnlikePost!,
                     active: userHasLiked),
               if (sharePost != null)

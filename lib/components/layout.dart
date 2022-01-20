@@ -242,9 +242,12 @@ class MySliverNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoSliverNavigationBar(
         leading: const NavBarBackButton(),
-        largeTitle: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.normal),
+        largeTitle: MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 0.88),
+          child: Text(
+            title.toUpperCase(),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
         trailing: trailing,
         border: null);

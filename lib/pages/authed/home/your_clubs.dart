@@ -75,6 +75,8 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
               columnButtons: [
                 FloatingButton(
                     icon: CupertinoIcons.add,
+                    iconSize: 19,
+                    text: 'Create Club',
                     onTap: () => context.navigateTo(ClubCreatorRoute())),
               ],
               rowButtonsAlignment: MainAxisAlignment.end,

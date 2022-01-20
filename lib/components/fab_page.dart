@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -40,7 +41,7 @@ class FABPage extends StatelessWidget {
           child,
           if (columnButtons.isNotEmpty)
             Positioned(
-              bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 64),
+              bottom: bottomPadding + 16 + (rowButtons.isEmpty ? 0 : 60),
               right: 16,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -48,7 +49,7 @@ class FABPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: columnButtons
                     .map((b) => Padding(
-                          padding: const EdgeInsets.only(top: 12),
+                          padding: const EdgeInsets.only(top: 10),
                           child: b,
                         ))
                     .toList(),
@@ -83,7 +84,7 @@ class FloatingButton extends StatelessWidget {
   final double iconSize;
   final EdgeInsets margin;
   final EdgeInsets padding;
-
+  final double? width;
   final bool loading;
 
   const FloatingButton({
@@ -95,6 +96,7 @@ class FloatingButton extends StatelessWidget {
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.all(11),
     this.loading = false,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -105,9 +107,9 @@ class FloatingButton extends StatelessWidget {
           onTap();
         },
         child: FABPageButtonContainer(
-          color: context.theme.fabBackground,
           padding: padding,
           margin: margin,
+          width: width,
           child: AnimatedSwitcher(
             duration: kStandardAnimationDuration,
             child: loading
@@ -122,12 +124,11 @@ class FloatingButton extends StatelessWidget {
                           size: iconSize,
                         ),
                       if (icon != null && text != null)
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 7),
                       if (text != null)
                         MyText(
                           text!,
-                          size: FONTSIZE.four,
-                          weight: FontWeight.bold,
+                          // weight: FontWeight.bold,
                         ),
                     ],
                   ),
@@ -140,18 +141,16 @@ class FABPageButtonContainer extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
-
-  /// [gradient] will override [color].
-  final Gradient? gradient;
-  final Color? color;
+  final double? width;
+  final Gradient gradient;
 
   const FABPageButtonContainer(
       {Key? key,
       required this.child,
       this.padding = const EdgeInsets.all(12),
-      this.gradient,
-      this.color,
-      this.margin = EdgeInsets.zero})
+      this.gradient = Styles.primaryAccentGradient,
+      this.margin = EdgeInsets.zero,
+      this.width})
       : super(key: key);
 
   @override
@@ -159,12 +158,11 @@ class FABPageButtonContainer extends StatelessWidget {
     return Container(
       padding: padding,
       margin: margin,
+      width: width,
       decoration: BoxDecoration(
           boxShadow: kElevation[6],
-          color: gradient != null
-              ? null
-              : color ?? context.theme.background.withOpacity(0.9),
-          border: Border.all(color: context.theme.primary, width: 2.5),
+          gradient: Styles.primaryAccentGradient,
+          border: Border.all(color: context.theme.primary, width: 2),
           borderRadius: BorderRadius.circular(60)),
       child: child,
     );

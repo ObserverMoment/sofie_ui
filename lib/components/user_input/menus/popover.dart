@@ -10,41 +10,51 @@ class PopoverMenu extends StatelessWidget {
   final Widget button;
   final List<PopoverMenuItem> items;
   final PopoverDirection popoverDirection;
+  final Color? backgroundColor;
   const PopoverMenu(
       {Key? key,
       required this.button,
       required this.items,
-      this.popoverDirection = PopoverDirection.bottom})
+      this.popoverDirection = PopoverDirection.bottom,
+      this.backgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Color backgroundColor =
-        context.theme.cardBackground.withOpacity(0.99);
     return GestureDetector(
       child: button,
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        showPopover(
+      onTap: () => showPopoverMenu(
           context: context,
-          transitionDuration: const Duration(milliseconds: 150),
-          bodyBuilder: (context) => ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: PopoverMenuContainer(
-              items: items,
-            ),
-          ),
+          items: items,
           backgroundColor: backgroundColor,
-          barrierColor: Styles.black.withOpacity(0.2),
-          radius: 16,
-          direction: popoverDirection,
-          arrowHeight: 10,
-          arrowWidth: 0,
-        );
-      },
+          popoverDirection: popoverDirection),
     );
   }
 }
+
+void showPopoverMenu(
+        {required BuildContext context,
+        required List<PopoverMenuItem> items,
+        Color? backgroundColor,
+        PopoverDirection popoverDirection = PopoverDirection.bottom}) =>
+    showPopover(
+      context: context,
+      transitionDuration: const Duration(milliseconds: 150),
+      bodyBuilder: (context) => ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: PopoverMenuContainer(
+          items: items,
+        ),
+      ),
+      backgroundColor:
+          backgroundColor ?? context.readTheme.cardBackground.withOpacity(0.99),
+      barrierColor: Styles.black.withOpacity(0.2),
+      radius: 16,
+      direction: popoverDirection,
+      arrowHeight: 10,
+      arrowWidth: 0,
+    );
 
 class PopoverMenuContainer extends StatelessWidget {
   final List<PopoverMenuItem> items;

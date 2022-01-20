@@ -22,14 +22,14 @@ class YourWorkoutsPage extends StatefulWidget {
   final void Function(WorkoutSummary workout)? selectWorkout;
   final bool showCreateButton;
   final bool showDiscoverButton;
-  final String pageTitle;
+  final String? pageTitle;
   final bool showSaved;
   const YourWorkoutsPage(
       {Key? key,
       this.selectWorkout,
       this.showCreateButton = false,
       this.showDiscoverButton = false,
-      this.pageTitle = 'Your Workouts',
+      this.pageTitle,
       this.showSaved = true})
       : super(key: key);
 
@@ -129,15 +129,29 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                 return CupertinoPageScaffold(
                     child: NestedScrollView(
                   headerSliverBuilder: (c, i) =>
-                      [MySliverNavbar(title: widget.pageTitle)],
+                      [MySliverNavbar(title: widget.pageTitle ?? 'Workouts')],
                   body: FABPage(
                       rowButtonsAlignment: MainAxisAlignment.end,
                       columnButtons: [
-                        if (widget.showCreateButton)
+                        FloatingButton(
+                            onTap: () => context.push(
+                                    child: PrivateWorkoutTextSearch(
+                                  selectWorkout: _selectWorkout,
+                                  // Combining created and saved workouts means there can be dupes.
+                                  // Remove them by building as a set.
+                                  userWorkouts: <WorkoutSummary>{
+                                    ...userWorkouts,
+                                    if (widget.showSaved) ...savedWorkouts
+                                  }.toList(),
+                                )),
+                            icon: CupertinoIcons.search),
+                        if (widget.showDiscoverButton)
                           FloatingButton(
-                              icon: CupertinoIcons.add,
                               onTap: () =>
-                                  context.navigateTo(WorkoutCreatorRoute())),
+                                  context.navigateTo(PublicWorkoutFinderRoute(
+                                    selectWorkout: _selectWorkout,
+                                  )),
+                              icon: CupertinoIcons.compass),
                       ],
                       rowButtons: [
                         TagsCollectionsFilterMenu(
@@ -157,28 +171,13 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                               setState(() => _selectedTag = t),
                         ),
                         const SizedBox(width: 12),
-                        FloatingButton(
-                            onTap: () => context.push(
-                                    child: PrivateWorkoutTextSearch(
-                                  selectWorkout: _selectWorkout,
-                                  // Combining created and saved workouts means there can be dupes.
-                                  // Remove them by building as a set.
-                                  userWorkouts: <WorkoutSummary>{
-                                    ...userWorkouts,
-                                    if (widget.showSaved) ...savedWorkouts
-                                  }.toList(),
-                                )),
-                            icon: CupertinoIcons.search),
-                        if (widget.showDiscoverButton)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0),
-                            child: FloatingButton(
-                                onTap: () =>
-                                    context.navigateTo(PublicWorkoutFinderRoute(
-                                      selectWorkout: _selectWorkout,
-                                    )),
-                                icon: CupertinoIcons.compass),
-                          ),
+                        if (widget.showCreateButton)
+                          FloatingButton(
+                              text: 'Create Workout',
+                              iconSize: 19,
+                              icon: CupertinoIcons.add,
+                              onTap: () =>
+                                  context.navigateTo(WorkoutCreatorRoute())),
                       ],
                       child: Column(
                         children: [

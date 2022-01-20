@@ -40,6 +40,7 @@ class YourGymProfilesPage extends StatelessWidget {
                           columnButtons: [
                             FloatingButton(
                                 icon: CupertinoIcons.add,
+                                text: 'Create Gym Profile',
                                 onTap: () => context
                                     .navigateTo(GymProfileCreatorRoute())),
                           ],

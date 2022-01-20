@@ -277,6 +277,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
         _postsWithLikeReactions.map((p) => p.activityId).toList();
     final sharedPostIds =
         _postsWithShareReactions.map((p) => p.activityId).toList();
+
     return Stack(
       alignment: Alignment.topCenter,
       children: [

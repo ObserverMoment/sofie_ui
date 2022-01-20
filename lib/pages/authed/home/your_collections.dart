@@ -44,6 +44,7 @@ class YourCollectionsPage extends StatelessWidget {
                       : FABPage(
                           columnButtons: [
                             FloatingButton(
+                                text: 'Create Collection',
                                 icon: CupertinoIcons.add,
                                 onTap: () => context
                                     .navigateTo(CollectionCreatorRoute())),

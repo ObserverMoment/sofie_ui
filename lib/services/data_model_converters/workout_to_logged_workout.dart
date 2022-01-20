@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
@@ -146,46 +143,6 @@ String generateWorkoutMoveString(
   return '$reps${workoutMove.move.name}$load$equipment';
 }
 
-//// Logged Workout Moves List ////
-Widget generateLoggedWorkoutMoveDisplay(
-    {required LoggedWorkoutSet loggedWorkoutSet,
-    required LoggedWorkoutMove loggedWorkoutMove,
-    required WorkoutSectionType workoutSectionType,
-    bool displayEquipment = true,
-    bool displayLoad = true}) {
-  /// Don't need reps for timed sets with only one move in.
-  final reps = generateRepString(
-      distanceUnit: loggedWorkoutMove.distanceUnit,
-      reps: loggedWorkoutMove.reps,
-      repType: loggedWorkoutMove.repType,
-      timeUnit: loggedWorkoutMove.timeUnit);
-
-  final equipment = displayEquipment && loggedWorkoutMove.equipment != null
-      ? loggedWorkoutMove.equipment!.name
-      : '';
-
-  final load = displayLoad && loggedWorkoutMove.loadAmount != 0
-      ? generateLoadString(
-          loadAmount: loggedWorkoutMove.loadAmount,
-          loadUnit: loggedWorkoutMove.loadUnit)
-      : '';
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      MyText('$reps ${loggedWorkoutMove.move.name}'),
-      if (Utils.textNotNull(equipment) || Utils.textNotNull(load))
-        Padding(
-          padding: const EdgeInsets.only(top: 2.0),
-          child: MyText(
-            '$load${load != "" ? " " : ""}$equipment',
-            color: Styles.primaryAccent,
-            size: FONTSIZE.two,
-          ),
-        ),
-    ],
-  );
-}
-
 //// Moves List Helpers ////
 String generateRepString({
   required double reps,
@@ -202,7 +159,7 @@ String generateRepString({
               : null;
   final repUnitString = repUnit != null ? ' $repUnit' : '';
 
-  return '${reps.stringMyDouble()}$repUnitString -';
+  return ' x ${reps.stringMyDouble()}$repUnitString';
 }
 
 String generateLoadString(
