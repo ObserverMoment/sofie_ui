@@ -1,14 +1,10 @@
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
-import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -16,8 +12,6 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/services/utils.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart' as avatar;

@@ -164,7 +164,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: const MyNavBar(
-        middle: NavBarLargeTitle('Posted By You'),
+        middle: NavBarLargeTitle('Your Posts'),
       ),
       child: _isLoading
           ? const ShimmerCardList(

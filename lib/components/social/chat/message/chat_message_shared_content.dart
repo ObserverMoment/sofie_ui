@@ -62,33 +62,36 @@ class ChatMessageSharedContent extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              getChatMessageIconData(type),
-                              size: 13,
-                              color: contentColor,
-                            ),
-                            const SizedBox(width: 4),
-                            MyHeaderText(
-                              getSharedContentTypeHeaderDisplay(type),
-                              size: FONTSIZE.one,
-                              color: contentColor,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        MyHeaderText(
-                          name,
-                          color: contentColor,
-                          maxLines: 2,
-                          size: FONTSIZE.two,
-                        )
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                getChatMessageIconData(type),
+                                size: 13,
+                                color: contentColor,
+                              ),
+                              const SizedBox(width: 4),
+                              MyHeaderText(
+                                getSharedContentTypeHeaderDisplay(type),
+                                size: FONTSIZE.one,
+                                color: contentColor,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          MyHeaderText(
+                            name,
+                            color: contentColor,
+                            maxLines: 2,
+                            size: FONTSIZE.two,
+                            lineHeight: 1.3,
+                          )
+                        ],
+                      ),
                     ),
                     Icon(
                       CupertinoIcons.chevron_right,

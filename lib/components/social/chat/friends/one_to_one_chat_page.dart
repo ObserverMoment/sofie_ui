@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart' as avatar;
 import 'package:sofie_ui/components/social/chat/message_list_view.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
@@ -114,24 +113,25 @@ class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
             navigationBar: MyNavBar(
               middle: CupertinoButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () => openBottomSheetMenu(
-                      context: context,
-                      child: BottomSheetMenu(
-                          header: BottomSheetMenuHeader(
-                            name: displayName,
-                            subtitle: 'Chat',
-                            imageUri: avatarUri,
-                          ),
-                          items: [
-                            BottomSheetMenuItem(
-                                text: 'Block',
-                                icon: CupertinoIcons.nosign,
-                                onPressed: () => printLog('block')),
-                            BottomSheetMenuItem(
-                                text: 'Report',
-                                icon: CupertinoIcons.exclamationmark_circle,
-                                onPressed: () => printLog('report')),
-                          ])),
+                  onPressed: null,
+                  // onPressed: () => openBottomSheetMenu(
+                  //     context: context,
+                  //     child: BottomSheetMenu(
+                  //         header: BottomSheetMenuHeader(
+                  //           name: displayName,
+                  //           subtitle: 'Chat',
+                  //           imageUri: avatarUri,
+                  //         ),
+                  //         items: [
+                  //           BottomSheetMenuItem(
+                  //               text: 'Block',
+                  //               icon: CupertinoIcons.nosign,
+                  //               onPressed: () => printLog('block')),
+                  //           BottomSheetMenuItem(
+                  //               text: 'Report',
+                  //               icon: CupertinoIcons.exclamationmark_circle,
+                  //               onPressed: () => printLog('report')),
+                  //         ])),
                   child: MyHeaderText(displayName)),
               trailing: CupertinoButton(
                 onPressed: avatarUri != null
