@@ -9,7 +9,7 @@ import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creat
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_post_creator.dart';
-import 'package:sofie_ui/components/creators/post_creator/post_creator.dart';
+import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
@@ -77,11 +77,11 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
             AutoRoute(
               path: '',
-              page: DiscoverPage,
+              page: SocialPage,
             ),
             AutoRoute(
-              path: 'social',
-              page: SocialPage,
+              path: 'discover',
+              page: DiscoverPage,
             ),
             AutoRoute(path: 'studio', page: HomePage),
             AutoRoute(
@@ -164,7 +164,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/journal-mood', page: JournalMoodCreatorPage),
           AutoRoute(
               path: 'create/personal-best', page: PersonalBestCreatorPage),
-          AutoRoute(path: 'create/post', page: PostCreatorPage),
+          AutoRoute(path: 'create/post', page: FeedPostCreatorPage),
           AutoRoute(path: 'create/club-post', page: ClubPostCreatorPage),
           AutoRoute(
               path: 'create/scheduled-workout',

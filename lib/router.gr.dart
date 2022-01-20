@@ -30,7 +30,7 @@ import 'components/creators/logged_workout_creator/logged_workout_creator.dart'
 import 'components/creators/personal_best_creator/personal_best_creator.dart'
     as _i48;
 import 'components/creators/post_creator/club_post_creator.dart' as _i50;
-import 'components/creators/post_creator/post_creator.dart' as _i49;
+import 'components/creators/post_creator/feed_post_creator_page.dart' as _i49;
 import 'components/creators/scheduled_workout_creator.dart' as _i51;
 import 'components/creators/workout_creator/workout_creator.dart' as _i52;
 import 'components/creators/workout_plan_creator/workout_plan_creator.dart'
@@ -63,7 +63,7 @@ import 'pages/authed/details_pages/workout_plan_details_page.dart' as _i39;
 import 'pages/authed/details_pages/workout_plan_enrolment_details_page.dart'
     as _i40;
 import 'pages/authed/discover/discover_clubs_page.dart' as _i33;
-import 'pages/authed/discover/discover_page.dart' as _i57;
+import 'pages/authed/discover/discover_page.dart' as _i58;
 import 'pages/authed/discover/discover_people_page.dart' as _i32;
 import 'pages/authed/home/home_page.dart' as _i59;
 import 'pages/authed/home/your_clubs.dart' as _i15;
@@ -86,7 +86,7 @@ import 'pages/authed/progress/journal_page.dart' as _i25;
 import 'pages/authed/progress/logged_workouts_page.dart' as _i27;
 import 'pages/authed/progress/personal_bests_page.dart' as _i24;
 import 'pages/authed/progress/progress_page.dart' as _i60;
-import 'pages/authed/social/social_page.dart' as _i58;
+import 'pages/authed/social/social_page.dart' as _i57;
 import 'pages/authed/social/your_posts_page.dart' as _i20;
 import 'pages/unauthed/unauthed_landing.dart' as _i1;
 
@@ -440,9 +440,9 @@ class AppRouter extends _i62.RootStackRouter {
           child: _i48.PersonalBestCreatorPage(
               key: args.key, userBenchmark: args.userBenchmark));
     },
-    PostCreatorRoute.name: (routeData) {
+    FeedPostCreatorRoute.name: (routeData) {
       return _i62.CupertinoPageX<dynamic>(
-          routeData: routeData, child: const _i49.PostCreatorPage());
+          routeData: routeData, child: const _i49.FeedPostCreatorPage());
     },
     ClubPostCreatorRoute.name: (routeData) {
       final args = routeData.argsAs<ClubPostCreatorRouteArgs>();
@@ -503,13 +503,13 @@ class AppRouter extends _i62.RootStackRouter {
       return _i62.CupertinoPageX<dynamic>(
           routeData: routeData, child: const _i56.PageNotFoundPage());
     },
-    DiscoverRoute.name: (routeData) {
-      return _i62.CupertinoPageX<dynamic>(
-          routeData: routeData, child: const _i57.DiscoverPage());
-    },
     SocialRoute.name: (routeData) {
       return _i62.CupertinoPageX<dynamic>(
-          routeData: routeData, child: const _i58.SocialPage());
+          routeData: routeData, child: const _i57.SocialPage());
+    },
+    DiscoverRoute.name: (routeData) {
+      return _i62.CupertinoPageX<dynamic>(
+          routeData: routeData, child: const _i58.DiscoverPage());
     },
     HomeRoute.name: (routeData) {
       return _i62.CupertinoPageX<dynamic>(
@@ -534,10 +534,10 @@ class AppRouter extends _i62.RootStackRouter {
               path: '',
               parent: AuthedRouter.name,
               children: [
-                _i62.RouteConfig(DiscoverRoute.name,
-                    path: '', parent: MainTabsRoute.name),
                 _i62.RouteConfig(SocialRoute.name,
-                    path: 'social', parent: MainTabsRoute.name),
+                    path: '', parent: MainTabsRoute.name),
+                _i62.RouteConfig(DiscoverRoute.name,
+                    path: 'discover', parent: MainTabsRoute.name),
                 _i62.RouteConfig(HomeRoute.name,
                     path: 'studio', parent: MainTabsRoute.name),
                 _i62.RouteConfig(ProgressRoute.name,
@@ -633,7 +633,7 @@ class AppRouter extends _i62.RootStackRouter {
               path: 'create/journal-mood', parent: AuthedRouter.name),
           _i62.RouteConfig(PersonalBestCreatorRoute.name,
               path: 'create/personal-best', parent: AuthedRouter.name),
-          _i62.RouteConfig(PostCreatorRoute.name,
+          _i62.RouteConfig(FeedPostCreatorRoute.name,
               path: 'create/post', parent: AuthedRouter.name),
           _i62.RouteConfig(ClubPostCreatorRoute.name,
               path: 'create/club-post', parent: AuthedRouter.name),
@@ -1667,11 +1667,12 @@ class PersonalBestCreatorRouteArgs {
 }
 
 /// generated route for
-/// [_i49.PostCreatorPage]
-class PostCreatorRoute extends _i62.PageRouteInfo<void> {
-  const PostCreatorRoute() : super(PostCreatorRoute.name, path: 'create/post');
+/// [_i49.FeedPostCreatorPage]
+class FeedPostCreatorRoute extends _i62.PageRouteInfo<void> {
+  const FeedPostCreatorRoute()
+      : super(FeedPostCreatorRoute.name, path: 'create/post');
 
-  static const String name = 'PostCreatorRoute';
+  static const String name = 'FeedPostCreatorRoute';
 }
 
 /// generated route for
@@ -1898,19 +1899,19 @@ class RouteNotFoundRoute extends _i62.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i57.DiscoverPage]
-class DiscoverRoute extends _i62.PageRouteInfo<void> {
-  const DiscoverRoute() : super(DiscoverRoute.name, path: '');
+/// [_i57.SocialPage]
+class SocialRoute extends _i62.PageRouteInfo<void> {
+  const SocialRoute() : super(SocialRoute.name, path: '');
 
-  static const String name = 'DiscoverRoute';
+  static const String name = 'SocialRoute';
 }
 
 /// generated route for
-/// [_i58.SocialPage]
-class SocialRoute extends _i62.PageRouteInfo<void> {
-  const SocialRoute() : super(SocialRoute.name, path: 'social');
+/// [_i58.DiscoverPage]
+class DiscoverRoute extends _i62.PageRouteInfo<void> {
+  const DiscoverRoute() : super(DiscoverRoute.name, path: 'discover');
 
-  static const String name = 'SocialRoute';
+  static const String name = 'DiscoverRoute';
 }
 
 /// generated route for

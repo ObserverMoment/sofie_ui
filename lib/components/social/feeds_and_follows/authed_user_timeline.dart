@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/cards/timeline_post_card.dart';
+import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
@@ -39,7 +39,7 @@ class AuthedUserTimeline extends StatefulWidget {
 
 class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   bool _isLoading = true;
-  late PagingController<int, ActivityWithObjectData> _pagingController;
+  late PagingController<int, EnrichedActivity> _pagingController;
   late ScrollController _scrollController;
 
   Subscription? _feedSubscription;
@@ -50,7 +50,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   /// New posts that have come in via the subscription.
   /// We let the user choose if they want to see these via a floating button at the top of the list.
   /// Ontap these activities get added to the top of the [_pagingController.itemList] and the user is scrolled back to the top of the page.
-  List<ActivityWithObjectData> _newActivitiesWithObjectData = [];
+  List<EnrichedActivity> _newActivities = [];
 
   /// List of activities which the current user has marked as liked.
   List<PostWithLikeReaction> _postsWithLikeReactions = [];
@@ -59,8 +59,9 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   @override
   void initState() {
     super.initState();
-    _pagingController = PagingController<int, ActivityWithObjectData>(
+    _pagingController = PagingController<int, EnrichedActivity>(
         firstPageKey: 0, invisibleItemsThreshold: 5);
+
     _scrollController = ScrollController();
 
     _pagingController.addPageRequestListener((nextPageKey) {
@@ -116,17 +117,14 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
             .toList()
       ];
 
-      final activitiesWithObjectData =
-          await FeedUtils.getPostsUserAndObjectData(context, feedActivities);
-
       final int numPostsBefore = _pagingController.itemList?.length ?? 0;
-      final int numNewPosts = activitiesWithObjectData.length;
+      final int numNewPosts = feedActivities.length;
 
       if (feedActivities.length < _postsPerPage) {
-        _pagingController.appendLastPage(activitiesWithObjectData);
+        _pagingController.appendLastPage(feedActivities);
       } else {
         _pagingController.appendPage(
-            activitiesWithObjectData, numPostsBefore + numNewPosts);
+            feedActivities, numPostsBefore + numNewPosts);
       }
     } catch (e) {
       printLog(e.toString());
@@ -153,18 +151,11 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   Future<void> _handleNewPosts(
       RealtimeMessage<User, String, String, String>? message) async {
     if (message?.newActivities != null && message!.newActivities!.isNotEmpty) {
-      final newActivitiesWithObjectData =
-          await FeedUtils.getPostsUserAndObjectData(
-              context, message.newActivities!);
-
-      final sortedNewActivities = newActivitiesWithObjectData
-          .sortedBy<DateTime>((a) => a.activity.time!);
+      final sortedNewActivities =
+          message.newActivities!.sortedBy<DateTime>((a) => a.time!);
 
       setState(() {
-        _newActivitiesWithObjectData = [
-          ...sortedNewActivities,
-          ..._newActivitiesWithObjectData
-        ];
+        _newActivities = [...sortedNewActivities, ..._newActivities];
       });
     }
   }
@@ -178,19 +169,20 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
 
     /// Add the new items to the paging controller.
     _pagingController.itemList = [
-      ..._newActivitiesWithObjectData,
+      ..._newActivities,
       ..._pagingController.itemList ?? []
     ];
 
-    /// Clear the [_newActivitiesWithObjectData] to remove the floating button.
+    /// Clear the [_newActivities] to remove the floating button.
     setState(() {
-      _newActivitiesWithObjectData = [];
+      _newActivities = [];
     });
   }
 
   Future<void> _likeUnlikePost(String activityId) async {
     final postWithReaction = _postsWithLikeReactions
         .firstWhereOrNull((p) => p.activityId == activityId);
+
     if (postWithReaction != null) {
       await widget.streamFeedClient.reactions
           .delete(postWithReaction.reaction.id!);
@@ -206,9 +198,10 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
 
   /// If the user has already shared this post, they cannot share it again.
   /// In this case just show an alert.
-  Future<void> _sharePost(EnrichedActivity enrichedActivity) async {
+  Future<void> _sharePost(
+      EnrichedActivity activity, ActivityExtraData extraData) async {
     final postWithShare = _postsWithShareReactions
-        .firstWhereOrNull((p) => p.activityId == enrichedActivity.id);
+        .firstWhereOrNull((p) => p.activityId == activity.id);
 
     if (postWithShare != null) {
       context.showAlertDialog(
@@ -223,32 +216,24 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
             message:
                 'Send this post to your feed and all your followers timelines?',
             onConfirm: () async {
-              final extraData =
-                  enrichedActivity.extraData ?? <String, Object>{};
-              final originalPostId = extraData['original_post_id'] as String?;
+              /// Add the id of the activity we are re-posting.
+              extraData.originalPostId = activity.id;
 
-              final Activity newActivityToRepost =
-                  FeedUtils.activityFromEnrichedActivity(enrichedActivity,
-                      data: {
-                        'actor': widget.streamFeedClient.currentUser!.ref,
-                        'extraData': {
-                          ...extraData,
-                          // A list of stream user Ids, starting from the original poster, who have reposted this activity.
-                          'original_post_id':
-                              originalPostId ?? enrichedActivity.id
-                        }
-                      },
-                      removeTime: true,
-                      removeId: true);
+              final Activity newActivityForRepost = Activity(
+                  actor: widget.streamFeedClient.currentUser!.ref,
+                  verb: kDefaultFeedPostVerb,
+                  object: activity.object,
+                  extraData: extraData.toJson);
 
-              /// Add the original activity to the users own [user_feed].
-              await widget.userFeed.addActivity(newActivityToRepost);
+              /// Repost the original activity to the users own [user_feed].
+              await widget.userFeed.addActivity(newActivityForRepost);
 
               /// On success - add the reaction to the API and then save locally.
               final reaction = await widget.streamFeedClient.reactions
-                  .add(kShareReactionName, enrichedActivity.id!);
+                  .add(kShareReactionName, activity.id!);
+
               _postsWithShareReactions.add(PostWithShareReaction(
-                  activityId: enrichedActivity.id!, reaction: reaction));
+                  activityId: activity.id!, reaction: reaction));
 
               setState(() {});
 
@@ -300,29 +285,32 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                           buttonIcon: CupertinoIcons.compass,
                           buttonText: 'Discover People'),
                     ])
-              : PagedListView<int, ActivityWithObjectData>(
+              : PagedListView<int, EnrichedActivity>(
                   pagingController: _pagingController,
                   scrollController: _scrollController,
                   physics: const AlwaysScrollableScrollPhysics(),
-                  builderDelegate:
-                      PagedChildBuilderDelegate<ActivityWithObjectData>(
-                    itemBuilder: (context, post, index) => SizeFadeIn(
-                      duration: 50,
-                      delay: index,
-                      delayBasis: 10,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: TimelinePostCard(
-                          activityWithObjectData: post,
-                          likeUnlikePost: () =>
-                              _likeUnlikePost(post.activity.id!),
-                          userHasLiked: likedPostIds.contains(post.activity.id),
-                          sharePost: () => _sharePost(post.activity),
-                          userHasShared:
-                              sharedPostIds.contains(post.activity.id),
+                  builderDelegate: PagedChildBuilderDelegate<EnrichedActivity>(
+                    itemBuilder: (context, activity, index) {
+                      final extraData =
+                          ActivityExtraData.fromJson(activity.extraData!);
+
+                      return SizeFadeIn(
+                        duration: 50,
+                        delay: index,
+                        delayBasis: 10,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: FeedPostCard(
+                            likeUnlikePost: () => _likeUnlikePost(activity.id!),
+                            userHasLiked: likedPostIds.contains(activity.id),
+                            sharePost: () => _sharePost(activity, extraData),
+                            userHasShared: sharedPostIds.contains(activity.id),
+                            activity: activity,
+                            activityExtraData: extraData,
+                          ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                     firstPageErrorIndicatorBuilder: (context) => MyText(
                       'Oh dear, ${_pagingController.error.toString()}',
                       maxLines: 5,
@@ -341,7 +329,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                         const Center(child: MyText('No results...')),
                   ),
                 ),
-        if (_newActivitiesWithObjectData.isNotEmpty)
+        if (_newActivities.isNotEmpty)
           Positioned(
               top: 8,
               child: SizeFadeIn(
@@ -349,7 +337,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                 icon: CupertinoIcons.news,
                 onTap: _prependNewPosts,
                 text:
-                    '${_newActivitiesWithObjectData.length} new ${_newActivitiesWithObjectData.length == 1 ? "post" : "posts"}',
+                    '${_newActivities.length} new ${_newActivities.length == 1 ? "post" : "posts"}',
               )))
       ],
     );

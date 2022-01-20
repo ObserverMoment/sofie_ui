@@ -52,7 +52,8 @@ class _SocialPageState extends State<SocialPage> {
           children: [
             IconButton(
                 iconData: CupertinoIcons.plus_rectangle,
-                onPressed: () => context.navigateTo(const PostCreatorRoute())),
+                onPressed: () =>
+                    context.navigateTo(const FeedPostCreatorRoute())),
             _buttonSpacer,
             const ChatsIconButton(),
             _buttonSpacer,

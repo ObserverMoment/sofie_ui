@@ -806,7 +806,13 @@ class CreateTextIconButton extends StatelessWidget {
 class NavBarCancelButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
-  const NavBarCancelButton(this.onPressed, {Key? key, this.text = 'Cancel'})
+  final Color? color;
+  final FontWeight weight;
+  const NavBarCancelButton(this.onPressed,
+      {Key? key,
+      this.text = 'Cancel',
+      this.color,
+      this.weight = FontWeight.normal})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -815,6 +821,8 @@ class NavBarCancelButton extends StatelessWidget {
         onPressed: onPressed,
         child: MyText(
           text,
+          color: color,
+          weight: weight,
         ));
   }
 }

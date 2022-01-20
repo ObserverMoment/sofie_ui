@@ -301,7 +301,7 @@ class AnimatedNavBar extends StatelessWidget {
                                     text: 'Share',
                                     icon: CupertinoIcons.paperplane,
                                     onPressed: () => _shareClub(club)),
-                              if (!_userIsMember && !_userIsOwner)
+                              if (_userIsMember && !_userIsOwner)
                                 BottomSheetMenuItem(
                                     text: 'Leave Club',
                                     isDestructive: true,

@@ -7,6 +7,34 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 
+const kDefaultFeedPostVerb = 'post';
+
+const Map<String, FeedPostType> kStreamNameToFeedPostType = {
+  'announcement': FeedPostType.announcement,
+  'article': FeedPostType.article,
+  'video': FeedPostType.video,
+  'workout': FeedPostType.workout,
+  'workoutPlan': FeedPostType.workoutPlan,
+  'loggedWorkout': FeedPostType.loggedWorkout,
+};
+const Map<FeedPostType, String> kFeedPostTypeToStreamName = {
+  FeedPostType.announcement: 'announcement',
+  FeedPostType.article: 'article',
+  FeedPostType.video: 'video',
+  FeedPostType.workout: 'workout',
+  FeedPostType.workoutPlan: 'workoutPlan',
+  FeedPostType.loggedWorkout: 'loggedWorkout',
+};
+const Map<FeedPostType, String> kFeedPostTypeToDisplay = {
+  FeedPostType.announcement: 'Announcement',
+  FeedPostType.article: 'Article',
+  FeedPostType.video: 'video',
+  FeedPostType.workout: 'Workout',
+  FeedPostType.workoutPlan: 'Plan',
+  FeedPostType.loggedWorkout: 'Log',
+};
+
+/// TODO: Some of this can be stripped out once new Feed flow is built.
 class FeedUtils {
   /// Calls our API to get the necessary data for the User (who created the post) and for the referenced object (all posts reference an object in the DB - e.g a Workout).
   /// Based on [userId] via [activity.actor], and [objectId] | [objectType] via [activity.object]

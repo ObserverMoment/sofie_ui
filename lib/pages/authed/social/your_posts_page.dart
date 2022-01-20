@@ -5,7 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/cards/timeline_post_card.dart';
+import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -42,7 +42,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
 
   bool _isLoading = true;
 
-  late PagingController<int, ActivityWithObjectData> _pagingController;
+  late PagingController<int, EnrichedActivity> _pagingController;
   late ScrollController _scrollController;
 
   Subscription? _feedSubscription;
@@ -57,7 +57,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
     _streamFeedClient = context.streamFeedClient;
     _userFeed = _streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
 
-    _pagingController = PagingController<int, ActivityWithObjectData>(
+    _pagingController = PagingController<int, EnrichedActivity>(
         firstPageKey: 0, invisibleItemsThreshold: 5);
     _scrollController = ScrollController();
 
@@ -86,17 +86,14 @@ class _YourPostsPageState extends State<YourPostsPage> {
         flags: EnrichmentFlags().withReactionCounts(),
       );
 
-      final activitiesWithObjectData =
-          await FeedUtils.getPostsUserAndObjectData(context, feedActivities);
-
       final int numPostsBefore = _pagingController.itemList?.length ?? 0;
-      final int numNewPosts = activitiesWithObjectData.length;
+      final int numNewPosts = feedActivities.length;
 
       if (feedActivities.length < _postsPerPage) {
-        _pagingController.appendLastPage(activitiesWithObjectData);
+        _pagingController.appendLastPage(feedActivities);
       } else {
         _pagingController.appendPage(
-            activitiesWithObjectData, numPostsBefore + numNewPosts);
+            feedActivities, numPostsBefore + numNewPosts);
       }
     } catch (e) {
       printLog(e.toString());
@@ -123,12 +120,8 @@ class _YourPostsPageState extends State<YourPostsPage> {
   Future<void> _updateNewFeedPosts(
       RealtimeMessage<User, String, String, String>? message) async {
     if (message?.newActivities != null && message!.newActivities!.isNotEmpty) {
-      final newActivitiesWithObjectData =
-          await FeedUtils.getPostsUserAndObjectData(
-              context, message.newActivities!);
-
-      final sortedNewActivities = newActivitiesWithObjectData
-          .sortedBy<DateTime>((a) => a.activity.time!);
+      final sortedNewActivities =
+          message.newActivities!.sortedBy<DateTime>((a) => a.time!);
 
       if (_scrollController.hasClients) {
         _scrollController.jumpTo(0.0);
@@ -144,7 +137,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
         _pagingController.itemList != null &&
         _pagingController.itemList!.isNotEmpty) {
       _pagingController.itemList = _pagingController.itemList!
-          .where((i) => !message.deleted.contains(i.activity.id))
+          .where((i) => !message.deleted.contains(i.id))
           .toList();
     }
   }
@@ -177,28 +170,31 @@ class _YourPostsPageState extends State<YourPostsPage> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 11, horizontal: 16),
                     text: 'New Post',
-                    onTap: () => context.navigateTo(const PostCreatorRoute()),
+                    onTap: () =>
+                        context.navigateTo(const FeedPostCreatorRoute()),
                     icon: CupertinoIcons.pencil),
               ],
               child: _pagingController.itemList == null ||
                       _pagingController.itemList!.isEmpty
                   ? const YourContentEmptyPlaceholder(
                       message: 'No posts yet', actions: [])
-                  : PagedListView<int, ActivityWithObjectData>(
+                  : PagedListView<int, EnrichedActivity>(
                       pagingController: _pagingController,
                       scrollController: _scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       builderDelegate:
-                          PagedChildBuilderDelegate<ActivityWithObjectData>(
-                        itemBuilder: (context, post, index) => SizeFadeIn(
+                          PagedChildBuilderDelegate<EnrichedActivity>(
+                        itemBuilder: (context, activity, index) => FadeInUp(
                           duration: 50,
                           delay: index,
                           delayBasis: 10,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: TimelinePostCard(
-                              activityWithObjectData: post,
+                            child: FeedPostCard(
                               deleteActivityById: _deleteActivityById,
+                              activity: activity,
+                              activityExtraData: ActivityExtraData.fromJson(
+                                  activity.extraData!),
                             ),
                           ),
                         ),

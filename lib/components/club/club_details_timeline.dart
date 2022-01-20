@@ -198,12 +198,21 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
               )
             : _pagingController.itemList == null ||
                     _pagingController.itemList!.isEmpty
-
-                /// TODO: This needs a placeholder.
-                ? const Center(
-                    child: MyText(
-                      'No Activity',
-                      subtext: true,
+                ? Center(
+                    child: Column(
+                      children: const [
+                        Opacity(
+                            opacity: 0.5,
+                            child: Icon(
+                              CupertinoIcons.square_list,
+                              size: 50,
+                            )),
+                        SizedBox(height: 12),
+                        MyText(
+                          'Nothing here yet...',
+                          subtext: true,
+                        ),
+                      ],
                     ),
                   )
                 : PagedListView<int, TimelinePostFullData>(
