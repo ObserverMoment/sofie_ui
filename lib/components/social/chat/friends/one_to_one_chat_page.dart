@@ -174,6 +174,7 @@ class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
                         },
                         child: MessagesList(
                           messages: messages,
+                          isGroupChat: false,
                         ),
                       );
                     }))));

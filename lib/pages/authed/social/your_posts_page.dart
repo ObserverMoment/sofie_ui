@@ -193,8 +193,9 @@ class _YourPostsPageState extends State<YourPostsPage> {
                             child: FeedPostCard(
                               deleteActivityById: _deleteActivityById,
                               activity: activity,
-                              activityExtraData: ActivityExtraData.fromJson(
-                                  activity.extraData!),
+                              activityExtraData:
+                                  EnrichedActivityExtraData.fromJson(
+                                      activity.extraData!),
                             ),
                           ),
                         ),

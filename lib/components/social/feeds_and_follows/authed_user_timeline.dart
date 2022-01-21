@@ -199,7 +199,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   /// If the user has already shared this post, they cannot share it again.
   /// In this case just show an alert.
   Future<void> _sharePost(
-      EnrichedActivity activity, ActivityExtraData extraData) async {
+      EnrichedActivity activity, EnrichedActivityExtraData extraData) async {
     final postWithShare = _postsWithShareReactions
         .firstWhereOrNull((p) => p.activityId == activity.id);
 
@@ -291,8 +291,8 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   builderDelegate: PagedChildBuilderDelegate<EnrichedActivity>(
                     itemBuilder: (context, activity, index) {
-                      final extraData =
-                          ActivityExtraData.fromJson(activity.extraData!);
+                      final extraData = EnrichedActivityExtraData.fromJson(
+                          activity.extraData!);
 
                       return SizeFadeIn(
                         duration: 50,

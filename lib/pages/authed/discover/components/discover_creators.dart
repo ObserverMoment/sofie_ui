@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -37,11 +36,12 @@ class DiscoverCreators extends StatelessWidget {
                 const MyHeaderText(
                   'People',
                 ),
-                IconButton(
-                    iconData: CupertinoIcons.compass,
-                    iconColor: Styles.primaryAccent,
+                TertiaryButton(
+                    text: 'View All',
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                     onPressed: () =>
-                        context.navigateTo(const DiscoverPeopleRoute()))
+                        context.navigateTo(const DiscoverPeopleRoute())),
               ],
             ),
           ),

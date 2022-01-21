@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
@@ -36,6 +37,23 @@ const Map<FeedPostType, String> kFeedPostTypeToDisplay = {
 
 /// TODO: Some of this can be stripped out once new Feed flow is built.
 class FeedUtils {
+  static String getObjectTypeFromRef(String ref) => ref.split(':')[0];
+  static String getObjectIdFromRef(String ref) => ref.split(':')[1];
+
+  static IconData getFeedSharedContentIcon(FeedPostType type) {
+    switch (type) {
+      case FeedPostType.workout:
+        return MyCustomIcons.dumbbell;
+      case FeedPostType.workoutPlan:
+        return CupertinoIcons.calendar_today;
+      case FeedPostType.loggedWorkout:
+        return MyCustomIcons.plansIcon;
+      default:
+        throw Exception(
+            'getFeedSharedContentIcon: No builder provided for $type');
+    }
+  }
+
   /// Calls our API to get the necessary data for the User (who created the post) and for the referenced object (all posts reference an object in the DB - e.g a Workout).
   /// Based on [userId] via [activity.actor], and [objectId] | [objectType] via [activity.object]
   /// [ActivityWithObjectData] is what is needed to display a single post in the UI.

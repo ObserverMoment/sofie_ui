@@ -41,7 +41,7 @@ class _PostCreatorPageState extends State<PostCreatorPage> {
 
   /// If postType == PostType.user then we post to feed [kUserFeedName]
   late FlatFeed _feed;
-  late Activity _activity;
+  // late Activity _activity;
 
   final TextEditingController _captionController = TextEditingController();
 

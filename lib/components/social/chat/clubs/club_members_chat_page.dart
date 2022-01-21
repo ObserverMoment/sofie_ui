@@ -169,6 +169,7 @@ class _ClubMembersChatChannelPageState
                         },
                         child: MessagesList(
                           messages: messages,
+                          isGroupChat: true,
                         ),
                       );
                     }))));

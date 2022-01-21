@@ -51,7 +51,7 @@ class _SocialPageState extends State<SocialPage> {
         trailing: NavBarTrailingRow(
           children: [
             IconButton(
-                iconData: CupertinoIcons.plus_rectangle,
+                iconData: CupertinoIcons.plus,
                 onPressed: () =>
                     context.navigateTo(const FeedPostCreatorRoute())),
             _buttonSpacer,

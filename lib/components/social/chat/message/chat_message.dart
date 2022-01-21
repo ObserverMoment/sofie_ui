@@ -17,6 +17,9 @@ class ChatMessage extends StatelessWidget {
   final Color messageColor;
   final bool hasTail;
 
+  /// For groups chats when sender != authed user.
+  final bool showSenderName;
+
   const ChatMessage({
     Key? key,
     required this.alignment,
@@ -25,6 +28,7 @@ class ChatMessage extends StatelessWidget {
     required this.color,
     required this.messageColor,
     this.hasTail = false,
+    required this.showSenderName,
   }) : super(key: key);
 
   @override
@@ -57,6 +61,18 @@ class ChatMessage extends StatelessWidget {
             alignment: alignment,
             mainAxisSize: MainAxisSize.min,
             forInputDisplay: false,
+          ),
+        if (showSenderName && message.user?.name != null)
+          Align(
+            alignment: alignment,
+            child: Padding(
+              padding:
+                  const EdgeInsets.only(left: 8.0, bottom: 4, top: 2, right: 8),
+              child: MyText(
+                message.user!.name,
+                weight: FontWeight.bold,
+              ),
+            ),
           ),
         if (message.attachments.isNotEmpty)
           ...message.attachments

@@ -15,8 +15,10 @@ import 'package:stream_chat_flutter_core/stream_chat_flutter_core.dart'
     show Message, StreamChatCore;
 
 class MessagesList extends StatefulWidget {
-  const MessagesList({Key? key, this.messages}) : super(key: key);
   final List<Message>? messages;
+  final bool isGroupChat;
+  const MessagesList({Key? key, this.messages, required this.isGroupChat})
+      : super(key: key);
 
   @override
   State<MessagesList> createState() => _MessagesListState();
@@ -168,6 +170,7 @@ class _MessagesListState extends State<MessagesList> {
                                                           message: message,
                                                           hasTail:
                                                               isFinalMessage,
+                                                          showSenderName: false,
                                                         )
                                                       : ChatMessage(
                                                           alignment: Alignment
@@ -186,6 +189,8 @@ class _MessagesListState extends State<MessagesList> {
                                                           message: message,
                                                           hasTail:
                                                               isFinalMessage,
+                                                          showSenderName: widget
+                                                              .isGroupChat,
                                                         )),
                                             ),
                                           ),

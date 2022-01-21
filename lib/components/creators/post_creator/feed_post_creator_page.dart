@@ -15,6 +15,7 @@ import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
@@ -31,18 +32,21 @@ class FeedPostCreatorPage extends StatefulWidget {
 
 class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   late AuthedUser _authedUser;
+  String? _posterAvatarUri;
 
   /// If postType == PostType.user then we post to feed [kUserFeedName]
   late FlatFeed _feed;
 
   /// A stream User ref. Make sure format is correct by using [StreamUser.ref].
   /// [context.streamFeedClient.currentUser!.ref].
+  /// Format of stream user ref is: [SU:a379ea36-8a96-4bc6-82ae-c1b716c85b86]
   late String _actor;
 
   Activity? _activity;
   // While editing handle this input separately so we can keep it as a typed class rather than a Map.
   ActivityExtraData? _extraData;
 
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _captionController = TextEditingController();
   final TextEditingController _tagInputController = TextEditingController();
 
@@ -57,6 +61,14 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
 
     _actor = context.streamFeedClient.currentUser!.ref;
 
+    _titleController.addListener(() {
+      setState(() {
+        if (_extraData != null) {
+          _extraData!.title = _titleController.text;
+        }
+      });
+    });
+
     _captionController.addListener(() {
       setState(() {
         if (_extraData != null) {
@@ -64,8 +76,24 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
         }
       });
     });
+
     _tagInputController.addListener(() {
       setState(() {});
+    });
+
+    _getUserAvatarUri();
+  }
+
+  Future<void> _getUserAvatarUri() async {
+    /// Get the authed user avatar uri.
+    final result = await context.graphQLStore.networkOnlyOperation(
+        operation: UserAvatarByIdQuery(
+            variables: UserAvatarByIdArguments(id: _authedUser.id)));
+
+    checkOperationResult(context, result, onSuccess: () {
+      setState(() {
+        _posterAvatarUri = result.data!.userAvatarById.avatarUri;
+      });
     });
   }
 
@@ -87,18 +115,16 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   void _initActivity({
     required FeedPostType type,
     String? creatorId,
-    String? creatorName,
     required String objectId,
     required String objectName,
     String? imageUri, // Will be Uploadcare Uuid.
   }) {
+    /// Default the title of the post to be the object name.
+    _titleController.text = objectName;
+
     _extraData = ActivityExtraData(
-      posterId: _authedUser.id,
-      posterName: _authedUser.displayName,
-      creatorId: creatorId,
-      creatorName: creatorName,
-      objectId: objectId,
-      objectName: objectName,
+      creator: 'SU:$creatorId',
+      title: objectName,
       tags: [],
       imageUrl:
           imageUri != null ? UploadcareService.getFileUrl(imageUri) : null,
@@ -107,7 +133,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
     _activity = Activity(
       actor: _actor,
       verb: kDefaultFeedPostVerb,
-      object: kFeedPostTypeToStreamName[type],
+      object: '${kFeedPostTypeToStreamName[type]}:$objectId',
     );
     setState(() {});
   }
@@ -115,7 +141,6 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   void _selectWorkout(WorkoutSummary workout) {
     _initActivity(
       creatorId: workout.user.id,
-      creatorName: workout.user.displayName,
       objectId: workout.id,
       objectName: workout.name,
       type: FeedPostType.workout,
@@ -126,7 +151,6 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   void _selectWorkoutPlan(WorkoutPlanSummary plan) {
     _initActivity(
       creatorId: plan.user.id,
-      creatorName: plan.user.displayName,
       objectId: plan.id,
       objectName: plan.name,
       type: FeedPostType.workoutPlan,
@@ -232,6 +256,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                       FeedPostInputs(
                         extraData: _extraData!,
                         addTag: _addTag,
+                        titleController: _titleController,
                         captionController: _captionController,
                         tagInputController: _tagInputController,
                         removeTag: _removeTag,
@@ -239,15 +264,6 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                       const SizedBox(height: 10),
                       const HorizontalLine(
                         verticalPadding: 12,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FeedPostCard(
-                            isPreview: true,
-                            activity: EnrichedActivity(
-                                time: DateTime.now(),
-                                object: _activity!.object),
-                            activityExtraData: _extraData!),
                       ),
                     ],
                   )
@@ -294,6 +310,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
 
 class FeedPostInputs extends StatelessWidget {
   final ActivityExtraData extraData;
+  final TextEditingController titleController;
   final TextEditingController captionController;
   final TextEditingController tagInputController;
   final void Function(String tag) addTag;
@@ -304,7 +321,8 @@ class FeedPostInputs extends StatelessWidget {
       required this.captionController,
       required this.addTag,
       required this.removeTag,
-      required this.tagInputController})
+      required this.tagInputController,
+      required this.titleController})
       : super(key: key);
 
   @override
@@ -312,8 +330,14 @@ class FeedPostInputs extends StatelessWidget {
     return Column(
       children: [
         MyTextAreaFormFieldRow(
+            placeholder: 'Add a title...',
+            autofocus: true,
+            backgroundColor: context.theme.cardBackground,
+            keyboardType: TextInputType.text,
+            controller: titleController),
+        const SizedBox(height: 16),
+        MyTextAreaFormFieldRow(
             placeholder: 'Write a caption...',
-            autofocus: captionController.text.isEmpty,
             backgroundColor: context.theme.cardBackground,
             keyboardType: TextInputType.text,
             controller: captionController),
