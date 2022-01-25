@@ -1,0 +1,3 @@
+mutation deleteClubMembersFeedPost($activityId: ID!) {
+  deleteClubMembersFeedPost(activityId: $activityId)
+}

@@ -49,23 +49,3 @@ fragment ScheduledWorkout on ScheduledWorkout {
   workoutPlanDayWorkoutId
   loggedWorkoutId
 }
-
-# Minimal data for the poster of a post or the creator of the object referenced by it.
-fragment TimelinePostObjectDataUser on TimelinePostObjectDataUser {
-  __typename
-  id
-  displayName
-  avatarUri
-}
-
-# An object referenced by a post.
-fragment TimelinePostObjectDataObject on TimelinePostObjectDataObject {
-  __typename
-  id
-  type
-  name
-  audioUri
-  imageUri
-  videoUri
-  videoThumbUri
-}

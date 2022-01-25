@@ -18,15 +18,9 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:stream_feed/stream_feed.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
-class FeedPostCard extends StatelessWidget {
-  final FlatFeed userFeed;
-
-  /// TimlineFeed can be null as it is not always needed - e.g. when this card is being displayed in the users 'Your Posts' archive.
-  final FlatFeed? timelineFeed;
-
+class ClubFeedPostCard extends StatelessWidget {
   final StreamEnrichedActivity activity;
 
   // Removes interactivity when [true].
@@ -34,21 +28,12 @@ class FeedPostCard extends StatelessWidget {
   final VoidCallback? likeUnlikePost;
   final bool userHasLiked;
 
-  /// When true we don't display share count or display UI to allow the user to share.
-  /// Used for post types which should not be freely shared - i.e. posts within clubs / private challenges etc.
-  // final bool disableSharing;
-  final VoidCallback? sharePost;
-  final bool userHasShared;
-  const FeedPostCard({
+  const ClubFeedPostCard({
     Key? key,
     required this.activity,
     this.isPreview = false,
     this.likeUnlikePost,
-    this.sharePost,
     this.userHasLiked = false,
-    this.userHasShared = false,
-    required this.userFeed,
-    this.timelineFeed,
   }) : super(key: key);
 
   void _openDetailsPageByType(
@@ -65,7 +50,7 @@ class FeedPostCard extends StatelessWidget {
         break;
       default:
         throw Exception(
-            'FeedPostCard._openDetailsPageByType: No method defined for $type.');
+            'ClubFeedPostCard._openDetailsPageByType: No method defined for $type.');
     }
   }
 
@@ -78,73 +63,24 @@ class FeedPostCard extends StatelessWidget {
         itemType: 'Post',
         message: 'This will delete the post from all timelines.',
         onConfirm: () async {
-          await userFeed.removeActivityById(activityId);
+          print('delete activity via API');
         });
   }
 
-  /// A non owner can still remove a post from their own feed if they want.
-  /// TODO: This action needs to be tracked by the feed algos as this indicates that it should not have been there ion the first place.
-  Future<void> _confirmRemoveActivityFromFeed(
-      BuildContext context, String activityId) async {
-    if (timelineFeed != null) {
-      context.showConfirmDeleteDialog(
-          verb: 'Remove',
-          itemType: 'Post',
-          message: 'This will remove the post from your timeline.',
-          onConfirm: () async {
-            await timelineFeed!.removeActivityById(activityId);
-          });
-    }
-  }
-
-  Widget _buildReactionButtonsOrDisplay(BuildContext context,
-      StreamEnrichedActivity activity, bool userIsPoster) {
+  Widget _buildReactionButtonsOrDisplay(
+      BuildContext context, StreamEnrichedActivity activity) {
     final likesCount = activity.reactionCounts?.likes ?? 0;
-    final sharesCount = activity.reactionCounts?.shares ?? 0;
 
-    return userIsPoster
-        ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16),
-            child: Row(
-              children: [
-                Icon(
-                  CupertinoIcons.heart_fill,
-                  color: context.theme.primary.withOpacity(0.4),
-                  size: 20,
-                ),
-                const SizedBox(width: 4),
-                MyText('$likesCount'),
-                Row(
-                  children: [
-                    const SizedBox(width: 16),
-                    Icon(
-                      CupertinoIcons.paperplane_fill,
-                      color: context.theme.primary.withOpacity(0.4),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 4),
-                    MyText('$sharesCount'),
-                  ],
-                )
-              ],
-            ),
-          )
-        : Row(
-            children: [
-              if (likeUnlikePost != null)
-                _buildReactionButton(
-                    inactiveIconData: CupertinoIcons.heart,
-                    activeIconData: CupertinoIcons.heart_fill,
-                    onPressed: likeUnlikePost!,
-                    active: userHasLiked),
-              if (sharePost != null)
-                _buildReactionButton(
-                    inactiveIconData: CupertinoIcons.paperplane,
-                    activeIconData: CupertinoIcons.paperplane_fill,
-                    onPressed: sharePost!,
-                    active: userHasShared),
-            ],
-          );
+    return Row(
+      children: [
+        if (likeUnlikePost != null)
+          _buildReactionButton(
+              inactiveIconData: CupertinoIcons.heart,
+              activeIconData: CupertinoIcons.heart_fill,
+              onPressed: likeUnlikePost!,
+              active: userHasLiked),
+      ],
+    );
   }
 
   Widget _buildReactionButton(
@@ -248,10 +184,8 @@ class FeedPostCard extends StatelessWidget {
                     : _TimelinePostEllipsisMenu(
                         userIsCreator: userIsCreator,
                         userIsPoster: userIsPoster,
-                        handleDeletePost: userIsPoster
-                            ? () => _confirmDeleteActivity(context, activity.id)
-                            : () => _confirmRemoveActivityFromFeed(
-                                context, activity.id),
+                        handleDeletePost: () =>
+                            _confirmDeleteActivity(context, activity.id),
                         openDetailsPage: postType != null && objectId != null
                             ? () => _openDetailsPageByType(
                                 context, postType, objectId)
@@ -287,7 +221,7 @@ class FeedPostCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildReactionButtonsOrDisplay(context, activity, userIsPoster),
+                _buildReactionButtonsOrDisplay(context, activity),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -438,7 +372,7 @@ class _TimelinePostEllipsisMenu extends StatelessWidget {
         return 'logged-workout/$objectId';
       default:
         throw Exception(
-            'FeedPostCard._genLinkText._genLinkText: Cannot form a link text for $type');
+            'ClubFeedPostCard._genLinkText._genLinkText: Cannot form a link text for $type');
     }
   }
 

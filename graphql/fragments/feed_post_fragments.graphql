@@ -1,0 +1,21 @@
+fragment StreamEnrichedActivity on StreamEnrichedActivity {
+  id
+  verb
+  object
+  time
+}
+
+fragment StreamActivityReactionCounts on StreamActivityReactionCounts {
+  likes
+  shares
+}
+
+fragment StreamActivityExtraData on StreamActivityExtraData {
+  title
+  caption
+  tags
+  audioUrl
+  imageUrl
+  videoUrl
+  originalPostId
+}

@@ -262,6 +262,13 @@ input CreateClubInviteTokenInput {
   name: String!
 }
 
+input CreateClubTimelinePostInput {
+  caption: String
+  clubId: String!
+  object: String!
+  tags: [String!]
+}
+
 input CreateCollectionInput {
   description: String
   name: String!
@@ -384,7 +391,7 @@ input CreateStreamFeedActivityExtraDataInput {
   creator: String
   imageUrl: String
   originalPostId: String
-  tags: [String!]!
+  tags: [String!]
   title: String
   videoUrl: String
 }
@@ -998,14 +1005,9 @@ type StreamActivityExtraData {
   creator: StreamFeedUser
   imageUrl: String
   originalPostId: String
-  tags: [String!]!
+  tags: [String]!
   title: String
   videoUrl: String
-}
-
-type StreamActivityReactionCounts {
-  likes: Int
-  shares: Int
 }
 
 type StreamEnrichedActivity {
@@ -1013,9 +1015,17 @@ type StreamEnrichedActivity {
   extraData: StreamActivityExtraData!
   id: String!
   object: String!
-  reactionCounts: StreamActivityReactionCounts
   time: DateTime!
   verb: String!
+}
+
+enum StreamFeedActivityType {
+  ANNOUNCEMENT
+  ARTICLE
+  LOGGEDWORKOUT
+  VIDEO
+  WORKOUT
+  WORKOUTPLAN
 }
 
 type StreamFeedClub {

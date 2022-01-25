@@ -5,7 +5,6 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/creators/post_creator/share_object_type_selector_button.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
@@ -15,7 +14,6 @@ import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
@@ -32,9 +30,7 @@ class FeedPostCreatorPage extends StatefulWidget {
 
 class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   late AuthedUser _authedUser;
-  String? _posterAvatarUri;
 
-  /// If postType == PostType.user then we post to feed [kUserFeedName]
   late FlatFeed _feed;
 
   /// A stream User ref. Make sure format is correct by using [StreamUser.ref].
@@ -42,9 +38,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   /// Format of stream user ref is: [SU:a379ea36-8a96-4bc6-82ae-c1b716c85b86]
   late String _actor;
 
-  Activity? _activity;
-  // While editing handle this input separately so we can keep it as a typed class rather than a Map.
-  ActivityExtraData? _extraData;
+  CreateStreamFeedActivityInput? _activity;
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _captionController = TextEditingController();
@@ -63,37 +57,22 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
 
     _titleController.addListener(() {
       setState(() {
-        if (_extraData != null) {
-          _extraData!.title = _titleController.text;
+        if (_activity?.extraData != null) {
+          _activity!.extraData.title = _titleController.text;
         }
       });
     });
 
     _captionController.addListener(() {
       setState(() {
-        if (_extraData != null) {
-          _extraData!.caption = _captionController.text;
+        if (_activity?.extraData != null) {
+          _activity!.extraData.caption = _captionController.text;
         }
       });
     });
 
     _tagInputController.addListener(() {
       setState(() {});
-    });
-
-    _getUserAvatarUri();
-  }
-
-  Future<void> _getUserAvatarUri() async {
-    /// Get the authed user avatar uri.
-    final result = await context.graphQLStore.networkOnlyOperation(
-        operation: UserAvatarByIdQuery(
-            variables: UserAvatarByIdArguments(id: _authedUser.id)));
-
-    checkOperationResult(context, result, onSuccess: () {
-      setState(() {
-        _posterAvatarUri = result.data!.userAvatarById.avatarUri;
-      });
     });
   }
 
@@ -105,7 +84,6 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
           Utils.hideKeyboard(context);
           setState(() {
             _activity = null;
-            _extraData = null;
             _captionController.text = '';
             _tagInputController.text = '';
           });
@@ -122,19 +100,17 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
     /// Default the title of the post to be the object name.
     _titleController.text = objectName;
 
-    _extraData = ActivityExtraData(
-      creator: 'SU:$creatorId',
-      title: objectName,
-      tags: [],
-      imageUrl:
-          imageUri != null ? UploadcareService.getFileUrl(imageUri) : null,
-    );
-
-    _activity = Activity(
-      actor: _actor,
-      verb: kDefaultFeedPostVerb,
-      object: '${kFeedPostTypeToStreamName[type]}:$objectId',
-    );
+    _activity = CreateStreamFeedActivityInput(
+        actor: _actor,
+        verb: kDefaultFeedPostVerb,
+        object: '${kFeedPostTypeToStreamName[type]}:$objectId',
+        extraData: CreateStreamFeedActivityExtraDataInput(
+          creator: 'SU:$creatorId',
+          title: objectName,
+          tags: [],
+          imageUrl:
+              imageUri != null ? UploadcareService.getFileUrl(imageUri) : null,
+        ));
     setState(() {});
   }
 
@@ -167,20 +143,24 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   }
 
   void _addTag(String tag) {
-    setState(() {
-      _tagInputController.text = '';
-      _extraData!.tags.add(tag);
-    });
+    if (_activity?.extraData != null) {
+      setState(() {
+        _tagInputController.text = '';
+        _activity!.extraData.tags.add(tag);
+      });
+    }
   }
 
   void _removeTag(String tag) {
-    setState(() {
-      _extraData!.tags.remove(tag);
-    });
+    if (_activity?.extraData != null) {
+      setState(() {
+        _activity!.extraData.tags.remove(tag);
+      });
+    }
   }
 
   Future<void> _createPost() async {
-    if (_activity != null && _extraData != null) {
+    if (_activity != null) {
       setState(() {
         _loading = true;
       });
@@ -189,7 +169,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
         actor: _activity!.actor,
         object: _activity!.object,
         verb: _activity!.verb,
-        extraData: _extraData!.toJson,
+        extraData: Map<String, Object>.from(_activity!.extraData.toJson()),
       );
 
       try {
@@ -227,7 +207,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
               ? const CupertinoActivityIndicator(
                   radius: 14,
                 )
-              : (_activity != null && _extraData != null)
+              : (_activity != null)
                   ? FadeInUp(
                       child: NavBarTrailingRow(children: [
                         NavBarCancelButton(
@@ -249,12 +229,12 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
           padding: const EdgeInsets.all(8.0),
           child: AnimatedSwitcher(
             duration: kStandardAnimationDuration,
-            child: _activity != null && _extraData != null
+            child: _activity != null
                 ? ListView(
                     shrinkWrap: true,
                     children: [
                       FeedPostInputs(
-                        extraData: _extraData!,
+                        extraData: _activity!.extraData,
                         addTag: _addTag,
                         titleController: _titleController,
                         captionController: _captionController,
@@ -309,7 +289,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
 }
 
 class FeedPostInputs extends StatelessWidget {
-  final ActivityExtraData extraData;
+  final CreateStreamFeedActivityExtraDataInput extraData;
   final TextEditingController titleController;
   final TextEditingController captionController;
   final TextEditingController tagInputController;

@@ -142,10 +142,11 @@ class AnimatedNavBar extends StatelessWidget {
   }
 
   Future<void> _createNewPost(BuildContext context) async {
-    await context.navigateTo(ClubPostCreatorRoute(
-        clubId: club.id,
-        onSuccess: (_) => context.showToast(
-            message: 'Post created. It will display shortly.')));
+    /// TODO: Rebuild
+    // await context.navigateTo(ClubPostCreatorRoute(
+    //     clubId: club.id,
+    //     onSuccess: (_) => context.showToast(
+    //         message: 'Post created. It will display shortly.')));
   }
 
   void _confirmDeleteClub(BuildContext context, ClubSummary club) {

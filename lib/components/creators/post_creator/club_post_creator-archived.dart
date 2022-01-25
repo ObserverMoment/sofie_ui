@@ -1,48 +1,36 @@
 // import 'package:auto_route/auto_route.dart';
 // import 'package:flutter/cupertino.dart';
-// import 'package:flutter/foundation.dart';
 // import 'package:flutter/services.dart';
-// import 'package:get_it/get_it.dart';
-// import 'package:sofie_ui/blocs/auth_bloc.dart';
 // import 'package:sofie_ui/components/animated/mounting.dart';
 // import 'package:sofie_ui/components/buttons.dart';
-// import 'package:sofie_ui/components/cards/timeline_post_card-archived.dart';
 // import 'package:sofie_ui/components/cards/workout_card.dart';
 // import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 // import 'package:sofie_ui/components/creators/post_creator/share_object_type_selector_button.dart';
 // import 'package:sofie_ui/components/indicators.dart';
 // import 'package:sofie_ui/components/layout.dart';
-// import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 // import 'package:sofie_ui/components/text.dart';
 // import 'package:sofie_ui/components/user_input/text_input.dart';
 // import 'package:sofie_ui/constants.dart';
 // import 'package:sofie_ui/extensions/context_extensions.dart';
-// import 'package:sofie_ui/extensions/enum_extensions.dart';
 // import 'package:sofie_ui/extensions/type_extensions.dart';
 // import 'package:sofie_ui/generated/api/graphql_api.dart';
 // import 'package:sofie_ui/model/enum.dart';
 // import 'package:sofie_ui/router.gr.dart';
+// import 'package:sofie_ui/services/store/store_utils.dart';
 // import 'package:sofie_ui/services/utils.dart';
-// import 'package:stream_feed/stream_feed.dart' as feed;
-// import 'package:stream_feed/stream_feed.dart';
 
-// /// Create a post and sends it to GetStream.
 // /// Currently: Like a content share function. Can only share certain objects from within the app such as [Workout], [WorkoutPlan] etc.
-// /// Separate componenet needed for creating Club Posts as they will have different structure and also be handled server side due to the extra privacy requirements.
-// class PostCreatorPage extends StatefulWidget {
-//   const PostCreatorPage({Key? key}) : super(key: key);
+// class ClubPostCreatorPage extends StatefulWidget {
+//   final String clubId;
+//   final void Function(StreamEnrichedActivity createdPost)? onSuccess;
+//   const ClubPostCreatorPage({Key? key, required this.clubId, this.onSuccess})
+//       : super(key: key);
 
 //   @override
-//   _PostCreatorPageState createState() => _PostCreatorPageState();
+//   _ClubPostCreatorPageState createState() => _ClubPostCreatorPageState();
 // }
 
-// class _PostCreatorPageState extends State<PostCreatorPage> {
-//   late AuthedUser _authedUser;
-
-//   /// If postType == PostType.user then we post to feed [kUserFeedName]
-//   late FlatFeed _feed;
-//   // late Activity _activity;
-
+// class _ClubPostCreatorPageState extends State<ClubPostCreatorPage> {
 //   final TextEditingController _captionController = TextEditingController();
 
 //   /// Tags are text input one at at time via _tagsController
@@ -54,13 +42,15 @@
 
 //   /// The selected objects id and type to share + vars to save the data to display object summary.
 //   /// [id] is uid from DB
-//   /// [type] is name such as Workout | WorkoutPlan | Challenge.
+//   /// [type] is name such as Announcement | Workout | WorkoutPlan | Throwdown.
 //   /// Will be formed as [type:id] before being sent to getStream as [Activity.object]
 //   String? _selectedObjectId;
 //   TimelinePostType? _selectedObjectType;
 
 //   /// Only one of these should ever be not null.
 //   /// When saving a new one make sure you set all others null.
+//   // ClubAnnouncement? _announcement;
+//   ClubAnnouncement? _announcement;
 //   WorkoutSummary? _workout;
 //   WorkoutPlanSummary? _workoutPlan;
 
@@ -72,10 +62,6 @@
 //   @override
 //   void initState() {
 //     super.initState();
-//     _authedUser = GetIt.I<AuthBloc>().authedUser!;
-
-//     _feed = context.streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
-
 //     _captionController.addListener(() {
 //       setState(() {});
 //     });
@@ -89,8 +75,17 @@
 
 //   /// Doesn't setState...
 //   void _removeAllObjects() {
+//     _announcement = null;
 //     _workout = null;
 //     _workoutPlan = null;
+//   }
+
+//   void _selectAnnouncement(ClubAnnouncement a) {
+//     _removeAllObjects();
+//     _announcement = a;
+//     _selectedObjectId = a.id;
+//     _selectedObjectType = TimelinePostType.announcement;
+//     _changePage(1);
 //   }
 
 //   void _selectWorkout(WorkoutSummary w) {
@@ -134,19 +129,30 @@
 //       _loading = true;
 //     });
 //     try {
-//       await _feed.addActivity(feed.Activity(
-//           actor: context.streamFeedClient.currentUser!.ref,
-//           verb: kUserPostVerbName,
-//           // Send the object type in UPPERCASE!. E.g. WORKOUT:id
-//           object: '${_selectedObjectType!.apiValue}:$_selectedObjectId',
-//           extraData: {
-//             'caption': _captionController.text,
-//             // Try and ensure we always pass a list of strings.
-//             // There is no type checking on the getStream side and ints, bools, objects etc will all be allowed.
-//             'tags': _tags.whereType<String>().toList()
-//           }));
+//       final variables = CreateClubTimelinePostArguments(
+//           data: CreateClubTimelinePostInput(
+//               clubId: widget.clubId,
+//               object: '${_selectedObjectType!.apiValue}:$_selectedObjectId',
+//               caption: _captionController.text,
+//               tags: _tags));
 
-//       context.pop();
+//       final result = await context.graphQLStore.networkOnlyOperation<
+//               CreateClubTimelinePost$Mutation, CreateClubTimelinePostArguments>(
+//           operation: CreateClubTimelinePostMutation(variables: variables));
+
+//       setState(() {
+//         _loading = false;
+//       });
+
+//       if (result.hasErrors || result.data == null) {
+//         result.errors?.forEach((e) {
+//           printLog(e.toString());
+//         });
+//         throw Exception();
+//       } else {
+//         context.pop();
+//         widget.onSuccess?.call(result.data!.createClubTimelinePost);
+//       }
 //     } catch (e) {
 //       printLog(e.toString());
 //       context.showToast(
@@ -170,6 +176,8 @@
 
 //   UserAvatarData _getSelectedObjectCreator() {
 //     switch (_selectedObjectType) {
+//       case TimelinePostType.announcement:
+//         return _announcement!.user;
 //       case TimelinePostType.workout:
 //         return _workout!.user;
 //       case TimelinePostType.workoutplan:
@@ -182,12 +190,30 @@
 
 //   TimelinePostObjectDataObject _getSelectedObjectData() {
 //     switch (_selectedObjectType) {
+//       case TimelinePostType.announcement:
+//         final a = _announcement!;
+//         return TimelinePostObjectDataObject()
+//           ..id = a.id
+//           ..type = TimelinePostType.announcement
+//           ..name = a.description
+//           ..audioUri = a.audioUri
+//           ..imageUri = a.imageUri
+//           ..videoUri = a.videoUri
+//           ..videoThumbUri = a.videoThumbUri;
 //       case TimelinePostType.workout:
-//         return TimelinePostObjectDataObject.fromJson(
-//             {..._workout!.toJson(), 'type': _selectedObjectType!.apiValue});
+//         final w = _workout!;
+//         return TimelinePostObjectDataObject()
+//           ..id = w.id
+//           ..type = TimelinePostType.workout
+//           ..name = w.name
+//           ..imageUri = w.coverImageUri;
 //       case TimelinePostType.workoutplan:
-//         return TimelinePostObjectDataObject.fromJson(
-//             {..._workoutPlan!.toJson(), 'type': _selectedObjectType!.apiValue});
+//         final p = _workoutPlan!;
+//         return TimelinePostObjectDataObject()
+//           ..id = p.id
+//           ..type = TimelinePostType.workoutplan
+//           ..name = p.name
+//           ..imageUri = p.coverImageUri;
 //       default:
 //         throw Exception(
 //             'PostCreator._getSelectedObjectJson: No converter provided for $_selectedObjectType.');
@@ -203,8 +229,11 @@
 //   TimelinePostObjectDataUser _getCreatorDataForPreview() =>
 //       TimelinePostObjectDataUser.fromJson(_getSelectedObjectCreator().toJson());
 
-//   TimelinePostObjectData get postDataForPreview => TimelinePostObjectData()
+//   TimelinePostFullData get _postDataForPreview => TimelinePostFullData()
 //     ..activityId = 'temp'
+//     ..postedAt = DateTime.now()
+//     ..caption = _captionController.text
+//     ..tags = _tags
 //     ..poster = _getPosterDataForPreview()
 //     ..creator = _getCreatorDataForPreview()
 //     ..object = _getSelectedObjectData();
@@ -212,7 +241,7 @@
 //   Widget get _buildLeading => AnimatedSwitcher(
 //         duration: kStandardAnimationDuration,
 //         child: _activePageIndex == 0
-//             ? NavBarCancelButton(context.pop)
+//             ? NavBarCancelButton(_confirmCloseWithoutSave)
 //             : CupertinoButton(
 //                 padding: EdgeInsets.zero,
 //                 alignment: Alignment.centerLeft,
@@ -253,6 +282,8 @@
 
 //   Widget _buildDisplayCardByType() {
 //     switch (_selectedObjectType) {
+//       case TimelinePostType.announcement:
+//         return AnnouncementCard(announcement: _announcement!);
 //       case TimelinePostType.workout:
 //         return WorkoutCard(_workout!);
 //       case TimelinePostType.workoutplan:
@@ -260,6 +291,30 @@
 //       default:
 //         throw Exception(
 //             'PostCreator._buildDisplayCardByType: No selector provided for $_selectedObjectType.');
+//     }
+//   }
+
+//   void _confirmCloseWithoutSave() {
+//     context.showConfirmDialog(
+//         title: 'Close Without Saving',
+//         message:
+//             'Nothing will be saved and any media uploaded will be removed.',
+//         onConfirm: _closeWithoutSave);
+//   }
+
+//   Future<void> _closeWithoutSave() async {
+//     if (_announcement != null) {
+//       /// Delete the announcement that was created before the user cancelled.
+//       /// The API will handle any media clean up.
+//       final variables = DeleteClubAnnouncementArguments(id: _announcement!.id);
+//       final result = await context.graphQLStore.networkOnlyOperation(
+//           operation: DeleteClubAnnouncementMutation(variables: variables));
+
+//       checkOperationResult(context, result,
+//           onFail: () => context.showToast(
+//               message: 'Sorry, something went wrong while cleaning up.',
+//               toastType: ToastType.destructive),
+//           onSuccess: context.pop);
 //     }
 //   }
 
@@ -302,26 +357,38 @@
 //                     shrinkWrap: true,
 //                     children: [
 //                       ShareObjectTypeSelectorButton(
+//                           title: 'Announcement',
+//                           description:
+//                               'Share some news or content with your members!',
+//                           assetImageUri:
+//                               'assets/placeholder_images/announcement.jpg',
+//                           onPressed: () => context.push(
+//                                   child: ClubAnnouncementCreator(
+//                                 clubId: widget.clubId,
+//                                 onComplete: (a) => _selectAnnouncement(a),
+//                               ))),
+//                       ShareObjectTypeSelectorButton(
 //                         title: 'Workout',
 //                         description:
-//                             'Share a workout you have created, found or are going to do!',
+//                             'Share a workout you have created, or announce the Workout of the Day!',
 //                         assetImageUri: 'assets/placeholder_images/workout.jpg',
-//                         onPressed: () => context.navigateTo(YourWorkoutsRoute(
+//                         onPressed: () => context.pushRoute(YourWorkoutsRoute(
 //                             pageTitle: 'Select Workout',
 //                             showCreateButton: true,
+//                             showSaved: false,
 //                             selectWorkout: _selectWorkout)),
 //                       ),
 //                       ShareObjectTypeSelectorButton(
-//                           title: 'Workout Plan',
-//                           description:
-//                               'Share a plan you have created, found or are going to do!',
-//                           assetImageUri: 'assets/placeholder_images/plan.jpg',
-//                           onPressed: () => context.navigateTo(
-//                                 YourPlansRoute(
-//                                   selectPlan: _selectWorkoutPlan,
-//                                   showCreateButton: true,
-//                                 ),
-//                               ))
+//                         title: 'Workout Plan',
+//                         description:
+//                             'Share a plan you have created with your members!',
+//                         assetImageUri: 'assets/placeholder_images/plan.jpg',
+//                         onPressed: () => context.pushRoute(YourPlansRoute(
+//                             selectPlan: _selectWorkoutPlan,
+//                             showSaved: false,
+//                             showJoined: false,
+//                             showCreateButton: true)),
+//                       )
 //                     ],
 //                   ),
 //                 )
@@ -331,7 +398,7 @@
 //               shrinkWrap: true,
 //               children: [
 //                 MyTextAreaFormFieldRow(
-//                     placeholder: 'Description (required)',
+//                     placeholder: 'Caption (required)',
 //                     autofocus: _captionController.text.isEmpty,
 //                     backgroundColor: context.theme.cardBackground,
 //                     keyboardType: TextInputType.text,
@@ -385,26 +452,11 @@
 
 //                 if (_objectSelected)
 //                   SizeFadeIn(
-//                     child: Padding(
-//                       padding: const EdgeInsets.all(8.0),
-//                       child: TimelinePostCard(
-//                           isPreview: true,
-//                           activityWithObjectData: ActivityWithObjectData(
-//                               feed.EnrichedActivity(
-//                                   actor: feed.User(
-//                                       id: context
-//                                           .streamFeedClient.currentUser!.id),
-//                                   verb: 'post',
-//                                   object:
-//                                       '${describeEnum(_selectedObjectType!)}:$_selectedObjectId',
-//                                   time: DateTime.now(),
-//                                   extraData: {
-//                                     'caption': _captionController.text,
-//                                     'tags': _tags
-//                                   }),
-//                               postDataForPreview)),
-//                     ),
-//                   )
+//                       child: Padding(
+//                     padding: const EdgeInsets.all(12.0),
+//                     child: ClubTimelinePostCard(
+//                         isPreview: true, postData: _postDataForPreview),
+//                   ))
 //               ],
 //             )
 //           ],

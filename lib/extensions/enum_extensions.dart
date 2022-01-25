@@ -10,15 +10,6 @@ import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 //// String to enum parser ////
 // https://stackoverflow.com/questions/27673781/enum-from-string
 extension EnumParser on String {
-  TimelinePostType toTimelinePostType() {
-    return TimelinePostType.values.firstWhere(
-        (e) =>
-            e.toString().toLowerCase() ==
-            'TimelinePostType.$this'.toLowerCase(), orElse: () {
-      throw Exception('$this is not a valid TimelinePostType');
-    });
-  }
-
   DifficultyLevel toDifficultyLevel() {
     return DifficultyLevel.values.firstWhere(
         (v) =>
@@ -175,23 +166,6 @@ extension LoadUnitExtension on LoadUnit {
   }
 
   String get apiValue => describeEnum(this).toUpperCase();
-}
-
-extension TimelinePostTypeExtension on TimelinePostType {
-  String get apiValue => describeEnum(this).toUpperCase();
-
-  String get display {
-    switch (this) {
-      case TimelinePostType.announcement:
-        return 'Announcement';
-      case TimelinePostType.workout:
-        return 'Workout';
-      case TimelinePostType.workoutplan:
-        return 'Workout Plan';
-      default:
-        throw Exception('This is not a valid TimelinePostType enum: $this');
-    }
-  }
 }
 
 extension TimeUnitExtension on TimeUnit {

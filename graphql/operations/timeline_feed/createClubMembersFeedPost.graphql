@@ -1,5 +1,8 @@
-query clubMembersFeedPosts($clubId: ID!, $limit: Int!, $offset: Int!) {
-  clubMembersFeedPosts(clubId: $clubId, limit: $limit, offset: $offset) {
+mutation createClubMembersFeedPost(
+  $clubId: ID!
+  $data: CreateStreamFeedActivityInput!
+) {
+  createClubMembersFeedPost(clubId: $clubId, data: $data) {
     ...StreamEnrichedActivity
     reactionCounts {
       ...StreamActivityReactionCounts
