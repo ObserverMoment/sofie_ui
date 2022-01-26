@@ -21,6 +21,9 @@ import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
+/// Card for displaying non club feed posts.
+/// Only allowed feed types are those that share internal content (workouts, plans, logs etc).
+/// Generic posts or media can only be shared within the club setting.
 class FeedPostCard extends StatelessWidget {
   final FlatFeed userFeed;
 
@@ -202,12 +205,6 @@ class FeedPostCard extends StatelessWidget {
     final postType = kStreamNameToFeedPostType[
         FeedUtils.getObjectTypeFromRef(activity.object)];
 
-    final isSharedContent = [
-      FeedPostType.workout,
-      FeedPostType.workoutPlan,
-      FeedPostType.loggedWorkout
-    ].contains(postType);
-
     final objectId = FeedUtils.getObjectIdFromRef(activity.object);
 
     return Padding(
@@ -260,8 +257,11 @@ class FeedPostCard extends StatelessWidget {
                       )
               ],
             ),
-            _buildCaption,
-            if (isSharedContent && postType != null && objectId != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 2),
+              child: _buildCaption,
+            ),
+            if (postType != null && objectId != null)
               GestureDetector(
                   onTap: () =>
                       _openDetailsPageByType(context, postType, objectId),
@@ -270,8 +270,7 @@ class FeedPostCard extends StatelessWidget {
                     activityExtraData: activity.extraData,
                   )),
             const SizedBox(height: 4),
-            if (!isSharedContent &&
-                Utils.textNotNull(activity.extraData.imageUrl))
+            if (Utils.textNotNull(activity.extraData.imageUrl))
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
                 child: ClipRRect(
@@ -494,12 +493,6 @@ class _TimelinePostEllipsisMenu extends StatelessWidget {
                       icon: CupertinoIcons.delete_simple,
                       onPressed: handleDeletePost!,
                       isDestructive: true),
-                if (!userIsPoster)
-                  BottomSheetMenuItem(
-                      text: 'Report',
-                      icon: CupertinoIcons.exclamationmark_circle,
-                      isDestructive: true,
-                      onPressed: () => printLog('report this post')),
               ])),
     );
   }

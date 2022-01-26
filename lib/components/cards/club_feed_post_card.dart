@@ -5,9 +5,14 @@ import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/media/audio/inline_audio_player.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
+import 'package:sofie_ui/components/media/video/video_thumbnail_image.dart';
+import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/link_preview_display.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -25,8 +30,12 @@ class ClubFeedPostCard extends StatelessWidget {
 
   // Removes interactivity when [true].
   final bool isPreview;
+  // When displaying in the user's timeline we show a small icon to indicate that it is a Club post.
+  // Which enables them to click through to the club.
+  final bool showClubIcon;
   final VoidCallback? likeUnlikePost;
   final bool userHasLiked;
+  final VoidCallback? deletePost;
 
   const ClubFeedPostCard({
     Key? key,
@@ -34,6 +43,8 @@ class ClubFeedPostCard extends StatelessWidget {
     this.isPreview = false,
     this.likeUnlikePost,
     this.userHasLiked = false,
+    this.deletePost,
+    this.showClubIcon = false,
   }) : super(key: key);
 
   void _openDetailsPageByType(
@@ -52,19 +63,6 @@ class ClubFeedPostCard extends StatelessWidget {
         throw Exception(
             'ClubFeedPostCard._openDetailsPageByType: No method defined for $type.');
     }
-  }
-
-  // https://support.getstream.io/hc/en-us/articles/4404359414551-Deleting-Activities-with-Stream-Feeds-API-
-  // An activity explicitly added to a particular feed makes that feed the origin of the activity. An activity deleted from the origin is also deleted from all other feeds where it is found, either through fan-out or targeting. Deleting an activity from a feed that is not the origin of the activity, will delete it only from that feed.
-  /// When the activity is owned by the authed user we can delete the activity from their own [user_feed] (i.e. the origin feed). This will also remove the post from all timeline_feeds that follow it.
-  Future<void> _confirmDeleteActivity(
-      BuildContext context, String activityId) async {
-    context.showConfirmDeleteDialog(
-        itemType: 'Post',
-        message: 'This will delete the post from all timelines.',
-        onConfirm: () async {
-          print('delete activity via API');
-        });
   }
 
   Widget _buildReactionButtonsOrDisplay(
@@ -125,6 +123,26 @@ class ClubFeedPostCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10),
       );
 
+  Widget _buildClubIcon() => ContentBox(
+        borderRadius: 40,
+        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+        child: Row(
+          children: [
+            const Icon(
+              MyCustomIcons.clubsIcon,
+              color: Styles.primaryAccent,
+              size: 18,
+            ),
+            const SizedBox(width: 4),
+            MyText(
+              activity.extraData.club!.data.name ?? '',
+              size: FONTSIZE.two,
+              color: Styles.primaryAccent,
+            ),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
@@ -155,37 +173,41 @@ class ClubFeedPostCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    UserAvatar(
-                      size: 40,
-                      avatarUri: activity.actor.data.image,
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MyHeaderText(
-                          activity.extraData.title ?? 'Post',
-                          size: FONTSIZE.two,
-                          lineHeight: 1.3,
+                Expanded(
+                  child: Row(
+                    children: [
+                      UserAvatar(
+                        size: 40,
+                        avatarUri: activity.actor.data.image,
+                      ),
+                      const SizedBox(width: 10),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MyHeaderText(
+                              activity.extraData.title ?? 'Post',
+                              size: FONTSIZE.two,
+                              lineHeight: 1.3,
+                              maxLines: 2,
+                            ),
+                            const SizedBox(height: 4),
+                            MyText(
+                              activity.actor.data.name ?? '',
+                              size: FONTSIZE.two,
+                            ),
+                          ],
                         ),
-                        MyText(
-                          activity.actor.data.name ?? '',
-                          lineHeight: 1.4,
-                          size: FONTSIZE.two,
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
                 isPreview
                     ? const Icon(CupertinoIcons.ellipsis)
                     : _TimelinePostEllipsisMenu(
                         userIsCreator: userIsCreator,
                         userIsPoster: userIsPoster,
-                        handleDeletePost: () =>
-                            _confirmDeleteActivity(context, activity.id),
+                        handleDeletePost: deletePost?.call,
                         openDetailsPage: postType != null && objectId != null
                             ? () => _openDetailsPageByType(
                                 context, postType, objectId)
@@ -194,20 +216,24 @@ class ClubFeedPostCard extends StatelessWidget {
                       )
               ],
             ),
-            _buildCaption,
-            if (isSharedContent && postType != null && objectId != null)
-              GestureDetector(
-                  onTap: () =>
-                      _openDetailsPageByType(context, postType, objectId),
-                  child: _SharedContentDisplay(
-                    feedPostType: postType,
-                    activityExtraData: activity.extraData,
-                  )),
-            const SizedBox(height: 4),
+            if (Utils.textNotNull(activity.extraData.caption))
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 3.0, horizontal: 2),
+                child: _buildCaption,
+              ),
+            if (Utils.textNotNull(activity.extraData.articleUrl))
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 2),
+                child: LinkPreviewDisplay(
+                  url: activity.extraData.articleUrl!,
+                ),
+              ),
             if (!isSharedContent &&
                 Utils.textNotNull(activity.extraData.imageUrl))
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.all(4.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(6),
                   child: SizedBox(
@@ -218,26 +244,64 @@ class ClubFeedPostCard extends StatelessWidget {
                           imageUrl: activity.extraData.imageUrl!)),
                 ),
               ),
+            if (Utils.textNotNull(activity.extraData.audioUrl))
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: ContentBox(
+                  child: InlineAudioPlayer(
+                    audioUrl: activity.extraData.audioUrl!,
+                  ),
+                ),
+              ),
+            if (Utils.textNotNull(activity.extraData.videoUrl))
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: _FeedPostInlineVideo(
+                          videoUrl: activity.extraData.videoUrl!)),
+                ),
+              ),
+            if (isSharedContent && postType != null && objectId != null)
+              GestureDetector(
+                  onTap: () =>
+                      _openDetailsPageByType(context, postType, objectId),
+                  child: _SharedContentDisplay(
+                    feedPostType: postType,
+                    activityExtraData: activity.extraData,
+                  )),
+            const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildReactionButtonsOrDisplay(context, activity),
-                Row(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (originalPostId != null)
+                    if (showClubIcon && activity.extraData.club?.data != null)
                       Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: _buildInfoTag(
-                            context,
-                            'Re-Post',
-                          )),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: _buildInfoTag(context, activity.time.daysAgo),
-                    )
+                        padding: const EdgeInsets.only(right: 6.0, bottom: 3),
+                        child: _buildClubIcon(),
+                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (originalPostId != null)
+                          Padding(
+                              padding: const EdgeInsets.only(right: 6.0),
+                              child: _buildInfoTag(
+                                context,
+                                'Re-Post',
+                              )),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: _buildInfoTag(context, activity.time.daysAgo),
+                        )
+                      ],
+                    ),
                   ],
                 )
               ],
@@ -262,80 +326,6 @@ class ClubFeedPostCard extends StatelessWidget {
                 verticalPadding: 0,
                 color: context.theme.primary.withOpacity(0.2))
           ]),
-    );
-  }
-}
-
-class _SharedContentDisplay extends StatelessWidget {
-  final FeedPostType feedPostType;
-  final StreamActivityExtraData activityExtraData;
-  const _SharedContentDisplay(
-      {Key? key, required this.feedPostType, required this.activityExtraData})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final creatorName = activityExtraData.creator?.data.name;
-
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: ContentBox(
-          padding: const EdgeInsets.all(6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  if (Utils.textNotNull(activityExtraData.imageUrl))
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: SizedBox(
-                            height: 60,
-                            width: 60,
-                            child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: activityExtraData.imageUrl!)),
-                      ),
-                    ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4),
-                        child: Row(
-                          children: [
-                            Icon(
-                                FeedUtils.getFeedSharedContentIcon(
-                                    feedPostType),
-                                size: 19),
-                            const SizedBox(width: 8),
-                            MyHeaderText(
-                              kFeedPostTypeToDisplay[feedPostType]!,
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (creatorName != null)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4),
-                          child: MyText(
-                            'By $creatorName',
-                            weight: FontWeight.normal,
-                          ),
-                        ),
-                    ],
-                  ),
-                ],
-              ),
-              const Icon(CupertinoIcons.chevron_right)
-            ],
-          )),
     );
   }
 }
@@ -428,13 +418,100 @@ class _TimelinePostEllipsisMenu extends StatelessWidget {
                       icon: CupertinoIcons.delete_simple,
                       onPressed: handleDeletePost!,
                       isDestructive: true),
-                if (!userIsPoster)
-                  BottomSheetMenuItem(
-                      text: 'Report',
-                      icon: CupertinoIcons.exclamationmark_circle,
-                      isDestructive: true,
-                      onPressed: () => printLog('report this post')),
               ])),
+    );
+  }
+}
+
+class _SharedContentDisplay extends StatelessWidget {
+  final FeedPostType feedPostType;
+  final StreamActivityExtraData activityExtraData;
+  const _SharedContentDisplay(
+      {Key? key, required this.feedPostType, required this.activityExtraData})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final creatorName = activityExtraData.creator?.data.name;
+
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: ContentBox(
+          padding: const EdgeInsets.all(6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  if (Utils.textNotNull(activityExtraData.imageUrl))
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: SizedBox(
+                            height: 60,
+                            width: 60,
+                            child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: activityExtraData.imageUrl!)),
+                      ),
+                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4),
+                        child: Row(
+                          children: [
+                            Icon(
+                                FeedUtils.getFeedSharedContentIcon(
+                                    feedPostType),
+                                size: 19),
+                            const SizedBox(width: 8),
+                            MyHeaderText(
+                              kFeedPostTypeToDisplay[feedPostType]!,
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (creatorName != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4),
+                          child: MyText(
+                            'By $creatorName',
+                            weight: FontWeight.normal,
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+              const Icon(CupertinoIcons.chevron_right)
+            ],
+          )),
+    );
+  }
+}
+
+class _FeedPostInlineVideo extends StatelessWidget {
+  final String videoUrl;
+  const _FeedPostInlineVideo({Key? key, required this.videoUrl})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: () => VideoSetupManager.openFullScreenVideoFromUrl(
+          context: context, videoUrl: videoUrl, autoPlay: true),
+      child: VideoThumbnailImage(
+        videoUrl: videoUrl,
+        showPlayIcon: true,
+      ),
     );
   }
 }

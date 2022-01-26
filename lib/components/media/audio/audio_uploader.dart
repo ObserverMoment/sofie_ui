@@ -6,9 +6,10 @@ import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/indicators.dart';
-import 'package:sofie_ui/components/media/audio/audio_players.dart';
+import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/media/audio/mic_audio_recorder.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
@@ -46,16 +47,7 @@ class _AudioUploaderState extends State<AudioUploader> {
     try {
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: [
-          'wav',
-          'aiff',
-          'alac',
-          'flac',
-          'mp3',
-          'aac',
-          'wma',
-          'ogg'
-        ],
+        allowedExtensions: kAudioAllowedExtensions,
       );
 
       if (result != null && result.files.single.path != null) {

@@ -14,7 +14,6 @@ const kDefaultClubFeedPostVerb = 'post-club';
 const Map<String, FeedPostType> kStreamNameToFeedPostType = {
   'announcement': FeedPostType.announcement,
   'article': FeedPostType.article,
-  'video': FeedPostType.video,
   'workout': FeedPostType.workout,
   'workoutPlan': FeedPostType.workoutPlan,
   'loggedWorkout': FeedPostType.loggedWorkout,
@@ -23,7 +22,6 @@ const Map<String, FeedPostType> kStreamNameToFeedPostType = {
 const Map<FeedPostType, String> kFeedPostTypeToStreamName = {
   FeedPostType.announcement: 'announcement',
   FeedPostType.article: 'article',
-  FeedPostType.video: 'video',
   FeedPostType.workout: 'workout',
   FeedPostType.workoutPlan: 'workoutPlan',
   FeedPostType.loggedWorkout: 'loggedWorkout',
@@ -32,7 +30,6 @@ const Map<FeedPostType, String> kFeedPostTypeToStreamName = {
 const Map<FeedPostType, String> kFeedPostTypeToDisplay = {
   FeedPostType.announcement: 'Announcement',
   FeedPostType.article: 'Article',
-  FeedPostType.video: 'video',
   FeedPostType.workout: 'Workout',
   FeedPostType.workoutPlan: 'Plan',
   FeedPostType.loggedWorkout: 'Log',
@@ -96,6 +93,7 @@ class FeedUtils {
       ..tags = (extraData['tags'] != null && extraData['tags'] is List)
           ? (extraData['tags'] as List).map((o) => o.toString()).toList()
           : <String>[]
+      ..articleUrl = extraData['articleUrl'] as String?
       ..audioUrl = extraData['audioUrl'] as String?
       ..imageUrl = extraData['imageUrl'] as String?
       ..videoUrl = extraData['videoUrl'] as String?
@@ -115,11 +113,14 @@ class FeedUtils {
   }
 
   static StreamFeedClub? formatStreamFeedClub(CollectionEntry entry) {
-    if (entry.id == null || entry.data == null) return null;
+    /// TODO: The format of the [entry.data] object appears to have a nested data key inside it where the custom fields are being stored...seems a bit redundant so maybe we are creating the data incorrectly?
+    if (entry.id == null || entry.data?['data'] == null) return null;
+
+    final clubData = entry.data?['data'] as Map<String, dynamic>;
 
     final data = StreamFeedClubData()
-      ..name = (entry.data!['name'] as String?)
-      ..image = (entry.data!['image'] as String?);
+      ..name = clubData['name'] as String?
+      ..image = clubData['image'] as String?;
 
     return StreamFeedClub()
       ..id = entry.id!
@@ -127,6 +128,7 @@ class FeedUtils {
   }
 
   static String getObjectTypeFromRef(String ref) => ref.split(':')[0];
+
   static String? getObjectIdFromRef(String ref) {
     final parts = ref.split(':');
     if (parts.length > 1) {

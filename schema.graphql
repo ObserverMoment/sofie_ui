@@ -378,9 +378,9 @@ input CreateSkillInput {
 }
 
 input CreateStreamFeedActivityExtraDataInput {
+  articleUrl: String
   audioUrl: String
   caption: String
-  club: String
   creator: String
   imageUrl: String
   originalPostId: String
@@ -992,6 +992,7 @@ type SortPositionUpdated {
 }
 
 type StreamActivityExtraData {
+  articleUrl: String
   audioUrl: String
   caption: String
   club: StreamFeedClub

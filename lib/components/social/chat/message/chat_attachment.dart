@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/animated/custom_page_transitions.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/video/video_players.dart';
+import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
+import 'package:sofie_ui/components/media/video/video_thumbnail_image.dart';
 import 'package:sofie_ui/components/social/chat/media_viewers/chat_image_viewer.dart';
 import 'package:sofie_ui/components/social/chat/message/stream_message_types.dart';
 import 'package:sofie_ui/components/social/chat/utils.dart';
@@ -11,7 +11,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:video_player/video_player.dart';
 
 class ChatAttachment extends StatelessWidget {
   final Attachment attachment;
@@ -143,30 +142,6 @@ class ChatAttachmentVideo extends StatelessWidget {
     required this.alignment,
   }) : super(key: key);
 
-  /// Video url comes from a stream [Attachment.assetUrl]
-  Future<void> _openFullScreenChatVideo(
-      BuildContext context, String videoUrl) async {
-    final controller = VideoPlayerController.network(videoUrl);
-    await controller.initialize();
-
-    final isPortrait = controller.value.aspectRatio < 1;
-
-    if (isPortrait) {
-      await Navigator.of(context).push(PortraitVideoEmergingPageRoute(
-          page: PortraitFullScreenVideoPlayer(
-        controller: controller,
-      )));
-    } else {
-      await Navigator.of(context).push(LandscapeVideoRotatingPageRoute(
-          page: LandscapeFullScreenVideoPlayer(
-        controller: controller,
-      )));
-    }
-
-    /// Dispose of the controller once user is finished.
-    await controller.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     if (!Utils.textNotNull(attachment.assetUrl)) {
@@ -183,34 +158,29 @@ class ChatAttachmentVideo extends StatelessWidget {
     }
 
     return isInQuotedMessage
-        ? const SizedBox(
+        ? SizedBox(
             height: 50,
-            child: Icon(CupertinoIcons.tv),
+            child: VideoThumbnailImage(
+              videoUrl: attachment.assetUrl!,
+            ),
           )
         : Align(
             alignment: alignment,
             child: Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
-                child: GestureDetector(
-                  onTap: () =>
-                      _openFullScreenChatVideo(context, attachment.assetUrl!),
-                  child: ContentBox(
-                    backgroundColor: context.theme.modalBackground,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 12),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          CupertinoIcons.tv,
-                          size: 40,
-                        ),
-                        SizedBox(width: 8),
-                        Icon(
-                          CupertinoIcons.chevron_right,
-                          size: 32,
-                        ),
-                      ],
+                child: SizedBox(
+                  height: 180,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: CupertinoButton(
+                      onPressed: () =>
+                          VideoSetupManager.openFullScreenVideoFromUrl(
+                              context: context,
+                              videoUrl: attachment.assetUrl!,
+                              autoPlay: true),
+                      padding: EdgeInsets.zero,
+                      child: VideoThumbnailImage(
+                          videoUrl: attachment.assetUrl!, showPlayIcon: true),
                     ),
                   ),
                 )),

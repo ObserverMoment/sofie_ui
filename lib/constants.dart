@@ -168,3 +168,15 @@ const kLinkedinBaseUrl = 'https://www.linkedin.com/in';
 const kYoutubeBaseUrl = 'https://www.youtube.com';
 const kTiktokBaseUrl = 'https://www.tiktok.com';
 const kInstagramBaseUrl = 'https://www.instagram.com';
+
+//// Media File Type Extensions ////
+const kAudioAllowedExtensions = [
+  'wav',
+  'aiff',
+  'alac',
+  'flac',
+  'mp3',
+  'aac',
+  'wma',
+  'ogg'
+];

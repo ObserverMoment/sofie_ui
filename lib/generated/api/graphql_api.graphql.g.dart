@@ -5316,6 +5316,7 @@ StreamActivityExtraData _$StreamActivityExtraDataFromJson(
       ..title = json['title'] as String?
       ..caption = json['caption'] as String?
       ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
+      ..articleUrl = json['articleUrl'] as String?
       ..audioUrl = json['audioUrl'] as String?
       ..imageUrl = json['imageUrl'] as String?
       ..videoUrl = json['videoUrl'] as String?
@@ -5333,6 +5334,7 @@ Map<String, dynamic> _$StreamActivityExtraDataToJson(
       'title': instance.title,
       'caption': instance.caption,
       'tags': instance.tags,
+      'articleUrl': instance.articleUrl,
       'audioUrl': instance.audioUrl,
       'imageUrl': instance.imageUrl,
       'videoUrl': instance.videoUrl,
@@ -6090,9 +6092,9 @@ CreateStreamFeedActivityExtraDataInput
     _$CreateStreamFeedActivityExtraDataInputFromJson(
             Map<String, dynamic> json) =>
         CreateStreamFeedActivityExtraDataInput(
+          articleUrl: json['articleUrl'] as String?,
           audioUrl: json['audioUrl'] as String?,
           caption: json['caption'] as String?,
-          club: json['club'] as String?,
           creator: json['creator'] as String?,
           imageUrl: json['imageUrl'] as String?,
           originalPostId: json['originalPostId'] as String?,
@@ -6105,9 +6107,9 @@ CreateStreamFeedActivityExtraDataInput
 Map<String, dynamic> _$CreateStreamFeedActivityExtraDataInputToJson(
         CreateStreamFeedActivityExtraDataInput instance) =>
     <String, dynamic>{
+      'articleUrl': instance.articleUrl,
       'audioUrl': instance.audioUrl,
       'caption': instance.caption,
-      'club': instance.club,
       'creator': instance.creator,
       'imageUrl': instance.imageUrl,
       'originalPostId': instance.originalPostId,

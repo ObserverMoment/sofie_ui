@@ -7,14 +7,7 @@ class FollowWithUserAvatarData {
   const FollowWithUserAvatarData(this.follow, this.userAvatarData);
 }
 
-enum FeedPostType {
-  announcement,
-  article,
-  video,
-  workout,
-  workoutPlan,
-  loggedWorkout
-}
+enum FeedPostType { announcement, article, workout, workoutPlan, loggedWorkout }
 
 // /// Return data type.
 // /// Comes back in from Stream API with enriched data.

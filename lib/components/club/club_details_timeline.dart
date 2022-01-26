@@ -5,7 +5,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/club_feed_post_card.dart';
-import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -62,7 +61,6 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
     }
   }
 
-  /// TODO: Upgrade this polling functionality to use a websocket.
   void _initPollingForNewPosts() {
     _pollingTimer =
         Timer.periodic(const Duration(seconds: 30), (Timer t) async {
@@ -124,7 +122,8 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   bool _prependNewPosts(List<StreamEnrichedActivity> posts) {
     /// Check for new posts.
     final prevPosts = _pagingController.itemList ?? [];
-    final newPosts = posts.where((p) => !prevPosts.contains(p));
+    final prevPostIds = prevPosts.map((p) => p.id).toList();
+    final newPosts = posts.where((p) => !prevPostIds.contains(p.id));
 
     /// Prepend new posts.
     _pagingController.itemList = [...newPosts, ...prevPosts];
@@ -231,6 +230,9 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ClubFeedPostCard(
                               activity: activity,
+                              deletePost: widget.isOwnerOrAdmin
+                                  ? () => _deleteActivityById(context, activity)
+                                  : null,
                             )),
                       ),
                       firstPageErrorIndicatorBuilder: (context) => MyText(

@@ -644,6 +644,7 @@ mixin StreamActivityExtraDataMixin {
   String? title;
   String? caption;
   late List<String> tags;
+  String? articleUrl;
   String? audioUrl;
   String? imageUrl;
   String? videoUrl;
@@ -6785,6 +6786,7 @@ class StreamActivityExtraData extends JsonSerializable
         title,
         caption,
         tags,
+        articleUrl,
         audioUrl,
         imageUrl,
         videoUrl,
@@ -7753,9 +7755,9 @@ class CreateStreamFeedActivityInput extends JsonSerializable
 class CreateStreamFeedActivityExtraDataInput extends JsonSerializable
     with EquatableMixin {
   CreateStreamFeedActivityExtraDataInput(
-      {this.audioUrl,
+      {this.articleUrl,
+      this.audioUrl,
       this.caption,
-      this.club,
       this.creator,
       this.imageUrl,
       this.originalPostId,
@@ -7767,11 +7769,11 @@ class CreateStreamFeedActivityExtraDataInput extends JsonSerializable
           Map<String, dynamic> json) =>
       _$CreateStreamFeedActivityExtraDataInputFromJson(json);
 
+  String? articleUrl;
+
   String? audioUrl;
 
   String? caption;
-
-  String? club;
 
   String? creator;
 
@@ -7787,9 +7789,9 @@ class CreateStreamFeedActivityExtraDataInput extends JsonSerializable
 
   @override
   List<Object?> get props => [
+        articleUrl,
         audioUrl,
         caption,
-        club,
         creator,
         imageUrl,
         originalPostId,
@@ -44116,6 +44118,12 @@ final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'articleUrl'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'audioUrl'),
             alias: null,
             arguments: [],
@@ -49855,6 +49863,12 @@ final CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'articleUrl'),
             alias: null,
             arguments: [],
             directives: [],

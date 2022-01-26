@@ -318,7 +318,14 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: activity.extraData.club != null
-                              ? ClubFeedPostCard(activity: activity)
+                              ? ClubFeedPostCard(
+                                  activity: activity,
+                                  showClubIcon: true,
+                                  likeUnlikePost: () =>
+                                      _likeUnlikePost(activity.id),
+                                  userHasLiked:
+                                      likedPostIds.contains(activity.id),
+                                )
                               : FeedPostCard(
                                   likeUnlikePost: () =>
                                       _likeUnlikePost(activity.id),

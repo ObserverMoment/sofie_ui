@@ -6,6 +6,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/post_creator/share_object_type_selector_button.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
@@ -32,6 +33,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   late AuthedUser _authedUser;
 
   late FlatFeed _feed;
+  late StreamFeedClient _streamFeedClient;
 
   /// A stream User ref. Make sure format is correct by using [StreamUser.ref].
   /// [context.streamFeedClient.currentUser!.ref].
@@ -51,9 +53,10 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
     super.initState();
     _authedUser = GetIt.I<AuthBloc>().authedUser!;
 
-    _feed = context.streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
+    _streamFeedClient = context.streamFeedClient;
+    _feed = _streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
 
-    _actor = context.streamFeedClient.currentUser!.ref;
+    _actor = _streamFeedClient.currentUser!.ref;
 
     _titleController.addListener(() {
       setState(() {
@@ -105,7 +108,8 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
         verb: kDefaultFeedPostVerb,
         object: '${kFeedPostTypeToStreamName[type]}:$objectId',
         extraData: CreateStreamFeedActivityExtraDataInput(
-          creator: 'SU:$creatorId',
+          creator:
+              creatorId != null ? _streamFeedClient.user(creatorId).ref : null,
           title: objectName,
           tags: [],
           imageUrl:
@@ -165,11 +169,14 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
         _loading = true;
       });
 
+      final extraData = _activity!.extraData.toJson();
+      extraData.removeWhere((key, value) => value == null);
+
       final activity = Activity(
         actor: _activity!.actor,
         object: _activity!.object,
         verb: _activity!.verb,
-        extraData: Map<String, Object>.from(_activity!.extraData.toJson()),
+        extraData: Map<String, Object>.from(extraData),
       );
 
       try {
@@ -204,9 +211,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
         navigationBar: MyNavBar(
           middle: const NavBarTitle('New Post'),
           trailing: _loading
-              ? const CupertinoActivityIndicator(
-                  radius: 14,
-                )
+              ? const NavBarActivityIndicator()
               : (_activity != null)
                   ? FadeInUp(
                       child: NavBarTrailingRow(children: [
