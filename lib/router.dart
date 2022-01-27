@@ -8,8 +8,8 @@ import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creat
 import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
-import 'package:sofie_ui/components/creators/post_creator/club_post_creator.dart';
-import 'package:sofie_ui/components/creators/post_creator/post_creator.dart';
+import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
+import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
@@ -18,8 +18,8 @@ import 'package:sofie_ui/components/do_workout/do_workout_wrapper_page.dart';
 import 'package:sofie_ui/components/profile/user_public_content/profile_public_workout_plans.dart';
 import 'package:sofie_ui/components/profile/user_public_content/profile_public_workouts.dart';
 import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
-import 'package:sofie_ui/components/social/chat/club_members_chat_page.dart';
-import 'package:sofie_ui/components/social/chat/one_to_one_chat_page.dart';
+import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
+import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
 import 'package:sofie_ui/components/workout/workout_finders/public/public_workout_finder_page.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart';
@@ -77,11 +77,11 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
             AutoRoute(
               path: '',
-              page: DiscoverPage,
+              page: SocialPage,
             ),
             AutoRoute(
-              path: 'social',
-              page: SocialPage,
+              path: 'discover',
+              page: DiscoverPage,
             ),
             AutoRoute(path: 'studio', page: HomePage),
             AutoRoute(
@@ -164,8 +164,8 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/journal-mood', page: JournalMoodCreatorPage),
           AutoRoute(
               path: 'create/personal-best', page: PersonalBestCreatorPage),
-          AutoRoute(path: 'create/post', page: PostCreatorPage),
-          AutoRoute(path: 'create/club-post', page: ClubPostCreatorPage),
+          AutoRoute(path: 'create/post', page: FeedPostCreatorPage),
+          AutoRoute(path: 'create/club-post', page: ClubFeedPostCreatorPage),
           AutoRoute(
               path: 'create/scheduled-workout',
               page: ScheduledWorkoutCreatorPage),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
-import 'package:sofie_ui/components/social/feeds_and_follows/timeline_and_feed.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/timeline_and_feed_archived.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -88,7 +88,7 @@ class _AuthedUserFollowersState extends State<AuthedUserFollowers> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: MyCupertinoSearchTextField(
               placeholder: 'Search your followers',
               onChanged: (t) => setState(() => _searchString = t)),

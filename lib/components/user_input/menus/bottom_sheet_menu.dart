@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/page_transitions.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class BottomSheetMenuItem {
@@ -43,37 +44,37 @@ class BottomSheetMenu extends StatelessWidget {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(28.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (header != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (header != null)
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 6.0),
-                        child: header,
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              if (header != null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (header != null)
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: header,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
+              ...items
+                  .map((i) => BottomSheetMenuItemContainer(
+                        i,
+                      ))
+                  .toList(),
+              const SizedBox(height: 8),
+              TextButton(
+                text: 'Cancel',
+                onPressed: context.pop,
+                fontSize: FONTSIZE.four,
               ),
-            Container(
-              padding: const EdgeInsets.only(top: 12.0, bottom: 12),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: items.length,
-                  itemBuilder: (context, index) => BottomSheetMenuItemContainer(
-                        items[index],
-                      )),
-            ),
-            TextButton(
-              text: 'Cancel',
-              onPressed: context.pop,
-              fontSize: FONTSIZE.four,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -159,37 +160,4 @@ class BottomSheetMenuItemContainer extends StatelessWidget {
       ]),
     );
   }
-}
-
-class BottomSheetAnimateInPageRoute extends PageRouteBuilder {
-  final Widget page;
-  BottomSheetAnimateInPageRoute({
-    required this.page,
-  }) : super(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) =>
-                page,
-            transitionsBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-              Widget child,
-            ) =>
-                SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 1.0),
-                    end: Offset.zero,
-                  ).animate(
-                    CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                  ),
-                  child: FadeTransition(
-                    opacity: Tween<double>(begin: 0, end: 1.0).animate(
-                        CurvedAnimation(
-                            parent: animation, curve: Curves.easeIn)),
-                    child: child,
-                  ),
-                ));
 }

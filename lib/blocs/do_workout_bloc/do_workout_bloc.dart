@@ -8,13 +8,14 @@ import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_contr
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/timed_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
-import 'package:sofie_ui/components/media/audio/audio_players.dart';
+import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/audio_session_manager.dart';
 import 'package:sofie_ui/services/data_utils.dart';
+import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:uuid/uuid.dart';
@@ -132,7 +133,8 @@ class DoWorkoutBloc extends ChangeNotifier {
         await Future.wait(activeWorkout.workoutSections.map((section) async {
       if (Utils.textNotNull(section.classAudioUri)) {
         final player = await AudioPlayerController.init(
-            audioUri: section.classAudioUri!, player: AudioPlayer());
+            audioUrl: UploadcareService.getFileUrl(section.classAudioUri!)!,
+            player: AudioPlayer());
 
         return player;
       } else {
@@ -504,9 +506,13 @@ class DoWorkoutBloc extends ChangeNotifier {
 
   /// Modify Section, Set and Move methods END////
   ////////////////////////////////////////////////
+
   CreateLoggedWorkoutInput generateLogInputData() {
     CreateLoggedWorkoutInput loggedWorkoutInput = CreateLoggedWorkoutInput(
       completedOn: DateTime.now(),
+      scheduledWorkout: scheduledWorkout != null
+          ? ConnectRelationInput(id: scheduledWorkout!.id)
+          : null,
       gymProfile: scheduledWorkout?.gymProfile != null
           ? ConnectRelationInput(id: scheduledWorkout!.gymProfile!.id)
           : null,

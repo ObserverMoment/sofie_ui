@@ -1,5 +1,0 @@
-mutation updateClubAnnouncement($data: UpdateClubAnnouncementInput!) {
-  updateClubAnnouncement(data: $data) {
-    ...ClubAnnouncement
-  }
-}

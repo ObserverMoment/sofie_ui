@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/media/audio/audio_players.dart';
+import 'package:sofie_ui/components/media/audio/inline_audio_player.dart';
 import 'package:sofie_ui/components/media/audio/mic_audio_recorder.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -304,7 +304,7 @@ class _VoiceNoteTile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 24.0),
             child: InlineAudioPlayer(
-              audioUri: note.voiceNoteUri!,
+              audioUrl: UploadcareService.getFileUrl(note.voiceNoteUri!)!,
               layout: Axis.vertical,
               buttonSize: 50,
             ),

@@ -217,7 +217,7 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
             padding: const EdgeInsets.only(left: 4.0),
             child: NavBarCancelButton(context.pop, text: 'Cancel'),
           ),
-          middle: NavBarLargeTitle(widget.title),
+          middle: NavBarTitle(widget.title),
           trailing: _formIsDirty && _inputIsValid()
               ? FadeIn(
                   child: TertiaryButton(

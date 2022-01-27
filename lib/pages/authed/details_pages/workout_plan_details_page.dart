@@ -224,6 +224,8 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
     final query = WorkoutPlanByIdQuery(
         variables: WorkoutPlanByIdArguments(id: widget.id));
 
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return QueryObserver<WorkoutPlanById$Query, WorkoutPlanByIdArguments>(
         key: Key('WorkoutPlanDetails - ${query.operationName}-${widget.id}'),
         query: query,
@@ -318,11 +320,12 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                       ),
                     ),
                     child: FABPage(
-                      columnButtons: [
+                      rowButtons: [
                         FloatingButton(
+                          width: screenWidth * 0.8,
                           text: enrolmentInPlan != null
-                              ? 'View Progress'
-                              : 'Join Plan',
+                              ? 'VIEW PROGRESS'
+                              : 'JOIN PLAN',
                           icon: enrolmentInPlan != null
                               ? CupertinoIcons.chart_bar_square
                               : CupertinoIcons.plus,

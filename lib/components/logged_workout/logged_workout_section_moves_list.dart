@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/logged_workout/logged_workout_move_display.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:supercharged/supercharged.dart';
 
 /// Read only log moves list - lap / split times.
+/// Most code is duplicated in [LoggedWorkoutCreatorSectionMovesList].
 class LoggedWorkoutSectionMovesList extends StatefulWidget {
   final LoggedWorkoutSection loggedWorkoutSection;
   const LoggedWorkoutSectionMovesList(
@@ -173,7 +174,7 @@ class _SingleSetData extends StatelessWidget {
           .map(
             (lwm) => Padding(
               padding: const EdgeInsets.only(top: 6, bottom: 6.0),
-              child: _LoggedWorkoutMoveDisplay(
+              child: LoggedWorkoutMoveDisplay(
                 loggedWorkoutMove: lwm,
                 loggedWorkoutSet: loggedWorkoutSet,
                 workoutSectionType: workoutSectionType,
@@ -182,26 +183,6 @@ class _SingleSetData extends StatelessWidget {
           )
           .toList(),
     );
-  }
-}
-
-class _LoggedWorkoutMoveDisplay extends StatelessWidget {
-  final WorkoutSectionType workoutSectionType;
-  final LoggedWorkoutSet loggedWorkoutSet;
-  final LoggedWorkoutMove loggedWorkoutMove;
-  const _LoggedWorkoutMoveDisplay(
-      {Key? key,
-      required this.loggedWorkoutMove,
-      required this.workoutSectionType,
-      required this.loggedWorkoutSet})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return generateLoggedWorkoutMoveDisplay(
-        loggedWorkoutMove: loggedWorkoutMove,
-        loggedWorkoutSet: loggedWorkoutSet,
-        workoutSectionType: workoutSectionType);
   }
 }
 

@@ -11,7 +11,7 @@ import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section_modifications.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_settings.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/audio/audio_players.dart';
+import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';

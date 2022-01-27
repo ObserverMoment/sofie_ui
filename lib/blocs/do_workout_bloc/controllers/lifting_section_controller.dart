@@ -95,6 +95,8 @@ class LiftingSectionController extends WorkoutSectionController
     final completedSets = activeWorkoutSection.workoutSets
         .where((wSet) => completedWorkoutSetIds.contains(wSet.id));
 
+    final completedSetIds = completedSets.map((s) => s.id).toList();
+
     final completedSetInputs = completedSets
         .map((wSet) => CreateLoggedWorkoutSetInLoggedWorkoutSectionInput(
             sectionRoundNumber: 0,
@@ -105,10 +107,13 @@ class LiftingSectionController extends WorkoutSectionController
                 .toList()))
         .toList();
 
+    /// Any non completed set where at least one of its workout moves is in [completedWorkoutMoveIds].
     final partiallyCompletedSets = activeWorkoutSection.workoutSets.where(
-        (wSet) => wSet.workoutMoves
-            .map((wMove) => wMove.id)
-            .any((id) => completedWorkoutMoveIds.contains(id)));
+        (wSet) =>
+            !completedSetIds.contains(wSet.id) &&
+            wSet.workoutMoves
+                .map((wMove) => wMove.id)
+                .any((id) => completedWorkoutMoveIds.contains(id)));
 
     final partiallyCompletedSetInputs = partiallyCompletedSets
         .map((wSet) => CreateLoggedWorkoutSetInLoggedWorkoutSectionInput(

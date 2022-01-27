@@ -135,12 +135,6 @@ class _MoveSelectorState extends State<MoveSelector> {
                     ),
                     child: FABPage(
                       rowButtonsAlignment: MainAxisAlignment.end,
-                      columnButtons: [
-                        FloatingButton(
-                            icon: CupertinoIcons.add,
-                            onTap: () =>
-                                context.navigateTo(CustomMoveCreatorRoute())),
-                      ],
                       rowButtons: [
                         if (moveFiltersBloc.hasActiveFilters)
                           Padding(
@@ -160,6 +154,11 @@ class _MoveSelectorState extends State<MoveSelector> {
                                 ? null
                                 : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
                             icon: CupertinoIcons.slider_horizontal_3),
+                        const SizedBox(width: 12),
+                        FloatingButton(
+                            icon: CupertinoIcons.add,
+                            onTap: () =>
+                                context.navigateTo(CustomMoveCreatorRoute())),
                       ],
                       child: Column(
                         children: [

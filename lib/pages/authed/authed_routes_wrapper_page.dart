@@ -32,7 +32,6 @@ class AuthedRoutesWrapperPage extends StatefulWidget {
 class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   late AuthedUser _authedUser;
   late chat.StreamChatClient _streamChatClient;
-  late chat.OwnUser _streamChatUser;
   bool _chatInitialized = false;
 
   late feed.StreamFeedClient _streamFeedClient;
@@ -69,18 +68,18 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       chat.StreamChatClient(EnvironmentConfig.getStreamPublicKey,
           location: chat.Location.euWest, logLevel: feed.Level.WARNING);
 
+  feed.StreamFeedClient get _createStreamFeedClient => feed.StreamFeedClient(
+        EnvironmentConfig.getStreamPublicKey,
+        appId: EnvironmentConfig.getStreamAppId,
+        logLevel: feed.Level.WARNING,
+      );
+
   Future<void> _connectUserToChat() async {
     try {
-      _streamChatUser = await _streamChatClient.connectUser(
+      await _streamChatClient.connectUser(
         chat.User(id: _authedUser.id),
         _authedUser.streamChatToken,
       );
-
-      /// Add the users device to Stream backend.
-      /// https://getstream.io/chat/docs/sdk/flutter/guides/adding_push_notifications/#registering-a-device-at-stream-backend
-      // FirebaseMessaging.instance.onTokenRefresh.listen((token) {
-      //   _streamChatClient.addDevice(token, PushProvider.firebase);
-      // });
 
       _chatInitialized = true;
     } catch (e) {
@@ -89,15 +88,6 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       context.showToast(message: "Oops, couldn't initialize chat! $e");
     }
   }
-
-  feed.StreamFeedClient get _createStreamFeedClient => feed.StreamFeedClient(
-        EnvironmentConfig.getStreamPublicKey,
-        appId: EnvironmentConfig.getStreamAppId,
-        logLevel: feed.Level.WARNING,
-        token: feed.Token(
-          _authedUser.streamFeedToken,
-        ),
-      );
 
   Future<void> _initFeeds() async {
     try {
@@ -193,22 +183,19 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     return _chatInitialized &&
             _feedsInitialized &&
             _incomingLinkStreamInitialized
-        ? MultiProvider(
-            providers: [
-              Provider<chat.StreamChatClient>.value(
-                value: _streamChatClient,
-              ),
-              Provider<chat.OwnUser>.value(
-                value: _streamChatUser,
-              ),
-              Provider<feed.StreamFeedClient>.value(
-                value: _streamFeedClient,
-              ),
-              Provider<NotificationFeed>.value(
-                value: _notificationFeed,
-              ),
-            ],
-            child: const AutoRouter(),
+        ? chat.StreamChatCore(
+            client: _streamChatClient,
+            child: MultiProvider(
+              providers: [
+                Provider<feed.StreamFeedClient>.value(
+                  value: _streamFeedClient,
+                ),
+                Provider<NotificationFeed>.value(
+                  value: _notificationFeed,
+                ),
+              ],
+              child: const AutoRouter(),
+            ),
           )
         : const _LoadingPage();
   }

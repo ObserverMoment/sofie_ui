@@ -5,7 +5,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 enum FilterMenuType { tag, collection }
 
@@ -72,7 +71,6 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
         ? Container()
         : PopoverMenu(
             button: FABPageButtonContainer(
-              color: context.theme.fabBackground,
               child: Row(
                 children: [
                   if (filterMenuType == FilterMenuType.tag)
@@ -81,12 +79,12 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
                         child: selectedTag == null
                             ? Row(
                                 children: const [
-                                  MyText('Tags'),
-                                  SizedBox(width: 8),
                                   Icon(
                                     CupertinoIcons.tag,
                                     size: 16,
-                                  )
+                                  ),
+                                  SizedBox(width: 8),
+                                  MyText('Tags'),
                                 ],
                               )
                             : Row(
@@ -102,12 +100,12 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
                         child: selectedCollection == null
                             ? Row(
                                 children: const [
-                                  MyText('Collections'),
-                                  SizedBox(width: 8),
                                   Icon(
                                     CupertinoIcons.collections,
                                     size: 16,
-                                  )
+                                  ),
+                                  SizedBox(width: 8),
+                                  MyText('Collections'),
                                 ],
                               )
                             : Row(

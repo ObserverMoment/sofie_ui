@@ -13,7 +13,7 @@ import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/logged_workout/log_count_by_workout.dart';
-import 'package:sofie_ui/components/media/audio/audio_players.dart';
+import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
@@ -221,6 +221,8 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
     final workoutByIdQuery =
         WorkoutByIdQuery(variables: WorkoutByIdArguments(id: widget.id));
 
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return QueryObserver<WorkoutById$Query, WorkoutByIdArguments>(
         key: Key(
             'WorkoutDetailsPage - ${workoutByIdQuery.operationName}-${widget.id}'),
@@ -325,10 +327,11 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                       ),
                     ),
                     child: FABPage(
-                        columnButtons: [
+                        rowButtons: [
                           FloatingButton(
                             icon: CupertinoIcons.arrow_right_square,
-                            text: 'Do Workout',
+                            text: 'START WORKOUT',
+                            width: screenWidth * 0.8,
                             onTap: () => context.navigateTo(
                                 DoWorkoutWrapperRoute(
                                     id: widget.id,

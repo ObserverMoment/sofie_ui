@@ -40,6 +40,17 @@ extension DateTimeExtension on DateTime {
 
   String get monthAbbrev => DateFormat('MMM').format(this);
 
+  String get timeAgo {
+    final diff = DateTime.now().difference(this);
+    if (diff.inDays > 1) {
+      return '${diff.inDays}d';
+    } else if (diff.inHours > 1) {
+      return '${diff.inHours}h';
+    } else {
+      return '${diff.inMinutes}m';
+    }
+  }
+
   String get daysAgo => isToday
       ? 'Today'
       : isYesterday

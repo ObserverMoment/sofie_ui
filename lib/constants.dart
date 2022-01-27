@@ -140,8 +140,9 @@ const String kUserNotificationName =
     'user_notification'; // System notifications
 const String kClubMembersFeedName =
     'club_members_feed'; // Club members can follow this (optionally) with their timeline.
+
 const String kLikeReactionName = 'like'; // Activity reaction type.
-const String kShareReactionName = 'share'; // Activity reaction type.
+const String kCommentReactionName = 'comment'; // Activity reaction type.
 
 /// Hive
 const String kSettingsHiveBoxName = 'settings_box';
@@ -168,3 +169,15 @@ const kLinkedinBaseUrl = 'https://www.linkedin.com/in';
 const kYoutubeBaseUrl = 'https://www.youtube.com';
 const kTiktokBaseUrl = 'https://www.tiktok.com';
 const kInstagramBaseUrl = 'https://www.instagram.com';
+
+//// Media File Type Extensions ////
+const kAudioAllowedExtensions = [
+  'wav',
+  'aiff',
+  'alac',
+  'flac',
+  'mp3',
+  'aac',
+  'wma',
+  'ogg'
+];

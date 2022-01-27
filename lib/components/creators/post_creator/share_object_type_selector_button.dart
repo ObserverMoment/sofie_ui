@@ -29,25 +29,23 @@ class ShareObjectTypeSelectorButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(80)),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(60),
+            ClipOval(
               child: SizedBox(
-                height: 90,
-                width: 90,
+                height: 70,
+                width: 70,
                 child: Image.asset(
                   assetImageUri,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MyHeaderText(
                     title,
-                    size: FONTSIZE.four,
                     lineHeight: 1.4,
                   ),
                   MyText(

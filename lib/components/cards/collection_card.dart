@@ -1,12 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class CollectionCard extends StatelessWidget {
   final Collection collection;
@@ -39,11 +37,14 @@ class CollectionCard extends StatelessWidget {
             width: 80,
             child: selectedImageUri != null
                 ? SizedUploadcareImage(selectedImageUri)
-                : Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SvgPicture.asset(
-                      'assets/logos/sofie_logo.svg',
-                      color: context.theme.primary,
+                : const Opacity(
+                    opacity: 0.7,
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Icon(
+                        CupertinoIcons.square_stack_3d_down_right_fill,
+                        size: 46,
+                      ),
                     ),
                   ),
           ),
