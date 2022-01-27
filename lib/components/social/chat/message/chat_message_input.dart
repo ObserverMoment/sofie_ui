@@ -210,6 +210,12 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
   }
 
   @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final indicatorWidth = MediaQuery.of(context).size.width * 0.4;
 

@@ -11,13 +11,13 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_image.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/feed_post_reactions.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/link_preview_display.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -65,45 +65,6 @@ class ClubFeedPostCard extends StatelessWidget {
     }
   }
 
-  Widget _buildReactionButtonsOrDisplay(
-      BuildContext context, StreamEnrichedActivity activity) {
-    final likesCount = activity.reactionCounts?.likes ?? 0;
-
-    return Row(
-      children: [
-        if (likeUnlikePost != null)
-          _buildReactionButton(
-              inactiveIconData: CupertinoIcons.heart,
-              activeIconData: CupertinoIcons.heart_fill,
-              onPressed: likeUnlikePost!,
-              active: userHasLiked),
-      ],
-    );
-  }
-
-  Widget _buildReactionButton(
-          {required IconData inactiveIconData,
-          required IconData activeIconData,
-          required VoidCallback onPressed,
-          required bool active}) =>
-      CupertinoButton(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          onPressed: isPreview ? null : onPressed,
-          child: AnimatedSwitcher(
-            duration: kStandardAnimationDuration,
-            child: active
-                ? Icon(
-                    activeIconData,
-                    color: Styles.primaryAccent,
-                  )
-                : Opacity(
-                    opacity: 0.6,
-                    child: Icon(
-                      inactiveIconData,
-                    ),
-                  ),
-          ));
-
   Widget get _buildCaption => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Padding(
@@ -130,14 +91,12 @@ class ClubFeedPostCard extends StatelessWidget {
           children: [
             const Icon(
               MyCustomIcons.clubsIcon,
-              color: Styles.primaryAccent,
               size: 18,
             ),
             const SizedBox(width: 4),
             MyText(
               activity.extraData.club!.data.name ?? '',
               size: FONTSIZE.two,
-              color: Styles.primaryAccent,
             ),
           ],
         ),
@@ -176,6 +135,7 @@ class ClubFeedPostCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
+                      const SizedBox(width: 8),
                       UserAvatar(
                         size: 40,
                         avatarUri: activity.actor.data.image,
@@ -255,13 +215,10 @@ class ClubFeedPostCard extends StatelessWidget {
               ),
             if (Utils.textNotNull(activity.extraData.videoUrl))
               Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: _FeedPostInlineVideo(
-                          videoUrl: activity.extraData.videoUrl!)),
-                ),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: _FeedPostInlineVideo(
+                        videoUrl: activity.extraData.videoUrl!)),
               ),
             if (isSharedContent && postType != null && objectId != null)
               GestureDetector(
@@ -275,7 +232,13 @@ class ClubFeedPostCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildReactionButtonsOrDisplay(context, activity),
+                FeedPostReactions(
+                  userIsPoster: userIsPoster,
+                  activity: activity,
+                  isPreview: isPreview,
+                  userHasLiked: userHasLiked,
+                  likeUnlikePost: likeUnlikePost,
+                ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -308,7 +271,7 @@ class ClubFeedPostCard extends StatelessWidget {
             ),
             if (activity.extraData.tags.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Wrap(
                   spacing: 5,
                   runSpacing: 5,
@@ -511,6 +474,7 @@ class _FeedPostInlineVideo extends StatelessWidget {
       child: VideoThumbnailImage(
         videoUrl: videoUrl,
         showPlayIcon: true,
+        width: double.infinity,
       ),
     );
   }

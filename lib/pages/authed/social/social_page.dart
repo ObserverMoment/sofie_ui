@@ -45,7 +45,7 @@ class _SocialPageState extends State<SocialPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MyPageScaffold(
+    return CupertinoPageScaffold(
       navigationBar: MyNavBar(
         withoutLeading: true,
         trailing: NavBarTrailingRow(

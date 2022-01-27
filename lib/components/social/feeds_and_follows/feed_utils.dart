@@ -58,11 +58,11 @@ class FeedUtils {
       EnrichedActivity a) {
     if (checkActivityDataIsCorrect(a)) {
       final likes = a.reactionCounts?[kLikeReactionName] ?? 0;
-      final shares = a.reactionCounts?[kShareReactionName] ?? 0;
+      final comments = a.reactionCounts?[kCommentReactionName] ?? 0;
 
       final reactionCounts = StreamActivityReactionCounts()
         ..likes = likes
-        ..shares = shares;
+        ..comments = comments;
 
       return StreamEnrichedActivity()
         ..id = a.id!

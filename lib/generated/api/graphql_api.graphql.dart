@@ -638,7 +638,7 @@ mixin ScheduledWorkoutMixin {
 }
 mixin StreamActivityReactionCountsMixin {
   int? likes;
-  int? shares;
+  int? comments;
 }
 mixin StreamActivityExtraDataMixin {
   String? title;
@@ -658,6 +658,7 @@ mixin StreamEnrichedActivityMixin {
       fromJson: fromGraphQLDateTimeToDartDateTime,
       toJson: fromDartDateTimeToGraphQLDateTime)
   late DateTime time;
+  String? userLikeReactionId;
 }
 mixin WorkoutMixin {
   @JsonKey(name: '__typename')
@@ -6696,7 +6697,7 @@ class StreamActivityReactionCounts extends JsonSerializable
       _$StreamActivityReactionCountsFromJson(json);
 
   @override
-  List<Object?> get props => [likes, shares];
+  List<Object?> get props => [likes, comments];
   @override
   Map<String, dynamic> toJson() => _$StreamActivityReactionCountsToJson(this);
 }
@@ -6813,8 +6814,16 @@ class StreamEnrichedActivity extends JsonSerializable
   late StreamActivityExtraData extraData;
 
   @override
-  List<Object?> get props =>
-      [id, verb, object, time, reactionCounts, actor, extraData];
+  List<Object?> get props => [
+        id,
+        verb,
+        object,
+        time,
+        userLikeReactionId,
+        reactionCounts,
+        actor,
+        extraData
+      ];
   @override
   Map<String, dynamic> toJson() => _$StreamEnrichedActivityToJson(this);
 }
@@ -44085,7 +44094,7 @@ final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'shares'),
+            name: NameNode(value: 'comments'),
             alias: null,
             arguments: [],
             directives: [],
@@ -44176,6 +44185,12 @@ final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'time'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userLikeReactionId'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49835,7 +49850,7 @@ final CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'shares'),
+            name: NameNode(value: 'comments'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49926,6 +49941,12 @@ final CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'time'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'userLikeReactionId'),
             alias: null,
             arguments: [],
             directives: [],

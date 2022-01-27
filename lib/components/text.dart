@@ -214,10 +214,9 @@ class NavBarTitle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: MyHeaderText(
-        text.toUpperCase(),
+        text,
         size: FONTSIZE.two,
         textAlign: TextAlign.center,
-        weight: FontWeight.normal,
       ),
     );
   }

@@ -5255,13 +5255,13 @@ StreamActivityReactionCounts _$StreamActivityReactionCountsFromJson(
         Map<String, dynamic> json) =>
     StreamActivityReactionCounts()
       ..likes = json['likes'] as int?
-      ..shares = json['shares'] as int?;
+      ..comments = json['comments'] as int?;
 
 Map<String, dynamic> _$StreamActivityReactionCountsToJson(
         StreamActivityReactionCounts instance) =>
     <String, dynamic>{
       'likes': instance.likes,
-      'shares': instance.shares,
+      'comments': instance.comments,
     };
 
 StreamFeedUserData _$StreamFeedUserDataFromJson(Map<String, dynamic> json) =>
@@ -5350,6 +5350,7 @@ StreamEnrichedActivity _$StreamEnrichedActivityFromJson(
       ..verb = json['verb'] as String
       ..object = json['object'] as String
       ..time = fromGraphQLDateTimeToDartDateTime(json['time'] as int)
+      ..userLikeReactionId = json['userLikeReactionId'] as String?
       ..reactionCounts = json['reactionCounts'] == null
           ? null
           : StreamActivityReactionCounts.fromJson(
@@ -5365,6 +5366,7 @@ Map<String, dynamic> _$StreamEnrichedActivityToJson(
       'verb': instance.verb,
       'object': instance.object,
       'time': fromDartDateTimeToGraphQLDateTime(instance.time),
+      'userLikeReactionId': instance.userLikeReactionId,
       'reactionCounts': instance.reactionCounts?.toJson(),
       'actor': instance.actor.toJson(),
       'extraData': instance.extraData.toJson(),

@@ -3,11 +3,12 @@ fragment StreamEnrichedActivity on StreamEnrichedActivity {
   verb
   object
   time
+  userLikeReactionId
 }
 
 fragment StreamActivityReactionCounts on StreamActivityReactionCounts {
   likes
-  shares
+  comments
 }
 
 fragment StreamActivityExtraData on StreamActivityExtraData {

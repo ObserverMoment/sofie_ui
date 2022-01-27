@@ -6,8 +6,8 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/club_feed_post_card.dart';
 import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -54,9 +54,8 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   /// Ontap these activities get added to the top of the [_pagingController.itemList] and the user is scrolled back to the top of the page.
   List<StreamEnrichedActivity> _newActivities = [];
 
-  /// List of activities which the current user has marked as liked.
-  List<PostWithLikeReaction> _postsWithLikeReactions = [];
-  List<PostWithShareReaction> _postsWithShareReactions = [];
+  /// Ids of posts and reactions that the authed user has previously liked.
+  List<PostWithLikeReaction> _userLikedPosts = [];
 
   @override
   void initState() {
@@ -90,33 +89,22 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
         offset: offset,
         // On the timeline we dont show like counts or share counts
         // But we do want to know if the user has liked or shared a post already
-        flags: EnrichmentFlags().withOwnReactions(),
+        flags: EnrichmentFlags().withOwnReactions().withReactionCounts(),
       );
 
-      final feedActivitiesWithOwnLikeReactions = feedActivities.where((a) =>
-          a.ownReactions?[kLikeReactionName] != null &&
-          a.ownReactions![kLikeReactionName]!.isNotEmpty);
+      final feedActivitiesWithOwnLikeReactions = feedActivities
+          .where((a) =>
+              a.id != null &&
+              a.ownReactions?[kLikeReactionName] != null &&
+              a.ownReactions![kLikeReactionName]!.isNotEmpty)
+          .map((a) => PostWithLikeReaction(
+              activityId: a.id!,
+              reactionId: a.ownReactions![kLikeReactionName]![0].id!))
+          .toList();
 
-      final feedActivitiesWithOwnShareReactions = feedActivities.where((a) =>
-          a.ownReactions?[kShareReactionName] != null &&
-          a.ownReactions![kShareReactionName]!.isNotEmpty);
-
-      _postsWithLikeReactions = [
-        ..._postsWithLikeReactions,
+      _userLikedPosts = [
+        ..._userLikedPosts,
         ...feedActivitiesWithOwnLikeReactions
-            .map((a) => PostWithLikeReaction(
-                activityId: a.id!,
-                reaction: a.ownReactions![kLikeReactionName]![0]))
-            .toList()
-      ];
-
-      _postsWithShareReactions = [
-        ..._postsWithShareReactions,
-        ...feedActivitiesWithOwnShareReactions
-            .map((a) => PostWithShareReaction(
-                activityId: a.id!,
-                reaction: a.ownReactions![kShareReactionName]![0]))
-            .toList()
       ];
 
       final int numPostsBefore = _pagingController.itemList?.length ?? 0;
@@ -199,72 +187,23 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   }
 
   Future<void> _likeUnlikePost(String activityId) async {
-    final postWithReaction = _postsWithLikeReactions
-        .firstWhereOrNull((p) => p.activityId == activityId);
+    final postWithReaction =
+        _userLikedPosts.firstWhereOrNull((p) => p.activityId == activityId);
 
     if (postWithReaction != null) {
       await widget.streamFeedClient.reactions
-          .delete(postWithReaction.reaction.id!);
-      _postsWithLikeReactions.removeWhere((p) => p.activityId == activityId);
+          .delete(postWithReaction.reactionId);
+      _userLikedPosts.removeWhere((p) => p.activityId == activityId);
     } else {
       final reaction = await widget.streamFeedClient.reactions
           .add(kLikeReactionName, activityId);
-      _postsWithLikeReactions.add(
-          PostWithLikeReaction(activityId: activityId, reaction: reaction));
-    }
-    setState(() {});
-  }
 
-  /// If the user has already shared this post, they cannot share it again.
-  /// In this case just show an alert.
-  Future<void> _sharePost(StreamEnrichedActivity activity) async {
-    final postWithShare = _postsWithShareReactions
-        .firstWhereOrNull((p) => p.activityId == activity.id);
-
-    if (postWithShare != null) {
-      context.showAlertDialog(
-          title: 'Already shared',
-          message:
-              "You can only share other people's posts to your own feed once.");
-    } else {
-      try {
-        await context.showConfirmDialog(
-            title: 'Re-Post',
-            verb: 'Re-Post',
-            message:
-                'Send this post to your feed and all your followers timelines?',
-            onConfirm: () async {
-              /// Add the id of the activity we are re-posting.
-              activity.extraData.originalPostId = activity.id;
-
-              final Activity newActivityForRepost = Activity(
-                  actor: widget.streamFeedClient.currentUser!.ref,
-                  verb: kDefaultFeedPostVerb,
-                  object: activity.object,
-                  extraData:
-                      Map<String, Object>.from(activity.extraData.toJson()));
-
-              /// Repost the original activity to the users own [user_feed].
-              await widget.userFeed.addActivity(newActivityForRepost);
-
-              /// On success - add the reaction to the API and then save locally.
-              final reaction = await widget.streamFeedClient.reactions
-                  .add(kShareReactionName, activity.id);
-
-              _postsWithShareReactions.add(PostWithShareReaction(
-                  activityId: activity.id, reaction: reaction));
-
-              setState(() {});
-
-              context.showToast(
-                  icon: const Icon(CupertinoIcons.paperplane),
-                  message: 'Post shared');
-            });
-      } catch (e) {
-        printLog(e.toString());
-        context.showToast(message: 'Sorry, there was a problem re-posting!');
+      if (reaction.id != null) {
+        _userLikedPosts.add(PostWithLikeReaction(
+            activityId: activityId, reactionId: reaction.id!));
       }
     }
+    setState(() {});
   }
 
   @override
@@ -277,10 +216,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
 
   @override
   Widget build(BuildContext context) {
-    final likedPostIds =
-        _postsWithLikeReactions.map((p) => p.activityId).toList();
-    final sharedPostIds =
-        _postsWithShareReactions.map((p) => p.activityId).toList();
+    final likedPostIds = _userLikedPosts.map((p) => p.activityId).toList();
 
     return Stack(
       alignment: Alignment.topCenter,
@@ -307,6 +243,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
               : PagedListView<int, StreamEnrichedActivity>(
                   pagingController: _pagingController,
                   scrollController: _scrollController,
+                  cacheExtent: 1000,
                   physics: const AlwaysScrollableScrollPhysics(),
                   builderDelegate:
                       PagedChildBuilderDelegate<StreamEnrichedActivity>(
@@ -331,9 +268,6 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                                       _likeUnlikePost(activity.id),
                                   userHasLiked:
                                       likedPostIds.contains(activity.id),
-                                  sharePost: () => _sharePost(activity),
-                                  userHasShared:
-                                      sharedPostIds.contains(activity.id),
                                   activity: activity,
                                   timelineFeed: widget.timelineFeed,
                                   userFeed: widget.userFeed,
@@ -352,9 +286,9 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                       textAlign: TextAlign.center,
                     ),
                     firstPageProgressIndicatorBuilder: (c) =>
-                        const LoadingCircle(),
+                        const CupertinoActivityIndicator(),
                     newPageProgressIndicatorBuilder: (c) =>
-                        const LoadingCircle(),
+                        const CupertinoActivityIndicator(),
                     noItemsFoundIndicatorBuilder: (c) =>
                         const Center(child: MyText('No results...')),
                   ),
@@ -372,20 +306,4 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
       ],
     );
   }
-}
-
-class PostWithLikeReaction {
-  final String activityId;
-  final Reaction reaction;
-  const PostWithLikeReaction({
-    required this.activityId,
-    required this.reaction,
-  });
-}
-
-class PostWithShareReaction {
-  final String activityId;
-  final Reaction reaction;
-  const PostWithShareReaction(
-      {required this.activityId, required this.reaction});
 }

@@ -43,21 +43,22 @@ class VideoThumbnailImage extends StatefulWidget {
 }
 
 class _VideoThumbnailImageState extends State<VideoThumbnailImage> {
-  late Future<Uint8List?> thumbnailFuture;
+  late Future<Uint8List?> _thumbnailFuture;
 
   @override
   void initState() {
-    thumbnailFuture = VideoThumbnail.thumbnailData(
+    _thumbnailFuture = VideoThumbnail.thumbnailData(
         video: widget.videoUrl,
         maxHeight: widget.height.toInt(),
-        maxWidth: widget.width?.toInt() ?? 0);
+        maxWidth:
+            widget.width == double.infinity ? 0 : widget.width?.toInt() ?? 0);
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant VideoThumbnailImage oldWidget) {
     if (oldWidget.videoUrl != widget.videoUrl) {
-      thumbnailFuture = VideoThumbnail.thumbnailData(
+      _thumbnailFuture = VideoThumbnail.thumbnailData(
           video: widget.videoUrl,
           maxHeight: widget.height.toInt(),
           maxWidth: widget.width?.toInt() ?? 0);
@@ -69,7 +70,7 @@ class _VideoThumbnailImageState extends State<VideoThumbnailImage> {
   Widget build(BuildContext context) => SizedBox(
         height: widget.height,
         child: FutureBuilder<Uint8List?>(
-          future: thumbnailFuture,
+          future: _thumbnailFuture,
           builder: (context, snapshot) => AnimatedSwitcher(
             duration: const Duration(milliseconds: 350),
             child: Builder(

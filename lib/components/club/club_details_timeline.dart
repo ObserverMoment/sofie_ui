@@ -6,12 +6,16 @@ import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/club_feed_post_card.dart';
 import 'package:sofie_ui/components/indicators.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:collection/collection.dart';
+import 'package:stream_feed/stream_feed.dart';
 
 /// NOTE: Logic in this widget is simlar to that in [AuthedUserTimeline] in [FeedsAndFollows]. Except there is no sharing of posts to club feeds - they are club specific. Plus we may add some additional functionality - such as comments / threads to timeline posts here.
 class ClubDetailsTimeline extends StatefulWidget {
@@ -30,6 +34,7 @@ class ClubDetailsTimeline extends StatefulWidget {
 }
 
 class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
+  late StreamFeedClient _streamFeedClient;
   bool _isLoading = true;
   late PagingController<int, StreamEnrichedActivity> _pagingController;
   late Timer _pollingTimer;
@@ -37,9 +42,14 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   /// GetStream uses integer offset for making api calls to get more activities when paginating.
   final int _postsPerPage = 10;
 
+  /// Ids of posts and reactions that the authed user has previously liked.
+  List<PostWithLikeReaction> _userLikedPosts = [];
+
   @override
   void initState() {
     super.initState();
+
+    _streamFeedClient = context.streamFeedClient;
 
     _loadInitialData().then((_) => _initPollingForNewPosts());
 
@@ -100,7 +110,20 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
         checkOperationResult(context, result,
             onFail: () => throw Exception(result.errors));
 
-        return result.data!.clubMembersFeedPosts;
+        final feedActivities = result.data!.clubMembersFeedPosts;
+
+        final feedActivitiesWithOwnLikeReactions = feedActivities
+            .where((a) => a.userLikeReactionId != null)
+            .map((a) => PostWithLikeReaction(
+                activityId: a.id, reactionId: a.userLikeReactionId!))
+            .toList();
+
+        _userLikedPosts = [
+          ..._userLikedPosts,
+          ...feedActivitiesWithOwnLikeReactions
+        ];
+
+        return feedActivities;
       } catch (e) {
         printLog(e.toString());
         _pagingController.error = e.toString();
@@ -146,6 +169,25 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
     }
   }
 
+  Future<void> _likeUnlikePost(String activityId) async {
+    final postWithReaction =
+        _userLikedPosts.firstWhereOrNull((p) => p.activityId == activityId);
+
+    if (postWithReaction != null) {
+      await _streamFeedClient.reactions.delete(postWithReaction.reactionId);
+      _userLikedPosts.removeWhere((p) => p.activityId == activityId);
+    } else {
+      final reaction =
+          await _streamFeedClient.reactions.add(kLikeReactionName, activityId);
+
+      if (reaction.id != null) {
+        _userLikedPosts.add(PostWithLikeReaction(
+            activityId: activityId, reactionId: reaction.id!));
+      }
+    }
+    setState(() {});
+  }
+
   Future<void> _deleteActivityById(
       BuildContext context, StreamEnrichedActivity post) async {
     context.showConfirmDeleteDialog(
@@ -181,6 +223,8 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
 
   @override
   Widget build(BuildContext context) {
+    final likedPostIds = _userLikedPosts.map((p) => p.activityId).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -230,6 +274,9 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: ClubFeedPostCard(
                               activity: activity,
+                              likeUnlikePost: () =>
+                                  _likeUnlikePost(activity.id),
+                              userHasLiked: likedPostIds.contains(activity.id),
                               deletePost: widget.isOwnerOrAdmin
                                   ? () => _deleteActivityById(context, activity)
                                   : null,

@@ -7,12 +7,12 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/feed_post_reactions.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -37,19 +37,12 @@ class FeedPostCard extends StatelessWidget {
   final VoidCallback? likeUnlikePost;
   final bool userHasLiked;
 
-  /// When true we don't display share count or display UI to allow the user to share.
-  /// Used for post types which should not be freely shared - i.e. posts within clubs / private challenges etc.
-  // final bool disableSharing;
-  final VoidCallback? sharePost;
-  final bool userHasShared;
   const FeedPostCard({
     Key? key,
     required this.activity,
     this.isPreview = false,
     this.likeUnlikePost,
-    this.sharePost,
     this.userHasLiked = false,
-    this.userHasShared = false,
     required this.userFeed,
     this.timelineFeed,
   }) : super(key: key);
@@ -99,79 +92,6 @@ class FeedPostCard extends StatelessWidget {
           });
     }
   }
-
-  Widget _buildReactionButtonsOrDisplay(BuildContext context,
-      StreamEnrichedActivity activity, bool userIsPoster) {
-    final likesCount = activity.reactionCounts?.likes ?? 0;
-    final sharesCount = activity.reactionCounts?.shares ?? 0;
-
-    return userIsPoster
-        ? Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16),
-            child: Row(
-              children: [
-                Icon(
-                  CupertinoIcons.heart_fill,
-                  color: context.theme.primary.withOpacity(0.4),
-                  size: 20,
-                ),
-                const SizedBox(width: 4),
-                MyText('$likesCount'),
-                Row(
-                  children: [
-                    const SizedBox(width: 16),
-                    Icon(
-                      CupertinoIcons.paperplane_fill,
-                      color: context.theme.primary.withOpacity(0.4),
-                      size: 20,
-                    ),
-                    const SizedBox(width: 4),
-                    MyText('$sharesCount'),
-                  ],
-                )
-              ],
-            ),
-          )
-        : Row(
-            children: [
-              if (likeUnlikePost != null)
-                _buildReactionButton(
-                    inactiveIconData: CupertinoIcons.heart,
-                    activeIconData: CupertinoIcons.heart_fill,
-                    onPressed: likeUnlikePost!,
-                    active: userHasLiked),
-              if (sharePost != null)
-                _buildReactionButton(
-                    inactiveIconData: CupertinoIcons.paperplane,
-                    activeIconData: CupertinoIcons.paperplane_fill,
-                    onPressed: sharePost!,
-                    active: userHasShared),
-            ],
-          );
-  }
-
-  Widget _buildReactionButton(
-          {required IconData inactiveIconData,
-          required IconData activeIconData,
-          required VoidCallback onPressed,
-          required bool active}) =>
-      CupertinoButton(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-          onPressed: isPreview ? null : onPressed,
-          child: AnimatedSwitcher(
-            duration: kStandardAnimationDuration,
-            child: active
-                ? Icon(
-                    activeIconData,
-                    color: Styles.primaryAccent,
-                  )
-                : Opacity(
-                    opacity: 0.6,
-                    child: Icon(
-                      inactiveIconData,
-                    ),
-                  ),
-          ));
 
   Widget get _buildCaption => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -286,30 +206,41 @@ class FeedPostCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildReactionButtonsOrDisplay(context, activity, userIsPoster),
-                Row(
+                FeedPostReactions(
+                  userIsPoster: userIsPoster,
+                  activity: activity,
+                  isPreview: isPreview,
+                  userHasLiked: userHasLiked,
+                  likeUnlikePost: likeUnlikePost,
+                ),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if (originalPostId != null)
-                      Padding(
-                          padding: const EdgeInsets.only(right: 6.0),
-                          child: _buildInfoTag(
-                            context,
-                            'Re-Post',
-                          )),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8.0),
-                      child: _buildInfoTag(context, activity.time.daysAgo),
-                    )
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (originalPostId != null)
+                          Padding(
+                              padding: const EdgeInsets.only(right: 6.0),
+                              child: _buildInfoTag(
+                                context,
+                                'Re-Post',
+                              )),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: _buildInfoTag(context, activity.time.daysAgo),
+                        )
+                      ],
+                    ),
                   ],
                 )
               ],
             ),
             if (activity.extraData.tags.isNotEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Wrap(
                   spacing: 5,
                   runSpacing: 5,
