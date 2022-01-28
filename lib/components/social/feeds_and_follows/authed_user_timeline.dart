@@ -206,6 +206,29 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
     setState(() {});
   }
 
+  // https://support.getstream.io/hc/en-us/articles/4404359414551-Deleting-Activities-with-Stream-Feeds-API-
+  // An activity explicitly added to a particular feed makes that feed the origin of the activity. An activity deleted from the origin is also deleted from all other feeds where it is found, either through fan-out or targeting. Deleting an activity from a feed that is not the origin of the activity, will delete it only from that feed.
+  /// When the activity is owned by the authed user we can delete the activity from their own [user_feed] (i.e. the origin feed). This will also remove the post from all timeline_feeds that follow it.
+  Future<void> _confirmDeleteActivity(String activityId) async {
+    context.showConfirmDeleteDialog(
+        itemType: 'Post',
+        message: 'This will delete the post from all timelines.',
+        onConfirm: () async {
+          await widget.userFeed.removeActivityById(activityId);
+        });
+  }
+
+  /// A non owner can still remove a post from their own timeline if they want.
+  Future<void> _confirmRemoveActivityFromFeed(String activityId) async {
+    context.showConfirmDeleteDialog(
+        verb: 'Remove',
+        itemType: 'Post',
+        message: 'This will remove the post from your timeline.',
+        onConfirm: () async {
+          await widget.timelineFeed.removeActivityById(activityId);
+        });
+  }
+
   @override
   void dispose() {
     _pagingController.dispose();
@@ -248,7 +271,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                   builderDelegate:
                       PagedChildBuilderDelegate<StreamEnrichedActivity>(
                     itemBuilder: (context, activity, index) {
-                      return SizeFadeIn(
+                      return FadeInUp(
                         duration: 50,
                         delay: index,
                         delayBasis: 10,
@@ -262,7 +285,10 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                                       _likeUnlikePost(activity.id),
                                   userHasLiked:
                                       likedPostIds.contains(activity.id),
-                                )
+                                  removeActivityFromTimeline: () =>
+                                      _confirmRemoveActivityFromFeed(
+                                          activity.id),
+                                  enableViewClubOption: true)
                               : FeedPostCard(
                                   likeUnlikePost: () =>
                                       _likeUnlikePost(activity.id),
@@ -271,7 +297,12 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                                   activity: activity,
                                   timelineFeed: widget.timelineFeed,
                                   userFeed: widget.userFeed,
-                                ),
+                                  deleteActivity: () =>
+                                      _confirmDeleteActivity(activity.id),
+                                  removeActivityFromTimeline: () =>
+                                      _confirmRemoveActivityFromFeed(
+                                          activity.id),
+                                  enableViewClubOption: true),
                         ),
                       );
                     },
@@ -290,7 +321,7 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
                     newPageProgressIndicatorBuilder: (c) =>
                         const CupertinoActivityIndicator(),
                     noItemsFoundIndicatorBuilder: (c) =>
-                        const Center(child: MyText('No results...')),
+                        const Center(child: MyText('No notifications...')),
                   ),
                 ),
         if (_newActivities.isNotEmpty)

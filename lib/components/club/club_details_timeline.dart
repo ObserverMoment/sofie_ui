@@ -188,8 +188,8 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
     setState(() {});
   }
 
-  Future<void> _deleteActivityById(
-      BuildContext context, StreamEnrichedActivity post) async {
+  /// Only owners and admins should be allowed to do this.
+  Future<void> _deleteActivity(StreamEnrichedActivity post) async {
     context.showConfirmDeleteDialog(
         itemType: 'Post',
         message: 'This cannot be undone, are you sure?',
@@ -277,9 +277,10 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
                               likeUnlikePost: () =>
                                   _likeUnlikePost(activity.id),
                               userHasLiked: likedPostIds.contains(activity.id),
-                              deletePost: widget.isOwnerOrAdmin
-                                  ? () => _deleteActivityById(context, activity)
+                              deleteActivity: widget.isOwnerOrAdmin
+                                  ? () => _deleteActivity(activity)
                                   : null,
+                              enableViewClubOption: false,
                             )),
                       ),
                       firstPageErrorIndicatorBuilder: (context) => MyText(

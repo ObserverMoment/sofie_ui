@@ -149,6 +149,18 @@ class _YourPostsPageState extends State<YourPostsPage> {
     }
   }
 
+  // https://support.getstream.io/hc/en-us/articles/4404359414551-Deleting-Activities-with-Stream-Feeds-API-
+  // An activity explicitly added to a particular feed makes that feed the origin of the activity. An activity deleted from the origin is also deleted from all other feeds where it is found, either through fan-out or targeting. Deleting an activity from a feed that is not the origin of the activity, will delete it only from that feed.
+  /// When the activity is owned by the authed user we can delete the activity from their own [user_feed] (i.e. the origin feed). This will also remove the post from all timeline_feeds that follow it.
+  Future<void> _confirmDeleteActivity(String activityId) async {
+    context.showConfirmDeleteDialog(
+        itemType: 'Post',
+        message: 'This will delete the post from all timelines.',
+        onConfirm: () async {
+          await _userFeed.removeActivityById(activityId);
+        });
+  }
+
   @override
   void dispose() {
     _pagingController.dispose();
@@ -197,6 +209,9 @@ class _YourPostsPageState extends State<YourPostsPage> {
                             child: FeedPostCard(
                               activity: activity,
                               userFeed: _userFeed,
+                              enableViewClubOption: false,
+                              deleteActivity: () =>
+                                  _confirmDeleteActivity(activity.id),
                             ),
                           ),
                         ),

@@ -7,20 +7,21 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/schedule/coming_up_list.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_timeline.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/pages/authed/social/followers_following.dart';
+import 'package:sofie_ui/pages/authed/feed/announcements_updates.dart';
+import 'package:sofie_ui/pages/authed/feed/followers_following.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:stream_feed/stream_feed.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
-class SocialPage extends StatefulWidget {
-  const SocialPage({Key? key}) : super(key: key);
+class FeedPage extends StatefulWidget {
+  const FeedPage({Key? key}) : super(key: key);
 
   @override
-  State<SocialPage> createState() => _SocialPageState();
+  State<FeedPage> createState() => _FeedPageState();
 }
 
-class _SocialPageState extends State<SocialPage> {
+class _FeedPageState extends State<FeedPage> {
   late AuthedUser _authedUser;
   late StreamFeedClient _streamFeedClient;
 
@@ -41,38 +42,42 @@ class _SocialPageState extends State<SocialPage> {
     _userFeed = _streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
   }
 
-  Widget get _buttonSpacer => const SizedBox(width: 10);
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
+        backgroundColor: context.theme.modalBackground,
         withoutLeading: true,
-        trailing: NavBarTrailingRow(
+        middle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-                iconData: CupertinoIcons.plus,
+                iconData: CupertinoIcons.plus_circle,
                 onPressed: () =>
                     context.navigateTo(const FeedPostCreatorRoute())),
-            _buttonSpacer,
-            const ChatsIconButton(),
-            _buttonSpacer,
             IconButton(
                 iconData: CupertinoIcons.person_2,
                 onPressed: () => context.push(
                         child: FollowersFollowing(
                       userId: _authedUser.id,
-                      userDisplayName: _authedUser.displayName,
                     ))),
-            _buttonSpacer,
+            const ChatsIconButton(),
+            const NotificationsIconButton(),
             IconButton(
                 iconData: CupertinoIcons.tray_full,
                 onPressed: () => context.navigateTo(const YourPostsRoute())),
+            IconButton(
+                iconData: CupertinoIcons.gear,
+                onPressed: () => context.navigateTo(const SettingsRoute())),
           ],
         ),
       ),
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: AnnouncementsUpdates(),
+          ),
           const ComingUpList(),
           Expanded(
             child: AuthedUserTimeline(

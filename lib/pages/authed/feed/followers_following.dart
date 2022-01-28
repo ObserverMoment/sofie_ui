@@ -1,34 +1,30 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_followers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_following.dart';
-import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_timeline.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:auto_route/auto_route.dart';
 
-/// Maintains subscriptions - also includes a list of auth user's clubs.
-/// For You = the users timeline
-/// Your Posts = the users own feed.
-class TimelineAndFeed extends StatefulWidget {
-  const TimelineAndFeed({Key? key}) : super(key: key);
+/// As is, this widget will only work for the authed user, i.e. the one who is linked to the feed token generated via the API when user logs in.
+class FollowersFollowing extends StatefulWidget {
+  final String userId;
+  const FollowersFollowing({Key? key, required this.userId}) : super(key: key);
 
   @override
-  _TimelineAndFeedState createState() => _TimelineAndFeedState();
+  State<FollowersFollowing> createState() => _FollowersFollowingState();
 }
 
-class _TimelineAndFeedState extends State<TimelineAndFeed> {
+class _FollowersFollowingState extends State<FollowersFollowing> {
   int _activeTabIndex = 0;
 
-  late AuthedUser _authedUser;
   late StreamFeedClient _streamFeedClient;
 
   /// Timeline - activities from feeds the users timeline is following.
@@ -41,11 +37,10 @@ class _TimelineAndFeedState extends State<TimelineAndFeed> {
   void initState() {
     super.initState();
 
-    _authedUser = GetIt.I<AuthBloc>().authedUser!;
     _streamFeedClient = context.streamFeedClient;
     _timelineFeed =
-        _streamFeedClient.flatFeed(kUserTimelineName, _authedUser.id);
-    _userFeed = _streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
+        _streamFeedClient.flatFeed(kUserTimelineName, widget.userId);
+    _userFeed = _streamFeedClient.flatFeed(kUserFeedName, widget.userId);
   }
 
   void _changeTab(int index) {
@@ -54,40 +49,40 @@ class _TimelineAndFeedState extends State<TimelineAndFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 4),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          width: double.infinity,
-          child: MySlidingSegmentedControl<int>(
-              value: _activeTabIndex,
-              children: const {
-                0: 'Activity',
-                1: 'Following',
-                2: 'Followers',
-              },
-              updateValue: _changeTab),
-        ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: IndexedStack(
-            index: _activeTabIndex,
-            children: [
-              AuthedUserTimeline(
-                  userFeed: _userFeed,
-                  timelineFeed: _timelineFeed,
-                  streamFeedClient: _streamFeedClient),
-              AuthedUserFollowing(
-                timelineFeed: _timelineFeed,
-              ),
-              AuthedUserFollowers(
-                userFeed: _userFeed,
-              ),
-            ],
+    return MyPageScaffold(
+      navigationBar: const MyNavBar(
+        middle: NavBarTitle('Friends'),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            width: double.infinity,
+            child: MySlidingSegmentedControl<int>(
+                value: _activeTabIndex,
+                children: const {
+                  0: 'Followers',
+                  1: 'Following',
+                },
+                updateValue: _changeTab),
           ),
-        )
-      ],
+          const SizedBox(height: 8),
+          Expanded(
+            child: IndexedStack(
+              index: _activeTabIndex,
+              children: [
+                AuthedUserFollowers(
+                  userFeed: _userFeed,
+                ),
+                AuthedUserFollowing(
+                  timelineFeed: _timelineFeed,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

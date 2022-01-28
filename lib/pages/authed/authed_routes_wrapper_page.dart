@@ -12,6 +12,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
 import 'package:stream_feed/src/client/notification_feed.dart';
@@ -102,8 +103,9 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       _notificationFeed = _streamFeedClient.notificationFeed(
           kUserNotificationName, _authedUser.id);
 
-      _feedSubscription =
-          await _notificationFeed.subscribe(_handleNotification);
+      _feedSubscription = await _notificationFeed.subscribe((message) {
+        handleIncomingFeedNotifications(context, message);
+      });
 
       _feedsInitialized = true;
     } catch (e) {
@@ -111,15 +113,6 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       context.showToast(message: e.toString());
       context.showToast(message: "Oops, couldn't initialize notifications! $e");
     }
-  }
-
-  Future<void> _handleNotification(feed.RealtimeMessage? message) async {
-    // final _message =
-    //     message?.newActivities?[0].object?.data.toString() ?? 'No message';
-    // context.showNotification(
-    //     title: 'Notification',
-    //     onPressed: () => printLog('printLog a test'),
-    //     message: _message);
   }
 
   /// Handle incoming links - the ones that the app will recieve from the OS

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 
@@ -142,6 +143,14 @@ extension DistanceUnitExtension on DistanceUnit {
 
   String get display => describeEnum(this).capitalize;
   String get apiValue => describeEnum(this).toUpperCase();
+}
+
+extension FeedPostTypeExtension on FeedPostType {
+  bool get hasShareableContent => [
+        FeedPostType.workout,
+        FeedPostType.workoutPlan,
+        FeedPostType.loggedWorkout,
+      ].contains(this);
 }
 
 extension GenderExtension on Gender {

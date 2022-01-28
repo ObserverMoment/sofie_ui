@@ -133,6 +133,30 @@ const String kUserPostVerbName = 'post';
 // Posts to club feeds - they are private.
 const String kClubMembersPostVerbName = 'club-post';
 
+//// Notification Type Verbs ////
+const String kNotifyNotificationVerb = 'notify';
+const String kJoinClubNotificationVerb = 'join-club';
+const String kLeaveClubNotificationVerb = 'leave-club';
+const String kJoinPlanNotificationVerb = 'join-plan';
+const String kLeavePlanNotificationVerb = 'leave-plan';
+const String kLogWorkoutNotificationVerb = 'log-workout';
+const String kFollowNotificationVerb = 'follow';
+const String kCommentNotificationVerb = 'comment';
+const String kLikeNotificationVerb = 'like';
+
+//// Verb to Adverb Map ////
+const kNotifyVerbToDisplay = {
+  kNotifyNotificationVerb: 'Update',
+  kJoinClubNotificationVerb: 'joined club',
+  kLeaveClubNotificationVerb: 'left club',
+  kJoinPlanNotificationVerb: 'joined plan',
+  kLeavePlanNotificationVerb: 'left plan',
+  kLogWorkoutNotificationVerb: 'logged workout',
+  kFollowNotificationVerb: 'followed',
+  kCommentNotificationVerb: 'commented on',
+  kLikeNotificationVerb: 'liked'
+};
+
 const String kUserFeedName = 'user_feed'; // Post to this.
 const String kUserTimelineName =
     'user_timeline'; // View this / follow other feeds with this.
