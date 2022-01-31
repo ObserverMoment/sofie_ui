@@ -1,0 +1,21 @@
+fragment AnnouncementUpdate on AnnouncementUpdate {
+  __typename
+  id
+  createdAt
+  imageUri
+  videoUri
+  audioUri
+  articleUrl
+  title
+  subtitle
+  bodyOne
+  bodyTwo
+}
+
+fragment AnnouncementUpdateAction on AnnouncementUpdateAction {
+  __typename
+  id
+  createdAt
+  text
+  routeTo
+}

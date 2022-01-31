@@ -715,6 +715,34 @@ mixin ClubInviteTokenMixin {
   late int inviteLimit;
   late List<String> joinedUserIds;
 }
+mixin AnnouncementUpdateActionMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String text;
+  late String routeTo;
+}
+mixin AnnouncementUpdateMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  String? imageUri;
+  String? videoUri;
+  String? audioUri;
+  String? articleUrl;
+  late String title;
+  String? subtitle;
+  String? bodyOne;
+  String? bodyTwo;
+}
 
 @JsonSerializable(explicitToJson: true)
 class DeleteJournalGoalById$Mutation extends JsonSerializable
@@ -7829,6 +7857,103 @@ class DeleteClubMembersFeedPost$Mutation extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$DeleteClubMembersFeedPost$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AnnouncementUpdateAction extends JsonSerializable
+    with EquatableMixin, AnnouncementUpdateActionMixin {
+  AnnouncementUpdateAction();
+
+  factory AnnouncementUpdateAction.fromJson(Map<String, dynamic> json) =>
+      _$AnnouncementUpdateActionFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, createdAt, text, routeTo];
+  @override
+  Map<String, dynamic> toJson() => _$AnnouncementUpdateActionToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AnnouncementUpdate extends JsonSerializable
+    with EquatableMixin, AnnouncementUpdateMixin {
+  AnnouncementUpdate();
+
+  factory AnnouncementUpdate.fromJson(Map<String, dynamic> json) =>
+      _$AnnouncementUpdateFromJson(json);
+
+  late List<AnnouncementUpdateAction> actions;
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        imageUri,
+        videoUri,
+        audioUri,
+        articleUrl,
+        title,
+        subtitle,
+        bodyOne,
+        bodyTwo,
+        actions
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$AnnouncementUpdateToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AnnouncementUpdates$Query extends JsonSerializable with EquatableMixin {
+  AnnouncementUpdates$Query();
+
+  factory AnnouncementUpdates$Query.fromJson(Map<String, dynamic> json) =>
+      _$AnnouncementUpdates$QueryFromJson(json);
+
+  late List<AnnouncementUpdate> announcementUpdates;
+
+  @override
+  List<Object?> get props => [announcementUpdates];
+  @override
+  Map<String, dynamic> toJson() => _$AnnouncementUpdates$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MarkAnnouncementUpdateAsSeen$Mutation extends JsonSerializable
+    with EquatableMixin {
+  MarkAnnouncementUpdateAsSeen$Mutation();
+
+  factory MarkAnnouncementUpdateAsSeen$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$MarkAnnouncementUpdateAsSeen$MutationFromJson(json);
+
+  late String markAnnouncementUpdateAsSeen;
+
+  @override
+  List<Object?> get props => [markAnnouncementUpdateAsSeen];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$MarkAnnouncementUpdateAsSeen$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MarkAnnouncementUpdateAsSeenInput extends JsonSerializable
+    with EquatableMixin {
+  MarkAnnouncementUpdateAsSeenInput(
+      {required this.announcementUpdateId, required this.userId});
+
+  factory MarkAnnouncementUpdateAsSeenInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$MarkAnnouncementUpdateAsSeenInputFromJson(json);
+
+  late String announcementUpdateId;
+
+  late String userId;
+
+  @override
+  List<Object?> get props => [announcementUpdateId, userId];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$MarkAnnouncementUpdateAsSeenInputToJson(this);
 }
 
 enum ContentAccessScope {
@@ -50038,4 +50163,233 @@ class DeleteClubMembersFeedPostMutation extends GraphQLQuery<
   @override
   DeleteClubMembersFeedPost$Mutation parse(Map<String, dynamic> json) =>
       DeleteClubMembersFeedPost$Mutation.fromJson(json);
+}
+
+final ANNOUNCEMENT_UPDATES_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'announcementUpdates'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'announcementUpdates'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'AnnouncementUpdate'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'actions'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'AnnouncementUpdateAction'),
+                        directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'AnnouncementUpdateAction'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'AnnouncementUpdateAction'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'text'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'routeTo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'AnnouncementUpdate'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'AnnouncementUpdate'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'audioUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'articleUrl'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'title'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'subtitle'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'bodyOne'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'bodyTwo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class AnnouncementUpdatesQuery
+    extends GraphQLQuery<AnnouncementUpdates$Query, JsonSerializable> {
+  AnnouncementUpdatesQuery();
+
+  @override
+  final DocumentNode document = ANNOUNCEMENT_UPDATES_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'announcementUpdates';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  AnnouncementUpdates$Query parse(Map<String, dynamic> json) =>
+      AnnouncementUpdates$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MarkAnnouncementUpdateAsSeenArguments extends JsonSerializable
+    with EquatableMixin {
+  MarkAnnouncementUpdateAsSeenArguments({required this.data});
+
+  @override
+  factory MarkAnnouncementUpdateAsSeenArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$MarkAnnouncementUpdateAsSeenArgumentsFromJson(json);
+
+  late MarkAnnouncementUpdateAsSeenInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$MarkAnnouncementUpdateAsSeenArgumentsToJson(this);
+}
+
+final MARK_ANNOUNCEMENT_UPDATE_AS_SEEN_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'markAnnouncementUpdateAsSeen'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'MarkAnnouncementUpdateAsSeenInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'markAnnouncementUpdateAsSeen'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class MarkAnnouncementUpdateAsSeenMutation extends GraphQLQuery<
+    MarkAnnouncementUpdateAsSeen$Mutation,
+    MarkAnnouncementUpdateAsSeenArguments> {
+  MarkAnnouncementUpdateAsSeenMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      MARK_ANNOUNCEMENT_UPDATE_AS_SEEN_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'markAnnouncementUpdateAsSeen';
+
+  @override
+  final MarkAnnouncementUpdateAsSeenArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  MarkAnnouncementUpdateAsSeen$Mutation parse(Map<String, dynamic> json) =>
+      MarkAnnouncementUpdateAsSeen$Mutation.fromJson(json);
 }

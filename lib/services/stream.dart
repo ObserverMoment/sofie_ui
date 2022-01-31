@@ -56,6 +56,7 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
   int _unseenCount = 0;
   late NotificationFeed _notificationFeed;
   Subscription? _feedSubscription;
+  Timer? _pollingTimer;
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
     _updateIndicator().then((_) => _subscribeToFeed().then((_) {
           /// TODO: Remove this polling once the stream feeds bug is fixed.
           /// https://github.com/GetStream/stream-feed-flutter/issues/193
-          Timer.periodic(const Duration(seconds: 30), (_) {
+          _pollingTimer = Timer.periodic(const Duration(seconds: 30), (_) {
             _updateIndicator();
           });
         }));
@@ -73,10 +74,11 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
   Future<void> _updateIndicator() async {
     /// We only need to know if there are unseen activities - so set limit to 1.
     final counts = await _notificationFeed.getUnreadUnseenCounts();
-
-    setState(() {
-      _unseenCount = counts.unseenCount;
-    });
+    if (mounted) {
+      setState(() {
+        _unseenCount = counts.unseenCount;
+      });
+    }
   }
 
   Future<void> _subscribeToFeed() async {
@@ -97,6 +99,7 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
 
   @override
   void dispose() {
+    _pollingTimer?.cancel();
     _feedSubscription?.cancel();
     super.dispose();
   }

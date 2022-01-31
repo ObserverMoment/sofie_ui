@@ -6131,6 +6131,100 @@ Map<String, dynamic> _$DeleteClubMembersFeedPost$MutationToJson(
       'deleteClubMembersFeedPost': instance.deleteClubMembersFeedPost,
     };
 
+AnnouncementUpdateAction _$AnnouncementUpdateActionFromJson(
+        Map<String, dynamic> json) =>
+    AnnouncementUpdateAction()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..text = json['text'] as String
+      ..routeTo = json['routeTo'] as String;
+
+Map<String, dynamic> _$AnnouncementUpdateActionToJson(
+        AnnouncementUpdateAction instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'text': instance.text,
+      'routeTo': instance.routeTo,
+    };
+
+AnnouncementUpdate _$AnnouncementUpdateFromJson(Map<String, dynamic> json) =>
+    AnnouncementUpdate()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..imageUri = json['imageUri'] as String?
+      ..videoUri = json['videoUri'] as String?
+      ..audioUri = json['audioUri'] as String?
+      ..articleUrl = json['articleUrl'] as String?
+      ..title = json['title'] as String
+      ..subtitle = json['subtitle'] as String?
+      ..bodyOne = json['bodyOne'] as String?
+      ..bodyTwo = json['bodyTwo'] as String?
+      ..actions = (json['actions'] as List<dynamic>)
+          .map((e) =>
+              AnnouncementUpdateAction.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$AnnouncementUpdateToJson(AnnouncementUpdate instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'imageUri': instance.imageUri,
+      'videoUri': instance.videoUri,
+      'audioUri': instance.audioUri,
+      'articleUrl': instance.articleUrl,
+      'title': instance.title,
+      'subtitle': instance.subtitle,
+      'bodyOne': instance.bodyOne,
+      'bodyTwo': instance.bodyTwo,
+      'actions': instance.actions.map((e) => e.toJson()).toList(),
+    };
+
+AnnouncementUpdates$Query _$AnnouncementUpdates$QueryFromJson(
+        Map<String, dynamic> json) =>
+    AnnouncementUpdates$Query()
+      ..announcementUpdates = (json['announcementUpdates'] as List<dynamic>)
+          .map((e) => AnnouncementUpdate.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$AnnouncementUpdates$QueryToJson(
+        AnnouncementUpdates$Query instance) =>
+    <String, dynamic>{
+      'announcementUpdates':
+          instance.announcementUpdates.map((e) => e.toJson()).toList(),
+    };
+
+MarkAnnouncementUpdateAsSeen$Mutation
+    _$MarkAnnouncementUpdateAsSeen$MutationFromJson(
+            Map<String, dynamic> json) =>
+        MarkAnnouncementUpdateAsSeen$Mutation()
+          ..markAnnouncementUpdateAsSeen =
+              json['markAnnouncementUpdateAsSeen'] as String;
+
+Map<String, dynamic> _$MarkAnnouncementUpdateAsSeen$MutationToJson(
+        MarkAnnouncementUpdateAsSeen$Mutation instance) =>
+    <String, dynamic>{
+      'markAnnouncementUpdateAsSeen': instance.markAnnouncementUpdateAsSeen,
+    };
+
+MarkAnnouncementUpdateAsSeenInput _$MarkAnnouncementUpdateAsSeenInputFromJson(
+        Map<String, dynamic> json) =>
+    MarkAnnouncementUpdateAsSeenInput(
+      announcementUpdateId: json['announcementUpdateId'] as String,
+      userId: json['userId'] as String,
+    );
+
+Map<String, dynamic> _$MarkAnnouncementUpdateAsSeenInputToJson(
+        MarkAnnouncementUpdateAsSeenInput instance) =>
+    <String, dynamic>{
+      'announcementUpdateId': instance.announcementUpdateId,
+      'userId': instance.userId,
+    };
+
 DeleteJournalGoalByIdArguments _$DeleteJournalGoalByIdArgumentsFromJson(
         Map<String, dynamic> json) =>
     DeleteJournalGoalByIdArguments(
@@ -8000,4 +8094,18 @@ Map<String, dynamic> _$DeleteClubMembersFeedPostArgumentsToJson(
         DeleteClubMembersFeedPostArguments instance) =>
     <String, dynamic>{
       'activityId': instance.activityId,
+    };
+
+MarkAnnouncementUpdateAsSeenArguments
+    _$MarkAnnouncementUpdateAsSeenArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        MarkAnnouncementUpdateAsSeenArguments(
+          data: MarkAnnouncementUpdateAsSeenInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$MarkAnnouncementUpdateAsSeenArgumentsToJson(
+        MarkAnnouncementUpdateAsSeenArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
     };

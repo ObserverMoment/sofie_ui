@@ -40,6 +40,7 @@ const kImageOverlayOpacity = 0.7;
 
 /// Object Type names for the store.
 /// For use in [__typename:id] normalization and store ops.
+const kAnnouncementUpdateTypename = 'AnnouncementUpdate';
 const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
 const kCollectionSummaryTypename = 'CollectionSummary';

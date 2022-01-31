@@ -6,6 +6,9 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 /// Variables / args are ignored - just the operation name is returned.
 class GQLOpNames {
   /// List type queries where variables are not used.
+  static String get announcementUpdates =>
+      AnnouncementUpdatesQuery().operationName;
+
   static String get bodyTrackingEntries =>
       BodyTrackingEntriesQuery().operationName;
 

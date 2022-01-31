@@ -1,4 +1,6 @@
+import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -9,6 +11,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 import 'package:stream_feed/src/client/notification_feed.dart';
@@ -266,11 +269,13 @@ class NotificationActivity extends StatelessWidget {
         ? FeedUtils.formatStreamFeedUser(activity.actor!)
         : null;
 
+    final actorId = user?.id;
     final actorName = user?.data.name ?? 'Someone';
     final object = activity.object ?? 'something';
 
     switch (activity.verb) {
       case kNotifyNotificationVerb:
+        // Notification from app / admin.
         return MyText(
           activity.object ?? 'There was an update...',
           maxLines: 3,
@@ -278,17 +283,20 @@ class NotificationActivity extends StatelessWidget {
         );
       case kJoinClubNotificationVerb:
         return NotificationActivityJoinClub(
+            actorId: actorId,
             actorName: actorName,
             club: FeedUtils.formatStreamFeedClub(
                 CollectionEntry.fromJson(object)));
       case kLeaveClubNotificationVerb:
         return NotificationActivityLeaveClub(
+          actorId: actorId,
           actorName: actorName,
           club:
               FeedUtils.formatStreamFeedClub(CollectionEntry.fromJson(object)),
         );
       case kJoinPlanNotificationVerb:
         return NotificationActivityJoinLeavePlan(
+          actorId: actorId,
           actorName: actorName,
           workoutPlanId: FeedUtils.getObjectIdFromRef(activity.object),
           workoutPlanName: activity.foreignId,
@@ -296,6 +304,7 @@ class NotificationActivity extends StatelessWidget {
         );
       case kLeavePlanNotificationVerb:
         return NotificationActivityJoinLeavePlan(
+          actorId: actorId,
           actorName: actorName,
           workoutPlanId: FeedUtils.getObjectIdFromRef(activity.object),
           workoutPlanName: activity.foreignId,
@@ -303,19 +312,16 @@ class NotificationActivity extends StatelessWidget {
         );
       case kLogWorkoutNotificationVerb:
         return NotificationActivityLogWorkout(
+          actorId: actorId,
           actorName: actorName,
           workoutId: FeedUtils.getObjectIdFromRef(activity.object),
           workoutName: activity.foreignId,
         );
       case kFollowNotificationVerb:
         return NotificationActivityFollow(
+          actorId: actorId,
           actorName: actorName,
         );
-      // Not built yet as not certain that this is needed.
-      // case kCommentNotificationVerb:
-      //   return Container();
-      // case kLikeNotificationVerb:
-      //   return Container();
 
       default:
         printLog(
@@ -326,10 +332,12 @@ class NotificationActivity extends StatelessWidget {
 }
 
 class NotificationActivityFollow extends StatelessWidget {
+  final String? actorId;
   final String actorName;
   const NotificationActivityFollow({
     Key? key,
     required this.actorName,
+    this.actorId,
   }) : super(key: key);
 
   @override
@@ -337,11 +345,19 @@ class NotificationActivityFollow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        MyText(
-          '$actorName followed you!',
-          maxLines: 3,
-          lineHeight: 1,
-        ),
+        Expanded(
+            child: MyRichText(children: [
+          TextSpan(
+            text: actorName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = actorId != null
+                  ? () => context.navigateTo(
+                      UserPublicProfileDetailsRoute(userId: actorId!))
+                  : null,
+          ),
+          const TextSpan(text: ' followed you'),
+        ])),
         const Padding(
           padding: EdgeInsets.only(left: 6.0),
           child:
@@ -353,40 +369,48 @@ class NotificationActivityFollow extends StatelessWidget {
 }
 
 class NotificationActivityJoinClub extends StatelessWidget {
+  final String? actorId;
   final String actorName;
   final StreamFeedClub? club;
   const NotificationActivityJoinClub({
     Key? key,
     required this.actorName,
-    this.club,
+    required this.club,
+    required this.actorId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final clubId = club?.id;
     final clubName = club?.data.name != null ? ' ${club!.data.name}' : '';
-    final clubImage = club?.data.image;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
-          child: MyText(
-            '$actorName joined your club$clubName!',
-            maxLines: 3,
-            lineHeight: 1.4,
+            child: MyRichText(children: [
+          TextSpan(
+            text: actorName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = actorId != null
+                  ? () => context.navigateTo(
+                      UserPublicProfileDetailsRoute(userId: actorId!))
+                  : null,
           ),
-        ),
-        Row(
-          children: [
-            const SizedBox(width: 6),
-            const Icon(CupertinoIcons.hand_thumbsup_fill,
-                size: kThumbsUpIconSize),
-            if (clubImage != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: UserAvatar(
-                    avatarUri: clubImage, size: kNotificationAvatarSize),
-              ),
-          ],
+          const TextSpan(text: ' joined your club'),
+          TextSpan(
+            text: clubName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = clubId != null
+                  ? () => context.navigateTo(ClubDetailsRoute(id: clubId))
+                  : null,
+          ),
+        ])),
+        const Padding(
+          padding: EdgeInsets.only(left: 6.0),
+          child:
+              Icon(CupertinoIcons.hand_thumbsup_fill, size: kThumbsUpIconSize),
         ),
       ],
     );
@@ -394,46 +418,58 @@ class NotificationActivityJoinClub extends StatelessWidget {
 }
 
 class NotificationActivityLeaveClub extends StatelessWidget {
+  final String? actorId;
   final String actorName;
   final StreamFeedClub? club;
   const NotificationActivityLeaveClub({
     Key? key,
     required this.actorName,
     this.club,
+    this.actorId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final clubId = club?.id;
     final clubName = club?.data.name != null ? ' ${club!.data.name}' : '';
-    final clubImage = club?.data.image;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: MyText(
-            '$actorName left your club$clubName!',
-            maxLines: 3,
-            lineHeight: 1.4,
+        Expanded(
+            child: MyRichText(children: [
+          TextSpan(
+            text: actorName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = actorId != null
+                  ? () => context.navigateTo(
+                      UserPublicProfileDetailsRoute(userId: actorId!))
+                  : null,
           ),
-        ),
-        if (clubImage != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child:
-                UserAvatar(avatarUri: clubImage, size: kNotificationAvatarSize),
+          const TextSpan(text: ' left your club'),
+          TextSpan(
+            text: clubName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = clubId != null
+                  ? () => context.navigateTo(ClubDetailsRoute(id: clubId))
+                  : null,
           ),
+        ])),
       ],
     );
   }
 }
 
 class NotificationActivityJoinLeavePlan extends StatelessWidget {
+  final String? actorId;
   final String actorName;
   final String? workoutPlanId;
   final String? workoutPlanName;
   final bool isJoin;
   const NotificationActivityJoinLeavePlan({
     Key? key,
+    this.actorId,
     required this.actorName,
     required this.workoutPlanId,
     required this.workoutPlanName,
@@ -443,19 +479,32 @@ class NotificationActivityJoinLeavePlan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final action = isJoin ? 'joined' : 'left';
-    final text = workoutPlanName != null
-        ? '$actorName $action plan $workoutPlanName!'
-        : '$actorName $action your plan!';
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: MyText(
-            text,
-            maxLines: 3,
-            lineHeight: 1.4,
+        Expanded(
+            child: MyRichText(children: [
+          TextSpan(
+            text: actorName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = actorId != null
+                  ? () => context.navigateTo(
+                      UserPublicProfileDetailsRoute(userId: actorId!))
+                  : null,
           ),
-        ),
+          TextSpan(text: ' $action plan '),
+          TextSpan(
+            text: workoutPlanName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = workoutPlanId != null
+                  ? () => context
+                      .navigateTo(WorkoutPlanDetailsRoute(id: workoutPlanId!))
+                  : null,
+          ),
+        ])),
         if (isJoin)
           const Padding(
             padding: EdgeInsets.only(left: 6.0),
@@ -468,6 +517,7 @@ class NotificationActivityJoinLeavePlan extends StatelessWidget {
 }
 
 class NotificationActivityLogWorkout extends StatelessWidget {
+  final String? actorId;
   final String actorName;
   final String? workoutId;
   final String? workoutName;
@@ -476,23 +526,36 @@ class NotificationActivityLogWorkout extends StatelessWidget {
     required this.actorName,
     this.workoutId,
     this.workoutName,
+    this.actorId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final text = workoutName != null
-        ? '$actorName logged your workout $workoutName!'
-        : '$actorName logged your workout!';
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
-          child: MyText(
-            text,
-            maxLines: 3,
-            lineHeight: 1.4,
+        Expanded(
+            child: MyRichText(children: [
+          TextSpan(
+            text: actorName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = actorId != null
+                  ? () => context.navigateTo(
+                      UserPublicProfileDetailsRoute(userId: actorId!))
+                  : null,
           ),
-        ),
+          const TextSpan(text: ' logged your workout '),
+          TextSpan(
+            text: workoutName,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            recognizer: TapGestureRecognizer()
+              ..onTap = workoutId != null
+                  ? () =>
+                      context.navigateTo(WorkoutDetailsRoute(id: workoutId!))
+                  : null,
+          ),
+        ])),
         const Padding(
           padding: EdgeInsets.only(left: 6.0),
           child:

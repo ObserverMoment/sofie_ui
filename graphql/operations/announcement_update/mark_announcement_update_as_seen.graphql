@@ -1,0 +1,5 @@
+mutation markAnnouncementUpdateAsSeen(
+  $data: MarkAnnouncementUpdateAsSeenInput!
+) {
+  markAnnouncementUpdateAsSeen(data: $data)
+}

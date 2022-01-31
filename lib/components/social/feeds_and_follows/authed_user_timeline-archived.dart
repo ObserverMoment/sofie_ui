@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/club_feed_post_card.dart';
@@ -40,7 +41,6 @@ class AuthedUserTimeline extends StatefulWidget {
 }
 
 class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
-  bool _isLoading = true;
   late PagingController<int, StreamEnrichedActivity> _pagingController;
   late ScrollController _scrollController;
 
@@ -74,11 +74,6 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
 
   Future<void> _loadInitialData() async {
     await _getTimelinePosts(offset: 0);
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   Future<void> _getTimelinePosts({required int offset}) async {
@@ -241,100 +236,155 @@ class _AuthedUserTimelineState extends State<AuthedUserTimeline> {
   Widget build(BuildContext context) {
     final likedPostIds = _userLikedPosts.map((p) => p.activityId).toList();
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        if (_isLoading)
-          const ShimmerCardList(
-            itemCount: 10,
-            cardHeight: 260,
-          )
-        else
-          _pagingController.itemList == null ||
-                  _pagingController.itemList!.isEmpty
-              ? YourContentEmptyPlaceholder(
-                  message: 'No posts yet',
-                  explainer:
-                      'Posts from anyone you are following will show up here. Keep up with all the latest fitness news and content from your friends and fans!',
-                  actions: [
-                      EmptyPlaceholderAction(
-                          action: () =>
-                              context.navigateTo(const DiscoverPeopleRoute()),
-                          buttonIcon: CupertinoIcons.compass,
-                          buttonText: 'Discover People'),
-                    ])
-              : PagedListView<int, StreamEnrichedActivity>(
-                  pagingController: _pagingController,
-                  scrollController: _scrollController,
-                  cacheExtent: 1000,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  builderDelegate:
-                      PagedChildBuilderDelegate<StreamEnrichedActivity>(
-                    itemBuilder: (context, activity, index) {
-                      return FadeInUp(
-                        duration: 50,
-                        delay: index,
-                        delayBasis: 10,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: activity.extraData.club != null
-                              ? ClubFeedPostCard(
-                                  activity: activity,
-                                  showClubIcon: true,
-                                  likeUnlikePost: () =>
-                                      _likeUnlikePost(activity.id),
-                                  userHasLiked:
-                                      likedPostIds.contains(activity.id),
-                                  removeActivityFromTimeline: () =>
-                                      _confirmRemoveActivityFromFeed(
-                                          activity.id),
-                                  enableViewClubOption: true)
-                              : FeedPostCard(
-                                  likeUnlikePost: () =>
-                                      _likeUnlikePost(activity.id),
-                                  userHasLiked:
-                                      likedPostIds.contains(activity.id),
-                                  activity: activity,
-                                  timelineFeed: widget.timelineFeed,
-                                  userFeed: widget.userFeed,
-                                  deleteActivity: () =>
-                                      _confirmDeleteActivity(activity.id),
-                                  removeActivityFromTimeline: () =>
-                                      _confirmRemoveActivityFromFeed(
-                                          activity.id),
-                                  enableViewClubOption: true),
-                        ),
-                      );
-                    },
-                    firstPageErrorIndicatorBuilder: (context) => MyText(
-                      'Oh dear, ${_pagingController.error.toString()}',
-                      maxLines: 5,
-                      textAlign: TextAlign.center,
-                    ),
-                    newPageErrorIndicatorBuilder: (context) => MyText(
-                      'Oh dear, ${_pagingController.error.toString()}',
-                      maxLines: 5,
-                      textAlign: TextAlign.center,
-                    ),
-                    firstPageProgressIndicatorBuilder: (c) =>
-                        const CupertinoActivityIndicator(),
-                    newPageProgressIndicatorBuilder: (c) =>
-                        const CupertinoActivityIndicator(),
-                    noItemsFoundIndicatorBuilder: (c) =>
-                        const Center(child: MyText('No notifications...')),
-                  ),
+    return SliverStack(children: [
+      PagedSliverList<int, StreamEnrichedActivity>(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<StreamEnrichedActivity>(
+            itemBuilder: (context, activity, index) {
+              return FadeInUp(
+                duration: 50,
+                delay: index,
+                delayBasis: 10,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: activity.extraData.club != null
+                      ? ClubFeedPostCard(
+                          activity: activity,
+                          showClubIcon: true,
+                          likeUnlikePost: () => _likeUnlikePost(activity.id),
+                          userHasLiked: likedPostIds.contains(activity.id),
+                          removeActivityFromTimeline: () =>
+                              _confirmRemoveActivityFromFeed(activity.id),
+                          enableViewClubOption: true)
+                      : FeedPostCard(
+                          likeUnlikePost: () => _likeUnlikePost(activity.id),
+                          userHasLiked: likedPostIds.contains(activity.id),
+                          activity: activity,
+                          timelineFeed: widget.timelineFeed,
+                          userFeed: widget.userFeed,
+                          deleteActivity: () =>
+                              _confirmDeleteActivity(activity.id),
+                          removeActivityFromTimeline: () =>
+                              _confirmRemoveActivityFromFeed(activity.id),
+                          enableViewClubOption: true),
                 ),
-        if (_newActivities.isNotEmpty)
-          Positioned(
-              top: 8,
-              child: SizeFadeIn(
-                  child: FloatingButton(
-                icon: CupertinoIcons.news,
-                onTap: _prependNewPosts,
-                text:
-                    '${_newActivities.length} new ${_newActivities.length == 1 ? "post" : "posts"}',
-              )))
-      ],
-    );
+              );
+            },
+            firstPageErrorIndicatorBuilder: (context) => MyText(
+              'Oh dear, ${_pagingController.error.toString()}',
+              maxLines: 5,
+              textAlign: TextAlign.center,
+            ),
+            newPageErrorIndicatorBuilder: (context) => MyText(
+              'Oh dear, ${_pagingController.error.toString()}',
+              maxLines: 5,
+              textAlign: TextAlign.center,
+            ),
+            firstPageProgressIndicatorBuilder: (c) =>
+                const CupertinoActivityIndicator(),
+            newPageProgressIndicatorBuilder: (c) =>
+                const CupertinoActivityIndicator(),
+            noItemsFoundIndicatorBuilder: (context) => YourContentEmptyPlaceholder(
+                message: 'No posts yet',
+                explainer:
+                    'Posts from anyone you are following will show up here. Keep up with all the latest fitness news and content from your friends and fans!',
+                actions: [
+                  EmptyPlaceholderAction(
+                      action: () =>
+                          context.navigateTo(const DiscoverPeopleRoute()),
+                      buttonIcon: CupertinoIcons.compass,
+                      buttonText: 'Discover People'),
+                ]),
+          )),
+      // if (_newActivities.isNotEmpty)
+      if (true)
+        SliverPositioned(
+            top: 8,
+            child: SizeFadeIn(
+                child: FloatingButton(
+              icon: CupertinoIcons.news,
+              onTap: _prependNewPosts,
+              text:
+                  '${_newActivities.length} new ${_newActivities.length == 1 ? "post" : "posts"}',
+            )))
+    ]);
+
+    // return Stack(
+    //   alignment: Alignment.topCenter,
+    //   children: [
+    //     _pagingController.itemList == null ||
+    //             _pagingController.itemList!.isEmpty
+    //         ?
+    //         : PagedListView<int, StreamEnrichedActivity>(
+    //             pagingController: _pagingController,
+    //             scrollController: _scrollController,
+    //             cacheExtent: 1000,
+    //             physics: const AlwaysScrollableScrollPhysics(),
+    //             builderDelegate:
+    //                 PagedChildBuilderDelegate<StreamEnrichedActivity>(
+    //               itemBuilder: (context, activity, index) {
+    //                 return FadeInUp(
+    //                   duration: 50,
+    //                   delay: index,
+    //                   delayBasis: 10,
+    //                   child: Padding(
+    //                     padding: const EdgeInsets.symmetric(vertical: 8.0),
+    //                     child: activity.extraData.club != null
+    //                         ? ClubFeedPostCard(
+    //                             activity: activity,
+    //                             showClubIcon: true,
+    //                             likeUnlikePost: () =>
+    //                                 _likeUnlikePost(activity.id),
+    //                             userHasLiked:
+    //                                 likedPostIds.contains(activity.id),
+    //                             removeActivityFromTimeline: () =>
+    //                                 _confirmRemoveActivityFromFeed(activity.id),
+    //                             enableViewClubOption: true)
+    //                         : FeedPostCard(
+    //                             likeUnlikePost: () =>
+    //                                 _likeUnlikePost(activity.id),
+    //                             userHasLiked:
+    //                                 likedPostIds.contains(activity.id),
+    //                             activity: activity,
+    //                             timelineFeed: widget.timelineFeed,
+    //                             userFeed: widget.userFeed,
+    //                             deleteActivity: () =>
+    //                                 _confirmDeleteActivity(activity.id),
+    //                             removeActivityFromTimeline: () =>
+    //                                 _confirmRemoveActivityFromFeed(activity.id),
+    //                             enableViewClubOption: true),
+    //                   ),
+    //                 );
+    //               },
+    //               firstPageErrorIndicatorBuilder: (context) => MyText(
+    //                 'Oh dear, ${_pagingController.error.toString()}',
+    //                 maxLines: 5,
+    //                 textAlign: TextAlign.center,
+    //               ),
+    //               newPageErrorIndicatorBuilder: (context) => MyText(
+    //                 'Oh dear, ${_pagingController.error.toString()}',
+    //                 maxLines: 5,
+    //                 textAlign: TextAlign.center,
+    //               ),
+    //               firstPageProgressIndicatorBuilder: (c) =>
+    //                   const CupertinoActivityIndicator(),
+    //               newPageProgressIndicatorBuilder: (c) =>
+    //                   const CupertinoActivityIndicator(),
+    //               noItemsFoundIndicatorBuilder: (c) =>
+    //                   const Center(child: MyText('No notifications...')),
+    //             ),
+    //       ),
+    // if (_newActivities.isNotEmpty)
+    //   Positioned(
+    //       top: 8,
+    //       child: SizeFadeIn(
+    //           child: FloatingButton(
+    //         icon: CupertinoIcons.news,
+    //         onTap: _prependNewPosts,
+    //         text:
+    //             '${_newActivities.length} new ${_newActivities.length == 1 ? "post" : "posts"}',
+    //       )))
+    //   ],
+    // );
   }
 }
