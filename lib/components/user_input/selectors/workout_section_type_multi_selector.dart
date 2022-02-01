@@ -1,13 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 
 class WorkoutSectionTypeMultiSelector extends StatelessWidget {
   final String name;
@@ -61,53 +58,44 @@ class WorkoutSectionTypeMultiSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<WorkoutSectionTypes$Query, json.JsonSerializable>(
-        key: Key(
-            'WorkoutSectionTypeMultiSelector - ${WorkoutSectionTypesQuery().operationName}'),
-        query: WorkoutSectionTypesQuery(),
-        loadingIndicator: const ShimmerCardList(
-          itemCount: 7,
-          cardHeight: 70,
-        ),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        builder: (data) {
-          return Column(
-            children: [
-              if (!hideTitle)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      MyHeaderText(
-                        name,
-                      ),
-                      if (allowMultiSelect)
-                        MyText(
-                          selectedTypes.isEmpty
-                              ? 'All'
-                              : '${selectedTypes.length} selected',
-                          subtext: true,
-                        )
-                    ],
-                  ),
+    final workoutSectionTypes = CoreDataRepo.workoutSectionTypes;
+
+    return Column(
+      children: [
+        if (!hideTitle)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyHeaderText(
+                  name,
                 ),
-              const SizedBox(height: 16),
-              if (direction == Axis.vertical)
-                ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: _buildChildren(data.workoutSectionTypes),
-                )
-              else
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: _buildChildren(data.workoutSectionTypes),
-                ),
-            ],
-          );
-        });
+                if (allowMultiSelect)
+                  MyText(
+                    selectedTypes.isEmpty
+                        ? 'All'
+                        : '${selectedTypes.length} selected',
+                    subtext: true,
+                  )
+              ],
+            ),
+          ),
+        const SizedBox(height: 16),
+        if (direction == Axis.vertical)
+          ListView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            children: _buildChildren(workoutSectionTypes),
+          )
+        else
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10,
+            runSpacing: 10,
+            children: _buildChildren(workoutSectionTypes),
+          ),
+      ],
+    );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -11,8 +10,7 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class GymProfileCreatorPage extends StatefulWidget {
@@ -318,27 +316,16 @@ class _GymProfileCreatorPageEquipment extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: QueryObserver<Equipments$Query, json.JsonSerializable>(
-              key: Key(
-                  'GymProfileCreatorPage - ${EquipmentsQuery().operationName}'),
-              query: EquipmentsQuery(),
-              fetchPolicy: QueryFetchPolicy.storeFirst,
-              builder: (data) {
-                final List<Equipment> equipments = data.equipments;
-
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
-                  child: EquipmentMultiSelectorGrid(
-                    showIcon: true,
-                    equipments: equipments,
-                    handleSelection: handleSelection,
-                    selectedEquipments: selectedEquipments,
-                    fontSize: FONTSIZE.one,
-                  ),
-                );
-              }),
-        ),
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
+          child: EquipmentMultiSelectorGrid(
+            showIcon: true,
+            equipments: CoreDataRepo.equipment,
+            handleSelection: handleSelection,
+            selectedEquipments: selectedEquipments,
+            fontSize: FONTSIZE.one,
+          ),
+        )),
       ],
     );
   }

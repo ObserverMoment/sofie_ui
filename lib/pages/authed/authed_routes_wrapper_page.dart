@@ -12,6 +12,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
@@ -32,6 +33,9 @@ class AuthedRoutesWrapperPage extends StatefulWidget {
 
 class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   late AuthedUser _authedUser;
+
+  bool _coreAppDataInitialized = false;
+
   late chat.StreamChatClient _streamChatClient;
   bool _chatInitialized = false;
 
@@ -54,6 +58,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   }
 
   Future<void> asyncInit() async {
+    await _initCoreAppData();
     await _connectUserToChat();
     await _initFeeds();
     await _handleIncomingLinks();
@@ -63,6 +68,11 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _handleInitialUri();
     });
+  }
+
+  Future<void> _initCoreAppData() async {
+    await CoreDataRepo.initCoreData(context);
+    _coreAppDataInitialized = true;
   }
 
   chat.StreamChatClient get _createStreamChatClient =>
@@ -173,7 +183,8 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _chatInitialized &&
+    return _coreAppDataInitialized &&
+            _chatInitialized &&
             _feedsInitialized &&
             _incomingLinkStreamInitialized
         ? chat.StreamChatCore(

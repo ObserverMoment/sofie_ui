@@ -3,11 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -40,8 +38,6 @@ class _YourPostsPageState extends State<YourPostsPage> {
   /// Feed - posts the user has made themselves.
   late FlatFeed _userFeed;
 
-  bool _isLoading = true;
-
   late PagingController<int, StreamEnrichedActivity> _pagingController;
   late ScrollController _scrollController;
 
@@ -70,11 +66,6 @@ class _YourPostsPageState extends State<YourPostsPage> {
 
   Future<void> _loadInitialData() async {
     await _getFeedPosts(offset: 0);
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   Future<void> _getFeedPosts({required int offset}) async {
@@ -175,65 +166,53 @@ class _YourPostsPageState extends State<YourPostsPage> {
       navigationBar: const MyNavBar(
         middle: NavBarTitle('Your Posts'),
       ),
-      child: _isLoading
-          ? const ShimmerCardList(
-              itemCount: 10,
-              cardHeight: 260,
-            )
-          : FABPage(
-              rowButtons: [
-                FloatingButton(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 11, horizontal: 16),
-                    text: 'New Post',
-                    onTap: () =>
-                        context.navigateTo(const FeedPostCreatorRoute()),
-                    icon: CupertinoIcons.pencil),
-              ],
-              child: _pagingController.itemList == null ||
-                      _pagingController.itemList!.isEmpty
-                  ? const YourContentEmptyPlaceholder(
-                      message: 'No posts yet', actions: [])
-                  : PagedListView<int, StreamEnrichedActivity>(
-                      pagingController: _pagingController,
-                      scrollController: _scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      builderDelegate:
-                          PagedChildBuilderDelegate<StreamEnrichedActivity>(
-                        itemBuilder: (context, activity, index) => FadeInUp(
-                          duration: 50,
-                          delay: index,
-                          delayBasis: 10,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: FeedPostCard(
-                              activity: activity,
-                              userFeed: _userFeed,
-                              enableViewClubOption: false,
-                              deleteActivity: () =>
-                                  _confirmDeleteActivity(activity.id),
-                            ),
-                          ),
-                        ),
-                        firstPageErrorIndicatorBuilder: (context) => MyText(
-                          'Oh dear, ${_pagingController.error.toString()}',
-                          maxLines: 5,
-                          textAlign: TextAlign.center,
-                        ),
-                        newPageErrorIndicatorBuilder: (context) => MyText(
-                          'Oh dear, ${_pagingController.error.toString()}',
-                          maxLines: 5,
-                          textAlign: TextAlign.center,
-                        ),
-                        firstPageProgressIndicatorBuilder: (c) =>
-                            const LoadingCircle(),
-                        newPageProgressIndicatorBuilder: (c) =>
-                            const LoadingCircle(),
-                        noItemsFoundIndicatorBuilder: (c) =>
-                            const Center(child: MyText('No results...')),
-                      ),
-                    ),
+      child: FABPage(
+        rowButtons: [
+          FloatingButton(
+              padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
+              text: 'New Post',
+              onTap: () => context.navigateTo(const FeedPostCreatorRoute()),
+              icon: CupertinoIcons.pencil),
+        ],
+        child: PagedListView<int, StreamEnrichedActivity>(
+          pagingController: _pagingController,
+          scrollController: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          builderDelegate: PagedChildBuilderDelegate<StreamEnrichedActivity>(
+            itemBuilder: (context, activity, index) => FadeInUp(
+              duration: 50,
+              delay: index,
+              delayBasis: 10,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: FeedPostCard(
+                  activity: activity,
+                  userFeed: _userFeed,
+                  enableViewClubOption: false,
+                  deleteActivity: () => _confirmDeleteActivity(activity.id),
+                ),
+              ),
             ),
+            firstPageErrorIndicatorBuilder: (context) => MyText(
+              'Oh dear, ${_pagingController.error.toString()}',
+              maxLines: 5,
+              textAlign: TextAlign.center,
+            ),
+            newPageErrorIndicatorBuilder: (context) => MyText(
+              'Oh dear, ${_pagingController.error.toString()}',
+              maxLines: 5,
+              textAlign: TextAlign.center,
+            ),
+            firstPageProgressIndicatorBuilder: (c) =>
+                const CupertinoActivityIndicator(),
+            newPageProgressIndicatorBuilder: (c) =>
+                const CupertinoActivityIndicator(),
+            noItemsFoundIndicatorBuilder: (c) =>
+                const YourContentEmptyPlaceholder(
+                    message: 'No posts yet', actions: []),
+          ),
+        ),
+      ),
     );
   }
 }

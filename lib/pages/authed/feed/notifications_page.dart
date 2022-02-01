@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -135,8 +134,23 @@ class _NotificationsPageState extends State<NotificationsPage> {
               const CupertinoActivityIndicator(),
           newPageProgressIndicatorBuilder: (c) =>
               const CupertinoActivityIndicator(),
-          noItemsFoundIndicatorBuilder: (c) =>
-              const Center(child: MyText('No notifications...')),
+          noItemsFoundIndicatorBuilder: (c) => Center(
+            child: Column(
+              children: const [
+                Opacity(
+                    opacity: 0.5,
+                    child: Icon(
+                      CupertinoIcons.square_list,
+                      size: 50,
+                    )),
+                SizedBox(height: 12),
+                MyText(
+                  'No notifications...',
+                  subtext: true,
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

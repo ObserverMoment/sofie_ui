@@ -1,0 +1,38 @@
+query coreData {
+  coreData {
+    __typename
+    bodyAreas {
+      ...BodyArea
+    }
+    equipment {
+      ...Equipment
+    }
+    moveTypes {
+      ...MoveType
+    }
+    workoutGoals {
+      ...WorkoutGoal
+    }
+    workoutSectionTypes {
+      ...WorkoutSectionType
+    }
+    standardMoves {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+  }
+}

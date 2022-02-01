@@ -197,13 +197,9 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
                       ),
                     ),
                     firstPageProgressIndicatorBuilder: (c) =>
-                        const CupertinoActivityIndicator(
-                      radius: 12,
-                    ),
+                        const CupertinoActivityIndicator(),
                     newPageProgressIndicatorBuilder: (c) =>
-                        const CupertinoActivityIndicator(
-                      radius: 12,
-                    ),
+                        const CupertinoActivityIndicator(),
                     noItemsFoundIndicatorBuilder: (c) => const Center(
                       child: NoResultsToDisplay(),
                     ),

@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
@@ -14,8 +13,7 @@ import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Screen for inputting MoveFilter settings.
@@ -136,49 +134,43 @@ class MoveFiltersTypes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<MoveTypes$Query, json.JsonSerializable>(
-        key: Key('MoveFiltersTypes - ${MoveTypesQuery().operationName}'),
-        query: MoveTypesQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        builder: (data) {
-          final allMoveTypes = data.moveTypes;
+    final allMoveTypes = CoreDataRepo.moveTypes;
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
-            child: ListView(children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SelectableBoxExpanded(
-                          isSelected: selectedMoveTypes.isEmpty,
-                          onPressed: () {
-                            if (selectedMoveTypes.isEmpty) {
-                              updateSelected([...allMoveTypes]);
-                            } else {
-                              updateSelected([]);
-                            }
-                          },
-                          text: 'ALL'),
-                    ),
-                  ],
-                ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
+      child: ListView(children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: SelectableBoxExpanded(
+                    isSelected: selectedMoveTypes.isEmpty,
+                    onPressed: () {
+                      if (selectedMoveTypes.isEmpty) {
+                        updateSelected([...allMoveTypes]);
+                      } else {
+                        updateSelected([]);
+                      }
+                    },
+                    text: 'ALL'),
               ),
-              ...allMoveTypes
-                  .map((type) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0),
-                        child: SelectableBoxExpanded(
-                          text: type.name,
-                          isSelected: selectedMoveTypes.contains(type),
-                          onPressed: () => updateSelected(
-                              selectedMoveTypes.toggleItem<MoveType>(type)),
-                        ),
-                      ))
-                  .toList(),
-            ]),
-          );
-        });
+            ],
+          ),
+        ),
+        ...allMoveTypes
+            .map((type) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: SelectableBoxExpanded(
+                    text: type.name,
+                    isSelected: selectedMoveTypes.contains(type),
+                    onPressed: () => updateSelected(
+                        selectedMoveTypes.toggleItem<MoveType>(type)),
+                  ),
+                ))
+            .toList(),
+      ]),
+    );
   }
 }
 
@@ -207,23 +199,13 @@ class MoveFiltersEquipment extends StatelessWidget {
           Expanded(
             child: FadeIn(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: QueryObserver<Equipments$Query, json.JsonSerializable>(
-                    key: Key(
-                        'MoveFiltersEquipment - ${EquipmentsQuery().operationName}'),
-                    query: EquipmentsQuery(),
-                    fetchPolicy: QueryFetchPolicy.storeFirst,
-                    builder: (data) {
-                      final allEquipments = data.equipments;
-
-                      return EquipmentMultiSelectorGrid(
-                          selectedEquipments: selectedEquipments,
-                          equipments: allEquipments,
-                          fontSize: FONTSIZE.two,
-                          showIcon: true,
-                          handleSelection: handleSelection);
-                    }),
-              ),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: EquipmentMultiSelectorGrid(
+                      selectedEquipments: selectedEquipments,
+                      equipments: CoreDataRepo.equipment,
+                      fontSize: FONTSIZE.two,
+                      showIcon: true,
+                      handleSelection: handleSelection)),
             ),
           ),
       ],

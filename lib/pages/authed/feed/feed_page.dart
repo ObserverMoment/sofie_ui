@@ -60,6 +60,8 @@ class _FeedPageState extends State<FeedPage> {
   /// Ids of posts and reactions that the authed user has previously liked.
   List<PostWithLikeReaction> _userLikedPosts = [];
 
+  bool _showBackToTopButton = false;
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +76,19 @@ class _FeedPageState extends State<FeedPage> {
         firstPageKey: 0, invisibleItemsThreshold: 5);
 
     _scrollController = ScrollController();
+
+    _scrollController.addListener(() {
+      if (!_showBackToTopButton &&
+          _scrollController.positions.isNotEmpty &&
+          _scrollController.position.pixels > 2000) {
+        setState(() => _showBackToTopButton = true);
+      }
+      if (_showBackToTopButton &&
+          _scrollController.positions.isNotEmpty &&
+          _scrollController.position.pixels <= 2000) {
+        setState(() => _showBackToTopButton = false);
+      }
+    });
 
     _pagingController.addPageRequestListener((nextPageKey) {
       _getTimelinePosts(offset: nextPageKey);
@@ -233,6 +248,12 @@ class _FeedPageState extends State<FeedPage> {
         });
   }
 
+  void _scrollToTopOfScreen() => _scrollController.animateTo(
+        0,
+        duration: const Duration(seconds: 1),
+        curve: Curves.fastOutSlowIn,
+      );
+
   @override
   void dispose() {
     _pagingController.dispose();
@@ -289,10 +310,6 @@ class _FeedPageState extends State<FeedPage> {
                 const SliverToBoxAdapter(
                   child: ComingUpList(),
                 ),
-                // AuthedUserTimeline(
-                //     userFeed: _userFeed,
-                //     timelineFeed: _timelineFeed,
-                //     streamFeedClient: _streamFeedClient),
                 PagedSliverList<int, StreamEnrichedActivity>(
                     pagingController: _pagingController,
                     builderDelegate:
@@ -363,8 +380,7 @@ class _FeedPageState extends State<FeedPage> {
               ],
             ),
           ),
-          // if (_newActivities.isNotEmpty)
-          if (true)
+          if (_newActivities.isNotEmpty)
             Positioned(
                 bottom: EnvironmentConfig.bottomNavBarHeight + 20,
                 child: SizeFadeIn(
@@ -373,7 +389,23 @@ class _FeedPageState extends State<FeedPage> {
                   onTap: _prependNewPosts,
                   text:
                       '${_newActivities.length} new ${_newActivities.length == 1 ? "post" : "posts"}',
-                )))
+                ))),
+          if (_showBackToTopButton)
+            Positioned(
+                right: 10,
+                bottom: EnvironmentConfig.bottomNavBarHeight + 20,
+                child: FadeInUp(
+                  child: ContentBox(
+                    padding: const EdgeInsets.all(4),
+                    child: CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        child: const Icon(
+                          CupertinoIcons.chevron_up_circle,
+                          size: 30,
+                        ),
+                        onPressed: _scrollToTopOfScreen),
+                  ),
+                )),
         ],
       ),
     );

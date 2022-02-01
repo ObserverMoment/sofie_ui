@@ -9,7 +9,6 @@ import 'package:sofie_ui/components/creators/workout_creator/workout_creator_str
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -22,11 +21,9 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/default_object_factory.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 
 class WorkoutSectionCreator extends StatefulWidget {
   @override
@@ -200,202 +197,184 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
 
     final workoutSectionType = _workoutSection.workoutSectionType;
 
-    return QueryObserver<StandardMoves$Query, json.JsonSerializable>(
-        key: Key(
-            'WorkoutSectionWorkoutSets - ${StandardMovesQuery().operationName}'),
-        query: StandardMovesQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        loadingIndicator: const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: LoadingDots(
-            size: 12,
-          ),
-        ),
-        builder: (data) {
-          /// Need to get the Move [Rest] for use when user taps [+ Add Rest]
-          final restMove =
-              data.standardMoves.firstWhere((m) => m.id == kRestMoveId);
+    /// Need to get the Move [Rest] for use when user taps [+ Add Rest]
+    final restMove =
+        CoreDataRepo.standardMoves.firstWhere((m) => m.id == kRestMoveId);
 
-          return MyPageScaffold(
-            navigationBar: MyNavBar(
-              middle: _buildTitle(),
-              trailing: NavBarEllipsisMenu(
-                items: [
-                  ContextMenuItem(
-                    text: Utils.textNotNull(_workoutSection.name)
-                        ? 'Edit name'
-                        : 'Add name',
-                    iconData: CupertinoIcons.pencil,
-                    onTap: () => context.push(
-                        child: FullScreenTextEditing(
-                      title: 'Name',
-                      inputValidation: (text) => true,
-                      maxChars: 25,
-                      initialValue: _workoutSection.name,
-                      onSave: (name) => _updateWorkoutSection({'name': name}),
-                    )),
-                  ),
-                  ContextMenuItem(
-                    text: Utils.textNotNull(_workoutSection.note)
-                        ? 'Edit note'
-                        : 'Add note',
-                    iconData: CupertinoIcons.doc_text,
-                    onTap: _openNoteEditor,
-                  ),
-                  ContextMenuItem(
-                    text: 'Change type',
-                    iconData: CupertinoIcons.arrow_left_right,
-                    onTap: () => _openChangeSectionType(_workoutSection),
-                  ),
-                ],
+    return MyPageScaffold(
+      navigationBar: MyNavBar(
+        middle: _buildTitle(),
+        trailing: NavBarEllipsisMenu(
+          items: [
+            ContextMenuItem(
+              text: Utils.textNotNull(_workoutSection.name)
+                  ? 'Edit name'
+                  : 'Add name',
+              iconData: CupertinoIcons.pencil,
+              onTap: () => context.push(
+                  child: FullScreenTextEditing(
+                title: 'Name',
+                inputValidation: (text) => true,
+                maxChars: 25,
+                initialValue: _workoutSection.name,
+                onSave: (name) => _updateWorkoutSection({'name': name}),
+              )),
+            ),
+            ContextMenuItem(
+              text: Utils.textNotNull(_workoutSection.note)
+                  ? 'Edit note'
+                  : 'Add note',
+              iconData: CupertinoIcons.doc_text,
+              onTap: _openNoteEditor,
+            ),
+            ContextMenuItem(
+              text: 'Change type',
+              iconData: CupertinoIcons.arrow_left_right,
+              onTap: () => _openChangeSectionType(_workoutSection),
+            ),
+          ],
+        ),
+      ),
+      child: FABPage(
+        rowButtonsAlignment: MainAxisAlignment.spaceEvenly,
+        rowButtons: [
+          if (_workoutSection.isLifting || _workoutSection.isCustomSession)
+            _floatingButton(
+              text: 'Add Exercise',
+              loading: creatingSet,
+              onTap: () => _openWorkoutMoveCreator(context),
+            ),
+          if ([kAMRAPName, kForTimeName].contains(workoutSectionType.name))
+            _floatingButton(
+              text: 'Add Set',
+              loading: creatingSet,
+              onTap: () => _openWorkoutMoveCreator(context),
+            ),
+          if (kHIITCircuitName == workoutSectionType.name)
+            _floatingButton(
+              text: 'Add Station',
+              loading: creatingSet,
+              onTap: () => _openWorkoutMoveCreator(context,
+                  duration: 60, ignoreReps: true, screenTitle: 'Add Station'),
+            ),
+          if (kHIITCircuitName == workoutSectionType.name)
+            _floatingButton(
+              text: 'Add Rest',
+              loading: creatingSet,
+              onTap: () => _addRestSet(
+                context,
+                restMove,
+                30,
               ),
             ),
-            child: FABPage(
-              rowButtonsAlignment: MainAxisAlignment.spaceEvenly,
-              rowButtons: [
-                if (_workoutSection.isLifting ||
-                    _workoutSection.isCustomSession)
-                  _floatingButton(
-                    text: 'Add Exercise',
-                    loading: creatingSet,
-                    onTap: () => _openWorkoutMoveCreator(context),
+          if (kEMOMName == workoutSectionType.name)
+            _floatingButton(
+              text: 'Add Period',
+              loading: creatingSet,
+              onTap: () => _openWorkoutMoveCreator(context,
+                  duration: 60, screenTitle: 'Add Period'),
+            ),
+          if (kTabataName == workoutSectionType.name)
+            _floatingButton(
+              text: 'Add Set',
+              loading: creatingSet,
+              onTap: () => _openWorkoutMoveCreator(context,
+                  duration: 20, ignoreReps: true),
+            ),
+          if (kTabataName == workoutSectionType.name)
+            _floatingButton(
+              text: 'Add Rest',
+              loading: creatingSet,
+              onTap: () => _addRestSet(context, restMove, 10),
+            ),
+          if (!workoutSectionType.isTimed)
+            _floatingButton(
+              text: 'Set Generator',
+              loading: creatingSet,
+              onTap: () => _openWorkoutSetGeneratorCreator(context),
+            ),
+        ],
+        child: ListView(
+          padding: const EdgeInsets.only(bottom: 70),
+          shrinkWrap: true,
+          children: [
+            if (_workoutSection.name != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: MyHeaderText(
+                  _workoutSection.name!,
+                  size: FONTSIZE.four,
+                ),
+              ),
+            if (_workoutSection.isTimed)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                child: MyText(
+                  'Total Time: ${_workoutSection.timedSectionDuration.displayString}',
+                  size: FONTSIZE.four,
+                ),
+              ),
+            if (Utils.textNotNull(_workoutSection.note))
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                child: GestureDetector(
+                  onTap: _openNoteEditor,
+                  child: MyText(
+                    _workoutSection.note!,
+                    maxLines: 3,
+                    textAlign: TextAlign.left,
+                    lineHeight: 1.2,
                   ),
-                if ([kAMRAPName, kForTimeName]
-                    .contains(workoutSectionType.name))
-                  _floatingButton(
-                    text: 'Add Set',
-                    loading: creatingSet,
-                    onTap: () => _openWorkoutMoveCreator(context),
-                  ),
-                if (kHIITCircuitName == workoutSectionType.name)
-                  _floatingButton(
-                    text: 'Add Station',
-                    loading: creatingSet,
-                    onTap: () => _openWorkoutMoveCreator(context,
-                        duration: 60,
-                        ignoreReps: true,
-                        screenTitle: 'Add Station'),
-                  ),
-                if (kHIITCircuitName == workoutSectionType.name)
-                  _floatingButton(
-                    text: 'Add Rest',
-                    loading: creatingSet,
-                    onTap: () => _addRestSet(
-                      context,
-                      restMove,
-                      30,
-                    ),
-                  ),
-                if (kEMOMName == workoutSectionType.name)
-                  _floatingButton(
-                    text: 'Add Period',
-                    loading: creatingSet,
-                    onTap: () => _openWorkoutMoveCreator(context,
-                        duration: 60, screenTitle: 'Add Period'),
-                  ),
-                if (kTabataName == workoutSectionType.name)
-                  _floatingButton(
-                    text: 'Add Set',
-                    loading: creatingSet,
-                    onTap: () => _openWorkoutMoveCreator(context,
-                        duration: 20, ignoreReps: true),
-                  ),
-                if (kTabataName == workoutSectionType.name)
-                  _floatingButton(
-                    text: 'Add Rest',
-                    loading: creatingSet,
-                    onTap: () => _addRestSet(context, restMove, 10),
-                  ),
-                if (!workoutSectionType.isTimed)
-                  _floatingButton(
-                    text: 'Set Generator',
-                    loading: creatingSet,
-                    onTap: () => _openWorkoutSetGeneratorCreator(context),
-                  ),
-              ],
-              child: ListView(
-                padding: const EdgeInsets.only(bottom: 70),
-                shrinkWrap: true,
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  if (_workoutSection.name != null)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: MyHeaderText(
-                        _workoutSection.name!,
-                        size: FONTSIZE.four,
-                      ),
+                  if (_workoutSection.roundsInputAllowed)
+                    RoundPicker(
+                      rounds: _workoutSection.rounds,
+                      saveValue: (value) =>
+                          _updateWorkoutSection({'rounds': value}),
                     ),
-                  if (_workoutSection.isTimed)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 8.0),
-                      child: MyText(
-                        'Total Time: ${_workoutSection.timedSectionDuration.displayString}',
-                        size: FONTSIZE.four,
-                      ),
+                  if (_workoutSection.isAMRAP)
+                    DurationPickerDisplay(
+                      modalTitle: 'AMRAP Timecap',
+                      duration: Duration(seconds: _workoutSection.timecap),
+                      updateDuration: (duration) => _updateWorkoutSection(
+                          {'timecap': duration.inSeconds}),
                     ),
-                  if (Utils.textNotNull(_workoutSection.note))
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4.0),
-                      child: GestureDetector(
-                        onTap: _openNoteEditor,
-                        child: MyText(
-                          _workoutSection.note!,
-                          maxLines: 3,
-                          textAlign: TextAlign.left,
-                          lineHeight: 1.2,
-                        ),
-                      ),
-                    ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        if (_workoutSection.roundsInputAllowed)
-                          RoundPicker(
-                            rounds: _workoutSection.rounds,
-                            saveValue: (value) =>
-                                _updateWorkoutSection({'rounds': value}),
-                          ),
-                        if (_workoutSection.isAMRAP)
-                          DurationPickerDisplay(
-                            modalTitle: 'AMRAP Timecap',
-                            duration:
-                                Duration(seconds: _workoutSection.timecap),
-                            updateDuration: (duration) => _updateWorkoutSection(
-                                {'timecap': duration.inSeconds}),
-                          ),
-                      ],
-                    ),
-                  ),
-                  ImplicitlyAnimatedList<WorkoutSet>(
-                    items: _sortedWorkoutSets,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    areItemsTheSame: (a, b) => a.id == b.id,
-                    itemBuilder: (context, animation, item, index) {
-                      return SizeFadeTransition(
-                        sizeFraction: 0.7,
-                        curve: Curves.easeInOut,
-                        animation: animation,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: WorkoutSetCreator(
-                              key: Key(
-                                  'WorkoutSectionWorkoutSets-${widget.sectionIndex}-${item.sortPosition}'),
-                              sectionIndex: widget.sectionIndex,
-                              setIndex: item.sortPosition,
-                              allowReorder: _sortedWorkoutSets.length > 1),
-                        ),
-                      );
-                    },
-                  ),
                 ],
               ),
             ),
-          );
-        });
+            ImplicitlyAnimatedList<WorkoutSet>(
+              items: _sortedWorkoutSets,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              areItemsTheSame: (a, b) => a.id == b.id,
+              itemBuilder: (context, animation, item, index) {
+                return SizeFadeTransition(
+                  sizeFraction: 0.7,
+                  curve: Curves.easeInOut,
+                  animation: animation,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: WorkoutSetCreator(
+                        key: Key(
+                            'WorkoutSectionWorkoutSets-${widget.sectionIndex}-${item.sortPosition}'),
+                        sectionIndex: widget.sectionIndex,
+                        setIndex: item.sortPosition,
+                        allowReorder: _sortedWorkoutSets.length > 1),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

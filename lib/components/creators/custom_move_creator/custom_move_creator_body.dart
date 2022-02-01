@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/body_areas/body_area_score_adjuster.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selector_score_indicator.dart';
@@ -8,8 +7,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 
 class CustomMoveCreatorBody extends StatefulWidget {
   final Move move;
@@ -45,67 +43,61 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<BodyAreas$Query, json.JsonSerializable>(
-        key: Key('CustomMoveCreatorBody - ${BodyAreasQuery().operationName}'),
-        query: BodyAreasQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        builder: (data) {
-          final allBodyAreas = data.bodyAreas;
+    final allBodyAreas = CoreDataRepo.bodyAreas;
 
-          return SingleChildScrollView(
-            child: Column(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          if (widget.move.bodyAreaMoveScores.isEmpty)
+            const Padding(
+              padding: EdgeInsets.only(top: 4, bottom: 8.0),
+              child: MyText(
+                'Non specified. Tap Body Area to edit scores',
+                color: Styles.primaryAccent,
+                lineHeight: 1.3,
+                size: FONTSIZE.two,
+              ),
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 8.0),
+              child: TargetedBodyAreasScoreList(
+                widget.move.bodyAreaMoveScores,
+                showNumericalScore: true,
+              ),
+            ),
+          MySlidingSegmentedControl<int>(
+              children: const {0: 'Front', 1: 'Back'},
+              updateValue: (i) => setState(() => _activePageIndex = i),
+              value: _activePageIndex),
+          SizedBox(
+            height: _kBodyAreaGraphicHeight,
+            width: double.infinity,
+            child: IndexedStack(
+              alignment: Alignment.center,
+              index: _activePageIndex,
               children: [
-                if (widget.move.bodyAreaMoveScores.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 4, bottom: 8.0),
-                    child: MyText(
-                      'Non specified. Tap Body Area to edit scores',
-                      color: Styles.primaryAccent,
-                      lineHeight: 1.3,
-                      size: FONTSIZE.two,
-                    ),
-                  )
-                else
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4, bottom: 8.0),
-                    child: TargetedBodyAreasScoreList(
-                      widget.move.bodyAreaMoveScores,
-                      showNumericalScore: true,
-                    ),
-                  ),
-                MySlidingSegmentedControl<int>(
-                    children: const {0: 'Front', 1: 'Back'},
-                    updateValue: (i) => setState(() => _activePageIndex = i),
-                    value: _activePageIndex),
-                SizedBox(
+                BodyAreaSelectorScoreIndicator(
+                  bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
+                  frontBack: BodyAreaFrontBack.front,
+                  allBodyAreas: allBodyAreas,
+                  indicatePercentWithColor: true,
+                  handleTapBodyArea: _handleTapBodyArea,
                   height: _kBodyAreaGraphicHeight,
-                  width: double.infinity,
-                  child: IndexedStack(
-                    alignment: Alignment.center,
-                    index: _activePageIndex,
-                    children: [
-                      BodyAreaSelectorScoreIndicator(
-                        bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
-                        frontBack: BodyAreaFrontBack.front,
-                        allBodyAreas: allBodyAreas,
-                        indicatePercentWithColor: true,
-                        handleTapBodyArea: _handleTapBodyArea,
-                        height: _kBodyAreaGraphicHeight,
-                      ),
-                      BodyAreaSelectorScoreIndicator(
-                        bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
-                        frontBack: BodyAreaFrontBack.back,
-                        allBodyAreas: allBodyAreas,
-                        indicatePercentWithColor: true,
-                        handleTapBodyArea: _handleTapBodyArea,
-                        height: _kBodyAreaGraphicHeight,
-                      ),
-                    ],
-                  ),
-                )
+                ),
+                BodyAreaSelectorScoreIndicator(
+                  bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
+                  frontBack: BodyAreaFrontBack.back,
+                  allBodyAreas: allBodyAreas,
+                  indicatePercentWithColor: true,
+                  handleTapBodyArea: _handleTapBodyArea,
+                  height: _kBodyAreaGraphicHeight,
+                ),
               ],
             ),
-          );
-        });
+          )
+        ],
+      ),
+    );
   }
 }

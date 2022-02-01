@@ -1294,7 +1294,7 @@ packages:
     source: hosted
     version: "2.0.0+1"
   sliver_tools:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sliver_tools
       url: "https://pub.dartlang.org"

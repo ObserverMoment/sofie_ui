@@ -1102,7 +1102,14 @@ WorkoutSummary _$WorkoutSummaryFromJson(Map<String, dynamic> json) =>
       ..hasClassAudio = json['hasClassAudio'] as bool
       ..equipments =
           (json['equipments'] as List<dynamic>).map((e) => e as String).toList()
-      ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList();
+      ..sectionTypes = (json['sectionTypes'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList()
+      ..goals =
+          (json['goals'] as List<dynamic>).map((e) => e as String).toList()
+      ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
+      ..bodyAreas =
+          (json['bodyAreas'] as List<dynamic>).map((e) => e as String).toList();
 
 Map<String, dynamic> _$WorkoutSummaryToJson(WorkoutSummary instance) =>
     <String, dynamic>{
@@ -1120,7 +1127,10 @@ Map<String, dynamic> _$WorkoutSummaryToJson(WorkoutSummary instance) =>
       'hasClassVideo': instance.hasClassVideo,
       'hasClassAudio': instance.hasClassAudio,
       'equipments': instance.equipments,
+      'sectionTypes': instance.sectionTypes,
+      'goals': instance.goals,
       'tags': instance.tags,
+      'bodyAreas': instance.bodyAreas,
     };
 
 const _$DifficultyLevelEnumMap = {
@@ -3132,7 +3142,14 @@ ClubWorkoutsMixin$WorkoutSummary _$ClubWorkoutsMixin$WorkoutSummaryFromJson(
       ..hasClassAudio = json['hasClassAudio'] as bool
       ..equipments =
           (json['equipments'] as List<dynamic>).map((e) => e as String).toList()
-      ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList();
+      ..sectionTypes = (json['sectionTypes'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList()
+      ..goals =
+          (json['goals'] as List<dynamic>).map((e) => e as String).toList()
+      ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
+      ..bodyAreas =
+          (json['bodyAreas'] as List<dynamic>).map((e) => e as String).toList();
 
 Map<String, dynamic> _$ClubWorkoutsMixin$WorkoutSummaryToJson(
         ClubWorkoutsMixin$WorkoutSummary instance) =>
@@ -3151,7 +3168,10 @@ Map<String, dynamic> _$ClubWorkoutsMixin$WorkoutSummaryToJson(
       'hasClassVideo': instance.hasClassVideo,
       'hasClassAudio': instance.hasClassAudio,
       'equipments': instance.equipments,
+      'sectionTypes': instance.sectionTypes,
+      'goals': instance.goals,
       'tags': instance.tags,
+      'bodyAreas': instance.bodyAreas,
     };
 
 ClubWorkoutPlans _$ClubWorkoutPlansFromJson(Map<String, dynamic> json) =>
@@ -3860,20 +3880,6 @@ Map<String, dynamic> _$DeleteMoveById$MutationToJson(
       'softDeleteMoveById': instance.softDeleteMoveById,
     };
 
-UserCustomMoves$Query _$UserCustomMoves$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserCustomMoves$Query()
-      ..userCustomMoves = (json['userCustomMoves'] as List<dynamic>)
-          .map((e) => Move.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserCustomMoves$QueryToJson(
-        UserCustomMoves$Query instance) =>
-    <String, dynamic>{
-      'userCustomMoves':
-          instance.userCustomMoves.map((e) => e.toJson()).toList(),
-    };
-
 DeleteGymProfileById$Mutation _$DeleteGymProfileById$MutationFromJson(
         Map<String, dynamic> json) =>
     DeleteGymProfileById$Mutation()
@@ -4530,40 +4536,6 @@ Map<String, dynamic> _$DeleteWorkoutSetById$MutationToJson(
       'deleteWorkoutSetById': instance.deleteWorkoutSetById,
     };
 
-MoveTypes$Query _$MoveTypes$QueryFromJson(Map<String, dynamic> json) =>
-    MoveTypes$Query()
-      ..moveTypes = (json['moveTypes'] as List<dynamic>)
-          .map((e) => MoveType.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$MoveTypes$QueryToJson(MoveTypes$Query instance) =>
-    <String, dynamic>{
-      'moveTypes': instance.moveTypes.map((e) => e.toJson()).toList(),
-    };
-
-StandardMoves$Query _$StandardMoves$QueryFromJson(Map<String, dynamic> json) =>
-    StandardMoves$Query()
-      ..standardMoves = (json['standardMoves'] as List<dynamic>)
-          .map((e) => Move.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$StandardMoves$QueryToJson(
-        StandardMoves$Query instance) =>
-    <String, dynamic>{
-      'standardMoves': instance.standardMoves.map((e) => e.toJson()).toList(),
-    };
-
-WorkoutGoals$Query _$WorkoutGoals$QueryFromJson(Map<String, dynamic> json) =>
-    WorkoutGoals$Query()
-      ..workoutGoals = (json['workoutGoals'] as List<dynamic>)
-          .map((e) => WorkoutGoal.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$WorkoutGoals$QueryToJson(WorkoutGoals$Query instance) =>
-    <String, dynamic>{
-      'workoutGoals': instance.workoutGoals.map((e) => e.toJson()).toList(),
-    };
-
 CheckUniqueDisplayName$Query _$CheckUniqueDisplayName$QueryFromJson(
         Map<String, dynamic> json) =>
     CheckUniqueDisplayName$Query()
@@ -4573,42 +4545,6 @@ Map<String, dynamic> _$CheckUniqueDisplayName$QueryToJson(
         CheckUniqueDisplayName$Query instance) =>
     <String, dynamic>{
       'checkUniqueDisplayName': instance.checkUniqueDisplayName,
-    };
-
-WorkoutSectionTypes$Query _$WorkoutSectionTypes$QueryFromJson(
-        Map<String, dynamic> json) =>
-    WorkoutSectionTypes$Query()
-      ..workoutSectionTypes = (json['workoutSectionTypes'] as List<dynamic>)
-          .map((e) => WorkoutSectionType.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$WorkoutSectionTypes$QueryToJson(
-        WorkoutSectionTypes$Query instance) =>
-    <String, dynamic>{
-      'workoutSectionTypes':
-          instance.workoutSectionTypes.map((e) => e.toJson()).toList(),
-    };
-
-BodyAreas$Query _$BodyAreas$QueryFromJson(Map<String, dynamic> json) =>
-    BodyAreas$Query()
-      ..bodyAreas = (json['bodyAreas'] as List<dynamic>)
-          .map((e) => BodyArea.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$BodyAreas$QueryToJson(BodyAreas$Query instance) =>
-    <String, dynamic>{
-      'bodyAreas': instance.bodyAreas.map((e) => e.toJson()).toList(),
-    };
-
-Equipments$Query _$Equipments$QueryFromJson(Map<String, dynamic> json) =>
-    Equipments$Query()
-      ..equipments = (json['equipments'] as List<dynamic>)
-          .map((e) => Equipment.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$Equipments$QueryToJson(Equipments$Query instance) =>
-    <String, dynamic>{
-      'equipments': instance.equipments.map((e) => e.toJson()).toList(),
     };
 
 CreateUserBenchmarkEntry$Mutation _$CreateUserBenchmarkEntry$MutationFromJson(
@@ -6223,6 +6159,60 @@ Map<String, dynamic> _$MarkAnnouncementUpdateAsSeenInputToJson(
     <String, dynamic>{
       'announcementUpdateId': instance.announcementUpdateId,
       'userId': instance.userId,
+    };
+
+CoreData _$CoreDataFromJson(Map<String, dynamic> json) => CoreData()
+  ..$$typename = json['__typename'] as String?
+  ..bodyAreas = (json['bodyAreas'] as List<dynamic>)
+      .map((e) => BodyArea.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..equipment = (json['equipment'] as List<dynamic>)
+      .map((e) => Equipment.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..moveTypes = (json['moveTypes'] as List<dynamic>)
+      .map((e) => MoveType.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..workoutGoals = (json['workoutGoals'] as List<dynamic>)
+      .map((e) => WorkoutGoal.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..workoutSectionTypes = (json['workoutSectionTypes'] as List<dynamic>)
+      .map((e) => WorkoutSectionType.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..standardMoves = (json['standardMoves'] as List<dynamic>)
+      .map((e) => Move.fromJson(e as Map<String, dynamic>))
+      .toList();
+
+Map<String, dynamic> _$CoreDataToJson(CoreData instance) => <String, dynamic>{
+      '__typename': instance.$$typename,
+      'bodyAreas': instance.bodyAreas.map((e) => e.toJson()).toList(),
+      'equipment': instance.equipment.map((e) => e.toJson()).toList(),
+      'moveTypes': instance.moveTypes.map((e) => e.toJson()).toList(),
+      'workoutGoals': instance.workoutGoals.map((e) => e.toJson()).toList(),
+      'workoutSectionTypes':
+          instance.workoutSectionTypes.map((e) => e.toJson()).toList(),
+      'standardMoves': instance.standardMoves.map((e) => e.toJson()).toList(),
+    };
+
+CoreData$Query _$CoreData$QueryFromJson(Map<String, dynamic> json) =>
+    CoreData$Query()
+      ..coreData = CoreData.fromJson(json['coreData'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CoreData$QueryToJson(CoreData$Query instance) =>
+    <String, dynamic>{
+      'coreData': instance.coreData.toJson(),
+    };
+
+UserCustomMoves$Query _$UserCustomMoves$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserCustomMoves$Query()
+      ..customMoves = (json['customMoves'] as List<dynamic>)
+          .map((e) => Move.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserCustomMoves$QueryToJson(
+        UserCustomMoves$Query instance) =>
+    <String, dynamic>{
+      'customMoves': instance.customMoves.map((e) => e.toJson()).toList(),
     };
 
 DeleteJournalGoalByIdArguments _$DeleteJournalGoalByIdArgumentsFromJson(

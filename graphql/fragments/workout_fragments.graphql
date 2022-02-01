@@ -92,7 +92,10 @@ fragment WorkoutSummary on WorkoutSummary {
   hasClassVideo
   hasClassAudio
   equipments
+  sectionTypes
+  goals
   tags
+  bodyAreas
 }
 
 fragment ArchivedWorkout on Workout {
