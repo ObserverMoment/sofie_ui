@@ -15,6 +15,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 /// Editable moves list _ lap / split times. Most code is duplicated in [LoggedWorkoutSectionMovesList].
 class LoggedWorkoutCreatorSectionMovesList extends StatefulWidget {
@@ -126,21 +127,23 @@ class _SingleRoundData extends StatelessWidget {
     final timeTakenSeconds = loggedWorkoutSets.fold<int>(
         0, (acum, next) => acum + (next.timeTakenSeconds ?? 0));
 
-    /// Ensure sort position 0 goes at the top.
-    final sortedSets = loggedWorkoutSets.reversed.toList();
+    /// Lifting section should only ever have one round (no rounds in a lifting section).
+    /// So no need to display the round number header or split time (as the split time will be the same as that for the total workout).
+    final isLiftingSection = workoutSectionType.isLifting;
 
     return ContentBox(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MyText('ROUND ${roundIndex + 1}'),
-              CompactTimerIcon(duration: Duration(seconds: timeTakenSeconds)),
-            ],
+        if (!isLiftingSection)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MyText('ROUND ${roundIndex + 1}'),
+                CompactTimerIcon(duration: Duration(seconds: timeTakenSeconds)),
+              ],
+            ),
           ),
-        ),
         GrowInOut(
           show: showSets,
           child: ListView.builder(
@@ -157,10 +160,10 @@ class _SingleRoundData extends StatelessWidget {
                     child: _SingleSetData(
                       index: i,
                       workoutSectionType: workoutSectionType,
-                      loggedWorkoutSet: sortedSets[i],
+                      loggedWorkoutSet: loggedWorkoutSets[i],
                       updateDuration: (d) => bloc.updateSetTimeTakenSeconds(
                           sectionIndex: sectionIndex,
-                          setId: sortedSets[i].id,
+                          setId: loggedWorkoutSets[i].id,
                           seconds: d.inSeconds),
                     ),
                   )),
@@ -214,7 +217,7 @@ class _SingleSetData extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Ensure sort position 0 goes at the top.
-    final sortedMoves = loggedWorkoutSet.loggedWorkoutMoves.reversed.toList();
+    final sortedMoves = loggedWorkoutSet.loggedWorkoutMoves.toList();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -7912,18 +7912,18 @@ class CoreData$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserCustomMoves$Query extends JsonSerializable with EquatableMixin {
-  UserCustomMoves$Query();
+class CustomMoves$Query extends JsonSerializable with EquatableMixin {
+  CustomMoves$Query();
 
-  factory UserCustomMoves$Query.fromJson(Map<String, dynamic> json) =>
-      _$UserCustomMoves$QueryFromJson(json);
+  factory CustomMoves$Query.fromJson(Map<String, dynamic> json) =>
+      _$CustomMoves$QueryFromJson(json);
 
   late List<Move> customMoves;
 
   @override
   List<Object?> get props => [customMoves];
   @override
-  Map<String, dynamic> toJson() => _$UserCustomMoves$QueryToJson(this);
+  Map<String, dynamic> toJson() => _$CustomMoves$QueryToJson(this);
 }
 
 enum ContentAccessScope {
@@ -50212,10 +50212,10 @@ class CoreDataQuery extends GraphQLQuery<CoreData$Query, JsonSerializable> {
       CoreData$Query.fromJson(json);
 }
 
-final USER_CUSTOM_MOVES_QUERY_DOCUMENT = DocumentNode(definitions: [
+final CUSTOM_MOVES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
-      name: NameNode(value: 'userCustomMoves'),
+      name: NameNode(value: 'customMoves'),
       variableDefinitions: [],
       directives: [],
       selectionSet: SelectionSetNode(selections: [
@@ -50448,19 +50448,19 @@ final USER_CUSTOM_MOVES_QUERY_DOCUMENT = DocumentNode(definitions: [
       ]))
 ]);
 
-class UserCustomMovesQuery
-    extends GraphQLQuery<UserCustomMoves$Query, JsonSerializable> {
-  UserCustomMovesQuery();
+class CustomMovesQuery
+    extends GraphQLQuery<CustomMoves$Query, JsonSerializable> {
+  CustomMovesQuery();
 
   @override
-  final DocumentNode document = USER_CUSTOM_MOVES_QUERY_DOCUMENT;
+  final DocumentNode document = CUSTOM_MOVES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userCustomMoves';
+  final String operationName = 'customMoves';
 
   @override
   List<Object?> get props => [document, operationName];
   @override
-  UserCustomMoves$Query parse(Map<String, dynamic> json) =>
-      UserCustomMoves$Query.fromJson(json);
+  CustomMoves$Query parse(Map<String, dynamic> json) =>
+      CustomMoves$Query.fromJson(json);
 }

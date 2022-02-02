@@ -1,4 +1,4 @@
-query userCustomMoves {
+query customMoves {
   customMoves {
     ...Move
     MoveType {

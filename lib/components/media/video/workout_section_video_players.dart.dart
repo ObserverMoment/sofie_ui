@@ -78,7 +78,7 @@ class _WorkoutSectionVideoPlayerWrapperState
                 workoutSection: widget.workoutSection,
                 state: widget.state,
               )
-        : const Center(child: LoadingCircle());
+        : const Center(child: LoadingIndicator());
   }
 }
 
@@ -195,7 +195,7 @@ class _WorkoutSectionVideoPlayerLandscapeState
                   )
               ],
             )
-          : const Center(child: LoadingCircle()),
+          : const Center(child: LoadingIndicator()),
     );
   }
 }
@@ -359,6 +359,6 @@ class WorkoutSectionVideoPlayerPortrait extends StatelessWidget {
                 ],
               ),
             ))
-        : const Center(child: LoadingCircle());
+        : const Center(child: LoadingIndicator());
   }
 }

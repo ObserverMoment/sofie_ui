@@ -8,7 +8,8 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
-class NowAndNextMoves extends StatelessWidget {
+/// Overlays current move and the upcoming move over a workout video.
+class NowAndNextMovesVideo extends StatelessWidget {
   final WorkoutSection workoutSection;
 
   /// How many moves do you want to display.
@@ -16,7 +17,7 @@ class NowAndNextMoves extends StatelessWidget {
 
   final bool center;
 
-  const NowAndNextMoves({
+  const NowAndNextMovesVideo({
     Key? key,
     required this.workoutSection,
     this.qty = 3,
@@ -27,6 +28,7 @@ class NowAndNextMoves extends StatelessWidget {
   Widget build(BuildContext context) {
     final nowAndNextSets = context.select<DoWorkoutBloc, List<WorkoutSet?>>(
         (b) => b.getNowAndNextSetsForSection(workoutSection.sortPosition, qty));
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -47,12 +49,12 @@ class NowAndNextMoves extends StatelessWidget {
                       children: [
                         WorkoutSetMinimalDisplay(
                           backgroundColor:
-                              context.theme.cardBackground.withOpacity(0.7),
+                              context.theme.cardBackground.withOpacity(0.4),
                           workoutSet: workoutSet,
                           workoutSectionType: workoutSection.workoutSectionType,
                           elevation: 0,
                           displayLoad: false,
-                          textSize: FONTSIZE.four,
+                          textSize: FONTSIZE.three,
                         ),
                       ],
                     ),

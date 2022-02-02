@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
@@ -106,19 +107,19 @@ class AnnouncementUpdateCard extends StatelessWidget {
         removeRefFromQueries: [GQLOpNames.announcementUpdates]);
   }
 
-  BorderRadius get _borderRadius => BorderRadius.circular(3);
+  double get _borderRadius => 12.0;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      borderRadius: _borderRadius,
+      borderRadius: BorderRadius.circular(_borderRadius),
       margin: EdgeInsets.zero,
       padding: EdgeInsets.zero,
       child: Stack(
         children: [
           if (Utils.textNotNull(announcement.imageUri))
             ClipRRect(
-              borderRadius: _borderRadius,
+              borderRadius: BorderRadius.circular(_borderRadius - 2),
               child: SizedUploadcareImage(
                 announcement.imageUri!,
                 displaySize: const Size(800, 400),
@@ -138,6 +139,7 @@ class AnnouncementUpdateCard extends StatelessWidget {
                           MyText(
                             announcement.title,
                             size: FONTSIZE.five,
+                            color: Styles.white,
                           ),
                           TertiaryButton(
                               text: 'Got It',
@@ -154,6 +156,7 @@ class AnnouncementUpdateCard extends StatelessWidget {
                           size: FONTSIZE.two,
                           maxLines: 2,
                           lineHeight: 1.4,
+                          color: Styles.white,
                         ),
                       ),
                   ],
@@ -162,11 +165,13 @@ class AnnouncementUpdateCard extends StatelessWidget {
                   MyText(
                     announcement.bodyOne!,
                     maxLines: 3,
+                    color: Styles.white,
                   ),
                 if (Utils.textNotNull(announcement.bodyTwo))
                   MyText(
                     announcement.bodyTwo!,
                     maxLines: 3,
+                    color: Styles.white,
                   ),
                 if (Utils.textNotNull(announcement.articleUrl))
                   UpdateAnnouncementArticleLink(

@@ -9,7 +9,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
-//// NOTE: As of 17.01.22 this is no longer being used in the Lifting Moves List.
+//// NOTE: As of 17.01.22 this is no longer being used!
 class ModifyMove extends StatefulWidget {
   final WorkoutMove workoutMove;
   final void Function(WorkoutMove workoutMove) updateWorkoutMove;

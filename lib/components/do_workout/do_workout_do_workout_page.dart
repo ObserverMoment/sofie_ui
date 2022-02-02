@@ -5,6 +5,7 @@ import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_overview_page.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section.dart';
+import 'package:sofie_ui/components/logged_workout/congratulations_logged_workout.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
@@ -73,7 +74,7 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
       ),
     );
 
-    /// Once user has popped the do section page it is no longer active.
+    /// Once user has popped the DoSection page it is no longer active.
     _activeSectionIndex = null;
   }
 
@@ -115,8 +116,13 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
                       context.read<DoWorkoutBloc>().workoutPlanEnrolmentId!);
                 }
 
-                context.router.popAndPush(LoggedWorkoutDetailsRoute(
-                    id: result.data!.createLoggedWorkout.id));
+                context.push(
+                    fullscreenDialog: true,
+                    child: CongratulationsLoggedWorkout(
+                        onExit: () => context.router.popAndPush(
+                            LoggedWorkoutDetailsRoute(
+                                id: result.data!.createLoggedWorkout.id)),
+                        loggedWorkout: result.data!.createLoggedWorkout));
               });
         });
   }

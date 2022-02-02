@@ -242,7 +242,8 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
                   disableSuffix: true,
                   controller: _controller),
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16),
                 child: Row(
                   children: [
                     if (widget.maxChars != null)

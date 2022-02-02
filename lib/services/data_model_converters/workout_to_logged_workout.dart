@@ -3,6 +3,7 @@ import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:collection/collection.dart';
 
@@ -35,7 +36,8 @@ LoggedWorkout loggedWorkoutFromWorkout(
 LoggedWorkoutSection loggedWorkoutSectionFromWorkoutSection(
     {required WorkoutSection workoutSection,
     int? repScore,
-    int? timeTakenSeconds}) {
+    int? timeTakenSeconds,
+    int? rounds}) {
   final timecapIfValid = workoutSection.timecapIfValid;
 
   if (timecapIfValid == null && timeTakenSeconds == null) {
@@ -51,14 +53,97 @@ LoggedWorkoutSection loggedWorkoutSectionFromWorkoutSection(
     ..sortPosition = workoutSection.sortPosition
     ..timeTakenSeconds = timeTakenSeconds ?? timecapIfValid ?? 0
     ..workoutSectionType = workoutSection.workoutSectionType
-    ..loggedWorkoutSets = loggedWorkoutSetsFromWorkoutSection(workoutSection);
+    ..loggedWorkoutSets =
+        loggedWorkoutSetsFromWorkoutSection(workoutSection, rounds: rounds);
 }
 
+/// Calculate which sets would be inclouded in a partially completed round of a section, based on the number of reps that the user has completed.
+List<LoggedWorkoutSet> loggedWorkoutSetsPartialRound({
+  required WorkoutSection workoutSection,
+  required int reps,
+  required int roundNumber,
+}) {
+  int repsCounted = 0;
+
+  /// Move through the sets adding up the reps as you go.
+  /// Stop when [repsCounted] == [reps].
+  return workoutSection.workoutSets
+      .sortedBy<num>((wSet) => wSet.sortPosition)
+      .fold(<LoggedWorkoutSet>[], (acum, next) {
+    if (repsCounted >= reps) {
+      return acum;
+    } else {
+      final repsInSet = DataUtils.totalRepsInSet(next);
+      if (repsInSet <= reps - repsCounted) {
+        /// Update reps counted.
+        repsCounted += repsInSet;
+
+        /// Add the full set.
+        return [
+          ...acum,
+          loggedWorkoutSetFromWorkoutSet(
+              sectionType: workoutSection.workoutSectionType,
+              workoutSet: next,
+              roundNumber: roundNumber)
+        ];
+      } else {
+        final remainingReps = reps - repsCounted;
+
+        /// Update reps counted.
+        repsCounted += remainingReps;
+
+        /// We can only add a partial set.
+        next.workoutMoves =
+            workoutMovesForPartialSet(reps: remainingReps, workoutSet: next);
+
+        return [
+          ...acum,
+          loggedWorkoutSetFromWorkoutSet(
+              sectionType: workoutSection.workoutSectionType,
+              workoutSet: next,
+              roundNumber: roundNumber)
+        ];
+      }
+    }
+  });
+}
+
+/// Based on a number of reps completed - return a partial list of the workout moves that are in the set.
+List<WorkoutMove> workoutMovesForPartialSet(
+    {required WorkoutSet workoutSet, required int reps}) {
+  int repsCounted = 0;
+  return workoutSet.workoutMoves
+      .sortedBy<num>((wMove) => wMove.sortPosition)
+      .fold(<WorkoutMove>[], (acum, next) {
+    final repsInWorkoutMove = DataUtils.repsFromWorkoutMove(next);
+    if (repsCounted >= reps) {
+      return acum;
+    } else if (repsInWorkoutMove <= repsCounted - reps) {
+      /// Update reps counted.
+      repsCounted += repsInWorkoutMove;
+      // Add the full set.
+      return [...acum, next];
+    } else {
+      final remainingReps = reps - repsCounted;
+      // We can only add a partial workout move, so set the reps to whatever is left.
+      next.reps = remainingReps.toDouble();
+
+      /// Update reps counted.
+      repsCounted += remainingReps;
+      return [...acum, next];
+    }
+  });
+}
+
+/// Use [rounds] when the number of rounds to generate depends on the user input.
+/// i.e For an AMRAP...they will have completed a certain number of rounds before the timecap hit.
 List<LoggedWorkoutSet> loggedWorkoutSetsFromWorkoutSection(
-    WorkoutSection workoutSection) {
+    WorkoutSection workoutSection,
+    {int? rounds}) {
   return List.generate(
-      workoutSection.rounds,
+      rounds ?? workoutSection.rounds,
       (index) => workoutSection.workoutSets
+          .sortedBy<num>((wSet) => wSet.sortPosition)
           .map((wSet) => loggedWorkoutSetFromWorkoutSet(
               sectionType: workoutSection.workoutSectionType,
               workoutSet: wSet,
@@ -77,6 +162,7 @@ LoggedWorkoutSet loggedWorkoutSetFromWorkoutSet(
     ..sortPosition = workoutSet.sortPosition
     ..timeTakenSeconds = workoutSetDurationOrNull(sectionType, workoutSet)
     ..loggedWorkoutMoves = workoutSet.workoutMoves
+        .sortedBy<num>((wMove) => wMove.sortPosition)
         .map((wSet) => loggedWorkoutMoveFromWorkoutMove(wSet))
         .toList();
 }
@@ -133,7 +219,7 @@ String generateWorkoutMoveString(
   final reps = (workoutSectionType.isTimed &&
           workoutSet.workoutMoves.length == 1)
       ? ''
-      : '${generateRepString(distanceUnit: workoutMove.distanceUnit, reps: workoutMove.reps, repType: workoutMove.repType, timeUnit: workoutMove.timeUnit)} ';
+      : '${generateRepString(distanceUnit: workoutMove.distanceUnit, reps: workoutMove.reps, repType: workoutMove.repType, timeUnit: workoutMove.timeUnit, displayLoad: displayLoad)} ';
   final equipment = displayEquipment && workoutMove.equipment != null
       ? ' ${workoutMove.equipment!.name}'
       : '';
@@ -149,6 +235,7 @@ String generateRepString({
   required WorkoutMoveRepType repType,
   required TimeUnit timeUnit,
   required DistanceUnit distanceUnit,
+  bool displayLoad = true,
 }) {
   final repUnit = repType == WorkoutMoveRepType.time
       ? timeUnit.shortDisplay.capitalize
@@ -159,7 +246,7 @@ String generateRepString({
               : null;
   final repUnitString = repUnit != null ? ' $repUnit' : '';
 
-  return ' x ${reps.stringMyDouble()}$repUnitString';
+  return '${displayLoad ? " x " : ""}${reps.stringMyDouble()}$repUnitString';
 }
 
 String generateLoadString(

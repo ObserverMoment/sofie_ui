@@ -31,7 +31,6 @@ class _RequiredUserInputsState extends State<RequiredUserInputs> {
     _bloc = context.read<LoggedWorkoutCreatorBloc>();
 
     /// RequiredUserInput flow is only for creating a log, so [workout] must be non null.
-    ///
     _sectionsRequiringInput = _bloc.workout!.workoutSections
         .where(
             (w) => _bloc.typesInputRequired.contains(w.workoutSectionType.name))
@@ -112,11 +111,29 @@ class _RequiredUserInputsState extends State<RequiredUserInputs> {
                               children: [
                                 if (w.workoutSection.workoutSectionType.name ==
                                     kAMRAPName)
-                                  RepScoreInput(
-                                    repScore: w.input,
-                                    updateRepScore: (score) =>
-                                        _updateSectionInput(
-                                            w.workoutSection.id, score),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        RepScoreInput(
+                                          repScore: w.input,
+                                          updateRepScore: (score) =>
+                                              _updateSectionInput(
+                                                  w.workoutSection.id, score),
+                                        ),
+                                        const Padding(
+                                          padding: EdgeInsets.only(
+                                              left: 24, top: 6.0, right: 24),
+                                          child: MyText(
+                                            'For distance and time based moves each move in the set is worth 1 rep.',
+                                            maxLines: 3,
+                                            subtext: true,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   )
                                 else
                                   TimeTakenInput(

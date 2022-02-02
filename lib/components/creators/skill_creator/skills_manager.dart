@@ -309,7 +309,7 @@ class _SkillManagerListItem extends StatelessWidget {
                   ? const FadeIn(
                       child: Padding(
                       padding: EdgeInsets.all(4.0),
-                      child: LoadingDots(size: 14),
+                      child: LoadingIndicator(size: 14),
                     ))
                   : Utils.textNotNull(skill.documentUri)
                       ? FadeIn(

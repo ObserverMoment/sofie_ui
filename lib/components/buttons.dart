@@ -76,9 +76,7 @@ class MyButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      LoadingDots(
-                        color: contentColor,
-                      ),
+                      LoadingIndicator(color: contentColor, size: 10),
                     ],
                   )
                 : Row(
@@ -360,7 +358,7 @@ class BorderButton extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [LoadingDots(size: 10)],
+                  children: const [LoadingIndicator(size: 10)],
                 ),
               ),
             ],
@@ -607,7 +605,7 @@ class PageLink extends StatelessWidget {
                         const FadeIn(
                           child: Padding(
                             padding: EdgeInsets.only(left: 8.0),
-                            child: LoadingDots(
+                            child: LoadingIndicator(
                               size: 10,
                             ),
                           ),
@@ -678,7 +676,7 @@ class TextButton extends StatelessWidget {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: loading
-            ? const LoadingDots()
+            ? const LoadingIndicator(size: 10)
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -771,9 +769,7 @@ class CreateTextIconButton extends StatelessWidget {
   List<Widget> _buildChildren() {
     return loading
         ? [
-            const LoadingDots(
-              size: 10,
-            ),
+            const LoadingIndicator(size: 10),
           ]
         : [
             const Icon(
@@ -877,8 +873,8 @@ class NavBarSaveButton extends StatelessWidget {
             padding: EdgeInsets.zero,
             onPressed: loading ? null : onPressed,
             child: loading
-                ? const LoadingDots(
-                    size: 12,
+                ? const LoadingIndicator(
+                    size: 10,
                   )
                 : MyText(
                     text,

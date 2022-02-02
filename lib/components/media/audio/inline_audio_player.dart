@@ -98,7 +98,7 @@ class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
         child: AnimatedSwitcher(
           duration: kStandardAnimationDuration,
           child: _loading
-              ? const LoadingCircle(size: 12)
+              ? const LoadingIndicator(size: 12)
               : isPlaying
                   ? Icon(CupertinoIcons.pause_fill, size: widget.buttonSize)
                   : Icon(CupertinoIcons.play_fill, size: widget.buttonSize),

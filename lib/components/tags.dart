@@ -388,7 +388,7 @@ class DurationTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentBox(
         backgroundColor: backgroundColor,
-        borderRadius: 4,
+        borderRadius: 6,
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,

@@ -116,7 +116,7 @@ class __PreCreateUIState extends State<_PreCreateUI> {
         trailing: widget.creatingNewWorkout
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : NavBarSaveButton(() => widget.createWorkout(_createWorkoutInput),
@@ -190,7 +190,7 @@ class __MainUIState extends State<_MainUI> {
                 uploadingMedia || creatingSection || creatingSet || creatingMove
                     ? const NavBarTrailingRow(
                         children: [
-                          NavBarLoadingDots(),
+                          NavBarLoadingIndicator(),
                         ],
                       )
                     : NavBarSaveButton(

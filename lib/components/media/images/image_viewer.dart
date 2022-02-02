@@ -77,7 +77,7 @@ class FullScreenImageViewer extends StatelessWidget {
                       size: 40,
                     ),
                     SizedBox(height: 12),
-                    LoadingDots()
+                    LoadingIndicator()
                   ],
                 )),
           ),

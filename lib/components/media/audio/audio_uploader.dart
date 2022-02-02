@@ -143,7 +143,7 @@ class _AudioUploaderState extends State<AudioUploader> {
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 400),
               child: _uploading
-                  ? LoadingCircle(color: primary)
+                  ? LoadingIndicator(color: primary)
                   : Icon(
                       widget.iconData,
                       color: hasAudio ? Styles.white : primary.withOpacity(0.3),

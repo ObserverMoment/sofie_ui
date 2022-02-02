@@ -113,7 +113,7 @@ class FloatingButton extends StatelessWidget {
           child: AnimatedSwitcher(
             duration: kStandardAnimationDuration,
             child: loading
-                ? const LoadingDots()
+                ? const LoadingIndicator()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,

@@ -490,41 +490,57 @@ class _WorkoutSectionSummary extends StatelessWidget {
               ),
             ),
           const HorizontalLine(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              if (!(workoutSection.isCustomSession || workoutSection.isLifting))
-                _buildSectionFooterButton(
-                    CupertinoIcons.list_bullet,
-                    'View / Modify',
-                    () => context.push(
-                          fullscreenDialog: true,
-                          child: ChangeNotifierProvider<DoWorkoutBloc>.value(
-                            value: bloc,
-                            child: DoWorkoutSectionModifications(
-                                sectionIndex: workoutSection.sortPosition),
-                          ),
-                        )),
-              if (isComplete)
-                _buildSectionFooterButton(
-                  CupertinoIcons.refresh_bold,
-                  'Reset',
-                  () => _confirmResetSection(context, bloc),
+          workoutSection.hasSomeSets
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (!(workoutSection.isCustomSession ||
+                        workoutSection.isLifting))
+                      _buildSectionFooterButton(
+                          CupertinoIcons.list_bullet,
+                          'View / Modify',
+                          () => context.push(
+                                fullscreenDialog: true,
+                                child:
+                                    ChangeNotifierProvider<DoWorkoutBloc>.value(
+                                  value: bloc,
+                                  child: DoWorkoutSectionModifications(
+                                      sectionIndex:
+                                          workoutSection.sortPosition),
+                                ),
+                              )),
+                    if (isComplete)
+                      _buildSectionFooterButton(
+                        CupertinoIcons.refresh_bold,
+                        'Reset',
+                        () => _confirmResetSection(context, bloc),
+                      )
+                    else if (hasStarted)
+                      _buildSectionFooterButton(
+                        CupertinoIcons.play,
+                        'Continue',
+                        navigateToSectionPage,
+                      )
+                    else
+                      _buildSectionFooterButton(
+                        CupertinoIcons.play,
+                        'Do It',
+                        navigateToSectionPage,
+                      ),
+                  ],
                 )
-              else if (hasStarted)
-                _buildSectionFooterButton(
-                  CupertinoIcons.play,
-                  'Continue',
-                  navigateToSectionPage,
-                )
-              else
-                _buildSectionFooterButton(
-                  CupertinoIcons.play,
-                  'Do It',
-                  navigateToSectionPage,
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      MyText(
+                        'This section has no sets in it...',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
-            ],
-          ),
         ],
       ),
     );

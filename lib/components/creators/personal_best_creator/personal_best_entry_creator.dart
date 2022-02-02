@@ -237,7 +237,7 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
-                  LoadingDots(
+                  LoadingIndicator(
                     size: 12,
                   ),
                 ],

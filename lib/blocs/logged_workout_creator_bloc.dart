@@ -7,6 +7,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_create_log_inputs.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
+import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -130,11 +131,32 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         .sortedBy<num>((ws) => ws.sortPosition)
         .map((ws) {
       if (ws.workoutSectionType.isAMRAP) {
-        // Get the value from the inputs
+        // Get the value from the inputs.
         final s =
             sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
-        return loggedWorkoutSectionFromWorkoutSection(
-            workoutSection: ws, repScore: s.input);
+
+        final totalRepsCompleted = s.input!;
+        final repsPerRound = DataUtils.totalRepsInSection(ws);
+
+        final totalFullRounds = (totalRepsCompleted / repsPerRound).floor();
+
+        final remainingReps =
+            totalRepsCompleted - (totalFullRounds * repsPerRound);
+
+        final loggedSectionFullRounds = loggedWorkoutSectionFromWorkoutSection(
+            workoutSection: ws,
+            repScore: totalRepsCompleted,
+            rounds: totalFullRounds);
+
+        loggedSectionFullRounds.loggedWorkoutSets = [
+          ...loggedSectionFullRounds.loggedWorkoutSets,
+          ...loggedWorkoutSetsPartialRound(
+              reps: remainingReps,
+              roundNumber: totalFullRounds,
+              workoutSection: ws)
+        ];
+
+        return loggedSectionFullRounds;
       } else if (ws.workoutSectionType.isCustom ||
           ws.workoutSectionType.isForTime ||
           ws.workoutSectionType.isLifting) {
@@ -169,7 +191,8 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   /// Used when creating only - when editing we save incrementally.
   /// When creating a log we need to check if the log should be associated with a scheduled workout and / or with a workout plan enrolment.
-  Future<OperationResult> createAndSave(BuildContext context) async {
+  Future<OperationResult<CreateLoggedWorkout$Mutation>> createAndSave(
+      BuildContext context) async {
     final input = createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
         scheduledWorkout: scheduledWorkout,
         workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,

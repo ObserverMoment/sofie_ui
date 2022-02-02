@@ -161,7 +161,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: const [
-                  LoadingDots(
+                  LoadingIndicator(
                     size: 12,
                   )
                 ],

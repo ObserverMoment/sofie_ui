@@ -75,7 +75,7 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
               navigationBar: MyNavBar(
                 middle: NavBarTitle('Loading Chat...'),
               ),
-              child: LoadingCircle()),
+              child: Center(child: LoadingIndicator())),
     );
   }
 }
@@ -102,76 +102,81 @@ class _ClubMembersChatChannelPageState
     final displayName = widget.clubChatSummary.name;
     final avatarUri = widget.clubChatSummary.coverImageUri;
 
-    return StreamChannel(
+    return CupertinoPageScaffold(
+      navigationBar: MyNavBar(
+        backgroundColor: context.theme.modalBackground,
+        middle: CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: null,
+            // onPressed: () => openBottomSheetMenu(
+            //     context: context,
+            //     child: BottomSheetMenu(
+            //         header: BottomSheetMenuHeader(
+            //           name: displayName,
+            //           subtitle: 'Chat',
+            //           imageUri: avatarUri,
+            //         ),
+            //         items: [
+            //           BottomSheetMenuItem(
+            //               text: 'Block',
+            //               icon: CupertinoIcons.nosign,
+            //               onPressed: () => printLog('block')),
+            //           BottomSheetMenuItem(
+            //               text: 'Report',
+            //               icon: CupertinoIcons.exclamationmark_circle,
+            //               onPressed: () => printLog('report')),
+            //         ])),
+            child: MyHeaderText(displayName)),
+        trailing: CupertinoButton(
+          onPressed: avatarUri != null
+              ? () => openFullScreenImageViewer(context, avatarUri)
+              : null,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: avatar.UserAvatar(
+            size: 36,
+            avatarUri: avatarUri,
+          ),
+        ),
+      ),
+      child: StreamChannel(
         channel: widget.channel,
-        child: CupertinoPageScaffold(
-            navigationBar: MyNavBar(
-              middle: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: null,
-                  // onPressed: () => openBottomSheetMenu(
-                  //     context: context,
-                  //     child: BottomSheetMenu(
-                  //         header: BottomSheetMenuHeader(
-                  //           name: displayName,
-                  //           subtitle: 'Chat',
-                  //           imageUri: avatarUri,
-                  //         ),
-                  //         items: [
-                  //           BottomSheetMenuItem(
-                  //               text: 'Block',
-                  //               icon: CupertinoIcons.nosign,
-                  //               onPressed: () => printLog('block')),
-                  //           BottomSheetMenuItem(
-                  //               text: 'Report',
-                  //               icon: CupertinoIcons.exclamationmark_circle,
-                  //               onPressed: () => printLog('report')),
-                  //         ])),
-                  child: MyHeaderText(displayName)),
-              trailing: CupertinoButton(
-                onPressed: avatarUri != null
-                    ? () => openFullScreenImageViewer(context, avatarUri)
-                    : null,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: avatar.UserAvatar(
-                  size: 36,
-                  avatarUri: avatarUri,
-                ),
-              ),
-            ),
-            child: StreamChatCore(
-                client: widget.channel.client,
-                child: MessageListCore(
-                    messageListController: _messageListController,
-                    loadingBuilder: (context) {
-                      return const Center(
-                        child: CupertinoActivityIndicator(),
-                      );
-                    },
-                    errorBuilder: (context, err) {
-                      return const Center(
-                        child: Text('Error'),
-                      );
-                    },
-                    emptyBuilder: (context) {
-                      return const Center(
-                        child: Text('Nothing here...'),
-                      );
-                    },
-                    messageListBuilder: (context, messages) {
-                      /// Mark channel messages as read.
-                      widget.channel.markRead();
+        child: SizedBox.expand(
+          child: StreamChatCore(
+              client: widget.channel.client,
+              child: MessageListCore(
+                  messageListController: _messageListController,
+                  loadingBuilder: (context) {
+                    return const Center(
+                      child: CupertinoActivityIndicator(),
+                    );
+                  },
+                  errorBuilder: (context, err) {
+                    return const Center(
+                      child: Text('Error'),
+                    );
+                  },
+                  emptyBuilder: (context) {
+                    return const Center(
+                      child: Text('Nothing here...'),
+                    );
+                  },
+                  messageListBuilder: (context, messages) {
+                    /// Mark channel messages as read.
+                    widget.channel.markRead();
 
-                      /// Build the list.
-                      return LazyLoadScrollView(
-                        onStartOfPage: () async {
-                          await _messageListController.paginateData!();
-                        },
-                        child: MessagesList(
-                          messages: messages,
-                          isGroupChat: true,
-                        ),
-                      );
-                    }))));
+                    /// Build the list.
+                    return LazyLoadScrollView(
+                      onStartOfPage: () async {
+                        await _messageListController.paginateData!();
+                      },
+                      child: MessagesList(
+                        messages: messages,
+                        isGroupChat: true,
+                      ),
+                    );
+                  })),
+        ),
+      ),
+    );
   }
 }

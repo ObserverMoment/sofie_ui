@@ -33,7 +33,7 @@ class GQLOpNames {
   static String get userClubs => UserClubsQuery().operationName;
   static String get userCollections => UserCollectionsQuery().operationName;
 
-  static String get userCustomMoves => UserCustomMovesQuery().operationName;
+  static String get customMoves => CustomMovesQuery().operationName;
 
   /// TODO: Does this key trigger all workoutById queries?
   static String get workoutById =>

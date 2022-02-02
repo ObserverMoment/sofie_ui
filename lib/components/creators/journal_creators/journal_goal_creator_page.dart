@@ -106,7 +106,7 @@ class _CreateGoalState extends State<_CreateGoal> {
         trailing: _saving
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : NavBarTrailingRow(

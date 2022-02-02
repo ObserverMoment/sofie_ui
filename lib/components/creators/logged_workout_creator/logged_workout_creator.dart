@@ -6,12 +6,14 @@ import 'package:sofie_ui/components/creators/logged_workout_creator/logged_worko
 import 'package:sofie_ui/components/creators/logged_workout_creator/required_user_inputs.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/logged_workout/congratulations_logged_workout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 class LoggedWorkoutCreatorPage extends StatefulWidget {
   final String workoutId;
@@ -48,16 +50,20 @@ class _LoggedWorkoutCreatorPageState extends State<LoggedWorkoutCreatorPage> {
       _savingToDB = false;
     });
 
-    if (result.hasErrors) {
-      context
-          .showErrorAlert('Sorry, there was a problem logging this workout!');
-    } else {
-      await context.showSuccessAlert(
-        title: 'Workout Logged!',
-        message: 'You can go to Progress -> Logs to view it.',
-      );
-      context.pop(result: true); // Close the logged workout creator.
-    }
+    checkOperationResult(context, result,
+        onFail: () => context
+            .showErrorAlert('Sorry, there was a problem logging this workout!'),
+        onSuccess: () {
+          context.push(
+              fullscreenDialog: true,
+              child: CongratulationsLoggedWorkout(
+                loggedWorkout: result.data!.createLoggedWorkout,
+                onExit: () {
+                  context.pop(
+                      result: true); // Close the logged workout creator.
+                },
+              ));
+        });
   }
 
   void _handleCancel() {
@@ -96,7 +102,7 @@ class _LoggedWorkoutCreatorPageState extends State<LoggedWorkoutCreatorPage> {
                           ? _savingToDB
                               ? const NavBarTrailingRow(
                                   children: [
-                                    NavBarLoadingDots(),
+                                    NavBarLoadingIndicator(),
                                   ],
                                 )
                               : NavBarSaveButton(

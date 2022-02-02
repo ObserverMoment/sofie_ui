@@ -20,6 +20,7 @@ import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart' as feed;
 import 'package:stream_feed/stream_feed.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 /// https://github.com/Milad-Akarie/auto_route_library/issues/418
 /// Creates and provides all the global objects required on a user is logged in.
@@ -71,7 +72,16 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   }
 
   Future<void> _initCoreAppData() async {
+    /// Core app data such as equipment, moves, body areas and other non user generated content.
     await CoreDataRepo.initCoreData(context);
+
+    /// Get the users log history here as well.
+    /// All [QueryObservers] watching this query in the app should be set with
+    /// [fetchPolicy: QueryFetchPolicy.storeFirst] - as the data should already be there and should never be updated independently by anyone else than the user.
+    /// final query =
+    final query =
+        UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments());
+    await context.graphQLStore.query(query: query);
     _coreAppDataInitialized = true;
   }
 

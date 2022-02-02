@@ -75,7 +75,7 @@ class LiftingMovesList extends StatelessWidget {
                 percent: state.percentComplete.clamp(0.0, 1.0),
                 backgroundColor: context.theme.primary.withOpacity(0.07),
                 linearGradient: Styles.primaryAccentGradient,
-                linearStrokeCap: LinearStrokeCap.roundAll,
+                barRadius: const Radius.circular(60),
               ),
             ),
             Expanded(

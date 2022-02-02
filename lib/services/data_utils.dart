@@ -110,16 +110,21 @@ class DataUtils {
 
   static int totalRepsInSet(WorkoutSet workoutSet) {
     return workoutSet.workoutMoves.fold(0, (setAcum, nextMove) {
-      if ([
-        WorkoutMoveRepType.time,
-        WorkoutMoveRepType.distance,
-        WorkoutMoveRepType.artemisUnknown
-      ].contains(nextMove.repType)) {
-        return setAcum + 1;
-      } else {
-        return setAcum + nextMove.reps.round();
-      }
+      return setAcum + repsFromWorkoutMove(nextMove);
     });
+  }
+
+  /// Assumes that time and distance workout moves are just worth one rep.
+  static int repsFromWorkoutMove(WorkoutMove workoutMove) {
+    if ([
+      WorkoutMoveRepType.time,
+      WorkoutMoveRepType.distance,
+      WorkoutMoveRepType.artemisUnknown
+    ].contains(workoutMove.repType)) {
+      return 1;
+    } else {
+      return workoutMove.reps.round();
+    }
   }
 
   static int totalRepsInLoggedSectionInput(

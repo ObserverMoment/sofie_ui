@@ -124,7 +124,7 @@ abstract class ThemeData {
       greyThree: Styles.greyTwo,
       greyFour: Styles.greyOne,
       cardBackground: CupertinoColors.white,
-      modalBackground: CupertinoColors.systemGroupedBackground,
+      modalBackground: CupertinoColors.white,
       bottomNavigationBackground: const Color(0xffffffff),
       navbarBottomBorder: Styles.black.withOpacity(0.1));
 

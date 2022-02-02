@@ -216,11 +216,15 @@ class _MessagesListState extends State<MessagesList> {
                           }),
                     )),
               ),
-              ChatMessageInput(
-                quotedMessage: _quotedMessage,
-                clearQuotedMessage: () => setState(() => _quotedMessage = null),
-                onNewMessageSent: _onNewMessageSent,
-                focusNode: _inputFocusNode,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: ChatMessageInput(
+                  quotedMessage: _quotedMessage,
+                  clearQuotedMessage: () =>
+                      setState(() => _quotedMessage = null),
+                  onNewMessageSent: _onNewMessageSent,
+                  focusNode: _inputFocusNode,
+                ),
               )
             ],
           ),

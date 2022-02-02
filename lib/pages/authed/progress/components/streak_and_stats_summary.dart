@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/progress/components/lifetime_log_stats_summary.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
@@ -23,6 +24,7 @@ class StreakAndStatsSummary extends StatelessWidget {
     return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
         key: Key('StreakAndStatsSummary - ${query.operationName}'),
         query: query,
+        fetchPolicy: QueryFetchPolicy.storeFirst,
         loadingIndicator: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: ShimmerCard(height: _cardHeight),

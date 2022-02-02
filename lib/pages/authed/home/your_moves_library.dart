@@ -67,10 +67,9 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
     final standardMoves = CoreDataRepo.standardMoves;
 
     /// Also used in WorkoutMoveCreator, hence [onCancel] which is not needed here.
-    return QueryObserver<UserCustomMoves$Query, json.JsonSerializable>(
-        key: Key(
-            'YourMovesLibraryPage - ${UserCustomMovesQuery().operationName}'),
-        query: UserCustomMovesQuery(),
+    return QueryObserver<CustomMoves$Query, json.JsonSerializable>(
+        key: Key('YourMovesLibraryPage - ${CustomMovesQuery().operationName}'),
+        query: CustomMovesQuery(),
         builder: (customMovesData) {
           final customMoves = customMovesData.customMoves;
 

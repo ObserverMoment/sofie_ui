@@ -240,7 +240,7 @@ class _WorkoutSetGeneratorCreatorState
         customLeading: NavBarCancelButton(context.pop),
         middle: const NavBarLargeTitle('Generate Set'),
         trailing: _savingToDB
-            ? const NavBarTrailingRow(children: [NavBarLoadingDots()])
+            ? const NavBarTrailingRow(children: [NavBarLoadingIndicator()])
             : null,
       ),
       child: Column(
@@ -450,40 +450,42 @@ class _EquipmentSelectorUI extends StatelessWidget {
             'SELECT EQUIPMENT',
           ),
         ),
-        ListView(
-          shrinkWrap: true,
-          children: moves
-              .where((m) => m.selectableEquipments.isNotEmpty)
-              .map((m) => Padding(
-                    padding: const EdgeInsets.only(bottom: 24.0),
-                    child: Column(
-                      children: [
-                        ContentBox(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            MyText(m.name),
-                            MyText(
-                              equipmentForMoves[m] != null
-                                  ? ' - ${equipmentForMoves[m]!.name}'
-                                  : '',
-                              color: Styles.primaryAccent,
-                            )
-                          ],
-                        )),
-                        const SizedBox(height: 16),
-                        EquipmentSelectorList(
-                            tileSize: 90,
-                            selectedEquipments: equipmentForMoves[m] != null
-                                ? [equipmentForMoves[m]!]
-                                : [],
-                            equipments: m.selectableEquipments
-                                .sortedBy<String>((e) => e.name),
-                            handleSelection: (e) => updateEquipment(m, e)),
-                      ],
-                    ),
-                  ))
-              .toList(),
+        Expanded(
+          child: ListView(
+            shrinkWrap: true,
+            children: moves
+                .where((m) => m.selectableEquipments.isNotEmpty)
+                .map((m) => Padding(
+                      padding: const EdgeInsets.only(bottom: 24.0),
+                      child: Column(
+                        children: [
+                          ContentBox(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyText(m.name),
+                              MyText(
+                                equipmentForMoves[m] != null
+                                    ? ' - ${equipmentForMoves[m]!.name}'
+                                    : '',
+                                color: Styles.primaryAccent,
+                              )
+                            ],
+                          )),
+                          const SizedBox(height: 16),
+                          EquipmentSelectorList(
+                              tileSize: 90,
+                              selectedEquipments: equipmentForMoves[m] != null
+                                  ? [equipmentForMoves[m]!]
+                                  : [],
+                              equipments: m.selectableEquipments
+                                  .sortedBy<String>((e) => e.name),
+                              handleSelection: (e) => updateEquipment(m, e)),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
         ),
       ],
     );

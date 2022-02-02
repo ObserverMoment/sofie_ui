@@ -111,7 +111,7 @@ class _FullScreenAudioPlayerState extends State<FullScreenAudioPlayer> {
                         child: (!snapshot.hasData ||
                                 _totalDuration == Duration.zero)
                             ? const Center(
-                                child: LoadingDots(
+                                child: LoadingIndicator(
                                 size: 12,
                               ))
                             : Column(
@@ -175,7 +175,7 @@ class _FullScreenAudioPlayerState extends State<FullScreenAudioPlayer> {
                   } else {
                     if (!stateSnapShot.hasData) {
                       return const Center(
-                          child: LoadingDots(
+                          child: LoadingIndicator(
                         size: 12,
                       ));
                     } else {

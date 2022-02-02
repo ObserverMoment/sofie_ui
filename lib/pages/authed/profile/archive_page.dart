@@ -147,7 +147,7 @@ class _ArchivedCustomMoves extends StatelessWidget {
         UnarchiveCustomMoveById$Mutation, UnarchiveCustomMoveByIdArguments>(
       mutation: UnarchiveCustomMoveByIdMutation(
           variables: UnarchiveCustomMoveByIdArguments(id: id)),
-      addRefToQueries: [GQLOpNames.userCustomMoves],
+      addRefToQueries: [GQLOpNames.customMoves],
       removeRefFromQueries: [GQLOpNames.userArchivedCustomMoves],
     );
 

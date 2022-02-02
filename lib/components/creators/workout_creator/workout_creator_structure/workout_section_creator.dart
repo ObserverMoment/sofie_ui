@@ -111,8 +111,12 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
     await context.push(
         child: WorkoutMoveCreator(
       pageTitle: screenTitle,
-      saveWorkoutMove: (workoutMove) =>
-          _createSetAndAddWorkoutMove(context, workoutMove, duration: duration),
+      // If they have selected a the move as rest then this will become a 'rest set' (i.e. a set with only one move in it which is a resrt move.). The set will use set.duration as its length, so we take workoutMove and extract the time the user has entered, then set this as set.duration.
+      saveWorkoutMove: (workoutMove) => workoutMove.move.id == kRestMoveId
+          ? _createSetAndAddWorkoutMove(context, workoutMove,
+              duration: workoutMove.moveTimeInSeconds)
+          : _createSetAndAddWorkoutMove(context, workoutMove,
+              duration: duration),
       sortPosition: 0,
       ignoreReps: ignoreReps,
     ));

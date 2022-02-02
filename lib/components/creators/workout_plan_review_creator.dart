@@ -163,7 +163,7 @@ class _WorkoutPlanReviewCreatorPageState
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
-                      LoadingDots(
+                      LoadingIndicator(
                         size: 12,
                       ),
                     ],

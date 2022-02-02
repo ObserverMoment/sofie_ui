@@ -166,7 +166,7 @@ class _ScheduledWorkoutCreatorPageState
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
-                      NavBarLoadingDots(),
+                      NavBarLoadingIndicator(),
                     ],
                   )
                 : NavBarSaveButton(_schedule)),

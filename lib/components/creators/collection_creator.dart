@@ -133,7 +133,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
-                      LoadingDots(
+                      LoadingIndicator(
                         size: 12,
                       ),
                     ],

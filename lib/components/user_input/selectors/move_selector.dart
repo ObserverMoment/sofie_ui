@@ -100,9 +100,9 @@ class _MoveSelectorState extends State<MoveSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<UserCustomMoves$Query, json.JsonSerializable>(
-        key: Key('MoveSelector - ${UserCustomMovesQuery().operationName}'),
-        query: UserCustomMovesQuery(),
+    return QueryObserver<CustomMoves$Query, json.JsonSerializable>(
+        key: Key('MoveSelector - ${CustomMovesQuery().operationName}'),
+        query: CustomMovesQuery(),
         loadingIndicator: _loadingPage,
         builder: (customMovesData) {
           final standardMoves = CoreDataRepo.standardMoves;
@@ -124,7 +124,7 @@ class _MoveSelectorState extends State<MoveSelector> {
                 /// Required because in [WorkoutMoveCreator] this [MoveSelecter] sits as a sibling to another widget which also has a [CupertinoNavBar] - which was causing an 'identical hero tags in tree error'.
                 transitionBetweenRoutes: false,
                 leading: NavBarCancelButton(widget.onCancel),
-                middle: NavBarLargeTitle(widget.pageTitle),
+                middle: NavBarTitle(widget.pageTitle),
               ),
               child: FABPage(
                 rowButtonsAlignment: MainAxisAlignment.end,

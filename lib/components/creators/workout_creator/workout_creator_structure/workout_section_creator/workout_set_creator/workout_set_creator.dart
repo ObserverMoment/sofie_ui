@@ -286,7 +286,7 @@ class _WorkoutSetCreatorState extends State<WorkoutSetCreator> {
             children: [
               Row(
                 children: [
-                  if (_workoutSectionType.isTimed)
+                  if (_workoutSectionType.isTimed || _workoutSet.isRestSet)
                     CupertinoButton(
                         padding: const EdgeInsets.all(4),
                         onPressed: () => context.showBottomSheet(

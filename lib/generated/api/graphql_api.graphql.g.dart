@@ -6202,15 +6202,13 @@ Map<String, dynamic> _$CoreData$QueryToJson(CoreData$Query instance) =>
       'coreData': instance.coreData.toJson(),
     };
 
-UserCustomMoves$Query _$UserCustomMoves$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserCustomMoves$Query()
+CustomMoves$Query _$CustomMoves$QueryFromJson(Map<String, dynamic> json) =>
+    CustomMoves$Query()
       ..customMoves = (json['customMoves'] as List<dynamic>)
           .map((e) => Move.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$UserCustomMoves$QueryToJson(
-        UserCustomMoves$Query instance) =>
+Map<String, dynamic> _$CustomMoves$QueryToJson(CustomMoves$Query instance) =>
     <String, dynamic>{
       'customMoves': instance.customMoves.map((e) => e.toJson()).toList(),
     };

@@ -149,7 +149,7 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
             ],
           ),
           trailing: _savingToDB
-              ? const NavBarTrailingRow(children: [NavBarLoadingDots()])
+              ? const NavBarTrailingRow(children: [NavBarLoadingIndicator()])
               : NavBarCancelButton(_handleCancel)),
       child: ListView(
         shrinkWrap: true,

@@ -268,7 +268,7 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
           child: _authedUser.id == widget.otherUserId
               ? const Center(child: MyText('...'))
               : _isLoading
-                  ? const Center(child: LoadingDots(size: 10))
+                  ? const Center(child: LoadingIndicator(size: 10))
                   : _isFollowing
                       ? TertiaryButton(
                           text: 'Following',

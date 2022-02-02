@@ -160,14 +160,16 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
                               number: profile
                                   .lifetimeLogStatsSummary!.minutesWorked,
                             ),
-                          SummaryStatDisplay(
-                            label: 'WORKOUTS',
-                            number: workoutCount,
-                          ),
-                          SummaryStatDisplay(
-                            label: 'PLANS',
-                            number: planCount,
-                          ),
+                          if (isAuthedUserProfile || workoutCount > 0)
+                            SummaryStatDisplay(
+                              label: 'WORKOUTS',
+                              number: workoutCount,
+                            ),
+                          if (isAuthedUserProfile || workoutCount > 0)
+                            SummaryStatDisplay(
+                              label: 'PLANS',
+                              number: planCount,
+                            ),
                         ],
                       )),
                     ),

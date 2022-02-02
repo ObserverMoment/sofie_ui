@@ -108,7 +108,7 @@ extension BuildContextExtension on BuildContext {
                 MyText(message, textAlign: TextAlign.center),
                 const Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: LoadingDots(
+                  child: LoadingIndicator(
                     size: 14,
                   ),
                 )

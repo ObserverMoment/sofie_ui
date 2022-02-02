@@ -1,22 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 
 class WorkoutCard extends StatelessWidget {
@@ -62,11 +57,7 @@ class WorkoutCard extends StatelessWidget {
     // // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
     final double width = MediaQuery.of(context).size.width;
     final Dimensions dimensions = Dimensions.square((width * 1.5).toInt());
-    final Color contentOverlayColor =
-        Styles.black.withOpacity(kImageOverlayOpacity);
 
-    /// The lower section seems to need to have a border radius of one lower than that of the whole card to avoid a small peak of the underlying image - why does the corner get cut by 1 px?
-    const borderRadius = 8.0;
     const infoFontColor = Styles.white;
 
     /// Don't show 'Custom' as a tag.
@@ -191,11 +182,11 @@ class WorkoutCard extends StatelessWidget {
                           child: Row(
                             children: [
                               const Icon(
-                                CupertinoIcons.time,
-                                size: 12,
+                                CupertinoIcons.timer,
+                                size: 14,
                                 color: infoFontColor,
                               ),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: 5),
                               MyText(
                                 Duration(minutes: workout.lengthMinutes!)
                                     .displayString,
@@ -242,147 +233,6 @@ class WorkoutCard extends StatelessWidget {
               ),
           ],
         ));
-
-    return Card(
-      elevation: 2,
-      padding: EdgeInsets.zero,
-      borderRadius: BorderRadius.circular(borderRadius),
-      // backgroundImage: DecorationImage(
-      //     fit: BoxFit.cover,
-      //     image: Utils.textNotNull(workout.coverImageUri)
-      //         ? UploadcareImageProvider(workout.coverImageUri!,
-      //             transformations: [PreviewTransformation(dimensions)])
-      //         : const AssetImage(
-      //             'assets/placeholder_images/workout.jpg',
-      //           ) as ImageProvider),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-              height: 112,
-              width: double.infinity,
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 4),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildLoggedSessionsCount(context,
-                            workout.loggedSessionsCount, contentOverlayColor),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (workout.lengthMinutes != null)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: DurationTag(
-                                  duration:
-                                      Duration(minutes: workout.lengthMinutes!),
-                                  backgroundColor: contentOverlayColor,
-                                  textColor: infoFontColor,
-                                ),
-                              ),
-                            if (workout.difficultyLevel != null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child: Opacity(
-                                  opacity: 0.85,
-                                  child: DifficultyLevelDot(
-                                    difficultyLevel: workout.difficultyLevel!,
-                                    size: 21,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.end,
-                      verticalDirection: VerticalDirection.up,
-                      spacing: 6,
-                      runSpacing: 5,
-                      children: workout.equipments
-                          .map(
-                            (e) => Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: contentOverlayColor),
-                                padding: const EdgeInsets.all(3),
-                                width: 29,
-                                height: 29,
-                                child: Utils.getEquipmentIcon(context, e,
-                                    color: infoFontColor)),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ),
-              )),
-          Container(
-            decoration: BoxDecoration(
-                color: Styles.black.withOpacity(kImageOverlayOpacity),
-                borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(borderRadius),
-                    bottomLeft: Radius.circular(borderRadius))),
-            padding:
-                const EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MyHeaderText(
-                            workout.name,
-                            lineHeight: 1.3,
-                            color: infoFontColor,
-                            maxLines: 2,
-                          ),
-                          const SizedBox(height: 3),
-                          MyText(
-                            workout.user.displayName.toUpperCase(),
-                            size: FONTSIZE.two,
-                            lineHeight: 1.4,
-                            color: infoFontColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                if (Utils.textNotNull(workout.description))
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: MyText(
-                      workout.description!,
-                      color: infoFontColor,
-                      maxLines: 3,
-                    ),
-                  ),
-                if (sectionTagsToDisplay.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: CommaSeparatedList(
-                      sectionTagsToDisplay,
-                      textColor: Styles.primaryAccent,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
 

@@ -114,7 +114,7 @@ class _CreateMoodState extends State<_CreateMood> {
         trailing: _saving
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : NavBarTrailingRow(
