@@ -3,6 +3,7 @@ fragment WorkoutPlanData on WorkoutPlan {
   __typename
   id
   createdAt
+  updatedAt
   archived
   name
   description
@@ -49,6 +50,7 @@ fragment WorkoutPlan on WorkoutPlan {
   __typename
   id
   createdAt
+  updatedAt
   archived
   name
   description
@@ -65,6 +67,7 @@ fragment WorkoutPlanSummary on WorkoutPlanSummary {
   __typename
   id
   createdAt
+  updatedAt
   archived
   name
   description

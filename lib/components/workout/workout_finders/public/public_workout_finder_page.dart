@@ -91,7 +91,9 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
 
   Future<void> _fetchPublicWorkouts(int nextPageKey) async {
     try {
-      /// [nextPageKey] aka cursor defaults to 0 when [_pagingController] is initialised.
+      /// [nextPageKey] defaults to 0 when [_pagingController] is initialised.
+      /// For every subsequent call for a page [nextPageKey] will be [NOT 0]
+      /// Use as a boolean. If [not 0] then pass [_cursor] to the query args.
       final workouts = await _executePublicWorkoutsQuery(
           cursor: nextPageKey == 0 ? null : _cursor);
 

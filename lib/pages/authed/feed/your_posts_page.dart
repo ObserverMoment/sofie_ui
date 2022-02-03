@@ -171,7 +171,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
           FloatingButton(
               padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
               text: 'New Post',
-              onTap: () => context.navigateTo(const FeedPostCreatorRoute()),
+              onTap: () => context.navigateTo(FeedPostCreatorRoute()),
               icon: CupertinoIcons.pencil),
         ],
         child: PagedListView<int, StreamEnrichedActivity>(

@@ -1,0 +1,14 @@
+# User == author of the note.
+query clubMemberNotes($clubId: ID!, $memberId: ID!, $cursor: ID, $take: Int) {
+  clubMemberNotes(
+    clubId: $clubId
+    memberId: $memberId
+    cursor: $cursor
+    take: $take
+  ) {
+    ...ClubMemberNote
+    User {
+      ...UserAvatarData
+    }
+  }
+}

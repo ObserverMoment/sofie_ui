@@ -275,8 +275,7 @@ class _FeedPageState extends State<FeedPage> {
           children: [
             IconButton(
                 iconData: CupertinoIcons.plus_circle,
-                onPressed: () =>
-                    context.navigateTo(const FeedPostCreatorRoute())),
+                onPressed: () => context.navigateTo(FeedPostCreatorRoute())),
             IconButton(
                 iconData: CupertinoIcons.person_2,
                 onPressed: () => context.push(

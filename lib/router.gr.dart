@@ -447,8 +447,15 @@ class AppRouter extends _i63.RootStackRouter {
               key: args.key, userBenchmark: args.userBenchmark));
     },
     FeedPostCreatorRoute.name: (routeData) {
+      final args = routeData.argsAs<FeedPostCreatorRouteArgs>(
+          orElse: () => const FeedPostCreatorRouteArgs());
       return _i63.CupertinoPageX<dynamic>(
-          routeData: routeData, child: const _i50.FeedPostCreatorPage());
+          routeData: routeData,
+          child: _i50.FeedPostCreatorPage(
+              key: args.key,
+              activityInput: args.activityInput,
+              onComplete: args.onComplete,
+              title: args.title));
     },
     ClubFeedPostCreatorRoute.name: (routeData) {
       final args = routeData.argsAs<ClubFeedPostCreatorRouteArgs>();
@@ -1685,11 +1692,40 @@ class PersonalBestCreatorRouteArgs {
 
 /// generated route for
 /// [_i50.FeedPostCreatorPage]
-class FeedPostCreatorRoute extends _i63.PageRouteInfo<void> {
-  const FeedPostCreatorRoute()
-      : super(FeedPostCreatorRoute.name, path: 'create/post');
+class FeedPostCreatorRoute
+    extends _i63.PageRouteInfo<FeedPostCreatorRouteArgs> {
+  FeedPostCreatorRoute(
+      {_i65.Key? key,
+      _i66.CreateStreamFeedActivityInput? activityInput,
+      void Function()? onComplete,
+      String? title})
+      : super(FeedPostCreatorRoute.name,
+            path: 'create/post',
+            args: FeedPostCreatorRouteArgs(
+                key: key,
+                activityInput: activityInput,
+                onComplete: onComplete,
+                title: title));
 
   static const String name = 'FeedPostCreatorRoute';
+}
+
+class FeedPostCreatorRouteArgs {
+  const FeedPostCreatorRouteArgs(
+      {this.key, this.activityInput, this.onComplete, this.title});
+
+  final _i65.Key? key;
+
+  final _i66.CreateStreamFeedActivityInput? activityInput;
+
+  final void Function()? onComplete;
+
+  final String? title;
+
+  @override
+  String toString() {
+    return 'FeedPostCreatorRouteArgs{key: $key, activityInput: $activityInput, onComplete: $onComplete, title: $title}';
+  }
 }
 
 /// generated route for

@@ -884,6 +884,25 @@ class NavBarSaveButton extends StatelessWidget {
   }
 }
 
+class NavBarTertiarySaveButton extends StatelessWidget {
+  final void Function() onPressed;
+  final String text;
+  const NavBarTertiarySaveButton(
+    this.onPressed, {
+    Key? key,
+    this.text = 'Save',
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return TertiaryButton(
+      backgroundColor: Styles.primaryAccent,
+      textColor: Styles.white,
+      onPressed: onPressed,
+      text: 'Save',
+    );
+  }
+}
+
 /// Icon buttons
 class InfoPopupButton extends StatelessWidget {
   final String pageTitle;
