@@ -135,8 +135,8 @@ class WorkoutCard extends StatelessWidget {
                           spacing: 8,
                           runSpacing: 8,
                           children: [
-                            _buildLoggedSessionsCount(
-                                context, 25, Styles.black),
+                            _buildLoggedSessionsCount(context,
+                                workout.loggedSessionsCount, Styles.black),
                             ...workout.equipments
                                 .map(
                                   (e) => SizedBox(

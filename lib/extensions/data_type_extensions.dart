@@ -196,6 +196,7 @@ extension WorkoutExtension on Workout {
     ..$$typename = kWorkoutSummaryTypename
     ..id = id
     ..createdAt = createdAt
+    ..updatedAt = updatedAt
     ..archived = archived
     ..name = name
     ..user = user
@@ -219,6 +220,7 @@ extension WorkoutPlanExtension on WorkoutPlan {
     ..$$typename = kWorkoutPlanSummaryTypename
     ..id = id
     ..createdAt = createdAt
+    ..updatedAt = updatedAt
     ..archived = archived
     ..name = name
     ..description = description

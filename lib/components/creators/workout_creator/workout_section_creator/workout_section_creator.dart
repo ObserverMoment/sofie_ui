@@ -4,10 +4,10 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_set_generator_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/change_section_type.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/workout_set_generator_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_move_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_set_creator_container.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
@@ -354,28 +354,47 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
                 ],
               ),
             ),
-            ImplicitlyAnimatedList<WorkoutSet>(
-              items: _sortedWorkoutSets,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              areItemsTheSame: (a, b) => a.id == b.id,
-              itemBuilder: (context, animation, item, index) {
-                return SizeFadeTransition(
-                  sizeFraction: 0.7,
-                  curve: Curves.easeInOut,
-                  animation: animation,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: WorkoutSetCreator(
-                        key: Key(
-                            'WorkoutSectionWorkoutSets-${widget.sectionIndex}-${item.sortPosition}'),
-                        sectionIndex: widget.sectionIndex,
-                        setIndex: item.sortPosition,
-                        allowReorder: _sortedWorkoutSets.length > 1),
+            _sortedWorkoutSets.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: const [
+                        Opacity(
+                            opacity: 0.5,
+                            child: Icon(
+                              CupertinoIcons.square_list,
+                              size: 50,
+                            )),
+                        SizedBox(height: 12),
+                        MyText(
+                          'No sets defined yet...',
+                          subtext: true,
+                        ),
+                      ],
+                    ),
+                  )
+                : ImplicitlyAnimatedList<WorkoutSet>(
+                    items: _sortedWorkoutSets,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    areItemsTheSame: (a, b) => a.id == b.id,
+                    itemBuilder: (context, animation, item, index) {
+                      return SizeFadeTransition(
+                        sizeFraction: 0.7,
+                        curve: Curves.easeInOut,
+                        animation: animation,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: WorkoutSetCreatorContainer(
+                              key: Key(
+                                  'WorkoutSectionWorkoutSets-${widget.sectionIndex}-${item.sortPosition}'),
+                              sectionIndex: widget.sectionIndex,
+                              setIndex: item.sortPosition,
+                              allowReorder: _sortedWorkoutSets.length > 1),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ],
         ),
       ),

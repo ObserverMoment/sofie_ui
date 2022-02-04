@@ -139,7 +139,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
                     ],
                   )
                 : _nameController.text.length > 2
-                    ? NavBarSaveButton(_handleSave)
+                    ? NavBarTertiarySaveButton(_handleSave)
                     : Container(width: 0)),
       ),
       child: SingleChildScrollView(

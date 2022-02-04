@@ -4,10 +4,11 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/add_workout_section.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_structure_workout_section.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/add_workout_section.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/workout_section_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_structure_creator/workout_structure_workout_section_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
@@ -88,31 +89,51 @@ class _WorkoutCreatorStructureState extends State<WorkoutCreatorStructure> {
         padding: const EdgeInsets.symmetric(
           vertical: 10.0,
         ),
-        child: ImplicitlyAnimatedList<WorkoutSection>(
-          padding: const EdgeInsets.only(left: 4, top: 4, right: 4, bottom: 60),
-          items: _sortedworkoutSections,
-          shrinkWrap: true,
-          areItemsTheSame: (a, b) => a.id == b.id,
-          itemBuilder: (context, animation, item, index) {
-            return SizeFadeTransition(
-              sizeFraction: 0.7,
-              curve: Curves.easeInOut,
-              animation: animation,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: GestureDetector(
-                  onTap: () => _openEditSection(index),
-                  child: WorkoutStructureWorkoutSection(
-                    key: Key(item.id),
-                    workoutSection: item,
-                    index: index,
-                    canReorder: _sortedworkoutSections.length > 1,
-                  ),
+        child: _sortedworkoutSections.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: const [
+                    Opacity(
+                        opacity: 0.5,
+                        child: Icon(
+                          CupertinoIcons.square_list,
+                          size: 50,
+                        )),
+                    SizedBox(height: 12),
+                    MyText(
+                      'No sections defined yet...',
+                      subtext: true,
+                    ),
+                  ],
                 ),
+              )
+            : ImplicitlyAnimatedList<WorkoutSection>(
+                padding: const EdgeInsets.only(
+                    left: 4, top: 4, right: 4, bottom: 60),
+                items: _sortedworkoutSections,
+                shrinkWrap: true,
+                areItemsTheSame: (a, b) => a.id == b.id,
+                itemBuilder: (context, animation, item, index) {
+                  return SizeFadeTransition(
+                    sizeFraction: 0.7,
+                    curve: Curves.easeInOut,
+                    animation: animation,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: GestureDetector(
+                        onTap: () => _openEditSection(index),
+                        child: WorkoutStructureWorkoutSectionCard(
+                          key: Key(item.id),
+                          workoutSection: item,
+                          index: index,
+                          canReorder: _sortedworkoutSections.length > 1,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

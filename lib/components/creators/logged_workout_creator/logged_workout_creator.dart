@@ -105,7 +105,7 @@ class _LoggedWorkoutCreatorPageState extends State<LoggedWorkoutCreatorPage> {
                                     NavBarLoadingIndicator(),
                                   ],
                                 )
-                              : NavBarSaveButton(
+                              : NavBarTertiarySaveButton(
                                   () => _saveLogToDB(
                                       context.read<LoggedWorkoutCreatorBloc>()),
                                   text: 'Log It',

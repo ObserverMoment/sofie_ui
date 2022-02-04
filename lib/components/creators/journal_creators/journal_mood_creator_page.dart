@@ -208,7 +208,7 @@ class _EditMoodState extends State<_EditMood> {
           'Edit Mood',
         ),
         trailing: FadeIn(
-          child: NavBarSaveButton(
+          child: NavBarTertiarySaveButton(
             context.pop,
             text: 'Done',
           ),

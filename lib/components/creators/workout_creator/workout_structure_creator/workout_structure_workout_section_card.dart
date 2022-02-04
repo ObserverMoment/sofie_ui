@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/change_section_type.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/change_section_type.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/tags.dart';
@@ -13,13 +13,13 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class WorkoutStructureWorkoutSection extends StatelessWidget {
+class WorkoutStructureWorkoutSectionCard extends StatelessWidget {
   @override
   final Key key;
   final int index;
   final WorkoutSection workoutSection;
   final bool canReorder;
-  const WorkoutStructureWorkoutSection(
+  const WorkoutStructureWorkoutSectionCard(
       {required this.key,
       required this.index,
       required this.workoutSection,

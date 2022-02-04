@@ -65,7 +65,7 @@ class _ChangeSectionTypeState extends State<ChangeSectionType> {
       navigationBar: MyNavBar(
         customLeading: NavBarCancelButton(context.pop),
         middle: const NavBarTitle('Change Section Type'),
-        trailing: NavBarSaveButton(_saveAndClose),
+        trailing: NavBarTertiarySaveButton(_saveAndClose),
       ),
       child: ListView(
         children: [

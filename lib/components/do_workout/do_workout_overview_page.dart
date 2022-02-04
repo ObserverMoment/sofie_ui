@@ -8,7 +8,7 @@ import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_contr
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section_modifications.dart';
+import 'package:sofie_ui/components/do_workout/modifications/do_workout_section_modifications.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_settings.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
@@ -494,21 +494,17 @@ class _WorkoutSectionSummary extends StatelessWidget {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    if (!(workoutSection.isCustomSession ||
-                        workoutSection.isLifting))
-                      _buildSectionFooterButton(
-                          CupertinoIcons.list_bullet,
-                          'View / Modify',
-                          () => context.push(
-                                fullscreenDialog: true,
-                                child:
-                                    ChangeNotifierProvider<DoWorkoutBloc>.value(
-                                  value: bloc,
-                                  child: DoWorkoutSectionModifications(
-                                      sectionIndex:
-                                          workoutSection.sortPosition),
-                                ),
-                              )),
+                    _buildSectionFooterButton(
+                        CupertinoIcons.list_bullet,
+                        'View / Modify',
+                        () => context.push(
+                              child:
+                                  ChangeNotifierProvider<DoWorkoutBloc>.value(
+                                value: bloc,
+                                child: DoWorkoutSectionModifications(
+                                    sectionIndex: workoutSection.sortPosition),
+                              ),
+                            )),
                     if (isComplete)
                       _buildSectionFooterButton(
                         CupertinoIcons.refresh_bold,

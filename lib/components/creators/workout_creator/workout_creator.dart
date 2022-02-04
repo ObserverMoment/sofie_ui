@@ -4,7 +4,7 @@ import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_media.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator_info.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_creator_structure.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_structure_creator/workout_creator_structure.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -119,7 +119,8 @@ class __PreCreateUIState extends State<_PreCreateUI> {
                   NavBarLoadingIndicator(),
                 ],
               )
-            : NavBarSaveButton(() => widget.createWorkout(_createWorkoutInput),
+            : NavBarTertiarySaveButton(
+                () => widget.createWorkout(_createWorkoutInput),
                 text: 'Create'),
       ),
       child: ListView(children: [
@@ -193,7 +194,7 @@ class __MainUIState extends State<_MainUI> {
                           NavBarLoadingIndicator(),
                         ],
                       )
-                    : NavBarSaveButton(
+                    : NavBarTertiarySaveButton(
                         _saveAndClose,
                         text: 'Done',
                       ),

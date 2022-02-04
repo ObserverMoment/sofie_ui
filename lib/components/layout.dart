@@ -383,7 +383,7 @@ class ModalPageScaffold extends StatelessWidget {
                   ),
                 )
               : save != null && validToSave
-                  ? FadeIn(child: NavBarSaveButton(save!))
+                  ? FadeIn(child: NavBarTertiarySaveButton(save!))
                   : null,
         ),
         child: Padding(

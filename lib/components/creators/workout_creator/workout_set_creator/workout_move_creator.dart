@@ -209,7 +209,7 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
             middle: NavBarTitle(widget.pageTitle),
             trailing: _validToSave()
                 ? FadeIn(
-                    child: NavBarSaveButton(
+                    child: NavBarTertiarySaveButton(
                     _checkLoadAmount,
                   ))
                 : null,

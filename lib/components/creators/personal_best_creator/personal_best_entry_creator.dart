@@ -243,7 +243,7 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
                 ],
               )
             : _validToSubmit
-                ? FadeIn(child: NavBarSaveButton(_saveAndClose))
+                ? FadeIn(child: NavBarTertiarySaveButton(_saveAndClose))
                 : null,
       ),
       child: ListView(

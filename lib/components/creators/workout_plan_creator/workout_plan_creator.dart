@@ -127,7 +127,7 @@ class __MainUIState extends State<_MainUI> {
                       NavBarLoadingIndicator(),
                     ],
                   )
-                : NavBarSaveButton(
+                : NavBarTertiarySaveButton(
                     _saveAndClose,
                     text: 'Done',
                   ),
@@ -216,7 +216,7 @@ class __PreCreateUIState extends State<_PreCreateUI> {
                   NavBarLoadingIndicator(),
                 ],
               )
-            : NavBarSaveButton(
+            : NavBarTertiarySaveButton(
                 () => widget.createWorkoutPlan(_createWorkoutPlanInput),
                 text: 'Create'),
       ),

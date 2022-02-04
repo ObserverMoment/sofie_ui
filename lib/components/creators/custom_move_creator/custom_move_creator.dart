@@ -140,7 +140,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
           middle: NavBarTitle(widget.move == null ? 'New Move' : 'Edit Move'),
           trailing: _formIsDirty
               ? FadeIn(
-                  child: NavBarSaveButton(
+                  child: NavBarTertiarySaveButton(
                     _saveAndClose,
                     loading: _loading,
                   ),

@@ -241,7 +241,7 @@ class _EditGoalState extends State<_EditGoal> {
           'Goal',
         ),
         trailing: FadeIn(
-          child: NavBarSaveButton(
+          child: NavBarTertiarySaveButton(
             context.pop,
             text: 'Done',
           ),

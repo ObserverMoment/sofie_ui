@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_move_creator.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/logged_workout/logged_workout_move_display.dart';

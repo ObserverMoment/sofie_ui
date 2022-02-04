@@ -190,7 +190,7 @@ class _FullScreenDisplayNameEditingState
           middle: NavBarTitle(widget.title),
           trailing: _formIsDirty && _inputIsValid && _apiCheckIsvalid
               ? FadeIn(
-                  child: NavBarSaveButton(
+                  child: NavBarTertiarySaveButton(
                   _handleSave,
                 ))
               : null,

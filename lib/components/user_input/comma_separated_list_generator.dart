@@ -88,7 +88,7 @@ class _CommaSeparatedListGeneratorState
       navigationBar: MyNavBar(
         customLeading: NavBarCancelButton(context.pop),
         middle: NavBarTitle(widget.title),
-        trailing: NavBarSaveButton(
+        trailing: NavBarTertiarySaveButton(
           _saveAndClose,
           text: 'Done',
         ),

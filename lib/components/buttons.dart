@@ -887,18 +887,26 @@ class NavBarSaveButton extends StatelessWidget {
 class NavBarTertiarySaveButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
+  final bool loading;
   const NavBarTertiarySaveButton(
     this.onPressed, {
     Key? key,
     this.text = 'Save',
+    this.loading = false,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return TertiaryButton(
-      backgroundColor: Styles.primaryAccent,
-      textColor: Styles.white,
-      onPressed: onPressed,
-      text: 'Save',
+    return AnimatedSwitcher(
+      duration: kStandardAnimationDuration,
+      child: loading
+          ? const CupertinoActivityIndicator(radius: 6)
+          : TertiaryButton(
+              backgroundColor: Styles.primaryAccent,
+              textColor: Styles.white,
+              onPressed: onPressed,
+              text: text,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+            ),
     );
   }
 }

@@ -169,7 +169,7 @@ class _WorkoutPlanReviewCreatorPageState
                     ],
                   )
                 : _score != null
-                    ? NavBarSaveButton(_handleSave)
+                    ? NavBarTertiarySaveButton(_handleSave)
                     : Container(width: 0)),
       ),
       child: SingleChildScrollView(

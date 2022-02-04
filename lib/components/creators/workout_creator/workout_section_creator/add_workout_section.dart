@@ -86,7 +86,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
         middle: const NavBarTitle('Add Section'),
         trailing: _validToSubmit
             ? FadeIn(
-                child: NavBarSaveButton(_saveAndClose),
+                child: NavBarTertiarySaveButton(_saveAndClose),
               )
             : null,
       ),

@@ -169,7 +169,7 @@ class _ScheduledWorkoutCreatorPageState
                       NavBarLoadingIndicator(),
                     ],
                   )
-                : NavBarSaveButton(_schedule)),
+                : NavBarTertiarySaveButton(_schedule)),
       ),
       child: ListView(
         children: [
