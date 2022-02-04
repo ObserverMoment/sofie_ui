@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -177,8 +178,8 @@ class ScheduledWorkoutCard extends StatelessWidget {
                       if (!hasLog && scheduledWorkout.workout != null)
                         BottomSheetMenuItem(
                           text: 'Log it',
-                          onPressed: () => context.navigateTo(
-                              LoggedWorkoutCreatorRoute(
+                          onPressed: () => context.push(
+                              child: PreLoggingModifications(
                                   workoutId: scheduledWorkout.workout!.id,
                                   scheduledWorkout: scheduledWorkout,
                                   workoutPlanDayWorkoutId:

@@ -6,6 +6,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
 import 'package:sofie_ui/components/cards/workout_plan_day_card.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -155,10 +156,11 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
 
   Future<void> _handleLogWorkoutProgramWorkout(
       BuildContext context, WorkoutPlanDayWorkout planDayWorkout) async {
-    await context.pushRoute(LoggedWorkoutCreatorRoute(
-        workoutId: planDayWorkout.workout.id,
-        workoutPlanDayWorkoutId: planDayWorkout.id,
-        workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id));
+    await context.push(
+        child: PreLoggingModifications(
+            workoutId: planDayWorkout.workout.id,
+            workoutPlanDayWorkoutId: planDayWorkout.id,
+            workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id));
   }
 
   void _confirmDeleteCompletedWorkout(BuildContext context,

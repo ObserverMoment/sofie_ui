@@ -9,6 +9,7 @@ import 'package:sofie_ui/components/creators/logged_workout_creator/score_inputs
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
+import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 /// Certain loggedWorkoutSection types require some input from the user before they can be created.
 /// i.e. AMRAPs require a score and ForTime requires a time.
@@ -90,73 +91,88 @@ class _RequiredUserInputsState extends State<RequiredUserInputs> {
             children: _sectionsRequiringInput
                 .map((w) => Padding(
                       padding: const EdgeInsets.only(top: 12.0),
-                      child: ContentBox(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MyHeaderText(
-                            w.workoutSection.name ??
-                                'Section ${w.workoutSection.sortPosition + 1}',
-                            lineHeight: 1.5,
-                          ),
-                          MyText(
-                            w.workoutSection.workoutSectionType.name,
-                            color: Styles.primaryAccent,
-                            lineHeight: 1.5,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (w.workoutSection.workoutSectionType.name ==
-                                    kAMRAPName)
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        RepScoreInput(
-                                          repScore: w.input,
-                                          updateRepScore: (score) =>
-                                              _updateSectionInput(
-                                                  w.workoutSection.id, score),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 24, top: 6.0, right: 24),
-                                          child: MyText(
-                                            'For distance and time based moves each move in the set is worth 1 rep.',
-                                            maxLines: 3,
-                                            subtext: true,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                else
-                                  TimeTakenInput(
-                                      showSeconds: w.workoutSection
-                                              .workoutSectionType.name ==
-                                          kForTimeName,
-                                      duration: w.input != null
-                                          ? Duration(seconds: w.input!)
-                                          : null,
-                                      updateDuration: (duration) =>
-                                          _updateSectionInput(
-                                              w.workoutSection.id,
-                                              duration.inSeconds)),
-                              ],
-                            ),
-                          )
-                        ],
-                      )),
+                      child: RequiredUserInput(
+                        updateSectionInput: _updateSectionInput,
+                        workoutSectionWithInput: w,
+                      ),
                     ))
                 .toList(),
           ),
         )
       ],
     );
+  }
+}
+
+class RequiredUserInput extends StatelessWidget {
+  final WorkoutSectionWithInput workoutSectionWithInput;
+  final void Function(String workoutSectionId, int input) updateSectionInput;
+  const RequiredUserInput(
+      {Key? key,
+      required this.workoutSectionWithInput,
+      required this.updateSectionInput})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ContentBox(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MyHeaderText(
+          workoutSectionWithInput.workoutSection.name ??
+              'Section ${workoutSectionWithInput.workoutSection.sortPosition + 1}',
+          lineHeight: 1.5,
+        ),
+        MyText(
+          workoutSectionWithInput.workoutSection.workoutSectionType.name,
+          color: Styles.primaryAccent,
+          lineHeight: 1.5,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (workoutSectionWithInput
+                      .workoutSection.workoutSectionType.name ==
+                  kAMRAPName)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      RepScoreInput(
+                        repScore: workoutSectionWithInput.input,
+                        updateRepScore: (score) => updateSectionInput(
+                            workoutSectionWithInput.workoutSection.id, score),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 24, top: 6.0, right: 24),
+                        child: MyText(
+                          'For distance and time based moves each move in the set is worth 1 rep.',
+                          maxLines: 3,
+                          subtext: true,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              else
+                TimeTakenInput(
+                    showSeconds: workoutSectionWithInput
+                            .workoutSection.workoutSectionType.name ==
+                        kForTimeName,
+                    duration: workoutSectionWithInput.input != null
+                        ? Duration(seconds: workoutSectionWithInput.input!)
+                        : null,
+                    updateDuration: (duration) => updateSectionInput(
+                        workoutSectionWithInput.workoutSection.id,
+                        duration.inSeconds)),
+            ],
+          ),
+        )
+      ],
+    ));
   }
 }

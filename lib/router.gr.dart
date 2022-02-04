@@ -490,7 +490,7 @@ class AppRouter extends _i63.RootStackRouter {
           child: _i54.LoggedWorkoutCreatorPage(
               key: args.key,
               scheduledWorkout: args.scheduledWorkout,
-              workoutId: args.workoutId,
+              workout: args.workout,
               workoutPlanDayWorkoutId: args.workoutPlanDayWorkoutId,
               workoutPlanEnrolmentId: args.workoutPlanEnrolmentId));
     },
@@ -1837,7 +1837,7 @@ class LoggedWorkoutCreatorRoute
   LoggedWorkoutCreatorRoute(
       {_i65.Key? key,
       _i66.ScheduledWorkout? scheduledWorkout,
-      required String workoutId,
+      required _i66.Workout workout,
       String? workoutPlanDayWorkoutId,
       String? workoutPlanEnrolmentId})
       : super(LoggedWorkoutCreatorRoute.name,
@@ -1845,7 +1845,7 @@ class LoggedWorkoutCreatorRoute
             args: LoggedWorkoutCreatorRouteArgs(
                 key: key,
                 scheduledWorkout: scheduledWorkout,
-                workoutId: workoutId,
+                workout: workout,
                 workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
                 workoutPlanEnrolmentId: workoutPlanEnrolmentId));
 
@@ -1856,7 +1856,7 @@ class LoggedWorkoutCreatorRouteArgs {
   const LoggedWorkoutCreatorRouteArgs(
       {this.key,
       this.scheduledWorkout,
-      required this.workoutId,
+      required this.workout,
       this.workoutPlanDayWorkoutId,
       this.workoutPlanEnrolmentId});
 
@@ -1864,7 +1864,7 @@ class LoggedWorkoutCreatorRouteArgs {
 
   final _i66.ScheduledWorkout? scheduledWorkout;
 
-  final String workoutId;
+  final _i66.Workout workout;
 
   final String? workoutPlanDayWorkoutId;
 
@@ -1872,7 +1872,7 @@ class LoggedWorkoutCreatorRouteArgs {
 
   @override
   String toString() {
-    return 'LoggedWorkoutCreatorRouteArgs{key: $key, scheduledWorkout: $scheduledWorkout, workoutId: $workoutId, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId}';
+    return 'LoggedWorkoutCreatorRouteArgs{key: $key, scheduledWorkout: $scheduledWorkout, workout: $workout, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId}';
   }
 }
 

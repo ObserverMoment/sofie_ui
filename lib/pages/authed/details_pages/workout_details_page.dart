@@ -9,6 +9,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_like_heart.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
@@ -404,8 +405,8 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         icon: const Icon(CupertinoIcons
                                             .text_badge_checkmark),
                                         label: 'Log It',
-                                        onPressed: () => context.navigateTo(
-                                            LoggedWorkoutCreatorRoute(
+                                        onPressed: () => context.push(
+                                            child: PreLoggingModifications(
                                                 workoutId: workout.id,
                                                 scheduledWorkout:
                                                     widget.scheduledWorkout,
