@@ -44,8 +44,10 @@ class _RepScoreInputState extends State<RepScoreInput> {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const MyText('TOTAL REPS'),
+            const SizedBox(width: 4),
             SuperText(
               child: AnimatedSwitcher(
                   duration: kStandardAnimationDuration,
@@ -53,12 +55,12 @@ class _RepScoreInputState extends State<RepScoreInput> {
                       ? const Icon(
                           CupertinoIcons.exclamationmark_circle_fill,
                           color: Styles.errorRed,
-                          size: 20,
+                          size: 16,
                         )
                       : const Icon(
                           CupertinoIcons.checkmark_alt_circle_fill,
                           color: Styles.primaryAccent,
-                          size: 20,
+                          size: 16,
                         )),
             )
           ],
@@ -155,6 +157,7 @@ class _TimeTakenInputState extends State<TimeTakenInput> {
           child: Row(
             children: [
               const MyText('TIME TAKEN'),
+              const SizedBox(width: 4),
               SuperText(
                 child: AnimatedSwitcher(
                     duration: kStandardAnimationDuration,
@@ -162,12 +165,12 @@ class _TimeTakenInputState extends State<TimeTakenInput> {
                         ? const Icon(
                             CupertinoIcons.exclamationmark_circle_fill,
                             color: Styles.errorRed,
-                            size: 20,
+                            size: 16,
                           )
                         : const Icon(
                             CupertinoIcons.checkmark_alt_circle_fill,
                             color: Styles.primaryAccent,
-                            size: 20,
+                            size: 16,
                           )),
               )
             ],

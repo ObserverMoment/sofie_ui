@@ -179,7 +179,7 @@ class ScheduledWorkoutCard extends StatelessWidget {
                         BottomSheetMenuItem(
                           text: 'Log it',
                           onPressed: () => context.push(
-                              child: PreLoggingModifications(
+                              child: PreLoggingModificationsAndUserInputs(
                                   workoutId: scheduledWorkout.workout!.id,
                                   scheduledWorkout: scheduledWorkout,
                                   workoutPlanDayWorkoutId:

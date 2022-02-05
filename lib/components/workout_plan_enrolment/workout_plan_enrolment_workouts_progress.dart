@@ -157,7 +157,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
   Future<void> _handleLogWorkoutProgramWorkout(
       BuildContext context, WorkoutPlanDayWorkout planDayWorkout) async {
     await context.push(
-        child: PreLoggingModifications(
+        child: PreLoggingModificationsAndUserInputs(
             workoutId: planDayWorkout.workout.id,
             workoutPlanDayWorkoutId: planDayWorkout.id,
             workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id));

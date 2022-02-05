@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
+import 'package:sofie_ui/blocs/workout_structure_modifications_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator_with_sections.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/required_user_inputs.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/logged_workout/congratulations_logged_workout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
 class LoggedWorkoutCreatorPage extends StatefulWidget {
   final Workout workout;
+  final List<WorkoutSectionInput> sectionInputs;
 
   // When present these should be connected to the log
   /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
@@ -27,7 +27,8 @@ class LoggedWorkoutCreatorPage extends StatefulWidget {
       this.scheduledWorkout,
       required this.workout,
       this.workoutPlanDayWorkoutId,
-      this.workoutPlanEnrolmentId})
+      this.workoutPlanEnrolmentId,
+      required this.sectionInputs})
       : super(key: key);
 
   @override
@@ -76,38 +77,29 @@ class _LoggedWorkoutCreatorPageState extends State<LoggedWorkoutCreatorPage> {
       create: (context) => LoggedWorkoutCreatorBloc(
           context: context,
           workout: widget.workout,
+          sectionInputs: widget.sectionInputs,
           scheduledWorkout: widget.scheduledWorkout,
           workoutPlanDayWorkoutId: widget.workoutPlanDayWorkoutId,
           workoutPlanEnrolmentId: widget.workoutPlanEnrolmentId),
       builder: (context, child) {
-        final requireUserInputs =
-            context.select<LoggedWorkoutCreatorBloc, bool>(
-                (b) => b.loggedWorkout.loggedWorkoutSections.isEmpty);
-
         return MyPageScaffold(
-            navigationBar: MyNavBar(
-              customLeading: NavBarCancelButton(_handleCancel),
-              middle: NavBarTitle(widget.workout.name),
-              trailing: !requireUserInputs
-                  ? _savingToDB
-                      ? const NavBarTrailingRow(
-                          children: [
-                            NavBarLoadingIndicator(),
-                          ],
-                        )
-                      : NavBarSaveButton(
-                          () => _saveLogToDB(
-                              context.read<LoggedWorkoutCreatorBloc>()),
-                          text: 'Log It',
-                        )
-                  : null,
-            ),
-            child: AnimatedSwitcher(
-              duration: kStandardAnimationDuration,
-              child: requireUserInputs
-                  ? const RequiredUserInputs()
-                  : const LoggedWorkoutCreatorWithSections(),
-            ));
+          navigationBar: MyNavBar(
+            customLeading: NavBarCancelButton(_handleCancel),
+            middle: NavBarTitle(widget.workout.name),
+            trailing: _savingToDB
+                ? const NavBarTrailingRow(
+                    children: [
+                      NavBarLoadingIndicator(),
+                    ],
+                  )
+                : NavBarSaveButton(
+                    () =>
+                        _saveLogToDB(context.read<LoggedWorkoutCreatorBloc>()),
+                    text: 'Log It',
+                  ),
+          ),
+          child: const LoggedWorkoutCreatorWithSections(),
+        );
       },
     );
   }

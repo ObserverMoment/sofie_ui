@@ -14,6 +14,7 @@ import 'package:auto_route/auto_route.dart' as _i63;
 import 'package:flutter/cupertino.dart' as _i65;
 import 'package:flutter/material.dart' as _i64;
 
+import 'blocs/workout_structure_modifications_bloc.dart' as _i67;
 import 'components/creators/body_tracking/body_tracking_entry_creator.dart'
     as _i42;
 import 'components/creators/club_creator/club_creator.dart' as _i43;
@@ -492,7 +493,8 @@ class AppRouter extends _i63.RootStackRouter {
               scheduledWorkout: args.scheduledWorkout,
               workout: args.workout,
               workoutPlanDayWorkoutId: args.workoutPlanDayWorkoutId,
-              workoutPlanEnrolmentId: args.workoutPlanEnrolmentId));
+              workoutPlanEnrolmentId: args.workoutPlanEnrolmentId,
+              sectionInputs: args.sectionInputs));
     },
     WorkoutPlanCreatorRoute.name: (routeData) {
       final args = routeData.argsAs<WorkoutPlanCreatorRouteArgs>(
@@ -1839,7 +1841,8 @@ class LoggedWorkoutCreatorRoute
       _i66.ScheduledWorkout? scheduledWorkout,
       required _i66.Workout workout,
       String? workoutPlanDayWorkoutId,
-      String? workoutPlanEnrolmentId})
+      String? workoutPlanEnrolmentId,
+      required List<_i67.WorkoutSectionInput> sectionInputs})
       : super(LoggedWorkoutCreatorRoute.name,
             path: 'create/workout-log',
             args: LoggedWorkoutCreatorRouteArgs(
@@ -1847,7 +1850,8 @@ class LoggedWorkoutCreatorRoute
                 scheduledWorkout: scheduledWorkout,
                 workout: workout,
                 workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
-                workoutPlanEnrolmentId: workoutPlanEnrolmentId));
+                workoutPlanEnrolmentId: workoutPlanEnrolmentId,
+                sectionInputs: sectionInputs));
 
   static const String name = 'LoggedWorkoutCreatorRoute';
 }
@@ -1858,7 +1862,8 @@ class LoggedWorkoutCreatorRouteArgs {
       this.scheduledWorkout,
       required this.workout,
       this.workoutPlanDayWorkoutId,
-      this.workoutPlanEnrolmentId});
+      this.workoutPlanEnrolmentId,
+      required this.sectionInputs});
 
   final _i65.Key? key;
 
@@ -1870,9 +1875,11 @@ class LoggedWorkoutCreatorRouteArgs {
 
   final String? workoutPlanEnrolmentId;
 
+  final List<_i67.WorkoutSectionInput> sectionInputs;
+
   @override
   String toString() {
-    return 'LoggedWorkoutCreatorRouteArgs{key: $key, scheduledWorkout: $scheduledWorkout, workout: $workout, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId}';
+    return 'LoggedWorkoutCreatorRouteArgs{key: $key, scheduledWorkout: $scheduledWorkout, workout: $workout, workoutPlanDayWorkoutId: $workoutPlanDayWorkoutId, workoutPlanEnrolmentId: $workoutPlanEnrolmentId, sectionInputs: $sectionInputs}';
   }
 }
 

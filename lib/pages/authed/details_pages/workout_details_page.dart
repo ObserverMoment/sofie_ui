@@ -406,7 +406,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                             .text_badge_checkmark),
                                         label: 'Log It',
                                         onPressed: () => context.push(
-                                            child: PreLoggingModifications(
+                                            child: PreLoggingModificationsAndUserInputs(
                                                 workoutId: workout.id,
                                                 scheduledWorkout:
                                                     widget.scheduledWorkout,

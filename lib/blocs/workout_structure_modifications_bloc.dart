@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -9,18 +10,57 @@ import 'package:uuid/uuid.dart';
 /// Rest set is a set with one workoutMove in it where that move is a Rest.
 enum DurationUpdateType { sets, rests }
 
+class WorkoutSectionInput {
+  WorkoutSection workoutSection;
+  // Will be either reps (repScore) or time in seconds (timeTakenSeconds)
+  // When none of these are null the user can proceed and we can generate the full list of loggedWorkoutSections.
+  int? input;
+  WorkoutSectionInput({required this.workoutSection, this.input});
+}
+
 /// Use to edit a workout before you log it. For when you modified some moves or did not do all the sections.
 /// Data modified here is not persisted to the store but only modified and then passed off to some other handler.
 /// No media or meta info editing, or adding sections. Sections can be removed
 /// NOTE: Currently almost exact copy of [DoWorkoutBloc] view / modifications methods. Abstraction is probably possible.
 class WorkoutStructureModificationsBloc extends ChangeNotifier {
   final BuildContext context;
-
-  /// The main data that gets edited on the client by the user.
   late Workout workout;
+  late List<WorkoutSectionInput> sectionInputs;
+  late List<String> includedSectionIds;
+
+  final List<String> typesInputRequired = [
+    kCustomSessionName,
+    kLiftingName,
+    kForTimeName,
+    kAMRAPName
+  ];
 
   WorkoutStructureModificationsBloc(this.context, Workout initialWorkout) {
     workout = initialWorkout.copyAndSortAllChildren;
+    includedSectionIds = workout.workoutSections.map((ws) => ws.id).toList();
+    sectionInputs = workout.workoutSections
+        .map((wSection) => WorkoutSectionInput(
+            workoutSection: wSection,
+            input: typesInputRequired.contains(wSection.workoutSectionType.name)
+                ? null
+                : wSection.timedSectionDuration.inSeconds))
+        .toList();
+  }
+
+  void toggleIncludeSectionId(String sectionId) {
+    includedSectionIds = includedSectionIds.toggleItem<String>(sectionId);
+    notifyListeners();
+  }
+
+  void updateSectionInput(String sectionId, int input) {
+    sectionInputs = sectionInputs
+        .map((o) => o.workoutSection.id == sectionId
+            ? WorkoutSectionInput(
+                workoutSection: o.workoutSection, input: input)
+            : o)
+        .toList();
+
+    notifyListeners();
   }
 
   /// The user can minimize how sets are displayed (for easy re-ordering or overviewing).

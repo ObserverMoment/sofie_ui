@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/workout_structure_modifications_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
@@ -13,14 +14,6 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class WorkoutSectionWithInput {
-  WorkoutSection workoutSection;
-  // Will be either reps (repScore) or time in seconds (timeTakenSeconds)
-  // When none of these are null the user can proceed and we can generate the full list of loggedWorkoutSections.
-  int? input;
-  WorkoutSectionWithInput({required this.workoutSection, this.input});
-}
-
 /// Creating: LoggedWorkout is saved to the API at the end of the flow, not incrementally.
 /// Editing: Data is saved to the DB as the user is inputting, with optimistic UI update.
 class LoggedWorkoutCreatorBloc extends ChangeNotifier {
@@ -28,6 +21,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
   final LoggedWorkout? prevLoggedWorkout;
   final Workout? workout;
+  final List<WorkoutSectionInput>? sectionInputs;
 
   /// When present these will be passed on to log creation function.
   /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
@@ -43,19 +37,28 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   /// Can be create (from workout) or edit (a previous log).
   late bool _isEditing;
 
-  final List<String> typesInputRequired = [
-    kCustomSessionName,
-    kLiftingName,
-    kForTimeName,
-    kAMRAPName
-  ];
-
   late LoggedWorkout loggedWorkout;
+
+  static bool allSectionsHaveInputs(
+      Workout workout, List<WorkoutSectionInput> sectionInputs) {
+    return workout.workoutSections.every((wSection) {
+      final sectionInput = sectionInputs
+          .firstWhereOrNull((i) => wSection.id == i.workoutSection.id);
+      if (sectionInput == null) {
+        printLog(
+            'No input found for section id ${wSection.id}. All sections must have inputs before logging can begin');
+        return false;
+      }
+
+      return sectionInput.input != null;
+    });
+  }
 
   LoggedWorkoutCreatorBloc(
       {required this.context,
       this.prevLoggedWorkout,
       this.workout,
+      this.sectionInputs,
       this.scheduledWorkout,
       this.workoutPlanDayWorkoutId,
       this.workoutPlanEnrolmentId})
@@ -67,26 +70,22 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       _isEditing = true;
       loggedWorkout = prevLoggedWorkout!;
     } else {
+      if (sectionInputs == null ||
+          !allSectionsHaveInputs(workout!, sectionInputs!)) {
+        throw Exception(
+            'Section inputs must be provide for all sections of the workout that you wish to log.');
+      }
+
       _isEditing = false;
       loggedWorkout = loggedWorkoutFromWorkout(
           workout: workout!, scheduledWorkout: scheduledWorkout);
 
-      /// Are there any sections that require inputs from the user?
-      /// i.e. FreeSession - timeTaken
-      /// i.e. AMRAP - repScore
-      /// i.e. ForTIme - timeTaken
-      /// If not then go ahead and form the loggedWorkoutSections.
-      /// Otherwise do not.
-      final userInputNotRequired = workout!.workoutSections
-          .none((w) => typesInputRequired.contains(w.workoutSectionType.name));
-
-      if (userInputNotRequired) {
-        loggedWorkout.loggedWorkoutSections = workout!.workoutSections
-            .sortedBy<num>((ws) => ws.sortPosition)
-            .map((ws) =>
-                loggedWorkoutSectionFromWorkoutSection(workoutSection: ws))
-            .toList();
-      }
+      /// TODO: Add section inputs (times and scores) here.
+      loggedWorkout.loggedWorkoutSections = workout!.workoutSections
+          .sortedBy<num>((ws) => ws.sortPosition)
+          .map((ws) =>
+              loggedWorkoutSectionFromWorkoutSection(workoutSection: ws))
+          .toList();
     }
     loggedWorkout.copyAndSortAllChildren;
   }
@@ -125,57 +124,56 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   /// Only valid when creating and when [workout] is not null.
   /// Workout sections plus their inputs - inputted by the user.
   /// Do not run this before the user has added reps and timeTakenSeconds to AMRAP, ForTime and FreeSession sections.
-  void generateLoggedWorkoutSections(
-      List<WorkoutSectionWithInput> sectionsWithInputs) {
-    loggedWorkout.loggedWorkoutSections = workout!.workoutSections
-        .sortedBy<num>((ws) => ws.sortPosition)
-        .map((ws) {
-      if (ws.workoutSectionType.isAMRAP) {
-        // Get the value from the inputs.
-        final s =
-            sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
+  // void generateLoggedWorkoutSections() {
+  //   loggedWorkout.loggedWorkoutSections = workout!.workoutSections
+  //       .sortedBy<num>((ws) => ws.sortPosition)
+  //       .map((ws) {
+  //     if (ws.workoutSectionType.isAMRAP) {
+  //       // Get the value from the inputs.
+  //       final s =
+  //           sectionInputs!.firstWhere((s) => ws.id == s.workoutSection.id);
 
-        final totalRepsCompleted = s.input!;
-        final repsPerRound = DataUtils.totalRepsInSection(ws);
+  //       final totalRepsCompleted = s.input!;
+  //       final repsPerRound = DataUtils.totalRepsInSection(ws);
 
-        final totalFullRounds = (totalRepsCompleted / repsPerRound).floor();
+  //       final totalFullRounds = (totalRepsCompleted / repsPerRound).floor();
 
-        final remainingReps =
-            totalRepsCompleted - (totalFullRounds * repsPerRound);
+  //       final remainingReps =
+  //           totalRepsCompleted - (totalFullRounds * repsPerRound);
 
-        final loggedSectionFullRounds = loggedWorkoutSectionFromWorkoutSection(
-            workoutSection: ws,
-            repScore: totalRepsCompleted,
-            rounds: totalFullRounds);
+  //       final loggedSectionFullRounds = loggedWorkoutSectionFromWorkoutSection(
+  //           workoutSection: ws,
+  //           repScore: totalRepsCompleted,
+  //           rounds: totalFullRounds);
 
-        loggedSectionFullRounds.loggedWorkoutSets = [
-          ...loggedSectionFullRounds.loggedWorkoutSets,
-          ...loggedWorkoutSetsPartialRound(
-              reps: remainingReps,
-              roundNumber: totalFullRounds,
-              workoutSection: ws)
-        ];
+  //       loggedSectionFullRounds.loggedWorkoutSets = [
+  //         ...loggedSectionFullRounds.loggedWorkoutSets,
+  //         ...loggedWorkoutSetsPartialRound(
+  //             reps: remainingReps,
+  //             roundNumber: totalFullRounds,
+  //             workoutSection: ws)
+  //       ];
 
-        return loggedSectionFullRounds;
-      } else if (ws.workoutSectionType.isCustom ||
-          ws.workoutSectionType.isForTime ||
-          ws.workoutSectionType.isLifting) {
-        // Get the value from the inputs
-        final s =
-            sectionsWithInputs.firstWhere((s) => ws.id == s.workoutSection.id);
-        return loggedWorkoutSectionFromWorkoutSection(
-            workoutSection: ws, timeTakenSeconds: s.input);
-      } else {
-        // Timed sections already have all the data needed to create a LoggedWorkoutSection
-        return loggedWorkoutSectionFromWorkoutSection(workoutSection: ws);
-      }
-    }).toList();
+  //       return loggedSectionFullRounds;
+  //     } else if (ws.workoutSectionType.isCustom ||
+  //         ws.workoutSectionType.isForTime ||
+  //         ws.workoutSectionType.isLifting) {
+  //       // Get the value from the inputs
+  //       final s =
+  //           sectionInputs!.firstWhere((s) => ws.id == s.workoutSection.id);
+  //       return loggedWorkoutSectionFromWorkoutSection(
+  //           workoutSection: ws, timeTakenSeconds: s.input);
+  //     } else {
+  //       // Timed sections already have all the data needed to create a LoggedWorkoutSection
+  //       return loggedWorkoutSectionFromWorkoutSection(workoutSection: ws);
+  //     }
+  //   }).toList();
 
-    /// Ensure all sections and descendants correctly sorted.
-    loggedWorkout.copyAndSortAllChildren;
+  //   /// Ensure all sections and descendants correctly sorted.
+  //   loggedWorkout.copyAndSortAllChildren;
 
-    notifyListeners();
-  }
+  //   notifyListeners();
+  // }
 
   /// Writes all changes to the graphQLStore.
   /// Via the normalized root object which is the LoggedWorkout.
