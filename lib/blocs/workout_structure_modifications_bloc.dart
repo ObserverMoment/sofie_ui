@@ -47,6 +47,13 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
         .toList();
   }
 
+  bool savingLogToDB = false;
+
+  void setSavingLogToDB(bool value) {
+    savingLogToDB = value;
+    notifyListeners();
+  }
+
   void toggleIncludeSectionId(String sectionId) {
     includedSectionIds = includedSectionIds.toggleItem<String>(sectionId);
     notifyListeners();

@@ -1,20 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
+import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/blocs/workout_structure_modifications_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/required_user_input.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/logged_workout/congratulations_logged_workout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 /// Before being routed to the [LoggedWorkoutCreator] the user can make adjustments to any part of the workout and also remove entire sections if they did not do them.
 /// On complete this widget passed the modified [Workout] on to the [LoggedWorkoutCreator].
@@ -34,6 +40,39 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
       this.workoutPlanDayWorkoutId,
       this.workoutPlanEnrolmentId})
       : super(key: key);
+
+  Future<void> _createAndSaveLog(
+      {required BuildContext context,
+      required Workout workout,
+      required List<WorkoutSectionInput> sectionInputs}) async {
+    context.read<WorkoutStructureModificationsBloc>().setSavingLogToDB(true);
+
+    final loggedWorkout = loggedWorkoutFromWorkout(
+        workout: workout, scheduledWorkout: scheduledWorkout);
+
+    loggedWorkout.loggedWorkoutSections =
+        LoggedWorkoutCreatorBloc.generateLoggedWorkoutSections(
+            workout: workout, sectionInputs: sectionInputs);
+
+    final result = await LoggedWorkoutCreatorBloc.createLoggedWorkoutAndSave(
+        context: context, loggedWorkout: loggedWorkout.copyAndSortAllChildren);
+
+    context.read<WorkoutStructureModificationsBloc>().setSavingLogToDB(false);
+
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry, something went wrong',
+            toastType: ToastType.destructive),
+        onSuccess: () {
+          context.push(
+              fullscreenDialog: true,
+              child: CongratulationsLoggedWorkout(
+                  onExit: () => context.router.popAndPush(
+                      LoggedWorkoutDetailsRoute(
+                          id: result.data!.createLoggedWorkout.id)),
+                  loggedWorkout: result.data!.createLoggedWorkout));
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,13 +100,18 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
                     WorkoutStructureModificationsBloc,
                     List<WorkoutSectionInput>>((b) => b.sectionInputs);
 
+                final _savingLogToDB =
+                    context.select<WorkoutStructureModificationsBloc, bool>(
+                        (b) => b.savingLogToDB);
+
                 final validInputs = includedSectionIds.isNotEmpty &&
-                    includedSectionIds.every((id) =>
-                        sectionInputs
-                            .firstWhereOrNull(
-                                (input) => input.workoutSection.id == id)
-                            ?.input !=
-                        null);
+                    includedSectionIds.every((id) {
+                      final input = sectionInputs
+                          .firstWhereOrNull(
+                              (input) => input.workoutSection.id == id)
+                          ?.input;
+                      return input != null && input != 0;
+                    });
 
                 return MyPageScaffold(
                     navigationBar: MyNavBar(
@@ -76,14 +120,16 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
                       trailing: validInputs
                           ? FadeInUp(
                               child: NavBarTertiarySaveButton(
-                                () => context.router.popAndPush(
-                                    LoggedWorkoutCreatorRoute(
-                                        workout: context
-                                            .read<
-                                                WorkoutStructureModificationsBloc>()
-                                            .workout,
-                                        sectionInputs: sectionInputs)),
+                                () {
+                                  final bloc = context.read<
+                                      WorkoutStructureModificationsBloc>();
+                                  _createAndSaveLog(
+                                      context: context,
+                                      sectionInputs: bloc.sectionInputs,
+                                      workout: bloc.workout);
+                                },
                                 text: 'Done',
+                                loading: _savingLogToDB,
                               ),
                             )
                           : null,

@@ -43,26 +43,29 @@ class _LoggedWorkoutCreatorPageState extends State<LoggedWorkoutCreatorPage> {
     setState(() {
       _savingToDB = true;
     });
-    final result = await bloc.createAndSave(context);
+
+    /// TODO?
+    // final result = await bloc.createAndSave(context);
 
     setState(() {
       _savingToDB = false;
     });
 
-    checkOperationResult(context, result,
-        onFail: () => context
-            .showErrorAlert('Sorry, there was a problem logging this workout!'),
-        onSuccess: () {
-          context.push(
-              fullscreenDialog: true,
-              child: CongratulationsLoggedWorkout(
-                loggedWorkout: result.data!.createLoggedWorkout,
-                onExit: () {
-                  context.pop(
-                      result: true); // Close the logged workout creator.
-                },
-              ));
-        });
+    /// TODO?
+    // checkOperationResult(context, result,
+    //     onFail: () => context
+    //         .showErrorAlert('Sorry, there was a problem logging this workout!'),
+    //     onSuccess: () {
+    //       context.push(
+    //           fullscreenDialog: true,
+    //           child: CongratulationsLoggedWorkout(
+    //             loggedWorkout: result.data!.createLoggedWorkout,
+    //             onExit: () {
+    //               context.pop(
+    //                   result: true); // Close the logged workout creator.
+    //             },
+    //           ));
+    //     });
   }
 
   void _handleCancel() {

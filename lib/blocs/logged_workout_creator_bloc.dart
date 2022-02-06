@@ -70,22 +70,18 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
       _isEditing = true;
       loggedWorkout = prevLoggedWorkout!;
     } else {
-      if (sectionInputs == null ||
-          !allSectionsHaveInputs(workout!, sectionInputs!)) {
-        throw Exception(
-            'Section inputs must be provide for all sections of the workout that you wish to log.');
-      }
+      /// TODO: Remove this branch as this bloc will only be used for editing a prev created logged workout.
+      // if (sectionInputs == null ||
+      //     !allSectionsHaveInputs(workout!, sectionInputs!)) {
+      //   throw Exception(
+      //       'Section inputs must be provide for all sections of the workout that you wish to log.');
+      // }
 
-      _isEditing = false;
-      loggedWorkout = loggedWorkoutFromWorkout(
-          workout: workout!, scheduledWorkout: scheduledWorkout);
+      // _isEditing = false;
+      // loggedWorkout = loggedWorkoutFromWorkout(
+      //     workout: workout!, scheduledWorkout: scheduledWorkout);
 
-      /// TODO: Add section inputs (times and scores) here.
-      loggedWorkout.loggedWorkoutSections = workout!.workoutSections
-          .sortedBy<num>((ws) => ws.sortPosition)
-          .map((ws) =>
-              loggedWorkoutSectionFromWorkoutSection(workoutSection: ws))
-          .toList();
+      // generateLoggedWorkoutSections();
     }
     loggedWorkout.copyAndSortAllChildren;
   }
@@ -121,60 +117,6 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     }
   }
 
-  /// Only valid when creating and when [workout] is not null.
-  /// Workout sections plus their inputs - inputted by the user.
-  /// Do not run this before the user has added reps and timeTakenSeconds to AMRAP, ForTime and FreeSession sections.
-  // void generateLoggedWorkoutSections() {
-  //   loggedWorkout.loggedWorkoutSections = workout!.workoutSections
-  //       .sortedBy<num>((ws) => ws.sortPosition)
-  //       .map((ws) {
-  //     if (ws.workoutSectionType.isAMRAP) {
-  //       // Get the value from the inputs.
-  //       final s =
-  //           sectionInputs!.firstWhere((s) => ws.id == s.workoutSection.id);
-
-  //       final totalRepsCompleted = s.input!;
-  //       final repsPerRound = DataUtils.totalRepsInSection(ws);
-
-  //       final totalFullRounds = (totalRepsCompleted / repsPerRound).floor();
-
-  //       final remainingReps =
-  //           totalRepsCompleted - (totalFullRounds * repsPerRound);
-
-  //       final loggedSectionFullRounds = loggedWorkoutSectionFromWorkoutSection(
-  //           workoutSection: ws,
-  //           repScore: totalRepsCompleted,
-  //           rounds: totalFullRounds);
-
-  //       loggedSectionFullRounds.loggedWorkoutSets = [
-  //         ...loggedSectionFullRounds.loggedWorkoutSets,
-  //         ...loggedWorkoutSetsPartialRound(
-  //             reps: remainingReps,
-  //             roundNumber: totalFullRounds,
-  //             workoutSection: ws)
-  //       ];
-
-  //       return loggedSectionFullRounds;
-  //     } else if (ws.workoutSectionType.isCustom ||
-  //         ws.workoutSectionType.isForTime ||
-  //         ws.workoutSectionType.isLifting) {
-  //       // Get the value from the inputs
-  //       final s =
-  //           sectionInputs!.firstWhere((s) => ws.id == s.workoutSection.id);
-  //       return loggedWorkoutSectionFromWorkoutSection(
-  //           workoutSection: ws, timeTakenSeconds: s.input);
-  //     } else {
-  //       // Timed sections already have all the data needed to create a LoggedWorkoutSection
-  //       return loggedWorkoutSectionFromWorkoutSection(workoutSection: ws);
-  //     }
-  //   }).toList();
-
-  //   /// Ensure all sections and descendants correctly sorted.
-  //   loggedWorkout.copyAndSortAllChildren;
-
-  //   notifyListeners();
-  // }
-
   /// Writes all changes to the graphQLStore.
   /// Via the normalized root object which is the LoggedWorkout.
   /// At [LoggedWorkout:{loggedWorkout.id}].
@@ -185,44 +127,6 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         data: loggedWorkout.toJson(),
         broadcastQueryIds: [GQLNullVarsKeys.userLoggedWorkouts]);
     return success;
-  }
-
-  /// Used when creating only - when editing we save incrementally.
-  /// When creating a log we need to check if the log should be associated with a scheduled workout and / or with a workout plan enrolment.
-  Future<OperationResult<CreateLoggedWorkout$Mutation>> createAndSave(
-      BuildContext context) async {
-    final input = createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
-        scheduledWorkout: scheduledWorkout,
-        workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
-        workoutPlanEnrolmentId: workoutPlanEnrolmentId);
-
-    final variables = CreateLoggedWorkoutArguments(data: input);
-
-    final result = await context.graphQLStore.create(
-        mutation: CreateLoggedWorkoutMutation(variables: variables),
-        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
-
-    checkOperationResult(context, result,
-        onFail: () => context.showToast(
-            message: 'Sorry, something went wrong',
-            toastType: ToastType.destructive),
-        onSuccess: () async {
-          /// We need to update the userEnrolmentsQuery and the enrolmentByIdQuery.
-          /// We do this via the network for simplicity.
-          if (workoutPlanDayWorkoutId != null &&
-              workoutPlanEnrolmentId != null) {
-            await refetchWorkoutPlanEnrolmentQueries(
-                context, workoutPlanEnrolmentId!);
-          }
-
-          /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
-          if (scheduledWorkout != null) {
-            updateScheduleWithLoggedWorkout(
-                context, scheduledWorkout!, result.data!.createLoggedWorkout);
-          }
-        });
-
-    return result;
   }
 
   void updateGymProfile(GymProfile? profile) {
@@ -435,7 +339,98 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     }
   }
 
+  //////////////////////////////////
   /// Static helpers and methods ///
+  //////////////////////////////////
+  /// From an input of a [workout] and [sectionInputs] - inputted by the user - generate a full list of logged workout sections.
+  static List<LoggedWorkoutSection> generateLoggedWorkoutSections(
+      {required Workout workout,
+      required List<WorkoutSectionInput> sectionInputs}) {
+    return workout.workoutSections
+        .sortedBy<num>((ws) => ws.sortPosition)
+        .map((ws) {
+      if (ws.workoutSectionType.isAMRAP) {
+        // Get the value from the inputs.
+        final s = sectionInputs.firstWhere((s) => ws.id == s.workoutSection.id);
+
+        final totalRepsCompleted = s.input!;
+        final repsPerRound = DataUtils.totalRepsInSection(ws);
+
+        final totalFullRounds = (totalRepsCompleted / repsPerRound).floor();
+
+        final remainingReps =
+            totalRepsCompleted - (totalFullRounds * repsPerRound);
+
+        final loggedSectionFullRounds = loggedWorkoutSectionFromWorkoutSection(
+            workoutSection: ws,
+            repScore: totalRepsCompleted,
+            rounds: totalFullRounds);
+
+        loggedSectionFullRounds.loggedWorkoutSets = [
+          ...loggedSectionFullRounds.loggedWorkoutSets,
+          ...loggedWorkoutSetsPartialRound(
+              reps: remainingReps,
+              roundNumber: totalFullRounds,
+              workoutSection: ws)
+        ];
+
+        return loggedSectionFullRounds;
+      } else if (ws.workoutSectionType.isCustom ||
+          ws.workoutSectionType.isForTime ||
+          ws.workoutSectionType.isLifting) {
+        // Get the value from the inputs
+        final s = sectionInputs.firstWhere((s) => ws.id == s.workoutSection.id);
+        return loggedWorkoutSectionFromWorkoutSection(
+            workoutSection: ws, timeTakenSeconds: s.input);
+      } else {
+        // Timed sections already have all the data needed to create a LoggedWorkoutSection
+        return loggedWorkoutSectionFromWorkoutSection(workoutSection: ws);
+      }
+    }).toList();
+  }
+
+  /// When creating a log we need to check if the log should be associated with a scheduled workout and / or with a workout plan enrolment.
+  static Future<OperationResult<CreateLoggedWorkout$Mutation>>
+      createLoggedWorkoutAndSave(
+          {required BuildContext context,
+          required LoggedWorkout loggedWorkout,
+          ScheduledWorkout? scheduledWorkout,
+          String? workoutPlanDayWorkoutId,
+          String? workoutPlanEnrolmentId}) async {
+    final input = createLoggedWorkoutInputFromLoggedWorkout(loggedWorkout,
+        scheduledWorkout: scheduledWorkout,
+        workoutPlanDayWorkoutId: workoutPlanDayWorkoutId,
+        workoutPlanEnrolmentId: workoutPlanEnrolmentId);
+
+    final variables = CreateLoggedWorkoutArguments(data: input);
+
+    final result = await context.graphQLStore.create(
+        mutation: CreateLoggedWorkoutMutation(variables: variables),
+        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
+
+    checkOperationResult(context, result,
+        onFail: () => context.showToast(
+            message: 'Sorry, something went wrong',
+            toastType: ToastType.destructive),
+        onSuccess: () async {
+          /// We need to update the userEnrolmentsQuery and the enrolmentByIdQuery.
+          /// We do this via the network for simplicity.
+          if (workoutPlanDayWorkoutId != null &&
+              workoutPlanEnrolmentId != null) {
+            await refetchWorkoutPlanEnrolmentQueries(
+                context, workoutPlanEnrolmentId);
+          }
+
+          /// If the log is being created from a scheduled workout then we need to add the newly completed workout log to the scheduledWorkout.loggedWorkout in the store.
+          if (scheduledWorkout != null) {
+            updateScheduleWithLoggedWorkout(
+                context, scheduledWorkout, result.data!.createLoggedWorkout);
+          }
+        });
+
+    return result;
+  }
+
   /// Updates the [client side GraphQLStore] by adding the newly created workout log to the scheduled workout at [scheduledWorkout.loggedWorkoutId].
   /// The API will handle connecting the log to the scheduled workout in the DB.
   /// Meaning that the user's schedule will update and show the scheduled workout as completed.
