@@ -1,14 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:uuid/uuid.dart';
-
-/// Specify to update either all set.durations of sets of the specified type.
-/// Rest set is a set with one workoutMove in it where that move is a Rest.
-enum DurationUpdateType { sets, rests }
 
 class WorkoutSectionInput {
   WorkoutSection workoutSection;
@@ -40,12 +37,14 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
     includedSectionIds = workout.workoutSections.map((ws) => ws.id).toList();
     sectionInputs = workout.workoutSections
         .map((wSection) => WorkoutSectionInput(
-            workoutSection: wSection,
-            input: typesInputRequired.contains(wSection.workoutSectionType.name)
-                ? null
-                : wSection.timedSectionDuration.inSeconds))
+            workoutSection: wSection, input: getInputFromSection(wSection)))
         .toList();
   }
+
+  int? getInputFromSection(WorkoutSection wSection) =>
+      typesInputRequired.contains(wSection.workoutSectionType.name)
+          ? null
+          : wSection.timedSectionDuration.inSeconds;
 
   bool savingLogToDB = false;
 
@@ -64,6 +63,22 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
         .map((o) => o.workoutSection.id == sectionId
             ? WorkoutSectionInput(
                 workoutSection: o.workoutSection, input: input)
+            : o)
+        .toList();
+
+    notifyListeners();
+  }
+
+  /// Use this after user has performed some section modifications, IF it is a section which calculates its own input ONLY.
+  void refreshTimedSectionInput(String workoutSectionId) {
+    final workoutSection =
+        workout.workoutSections.firstWhere((ws) => ws.id == workoutSectionId);
+
+    sectionInputs = sectionInputs
+        .map((o) => o.workoutSection.id == workoutSectionId
+            ? WorkoutSectionInput(
+                workoutSection: workoutSection,
+                input: getInputFromSection(workoutSection))
             : o)
         .toList();
 
@@ -97,7 +112,15 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
         WorkoutSection.fromJson(workout.workoutSections[sectionIndex].toJson());
 
     section.timecap = seconds;
+
     workout.workoutSections[sectionIndex] = section;
+
+    /// Update the workout section that is on the section input.
+    sectionInputs = sectionInputs
+        .map((o) => o.workoutSection.id == section.id
+            ? WorkoutSectionInput(workoutSection: section, input: o.input)
+            : o)
+        .toList();
 
     notifyListeners();
   }

@@ -9,7 +9,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_like_heart.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/pre_logging_modifications.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';

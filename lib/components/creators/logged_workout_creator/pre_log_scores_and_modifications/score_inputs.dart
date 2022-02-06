@@ -83,13 +83,12 @@ class _RepScoreInputState extends State<RepScoreInput> {
 class TimeTakenInput extends StatefulWidget {
   final Duration? duration;
   final void Function(Duration duration) updateDuration;
-  final bool showSeconds;
-  const TimeTakenInput(
-      {Key? key,
-      required this.duration,
-      required this.updateDuration,
-      this.showSeconds = true})
-      : super(key: key);
+
+  const TimeTakenInput({
+    Key? key,
+    required this.duration,
+    required this.updateDuration,
+  }) : super(key: key);
 
   @override
   _TimeTakenInputState createState() => _TimeTakenInputState();
@@ -189,14 +188,12 @@ class _TimeTakenInputState extends State<TimeTakenInput> {
               padding: _unitPadding,
               child: const MyText('min'),
             ),
-            if (widget.showSeconds)
-              SizedBox(
-                  width: _inputWidth, child: _buildInput(_secondsController)),
-            if (widget.showSeconds)
-              Padding(
-                padding: _unitPadding,
-                child: const MyText('sec'),
-              ),
+            SizedBox(
+                width: _inputWidth, child: _buildInput(_secondsController)),
+            Padding(
+              padding: _unitPadding,
+              child: const MyText('sec'),
+            ),
           ],
         ),
       ],

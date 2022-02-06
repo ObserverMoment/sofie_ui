@@ -6,7 +6,6 @@ import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_cre
 import 'package:sofie_ui/components/creators/gym_profile_creator.dart';
 import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creator_page.dart';
 import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
@@ -172,7 +171,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
               path: 'create/scheduled-workout',
               page: ScheduledWorkoutCreatorPage),
           AutoRoute(path: 'create/workout', page: WorkoutCreatorPage),
-          AutoRoute(path: 'create/workout-log', page: LoggedWorkoutCreatorPage),
           AutoRoute(path: 'create/workout-plan', page: WorkoutPlanCreatorPage),
           AutoRoute(
               path: 'create/workout-plan-review',

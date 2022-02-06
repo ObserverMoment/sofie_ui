@@ -5,7 +5,8 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/blocs/workout_structure_modifications_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/required_user_input.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/required_user_input.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/section_modifications.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/logged_workout/congratulations_logged_workout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -138,7 +139,8 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(
+                              left: 8.0, top: 4, right: 8, bottom: 16),
                           child: MyText(
                             originalWorkout.name,
                             size: FONTSIZE.four,
@@ -261,11 +263,30 @@ class _WorkoutSectionCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(3.0),
             child: TertiaryButton(
-                backgroundColor: context.theme.background,
-                suffixIconData: CupertinoIcons.pen,
-                iconSize: 14,
-                text: 'Make Modifications',
-                onPressed: () => print('open section mods')),
+              backgroundColor: context.theme.background,
+              suffixIconData: CupertinoIcons.pen,
+              iconSize: 14,
+              text: 'Make Modifications',
+              onPressed: () async {
+                final bloc = context.read<WorkoutStructureModificationsBloc>();
+                final willRequireInputRefreshAfter = !bloc.typesInputRequired
+                    .contains(workoutSection.workoutSectionType.name);
+
+                await Navigator.of(context).push(CupertinoPageRoute(
+                  builder: (context) => ChangeNotifierProvider.value(
+                    value: bloc,
+                    child: PreLoggingSectionModifications(
+                      sectionIndex: workoutSection.sortPosition,
+                    ),
+                  ),
+                ));
+
+                /// If the section is a timed section then update the section time taken based on the new changes.
+                if (willRequireInputRefreshAfter) {
+                  bloc.refreshTimedSectionInput(workoutSection.id);
+                }
+              },
+            ),
           ),
           RequiredUserInput(
             updateSectionInput: context

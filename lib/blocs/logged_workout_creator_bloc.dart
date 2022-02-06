@@ -14,76 +14,26 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-/// Creating: LoggedWorkout is saved to the API at the end of the flow, not incrementally.
-/// Editing: Data is saved to the DB as the user is inputting, with optimistic UI update.
+/// Editing Only: Data is saved to the DB as the user is inputting, with optimistic UI update.
 class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   final BuildContext context;
 
-  final LoggedWorkout? prevLoggedWorkout;
-  final Workout? workout;
-  final List<WorkoutSectionInput>? sectionInputs;
-
-  /// When present these will be passed on to log creation function.
-  /// [scheduledWorkout] so that we can add the log to the scheduled workout to mark it as done.
-  /// [workoutPlanDayWorkoutId] and [workoutPlanEnrolmentId] so that we can create a [CompletedWorkoutPlanDayWorkout] to mark it as done in the plan.
-  final ScheduledWorkout? scheduledWorkout;
-  final String? workoutPlanDayWorkoutId;
-  final String? workoutPlanEnrolmentId;
+  final LoggedWorkout prevLoggedWorkout;
 
   /// Before every update we make a copy of the last workout here.
   /// If there is an issue calling the api then this is reverted to.
   late Map<String, dynamic> backupJson = {};
 
   /// Can be create (from workout) or edit (a previous log).
-  late bool _isEditing;
+  // late bool _isEditing;
 
   late LoggedWorkout loggedWorkout;
 
-  static bool allSectionsHaveInputs(
-      Workout workout, List<WorkoutSectionInput> sectionInputs) {
-    return workout.workoutSections.every((wSection) {
-      final sectionInput = sectionInputs
-          .firstWhereOrNull((i) => wSection.id == i.workoutSection.id);
-      if (sectionInput == null) {
-        printLog(
-            'No input found for section id ${wSection.id}. All sections must have inputs before logging can begin');
-        return false;
-      }
-
-      return sectionInput.input != null;
-    });
-  }
-
-  LoggedWorkoutCreatorBloc(
-      {required this.context,
-      this.prevLoggedWorkout,
-      this.workout,
-      this.sectionInputs,
-      this.scheduledWorkout,
-      this.workoutPlanDayWorkoutId,
-      this.workoutPlanEnrolmentId})
-      : assert(
-            (prevLoggedWorkout == null && workout != null) ||
-                (prevLoggedWorkout != null && workout == null),
-            'Provide a prior log to edit, or a workout to create a log from, not both, or neither') {
-    if (prevLoggedWorkout != null) {
-      _isEditing = true;
-      loggedWorkout = prevLoggedWorkout!;
-    } else {
-      /// TODO: Remove this branch as this bloc will only be used for editing a prev created logged workout.
-      // if (sectionInputs == null ||
-      //     !allSectionsHaveInputs(workout!, sectionInputs!)) {
-      //   throw Exception(
-      //       'Section inputs must be provide for all sections of the workout that you wish to log.');
-      // }
-
-      // _isEditing = false;
-      // loggedWorkout = loggedWorkoutFromWorkout(
-      //     workout: workout!, scheduledWorkout: scheduledWorkout);
-
-      // generateLoggedWorkoutSections();
-    }
-    loggedWorkout.copyAndSortAllChildren;
+  LoggedWorkoutCreatorBloc({
+    required this.context,
+    required this.prevLoggedWorkout,
+  }) {
+    loggedWorkout = prevLoggedWorkout.copyAndSortAllChildren;
   }
 
   /// Helpers for write methods.
@@ -135,9 +85,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     loggedWorkout.gymProfile = profile;
     notifyListeners();
 
-    if (_isEditing) {
-      _saveLoggedWorkoutToDB();
-    }
+    _saveLoggedWorkoutToDB();
   }
 
   void updateCompletedOn(DateTime completedOn) {
@@ -146,9 +94,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     loggedWorkout.completedOn = completedOn;
     notifyListeners();
 
-    if (_isEditing) {
-      _saveLoggedWorkoutToDB();
-    }
+    _saveLoggedWorkoutToDB();
   }
 
   void updateNote(String note) {
@@ -157,9 +103,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     loggedWorkout.note = note;
     notifyListeners();
 
-    if (_isEditing) {
-      _saveLoggedWorkoutToDB();
-    }
+    _saveLoggedWorkoutToDB();
   }
 
   void updateWorkoutGoals(List<WorkoutGoal> goals) {
@@ -168,9 +112,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     loggedWorkout.workoutGoals = goals;
     notifyListeners();
 
-    if (_isEditing) {
-      _saveLoggedWorkoutToDB();
-    }
+    _saveLoggedWorkoutToDB();
   }
 
   /// Run at the end of any loggedWorkout update IF we are editing a previous log already in the DB.
@@ -199,9 +141,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         LoggedWorkoutSection.fromJson({...prev.toJson(), 'repScore': repScore});
     notifyListeners();
 
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
+    _saveLoggedWorkoutSectionToDB(sectionIndex);
   }
 
   void updateTimeTakenSeconds(int sectionIndex, int timeTakenSeconds) {
@@ -214,9 +154,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
             {...prev.toJson(), 'timeTakenSeconds': timeTakenSeconds});
     notifyListeners();
 
-    if (_isEditing) {
-      _saveLoggedWorkoutSectionToDB(sectionIndex);
-    }
+    _saveLoggedWorkoutSectionToDB(sectionIndex);
   }
 
   /// Run at the end of any loggedWorkoutSection update IF we are editing a previous log already in the DB.
@@ -257,17 +195,15 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     notifyListeners();
 
-    if (_isEditing) {
-      final variables = UpdateLoggedWorkoutSetArguments(
-          data: UpdateLoggedWorkoutSetInput(
-              id: setId, timeTakenSeconds: seconds));
+    final variables = UpdateLoggedWorkoutSetArguments(
+        data:
+            UpdateLoggedWorkoutSetInput(id: setId, timeTakenSeconds: seconds));
 
-      final result = await context.graphQLStore.networkOnlyOperation(
-          operation: UpdateLoggedWorkoutSetMutation(variables: variables));
+    final result = await context.graphQLStore.networkOnlyOperation(
+        operation: UpdateLoggedWorkoutSetMutation(variables: variables));
 
-      /// If no errors then assume update has worked, otherwise revert UI to backup.
-      _checkApiResult(result, onSuccess: writeAllChangesToStore);
-    }
+    /// If no errors then assume update has worked, otherwise revert UI to backup.
+    _checkApiResult(result, onSuccess: writeAllChangesToStore);
   }
 
   //// Logged Workout Move CRUD ////
@@ -295,17 +231,15 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     notifyListeners();
 
-    if (_isEditing) {
-      final variables = UpdateLoggedWorkoutMoveArguments(
-          data: UpdateLoggedWorkoutMoveInput.fromJson(
-              updatedLoggedWorkoutMove.toJson()));
+    final variables = UpdateLoggedWorkoutMoveArguments(
+        data: UpdateLoggedWorkoutMoveInput.fromJson(
+            updatedLoggedWorkoutMove.toJson()));
 
-      final result = await context.graphQLStore.networkOnlyOperation(
-          operation: UpdateLoggedWorkoutMoveMutation(variables: variables));
+    final result = await context.graphQLStore.networkOnlyOperation(
+        operation: UpdateLoggedWorkoutMoveMutation(variables: variables));
 
-      /// If no errors then assume update has worked, otherwise revert UI to backup.
-      _checkApiResult(result, onSuccess: writeAllChangesToStore);
-    }
+    /// If no errors then assume update has worked, otherwise revert UI to backup.
+    _checkApiResult(result, onSuccess: writeAllChangesToStore);
   }
 
   Future<void> deleteLoggedWorkoutMove({
@@ -328,15 +262,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     notifyListeners();
 
-    if (_isEditing) {
-      final variables = DeleteLoggedWorkoutMoveArguments(id: loggedMoveId);
+    final variables = DeleteLoggedWorkoutMoveArguments(id: loggedMoveId);
 
-      final result = await context.graphQLStore.networkOnlyOperation(
-          operation: DeleteLoggedWorkoutMoveMutation(variables: variables));
+    final result = await context.graphQLStore.networkOnlyOperation(
+        operation: DeleteLoggedWorkoutMoveMutation(variables: variables));
 
-      /// If no errors then assume update has worked, otherwise revert UI to backup.
-      _checkApiResult(result, onSuccess: writeAllChangesToStore);
-    }
+    /// If no errors then assume update has worked, otherwise revert UI to backup.
+    _checkApiResult(result, onSuccess: writeAllChangesToStore);
   }
 
   //////////////////////////////////

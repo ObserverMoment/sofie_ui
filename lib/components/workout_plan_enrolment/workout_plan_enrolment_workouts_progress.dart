@@ -6,7 +6,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
 import 'package:sofie_ui/components/cards/workout_plan_day_card.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/pre_logging_modifications.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';

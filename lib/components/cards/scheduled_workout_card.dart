@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/pre_logging_modifications.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
