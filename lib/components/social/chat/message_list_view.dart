@@ -30,11 +30,23 @@ class _MessagesListState extends State<MessagesList> {
 
   final _scrollController = ScrollController();
 
+  bool _showBackToBottomButton = false;
+
   @override
   void initState() {
     super.initState();
+
     _scrollController.addListener(() {
-      setState(() {});
+      if (!_showBackToBottomButton &&
+          _scrollController.positions.isNotEmpty &&
+          _scrollController.position.pixels > 1000) {
+        setState(() => _showBackToBottomButton = true);
+      }
+      if (_showBackToBottomButton &&
+          _scrollController.positions.isNotEmpty &&
+          _scrollController.position.pixels <= 1000) {
+        setState(() => _showBackToBottomButton = false);
+      }
     });
 
     _inputFocusNode = FocusNode();
@@ -204,17 +216,20 @@ class _MessagesListState extends State<MessagesList> {
                           }),
                     )),
               ),
-              ChatMessageInput(
-                quotedMessage: _quotedMessage,
-                clearQuotedMessage: () => setState(() => _quotedMessage = null),
-                onNewMessageSent: _onNewMessageSent,
-                focusNode: _inputFocusNode,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: ChatMessageInput(
+                  quotedMessage: _quotedMessage,
+                  clearQuotedMessage: () =>
+                      setState(() => _quotedMessage = null),
+                  onNewMessageSent: _onNewMessageSent,
+                  focusNode: _inputFocusNode,
+                ),
               )
             ],
           ),
         ),
-        if (_scrollController.positions.isNotEmpty &&
-            _scrollController.position.pixels > 1000)
+        if (_showBackToBottomButton)
           Positioned(
               right: 0,
               bottom: 90,
@@ -226,7 +241,6 @@ class _MessagesListState extends State<MessagesList> {
                       child: const Icon(
                         CupertinoIcons.chevron_down_circle,
                         size: 30,
-                        color: Styles.primaryAccent,
                       ),
                       onPressed: _scrollToEndOfMessages),
                 ),

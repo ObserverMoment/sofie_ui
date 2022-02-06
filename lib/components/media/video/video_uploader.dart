@@ -165,7 +165,7 @@ class _VideoUploaderState extends State<VideoUploader> {
                   progress: _uploadProgress,
                 )
               : _processing
-                  ? LoadingCircle(
+                  ? LoadingIndicator(
                       color: primary,
                     )
                   : hasVideo

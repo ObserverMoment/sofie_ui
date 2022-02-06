@@ -4,7 +4,7 @@ import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/name_and_repscore.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section/components/now_and_next_moves.dart';
+import 'package:sofie_ui/components/do_workout/do_workout_section/components/now_and_next_moves_timer.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/timers/radial_countdown_timer.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -129,8 +129,8 @@ class AMRAPTimer extends StatelessWidget {
                         const SizedBox(height: 24),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child:
-                              NowAndNextMoves(workoutSection: workoutSection),
+                          child: NowAndNextMovesTimer(
+                              workoutSection: workoutSection),
                         ),
                       ],
                     ),

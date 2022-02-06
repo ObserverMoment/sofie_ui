@@ -105,7 +105,7 @@ class BodyAreaSelectorOverlay extends StatelessWidget {
             child: MyText('Sorry, there was an error: ${snapshot.error}'),
           );
         } else {
-          return const Center(child: LoadingCircle());
+          return const Center(child: LoadingIndicator());
         }
       },
     );

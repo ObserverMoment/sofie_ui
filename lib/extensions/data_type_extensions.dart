@@ -139,6 +139,9 @@ extension MoveExtension on Move {
 }
 
 extension WorkoutExtension on Workout {
+  bool get hasSomeSections =>
+      workoutSections.any((wSection) => wSection.hasSomeSets);
+
   /// Returns a copy of the workout with all child lists, ([workoutSections], [workoutSets], [workoutMoves]) sorted by [sortPosition].
   Workout get copyAndSortAllChildren {
     final copy = Workout.fromJson(toJson());
@@ -179,10 +182,21 @@ extension WorkoutExtension on Workout {
     return allEquipments.sortedBy<String>((e) => e.name).toList();
   }
 
+  Set<BodyArea> get uniqueBodyAreas {
+    final Set<BodyArea> allBodyAreas = {};
+
+    for (final section in workoutSections) {
+      allBodyAreas.addAll(section.uniqueBodyAreas);
+    }
+
+    return allBodyAreas;
+  }
+
   WorkoutSummary get summary => WorkoutSummary()
     ..$$typename = kWorkoutSummaryTypename
     ..id = id
     ..createdAt = createdAt
+    ..updatedAt = updatedAt
     ..archived = archived
     ..name = name
     ..user = user
@@ -194,11 +208,11 @@ extension WorkoutExtension on Workout {
     ..hasClassAudio = workoutSections.any((ws) => ws.classAudioUri != null)
     ..hasClassVideo = workoutSections.any((ws) => ws.classVideoUri != null)
     ..equipments = allEquipment.map((e) => e.name).toList()
-    ..tags = [
-      ...workoutSections.map((ws) => ws.workoutSectionType.name),
-      ...workoutGoals.map((g) => g.name),
-      ...workoutTags.map((t) => t.tag),
-    ];
+    ..sectionTypes =
+        workoutSections.map((ws) => ws.workoutSectionType.name).toList()
+    ..goals = workoutGoals.map((g) => g.name).toList()
+    ..tags = workoutTags.map((t) => t.tag).toList()
+    ..bodyAreas = uniqueBodyAreas.map((b) => b.name).toList();
 }
 
 extension WorkoutPlanExtension on WorkoutPlan {
@@ -206,6 +220,7 @@ extension WorkoutPlanExtension on WorkoutPlan {
     ..$$typename = kWorkoutPlanSummaryTypename
     ..id = id
     ..createdAt = createdAt
+    ..updatedAt = updatedAt
     ..archived = archived
     ..name = name
     ..description = description
@@ -302,6 +317,8 @@ extension WorkoutPlanDayExtension on WorkoutPlanDay {
 }
 
 extension WorkoutSectionExtension on WorkoutSection {
+  bool get hasSomeSets => workoutSets.any((wSet) => wSet.hasSomeWorkoutMoves);
+
   /// If there is a name, display the name, otherwise just display the type.
   String get nameOrTypeForDisplay =>
       Utils.textNotNull(name) ? name! : workoutSectionType.name;
@@ -484,17 +501,19 @@ extension WorkoutSectionTypeExtension on WorkoutSectionType {
 }
 
 extension WorkoutSetExtension on WorkoutSet {
+  bool get hasSomeWorkoutMoves => workoutMoves.isNotEmpty;
+
+  bool get isMultiMoveSet => uniqueMovesInSet > 1;
+
+  bool get isRestSet =>
+      workoutMoves.length == 1 && workoutMoves[0].move.id == kRestMoveId;
+
   /// A unique move is where the move and the equipment are the same.
   /// Reps and load can be different.
   int get uniqueMovesInSet => workoutMoves
       .map((wm) => '${wm.move.id}:${wm.equipment?.id}')
       .toSet()
       .length;
-
-  bool get isMultiMoveSet => uniqueMovesInSet > 1;
-
-  bool get isRestSet =>
-      workoutMoves.length == 1 && workoutMoves[0].move.id == kRestMoveId;
 }
 
 extension WorkoutMoveExtension on WorkoutMove {
@@ -512,4 +531,11 @@ extension WorkoutMoveExtension on WorkoutMove {
       : repType == WorkoutMoveRepType.distance
           ? distanceUnit.shortDisplay
           : repType.shortDisplay;
+
+  /// Use reps with time unit to calculate the total seconds that has been entered.
+  int get moveTimeInSeconds => timeUnit == TimeUnit.seconds
+      ? reps.round()
+      : timeUnit == TimeUnit.minutes
+          ? (reps * 60).round()
+          : (reps * 60 * 60).round();
 }

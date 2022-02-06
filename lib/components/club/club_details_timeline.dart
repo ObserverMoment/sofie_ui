@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/club_feed_post_card.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -35,7 +33,6 @@ class ClubDetailsTimeline extends StatefulWidget {
 
 class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   late StreamFeedClient _streamFeedClient;
-  bool _isLoading = true;
   late PagingController<int, StreamEnrichedActivity> _pagingController;
   late Timer _pollingTimer;
 
@@ -64,11 +61,6 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   Future<void> _loadInitialData() async {
     final posts = await _getTimelinePosts(offset: 0);
     _appendNewposts(posts);
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
   }
 
   void _initPollingForNewPosts() {
@@ -188,8 +180,8 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
     setState(() {});
   }
 
-  Future<void> _deleteActivityById(
-      BuildContext context, StreamEnrichedActivity post) async {
+  /// Only owners and admins should be allowed to do this.
+  Future<void> _deleteActivity(StreamEnrichedActivity post) async {
     context.showConfirmDeleteDialog(
         itemType: 'Post',
         message: 'This cannot be undone, are you sure?',
@@ -235,71 +227,61 @@ class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
             size: FONTSIZE.four,
           ),
         ),
-        _isLoading
-            ? const ShimmerCardList(
-                itemCount: 10,
-                cardHeight: 260,
-              )
-            : _pagingController.itemList == null ||
-                    _pagingController.itemList!.isEmpty
-                ? Center(
-                    child: Column(
-                      children: const [
-                        Opacity(
-                            opacity: 0.5,
-                            child: Icon(
-                              CupertinoIcons.square_list,
-                              size: 50,
-                            )),
-                        SizedBox(height: 12),
-                        MyText(
-                          'Nothing here yet...',
-                          subtext: true,
-                        ),
-                      ],
-                    ),
-                  )
-                : PagedListView<int, StreamEnrichedActivity>(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    pagingController: _pagingController,
-                    builderDelegate:
-                        PagedChildBuilderDelegate<StreamEnrichedActivity>(
-                      itemBuilder: (context, activity, index) => SizeFadeIn(
-                        duration: 50,
-                        delay: index,
-                        delayBasis: 10,
-                        child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: ClubFeedPostCard(
-                              activity: activity,
-                              likeUnlikePost: () =>
-                                  _likeUnlikePost(activity.id),
-                              userHasLiked: likedPostIds.contains(activity.id),
-                              deletePost: widget.isOwnerOrAdmin
-                                  ? () => _deleteActivityById(context, activity)
-                                  : null,
-                            )),
-                      ),
-                      firstPageErrorIndicatorBuilder: (context) => MyText(
-                        'Oh dear, ${_pagingController.error.toString()}',
-                        maxLines: 5,
-                        textAlign: TextAlign.center,
-                      ),
-                      newPageErrorIndicatorBuilder: (context) => MyText(
-                        'Oh dear, ${_pagingController.error.toString()}',
-                        maxLines: 5,
-                        textAlign: TextAlign.center,
-                      ),
-                      firstPageProgressIndicatorBuilder: (c) =>
-                          const LoadingCircle(),
-                      newPageProgressIndicatorBuilder: (c) =>
-                          const LoadingCircle(),
-                      noItemsFoundIndicatorBuilder: (c) =>
-                          const Center(child: MyText('No results...')),
-                    ),
+        PagedListView<int, StreamEnrichedActivity>(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<StreamEnrichedActivity>(
+            itemBuilder: (context, activity, index) => SizeFadeIn(
+              duration: 50,
+              delay: index,
+              delayBasis: 10,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ClubFeedPostCard(
+                    activity: activity,
+                    likeUnlikePost: () => _likeUnlikePost(activity.id),
+                    userHasLiked: likedPostIds.contains(activity.id),
+                    deleteActivity: widget.isOwnerOrAdmin
+                        ? () => _deleteActivity(activity)
+                        : null,
+                    enableViewClubOption: false,
+                  )),
+            ),
+            firstPageErrorIndicatorBuilder: (context) => MyText(
+              'Oh dear, ${_pagingController.error.toString()}',
+              maxLines: 5,
+              textAlign: TextAlign.center,
+            ),
+            newPageErrorIndicatorBuilder: (context) => MyText(
+              'Oh dear, ${_pagingController.error.toString()}',
+              maxLines: 5,
+              textAlign: TextAlign.center,
+            ),
+            firstPageProgressIndicatorBuilder: (c) =>
+                const CupertinoActivityIndicator(),
+            newPageProgressIndicatorBuilder: (c) =>
+                const CupertinoActivityIndicator(),
+            noItemsFoundIndicatorBuilder: (c) => Center(
+              child: Column(
+                children: const [
+                  Opacity(
+                      opacity: 0.5,
+                      child: Icon(
+                        CupertinoIcons.square_list,
+                        size: 50,
+                      )),
+                  SizedBox(height: 12),
+                  MyText(
+                    'Nothing here yet...',
+                    subtext: true,
                   ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

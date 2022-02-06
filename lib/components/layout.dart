@@ -175,7 +175,7 @@ class CreateEditPageNavBar extends CupertinoNavigationBar {
                       children: const [
                         Padding(
                           padding: EdgeInsets.only(right: 8.0),
-                          child: LoadingDots(
+                          child: LoadingIndicator(
                             size: 12,
                           ),
                         )
@@ -378,12 +378,12 @@ class ModalPageScaffold extends StatelessWidget {
               ? const FadeIn(
                   child: NavBarTrailingRow(
                     children: [
-                      NavBarLoadingDots(),
+                      NavBarLoadingIndicator(),
                     ],
                   ),
                 )
               : save != null && validToSave
-                  ? FadeIn(child: NavBarSaveButton(save!))
+                  ? FadeIn(child: NavBarTertiarySaveButton(save!))
                   : null,
         ),
         child: Padding(

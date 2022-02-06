@@ -127,8 +127,7 @@ class DifficultyLevelDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isElite = difficultyLevel == DifficultyLevel.elite;
-    final borderColor =
-        isElite ? context.theme.primary : difficultyLevel.displayColor;
+    final borderColor = isElite ? Styles.white : difficultyLevel.displayColor;
 
     return Container(
       width: size,
@@ -145,26 +144,23 @@ class DifficultyLevelIcon extends StatelessWidget {
   final DifficultyLevel difficultyLevel;
 
   final FONTSIZE fontSize;
-  final bool withBackground;
+
+  final Color? backgroundColor;
 
   const DifficultyLevelIcon(
       {Key? key,
       required this.difficultyLevel,
       this.fontSize = FONTSIZE.two,
-      this.withBackground = true})
+      this.backgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final color = difficultyLevel.displayColor;
     return Container(
-      padding: withBackground
-          ? const EdgeInsets.symmetric(vertical: 4, horizontal: 5)
-          : EdgeInsets.zero,
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
-          color: withBackground
-              ? context.theme.background.withOpacity(0.85)
-              : null),
+          borderRadius: BorderRadius.circular(3), color: backgroundColor),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -176,8 +172,8 @@ class DifficultyLevelIcon extends StatelessWidget {
                   width: 5,
                   decoration: BoxDecoration(
                       color: difficultyLevel.numericValue >= i
-                          ? context.theme.primary.withOpacity(0.85)
-                          : context.theme.primary.withOpacity(0.2),
+                          ? color.withOpacity(0.85)
+                          : color.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(1)),
                 )),
       ),
@@ -392,7 +388,7 @@ class DurationTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentBox(
         backgroundColor: backgroundColor,
-        borderRadius: 4,
+        borderRadius: 6,
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,

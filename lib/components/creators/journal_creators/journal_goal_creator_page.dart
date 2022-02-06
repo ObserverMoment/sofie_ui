@@ -106,7 +106,7 @@ class _CreateGoalState extends State<_CreateGoal> {
         trailing: _saving
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : NavBarTrailingRow(
@@ -241,7 +241,7 @@ class _EditGoalState extends State<_EditGoal> {
           'Goal',
         ),
         trailing: FadeIn(
-          child: NavBarSaveButton(
+          child: NavBarTertiarySaveButton(
             context.pop,
             text: 'Done',
           ),

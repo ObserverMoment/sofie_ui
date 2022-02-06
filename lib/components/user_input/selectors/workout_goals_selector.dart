@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -11,8 +9,7 @@ import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 
 class WorkoutGoalsSelectorRow extends StatelessWidget {
   final List<WorkoutGoal> selectedWorkoutGoals;
@@ -139,63 +136,53 @@ class _WorkoutGoalsSelectorState extends State<WorkoutGoalsSelector> {
 
   @override
   Widget build(BuildContext context) {
+    final workoutGoals = CoreDataRepo.workoutGoals;
+
     return MyPageScaffold(
-      navigationBar: MyNavBar(
-        withoutLeading: true,
-        trailing: TertiaryButton(
-            backgroundGradient: Styles.primaryAccentGradient,
-            textColor: Styles.white,
-            text: 'Done',
-            onPressed: context.pop),
-        middle: const LeadingNavBarTitle(
-          'Workout Goals',
-        ),
-      ),
-      child: QueryObserver<WorkoutGoals$Query, json.JsonSerializable>(
-          key: Key(
-              'WorkoutGoalsSelector - ${WorkoutGoalsQuery().operationName}'),
-          query: WorkoutGoalsQuery(),
-          fetchPolicy: QueryFetchPolicy.storeFirst,
-          loadingIndicator: const ShimmerCardList(
-            itemCount: 10,
-            cardHeight: 50,
+        navigationBar: MyNavBar(
+          withoutLeading: true,
+          trailing: TertiaryButton(
+              backgroundGradient: Styles.primaryAccentGradient,
+              textColor: Styles.white,
+              text: 'Done',
+              onPressed: context.pop),
+          middle: const LeadingNavBarTitle(
+            'Workout Goals',
           ),
-          builder: (data) {
-            return Column(
-              children: [
-                if (widget.max != null)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MyText(
-                        'Select up to ${widget.max!} goals - ',
-                      ),
-                      MyText(
-                        '${_activeSelectedWorkoutGoals.length} selected',
-                        color: Styles.primaryAccent,
-                      ),
-                    ],
+        ),
+        child: Column(
+          children: [
+            if (widget.max != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyText(
+                    'Select up to ${widget.max!} goals - ',
                   ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: ListView(
-                    children: data.workoutGoals
-                        .map((goal) => Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: SelectableBoxExpanded(
-                                onPressed: () => _handleUpdateSelected(goal),
-                                height: 50,
-                                isSelected:
-                                    _activeSelectedWorkoutGoals.contains(goal),
-                                text: goal.name,
-                              ),
-                            ))
-                        .toList(),
+                  MyText(
+                    '${_activeSelectedWorkoutGoals.length} selected',
+                    color: Styles.primaryAccent,
                   ),
-                ),
-              ],
-            );
-          }),
-    );
+                ],
+              ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView(
+                children: workoutGoals
+                    .map((goal) => Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: SelectableBoxExpanded(
+                            onPressed: () => _handleUpdateSelected(goal),
+                            height: 50,
+                            isSelected:
+                                _activeSelectedWorkoutGoals.contains(goal),
+                            text: goal.name,
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
+          ],
+        ));
   }
 }

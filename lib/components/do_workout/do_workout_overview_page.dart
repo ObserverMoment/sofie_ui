@@ -8,7 +8,7 @@ import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_contr
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/do_workout/do_workout_section_modifications.dart';
+import 'package:sofie_ui/components/do_workout/modifications/do_workout_section_modifications.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_settings.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
@@ -490,41 +490,53 @@ class _WorkoutSectionSummary extends StatelessWidget {
               ),
             ),
           const HorizontalLine(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              if (!(workoutSection.isCustomSession || workoutSection.isLifting))
-                _buildSectionFooterButton(
-                    CupertinoIcons.list_bullet,
-                    'View / Modify',
-                    () => context.push(
-                          fullscreenDialog: true,
-                          child: ChangeNotifierProvider<DoWorkoutBloc>.value(
-                            value: bloc,
-                            child: DoWorkoutSectionModifications(
-                                sectionIndex: workoutSection.sortPosition),
-                          ),
-                        )),
-              if (isComplete)
-                _buildSectionFooterButton(
-                  CupertinoIcons.refresh_bold,
-                  'Reset',
-                  () => _confirmResetSection(context, bloc),
+          workoutSection.hasSomeSets
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildSectionFooterButton(
+                        CupertinoIcons.list_bullet,
+                        'View / Modify',
+                        () => context.push(
+                              child:
+                                  ChangeNotifierProvider<DoWorkoutBloc>.value(
+                                value: bloc,
+                                child: DoWorkoutSectionModifications(
+                                    sectionIndex: workoutSection.sortPosition),
+                              ),
+                            )),
+                    if (isComplete)
+                      _buildSectionFooterButton(
+                        CupertinoIcons.refresh_bold,
+                        'Reset',
+                        () => _confirmResetSection(context, bloc),
+                      )
+                    else if (hasStarted)
+                      _buildSectionFooterButton(
+                        CupertinoIcons.play,
+                        'Continue',
+                        navigateToSectionPage,
+                      )
+                    else
+                      _buildSectionFooterButton(
+                        CupertinoIcons.play,
+                        'Do It',
+                        navigateToSectionPage,
+                      ),
+                  ],
                 )
-              else if (hasStarted)
-                _buildSectionFooterButton(
-                  CupertinoIcons.play,
-                  'Continue',
-                  navigateToSectionPage,
-                )
-              else
-                _buildSectionFooterButton(
-                  CupertinoIcons.play,
-                  'Do It',
-                  navigateToSectionPage,
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      MyText(
+                        'This section has no sets in it...',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
-            ],
-          ),
         ],
       ),
     );

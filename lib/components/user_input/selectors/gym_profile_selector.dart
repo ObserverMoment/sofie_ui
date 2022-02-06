@@ -111,7 +111,7 @@ class _GymProfileSelectorState extends State<GymProfileSelector> {
           navigationBar: MyNavBar(
             customLeading: NavBarCancelButton(context.pop),
             middle: const NavBarTitle('Select Gym Profile'),
-            trailing: NavBarSaveButton(context.pop, text: 'Done'),
+            trailing: NavBarTertiarySaveButton(context.pop, text: 'Done'),
           ),
           child: gymProfiles.isEmpty
               ? Padding(

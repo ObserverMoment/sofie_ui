@@ -214,10 +214,13 @@ class _ClubFeedPostCreatorPageState extends State<ClubFeedPostCreatorPage> {
 
   void _addTag(String tag) {
     if (_activity?.extraData != null) {
-      setState(() {
-        _tagInputController.text = '';
-        _activity!.extraData.tags.add(tag);
-      });
+      /// Don't add a tag that is already there.
+      if (!_activity!.extraData.tags.contains(tag)) {
+        setState(() {
+          _tagInputController.text = '';
+          _activity!.extraData.tags.add(tag);
+        });
+      }
     }
   }
 

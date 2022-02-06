@@ -29,6 +29,15 @@ fragment ClubSummary on ClubSummary {
   planCount
 }
 
+fragment ClubMemberNote on ClubMemberNote {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+  tags
+}
+
 # No typename as we do not want to ever save this to store.
 fragment ClubChatSummary on ClubChatSummary {
   id

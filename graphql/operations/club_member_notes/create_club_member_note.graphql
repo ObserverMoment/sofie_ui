@@ -1,0 +1,9 @@
+# User == author of the note.
+mutation createClubMemberNote($data: CreateClubMemberNoteInput!) {
+  createClubMemberNote(data: $data) {
+    ...ClubMemberNote
+    User {
+      ...UserAvatarData
+    }
+  }
+}

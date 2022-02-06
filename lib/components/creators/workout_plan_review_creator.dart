@@ -163,13 +163,13 @@ class _WorkoutPlanReviewCreatorPageState
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
-                      LoadingDots(
+                      LoadingIndicator(
                         size: 12,
                       ),
                     ],
                   )
                 : _score != null
-                    ? NavBarSaveButton(_handleSave)
+                    ? NavBarTertiarySaveButton(_handleSave)
                     : Container(width: 0)),
       ),
       child: SingleChildScrollView(

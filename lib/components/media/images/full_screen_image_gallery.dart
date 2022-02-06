@@ -103,7 +103,7 @@ class _FullScreenImageGalleryState extends State<FullScreenImageGallery> {
                       child: SizedBox(
                         width: 20.0,
                         height: 20.0,
-                        child: LoadingCircle(),
+                        child: LoadingIndicator(),
                       ),
                     ),
                   ),

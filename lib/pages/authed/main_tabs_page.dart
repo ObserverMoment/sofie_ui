@@ -37,7 +37,7 @@ class MainTabsPage extends StatelessWidget {
       // https://github.com/Milad-Akarie/auto_route_library/issues/619#issuecomment-945187688
       backgroundColor: context.theme.background,
       routes: const [
-        SocialRoute(),
+        FeedRoute(),
         DiscoverRoute(),
         HomeRoute(),
         ProgressRoute(),

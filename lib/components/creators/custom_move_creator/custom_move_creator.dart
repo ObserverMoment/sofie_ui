@@ -82,7 +82,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
 
       final result = await context.graphQLStore.mutate(
           mutation: UpdateMoveMutation(variables: variables),
-          broadcastQueryIds: [UserCustomMovesQuery().operationName]);
+          broadcastQueryIds: [CustomMovesQuery().operationName]);
 
       if (result.hasErrors) {
         context.showToast(
@@ -98,7 +98,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
 
       final result = await context.graphQLStore.create(
           mutation: CreateMoveMutation(variables: variables),
-          addRefToQueries: [UserCustomMovesQuery().operationName]);
+          addRefToQueries: [CustomMovesQuery().operationName]);
 
       if (result.hasErrors) {
         context.showToast(
@@ -140,7 +140,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
           middle: NavBarTitle(widget.move == null ? 'New Move' : 'Edit Move'),
           trailing: _formIsDirty
               ? FadeIn(
-                  child: NavBarSaveButton(
+                  child: NavBarTertiarySaveButton(
                     _saveAndClose,
                     loading: _loading,
                   ),

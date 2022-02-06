@@ -5,6 +5,7 @@ fragment WorkoutData on Workout {
   __typename
   id
   createdAt
+  updatedAt
   archived
   name
   description
@@ -63,6 +64,7 @@ fragment Workout on Workout {
   __typename
   id
   createdAt
+  updatedAt
   archived
   name
   description
@@ -79,6 +81,7 @@ fragment WorkoutSummary on WorkoutSummary {
   __typename
   id
   createdAt
+  updatedAt
   archived
   name
   User {
@@ -92,7 +95,10 @@ fragment WorkoutSummary on WorkoutSummary {
   hasClassVideo
   hasClassAudio
   equipments
+  sectionTypes
+  goals
   tags
+  bodyAreas
 }
 
 fragment ArchivedWorkout on Workout {

@@ -49,22 +49,24 @@ class FeedPostReactions extends StatelessWidget {
             )
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0, bottom: 4),
-          child: MyText(
-            '$likesCount likes',
-            subtext: true,
-            size: FONTSIZE.two,
+        if (likesCount > 0)
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, bottom: 4),
+            child: MyText(
+              '$likesCount likes',
+              subtext: true,
+              size: FONTSIZE.two,
+            ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 12.0, bottom: 5),
-          child: MyText(
-            '$commentsCount comments',
-            size: FONTSIZE.two,
-            subtext: true,
+        if (commentsCount > 0)
+          Padding(
+            padding: const EdgeInsets.only(left: 12.0, bottom: 5),
+            child: MyText(
+              '$commentsCount comments',
+              size: FONTSIZE.two,
+              subtext: true,
+            ),
           ),
-        ),
       ],
     );
   }

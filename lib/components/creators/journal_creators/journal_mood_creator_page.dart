@@ -114,7 +114,7 @@ class _CreateMoodState extends State<_CreateMood> {
         trailing: _saving
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : NavBarTrailingRow(
@@ -208,7 +208,7 @@ class _EditMoodState extends State<_EditMood> {
           'Edit Mood',
         ),
         trailing: FadeIn(
-          child: NavBarSaveButton(
+          child: NavBarTertiarySaveButton(
             context.pop,
             text: 'Done',
           ),

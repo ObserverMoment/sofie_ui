@@ -206,7 +206,7 @@ class _FullScreenEquipmentSelectorState
     return MyPageScaffold(
       navigationBar: MyNavBar(
         middle: const NavBarTitle('Select Equipment'),
-        trailing: NavBarSaveButton(
+        trailing: NavBarTertiarySaveButton(
           context.pop,
           text: 'Done',
         ),

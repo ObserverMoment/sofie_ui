@@ -124,10 +124,10 @@ class __MainUIState extends State<_MainUI> {
             trailing: uploadingMedia
                 ? const NavBarTrailingRow(
                     children: [
-                      NavBarLoadingDots(),
+                      NavBarLoadingIndicator(),
                     ],
                   )
-                : NavBarSaveButton(
+                : NavBarTertiarySaveButton(
                     _saveAndClose,
                     text: 'Done',
                   ),
@@ -213,10 +213,10 @@ class __PreCreateUIState extends State<_PreCreateUI> {
         trailing: widget.creatingNewWorkoutPlan
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
-            : NavBarSaveButton(
+            : NavBarTertiarySaveButton(
                 () => widget.createWorkoutPlan(_createWorkoutPlanInput),
                 text: 'Create'),
       ),

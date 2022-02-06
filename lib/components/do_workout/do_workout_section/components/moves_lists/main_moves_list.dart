@@ -119,7 +119,7 @@ class _MainMovesListState extends State<MainMovesList> {
           percent: widget.state.percentComplete,
           backgroundColor: context.theme.primary.withOpacity(0.07),
           linearGradient: Styles.primaryAccentGradient,
-          linearStrokeCap: LinearStrokeCap.roundAll,
+          barRadius: const Radius.circular(30),
         ),
         const SizedBox(height: 8),
         Expanded(

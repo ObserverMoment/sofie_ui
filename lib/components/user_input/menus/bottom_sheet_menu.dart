@@ -42,38 +42,42 @@ class BottomSheetMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(28.0),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              if (header != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    if (header != null)
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: header,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: context.pop,
+        child: Padding(
+          padding: const EdgeInsets.all(28.0),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                if (header != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (header != null)
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: header,
+                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
+                ...items
+                    .map((i) => BottomSheetMenuItemContainer(
+                          i,
+                        ))
+                    .toList(),
+                const SizedBox(height: 8),
+                TextButton(
+                  text: 'Cancel',
+                  onPressed: context.pop,
+                  fontSize: FONTSIZE.four,
                 ),
-              ...items
-                  .map((i) => BottomSheetMenuItemContainer(
-                        i,
-                      ))
-                  .toList(),
-              const SizedBox(height: 8),
-              TextButton(
-                text: 'Cancel',
-                onPressed: context.pop,
-                fontSize: FONTSIZE.four,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

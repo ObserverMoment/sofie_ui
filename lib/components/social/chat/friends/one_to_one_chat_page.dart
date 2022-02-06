@@ -82,7 +82,7 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
               navigationBar: MyNavBar(
                 middle: NavBarTitle('Loading Chat...'),
               ),
-              child: LoadingCircle()),
+              child: Center(child: LoadingIndicator())),
     );
   }
 }
@@ -111,6 +111,7 @@ class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
         channel: widget.channel,
         child: CupertinoPageScaffold(
             navigationBar: MyNavBar(
+              backgroundColor: context.theme.modalBackground,
               middle: CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: null,

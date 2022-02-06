@@ -6,7 +6,6 @@ import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_cre
 import 'package:sofie_ui/components/creators/gym_profile_creator.dart';
 import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creator_page.dart';
 import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
-import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
@@ -35,6 +34,9 @@ import 'package:sofie_ui/pages/authed/details_pages/workout_plan_details_page.da
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_enrolment_details_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_clubs_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_page.dart';
+import 'package:sofie_ui/pages/authed/feed/feed_page.dart';
+import 'package:sofie_ui/pages/authed/feed/notifications_page.dart';
+import 'package:sofie_ui/pages/authed/feed/your_posts_page.dart';
 import 'package:sofie_ui/pages/authed/home/home_page.dart';
 import 'package:sofie_ui/pages/authed/home/your_clubs.dart';
 import 'package:sofie_ui/pages/authed/home/your_collections.dart';
@@ -57,8 +59,6 @@ import 'package:sofie_ui/pages/authed/progress/logged_workouts_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_bests_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_people_page.dart';
-import 'package:sofie_ui/pages/authed/social/social_page.dart';
-import 'package:sofie_ui/pages/authed/social/your_posts_page.dart';
 import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
 @CupertinoAutoRouter(
@@ -77,7 +77,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
             AutoRoute(
               path: '',
-              page: SocialPage,
+              page: FeedPage,
             ),
             AutoRoute(
               path: 'discover',
@@ -103,6 +103,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           /// User related.
           AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'settings', page: SettingsPage),
+          AutoRoute(path: 'notifications', page: NotificationsPage),
           AutoRoute(path: 'edit-profile', page: EditProfilePage),
 
           /// Misc
@@ -170,7 +171,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
               path: 'create/scheduled-workout',
               page: ScheduledWorkoutCreatorPage),
           AutoRoute(path: 'create/workout', page: WorkoutCreatorPage),
-          AutoRoute(path: 'create/workout-log', page: LoggedWorkoutCreatorPage),
           AutoRoute(path: 'create/workout-plan', page: WorkoutPlanCreatorPage),
           AutoRoute(
               path: 'create/workout-plan-review',

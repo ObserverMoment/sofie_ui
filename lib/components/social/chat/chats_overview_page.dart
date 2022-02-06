@@ -25,7 +25,7 @@ class _ChatsOverviewPageState extends State<ChatsOverviewPage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: const MyNavBar(
-        middle: NavBarLargeTitle('Chats'),
+        middle: NavBarTitle('Chats'),
       ),
       child: Column(
         children: [

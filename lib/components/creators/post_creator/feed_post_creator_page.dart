@@ -23,7 +23,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 class FeedPostCreatorPage extends StatefulWidget {
-  const FeedPostCreatorPage({Key? key}) : super(key: key);
+  /// Allows us to pre-fill some fields when sharing content such as workouts, plans and logs from the details pages.
+  final CreateStreamFeedActivityInput? activityInput;
+  final VoidCallback? onComplete;
+  final String? title;
+  const FeedPostCreatorPage(
+      {Key? key, this.activityInput, this.onComplete, this.title})
+      : super(key: key);
 
   @override
   _FeedPostCreatorPageState createState() => _FeedPostCreatorPageState();
@@ -57,6 +63,11 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
     _feed = _streamFeedClient.flatFeed(kUserFeedName, _authedUser.id);
 
     _actor = _streamFeedClient.currentUser!.ref;
+
+    _activity = widget.activityInput;
+
+    _titleController.text = widget.activityInput?.extraData.title ?? '';
+    _captionController.text = widget.activityInput?.extraData.caption ?? '';
 
     _titleController.addListener(() {
       setState(() {
@@ -148,10 +159,13 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
 
   void _addTag(String tag) {
     if (_activity?.extraData != null) {
-      setState(() {
-        _tagInputController.text = '';
-        _activity!.extraData.tags.add(tag);
-      });
+      /// Don't add a tag thats already there.
+      if (!_activity!.extraData.tags.contains(tag)) {
+        setState(() {
+          _tagInputController.text = '';
+          _activity!.extraData.tags.add(tag);
+        });
+      }
     }
   }
 
@@ -181,8 +195,8 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
 
       try {
         await _feed.addActivity(activity);
-
         context.pop();
+        widget.onComplete?.call();
       } catch (e) {
         printLog(e.toString());
         context.showToast(
@@ -209,7 +223,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          middle: const NavBarTitle('New Post'),
+          middle: NavBarTitle(widget.title ?? 'New Post'),
           trailing: _loading
               ? const NavBarActivityIndicator()
               : (_activity != null)

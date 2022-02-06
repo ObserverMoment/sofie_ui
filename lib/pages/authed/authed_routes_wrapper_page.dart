@@ -12,12 +12,15 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
 import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart' as feed;
 import 'package:stream_feed/stream_feed.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 /// https://github.com/Milad-Akarie/auto_route_library/issues/418
 /// Creates and provides all the global objects required on a user is logged in.
@@ -31,6 +34,9 @@ class AuthedRoutesWrapperPage extends StatefulWidget {
 
 class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   late AuthedUser _authedUser;
+
+  bool _coreAppDataInitialized = false;
+
   late chat.StreamChatClient _streamChatClient;
   bool _chatInitialized = false;
 
@@ -53,6 +59,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   }
 
   Future<void> asyncInit() async {
+    await _initCoreAppData();
     await _connectUserToChat();
     await _initFeeds();
     await _handleIncomingLinks();
@@ -62,6 +69,20 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _handleInitialUri();
     });
+  }
+
+  Future<void> _initCoreAppData() async {
+    /// Core app data such as equipment, moves, body areas and other non user generated content.
+    await CoreDataRepo.initCoreData(context);
+
+    /// Get the users log history here as well.
+    /// All [QueryObservers] watching this query in the app should be set with
+    /// [fetchPolicy: QueryFetchPolicy.storeFirst] - as the data should already be there and should never be updated independently by anyone else than the user.
+    /// final query =
+    final query =
+        UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments());
+    await context.graphQLStore.query(query: query);
+    _coreAppDataInitialized = true;
   }
 
   chat.StreamChatClient get _createStreamChatClient =>
@@ -102,8 +123,9 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       _notificationFeed = _streamFeedClient.notificationFeed(
           kUserNotificationName, _authedUser.id);
 
-      _feedSubscription =
-          await _notificationFeed.subscribe(_handleNotification);
+      _feedSubscription = await _notificationFeed.subscribe((message) {
+        handleIncomingFeedNotifications(context, message);
+      });
 
       _feedsInitialized = true;
     } catch (e) {
@@ -111,15 +133,6 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       context.showToast(message: e.toString());
       context.showToast(message: "Oops, couldn't initialize notifications! $e");
     }
-  }
-
-  Future<void> _handleNotification(feed.RealtimeMessage? message) async {
-    // final _message =
-    //     message?.newActivities?[0].object?.data.toString() ?? 'No message';
-    // context.showNotification(
-    //     title: 'Notification',
-    //     onPressed: () => printLog('printLog a test'),
-    //     message: _message);
   }
 
   /// Handle incoming links - the ones that the app will recieve from the OS
@@ -180,7 +193,8 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _chatInitialized &&
+    return _coreAppDataInitialized &&
+            _chatInitialized &&
             _feedsInitialized &&
             _incomingLinkStreamInitialized
         ? chat.StreamChatCore(

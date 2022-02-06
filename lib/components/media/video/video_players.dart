@@ -157,7 +157,7 @@ class _LandscapeInlineVideoPlayerState
             ),
           )
         : const Center(
-            child: LoadingCircle(),
+            child: LoadingIndicator(),
           );
   }
 }

@@ -237,13 +237,13 @@ class _PersonalBestEntryCreatorState extends State<PersonalBestEntryCreator> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
-                  LoadingDots(
+                  LoadingIndicator(
                     size: 12,
                   ),
                 ],
               )
             : _validToSubmit
-                ? FadeIn(child: NavBarSaveButton(_saveAndClose))
+                ? FadeIn(child: NavBarTertiarySaveButton(_saveAndClose))
                 : null,
       ),
       child: ListView(

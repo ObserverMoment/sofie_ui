@@ -4,6 +4,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
+import 'package:sofie_ui/components/club/club_member_notes/club_details_member_notes.dart';
 import 'package:sofie_ui/components/club/invites/club_details_invites_manager.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -12,6 +13,7 @@ import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
+import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/country.dart';
 import 'package:sofie_ui/model/enum.dart';
@@ -53,6 +55,11 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
               header: BottomSheetMenuHeader(
                   name: member.displayName, imageUri: member.avatarUri),
               items: [
+                BottomSheetMenuItem(
+                    text: 'View Notes',
+                    onPressed: () => context.push(
+                        child: ClubDetailsMemberNotes(
+                            clubId: widget.clubId, clubMemberSummary: member))),
                 BottomSheetMenuItem(
                     text: 'View Profile',
                     onPressed: () => _navigateToProfile(member)),
@@ -202,7 +209,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
                           trailing: _loading
                               ? const NavBarTrailingRow(
                                   children: [
-                                    NavBarLoadingDots(),
+                                    NavBarLoadingIndicator(),
                                   ],
                                 )
                               : _userIsOwnerOrAdmin
@@ -229,7 +236,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
   }
 }
 
-class _ClubMembersList extends StatelessWidget {
+class _ClubMembersList extends StatefulWidget {
   final ClubMemberSummary owner;
   final List<ClubMemberSummary> admins;
   final List<ClubMemberSummary> members;
@@ -243,6 +250,37 @@ class _ClubMembersList extends StatelessWidget {
       required this.members})
       : super(key: key);
 
+  @override
+  State<_ClubMembersList> createState() => _ClubMembersListState();
+}
+
+class _ClubMembersListState extends State<_ClubMembersList> {
+  String _lowercaseSearch = '';
+
+  bool _matchDisplayName(ClubMemberSummary member) =>
+      member.displayName.toLowerCase().contains(_lowercaseSearch);
+
+  bool _matchSkills(ClubMemberSummary member) =>
+      member.skills.any((s) => s.toLowerCase().contains(_lowercaseSearch));
+
+  bool _matchTownCity(ClubMemberSummary member) =>
+      member.townCity != null &&
+      member.townCity!.toLowerCase().contains(_lowercaseSearch);
+
+  bool _matchCountry(ClubMemberSummary member) => member.countryCode != null
+      ? Country.fromIsoCode(member.countryCode!)
+          .name
+          .toLowerCase()
+          .contains(_lowercaseSearch)
+      : false;
+
+  bool _textSearchFilterMember(ClubMemberSummary m) {
+    return _matchDisplayName(m) ||
+        _matchSkills(m) ||
+        _matchTownCity(m) ||
+        _matchCountry(m);
+  }
+
   Widget _buildHeading(String text) => Padding(
         padding: const EdgeInsets.only(left: 8.0, bottom: 4, top: 12),
         child: MyHeaderText(text),
@@ -250,6 +288,12 @@ class _ClubMembersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final filteredMembers = Utils.textNotNull(_lowercaseSearch)
+        ? widget.members.where((m) => _textSearchFilterMember(m))
+        : widget.members;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: CustomScrollView(
@@ -262,13 +306,14 @@ class _ClubMembersList extends StatelessWidget {
                 const HorizontalLine(),
                 GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () =>
-                        handleMemberTap(owner, UserClubMemberStatus.owner),
-                    child: FadeIn(child: _ClubOwnerSummaryCard(member: owner))),
+                    onTap: () => widget.handleMemberTap(
+                        widget.owner, UserClubMemberStatus.owner),
+                    child: FadeIn(
+                        child: _ClubOwnerSummaryCard(member: widget.owner))),
               ],
             ),
           ),
-          if (admins.isNotEmpty)
+          if (widget.admins.isNotEmpty)
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,7 +323,7 @@ class _ClubMembersList extends StatelessWidget {
                 ],
               ),
             ),
-          if (admins.isNotEmpty)
+          if (widget.admins.isNotEmpty)
             SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -286,14 +331,16 @@ class _ClubMembersList extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 (c, i) => GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () =>
-                        handleMemberTap(admins[i], UserClubMemberStatus.admin),
+                    onTap: () => widget.handleMemberTap(
+                        widget.admins[i], UserClubMemberStatus.admin),
                     child: FadeIn(
-                        child: _ClubAdminSummaryCard(member: admins[i]))),
-                childCount: admins.length,
+                        child: _ClubAdminSummaryCard(
+                            member: widget.admins[i],
+                            avatarSize: screenWidth / 3))),
+                childCount: widget.admins.length,
               ),
             ),
-          if (members.isNotEmpty)
+          if (widget.members.isNotEmpty)
             SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,7 +350,16 @@ class _ClubMembersList extends StatelessWidget {
                 ],
               ),
             ),
-          if (members.isNotEmpty)
+          if (widget.members.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10.0, top: 4),
+                child: MyCupertinoSearchTextField(
+                    onChanged: (t) =>
+                        setState(() => _lowercaseSearch = t.toLowerCase())),
+              ),
+            ),
+          if (filteredMembers.isNotEmpty)
             SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
@@ -311,11 +367,13 @@ class _ClubMembersList extends StatelessWidget {
               delegate: SliverChildBuilderDelegate(
                 (c, i) => GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: () => handleMemberTap(
-                        members[i], UserClubMemberStatus.member),
+                    onTap: () => widget.handleMemberTap(
+                        widget.members[i], UserClubMemberStatus.member),
                     child: FadeIn(
-                        child: _ClubMemberSummaryCard(member: members[i]))),
-                childCount: members.length,
+                        child: _ClubMemberSummaryCard(
+                            member: widget.members[i],
+                            avatarSize: screenWidth / 5))),
+                childCount: widget.members.length,
               ),
             )
         ],
@@ -401,7 +459,9 @@ class _ClubOwnerSummaryCard extends StatelessWidget {
 
 class _ClubAdminSummaryCard extends StatelessWidget {
   final ClubMemberSummary member;
-  const _ClubAdminSummaryCard({Key? key, required this.member})
+  final double avatarSize;
+  const _ClubAdminSummaryCard(
+      {Key? key, required this.member, required this.avatarSize})
       : super(key: key);
 
   @override
@@ -416,7 +476,7 @@ class _ClubAdminSummaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              UserAvatar(avatarUri: member.avatarUri, size: 100),
+              UserAvatar(avatarUri: member.avatarUri, size: avatarSize),
               Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: MyText(
@@ -454,7 +514,9 @@ class _ClubAdminSummaryCard extends StatelessWidget {
 
 class _ClubMemberSummaryCard extends StatelessWidget {
   final ClubMemberSummary member;
-  const _ClubMemberSummaryCard({Key? key, required this.member})
+  final double avatarSize;
+  const _ClubMemberSummaryCard(
+      {Key? key, required this.member, required this.avatarSize})
       : super(key: key);
 
   @override
@@ -469,7 +531,7 @@ class _ClubMemberSummaryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              UserAvatar(avatarUri: member.avatarUri, size: 80),
+              UserAvatar(avatarUri: member.avatarUri, size: avatarSize),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: MyText(

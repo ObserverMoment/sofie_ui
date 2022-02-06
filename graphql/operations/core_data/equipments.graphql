@@ -1,5 +1,0 @@
-query equipments {
-  equipments {
-    ...Equipment
-  }
-}

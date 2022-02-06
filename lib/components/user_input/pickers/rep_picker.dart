@@ -227,6 +227,7 @@ class _RepPickerModalState extends State<RepPickerModal> {
             if (_activeRepType == WorkoutMoveRepType.time)
               MySlidingSegmentedControl<TimeUnit>(
                   value: _activeTimeUnit,
+                  fontSize: 15,
                   children: {
                     for (final v in TimeUnit.values
                         .where((v) => v != TimeUnit.artemisUnknown))
@@ -241,6 +242,11 @@ class _RepPickerModalState extends State<RepPickerModal> {
               FadeIn(
                 child: MySlidingSegmentedControl<DistanceUnit>(
                     value: _activeDistanceUnit,
+                    containerPadding:
+                        const EdgeInsets.symmetric(vertical: 3, horizontal: 0),
+                    childPadding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 8),
+                    fontSize: 14,
                     children: {
                       for (final v in DistanceUnit.values
                           .where((v) => v != DistanceUnit.artemisUnknown))
@@ -289,6 +295,7 @@ class RepTimePicker extends StatelessWidget {
                     (i) => Center(child: H3((i + 1).toString()))))),
         MySlidingSegmentedControl<TimeUnit>(
             value: timeUnit,
+            fontSize: 15,
             children: {
               for (final v
                   in TimeUnit.values.where((v) => v != TimeUnit.artemisUnknown))

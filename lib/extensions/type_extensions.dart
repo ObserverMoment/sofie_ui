@@ -42,9 +42,9 @@ extension DateTimeExtension on DateTime {
 
   String get timeAgo {
     final diff = DateTime.now().difference(this);
-    if (diff.inDays > 1) {
+    if (diff.inDays > 0) {
       return '${diff.inDays}d';
-    } else if (diff.inHours > 1) {
+    } else if (diff.inHours > 0) {
       return '${diff.inHours}h';
     } else {
       return '${diff.inMinutes}m';

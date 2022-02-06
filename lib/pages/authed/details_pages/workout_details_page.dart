@@ -9,6 +9,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_like_heart.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
+import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
@@ -23,6 +24,7 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/workout/workout_details_workout_section.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/toast_request.dart';
@@ -200,15 +202,29 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                 if (workout.lengthMinutes != null)
                   DurationTag(
                     fontSize: FONTSIZE.three,
-                    iconSize: 15,
-                    backgroundColor: context.theme.background.withOpacity(0.6),
+                    iconSize: 14,
+                    backgroundColor: context.theme.background.withOpacity(0.85),
                     duration: Duration(minutes: workout.lengthMinutes!),
                   ),
                 if (workout.difficultyLevel != null)
-                  DifficultyLevelTag(
-                    backgroundColor: context.theme.background.withOpacity(0.6),
-                    difficultyLevel: workout.difficultyLevel!,
-                    fontSize: FONTSIZE.two,
+                  ContentBox(
+                    borderRadius: 6,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                    backgroundColor: context.theme.background.withOpacity(0.85),
+                    child: Row(
+                      children: [
+                        DifficultyLevelDot(
+                          difficultyLevel: workout.difficultyLevel!,
+                          size: 10,
+                        ),
+                        const SizedBox(width: 6),
+                        MyText(
+                          workout.difficultyLevel!.display,
+                          size: FONTSIZE.two,
+                        )
+                      ],
+                    ),
                   ),
               ],
             ),
@@ -328,19 +344,20 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                     ),
                     child: FABPage(
                         rowButtons: [
-                          FloatingButton(
-                            icon: CupertinoIcons.arrow_right_square,
-                            text: 'START WORKOUT',
-                            width: screenWidth * 0.8,
-                            onTap: () => context.navigateTo(
-                                DoWorkoutWrapperRoute(
-                                    id: widget.id,
-                                    scheduledWorkout: widget.scheduledWorkout,
-                                    workoutPlanDayWorkoutId:
-                                        widget.workoutPlanDayWorkoutId,
-                                    workoutPlanEnrolmentId:
-                                        widget.workoutPlanEnrolmentId)),
-                          )
+                          if (workout.hasSomeSections)
+                            FloatingButton(
+                              icon: CupertinoIcons.arrow_right_square,
+                              text: 'START WORKOUT',
+                              width: screenWidth * 0.8,
+                              onTap: () => context.navigateTo(
+                                  DoWorkoutWrapperRoute(
+                                      id: widget.id,
+                                      scheduledWorkout: widget.scheduledWorkout,
+                                      workoutPlanDayWorkoutId:
+                                          widget.workoutPlanDayWorkoutId,
+                                      workoutPlanEnrolmentId:
+                                          widget.workoutPlanEnrolmentId)),
+                            )
                         ],
                         child: ListView(
                           shrinkWrap: true,
@@ -388,8 +405,8 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                         icon: const Icon(CupertinoIcons
                                             .text_badge_checkmark),
                                         label: 'Log It',
-                                        onPressed: () => context.navigateTo(
-                                            LoggedWorkoutCreatorRoute(
+                                        onPressed: () => context.push(
+                                            child: PreLoggingModificationsAndUserInputs(
                                                 workoutId: workout.id,
                                                 scheduledWorkout:
                                                     widget.scheduledWorkout,

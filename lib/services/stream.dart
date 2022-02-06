@@ -4,7 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
@@ -14,40 +13,31 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/pages/authed/feed/notifications_page.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
 import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart';
 
-StreamChatThemeData generateStreamTheme(BuildContext context) {
-  final bool isDark = context.theme.brightness == Brightness.dark;
-  final primary = context.theme.primary;
-  final background = context.theme.background;
-  final cardBackground = context.theme.cardBackground;
+Future<void> handleIncomingFeedNotifications(
+    BuildContext context, RealtimeMessage? message) async {
+  /// Only fairly serious messages should trigger a full notification.
+  /// For now just [join-club], [leave-club], [join-plan], [leave-plan]
+  final latest = message?.newActivities?[0];
 
-  return StreamChatThemeData(
-    brightness: context.theme.brightness,
-    primaryIconTheme: IconThemeData(color: primary),
-
-    /// We do not want Stream to display any user image - initially used so QuotedMessage widget does not show an empty default UserAvatar circle.
-    defaultUserImage: (_, __) => Container(),
-    colorTheme: isDark
-        ? ColorTheme.dark(
-            accentPrimary: primary,
-          )
-        : ColorTheme.light(accentPrimary: primary),
-    messageInputTheme: MessageInputThemeData(
-        inputTextStyle: GoogleFonts.sourceSansPro(),
-        inputBackgroundColor: cardBackground),
-    channelListViewTheme: ChannelListViewThemeData(backgroundColor: background),
-    messageListViewTheme: MessageListViewThemeData(backgroundColor: background),
-    channelHeaderTheme: ChannelHeaderThemeData(
-      color: background,
-      titleStyle: GoogleFonts.archivo(textStyle: TextStyle(color: primary)),
-      subtitleStyle: GoogleFonts.sourceSansPro(),
-    ),
-  );
+  if (latest != null) {
+    context.showNotification(
+        title: 'Notification',
+        content: NotificationActivity(
+          activity: GenericEnrichedActivity<User, dynamic, String, String>(
+              id: latest.id,
+              actor: User.fromJson(latest.actor),
+              verb: latest.verb,
+              object: latest.object,
+              foreignId: latest.foreignId),
+        ));
+  }
 }
 
 /// Notification bell icon that can be used anywhere in the app.
@@ -66,30 +56,35 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
   int _unseenCount = 0;
   late NotificationFeed _notificationFeed;
   Subscription? _feedSubscription;
+  Timer? _pollingTimer;
 
   @override
   void initState() {
     super.initState();
     _notificationFeed = context.notificationFeed;
-    _initIndicator().then((_) => _subscribeToFeed());
+    _updateIndicator().then((_) => _subscribeToFeed().then((_) {
+          /// TODO: Remove this polling once the stream feeds bug is fixed.
+          /// https://github.com/GetStream/stream-feed-flutter/issues/193
+          _pollingTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+            _updateIndicator();
+          });
+        }));
   }
 
-  Future<void> _initIndicator() async {
+  Future<void> _updateIndicator() async {
     /// We only need to know if there are unseen activities - so set limit to 1.
-    final feedData = await _notificationFeed.getActivities();
-    _unseenCount = feedData.fold(0, (unseenCount, next) {
-      if (next.isSeen != true) {
-        return unseenCount + 1;
-      } else {
-        return unseenCount;
-      }
-    });
-    setState(() {});
+    final counts = await _notificationFeed.getUnreadUnseenCounts();
+    if (mounted) {
+      setState(() {
+        _unseenCount = counts.unseenCount;
+      });
+    }
   }
 
   Future<void> _subscribeToFeed() async {
     try {
-      _feedSubscription = await _notificationFeed.subscribe(_updateIndicator);
+      _feedSubscription =
+          await _notificationFeed.subscribe(_handleSubscriptionMessage);
     } catch (e) {
       printLog(e.toString());
       throw Exception(e);
@@ -98,12 +93,13 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
     }
   }
 
-  Future<void> _updateIndicator(RealtimeMessage? message) async {
-    _initIndicator();
+  Future<void> _handleSubscriptionMessage(RealtimeMessage? message) async {
+    _updateIndicator();
   }
 
   @override
   void dispose() {
+    _pollingTimer?.cancel();
     _feedSubscription?.cancel();
     super.dispose();
   }
@@ -113,17 +109,17 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
     return Stack(
       children: [
         CupertinoButton(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-            onPressed: () => printLog('open notifications'),
+            padding: EdgeInsets.zero,
+            onPressed: () => context.navigateTo(const NotificationsRoute()),
             child: const Icon(CupertinoIcons.bell)),
         if (_unseenCount > 0)
           Positioned(
-            top: 4,
-            right: 8,
+            top: 2,
+            right: 6,
             child: SizeFadeIn(
                 key: Key(_unseenCount.toString()),
                 child: Dot(
-                  diameter: 14,
+                  diameter: 16,
                   border: Border.all(color: context.theme.background, width: 2),
                   color: Styles.infoBlue,
                 )),
@@ -142,30 +138,32 @@ class ChatsIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<int>(
-        stream: StreamChatCore.of(context).client.state.totalUnreadCountStream,
+        stream:
+            chat.StreamChatCore.of(context).client.state.totalUnreadCountStream,
         builder: (context, snapshot) {
           final unreadCount = snapshot.data;
 
-          return GestureDetector(
-            onTap: () => context.pushRoute(const ChatsOverviewRoute()),
-            child: Stack(
-              children: [
-                const Icon(CupertinoIcons.chat_bubble_2),
-                if (unreadCount != null && unreadCount > 0)
-                  Positioned(
-                    top: 0,
-                    right: 0,
-                    child: FadeInUp(
-                        key: Key(unreadCount.toString()),
-                        child: Dot(
-                          diameter: 14,
-                          border: Border.all(
-                              color: context.theme.background, width: 2),
-                          color: Styles.primaryAccent,
-                        )),
-                  ),
-              ],
-            ),
+          return Stack(
+            children: [
+              CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () =>
+                      context.pushRoute(const ChatsOverviewRoute()),
+                  child: const Icon(CupertinoIcons.chat_bubble)),
+              if (unreadCount != null && unreadCount > 0)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: FadeInUp(
+                      key: Key(unreadCount.toString()),
+                      child: Dot(
+                        diameter: 16,
+                        border: Border.all(
+                            color: context.theme.background, width: 2),
+                        color: Styles.infoBlue,
+                      )),
+                ),
+            ],
           );
         });
   }
@@ -270,7 +268,7 @@ class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
           child: _authedUser.id == widget.otherUserId
               ? const Center(child: MyText('...'))
               : _isLoading
-                  ? const Center(child: LoadingDots(size: 10))
+                  ? const Center(child: LoadingIndicator(size: 10))
                   : _isFollowing
                       ? TertiaryButton(
                           text: 'Following',

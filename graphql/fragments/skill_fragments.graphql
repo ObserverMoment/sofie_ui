@@ -2,6 +2,7 @@ fragment Skill on Skill {
   __typename
   id
   createdAt
+  updatedAt
   name
   experience
   certification

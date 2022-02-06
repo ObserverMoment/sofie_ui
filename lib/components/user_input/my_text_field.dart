@@ -122,7 +122,7 @@ class _MyTextFieldState extends State<MyTextField> {
           : widget.textInputType ?? TextInputType.text,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: widget.backgroundColor ?? context.theme.primary.withOpacity(0.1),
+        color: widget.backgroundColor ?? context.theme.cardBackground,
       ),
     );
   }

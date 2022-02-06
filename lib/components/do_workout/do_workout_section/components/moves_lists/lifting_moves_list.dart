@@ -8,9 +8,9 @@ import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_move_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_set_generator_creator.dart';
-import 'package:sofie_ui/components/creators/workout_creator/workout_creator_structure/workout_section_creator/workout_set_creator/workout_set_definition.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/workout_set_generator_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_move_creator.dart';
+import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
@@ -37,9 +37,9 @@ class LiftingMovesList extends StatelessWidget {
     await context.push(
         child: WorkoutSetGeneratorCreator(
       handleGeneratedSet: (workoutSet) {
-        context
-            .read<DoWorkoutBloc>()
-            .addWorkoutSetToSection(workoutSection.sortPosition, workoutSet);
+        context.read<DoWorkoutBloc>().addWorkoutSetToSection(
+            workoutSection.sortPosition, workoutSet,
+            doNotReset: true);
         context.pop();
       },
       validRepTypes:
@@ -75,7 +75,7 @@ class LiftingMovesList extends StatelessWidget {
                 percent: state.percentComplete.clamp(0.0, 1.0),
                 backgroundColor: context.theme.primary.withOpacity(0.07),
                 linearGradient: Styles.primaryAccentGradient,
-                linearStrokeCap: LinearStrokeCap.roundAll,
+                barRadius: const Radius.circular(60),
               ),
             ),
             Expanded(
@@ -153,7 +153,8 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
           workoutMove: originalWorkoutMove,
           saveWorkoutMove: (workoutMove) {
             context.read<DoWorkoutBloc>().updateWorkoutMove(
-                sectionIndex, workoutSet.sortPosition, workoutMove);
+                sectionIndex, workoutSet.sortPosition, workoutMove,
+                doNotReset: true);
           },
           sortPosition: originalWorkoutMove.sortPosition,
         ));

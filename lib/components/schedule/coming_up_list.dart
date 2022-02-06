@@ -17,7 +17,7 @@ import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 class ComingUpList extends StatelessWidget {
   const ComingUpList({Key? key}) : super(key: key);
 
-  double get _cardHeight => 122.0;
+  double get _cardHeight => 116.0;
 
   @override
   Widget build(BuildContext context) {

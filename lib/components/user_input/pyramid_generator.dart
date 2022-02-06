@@ -91,7 +91,7 @@ class _PyramidGeneratorState extends State<PyramidGenerator> {
         customLeading: NavBarCancelButton(context.pop),
         middle: NavBarTitle(widget.pageTitle),
         trailing: validToSubmit
-            ? FadeIn(child: NavBarSaveButton(_saveAndClose))
+            ? FadeIn(child: NavBarTertiarySaveButton(_saveAndClose))
             : null,
       ),
       child: SingleChildScrollView(

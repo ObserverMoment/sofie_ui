@@ -133,13 +133,13 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: const [
-                      LoadingDots(
+                      LoadingIndicator(
                         size: 12,
                       ),
                     ],
                   )
                 : _nameController.text.length > 2
-                    ? NavBarSaveButton(_handleSave)
+                    ? NavBarTertiarySaveButton(_handleSave)
                     : Container(width: 0)),
       ),
       child: SingleChildScrollView(

@@ -11,17 +11,16 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_image.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/feed_post_card_ellipsis_menu.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_post_reactions.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/link_preview_display.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
@@ -35,7 +34,16 @@ class ClubFeedPostCard extends StatelessWidget {
   final bool showClubIcon;
   final VoidCallback? likeUnlikePost;
   final bool userHasLiked;
-  final VoidCallback? deletePost;
+
+  /// Only pass this when the user is an owner or admin of the club and they are in the Club details area.
+  final VoidCallback? deleteActivity;
+
+  /// Removes the activity from the users timeline only.
+  /// Does not delete anything.
+  final VoidCallback? removeActivityFromTimeline;
+
+  /// Should only be true when the user is NOT already in the club!
+  final bool enableViewClubOption;
 
   const ClubFeedPostCard({
     Key? key,
@@ -43,8 +51,10 @@ class ClubFeedPostCard extends StatelessWidget {
     this.isPreview = false,
     this.likeUnlikePost,
     this.userHasLiked = false,
-    this.deletePost,
     this.showClubIcon = false,
+    this.deleteActivity,
+    this.removeActivityFromTimeline,
+    required this.enableViewClubOption,
   }) : super(key: key);
 
   void _openDetailsPageByType(
@@ -91,12 +101,13 @@ class ClubFeedPostCard extends StatelessWidget {
           children: [
             const Icon(
               MyCustomIcons.clubsIcon,
-              size: 18,
+              size: 22,
+              color: Styles.primaryAccent,
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 6),
             MyText(
               activity.extraData.club!.data.name ?? '',
-              size: FONTSIZE.two,
+              color: Styles.primaryAccent,
             ),
           ],
         ),
@@ -136,9 +147,14 @@ class ClubFeedPostCard extends StatelessWidget {
                   child: Row(
                     children: [
                       const SizedBox(width: 8),
-                      UserAvatar(
-                        size: 40,
-                        avatarUri: activity.actor.data.image,
+                      GestureDetector(
+                        onTap: () => context.navigateTo(
+                            UserPublicProfileDetailsRoute(
+                                userId: activity.actor.id)),
+                        child: UserAvatar(
+                          size: 40,
+                          avatarUri: activity.actor.data.image,
+                        ),
                       ),
                       const SizedBox(width: 10),
                       Flexible(
@@ -164,15 +180,15 @@ class ClubFeedPostCard extends StatelessWidget {
                 ),
                 isPreview
                     ? const Icon(CupertinoIcons.ellipsis)
-                    : _TimelinePostEllipsisMenu(
+                    : FeedPostCardEllipsisMenu(
                         userIsCreator: userIsCreator,
                         userIsPoster: userIsPoster,
-                        handleDeletePost: deletePost?.call,
-                        openDetailsPage: postType != null && objectId != null
-                            ? () => _openDetailsPageByType(
-                                context, postType, objectId)
-                            : null,
+                        deleteActivity: deleteActivity,
+                        removeActivityFromTimeline: removeActivityFromTimeline,
                         activity: activity,
+                        feedPostType: postType,
+                        objectId: objectId,
+                        enableViewClubOption: enableViewClubOption,
                       )
               ],
             ),
@@ -243,9 +259,13 @@ class ClubFeedPostCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     if (showClubIcon && activity.extraData.club?.data != null)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 6.0, bottom: 3),
-                        child: _buildClubIcon(),
+                      GestureDetector(
+                        onTap: () => context.navigateTo(
+                            ClubDetailsRoute(id: activity.extraData.club!.id)),
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 6.0, bottom: 3),
+                          child: _buildClubIcon(),
+                        ),
                       ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -289,99 +309,6 @@ class ClubFeedPostCard extends StatelessWidget {
                 verticalPadding: 0,
                 color: context.theme.primary.withOpacity(0.2))
           ]),
-    );
-  }
-}
-
-class _TimelinePostEllipsisMenu extends StatelessWidget {
-  final bool userIsPoster;
-  final bool userIsCreator;
-  final StreamEnrichedActivity activity;
-  final VoidCallback? handleDeletePost;
-  final VoidCallback? openDetailsPage;
-
-  const _TimelinePostEllipsisMenu({
-    Key? key,
-    required this.activity,
-    required this.openDetailsPage,
-    this.handleDeletePost,
-    required this.userIsPoster,
-    required this.userIsCreator,
-  }) : super(key: key);
-
-  void _openUserProfile(BuildContext context, String userId) {
-    context.navigateTo(UserPublicProfileDetailsRoute(userId: userId));
-  }
-
-  String _genLinkText(FeedPostType type) {
-    final objectId = FeedUtils.getObjectIdFromRef(activity.object);
-
-    switch (type) {
-      case FeedPostType.workout:
-        return 'workout/$objectId';
-      case FeedPostType.workoutPlan:
-        return 'workout-plan/$objectId';
-      case FeedPostType.loggedWorkout:
-        return 'logged-workout/$objectId';
-      default:
-        throw Exception(
-            'ClubFeedPostCard._genLinkText._genLinkText: Cannot form a link text for $type');
-    }
-  }
-
-  Future<void> _shareObject(FeedPostType type, String display) async {
-    await SharingAndLinking.shareLink(
-        _genLinkText(type), 'Check out this $display');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final feedPostType = kStreamNameToFeedPostType[activity.object];
-    final typeDisplay = kFeedPostTypeToDisplay[feedPostType] ?? 'Post';
-
-    final creatorId = activity.extraData.creator?.id;
-
-    final posterId = activity.actor.id;
-    final posterName = activity.actor.data.name;
-
-    return CupertinoButton(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-      child: const Icon(CupertinoIcons.ellipsis),
-      onPressed: () => openBottomSheetMenu(
-          context: context,
-          child: BottomSheetMenu(
-              header: BottomSheetMenuHeader(
-                name: activity.extraData.title ?? 'Post',
-                subtitle: 'Posted by $posterName',
-              ),
-              items: [
-                if (openDetailsPage != null)
-                  BottomSheetMenuItem(
-                      text: 'View $typeDisplay',
-                      icon: CupertinoIcons.eye,
-                      onPressed: openDetailsPage!),
-                if (creatorId != null && !userIsCreator)
-                  BottomSheetMenuItem(
-                      text: 'View Creator',
-                      icon: CupertinoIcons.person_crop_rectangle,
-                      onPressed: () => _openUserProfile(context, creatorId)),
-                if (!userIsPoster)
-                  BottomSheetMenuItem(
-                      text: 'View Poster',
-                      icon: CupertinoIcons.person_crop_rectangle,
-                      onPressed: () => _openUserProfile(context, posterId)),
-                if (feedPostType != null)
-                  BottomSheetMenuItem(
-                      text: 'Share $typeDisplay to...',
-                      icon: CupertinoIcons.paperplane,
-                      onPressed: () => _shareObject(feedPostType, typeDisplay)),
-                if (handleDeletePost != null)
-                  BottomSheetMenuItem(
-                      text: userIsPoster ? 'Delete Post' : 'Remove Post',
-                      icon: CupertinoIcons.delete_simple,
-                      onPressed: handleDeletePost!,
-                      isDestructive: true),
-              ])),
     );
   }
 }

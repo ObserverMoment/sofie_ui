@@ -185,7 +185,7 @@ class _SkillCreatorState extends State<SkillCreator> {
         trailing: _savingToDB
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : _activeSkill == null
