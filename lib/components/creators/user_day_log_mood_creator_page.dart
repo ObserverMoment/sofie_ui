@@ -41,9 +41,10 @@ const List<String> kBadFeelings = [
   'Numb',
 ];
 
-class JournalMoodCreatorPage extends StatelessWidget {
-  final JournalMood? journalMood;
-  const JournalMoodCreatorPage({Key? key, this.journalMood}) : super(key: key);
+class UserDayLogMoodCreatorPage extends StatelessWidget {
+  final UserDayLogMood? journalMood;
+  const UserDayLogMoodCreatorPage({Key? key, this.journalMood})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -77,26 +78,28 @@ class _CreateMoodState extends State<_CreateMood> {
       setState(() {
         _saving = true;
       });
-      final variables = CreateJournalMoodArguments(
-          data: CreateJournalMoodInput(
-              energyScore: _energyScore!,
-              moodScore: _moodScore!,
-              tags: _tags,
-              textNote: _textNote));
 
-      final result = await context.graphQLStore.create(
-        mutation: CreateJournalMoodMutation(variables: variables),
-        addRefToQueries: [
-          GQLOpNames.journalMoods,
-        ],
-      );
+      /// TODO?
+      // final variables = CreateUserDayLogMoodArguments(
+      //     data: CreateUserDayLogMoodInput(
+      //         energyScore: _energyScore!,
+      //         moodScore: _moodScore!,
+      //         tags: _tags,
+      //         textNote: _textNote));
+
+      // final result = await context.graphQLStore.create(
+      //   mutation: CreateUserDayLogMoodMutation(variables: variables),
+      //   addRefToQueries: [
+      //     GQLOpNames.journalMoods,
+      //   ],
+      // );
 
       setState(() {
         _saving = false;
       });
 
-      checkOperationResult(context, result,
-          onFail: _showErrorToast, onSuccess: context.pop);
+      // checkOperationResult(context, result,
+      //     onFail: _showErrorToast, onSuccess: context.pop);
     }
   }
 
@@ -150,7 +153,7 @@ class _CreateMoodState extends State<_CreateMood> {
 }
 
 class _EditMood extends StatefulWidget {
-  final JournalMood journalMood;
+  final UserDayLogMood journalMood;
   const _EditMood({Key? key, required this.journalMood}) : super(key: key);
 
   @override
@@ -159,41 +162,42 @@ class _EditMood extends StatefulWidget {
 
 class _EditMoodState extends State<_EditMood> {
   /// For optimistic UI updates.
-  late JournalMood _activeJournalMood;
+  late UserDayLogMood _activeUserDayLogMood;
   late Map<String, dynamic> _backup;
 
   @override
   void initState() {
     super.initState();
     _backup = widget.journalMood.toJson();
-    _activeJournalMood = JournalMood.fromJson(_backup);
+    _activeUserDayLogMood = UserDayLogMood.fromJson(_backup);
   }
 
   /// Updates the UI optimistically.
   /// Saves the the DB. Check result. If no errors, do nothing further.
   /// Else rollback and show errro toast.
-  Future<void> _updateJournalMood(Map<String, dynamic> data) async {
+  Future<void> _updateUserDayLogMood(Map<String, dynamic> data) async {
     setState(() {
-      _activeJournalMood =
-          JournalMood.fromJson({..._activeJournalMood.toJson(), ...data});
+      _activeUserDayLogMood =
+          UserDayLogMood.fromJson({..._activeUserDayLogMood.toJson(), ...data});
     });
 
-    final variables = UpdateJournalMoodArguments(
-        data: UpdateJournalMoodInput(
-            id: _activeJournalMood.id,
-            energyScore: _activeJournalMood.energyScore,
-            moodScore: _activeJournalMood.moodScore,
-            tags: _activeJournalMood.tags,
-            textNote: _activeJournalMood.textNote));
+    /// TODO?
+    // final variables = UpdateUserDayLogMoodArguments(
+    //     data: UpdateUserDayLogMoodInput(
+    //         id: _activeUserDayLogMood.id,
+    //         energyScore: _activeUserDayLogMood.energyScore,
+    //         moodScore: _activeUserDayLogMood.moodScore,
+    //         tags: _activeUserDayLogMood.tags,
+    //         textNote: _activeUserDayLogMood.textNote));
 
-    final result = await context.graphQLStore.mutate(
-      mutation: UpdateJournalMoodMutation(variables: variables),
-      broadcastQueryIds: [
-        GQLOpNames.journalMoods,
-      ],
-    );
+    // final result = await context.graphQLStore.mutate(
+    //   mutation: UpdateUserDayLogMoodMutation(variables: variables),
+    //   broadcastQueryIds: [
+    //     GQLOpNames.journalMoods,
+    //   ],
+    // );
 
-    checkOperationResult(context, result, onFail: _showErrorToast);
+    // checkOperationResult(context, result, onFail: _showErrorToast);
   }
 
   void _showErrorToast() => context.showToast(
@@ -215,16 +219,17 @@ class _EditMoodState extends State<_EditMood> {
         ),
       ),
       child: _Inputs(
-          moodScore: _activeJournalMood.moodScore,
-          updateMoodScore: (score) => _updateJournalMood({'moodScore': score}),
-          energyScore: _activeJournalMood.energyScore,
+          moodScore: _activeUserDayLogMood.moodScore,
+          updateMoodScore: (score) =>
+              _updateUserDayLogMood({'moodScore': score}),
+          energyScore: _activeUserDayLogMood.energyScore,
           updateEnergyScore: (score) =>
-              _updateJournalMood({'energyScore': score}),
-          tags: _activeJournalMood.tags,
-          toggleTag: (tag) => _updateJournalMood(
-              {'tags': _activeJournalMood.tags.toggleItem<String>(tag)}),
-          textNote: _activeJournalMood.textNote,
-          updateTextNote: (note) => _updateJournalMood({'textNote': note})),
+              _updateUserDayLogMood({'energyScore': score}),
+          tags: _activeUserDayLogMood.tags,
+          toggleTag: (tag) => _updateUserDayLogMood(
+              {'tags': _activeUserDayLogMood.tags.toggleItem<String>(tag)}),
+          textNote: _activeUserDayLogMood.textNote,
+          updateTextNote: (note) => _updateUserDayLogMood({'textNote': note})),
     );
   }
 }

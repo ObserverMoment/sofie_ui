@@ -319,8 +319,8 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
                     minLines: 1,
                     onSubmitted: (_) => _sendRegularMessage(),
                     placeholder: '',
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 16),
                     suffixMode: OverlayVisibilityMode.editing,
                     suffix: GestureDetector(
                       onTap: () async {

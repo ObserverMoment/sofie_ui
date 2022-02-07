@@ -94,11 +94,7 @@ class _FeedPageState extends State<FeedPage> {
       _getTimelinePosts(offset: nextPageKey);
     });
 
-    _loadInitialData().then((_) => _subscribeToFeed());
-  }
-
-  Future<void> _loadInitialData() async {
-    await _getTimelinePosts(offset: 0);
+    _subscribeToFeed();
   }
 
   Future<void> _getTimelinePosts({required int offset}) async {
@@ -254,6 +250,24 @@ class _FeedPageState extends State<FeedPage> {
         curve: Curves.fastOutSlowIn,
       );
 
+  Widget _buildNavIconButton(
+          VoidCallback onPressed, IconData iconData, String label) =>
+      CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(iconData),
+            const SizedBox(height: 2),
+            MyText(
+              label,
+              size: FONTSIZE.one,
+            )
+          ],
+        ),
+      );
+
   @override
   void dispose() {
     _pagingController.dispose();
@@ -273,23 +287,25 @@ class _FeedPageState extends State<FeedPage> {
         middle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IconButton(
-                iconData: CupertinoIcons.plus_circle,
-                onPressed: () => context.navigateTo(FeedPostCreatorRoute())),
-            IconButton(
-                iconData: CupertinoIcons.person_2,
-                onPressed: () => context.push(
+            _buildNavIconButton(
+                () => context.navigateTo(FeedPostCreatorRoute()),
+                CupertinoIcons.plus_circle,
+                'Post'),
+            _buildNavIconButton(
+                () => context.push(
                         child: FollowersFollowing(
                       userId: _authedUser.id,
-                    ))),
+                    )),
+                CupertinoIcons.person_2,
+                'Friends'),
             const ChatsIconButton(),
             const NotificationsIconButton(),
-            IconButton(
-                iconData: CupertinoIcons.tray_full,
-                onPressed: () => context.navigateTo(const YourPostsRoute())),
-            IconButton(
-                iconData: CupertinoIcons.gear,
-                onPressed: () => context.navigateTo(const SettingsRoute())),
+            _buildNavIconButton(
+                () => context.navigateTo(const YourPostsRoute()),
+                CupertinoIcons.tray_full,
+                'History'),
+            _buildNavIconButton(() => context.navigateTo(const SettingsRoute()),
+                CupertinoIcons.gear, 'Settings'),
           ],
         ),
       ),

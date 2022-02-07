@@ -1,0 +1,5 @@
+mutation createUserDayLogMood($data: CreateUserDayLogMoodInput!) {
+  createUserDayLogMood(data: $data) {
+    ...UserDayLogMood
+  }
+}

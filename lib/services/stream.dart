@@ -106,25 +106,37 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: () => context.navigateTo(const NotificationsRoute()),
-            child: const Icon(CupertinoIcons.bell)),
-        if (_unseenCount > 0)
-          Positioned(
-            top: 2,
-            right: 6,
-            child: SizeFadeIn(
-                key: Key(_unseenCount.toString()),
-                child: Dot(
-                  diameter: 16,
-                  border: Border.all(color: context.theme.background, width: 2),
-                  color: Styles.infoBlue,
-                )),
+    return CupertinoButton(
+      padding: EdgeInsets.zero,
+      onPressed: () => context.navigateTo(const NotificationsRoute()),
+      child: Stack(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              Icon(CupertinoIcons.bell),
+              SizedBox(height: 2),
+              MyText(
+                'Alerts',
+                size: FONTSIZE.one,
+              )
+            ],
           ),
-      ],
+          if (_unseenCount > 0)
+            Positioned(
+              top: -2,
+              right: -2,
+              child: FadeInUp(
+                  key: Key(_unseenCount.toString()),
+                  child: Dot(
+                    diameter: 14,
+                    border:
+                        Border.all(color: context.theme.background, width: 2),
+                    color: Styles.infoBlue,
+                  )),
+            ),
+        ],
+      ),
     );
   }
 }
@@ -143,27 +155,37 @@ class ChatsIconButton extends StatelessWidget {
         builder: (context, snapshot) {
           final unreadCount = snapshot.data;
 
-          return Stack(
-            children: [
-              CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () =>
-                      context.pushRoute(const ChatsOverviewRoute()),
-                  child: const Icon(CupertinoIcons.chat_bubble)),
-              if (unreadCount != null && unreadCount > 0)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: FadeInUp(
-                      key: Key(unreadCount.toString()),
-                      child: Dot(
-                        diameter: 16,
-                        border: Border.all(
-                            color: context.theme.background, width: 2),
-                        color: Styles.infoBlue,
-                      )),
+          return CupertinoButton(
+            padding: EdgeInsets.zero,
+            onPressed: () => context.navigateTo(const ChatsOverviewRoute()),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Icon(CupertinoIcons.chat_bubble_text),
+                    SizedBox(height: 2),
+                    MyText(
+                      'Chat',
+                      size: FONTSIZE.one,
+                    )
+                  ],
                 ),
-            ],
+                if (unreadCount != null && unreadCount > 0)
+                  Positioned(
+                    top: -2,
+                    right: -2,
+                    child: FadeInUp(
+                        key: Key(unreadCount.toString()),
+                        child: Dot(
+                          diameter: 14,
+                          border: Border.all(
+                              color: context.theme.background, width: 2),
+                          color: Styles.infoBlue,
+                        )),
+                  ),
+              ],
+            ),
           );
         });
   }

@@ -1,5 +1,0 @@
-mutation updateJournalMood($data: UpdateJournalMoodInput!) {
-  updateJournalMood(data: $data) {
-    ...JournalMood
-  }
-}

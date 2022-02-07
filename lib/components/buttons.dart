@@ -899,7 +899,7 @@ class NavBarTertiarySaveButton extends StatelessWidget {
     return AnimatedSwitcher(
       duration: kStandardAnimationDuration,
       child: loading
-          ? const CupertinoActivityIndicator(radius: 6)
+          ? const CupertinoActivityIndicator(radius: 9)
           : TertiaryButton(
               backgroundColor: Styles.primaryAccent,
               textColor: Styles.white,

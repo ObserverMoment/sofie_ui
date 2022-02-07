@@ -1,0 +1,3 @@
+mutation deleteUserDayLog($id: ID!) {
+  deleteUserDayLog(id: $id)
+}

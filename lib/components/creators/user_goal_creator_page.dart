@@ -16,9 +16,9 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class JournalGoalCreatorPage extends StatelessWidget {
-  final JournalGoal? journalGoal;
-  const JournalGoalCreatorPage({Key? key, this.journalGoal}) : super(key: key);
+class UserGoalCreatorPage extends StatelessWidget {
+  final UserGoal? journalGoal;
+  const UserGoalCreatorPage({Key? key, this.journalGoal}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,17 +59,17 @@ class _CreateGoalState extends State<_CreateGoal> {
         _saving = true;
       });
 
-      final variables = CreateJournalGoalArguments(
-          data: CreateJournalGoalInput(
+      final variables = CreateUserGoalArguments(
+          data: CreateUserGoalInput(
         name: _nameController.text,
         description: _descriptionController.text,
         deadline: _deadline,
       ));
 
       final result = await context.graphQLStore.create(
-        mutation: CreateJournalGoalMutation(variables: variables),
+        mutation: CreateUserGoalMutation(variables: variables),
         addRefToQueries: [
-          GQLOpNames.journalGoals,
+          GQLOpNames.userGoals,
         ],
       );
 
@@ -183,7 +183,7 @@ class _CreateGoalState extends State<_CreateGoal> {
 }
 
 class _EditGoal extends StatefulWidget {
-  final JournalGoal journalGoal;
+  final UserGoal journalGoal;
   const _EditGoal({Key? key, required this.journalGoal}) : super(key: key);
 
   @override
@@ -192,37 +192,37 @@ class _EditGoal extends StatefulWidget {
 
 class _EditGoalState extends State<_EditGoal> {
   /// For optimistic UI updates.
-  late JournalGoal _activeJournalGoal;
+  late UserGoal _activeUserGoal;
   late Map<String, dynamic> _backup;
 
   @override
   void initState() {
     super.initState();
     _backup = widget.journalGoal.toJson();
-    _activeJournalGoal = JournalGoal.fromJson(_backup);
+    _activeUserGoal = UserGoal.fromJson(_backup);
   }
 
   /// Updates the UI optimistically.
   /// Saves the the DB. Check result. If no errors, do nothing further.
   /// Else rollback and show errro toast.
-  Future<void> _updateJournalGoal(Map<String, dynamic> data) async {
+  Future<void> _updateUserGoal(Map<String, dynamic> data) async {
     setState(() {
-      _activeJournalGoal =
-          JournalGoal.fromJson({..._activeJournalGoal.toJson(), ...data});
+      _activeUserGoal =
+          UserGoal.fromJson({..._activeUserGoal.toJson(), ...data});
     });
 
-    final variables = UpdateJournalGoalArguments(
-        data: UpdateJournalGoalInput(
-      id: _activeJournalGoal.id,
-      name: _activeJournalGoal.name,
-      description: _activeJournalGoal.description,
-      deadline: _activeJournalGoal.deadline,
+    final variables = UpdateUserGoalArguments(
+        data: UpdateUserGoalInput(
+      id: _activeUserGoal.id,
+      name: _activeUserGoal.name,
+      description: _activeUserGoal.description,
+      deadline: _activeUserGoal.deadline,
     ));
 
     final result = await context.graphQLStore.mutate(
-      mutation: UpdateJournalGoalMutation(variables: variables),
+      mutation: UpdateUserGoalMutation(variables: variables),
       broadcastQueryIds: [
-        GQLOpNames.journalGoals,
+        GQLOpNames.userGoals,
       ],
     );
 
@@ -253,24 +253,24 @@ class _EditGoalState extends State<_EditGoal> {
           UserInputContainer(
             child: EditableTextFieldRow(
                 title: "The Goal",
-                text: _activeJournalGoal.name,
-                onSave: (name) => _updateJournalGoal({'name': name}),
+                text: _activeUserGoal.name,
+                onSave: (name) => _updateUserGoal({'name': name}),
                 inputValidation: (name) => Utils.textNotNull(name)),
           ),
           UserInputContainer(
             child: EditableTextAreaRow(
                 title: 'Description',
-                text: _activeJournalGoal.description ?? '',
+                text: _activeUserGoal.description ?? '',
                 onSave: (description) =>
-                    _updateJournalGoal({'description': description}),
+                    _updateUserGoal({'description': description}),
                 inputValidation: (_) => true),
           ),
           UserInputContainer(
             child: DateTimePickerDisplay(
                 title: 'Complete By',
-                dateTime: _activeJournalGoal.deadline,
+                dateTime: _activeUserGoal.deadline,
                 showTime: false,
-                saveDateTime: (deadline) => _updateJournalGoal(
+                saveDateTime: (deadline) => _updateUserGoal(
                     {'deadline': deadline.millisecondsSinceEpoch})),
           ),
         ],

@@ -1,0 +1,8 @@
+query userDayLogs {
+  userDayLogs {
+    ...UserDayLog
+    UserDayLogMood {
+      ...UserDayLogMood
+    }
+  }
+}

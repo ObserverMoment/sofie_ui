@@ -59,6 +59,8 @@ fragment UserProfile on UserProfile {
   followerCount
   workoutCount
   planCount
+  workoutsPerWeekTarget
+  streakTrackingStartDate
 }
 
 fragment UserProfileResult on UpdateUserProfileResult {
@@ -82,6 +84,8 @@ fragment UserProfileResult on UpdateUserProfileResult {
   gender
   hasOnboarded
   lastname
+  workoutsPerWeekTarget
+  streakTrackingStartDate
 }
 
 fragment UserProfileSummary on UserProfileSummary {

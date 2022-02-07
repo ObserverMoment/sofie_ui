@@ -1,0 +1,5 @@
+mutation createUserGoal($data: CreateUserGoalInput!) {
+  createUserGoal(data: $data) {
+    ...UserGoal
+  }
+}

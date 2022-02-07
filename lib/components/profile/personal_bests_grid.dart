@@ -63,7 +63,6 @@ class _PersonalBestScoreIcon extends StatelessWidget {
           ? () => VideoSetupManager.openFullScreenVideoPlayer(
               context: context,
               title: benchmark.name,
-              subtitle: GetIt.I<AuthBloc>().authedUser?.displayName ?? '',
               videoUri: bestEntry.videoUri!,
               autoLoop: true)
           : null,

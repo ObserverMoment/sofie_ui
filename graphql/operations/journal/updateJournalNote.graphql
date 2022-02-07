@@ -1,5 +1,0 @@
-mutation updateJournalNote($data: UpdateJournalNoteInput!) {
-  updateJournalNote(data: $data) {
-    ...JournalNote
-  }
-}

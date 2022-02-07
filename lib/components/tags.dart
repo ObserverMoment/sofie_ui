@@ -410,9 +410,9 @@ class DurationTag extends StatelessWidget {
   }
 }
 
-class ProgressJournalGoalAndTagsTag extends StatelessWidget {
-  final JournalGoal progressJournalGoal;
-  const ProgressJournalGoalAndTagsTag(this.progressJournalGoal, {Key? key})
+class ProgressUserGoalAndTagsTag extends StatelessWidget {
+  final UserGoal progressUserGoal;
+  const ProgressUserGoalAndTagsTag(this.progressUserGoal, {Key? key})
       : super(key: key);
 
   @override
@@ -427,9 +427,9 @@ class ProgressJournalGoalAndTagsTag extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MyText(
-            progressJournalGoal.name,
+            progressUserGoal.name,
             size: FONTSIZE.two,
-            decoration: progressJournalGoal.completedDate != null
+            decoration: progressUserGoal.completedDate != null
                 ? TextDecoration.lineThrough
                 : null,
           ),

@@ -61,11 +61,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
       _getFeedPosts(offset: nextPageKey);
     });
 
-    _loadInitialData().then((_) => _subscribeToFeed());
-  }
-
-  Future<void> _loadInitialData() async {
-    await _getFeedPosts(offset: 0);
+    _subscribeToFeed();
   }
 
   Future<void> _getFeedPosts({required int offset}) async {

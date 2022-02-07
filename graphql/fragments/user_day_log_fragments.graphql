@@ -1,12 +1,15 @@
-fragment JournalNote on JournalNote {
+fragment UserDayLog on UserDayLog {
   __typename
   id
   createdAt
-  textNote
-  voiceNoteUri
+  dayNumber
+  eatWell
+  sleepWell
+  meditationMinutes
+  stretchingMinutes
 }
 
-fragment JournalMood on JournalMood {
+fragment UserDayLogMood on UserDayLogMood {
   __typename
   id
   createdAt
@@ -16,7 +19,7 @@ fragment JournalMood on JournalMood {
   textNote
 }
 
-fragment JournalGoal on JournalGoal {
+fragment UserGoal on UserGoal {
   __typename
   id
   createdAt

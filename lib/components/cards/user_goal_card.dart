@@ -14,9 +14,9 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class JournalGoalCard extends StatelessWidget {
-  final JournalGoal journalGoal;
-  const JournalGoalCard({
+class UserGoalCard extends StatelessWidget {
+  final UserGoal journalGoal;
+  const UserGoalCard({
     Key? key,
     required this.journalGoal,
   }) : super(key: key);
@@ -45,15 +45,15 @@ class JournalGoalCard extends StatelessWidget {
     context.showConfirmDialog(
         title: 'Mark Incomplete?',
         onConfirm: () async {
-          final updated = JournalGoal.fromJson(journalGoal.toJson());
+          final updated = UserGoal.fromJson(journalGoal.toJson());
           updated.completedDate = null;
 
-          final variables = UpdateJournalGoalArguments(
-              data: UpdateJournalGoalInput.fromJson(updated.toJson()));
+          final variables = UpdateUserGoalArguments(
+              data: UpdateUserGoalInput.fromJson(updated.toJson()));
 
           final result = await context.graphQLStore.mutate(
-              mutation: UpdateJournalGoalMutation(variables: variables),
-              broadcastQueryIds: [GQLOpNames.journalGoals]);
+              mutation: UpdateUserGoalMutation(variables: variables),
+              broadcastQueryIds: [GQLOpNames.userGoals]);
 
           checkOperationResult(context, result,
               onFail: () => _showErrorToast(context));
@@ -112,15 +112,23 @@ class JournalGoalCard extends StatelessWidget {
                       if (!isComplete && journalGoal.deadline != null)
                         Padding(
                           padding: const EdgeInsets.only(left: 6.0),
-                          child: MyText(
-                            journalGoal.deadline!.minimalDateString,
-                            size: FONTSIZE.two,
-                            decoration:
-                                isComplete ? TextDecoration.lineThrough : null,
-                            color:
-                                journalGoal.deadline!.isBefore(DateTime.now())
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              const MyText('Complete By', size: FONTSIZE.one),
+                              const SizedBox(height: 3),
+                              MyText(
+                                journalGoal.deadline!.minimalDateString,
+                                size: FONTSIZE.two,
+                                decoration: isComplete
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                                color: journalGoal.deadline!
+                                        .isBefore(DateTime.now())
                                     ? Styles.errorRed
                                     : Styles.primaryAccent,
+                              ),
+                            ],
                           ),
                         ),
                       if (isComplete)
@@ -158,7 +166,7 @@ class JournalGoalCard extends StatelessWidget {
 }
 
 class _MarkGoalCompletedBottomSheet extends StatefulWidget {
-  final JournalGoal journalGoal;
+  final UserGoal journalGoal;
   final void Function(OperationResult result) onUpdateComplete;
   const _MarkGoalCompletedBottomSheet(
       {required this.journalGoal, required this.onUpdateComplete});
@@ -175,16 +183,16 @@ class __MarkGoalCompletedBottomSheetState
 
   Future<void> _markComplete() async {
     setState(() => _loading = true);
-    final updated = JournalGoal.fromJson(widget.journalGoal.toJson());
+    final updated = UserGoal.fromJson(widget.journalGoal.toJson());
     updated.completedDate = _completedDate;
 
-    final input = UpdateJournalGoalInput.fromJson(updated.toJson());
+    final input = UpdateUserGoalInput.fromJson(updated.toJson());
 
-    final variables = UpdateJournalGoalArguments(data: input);
+    final variables = UpdateUserGoalArguments(data: input);
 
     final result = await context.graphQLStore.mutate(
-        mutation: UpdateJournalGoalMutation(variables: variables),
-        broadcastQueryIds: [GQLOpNames.journalGoals]);
+        mutation: UpdateUserGoalMutation(variables: variables),
+        broadcastQueryIds: [GQLOpNames.userGoals]);
 
     setState(() => _loading = false);
 
