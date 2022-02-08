@@ -2,10 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/pages/authed/progress/components/all_time_stats_summary.dart';
 import 'package:sofie_ui/pages/authed/progress/components/sub_section_link_tile.dart';
-import 'package:sofie_ui/pages/authed/progress/components/user_day_log_display.dart';
-import 'package:sofie_ui/pages/authed/progress/components/workout_streak_dots.dart';
+import 'package:sofie_ui/pages/authed/progress/widgets/all_time_stats_summary.dart';
+import 'package:sofie_ui/pages/authed/progress/widgets/logged_sessions.dart';
+import 'package:sofie_ui/pages/authed/progress/widgets/streak_summary.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -64,21 +64,40 @@ class ProgressPage extends StatelessWidget {
 
                 return Column(
                   children: [
-                    AllTimeStatsSummary(
-                      loggedWorkouts: loggedWorkouts,
-                    ),
-                    // WorkoutStreakDots(
-                    //   loggedWorkouts: loggedWorkouts,
-                    // ),
-                    const SizedBox(height: 4),
                     ProgressWidgetContainer(
-                      child: WorkoutStreakDots(
+                      child: AllTimeStatsSummaryWidget(
                         loggedWorkouts: loggedWorkouts,
                       ),
                     ),
-                    // UserDayLogDisplay(
-                    //   loggedWorkouts: loggedWorkouts,
+                    ProgressWidgetContainer(
+                      child: StreaksSummaryWidget(
+                        loggedWorkouts: loggedWorkouts,
+                      ),
+                    ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    //   children: [
+                    //     Flexible(
+                    //       child: ProgressWidgetContainer(
+                    //         child: AllTimeStatsSummaryWidget(
+                    //           loggedWorkouts: loggedWorkouts,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //     Flexible(
+                    //       child: ProgressWidgetContainer(
+                    //         child: StreaksSummaryWidget(
+                    //           loggedWorkouts: loggedWorkouts,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
                     // ),
+                    ProgressWidgetContainer(
+                      child: LoggedSessionsWidget(
+                        loggedWorkouts: loggedWorkouts,
+                      ),
+                    ),
                   ],
                 );
               })
@@ -97,7 +116,11 @@ class ProgressWidgetContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(4.0),
-      child: Card(borderRadius: BorderRadius.circular(20), child: child),
+      child: Card(
+          padding:
+              const EdgeInsets.only(left: 10, top: 4, right: 10, bottom: 8),
+          borderRadius: BorderRadius.circular(20),
+          child: child),
     );
   }
 }

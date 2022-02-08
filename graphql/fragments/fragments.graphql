@@ -49,3 +49,21 @@ fragment ScheduledWorkout on ScheduledWorkout {
   workoutPlanDayWorkoutId
   loggedWorkoutId
 }
+
+fragment ProgressWidget on ProgressWidget {
+  __typename
+  id
+  createdAt
+  name
+  subtitle
+  description
+}
+
+fragment LogDataWidget on LogDataWidget {
+  __typename
+  id
+  createdAt
+  name
+  subtitle
+  description
+}

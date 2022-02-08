@@ -3212,345 +3212,6 @@ Map<String, dynamic> _$CreateWorkoutPlanInputToJson(
       'name': instance.name,
     };
 
-UserGoal _$UserGoalFromJson(Map<String, dynamic> json) => UserGoal()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-  ..name = json['name'] as String
-  ..description = json['description'] as String?
-  ..deadline = fromGraphQLDateTimeNullableToDartDateTimeNullable(
-      json['deadline'] as int?)
-  ..completedDate = fromGraphQLDateTimeNullableToDartDateTimeNullable(
-      json['completedDate'] as int?);
-
-Map<String, dynamic> _$UserGoalToJson(UserGoal instance) => <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'name': instance.name,
-      'description': instance.description,
-      'deadline':
-          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.deadline),
-      'completedDate': fromDartDateTimeNullableToGraphQLDateTimeNullable(
-          instance.completedDate),
-    };
-
-CreateUserGoal$Mutation _$CreateUserGoal$MutationFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserGoal$Mutation()
-      ..createUserGoal =
-          UserGoal.fromJson(json['createUserGoal'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserGoal$MutationToJson(
-        CreateUserGoal$Mutation instance) =>
-    <String, dynamic>{
-      'createUserGoal': instance.createUserGoal.toJson(),
-    };
-
-CreateUserGoalInput _$CreateUserGoalInputFromJson(Map<String, dynamic> json) =>
-    CreateUserGoalInput(
-      deadline: fromGraphQLDateTimeNullableToDartDateTimeNullable(
-          json['deadline'] as int?),
-      description: json['description'] as String?,
-      name: json['name'] as String,
-    );
-
-Map<String, dynamic> _$CreateUserGoalInputToJson(
-        CreateUserGoalInput instance) =>
-    <String, dynamic>{
-      'deadline':
-          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.deadline),
-      'description': instance.description,
-      'name': instance.name,
-    };
-
-DeleteUserGoal$Mutation _$DeleteUserGoal$MutationFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserGoal$Mutation()
-      ..deleteUserGoal = json['deleteUserGoal'] as String;
-
-Map<String, dynamic> _$DeleteUserGoal$MutationToJson(
-        DeleteUserGoal$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserGoal': instance.deleteUserGoal,
-    };
-
-UserDayLogMood _$UserDayLogMoodFromJson(Map<String, dynamic> json) =>
-    UserDayLogMood()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-      ..moodScore = json['moodScore'] as int
-      ..energyScore = json['energyScore'] as int
-      ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
-      ..textNote = json['textNote'] as String?;
-
-Map<String, dynamic> _$UserDayLogMoodToJson(UserDayLogMood instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'moodScore': instance.moodScore,
-      'energyScore': instance.energyScore,
-      'tags': instance.tags,
-      'textNote': instance.textNote,
-    };
-
-UpdateUserDayLogMood$Mutation _$UpdateUserDayLogMood$MutationFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDayLogMood$Mutation()
-      ..updateUserDayLogMood = UserDayLogMood.fromJson(
-          json['updateUserDayLogMood'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UpdateUserDayLogMood$MutationToJson(
-        UpdateUserDayLogMood$Mutation instance) =>
-    <String, dynamic>{
-      'updateUserDayLogMood': instance.updateUserDayLogMood.toJson(),
-    };
-
-UpdateUserDayLogMoodInput _$UpdateUserDayLogMoodInputFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDayLogMoodInput(
-      energyScore: json['energyScore'] as int?,
-      id: json['id'] as String,
-      moodScore: json['moodScore'] as int?,
-      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      textNote: json['textNote'] as String?,
-    );
-
-Map<String, dynamic> _$UpdateUserDayLogMoodInputToJson(
-        UpdateUserDayLogMoodInput instance) =>
-    <String, dynamic>{
-      'energyScore': instance.energyScore,
-      'id': instance.id,
-      'moodScore': instance.moodScore,
-      'tags': instance.tags,
-      'textNote': instance.textNote,
-    };
-
-UserDayLog _$UserDayLogFromJson(Map<String, dynamic> json) => UserDayLog()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-  ..dayNumber = json['dayNumber'] as int
-  ..eatWell = $enumDecodeNullable(_$UserDayLogRatingEnumMap, json['eatWell'],
-      unknownValue: UserDayLogRating.artemisUnknown)
-  ..sleepWell = $enumDecodeNullable(
-      _$UserDayLogRatingEnumMap, json['sleepWell'],
-      unknownValue: UserDayLogRating.artemisUnknown)
-  ..meditationMinutes = json['meditationMinutes'] as int
-  ..stretchingMinutes = json['stretchingMinutes'] as int
-  ..userDayLogMood = json['UserDayLogMood'] == null
-      ? null
-      : UserDayLogMood.fromJson(json['UserDayLogMood'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UserDayLogToJson(UserDayLog instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'dayNumber': instance.dayNumber,
-      'eatWell': _$UserDayLogRatingEnumMap[instance.eatWell],
-      'sleepWell': _$UserDayLogRatingEnumMap[instance.sleepWell],
-      'meditationMinutes': instance.meditationMinutes,
-      'stretchingMinutes': instance.stretchingMinutes,
-      'UserDayLogMood': instance.userDayLogMood?.toJson(),
-    };
-
-const _$UserDayLogRatingEnumMap = {
-  UserDayLogRating.average: 'AVERAGE',
-  UserDayLogRating.bad: 'BAD',
-  UserDayLogRating.good: 'GOOD',
-  UserDayLogRating.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-CreateUserDayLog$Mutation _$CreateUserDayLog$MutationFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserDayLog$Mutation()
-      ..createUserDayLog =
-          UserDayLog.fromJson(json['createUserDayLog'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserDayLog$MutationToJson(
-        CreateUserDayLog$Mutation instance) =>
-    <String, dynamic>{
-      'createUserDayLog': instance.createUserDayLog.toJson(),
-    };
-
-CreateUserDayLogInput _$CreateUserDayLogInputFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserDayLogInput(
-      userDayLogMood: json['UserDayLogMood'] == null
-          ? null
-          : CreateUserDayLogMoodInput.fromJson(
-              json['UserDayLogMood'] as Map<String, dynamic>),
-      dayNumber: json['dayNumber'] as int,
-      eatWell: $enumDecodeNullable(_$UserDayLogRatingEnumMap, json['eatWell'],
-          unknownValue: UserDayLogRating.artemisUnknown),
-      meditationMinutes: json['meditationMinutes'] as int?,
-      sleepWell: $enumDecodeNullable(
-          _$UserDayLogRatingEnumMap, json['sleepWell'],
-          unknownValue: UserDayLogRating.artemisUnknown),
-      stretchingMinutes: json['stretchingMinutes'] as int?,
-    );
-
-Map<String, dynamic> _$CreateUserDayLogInputToJson(
-        CreateUserDayLogInput instance) =>
-    <String, dynamic>{
-      'UserDayLogMood': instance.userDayLogMood?.toJson(),
-      'dayNumber': instance.dayNumber,
-      'eatWell': _$UserDayLogRatingEnumMap[instance.eatWell],
-      'meditationMinutes': instance.meditationMinutes,
-      'sleepWell': _$UserDayLogRatingEnumMap[instance.sleepWell],
-      'stretchingMinutes': instance.stretchingMinutes,
-    };
-
-CreateUserDayLogMoodInput _$CreateUserDayLogMoodInputFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserDayLogMoodInput(
-      userDayLog: ConnectRelationInput.fromJson(
-          json['UserDayLog'] as Map<String, dynamic>),
-      energyScore: json['energyScore'] as int,
-      moodScore: json['moodScore'] as int,
-      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      textNote: json['textNote'] as String?,
-    );
-
-Map<String, dynamic> _$CreateUserDayLogMoodInputToJson(
-        CreateUserDayLogMoodInput instance) =>
-    <String, dynamic>{
-      'UserDayLog': instance.userDayLog.toJson(),
-      'energyScore': instance.energyScore,
-      'moodScore': instance.moodScore,
-      'tags': instance.tags,
-      'textNote': instance.textNote,
-    };
-
-UserGoals$Query _$UserGoals$QueryFromJson(Map<String, dynamic> json) =>
-    UserGoals$Query()
-      ..userGoals = (json['userGoals'] as List<dynamic>)
-          .map((e) => UserGoal.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserGoals$QueryToJson(UserGoals$Query instance) =>
-    <String, dynamic>{
-      'userGoals': instance.userGoals.map((e) => e.toJson()).toList(),
-    };
-
-UpdateUserGoal$Mutation _$UpdateUserGoal$MutationFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserGoal$Mutation()
-      ..updateUserGoal =
-          UserGoal.fromJson(json['updateUserGoal'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UpdateUserGoal$MutationToJson(
-        UpdateUserGoal$Mutation instance) =>
-    <String, dynamic>{
-      'updateUserGoal': instance.updateUserGoal.toJson(),
-    };
-
-UpdateUserGoalInput _$UpdateUserGoalInputFromJson(Map<String, dynamic> json) =>
-    UpdateUserGoalInput(
-      completedDate: fromGraphQLDateTimeNullableToDartDateTimeNullable(
-          json['completedDate'] as int?),
-      deadline: fromGraphQLDateTimeNullableToDartDateTimeNullable(
-          json['deadline'] as int?),
-      description: json['description'] as String?,
-      id: json['id'] as String,
-      name: json['name'] as String?,
-    );
-
-Map<String, dynamic> _$UpdateUserGoalInputToJson(
-        UpdateUserGoalInput instance) =>
-    <String, dynamic>{
-      'completedDate': fromDartDateTimeNullableToGraphQLDateTimeNullable(
-          instance.completedDate),
-      'deadline':
-          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.deadline),
-      'description': instance.description,
-      'id': instance.id,
-      'name': instance.name,
-    };
-
-DeleteUserDayLogMood$Mutation _$DeleteUserDayLogMood$MutationFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserDayLogMood$Mutation()
-      ..deleteUserDayLogMood = json['deleteUserDayLogMood'] as String;
-
-Map<String, dynamic> _$DeleteUserDayLogMood$MutationToJson(
-        DeleteUserDayLogMood$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserDayLogMood': instance.deleteUserDayLogMood,
-    };
-
-DeleteUserDayLog$Mutation _$DeleteUserDayLog$MutationFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserDayLog$Mutation()
-      ..deleteUserDayLog = json['deleteUserDayLog'] as String;
-
-Map<String, dynamic> _$DeleteUserDayLog$MutationToJson(
-        DeleteUserDayLog$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserDayLog': instance.deleteUserDayLog,
-    };
-
-UpdateUserDayLog$Mutation _$UpdateUserDayLog$MutationFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDayLog$Mutation()
-      ..updateUserDayLog =
-          UserDayLog.fromJson(json['updateUserDayLog'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$UpdateUserDayLog$MutationToJson(
-        UpdateUserDayLog$Mutation instance) =>
-    <String, dynamic>{
-      'updateUserDayLog': instance.updateUserDayLog.toJson(),
-    };
-
-UpdateUserDayLogInput _$UpdateUserDayLogInputFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDayLogInput(
-      eatWell: $enumDecodeNullable(_$UserDayLogRatingEnumMap, json['eatWell'],
-          unknownValue: UserDayLogRating.artemisUnknown),
-      id: json['id'] as String,
-      meditationMinutes: json['meditationMinutes'] as int?,
-      sleepWell: $enumDecodeNullable(
-          _$UserDayLogRatingEnumMap, json['sleepWell'],
-          unknownValue: UserDayLogRating.artemisUnknown),
-      stretchingMinutes: json['stretchingMinutes'] as int?,
-    );
-
-Map<String, dynamic> _$UpdateUserDayLogInputToJson(
-        UpdateUserDayLogInput instance) =>
-    <String, dynamic>{
-      'eatWell': _$UserDayLogRatingEnumMap[instance.eatWell],
-      'id': instance.id,
-      'meditationMinutes': instance.meditationMinutes,
-      'sleepWell': _$UserDayLogRatingEnumMap[instance.sleepWell],
-      'stretchingMinutes': instance.stretchingMinutes,
-    };
-
-UserDayLogs$Query _$UserDayLogs$QueryFromJson(Map<String, dynamic> json) =>
-    UserDayLogs$Query()
-      ..userDayLogs = (json['userDayLogs'] as List<dynamic>)
-          .map((e) => UserDayLog.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$UserDayLogs$QueryToJson(UserDayLogs$Query instance) =>
-    <String, dynamic>{
-      'userDayLogs': instance.userDayLogs.map((e) => e.toJson()).toList(),
-    };
-
-CreateUserDayLogMood$Mutation _$CreateUserDayLogMood$MutationFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserDayLogMood$Mutation()
-      ..createUserDayLogMood = UserDayLogMood.fromJson(
-          json['createUserDayLogMood'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserDayLogMood$MutationToJson(
-        CreateUserDayLogMood$Mutation instance) =>
-    <String, dynamic>{
-      'createUserDayLogMood': instance.createUserDayLogMood.toJson(),
-    };
-
 UserAvatarById$Query _$UserAvatarById$QueryFromJson(
         Map<String, dynamic> json) =>
     UserAvatarById$Query()
@@ -4621,6 +4282,44 @@ Map<String, dynamic> _$DeleteWorkoutSetById$MutationToJson(
       'deleteWorkoutSetById': instance.deleteWorkoutSetById,
     };
 
+ProgressWidget _$ProgressWidgetFromJson(Map<String, dynamic> json) =>
+    ProgressWidget()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..name = json['name'] as String
+      ..subtitle = json['subtitle'] as String?
+      ..description = json['description'] as String?;
+
+Map<String, dynamic> _$ProgressWidgetToJson(ProgressWidget instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'name': instance.name,
+      'subtitle': instance.subtitle,
+      'description': instance.description,
+    };
+
+LogDataWidget _$LogDataWidgetFromJson(Map<String, dynamic> json) =>
+    LogDataWidget()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..name = json['name'] as String
+      ..subtitle = json['subtitle'] as String?
+      ..description = json['description'] as String?;
+
+Map<String, dynamic> _$LogDataWidgetToJson(LogDataWidget instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'name': instance.name,
+      'subtitle': instance.subtitle,
+      'description': instance.description,
+    };
+
 CoreData _$CoreDataFromJson(Map<String, dynamic> json) => CoreData()
   ..$$typename = json['__typename'] as String?
   ..bodyAreas = (json['bodyAreas'] as List<dynamic>)
@@ -4640,6 +4339,12 @@ CoreData _$CoreDataFromJson(Map<String, dynamic> json) => CoreData()
       .toList()
   ..standardMoves = (json['standardMoves'] as List<dynamic>)
       .map((e) => Move.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..progressWidgets = (json['progressWidgets'] as List<dynamic>)
+      .map((e) => ProgressWidget.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..logDataWidgets = (json['logDataWidgets'] as List<dynamic>)
+      .map((e) => LogDataWidget.fromJson(e as Map<String, dynamic>))
       .toList();
 
 Map<String, dynamic> _$CoreDataToJson(CoreData instance) => <String, dynamic>{
@@ -4651,6 +4356,9 @@ Map<String, dynamic> _$CoreDataToJson(CoreData instance) => <String, dynamic>{
       'workoutSectionTypes':
           instance.workoutSectionTypes.map((e) => e.toJson()).toList(),
       'standardMoves': instance.standardMoves.map((e) => e.toJson()).toList(),
+      'progressWidgets':
+          instance.progressWidgets.map((e) => e.toJson()).toList(),
+      'logDataWidgets': instance.logDataWidgets.map((e) => e.toJson()).toList(),
     };
 
 CoreData$Query _$CoreData$QueryFromJson(Map<String, dynamic> json) =>
@@ -6384,6 +6092,305 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'name': instance.name,
     };
 
+UserGoal _$UserGoalFromJson(Map<String, dynamic> json) => UserGoal()
+  ..$$typename = json['__typename'] as String?
+  ..id = json['id'] as String
+  ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+  ..name = json['name'] as String
+  ..description = json['description'] as String?
+  ..deadline = fromGraphQLDateTimeNullableToDartDateTimeNullable(
+      json['deadline'] as int?)
+  ..completedDate = fromGraphQLDateTimeNullableToDartDateTimeNullable(
+      json['completedDate'] as int?);
+
+Map<String, dynamic> _$UserGoalToJson(UserGoal instance) => <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'name': instance.name,
+      'description': instance.description,
+      'deadline':
+          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.deadline),
+      'completedDate': fromDartDateTimeNullableToGraphQLDateTimeNullable(
+          instance.completedDate),
+    };
+
+CreateUserGoal$Mutation _$CreateUserGoal$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserGoal$Mutation()
+      ..createUserGoal =
+          UserGoal.fromJson(json['createUserGoal'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserGoal$MutationToJson(
+        CreateUserGoal$Mutation instance) =>
+    <String, dynamic>{
+      'createUserGoal': instance.createUserGoal.toJson(),
+    };
+
+CreateUserGoalInput _$CreateUserGoalInputFromJson(Map<String, dynamic> json) =>
+    CreateUserGoalInput(
+      deadline: fromGraphQLDateTimeNullableToDartDateTimeNullable(
+          json['deadline'] as int?),
+      description: json['description'] as String?,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$CreateUserGoalInputToJson(
+        CreateUserGoalInput instance) =>
+    <String, dynamic>{
+      'deadline':
+          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.deadline),
+      'description': instance.description,
+      'name': instance.name,
+    };
+
+DeleteUserGoal$Mutation _$DeleteUserGoal$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserGoal$Mutation()
+      ..deleteUserGoal = json['deleteUserGoal'] as String;
+
+Map<String, dynamic> _$DeleteUserGoal$MutationToJson(
+        DeleteUserGoal$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserGoal': instance.deleteUserGoal,
+    };
+
+UserMeditationLog _$UserMeditationLogFromJson(Map<String, dynamic> json) =>
+    UserMeditationLog()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..dayNumber = json['dayNumber'] as int
+      ..minutesLogged = json['minutesLogged'] as int
+      ..note = json['note'] as String?;
+
+Map<String, dynamic> _$UserMeditationLogToJson(UserMeditationLog instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'dayNumber': instance.dayNumber,
+      'minutesLogged': instance.minutesLogged,
+      'note': instance.note,
+    };
+
+UserMeditationLogs$Query _$UserMeditationLogs$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserMeditationLogs$Query()
+      ..userMeditationLogs = (json['userMeditationLogs'] as List<dynamic>)
+          .map((e) => UserMeditationLog.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserMeditationLogs$QueryToJson(
+        UserMeditationLogs$Query instance) =>
+    <String, dynamic>{
+      'userMeditationLogs':
+          instance.userMeditationLogs.map((e) => e.toJson()).toList(),
+    };
+
+UserDayLogMood _$UserDayLogMoodFromJson(Map<String, dynamic> json) =>
+    UserDayLogMood()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..dayNumber = json['dayNumber'] as int
+      ..moodScore = json['moodScore'] as int
+      ..energyScore = json['energyScore'] as int
+      ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
+      ..textNote = json['textNote'] as String?;
+
+Map<String, dynamic> _$UserDayLogMoodToJson(UserDayLogMood instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'dayNumber': instance.dayNumber,
+      'moodScore': instance.moodScore,
+      'energyScore': instance.energyScore,
+      'tags': instance.tags,
+      'textNote': instance.textNote,
+    };
+
+UpdateUserDayLogMood$Mutation _$UpdateUserDayLogMood$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserDayLogMood$Mutation()
+      ..updateUserDayLogMood = UserDayLogMood.fromJson(
+          json['updateUserDayLogMood'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateUserDayLogMood$MutationToJson(
+        UpdateUserDayLogMood$Mutation instance) =>
+    <String, dynamic>{
+      'updateUserDayLogMood': instance.updateUserDayLogMood.toJson(),
+    };
+
+UpdateUserDayLogMoodInput _$UpdateUserDayLogMoodInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserDayLogMoodInput(
+      energyScore: json['energyScore'] as int?,
+      id: json['id'] as String,
+      moodScore: json['moodScore'] as int?,
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      textNote: json['textNote'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateUserDayLogMoodInputToJson(
+        UpdateUserDayLogMoodInput instance) =>
+    <String, dynamic>{
+      'energyScore': instance.energyScore,
+      'id': instance.id,
+      'moodScore': instance.moodScore,
+      'tags': instance.tags,
+      'textNote': instance.textNote,
+    };
+
+UserGoals$Query _$UserGoals$QueryFromJson(Map<String, dynamic> json) =>
+    UserGoals$Query()
+      ..userGoals = (json['userGoals'] as List<dynamic>)
+          .map((e) => UserGoal.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserGoals$QueryToJson(UserGoals$Query instance) =>
+    <String, dynamic>{
+      'userGoals': instance.userGoals.map((e) => e.toJson()).toList(),
+    };
+
+UpdateUserGoal$Mutation _$UpdateUserGoal$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserGoal$Mutation()
+      ..updateUserGoal =
+          UserGoal.fromJson(json['updateUserGoal'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateUserGoal$MutationToJson(
+        UpdateUserGoal$Mutation instance) =>
+    <String, dynamic>{
+      'updateUserGoal': instance.updateUserGoal.toJson(),
+    };
+
+UpdateUserGoalInput _$UpdateUserGoalInputFromJson(Map<String, dynamic> json) =>
+    UpdateUserGoalInput(
+      completedDate: fromGraphQLDateTimeNullableToDartDateTimeNullable(
+          json['completedDate'] as int?),
+      deadline: fromGraphQLDateTimeNullableToDartDateTimeNullable(
+          json['deadline'] as int?),
+      description: json['description'] as String?,
+      id: json['id'] as String,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateUserGoalInputToJson(
+        UpdateUserGoalInput instance) =>
+    <String, dynamic>{
+      'completedDate': fromDartDateTimeNullableToGraphQLDateTimeNullable(
+          instance.completedDate),
+      'deadline':
+          fromDartDateTimeNullableToGraphQLDateTimeNullable(instance.deadline),
+      'description': instance.description,
+      'id': instance.id,
+      'name': instance.name,
+    };
+
+CreateUserMeditationLog$Mutation _$CreateUserMeditationLog$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserMeditationLog$Mutation()
+      ..createUserMeditationLog = UserMeditationLog.fromJson(
+          json['createUserMeditationLog'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserMeditationLog$MutationToJson(
+        CreateUserMeditationLog$Mutation instance) =>
+    <String, dynamic>{
+      'createUserMeditationLog': instance.createUserMeditationLog.toJson(),
+    };
+
+CreateUserMeditationLogInput _$CreateUserMeditationLogInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserMeditationLogInput(
+      dayNumber: json['dayNumber'] as int,
+      minutesLogged: json['minutesLogged'] as int,
+      note: json['note'] as String?,
+    );
+
+Map<String, dynamic> _$CreateUserMeditationLogInputToJson(
+        CreateUserMeditationLogInput instance) =>
+    <String, dynamic>{
+      'dayNumber': instance.dayNumber,
+      'minutesLogged': instance.minutesLogged,
+      'note': instance.note,
+    };
+
+UpdateUserMeditationLog$Mutation _$UpdateUserMeditationLog$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserMeditationLog$Mutation()
+      ..updateUserMeditationLog = UserMeditationLog.fromJson(
+          json['updateUserMeditationLog'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateUserMeditationLog$MutationToJson(
+        UpdateUserMeditationLog$Mutation instance) =>
+    <String, dynamic>{
+      'updateUserMeditationLog': instance.updateUserMeditationLog.toJson(),
+    };
+
+UpdateUserMeditationLogInput _$UpdateUserMeditationLogInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserMeditationLogInput(
+      id: json['id'] as String,
+      minutesLogged: json['minutesLogged'] as int?,
+      note: json['note'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateUserMeditationLogInputToJson(
+        UpdateUserMeditationLogInput instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'minutesLogged': instance.minutesLogged,
+      'note': instance.note,
+    };
+
+UserDayLogMoods$Query _$UserDayLogMoods$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserDayLogMoods$Query()
+      ..userDayLogMoods = (json['userDayLogMoods'] as List<dynamic>)
+          .map((e) => UserDayLogMood.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserDayLogMoods$QueryToJson(
+        UserDayLogMoods$Query instance) =>
+    <String, dynamic>{
+      'userDayLogMoods':
+          instance.userDayLogMoods.map((e) => e.toJson()).toList(),
+    };
+
+CreateUserDayLogMood$Mutation _$CreateUserDayLogMood$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserDayLogMood$Mutation()
+      ..createUserDayLogMood = UserDayLogMood.fromJson(
+          json['createUserDayLogMood'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserDayLogMood$MutationToJson(
+        CreateUserDayLogMood$Mutation instance) =>
+    <String, dynamic>{
+      'createUserDayLogMood': instance.createUserDayLogMood.toJson(),
+    };
+
+CreateUserDayLogMoodInput _$CreateUserDayLogMoodInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserDayLogMoodInput(
+      dayNumber: json['dayNumber'] as int,
+      energyScore: json['energyScore'] as int,
+      moodScore: json['moodScore'] as int,
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      textNote: json['textNote'] as String?,
+    );
+
+Map<String, dynamic> _$CreateUserDayLogMoodInputToJson(
+        CreateUserDayLogMoodInput instance) =>
+    <String, dynamic>{
+      'dayNumber': instance.dayNumber,
+      'energyScore': instance.energyScore,
+      'moodScore': instance.moodScore,
+      'tags': instance.tags,
+      'textNote': instance.textNote,
+    };
+
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubChatSummaryArguments(
@@ -7235,118 +7242,6 @@ CreateWorkoutPlanArguments _$CreateWorkoutPlanArgumentsFromJson(
 
 Map<String, dynamic> _$CreateWorkoutPlanArgumentsToJson(
         CreateWorkoutPlanArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-CreateUserGoalArguments _$CreateUserGoalArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserGoalArguments(
-      data: CreateUserGoalInput.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$CreateUserGoalArgumentsToJson(
-        CreateUserGoalArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-DeleteUserGoalArguments _$DeleteUserGoalArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserGoalArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$DeleteUserGoalArgumentsToJson(
-        DeleteUserGoalArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-UpdateUserDayLogMoodArguments _$UpdateUserDayLogMoodArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDayLogMoodArguments(
-      data: UpdateUserDayLogMoodInput.fromJson(
-          json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$UpdateUserDayLogMoodArgumentsToJson(
-        UpdateUserDayLogMoodArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-CreateUserDayLogArguments _$CreateUserDayLogArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserDayLogArguments(
-      data:
-          CreateUserDayLogInput.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$CreateUserDayLogArgumentsToJson(
-        CreateUserDayLogArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-UpdateUserGoalArguments _$UpdateUserGoalArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserGoalArguments(
-      data: UpdateUserGoalInput.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$UpdateUserGoalArgumentsToJson(
-        UpdateUserGoalArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-DeleteUserDayLogMoodArguments _$DeleteUserDayLogMoodArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserDayLogMoodArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$DeleteUserDayLogMoodArgumentsToJson(
-        DeleteUserDayLogMoodArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-DeleteUserDayLogArguments _$DeleteUserDayLogArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserDayLogArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$DeleteUserDayLogArgumentsToJson(
-        DeleteUserDayLogArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-UpdateUserDayLogArguments _$UpdateUserDayLogArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDayLogArguments(
-      data:
-          UpdateUserDayLogInput.fromJson(json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$UpdateUserDayLogArgumentsToJson(
-        UpdateUserDayLogArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-CreateUserDayLogMoodArguments _$CreateUserDayLogMoodArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    CreateUserDayLogMoodArguments(
-      data: CreateUserDayLogMoodInput.fromJson(
-          json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$CreateUserDayLogMoodArgumentsToJson(
-        CreateUserDayLogMoodArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
     };
@@ -8307,6 +8202,94 @@ CreateClubInviteTokenArguments _$CreateClubInviteTokenArgumentsFromJson(
 
 Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserGoalArguments _$CreateUserGoalArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserGoalArguments(
+      data: CreateUserGoalInput.fromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateUserGoalArgumentsToJson(
+        CreateUserGoalArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteUserGoalArguments _$DeleteUserGoalArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserGoalArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteUserGoalArgumentsToJson(
+        DeleteUserGoalArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+UpdateUserDayLogMoodArguments _$UpdateUserDayLogMoodArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserDayLogMoodArguments(
+      data: UpdateUserDayLogMoodInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateUserDayLogMoodArgumentsToJson(
+        UpdateUserDayLogMoodArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+UpdateUserGoalArguments _$UpdateUserGoalArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserGoalArguments(
+      data: UpdateUserGoalInput.fromJson(json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateUserGoalArgumentsToJson(
+        UpdateUserGoalArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserMeditationLogArguments _$CreateUserMeditationLogArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserMeditationLogArguments(
+      data: CreateUserMeditationLogInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateUserMeditationLogArgumentsToJson(
+        CreateUserMeditationLogArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+UpdateUserMeditationLogArguments _$UpdateUserMeditationLogArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserMeditationLogArguments(
+      data: UpdateUserMeditationLogInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateUserMeditationLogArgumentsToJson(
+        UpdateUserMeditationLogArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserDayLogMoodArguments _$CreateUserDayLogMoodArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateUserDayLogMoodArguments(
+      data: CreateUserDayLogMoodInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateUserDayLogMoodArgumentsToJson(
+        CreateUserDayLogMoodArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
     };

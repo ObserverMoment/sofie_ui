@@ -14,7 +14,9 @@ class GQLOpNames {
 
   static String get userGoals => UserGoalsQuery().operationName;
 
-  static String get userDayLogs => UserDayLogsQuery().operationName;
+  static String get userDayLogMoods => UserDayLogMoodsQuery().operationName;
+  static String get userMeditationLogs =>
+      UserMeditationLogsQuery().operationName;
 
   static String get workoutPlanEnrolments =>
       WorkoutPlanEnrolmentsQuery().operationName;

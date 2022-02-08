@@ -41,12 +41,11 @@ import 'components/social/chat/chats_overview_page.dart' as _i5;
 import 'components/social/chat/clubs/club_members_chat_page.dart' as _i7;
 import 'components/social/chat/friends/one_to_one_chat_page.dart' as _i6;
 import 'components/timers/timers_page.dart' as _i15;
-import 'pages/authed/progress/user_goals_page.dart' as _i26;
 import 'components/workout/workout_finders/public/public_workout_finder_page.dart'
     as _i31;
 import 'components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart'
     as _i32;
-import 'generated/api/graphql_api.graphql.dart' as _i64;
+import 'generated/api/graphql_api.dart' as _i64;
 import 'main.dart' as _i2;
 import 'pages/authed/authed_routes_wrapper_page.dart' as _i3;
 import 'pages/authed/details_pages/club_details/club_details_page.dart' as _i35;
@@ -85,6 +84,7 @@ import 'pages/authed/progress/body_tracking_page.dart' as _i27;
 import 'pages/authed/progress/logged_workouts_page.dart' as _i28;
 import 'pages/authed/progress/personal_bests_page.dart' as _i25;
 import 'pages/authed/progress/progress_page.dart' as _i59;
+import 'pages/authed/progress/user_goals_page.dart' as _i26;
 import 'pages/unauthed/unauthed_landing.dart' as _i1;
 
 class AppRouter extends _i61.RootStackRouter {

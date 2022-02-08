@@ -185,18 +185,25 @@ abstract class Styles {
 
   // Design / Accent colors.
   static const Color primaryAccent = Color(0xff2c8a8a);
+  // static const Color primaryAccent = Color(0xfff24c2b);
+  // static const Color primaryAccent = Color(0xfffe7743);
+  // static const Color primaryAccent = Color(0xff079767);
 
   static const LinearGradient primaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
       primaryAccent,
-      Color(0xff3aa1a1),
+      // Color(0xff3aa1a1),
+      // Color(0xfff4532c),
+      // Color(0xffF09819),
+      Color(0xff34e7ab),
     ],
     stops: [0.0, 1.0],
   );
 
   static const Color secondaryAccent = Color(0xffF97D5B);
+  // static const Color secondaryAccent = Color(0xfffe7743);
 
   static const LinearGradient secondaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,

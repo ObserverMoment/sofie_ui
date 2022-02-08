@@ -254,7 +254,9 @@ input CopyWorkoutPlanDayToAnotherDayInput {
 type CoreData {
   bodyAreas: [BodyArea!]!
   equipment: [Equipment!]!
+  logDataWidgets: [LogDataWidget!]!
   moveTypes: [MoveType!]!
+  progressWidgets: [ProgressWidget!]!
   standardMoves: [Move!]!
   workoutGoals: [WorkoutGoal!]!
   workoutSectionTypes: [WorkoutSectionType!]!
@@ -420,27 +422,43 @@ input CreateUserBenchmarkInput {
   name: String!
 }
 
-input CreateUserDayLogInput {
-  UserDayLogMood: CreateUserDayLogMoodInput
-  dayNumber: Int!
-  eatWell: UserDayLogRating
-  meditationMinutes: Int
-  sleepWell: UserDayLogRating
-  stretchingMinutes: Int
-}
-
 input CreateUserDayLogMoodInput {
-  UserDayLog: ConnectRelationInput!
+  dayNumber: Int!
   energyScore: Int!
   moodScore: Int!
   tags: [String!]
   textNote: String
 }
 
+input CreateUserEatWellLogInput {
+  dayNumber: Int!
+  note: String
+  rating: UserDayLogRating!
+}
+
 input CreateUserGoalInput {
   deadline: DateTime
   description: String
   name: String!
+}
+
+input CreateUserMeditationLogInput {
+  dayNumber: Int!
+  minutesLogged: Int!
+  note: String
+}
+
+input CreateUserMobilityLogInput {
+  dayNumber: Int!
+  minutesLogged: Int!
+  note: String
+}
+
+input CreateUserSleepWellLogInput {
+  dayNumber: Int!
+  minutesSlept: Int
+  note: String
+  rating: UserDayLogRating!
 }
 
 input CreateWorkoutInput {
@@ -600,6 +618,14 @@ enum LoadUnit {
   PERCENTMAX
 }
 
+type LogDataWidget {
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  name: String!
+  subtitle: String
+}
+
 type LoggedWorkout {
   GymProfile: GymProfile
   LoggedWorkoutSections: [LoggedWorkoutSection!]!
@@ -648,6 +674,11 @@ input MarkAnnouncementUpdateAsSeenInput {
   userId: ID!
 }
 
+input MarkOnboardingMessageAsSeenInput {
+  onboardingMessageId: ID!
+  userId: ID!
+}
+
 type Move {
   BodyAreaMoveScores: [BodyAreaMoveScore!]!
   MoveType: MoveType!
@@ -662,6 +693,23 @@ type Move {
   scope: MoveScope!
   searchTerms: String
   validRepTypes: [WorkoutMoveRepType!]!
+}
+
+type MoveHistoryTrackerWidget {
+  Equipment: Equipment
+  Move: Move!
+  benchmarkType: BenchmarkType!
+  createdAt: DateTime!
+  description: String
+  distanceUnit: DistanceUnit
+  id: ID!
+  loadAmount: Float
+  loadUnit: LoadUnit
+  name: String!
+  repType: WorkoutMoveRepType!
+  reps: Float
+  sortPosition: Int!
+  timeUnit: TimeUnit
 }
 
 """
@@ -729,9 +777,14 @@ type Mutation {
   createUserBenchmarkEntry(
     data: CreateUserBenchmarkEntryInput!
   ): UserBenchmarkEntry!
-  createUserDayLog(data: CreateUserDayLogInput!): UserDayLog!
   createUserDayLogMood(data: CreateUserDayLogMoodInput!): UserDayLogMood!
+  createUserEatWellLog(data: CreateUserEatWellLogInput!): UserEatWellLog!
   createUserGoal(data: CreateUserGoalInput!): UserGoal!
+  createUserMeditationLog(
+    data: CreateUserMeditationLogInput!
+  ): UserMeditationLog!
+  createUserMobilityLog(data: CreateUserMobilityLogInput!): UserMobilityLog!
+  createUserSleepWellLog(data: CreateUserSleepWellLogInput!): UserSleepWellLog!
   createWorkout(data: CreateWorkoutInput!): Workout!
   createWorkoutMove(data: CreateWorkoutMoveInput!): WorkoutMove!
   createWorkoutPlan(data: CreateWorkoutPlanInput!): WorkoutPlan!
@@ -766,8 +819,6 @@ type Mutation {
   deleteSkillById(id: ID!): ID!
   deleteUserBenchmark(id: ID!): ID!
   deleteUserBenchmarkEntry(id: ID!): ID!
-  deleteUserDayLog(id: ID!): ID!
-  deleteUserDayLogMood(id: ID!): ID!
   deleteUserGoal(id: ID!): ID!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
@@ -783,6 +834,7 @@ type Mutation {
   giveMemberAdminStatus(clubId: ID!, userId: ID!): ClubMembers!
   makeCopyWorkoutById(id: ID!): Workout!
   markAnnouncementUpdateAsSeen(data: MarkAnnouncementUpdateAsSeenInput!): ID!
+  markOnboardingMessageAsSeen(data: MarkOnboardingMessageAsSeenInput!): ID!
   moveWorkoutPlanDayToAnotherDay(
     data: MoveWorkoutPlanDayToAnotherDayInput!
   ): WorkoutPlanDay!
@@ -839,10 +891,15 @@ type Mutation {
   updateUserBenchmarkEntry(
     data: UpdateUserBenchmarkEntryInput!
   ): UserBenchmarkEntry!
-  updateUserDayLog(data: UpdateUserDayLogInput!): UserDayLog!
   updateUserDayLogMood(data: UpdateUserDayLogMoodInput!): UserDayLogMood!
+  updateUserEatWellLog(data: UpdateUserEatWellLogInput!): UserEatWellLog!
   updateUserGoal(data: UpdateUserGoalInput!): UserGoal!
+  updateUserMeditationLog(
+    data: UpdateUserMeditationLogInput!
+  ): UserMeditationLog!
+  updateUserMobilityLog(data: UpdateUserMobilityLogInput!): UserMobilityLog!
   updateUserProfile(data: UpdateUserProfileInput!): UpdateUserProfileResult!
+  updateUserSleepWellLog(data: UpdateUserSleepWellLogInput!): UserSleepWellLog!
   updateWorkout(data: UpdateWorkoutInput!): Workout!
   updateWorkoutMetaDataAdmin(
     data: UpdateWorkoutMetaDataAdminInput!
@@ -864,6 +921,27 @@ type Mutation {
   updateWorkoutSet(data: UpdateWorkoutSetInput!): WorkoutSet!
   updateWorkoutTag(data: UpdateWorkoutTagInput!): WorkoutTag!
   userJoinPublicClub(clubId: ID!): ID!
+}
+
+type OnboardingMessage {
+  articleUrl: String
+  audioUri: String
+  bodyOne: String
+  bodyTwo: String
+  createdAt: DateTime!
+  id: ID!
+  imageUri: String
+  subtitle: String
+  title: String!
+  videoUri: String
+}
+
+type ProgressWidget {
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  name: String!
+  subtitle: String
 }
 
 enum PublicContentValidationStatus {
@@ -940,14 +1018,18 @@ type Query {
   userClubs: [ClubSummary!]!
   userCollectionById(id: ID!): Collection!
   userCollections: [Collection!]!
-  userDayLogs: [UserDayLog!]!
+  userDayLogMoods: [UserDayLogMood!]!
+  userEatWellLogs: [UserEatWellLog!]!
   userGoals: [UserGoal!]!
   userLoggedWorkouts(take: Int): [LoggedWorkout!]!
+  userMeditationLogs: [UserMeditationLog!]!
+  userMobilityLogs: [UserMobilityLog!]!
   userProfile(userId: ID!): UserProfile!
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
+  userSleepWellLogs: [UserSleepWellLog!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
   userWorkoutTags: [WorkoutTag!]!
   userWorkouts: [WorkoutSummary!]!
@@ -1221,14 +1303,6 @@ input UpdateUserBenchmarkInput {
   name: String
 }
 
-input UpdateUserDayLogInput {
-  eatWell: UserDayLogRating
-  id: ID!
-  meditationMinutes: Int
-  sleepWell: UserDayLogRating
-  stretchingMinutes: Int
-}
-
 input UpdateUserDayLogMoodInput {
   energyScore: Int
   id: ID!
@@ -1237,12 +1311,30 @@ input UpdateUserDayLogMoodInput {
   textNote: String
 }
 
+input UpdateUserEatWellLogInput {
+  id: ID!
+  note: String
+  rating: UserDayLogRating
+}
+
 input UpdateUserGoalInput {
   completedDate: DateTime
   deadline: DateTime
   description: String
   id: ID!
   name: String
+}
+
+input UpdateUserMeditationLogInput {
+  id: ID!
+  minutesLogged: Int
+  note: String
+}
+
+input UpdateUserMobilityLogInput {
+  id: ID!
+  minutesLogged: Int
+  note: String
 }
 
 input UpdateUserProfileInput {
@@ -1290,6 +1382,13 @@ type UpdateUserProfileResult {
   userProfileScope: UserProfileScope
   workoutsPerWeekTarget: Int
   youtubeHandle: String
+}
+
+input UpdateUserSleepWellLogInput {
+  id: ID!
+  minutesSlept: Int
+  note: String
+  rating: UserDayLogRating
 }
 
 input UpdateWorkoutInput {
@@ -1441,19 +1540,9 @@ enum UserClubMemberStatus {
   OWNER
 }
 
-type UserDayLog {
-  UserDayLogMood: UserDayLogMood
-  createdAt: DateTime!
-  dayNumber: Int!
-  eatWell: UserDayLogRating
-  id: ID!
-  meditationMinutes: Int!
-  sleepWell: UserDayLogRating
-  stretchingMinutes: Int!
-}
-
 type UserDayLogMood {
   createdAt: DateTime!
+  dayNumber: Int!
   energyScore: Int!
   id: ID!
   moodScore: Int!
@@ -1467,6 +1556,14 @@ enum UserDayLogRating {
   GOOD
 }
 
+type UserEatWellLog {
+  createdAt: DateTime!
+  dayNumber: Int!
+  id: ID!
+  note: String
+  rating: UserDayLogRating!
+}
+
 type UserGoal {
   completedDate: DateTime
   createdAt: DateTime!
@@ -1474,6 +1571,22 @@ type UserGoal {
   description: String
   id: ID!
   name: String!
+}
+
+type UserMeditationLog {
+  createdAt: DateTime!
+  dayNumber: Int!
+  id: ID!
+  minutesLogged: Int!
+  note: String
+}
+
+type UserMobilityLog {
+  createdAt: DateTime!
+  dayNumber: Int!
+  id: ID!
+  minutesLogged: Int!
+  note: String
 }
 
 type UserProfile {
@@ -1521,6 +1634,15 @@ type UserProfileSummary {
   townCity: String
   userProfileScope: UserProfileScope!
   workoutCount: Int!
+}
+
+type UserSleepWellLog {
+  createdAt: DateTime!
+  dayNumber: Int!
+  id: ID!
+  minutesSlept: Int
+  note: String
+  rating: UserDayLogRating!
 }
 
 type Workout {

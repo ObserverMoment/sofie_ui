@@ -1,18 +1,8 @@
-fragment UserDayLog on UserDayLog {
-  __typename
-  id
-  createdAt
-  dayNumber
-  eatWell
-  sleepWell
-  meditationMinutes
-  stretchingMinutes
-}
-
 fragment UserDayLogMood on UserDayLogMood {
   __typename
   id
   createdAt
+  dayNumber
   moodScore
   energyScore
   tags
@@ -27,4 +17,13 @@ fragment UserGoal on UserGoal {
   description
   deadline
   completedDate
+}
+
+fragment UserMeditationLog on UserMeditationLog {
+  __typename
+  id
+  createdAt
+  dayNumber
+  minutesLogged
+  note
 }

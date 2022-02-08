@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/club_feed_post_card.dart';
 import 'package:sofie_ui/components/cards/feed_post_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';

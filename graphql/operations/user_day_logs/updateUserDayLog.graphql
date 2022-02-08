@@ -1,8 +1,0 @@
-mutation updateUserDayLog($data: UpdateUserDayLogInput!) {
-  updateUserDayLog(data: $data) {
-    ...UserDayLog
-    UserDayLogMood {
-      ...UserDayLogMood
-    }
-  }
-}

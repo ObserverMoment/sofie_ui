@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get_it/get_it.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/text.dart';

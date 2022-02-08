@@ -12,8 +12,6 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/services/graphql_operation_names.dart';
-import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:collection/collection.dart';
 
 const List<String> kGoodFeelings = [

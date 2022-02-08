@@ -1,3 +1,0 @@
-mutation deleteUserDayLogMood($id: ID!) {
-  deleteUserDayLogMood(id: $id)
-}
