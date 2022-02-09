@@ -87,6 +87,7 @@ class AllTimeStatsSummaryWidget extends StatelessWidget {
           child: Row(
             children: [
               ContentBox(
+                  borderRadius: 20,
                   padding:
                       const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   backgroundColor: backgroundColor,
@@ -221,13 +222,13 @@ class SingleMonthColumns extends StatelessWidget {
       children: [
         _buildChartColumn(
           height: logsHeight,
-          gradient: Styles.secondaryAccentGradient,
+          gradient: Styles.secondaryAccentGradientVertical,
           value: data.logCount,
         ),
         const SizedBox(width: 7),
         _buildChartColumn(
           height: minsHeight,
-          gradient: Styles.primaryAccentGradient,
+          gradient: Styles.primaryAccentGradientVertical,
           value: data.minutes,
         ),
       ],

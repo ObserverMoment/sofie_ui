@@ -1,5 +1,3 @@
-mutation updateUserDayLogMood($data: UpdateUserDayLogMoodInput!) {
-  updateUserDayLogMood(data: $data) {
-    ...UserDayLogMood
-  }
+mutation deleteUserDayLogMood($id: ID!) {
+  deleteUserDayLogMood(id: $id)
 }

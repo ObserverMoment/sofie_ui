@@ -194,20 +194,40 @@ abstract class Styles {
     end: Alignment.bottomRight,
     colors: [
       primaryAccent,
-      // Color(0xff3aa1a1),
+      Color(0xff3aa1a1),
       // Color(0xfff4532c),
       // Color(0xffF09819),
-      Color(0xff34e7ab),
+      // Color(0xff34e7ab),
     ],
     stops: [0.0, 1.0],
   );
 
-  static const Color secondaryAccent = Color(0xffF97D5B);
-  // static const Color secondaryAccent = Color(0xfffe7743);
+  static const LinearGradient primaryAccentGradientVertical = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [
+      primaryAccent,
+      Color(0xff3aa1a1),
+      // Color(0xfff4532c),
+      // Color(0xffF09819),
+      // Color(0xff34e7ab),
+    ],
+    stops: [0.0, 1.0],
+  );
+
+  // static const Color secondaryAccent = Color(0xffF97D5B);
+  static const Color secondaryAccent = Color(0xfffe7743);
 
   static const LinearGradient secondaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    colors: [secondaryAccent, Color(0xffF9A87B)],
+    stops: [0.0, 1.0],
+  );
+
+  static const LinearGradient secondaryAccentGradientVertical = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
     colors: [secondaryAccent, Color(0xffF9A87B)],
     stops: [0.0, 1.0],
   );

@@ -2,9 +2,7 @@ import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/indicators.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -66,7 +64,7 @@ class LoggedSessionsWidget extends StatelessWidget {
             const Opacity(
                 opacity: 0.25,
                 child: Icon(MyCustomIcons.medal, color: Styles.white)),
-          if (numLogsOnDay > 1)
+          if (hasLogOnDay)
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(

@@ -108,7 +108,6 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
                 CupertinoPageScaffold(
                     child: Center(
                         child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     CupertinoActivityIndicator(

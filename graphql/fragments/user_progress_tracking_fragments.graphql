@@ -2,11 +2,10 @@ fragment UserDayLogMood on UserDayLogMood {
   __typename
   id
   createdAt
-  dayNumber
   moodScore
   energyScore
   tags
-  textNote
+  note
 }
 
 fragment UserGoal on UserGoal {

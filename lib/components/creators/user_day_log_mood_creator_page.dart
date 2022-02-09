@@ -13,6 +13,8 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:collection/collection.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/store_utils.dart';
 
 const List<String> kGoodFeelings = [
   'Calm',
@@ -39,33 +41,19 @@ const List<String> kBadFeelings = [
   'Numb',
 ];
 
-class UserDayLogMoodCreatorPage extends StatelessWidget {
-  final UserDayLogMood? journalMood;
-  const UserDayLogMoodCreatorPage({Key? key, this.journalMood})
-      : super(key: key);
+class UserDayLogMoodCreatorPage extends StatefulWidget {
+  const UserDayLogMoodCreatorPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return journalMood != null
-        ? _EditMood(
-            journalMood: journalMood!,
-          )
-        : const _CreateMood();
-  }
+  State<UserDayLogMoodCreatorPage> createState() =>
+      _UserDayLogMoodCreatorPageState();
 }
 
-class _CreateMood extends StatefulWidget {
-  const _CreateMood({Key? key}) : super(key: key);
-
-  @override
-  State<_CreateMood> createState() => _CreateMoodState();
-}
-
-class _CreateMoodState extends State<_CreateMood> {
+class _UserDayLogMoodCreatorPageState extends State<UserDayLogMoodCreatorPage> {
   int? _moodScore;
   int? _energyScore;
   List<String> _tags = [];
-  String? _textNote;
+  String? _note;
 
   bool _saving = false;
 
@@ -77,27 +65,26 @@ class _CreateMoodState extends State<_CreateMood> {
         _saving = true;
       });
 
-      /// TODO?
-      // final variables = CreateUserDayLogMoodArguments(
-      //     data: CreateUserDayLogMoodInput(
-      //         energyScore: _energyScore!,
-      //         moodScore: _moodScore!,
-      //         tags: _tags,
-      //         textNote: _textNote));
+      final variables = CreateUserDayLogMoodArguments(
+          data: CreateUserDayLogMoodInput(
+              energyScore: _energyScore!,
+              moodScore: _moodScore!,
+              tags: _tags,
+              note: _note));
 
-      // final result = await context.graphQLStore.create(
-      //   mutation: CreateUserDayLogMoodMutation(variables: variables),
-      //   addRefToQueries: [
-      //     GQLOpNames.journalMoods,
-      //   ],
-      // );
+      final result = await context.graphQLStore.create(
+        mutation: CreateUserDayLogMoodMutation(variables: variables),
+        addRefToQueries: [
+          GQLOpNames.userDayLogMoods,
+        ],
+      );
 
       setState(() {
         _saving = false;
       });
 
-      // checkOperationResult(context, result,
-      //     onFail: _showErrorToast, onSuccess: context.pop);
+      checkOperationResult(context, result,
+          onFail: _showErrorToast, onSuccess: context.pop);
     }
   }
 
@@ -144,90 +131,8 @@ class _CreateMoodState extends State<_CreateMood> {
           tags: _tags,
           toggleTag: (tag) =>
               setState(() => _tags = _tags.toggleItem<String>(tag)),
-          textNote: _textNote,
-          updateTextNote: (note) => setState(() => _textNote = note)),
-    );
-  }
-}
-
-class _EditMood extends StatefulWidget {
-  final UserDayLogMood journalMood;
-  const _EditMood({Key? key, required this.journalMood}) : super(key: key);
-
-  @override
-  State<_EditMood> createState() => _EditMoodState();
-}
-
-class _EditMoodState extends State<_EditMood> {
-  /// For optimistic UI updates.
-  late UserDayLogMood _activeUserDayLogMood;
-  late Map<String, dynamic> _backup;
-
-  @override
-  void initState() {
-    super.initState();
-    _backup = widget.journalMood.toJson();
-    _activeUserDayLogMood = UserDayLogMood.fromJson(_backup);
-  }
-
-  /// Updates the UI optimistically.
-  /// Saves the the DB. Check result. If no errors, do nothing further.
-  /// Else rollback and show errro toast.
-  Future<void> _updateUserDayLogMood(Map<String, dynamic> data) async {
-    setState(() {
-      _activeUserDayLogMood =
-          UserDayLogMood.fromJson({..._activeUserDayLogMood.toJson(), ...data});
-    });
-
-    /// TODO?
-    // final variables = UpdateUserDayLogMoodArguments(
-    //     data: UpdateUserDayLogMoodInput(
-    //         id: _activeUserDayLogMood.id,
-    //         energyScore: _activeUserDayLogMood.energyScore,
-    //         moodScore: _activeUserDayLogMood.moodScore,
-    //         tags: _activeUserDayLogMood.tags,
-    //         textNote: _activeUserDayLogMood.textNote));
-
-    // final result = await context.graphQLStore.mutate(
-    //   mutation: UpdateUserDayLogMoodMutation(variables: variables),
-    //   broadcastQueryIds: [
-    //     GQLOpNames.journalMoods,
-    //   ],
-    // );
-
-    // checkOperationResult(context, result, onFail: _showErrorToast);
-  }
-
-  void _showErrorToast() => context.showToast(
-      message: 'Sorry, there was a problem.', toastType: ToastType.destructive);
-
-  @override
-  Widget build(BuildContext context) {
-    return MyPageScaffold(
-      navigationBar: MyNavBar(
-        withoutLeading: true,
-        middle: const LeadingNavBarTitle(
-          'Edit Mood',
-        ),
-        trailing: FadeIn(
-          child: NavBarTertiarySaveButton(
-            context.pop,
-            text: 'Done',
-          ),
-        ),
-      ),
-      child: _Inputs(
-          moodScore: _activeUserDayLogMood.moodScore,
-          updateMoodScore: (score) =>
-              _updateUserDayLogMood({'moodScore': score}),
-          energyScore: _activeUserDayLogMood.energyScore,
-          updateEnergyScore: (score) =>
-              _updateUserDayLogMood({'energyScore': score}),
-          tags: _activeUserDayLogMood.tags,
-          toggleTag: (tag) => _updateUserDayLogMood(
-              {'tags': _activeUserDayLogMood.tags.toggleItem<String>(tag)}),
-          textNote: _activeUserDayLogMood.textNote,
-          updateTextNote: (note) => _updateUserDayLogMood({'textNote': note})),
+          note: _note,
+          updateNote: (note) => setState(() => _note = note)),
     );
   }
 }
@@ -240,8 +145,8 @@ class _Inputs extends StatelessWidget {
   final void Function(int score) updateEnergyScore;
   final List<String> tags;
   final void Function(String tag) toggleTag;
-  final String? textNote;
-  final void Function(String textNote) updateTextNote;
+  final String? note;
+  final void Function(String note) updateNote;
   const _Inputs(
       {Key? key,
       required this.moodScore,
@@ -250,8 +155,8 @@ class _Inputs extends StatelessWidget {
       required this.updateEnergyScore,
       required this.tags,
       required this.toggleTag,
-      required this.textNote,
-      required this.updateTextNote})
+      required this.note,
+      required this.updateNote})
       : super(key: key);
 
   EdgeInsets get _inputPadding =>
@@ -333,8 +238,8 @@ class _Inputs extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: EditableTextAreaRow(
               title: 'Anything else?',
-              text: textNote ?? '',
-              onSave: updateTextNote,
+              text: note ?? '',
+              onSave: updateNote,
               inputValidation: (_) => true),
         ),
       ],

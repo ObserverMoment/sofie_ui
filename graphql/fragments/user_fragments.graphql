@@ -60,7 +60,6 @@ fragment UserProfile on UserProfile {
   workoutCount
   planCount
   workoutsPerWeekTarget
-  streakTrackingStartDate
 }
 
 fragment UserProfileResult on UpdateUserProfileResult {
@@ -85,7 +84,6 @@ fragment UserProfileResult on UpdateUserProfileResult {
   hasOnboarded
   lastname
   workoutsPerWeekTarget
-  streakTrackingStartDate
 }
 
 fragment UserProfileSummary on UserProfileSummary {

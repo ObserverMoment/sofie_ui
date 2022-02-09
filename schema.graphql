@@ -423,11 +423,10 @@ input CreateUserBenchmarkInput {
 }
 
 input CreateUserDayLogMoodInput {
-  dayNumber: Int!
   energyScore: Int!
   moodScore: Int!
+  note: String
   tags: [String!]
-  textNote: String
 }
 
 input CreateUserEatWellLogInput {
@@ -819,6 +818,7 @@ type Mutation {
   deleteSkillById(id: ID!): ID!
   deleteUserBenchmark(id: ID!): ID!
   deleteUserBenchmarkEntry(id: ID!): ID!
+  deleteUserDayLogMood(id: ID!): ID!
   deleteUserGoal(id: ID!): ID!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
@@ -891,7 +891,6 @@ type Mutation {
   updateUserBenchmarkEntry(
     data: UpdateUserBenchmarkEntryInput!
   ): UserBenchmarkEntry!
-  updateUserDayLogMood(data: UpdateUserDayLogMoodInput!): UserDayLogMood!
   updateUserEatWellLog(data: UpdateUserEatWellLogInput!): UserEatWellLog!
   updateUserGoal(data: UpdateUserGoalInput!): UserGoal!
   updateUserMeditationLog(
@@ -1303,14 +1302,6 @@ input UpdateUserBenchmarkInput {
   name: String
 }
 
-input UpdateUserDayLogMoodInput {
-  energyScore: Int
-  id: ID!
-  moodScore: Int
-  tags: [String!]
-  textNote: String
-}
-
 input UpdateUserEatWellLogInput {
   id: ID!
   note: String
@@ -1351,7 +1342,6 @@ input UpdateUserProfileInput {
   introVideoUri: String
   lastname: String
   linkedinHandle: String
-  streakTrackingStartDate: DateTime
   tagline: String
   tiktokHandle: String
   townCity: String
@@ -1375,7 +1365,6 @@ type UpdateUserProfileResult {
   introVideoUri: String
   lastname: String
   linkedinHandle: String
-  streakTrackingStartDate: DateTime
   tagline: String
   tiktokHandle: String
   townCity: String
@@ -1542,12 +1531,11 @@ enum UserClubMemberStatus {
 
 type UserDayLogMood {
   createdAt: DateTime!
-  dayNumber: Int!
   energyScore: Int!
   id: ID!
   moodScore: Int!
+  note: String
   tags: [String!]!
-  textNote: String
 }
 
 enum UserDayLogRating {
@@ -1607,7 +1595,6 @@ type UserProfile {
   introVideoUri: String
   linkedinHandle: String
   planCount: Int
-  streakTrackingStartDate: DateTime
   tagline: String
   tiktokHandle: String
   townCity: String

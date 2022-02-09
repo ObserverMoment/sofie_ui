@@ -1,74 +1,102 @@
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/progress/components/summary_stat_display.dart';
 import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
-import 'package:timeline_tile/timeline_tile.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class StreaksSummaryWidget extends StatelessWidget {
   final List<LoggedWorkout> loggedWorkouts;
-  const StreaksSummaryWidget({Key? key, required this.loggedWorkouts})
+  final UserProfile userProfile;
+  const StreaksSummaryWidget(
+      {Key? key, required this.loggedWorkouts, required this.userProfile})
       : super(key: key);
+
+  String _yearWeekKey(DateTime date) => '${date.year}:${date.weekNumberInYear}';
+
+  int get _weekStreakCount {
+    final now = DateTime.now();
+
+    final perWeekTarget = userProfile.workoutsPerWeekTarget;
+
+    if (perWeekTarget == null) {
+      printLog(
+          'Sorry, cannot calculate a week streak number without [perWeekTarget] value');
+      return 0;
+    }
+
+    /// Go back through week grouped logs starting from last week. Increment count for each week where count >= [perWeekTarget].
+    final currentWeek = now.weekNumberInYear;
+    final currentYear = now.year;
+
+    /// Keys are formatted like [year:week]
+    final logsByWeekAndYear =
+        loggedWorkouts.groupListsBy((l) => _yearWeekKey(l.completedOn));
+
+    int weekStreakCount = 0;
+
+    /// Start from last week.
+    int weekCursor = currentWeek;
+    int yearCursor = currentYear;
+
+    while (true) {
+      final logs = logsByWeekAndYear['$yearCursor:$weekCursor'];
+
+      if (logs != null && logs.length >= perWeekTarget) {
+        weekStreakCount++;
+        if (weekCursor == 1) {
+          weekCursor = 52;
+          yearCursor--;
+        } else {
+          weekCursor--;
+        }
+      } else {
+        break;
+      }
+    }
+
+    return weekStreakCount;
+  }
+
+  int get _dailyStreakCount {
+    final now = DateTime.now();
+
+    final logsByDate = loggedWorkouts.groupListsBy((l) =>
+        DateTime(l.completedOn.year, l.completedOn.month, l.completedOn.day));
+
+    final today = DateTime(now.year, now.month, now.day);
+
+    final bool hasWorkedoutToday = logsByDate[today] != null;
+
+    /// Start from yesterday.
+    DateTime dateCursor = today.subtract(const Duration(days: 1));
+    int dayStreakCount = hasWorkedoutToday ? 1 : 0;
+
+    while (true) {
+      final logs = logsByDate[dateCursor];
+
+      if (logs != null && logs.isNotEmpty) {
+        dayStreakCount++;
+        dateCursor = dateCursor.subtract(const Duration(days: 1));
+      } else {
+        break;
+      }
+    }
+
+    return dayStreakCount;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-
-    final logsByDay = loggedWorkouts.groupListsBy((l) =>
-        DateTime(l.completedOn.year, l.completedOn.month, l.completedOn.day));
-
-    final bool hasWorkedoutToday =
-        logsByDay[DateTime(now.year, now.month, now.day)] != null;
-
-    /// Sometimes the user will have no logs at all...
-    final sortedLogDates = logsByDay.keys.sortedBy<DateTime>((k) => k);
-
-    final earliestLogDate =
-        sortedLogDates.isEmpty ? null : sortedLogDates.first;
-
-    /// Select a date to work back to to check for streaks.
-    /// Use two days before earliest log to allow final loop of the [while] clause below.
-    final beforeEarlistLogDate = earliestLogDate != null
-        ? DateTime(earliestLogDate.year, earliestLogDate.month,
-            earliestLogDate.day - 2)
-        : DateTime.now();
-
-    final _StreakCalcData streakData = _StreakCalcData();
-
-    int daysPast = hasWorkedoutToday
-        ? 0
-        : -1; // Start at yesterday and work backwards, unless they have logged a workout today, in which case start today.
-
-    DateTime day = DateTime(now.year, now.month, now.day + daysPast);
-
-    while (day.isAfter(beforeEarlistLogDate)) {
-      if (logsByDay[day] != null) {
-        streakData.streak++;
-      } else {
-        // The streak has ended.
-        // Check if this is the end of the most recent streak.
-        if (!streakData.currentDone) {
-          streakData.current = streakData.streak;
-          streakData.currentDone = true;
-        }
-        // Check if this is the longest streak we have found so far.
-        if (streakData.streak > streakData.longest) {
-          streakData.longest = streakData.streak;
-        }
-
-        // Reset the streak counter.
-        streakData.streak = 0;
-      }
-
-      /// Move another day into the past.
-      daysPast--;
-      day = DateTime(now.year, now.month, now.day + daysPast);
-    }
-
-    final backgroundColor = context.theme.background.withOpacity(0.45);
+    final daily = _dailyStreakCount;
+    final weekly = _weekStreakCount;
+    final perWeekTarget = userProfile.workoutsPerWeekTarget;
 
     return Column(
       children: [
@@ -84,82 +112,73 @@ class StreaksSummaryWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Expanded(
-              child: StreakSummaryStatDisplay(
-                backgroundColor: backgroundColor,
-                label: 'Days',
-                sublabel: 'In a Row',
-                number: streakData.current,
-              ),
+            StatContainer(
+              count: daily,
+              label: 'Days in a Row',
             ),
-            Expanded(
-              child: StreakSummaryStatDisplay(
-                backgroundColor: backgroundColor,
-                label: 'Weeks',
-                sublabel: 'Hit Target',
-                number: streakData.current,
-              ),
-            ),
-            Expanded(
-              child: StreakSummaryStatDisplay(
-                backgroundColor: backgroundColor,
-                label: 'Months',
-                sublabel: 'Hit Target',
-                number: streakData.current,
-              ),
+            StatContainer(
+              count: weekly,
+              label: 'On Target Weeks',
             ),
           ],
         ),
+        if (perWeekTarget != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 10.0, left: 16, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Icon(CupertinoIcons.scope, size: 14),
+                const SizedBox(width: 3),
+                MyText(
+                  'Target = $perWeekTarget workouts per week'.toUpperCase(),
+                  size: FONTSIZE.one,
+                )
+              ],
+            ),
+          )
       ],
     );
   }
 }
 
-class StreakSummaryStatDisplay extends StatelessWidget {
+class StatContainer extends StatelessWidget {
+  final int count;
   final String label;
-  final String sublabel;
-  final int number;
-  final Color? backgroundColor;
-  const StreakSummaryStatDisplay(
-      {Key? key,
-      required this.label,
-      required this.sublabel,
-      required this.number,
-      this.backgroundColor})
-      : super(key: key);
+  const StatContainer({
+    Key? key,
+    required this.count,
+    required this.label,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: ContentBox(
-        backgroundColor: backgroundColor,
-        child: Column(
-          children: [
-            MyText(
-              number.toString(),
-              size: FONTSIZE.six,
+    final backgroundColor = context.theme.background.withOpacity(0.45);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+      decoration: BoxDecoration(
+          color: backgroundColor, borderRadius: BorderRadius.circular(20)),
+      child: Column(
+        children: [
+          const SizedBox(height: 6),
+          MyHeaderText(
+            label,
+            size: FONTSIZE.two,
+            weight: FontWeight.normal,
+          ),
+          const SizedBox(height: 6),
+          Card(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(10),
+            child: MyText(
+              count == 0 ? '-' : count.toString(),
+              size: FONTSIZE.seven,
+              color: Styles.secondaryAccent,
             ),
-            const SizedBox(height: 4),
-            MyText(label.toUpperCase(), size: FONTSIZE.two),
-            const SizedBox(height: 4),
-            MyText(
-              sublabel,
-              size: FONTSIZE.one,
-              subtext: true,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
-}
-
-class _StreakCalcData {
-  // used during the calculation. Increments while counting then resets to zero.
-  int streak = 0;
-  int current = 0;
-  int longest = 0;
-  // Once the initial streak - starting yesterday - is completed, mark this as true.
-  bool currentDone = false;
 }
