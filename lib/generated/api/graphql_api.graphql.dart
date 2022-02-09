@@ -1357,22 +1357,6 @@ class UserMeditationLogs$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class DeleteUserDayLogMood$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserDayLogMood$Mutation();
-
-  factory DeleteUserDayLogMood$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$DeleteUserDayLogMood$MutationFromJson(json);
-
-  late String deleteUserDayLogMood;
-
-  @override
-  List<Object?> get props => [deleteUserDayLogMood];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteUserDayLogMood$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UserGoals$Query extends JsonSerializable with EquatableMixin {
   UserGoals$Query();
 
@@ -8109,6 +8093,22 @@ class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class DeleteUserDayLogMood$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserDayLogMood$Mutation();
+
+  factory DeleteUserDayLogMood$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserDayLogMood$MutationFromJson(json);
+
+  late String deleteUserDayLogMood;
+
+  @override
+  List<Object?> get props => [deleteUserDayLogMood];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserDayLogMood$MutationToJson(this);
+}
+
 enum ContentAccessScope {
   @JsonValue('PRIVATE')
   private,
@@ -10393,69 +10393,6 @@ class UserMeditationLogsQuery
   @override
   UserMeditationLogs$Query parse(Map<String, dynamic> json) =>
       UserMeditationLogs$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteUserDayLogMoodArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteUserDayLogMoodArguments({required this.id});
-
-  @override
-  factory DeleteUserDayLogMoodArguments.fromJson(Map<String, dynamic> json) =>
-      _$DeleteUserDayLogMoodArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteUserDayLogMoodArgumentsToJson(this);
-}
-
-final DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteUserDayLogMood'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteUserDayLogMood'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteUserDayLogMoodMutation extends GraphQLQuery<
-    DeleteUserDayLogMood$Mutation, DeleteUserDayLogMoodArguments> {
-  DeleteUserDayLogMoodMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteUserDayLogMood';
-
-  @override
-  final DeleteUserDayLogMoodArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteUserDayLogMood$Mutation parse(Map<String, dynamic> json) =>
-      DeleteUserDayLogMood$Mutation.fromJson(json);
 }
 
 final USER_GOALS_QUERY_DOCUMENT = DocumentNode(definitions: [
@@ -51458,4 +51395,67 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   @override
   CreateClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       CreateClubInviteToken$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserDayLogMoodArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserDayLogMoodArguments({required this.id});
+
+  @override
+  factory DeleteUserDayLogMoodArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserDayLogMoodArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserDayLogMoodArgumentsToJson(this);
+}
+
+final DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserDayLogMood'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserDayLogMood'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserDayLogMoodMutation extends GraphQLQuery<
+    DeleteUserDayLogMood$Mutation, DeleteUserDayLogMoodArguments> {
+  DeleteUserDayLogMoodMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserDayLogMood';
+
+  @override
+  final DeleteUserDayLogMoodArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserDayLogMood$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserDayLogMood$Mutation.fromJson(json);
 }

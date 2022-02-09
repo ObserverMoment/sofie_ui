@@ -483,17 +483,6 @@ Map<String, dynamic> _$UserMeditationLogs$QueryToJson(
           instance.userMeditationLogs.map((e) => e.toJson()).toList(),
     };
 
-DeleteUserDayLogMood$Mutation _$DeleteUserDayLogMood$MutationFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserDayLogMood$Mutation()
-      ..deleteUserDayLogMood = json['deleteUserDayLogMood'] as String;
-
-Map<String, dynamic> _$DeleteUserDayLogMood$MutationToJson(
-        DeleteUserDayLogMood$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserDayLogMood': instance.deleteUserDayLogMood,
-    };
-
 UserGoals$Query _$UserGoals$QueryFromJson(Map<String, dynamic> json) =>
     UserGoals$Query()
       ..userGoals = (json['userGoals'] as List<dynamic>)
@@ -6349,6 +6338,17 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'name': instance.name,
     };
 
+DeleteUserDayLogMood$Mutation _$DeleteUserDayLogMood$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserDayLogMood$Mutation()
+      ..deleteUserDayLogMood = json['deleteUserDayLogMood'] as String;
+
+Map<String, dynamic> _$DeleteUserDayLogMood$MutationToJson(
+        DeleteUserDayLogMood$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserDayLogMood': instance.deleteUserDayLogMood,
+    };
+
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubChatSummaryArguments(
@@ -6490,18 +6490,6 @@ DeleteUserGoalArguments _$DeleteUserGoalArgumentsFromJson(
 
 Map<String, dynamic> _$DeleteUserGoalArgumentsToJson(
         DeleteUserGoalArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-DeleteUserDayLogMoodArguments _$DeleteUserDayLogMoodArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    DeleteUserDayLogMoodArguments(
-      id: json['id'] as String,
-    );
-
-Map<String, dynamic> _$DeleteUserDayLogMoodArgumentsToJson(
-        DeleteUserDayLogMoodArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
     };
@@ -8249,4 +8237,16 @@ Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
+    };
+
+DeleteUserDayLogMoodArguments _$DeleteUserDayLogMoodArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteUserDayLogMoodArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteUserDayLogMoodArgumentsToJson(
+        DeleteUserDayLogMoodArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

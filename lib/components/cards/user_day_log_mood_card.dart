@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/user_day_log_mood_creator_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
@@ -12,90 +10,37 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:collection/collection.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class UserDayLogMoodCard extends StatelessWidget {
   final UserDayLogMood mood;
+  final VoidCallback deleteMoodLog;
   const UserDayLogMoodCard({
     Key? key,
     required this.mood,
+    required this.deleteMoodLog,
   }) : super(key: key);
 
   int get kMaxScore => 4;
 
-  double get kScoreDisplayDiameter => 60.0;
-
-  List<Widget> _buildScoreIndicators(BuildContext context) {
-    final tags = ['Mood', 'Energy'];
-
-    return [
-      mood.moodScore,
-      mood.energyScore,
-    ]
-        .mapIndexed((index, score) => Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 3),
-                  child: ClipOval(
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Container(
-                          height: kScoreDisplayDiameter,
-                          width: kScoreDisplayDiameter,
-                          color: context.theme.background,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          child: Container(
-                            height: kScoreDisplayDiameter * (score / kMaxScore),
-                            width: kScoreDisplayDiameter,
-                            color: Color.lerp(kBadScoreColor, kGoodScoreColor,
-                                score / kMaxScore),
-                          ),
-                        ),
-                        Opacity(
-                          opacity: 0.6,
-                          child: score > 2
-                              ? const Icon(CupertinoIcons.checkmark_alt)
-                              : score == 2
-                                  ? null
-                                  : const Icon(
-                                      CupertinoIcons
-                                          .exclamationmark_triangle_fill,
-                                      color: Styles.errorRed,
-                                    ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                MyText(
-                  tags[index],
-                ),
-              ],
-            ))
-        .toList();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      padding: const EdgeInsets.all(8),
+    return ContentBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              MyText(
-                mood.createdAt.dateAndTime,
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: MyText(
+                  mood.createdAt.dateAndTime,
+                ),
               ),
               TertiaryButton(
                 text: 'Delete',
-                onPressed: () => print('delete mood'),
+                onPressed: deleteMoodLog,
                 textColor: Styles.errorRed,
               )
             ],
@@ -130,14 +75,13 @@ class UserDayLogMoodCard extends StatelessWidget {
                         .map((t) => kGoodFeelings.contains(t)
                             ? Tag(
                                 textColor: Styles.white,
-                                color: kGoodScoreColor,
-                                fontSize: FONTSIZE.three,
+                                color: kGoodScoreColor.withOpacity(0.8),
                                 tag: t,
                               )
                             : Tag(
                                 tag: t,
-                                color: material.Colors.transparent,
-                                textColor: context.theme.primary,
+                                color: kBadScoreColor.withOpacity(0.8),
+                                textColor: Styles.white,
                               ))
                         .toList(),
                   ),
@@ -174,55 +118,78 @@ class _ScoreMeter extends StatelessWidget {
       required this.gradient})
       : super(key: key);
 
-  BorderRadius get _borderRadius => BorderRadius.circular(20);
+  double get _borderPadding => 12.0;
+  double get _maxHeight => 140.0;
+  double get _fullMeterHeight => _maxHeight - (_borderPadding * 2);
 
   @override
   Widget build(BuildContext context) {
+    final percent = (score + 1) / 5;
+
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        Container(
+          alignment: Alignment.center,
+          height: 32,
+          padding: const EdgeInsets.all(4.0),
           child: Opacity(
-            opacity: 0.6,
+            opacity: 0.8,
             child: score > 2
-                ? const Icon(CupertinoIcons.hand_thumbsup_fill)
+                ? const Icon(
+                    CupertinoIcons.checkmark_alt,
+                    color: Styles.infoBlue,
+                  )
                 : score == 2
-
-                    /// TODO:
-                    ? const Icon(CupertinoIcons.checkmark_alt)
+                    ? null
                     : const Icon(
                         CupertinoIcons.exclamationmark_triangle_fill,
                         color: Styles.errorRed,
                       ),
           ),
         ),
-        Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
+        Container(
+          padding: EdgeInsets.all(_borderPadding),
+          height: _maxHeight,
+          width: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: Styles.secondaryButtonGradient,
+          ),
+          child: ClipRect(
+            child: Container(
+              clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                  borderRadius: _borderRadius, color: context.theme.background),
-              height: 140,
-              width: 80,
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: _borderRadius,
-                    color: context.theme.cardBackground),
+                borderRadius: BorderRadius.circular(12),
+                color: context.theme.cardBackground.withOpacity(0.9),
+              ),
+              child: Stack(
+                children: [
+                  ClipRect(
+                      clipBehavior: Clip.hardEdge,
+                      child: OverflowBox(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: GrowIn(
+                              duration: 1000,
+                              child: Container(
+                                alignment: Alignment.bottomCenter,
+                                decoration: BoxDecoration(gradient: gradient),
+                                height: percent * _fullMeterHeight,
+                              )),
+                        ),
+                      )),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(
+                        4,
+                        (index) => HorizontalLine(
+                              color: context.theme.primary.withOpacity(0.05),
+                            )),
+                  ),
+                ],
               ),
             ),
-            GrowIn(
-                duration: 1000,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: _borderRadius, gradient: gradient),
-                    height: 140,
-                    width: 80,
-                  ),
-                ))
-          ],
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

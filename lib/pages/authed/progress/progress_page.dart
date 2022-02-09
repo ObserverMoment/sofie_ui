@@ -131,7 +131,7 @@ class ProgressWidgetContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8),
       child: Card(
           padding:
               const EdgeInsets.only(left: 10, top: 4, right: 10, bottom: 8),
