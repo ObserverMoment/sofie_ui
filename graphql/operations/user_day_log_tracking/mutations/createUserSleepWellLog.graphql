@@ -1,0 +1,5 @@
+mutation createUserSleepWellLog($data: CreateUserSleepWellLogInput!) {
+  createUserSleepWellLog(data: $data) {
+    ...UserSleepWellLog
+  }
+}

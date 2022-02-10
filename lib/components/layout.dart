@@ -234,14 +234,22 @@ class MyPageScaffold extends StatelessWidget {
 
 class MySliverNavbar extends StatelessWidget {
   final String title;
+  final IconData? leadingIcon;
   final Widget? trailing;
-  const MySliverNavbar({Key? key, required this.title, this.trailing})
+  final Color? backgroundColor;
+  const MySliverNavbar(
+      {Key? key,
+      required this.title,
+      this.trailing,
+      this.leadingIcon,
+      this.backgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return CupertinoSliverNavigationBar(
-        leading: const NavBarBackButton(),
+        backgroundColor: backgroundColor,
+        leading: NavBarBackButton(icon: leadingIcon),
         largeTitle: MediaQuery(
           data: MediaQuery.of(context).copyWith(textScaleFactor: 0.87),
           child: Text(
@@ -286,9 +294,11 @@ class MyNavBar extends CupertinoNavigationBar {
 
 class NavBarBackButton extends StatelessWidget {
   final Alignment alignment;
+  final IconData? icon;
   const NavBarBackButton({
     Key? key,
     this.alignment = Alignment.centerLeft,
+    this.icon,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -299,7 +309,7 @@ class NavBarBackButton extends StatelessWidget {
         Navigator.maybePop(context);
       },
       child: Icon(
-        CupertinoIcons.arrow_left,
+        icon ?? CupertinoIcons.arrow_left,
         size: 22,
         color: context.theme.primary,
       ),

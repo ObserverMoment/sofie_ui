@@ -22,7 +22,29 @@ fragment UserMeditationLog on UserMeditationLog {
   __typename
   id
   createdAt
+  year
   dayNumber
   minutesLogged
+  note
+}
+
+fragment UserEatWellLog on UserEatWellLog {
+  __typename
+  id
+  createdAt
+  year
+  dayNumber
+  rating
+  note
+}
+
+fragment UserSleepWellLog on UserSleepWellLog {
+  __typename
+  id
+  createdAt
+  year
+  dayNumber
+  rating
+  minutesSlept
   note
 }

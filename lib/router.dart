@@ -8,7 +8,10 @@ import 'package:sofie_ui/components/creators/personal_best_creator/personal_best
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_eat_well_log_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_sleep_well_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_goal_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_meditation_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_review_creator.dart';
@@ -161,6 +164,12 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/custom-move', page: CustomMoveCreatorPage),
           AutoRoute(path: 'create/gym-profile', page: GymProfileCreatorPage),
           AutoRoute(path: 'create/goal', page: UserGoalCreatorPage),
+          AutoRoute(
+              path: 'create/mindfulness-log',
+              page: UserMeditationLogCreatorPage),
+          AutoRoute(path: 'create/food-log', page: UserEatWellLogCreatorPage),
+          AutoRoute(
+              path: 'create/sleep-log', page: UserSleepWellLogCreatorPage),
           AutoRoute(
               path: 'create/personal-best', page: PersonalBestCreatorPage),
           AutoRoute(path: 'create/post', page: FeedPostCreatorPage),

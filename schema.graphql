@@ -433,6 +433,7 @@ input CreateUserEatWellLogInput {
   dayNumber: Int!
   note: String
   rating: UserDayLogRating!
+  year: Int!
 }
 
 input CreateUserGoalInput {
@@ -445,12 +446,7 @@ input CreateUserMeditationLogInput {
   dayNumber: Int!
   minutesLogged: Int!
   note: String
-}
-
-input CreateUserMobilityLogInput {
-  dayNumber: Int!
-  minutesLogged: Int!
-  note: String
+  year: Int!
 }
 
 input CreateUserSleepWellLogInput {
@@ -458,6 +454,7 @@ input CreateUserSleepWellLogInput {
   minutesSlept: Int
   note: String
   rating: UserDayLogRating!
+  year: Int!
 }
 
 input CreateWorkoutInput {
@@ -782,7 +779,6 @@ type Mutation {
   createUserMeditationLog(
     data: CreateUserMeditationLogInput!
   ): UserMeditationLog!
-  createUserMobilityLog(data: CreateUserMobilityLogInput!): UserMobilityLog!
   createUserSleepWellLog(data: CreateUserSleepWellLogInput!): UserSleepWellLog!
   createWorkout(data: CreateWorkoutInput!): Workout!
   createWorkoutMove(data: CreateWorkoutMoveInput!): WorkoutMove!
@@ -896,7 +892,6 @@ type Mutation {
   updateUserMeditationLog(
     data: UpdateUserMeditationLogInput!
   ): UserMeditationLog!
-  updateUserMobilityLog(data: UpdateUserMobilityLogInput!): UserMobilityLog!
   updateUserProfile(data: UpdateUserProfileInput!): UpdateUserProfileResult!
   updateUserSleepWellLog(data: UpdateUserSleepWellLogInput!): UserSleepWellLog!
   updateWorkout(data: UpdateWorkoutInput!): Workout!
@@ -1022,7 +1017,6 @@ type Query {
   userGoals: [UserGoal!]!
   userLoggedWorkouts(take: Int): [LoggedWorkout!]!
   userMeditationLogs: [UserMeditationLog!]!
-  userMobilityLogs: [UserMobilityLog!]!
   userProfile(userId: ID!): UserProfile!
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
@@ -1322,13 +1316,9 @@ input UpdateUserMeditationLogInput {
   note: String
 }
 
-input UpdateUserMobilityLogInput {
-  id: ID!
-  minutesLogged: Int
-  note: String
-}
-
 input UpdateUserProfileInput {
+  activeLogDataWidgets: [String!]
+  activeProgressWidgets: [String!]
   avatarUri: String
   bio: String
   birthdate: DateTime
@@ -1351,6 +1341,8 @@ input UpdateUserProfileInput {
 }
 
 type UpdateUserProfileResult {
+  activeLogDataWidgets: [String!]
+  activeProgressWidgets: [String!]
   avatarUri: String
   bio: String
   birthdate: DateTime
@@ -1550,6 +1542,7 @@ type UserEatWellLog {
   id: ID!
   note: String
   rating: UserDayLogRating!
+  year: Int!
 }
 
 type UserGoal {
@@ -1567,14 +1560,7 @@ type UserMeditationLog {
   id: ID!
   minutesLogged: Int!
   note: String
-}
-
-type UserMobilityLog {
-  createdAt: DateTime!
-  dayNumber: Int!
-  id: ID!
-  minutesLogged: Int!
-  note: String
+  year: Int!
 }
 
 type UserProfile {
@@ -1582,6 +1568,8 @@ type UserProfile {
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
   Skills: [Skill!]!
+  activeLogDataWidgets: [String!]
+  activeProgressWidgets: [String!]
   avatarUri: String
   bio: String
   birthdate: DateTime
@@ -1630,6 +1618,7 @@ type UserSleepWellLog {
   minutesSlept: Int
   note: String
   rating: UserDayLogRating!
+  year: Int!
 }
 
 type Workout {

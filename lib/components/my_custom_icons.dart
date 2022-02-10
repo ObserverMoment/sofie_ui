@@ -29,4 +29,6 @@ class MyCustomIcons {
       IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData medal =
       IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData mindfulnessIcon =
+      IconData(0xe808, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

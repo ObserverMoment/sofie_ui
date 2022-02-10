@@ -5,7 +5,6 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
@@ -16,7 +15,7 @@ class LoggedSessionsWidget extends StatelessWidget {
   const LoggedSessionsWidget({Key? key, required this.loggedWorkouts})
       : super(key: key);
 
-  final numDays = 28;
+  final _numDays = 28;
 
   DateTime _getDateXDaysAgo(DateTime now, int days) {
     return DateTime(now.year, now.month, now.day - days);
@@ -33,20 +32,20 @@ class LoggedSessionsWidget extends StatelessWidget {
   Widget _buildDay(
     BuildContext context,
     Map<DateTime, List<LoggedWorkout>> logsByDay,
-    DateTime now,
+    DateTime today,
     DateTime date,
   ) {
-    final isToday = now.isSameDate(date);
+    final isToday = today.isSameDate(date);
 
     final numLogsOnDay = logsByDay[date]?.length ?? 0;
     final hasLogOnDay = numLogsOnDay > 0;
 
     return Container(
       decoration: BoxDecoration(
-          border: isToday
-              ? Border.all(color: Styles.primaryAccent, width: 2)
-              : null,
-          borderRadius: BorderRadius.circular(60)),
+        border:
+            isToday ? Border.all(color: Styles.primaryAccent, width: 2) : null,
+        shape: BoxShape.circle,
+      ),
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -55,8 +54,6 @@ class LoggedSessionsWidget extends StatelessWidget {
             margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color:
-                  hasLogOnDay ? null : context.theme.primary.withOpacity(0.1),
               gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
             ),
           ),
@@ -85,7 +82,7 @@ class LoggedSessionsWidget extends StatelessWidget {
             ),
           MyText(
             date.day.toString(),
-            size: FONTSIZE.one,
+            size: FONTSIZE.zero,
             color: hasLogOnDay ? Styles.white : null,
           ),
         ],
@@ -100,8 +97,9 @@ class LoggedSessionsWidget extends StatelessWidget {
     /// [startDay] should be the Monday 3 and a bit weeks ago.
     /// You show 4 weeks - including the week the user is currently in.
     final weekDayNumber = now.weekday;
-    final daysBeforeToday = 21 + (weekDayNumber - 1);
-    final startDay = DateTime(now.year, now.month, now.day - daysBeforeToday);
+    final numDaysBeforeToday = (_numDays - 7) + (weekDayNumber - 1);
+    final startDay =
+        DateTime(now.year, now.month, now.day - numDaysBeforeToday);
 
     final logsByDay = loggedWorkouts
         .where((l) => l.completedOn.isAfter(startDay))
@@ -111,20 +109,8 @@ class LoggedSessionsWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        WidgetHeader(
-          icon: MyCustomIcons.dumbbell,
-          title: 'Sessions Logged',
-          actions: [
-            WidgetHeaderAction(
-                icon: CupertinoIcons.rectangle_expand_vertical,
-                onPressed: () => print('view full screen')),
-            WidgetHeaderAction(
-                icon: CupertinoIcons.settings,
-                onPressed: () => print('settings')),
-          ],
-        ),
-        const SizedBox(height: 8),
         GridView.count(
+          padding: EdgeInsets.zero,
           crossAxisCount: 7,
           physics: const NeverScrollableScrollPhysics(),
           childAspectRatio: 3,
@@ -133,13 +119,14 @@ class LoggedSessionsWidget extends StatelessWidget {
               (index) => _buildDayHeader(startDay.add(Duration(days: index)))),
         ),
         GridView.count(
+            padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             crossAxisCount: 7,
             shrinkWrap: true,
             children: List.generate(
-                28,
+                _numDays,
                 (index) => _buildDay(context, logsByDay, now,
-                    _getDateXDaysAgo(now, daysBeforeToday - index)))),
+                    _getDateXDaysAgo(now, numDaysBeforeToday - index)))),
       ],
     );
   }
