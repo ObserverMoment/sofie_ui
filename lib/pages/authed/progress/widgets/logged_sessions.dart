@@ -15,7 +15,7 @@ class LoggedSessionsWidget extends StatelessWidget {
   const LoggedSessionsWidget({Key? key, required this.loggedWorkouts})
       : super(key: key);
 
-  final _numDays = 28;
+  final _numDays = 21;
 
   DateTime _getDateXDaysAgo(DateTime now, int days) {
     return DateTime(now.year, now.month, now.day - days);
@@ -60,7 +60,8 @@ class LoggedSessionsWidget extends StatelessWidget {
           if (hasLogOnDay)
             const Opacity(
                 opacity: 0.25,
-                child: Icon(MyCustomIcons.medal, color: Styles.white)),
+                child:
+                    Icon(MyCustomIcons.medal, size: 18, color: Styles.white)),
           if (hasLogOnDay)
             Align(
               alignment: Alignment.bottomCenter,
@@ -74,7 +75,7 @@ class LoggedSessionsWidget extends StatelessWidget {
                   children: List.generate(
                       numLogsOnDay,
                       (i) => const Dot(
-                            diameter: 4,
+                            diameter: 3,
                             color: Styles.white,
                           )),
                 ),
@@ -118,15 +119,15 @@ class LoggedSessionsWidget extends StatelessWidget {
           children: List.generate(7,
               (index) => _buildDayHeader(startDay.add(Duration(days: index)))),
         ),
-        GridView.count(
+        GridView.builder(
+            shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 7,
-            shrinkWrap: true,
-            children: List.generate(
-                _numDays,
-                (index) => _buildDay(context, logsByDay, now,
-                    _getDateXDaysAgo(now, numDaysBeforeToday - index)))),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7, mainAxisExtent: 40),
+            itemCount: _numDays,
+            itemBuilder: (c, i) => _buildDay(context, logsByDay, now,
+                _getDateXDaysAgo(now, numDaysBeforeToday - i))),
       ],
     );
   }

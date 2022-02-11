@@ -663,7 +663,6 @@ mixin UserProfileMixin {
   int? workoutCount;
   int? planCount;
   int? workoutsPerWeekTarget;
-  int? workoutsPerWeekTarget;
   List<String>? activeProgressWidgets;
   List<String>? activeLogDataWidgets;
 }
@@ -39559,12 +39558,6 @@ final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'planCount'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'workoutsPerWeekTarget'),
             alias: null,
             arguments: [],
             directives: [],

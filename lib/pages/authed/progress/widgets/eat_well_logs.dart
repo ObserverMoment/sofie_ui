@@ -1,23 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:intl/intl.dart';
+import 'package:meta/meta.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 
 class EatWellLogWidget extends StatelessWidget {
-  const EatWellLogWidget({Key? key}) : super(key: key);
+  final List<UserEatWellLog> userEatWellLogs;
+  const EatWellLogWidget({Key? key, required this.userEatWellLogs})
+      : super(key: key);
 
-  final _numDays = 28;
+  final _numDays = 21;
 
   DateTime _getDateXDaysAgo(DateTime now, int days) {
     return DateTime(now.year, now.month, now.day - days);
@@ -73,71 +70,59 @@ class EatWellLogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = UserEatWellLogsQuery();
+    final now = DateTime.now();
+    final todayDayNumber = now.dayNumberInYear;
 
-    return QueryObserver<UserEatWellLogs$Query, json.JsonSerializable>(
-        key: Key('EatWellLogWidget - ${query.operationName}'),
-        query: query,
-        loadingIndicator: const ShimmerCard(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        builder: (data) {
-          final now = DateTime.now();
-          final todayDayNumber = now.dayNumberInYear;
+    /// [startDay] should be the Monday 3 and a bit weeks ago.
+    /// You show 4 weeks - including the week the user is currently in.
 
-          /// [startDay] should be the Monday 3 and a bit weeks ago.
-          /// You show 4 weeks - including the week the user is currently in.
+    final weekDayNumber = now.weekday;
+    final numDaysBeforeToday = (_numDays - 7) + (weekDayNumber - 1);
+    final startDay =
+        DateTime(now.year, now.month, todayDayNumber - numDaysBeforeToday);
+    final startDayNumber = todayDayNumber - numDaysBeforeToday;
 
-          final weekDayNumber = now.weekday;
-          final numDaysBeforeToday = (_numDays - 7) + (weekDayNumber - 1);
-          final startDay = DateTime(
-              now.year, now.month, todayDayNumber - numDaysBeforeToday);
-          final startDayNumber = todayDayNumber - numDaysBeforeToday;
+    /// Should only be one log per dayNumber.
+    final logsByDay = userEatWellLogs
+        .where((l) => l.dayNumber >= startDayNumber)
+        .fold<Map<DateTime, UserEatWellLog>>({}, (acum, next) {
+      acum[DateTime(next.year, 1, next.dayNumber)] = next;
+      return acum;
+    });
 
-          /// Should only be one log per dayNumber.
-          final logsByDay = data.userEatWellLogs
-              .where((l) => l.dayNumber >= startDayNumber)
-              .fold<Map<DateTime, UserEatWellLog>>({}, (acum, next) {
-            acum[DateTime(next.year, 1, next.dayNumber)] = next;
-            return acum;
-          });
+    return Column(
+      children: [
+        GridView.count(
+          padding: EdgeInsets.zero,
+          crossAxisCount: 7,
+          physics: const NeverScrollableScrollPhysics(),
+          childAspectRatio: 3,
+          shrinkWrap: true,
+          children: List.generate(7,
+              (index) => _buildDayHeader(startDay.add(Duration(days: index)))),
+        ),
+        GridView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 7, mainAxisExtent: 40),
+            itemCount: _numDays,
+            itemBuilder: (c, i) {
+              final date = _getDateXDaysAgo(now, numDaysBeforeToday - i);
 
-          return Column(
-            children: [
-              GridView.count(
-                padding: EdgeInsets.zero,
-                crossAxisCount: 7,
-                physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 3,
-                shrinkWrap: true,
-                children: List.generate(
-                    7,
-                    (index) =>
-                        _buildDayHeader(startDay.add(Duration(days: index)))),
-              ),
-              GridView.count(
-                  padding: EdgeInsets.zero,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 7,
-                  childAspectRatio: 1.4,
-                  shrinkWrap: true,
-                  children: List.generate(_numDays, (index) {
-                    final date =
-                        _getDateXDaysAgo(now, numDaysBeforeToday - index);
-
-                    return GestureDetector(
-                      onTap: () {
-                        final log = logsByDay[date];
-                        context.navigateTo(UserEatWellLogCreatorRoute(
-                            year: log == null ? date.year : null,
-                            dayNumber:
-                                log == null ? date.dayNumberInYear : null,
-                            userEatWellLog: logsByDay[date]));
-                      },
-                      child: _buildDay(context, logsByDay, now, date),
-                    );
-                  })),
-            ],
-          );
-        });
+              return GestureDetector(
+                onTap: () {
+                  final log = logsByDay[date];
+                  context.navigateTo(UserEatWellLogCreatorRoute(
+                      year: log == null ? date.year : null,
+                      dayNumber: log == null ? date.dayNumberInYear : null,
+                      userEatWellLog: logsByDay[date]));
+                },
+                child: _buildDay(context, logsByDay, now, date),
+              );
+            }),
+      ],
+    );
   }
 }

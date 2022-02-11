@@ -13,7 +13,6 @@ import 'package:sofie_ui/services/utils.dart';
 
 class Tag extends StatelessWidget {
   final Color? color;
-  final Color? borderColor;
   final Color? textColor;
   final String tag;
 
@@ -23,7 +22,6 @@ class Tag extends StatelessWidget {
   const Tag(
       {Key? key,
       this.color,
-      this.borderColor,
       this.textColor,
       required this.tag,
       this.padding = kDefaultTagPadding,
@@ -34,16 +32,15 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = color ?? context.theme.primary.withOpacity(0.95);
-    final border =
-        borderColor ?? color ?? context.theme.primary.withOpacity(0.95);
+
     final text = textColor ?? context.theme.background;
 
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: background,
-          border: Border.all(color: border)),
+        borderRadius: BorderRadius.circular(30),
+        color: background,
+      ),
       child: MyText(
         tag,
         size: fontSize,

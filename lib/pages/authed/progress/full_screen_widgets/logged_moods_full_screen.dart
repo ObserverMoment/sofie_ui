@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 
 class LoggedMoodsFullScreen extends StatelessWidget {
-  const LoggedMoodsFullScreen({Key? key}) : super(key: key);
+  final String widgetId;
+  const LoggedMoodsFullScreen({Key? key, required this.widgetId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +21,10 @@ class LoggedMoodsFullScreen extends StatelessWidget {
                     trailing: Padding(
                       padding: const EdgeInsets.only(right: 5.0),
                       child: CircularBox(
-                          padding: const EdgeInsets.all(7),
-                          color: context.theme.background,
-                          child: const Icon(CupertinoIcons.smiley)),
+                        padding: const EdgeInsets.all(10),
+                        color: context.theme.background,
+                        child: Icon(kWidgetIdToIconMap[widgetId], size: 20),
+                      ),
                     ),
                     backgroundColor: context.theme.cardBackground,
                   ),

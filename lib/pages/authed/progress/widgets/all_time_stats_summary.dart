@@ -5,7 +5,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
 import 'package:collection/collection.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:supercharged/supercharged.dart';
@@ -15,19 +14,19 @@ class AllTimeStatsSummaryWidget extends StatelessWidget {
   const AllTimeStatsSummaryWidget({Key? key, required this.loggedWorkouts})
       : super(key: key);
 
+  int get _showNumMonths => 4;
+
   @override
   Widget build(BuildContext context) {
-    /// Get the date maximum of 4 months ago.
-    /// We want to show (max) 3 previous months and this month.
+    /// Get the date maximum of [_showNumMonths] months ago.
+    /// We want to show (max) [_showNumMonths - 1] previous months and this month.
     final now = DateTime.now();
-    final startFrom = DateTime(now.year, now.month - 3);
+    final startFrom = DateTime(now.year, now.month - (_showNumMonths - 1));
 
     final sortedLoggedWorkouts =
         loggedWorkouts.sortedBy<DateTime>((l) => l.completedOn);
 
-    // final logsByMonth = sortedLoggedWorkouts.groupFoldBy<DateTime, int>((l) => DateTime(l.completedOn.year, l.completedOn.month), (acum, next) => ((acum ?? 0) + next.totalSessionTime.inMinutes).round());
-
-    /// Take a max of 4 months
+    /// Take a max of [_showNumMonths] months
     final logsByMonth = sortedLoggedWorkouts
         .fold<Map<DateTime, List<LoggedWorkout>>>({}, (acum, next) {
       final dateAsMonth =
@@ -71,102 +70,86 @@ class AllTimeStatsSummaryWidget extends StatelessWidget {
 
     final backgroundColor = context.theme.background.withOpacity(0.45);
 
-    return Column(
-      children: [
-        WidgetHeader(
-          icon: CupertinoIcons.chart_bar,
-          title: 'Summary',
-          actions: [
-            WidgetHeaderAction(
-                icon: CupertinoIcons.settings,
-                onPressed: () => print('open something'))
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2),
-          child: Row(
-            children: [
-              ContentBox(
-                  borderRadius: 20,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                  backgroundColor: backgroundColor,
-                  child: Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2),
+      child: Row(
+        children: [
+          ContentBox(
+              borderRadius: 20,
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 32),
+              backgroundColor: backgroundColor,
+              child: Column(
+                children: [
+                  const MyText(
+                    'ALL TIME',
+                    size: FONTSIZE.one,
+                    subtext: true,
+                  ),
+                  const SizedBox(height: 8),
+                  Column(
                     children: [
+                      MyText(
+                        '$allTimeSessionCount',
+                        color: Styles.secondaryAccent,
+                        size: FONTSIZE.eight,
+                      ),
+                      const SizedBox(height: 3),
                       const MyText(
-                        'ALL TIME',
-                        size: FONTSIZE.one,
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          MyText(
-                            '$allTimeSessionCount',
-                            color: Styles.secondaryAccent,
-                            size: FONTSIZE.seven,
-                          ),
-                          const SizedBox(width: 3),
-                          const MyText(
-                            'WORKOUTS',
-                            subtext: true,
-                            size: FONTSIZE.zero,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 6),
-                      Row(
-                        children: [
-                          MyText(
-                            allTimeMinutes.displayLong,
-                            size: FONTSIZE.four,
-                            color: Styles.primaryAccent,
-                          ),
-                          const SizedBox(width: 3),
-                          const MyText(
-                            'MINUTES',
-                            subtext: true,
-                            size: FONTSIZE.zero,
-                          ),
-                        ],
+                        'WORKOUTS',
+                        size: FONTSIZE.zero,
                       ),
                     ],
-                  )),
-              Flexible(
-                child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0, right: 2),
-                    child: Table(
-                      defaultVerticalAlignment:
-                          TableCellVerticalAlignment.bottom,
-                      children: [
-                        TableRow(
-                          children: data
-                              .map((data) => SingleMonthColumns(
-                                    data: data,
-                                    maxLogs: maxLogs,
-                                    maxMinutes: maxMinutes,
-                                  ))
-                              .toList(),
-                        ),
-                        TableRow(
-                          children: data
-                              .map((data) => Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: MyText(
-                                      data.date.monthAbbrev,
-                                      textAlign: TextAlign.center,
-                                      subtext: true,
-                                      size: FONTSIZE.one,
-                                    ),
-                                  ))
-                              .toList(),
-                        )
-                      ],
-                    )),
-              ),
-            ],
+                  ),
+                  const SizedBox(height: 6),
+                  Column(
+                    children: [
+                      MyText(
+                        allTimeMinutes.displayLong,
+                        size: FONTSIZE.five,
+                        color: Styles.primaryAccent,
+                      ),
+                      const SizedBox(height: 3),
+                      const MyText(
+                        'MINUTES',
+                        size: FONTSIZE.zero,
+                      ),
+                    ],
+                  ),
+                ],
+              )),
+          Flexible(
+            child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 2),
+                child: Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.bottom,
+                  children: [
+                    TableRow(
+                      children: data
+                          .map((data) => SingleMonthColumns(
+                                data: data,
+                                maxLogs: maxLogs,
+                                maxMinutes: maxMinutes,
+                              ))
+                          .toList(),
+                    ),
+                    TableRow(
+                      children: data
+                          .map((data) => Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: MyText(
+                                  data.date.monthAbbrev,
+                                  textAlign: TextAlign.center,
+                                  subtext: true,
+                                  size: FONTSIZE.one,
+                                ),
+                              ))
+                          .toList(),
+                    )
+                  ],
+                )),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -182,7 +165,7 @@ class SingleMonthColumns extends StatelessWidget {
       required this.maxMinutes})
       : super(key: key);
 
-  double get _columnMaxHeight => 70.0;
+  double get _columnMaxHeight => 94.0;
 
   Widget _buildChartColumn({
     required double height,
@@ -201,7 +184,7 @@ class SingleMonthColumns extends StatelessWidget {
             width: 8,
           ),
           Positioned(
-            top: -13,
+            top: -15,
             child: MyText(
               value.toString(),
               size: FONTSIZE.zero,
@@ -225,7 +208,7 @@ class SingleMonthColumns extends StatelessWidget {
           gradient: Styles.secondaryAccentGradientVertical,
           value: data.logCount,
         ),
-        const SizedBox(width: 7),
+        const SizedBox(width: 14),
         _buildChartColumn(
           height: minsHeight,
           gradient: Styles.primaryAccentGradientVertical,

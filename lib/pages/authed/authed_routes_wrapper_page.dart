@@ -87,7 +87,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
 
   chat.StreamChatClient get _createStreamChatClient =>
       chat.StreamChatClient(EnvironmentConfig.getStreamPublicKey,
-          location: chat.Location.euWest, logLevel: feed.Level.WARNING);
+          logLevel: feed.Level.WARNING);
 
   feed.StreamFeedClient get _createStreamFeedClient => feed.StreamFeedClient(
         EnvironmentConfig.getStreamPublicKey,

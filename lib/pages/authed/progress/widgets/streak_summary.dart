@@ -1,14 +1,18 @@
 import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_it/get_it.dart';
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/number_picker_modal.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
+import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class StreaksSummaryWidget extends StatelessWidget {
@@ -17,6 +21,26 @@ class StreaksSummaryWidget extends StatelessWidget {
   const StreaksSummaryWidget(
       {Key? key, required this.loggedWorkouts, required this.userProfile})
       : super(key: key);
+
+  Future<void> _openWeeklyTargetSelector(
+      BuildContext context, int? prevTarget) async {
+    context.showActionSheetPopup(
+        child: NumberPickerModal(
+      initialValue: prevTarget ?? 3,
+      min: 1,
+      max: 28,
+      saveValue: (value) => _updateWeeklyWorkoutTarget(context, value),
+      title: 'Workouts Per Week Target',
+    ));
+  }
+
+  Future<void> _updateWeeklyWorkoutTarget(
+      BuildContext context, int workoutsPerWeekTarget) async {
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+
+    await EditProfilePage.updateUserFields(context, authedUserId,
+        {'workoutsPerWeekTarget': workoutsPerWeekTarget});
+  }
 
   String _yearWeekKey(DateTime date) => '${date.year}:${date.weekNumberInYear}';
 
@@ -100,52 +124,39 @@ class StreaksSummaryWidget extends StatelessWidget {
 
     return Column(
       children: [
-        WidgetHeader(
-          icon: CupertinoIcons.flame,
-          title: 'Streaks',
-          actions: [
-            WidgetHeaderAction(
-                icon: CupertinoIcons.settings,
-                onPressed: () => print('open something'))
-          ],
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            StatContainer(
+            _StatContainer(
               count: daily,
               label: 'Days in a Row',
             ),
-            StatContainer(
+            _StatContainer(
               count: weekly,
-              label: 'On Target Weeks',
+              label: 'Weeks On Target',
             ),
           ],
         ),
-        if (perWeekTarget != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, left: 16, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Icon(CupertinoIcons.scope, size: 14),
-                const SizedBox(width: 3),
-                MyText(
-                  'Target = $perWeekTarget workouts per week'.toUpperCase(),
-                  size: FONTSIZE.one,
-                )
-              ],
-            ),
-          )
+        const SizedBox(height: 8),
+        TertiaryButton(
+            backgroundColor: context.theme.background,
+            prefixIconData: CupertinoIcons.scope,
+            text: perWeekTarget != null
+                ? '$perWeekTarget workouts / week'
+                : 'Set Weekly Target',
+            onPressed: () => _openWeeklyTargetSelector(
+                  context,
+                  perWeekTarget,
+                ))
       ],
     );
   }
 }
 
-class StatContainer extends StatelessWidget {
+class _StatContainer extends StatelessWidget {
   final int count;
   final String label;
-  const StatContainer({
+  const _StatContainer({
     Key? key,
     required this.count,
     required this.label,
@@ -156,7 +167,7 @@ class StatContainer extends StatelessWidget {
     final backgroundColor = context.theme.background.withOpacity(0.45);
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
       decoration: BoxDecoration(
           color: backgroundColor, borderRadius: BorderRadius.circular(20)),
       child: Column(
@@ -164,16 +175,15 @@ class StatContainer extends StatelessWidget {
           const SizedBox(height: 6),
           MyHeaderText(
             label,
-            size: FONTSIZE.two,
+            size: FONTSIZE.one,
             weight: FontWeight.normal,
           ),
           const SizedBox(height: 6),
-          Card(
-            elevation: 1,
-            borderRadius: BorderRadius.circular(10),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: MyText(
               count == 0 ? '-' : count.toString(),
-              size: FONTSIZE.seven,
+              size: FONTSIZE.eight,
               color: Styles.secondaryAccent,
             ),
           ),

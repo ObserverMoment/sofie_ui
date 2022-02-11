@@ -2,9 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 
 class SleepWellLogsFullScreen extends StatelessWidget {
-  const SleepWellLogsFullScreen({Key? key}) : super(key: key);
+  final String widgetId;
+  const SleepWellLogsFullScreen({Key? key, required this.widgetId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +21,9 @@ class SleepWellLogsFullScreen extends StatelessWidget {
                     trailing: Padding(
                       padding: const EdgeInsets.only(right: 5.0),
                       child: CircularBox(
-                          padding: const EdgeInsets.all(7),
+                          padding: const EdgeInsets.all(10),
                           color: context.theme.background,
-                          child: const Icon(CupertinoIcons.bed_double)),
+                          child: Icon(kWidgetIdToIconMap[widgetId], size: 20)),
                     ),
                     backgroundColor: context.theme.cardBackground,
                   ),
