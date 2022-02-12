@@ -154,12 +154,14 @@ class BottomSheetMenuItemContainer extends StatelessWidget {
                   : Styles.primaryAccent,
             ),
           ),
-        MyText(
-          bottomSheetMenuItem.text,
-          color: bottomSheetMenuItem.isDestructive
-              ? Styles.errorRed
-              : context.theme.primary,
-          size: FONTSIZE.four,
+        Flexible(
+          child: MyText(
+            bottomSheetMenuItem.text,
+            color: bottomSheetMenuItem.isDestructive
+                ? Styles.errorRed
+                : context.theme.primary,
+            size: FONTSIZE.four,
+          ),
         ),
       ]),
     );

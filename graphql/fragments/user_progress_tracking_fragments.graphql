@@ -1,0 +1,50 @@
+fragment UserDayLogMood on UserDayLogMood {
+  __typename
+  id
+  createdAt
+  moodScore
+  energyScore
+  tags
+  note
+}
+
+fragment UserGoal on UserGoal {
+  __typename
+  id
+  createdAt
+  name
+  description
+  deadline
+  completedDate
+}
+
+fragment UserMeditationLog on UserMeditationLog {
+  __typename
+  id
+  createdAt
+  year
+  dayNumber
+  minutesLogged
+  note
+}
+
+fragment UserEatWellLog on UserEatWellLog {
+  __typename
+  id
+  createdAt
+  year
+  dayNumber
+  rating
+  note
+}
+
+fragment UserSleepWellLog on UserSleepWellLog {
+  __typename
+  id
+  createdAt
+  year
+  dayNumber
+  rating
+  minutesSlept
+  note
+}

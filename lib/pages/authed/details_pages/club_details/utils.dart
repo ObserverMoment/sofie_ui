@@ -17,6 +17,7 @@ class ClubUtils {
     } else {
       context.showToast(
           message: 'Sorry, there was a problem checking your membership.');
+      return null;
     }
   }
 

@@ -156,8 +156,9 @@ class _ClubMembersChatChannelPageState
                     );
                   },
                   emptyBuilder: (context) {
-                    return const Center(
-                      child: Text('Nothing here...'),
+                    return const MessagesList(
+                      messages: [],
+                      isGroupChat: false,
                     );
                   },
                   messageListBuilder: (context, messages) {

@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/chat/message/chat_message.dart';
 import 'package:sofie_ui/components/social/chat/message/chat_message_input.dart';
 import 'package:sofie_ui/components/social/chat/swipe_to_reply.dart';
+import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/components/social/chat/message_header.dart';
@@ -50,6 +51,11 @@ class _MessagesListState extends State<MessagesList> {
     });
 
     _inputFocusNode = FocusNode();
+
+    /// If this is a new chat (i.e. no messages exist yet) then auto focus the input.
+    if (widget.messages == null || widget.messages!.isEmpty) {
+      _inputFocusNode.requestFocus();
+    }
   }
 
   Future<void> _copyMessageToClipboard(String messageText) async {
@@ -90,134 +96,142 @@ class _MessagesListState extends State<MessagesList> {
 
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.9,
-                    child: Align(
-                      alignment: FractionalOffset.topCenter,
-                      child: ListView.builder(
-                          controller: _scrollController,
-                          reverse: true,
-                          itemCount: entries.length,
-                          itemBuilder: (context, index) {
-                            return Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      8.0, 14.0, 8.0, 2.0),
-                                  child: MessageHeader(
-                                      rawTimeStamp: entries[index].key), //date
-                                ),
-                                ...entries[index]
-                                    .value //messages
-                                    .asMap()
-                                    .entries
-                                    .map(
-                                      (entry) {
-                                        final message = entry.value;
-                                        final isFinalMessage = 0 == entry.key;
-                                        final ownMessage =
-                                            isOwnMessage(message, context);
+        Column(
+          children: [
+            Expanded(
+              child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  height: MediaQuery.of(context).size.height * 0.9,
+                  child: Align(
+                    alignment: FractionalOffset.topCenter,
+                    child: widget.messages == null || widget.messages!.isEmpty
+                        ? const _EmptyMessageState()
+                        : ListView.builder(
+                            controller: _scrollController,
+                            reverse: true,
+                            itemCount: entries.length,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 14),
+                                    child: MessageHeader(
+                                        rawTimeStamp:
+                                            entries[index].key), //date
+                                  ),
+                                  ...entries[index]
+                                      .value //messages
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (entry) {
+                                          final message = entry.value;
+                                          final isFinalMessage = 0 == entry.key;
+                                          final ownMessage =
+                                              isOwnMessage(message, context);
 
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 8.0),
-                                          child: GestureDetector(
-                                            onLongPress: () =>
-                                                openBottomSheetMenu(
-                                                    context: context,
-                                                    child: BottomSheetMenu(
-                                                      items: [
-                                                        BottomSheetMenuItem(
-                                                            onPressed: () =>
-                                                                _replyToMessage(
-                                                                    message),
-                                                            text: 'Reply'),
-                                                        if (Utils.textNotNull(
-                                                            message.text))
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 8.0),
+                                            child: GestureDetector(
+                                              onLongPress: () =>
+                                                  openBottomSheetMenu(
+                                                      context: context,
+                                                      child: BottomSheetMenu(
+                                                        items: [
                                                           BottomSheetMenuItem(
                                                               onPressed: () =>
-                                                                  _copyMessageToClipboard(
-                                                                      message
-                                                                          .text!),
-                                                              text:
-                                                                  'Copy Text'),
-                                                        if (ownMessage)
-                                                          BottomSheetMenuItem(
-                                                              isDestructive:
-                                                                  true,
-                                                              onPressed: () =>
-                                                                  _deleteMessage(
+                                                                  _replyToMessage(
                                                                       message),
-                                                              text:
-                                                                  'Delete Message'),
-                                                      ],
-                                                    )),
-                                            child: SwipeToReply(
-                                              onSwipe: () =>
-                                                  _replyToMessage(message),
-                                              child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 4),
-                                                  child: (ownMessage)
-                                                      ? ChatMessage(
-                                                          alignment: Alignment
-                                                              .topRight,
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  14.0,
-                                                                  8.0,
-                                                                  22.0,
-                                                                  8.0),
-                                                          color: Styles
-                                                              .primaryAccent,
-                                                          messageColor:
-                                                              CupertinoColors
-                                                                  .white,
-                                                          message: message,
-                                                          hasTail:
-                                                              isFinalMessage,
-                                                          showSenderName: false,
-                                                        )
-                                                      : ChatMessage(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .fromLTRB(
-                                                                  22.0,
-                                                                  8.0,
-                                                                  14.0,
-                                                                  8.0),
-                                                          color: context.theme
-                                                              .cardBackground,
-                                                          messageColor: context
-                                                              .theme.primary,
-                                                          message: message,
-                                                          hasTail:
-                                                              isFinalMessage,
-                                                          showSenderName: widget
-                                                              .isGroupChat,
-                                                        )),
+                                                              text: 'Reply'),
+                                                          if (Utils.textNotNull(
+                                                              message.text))
+                                                            BottomSheetMenuItem(
+                                                                onPressed: () =>
+                                                                    _copyMessageToClipboard(
+                                                                        message
+                                                                            .text!),
+                                                                text:
+                                                                    'Copy Text'),
+                                                          if (ownMessage)
+                                                            BottomSheetMenuItem(
+                                                                isDestructive:
+                                                                    true,
+                                                                onPressed: () =>
+                                                                    _deleteMessage(
+                                                                        message),
+                                                                text:
+                                                                    'Delete Message'),
+                                                        ],
+                                                      )),
+                                              child: SwipeToReply(
+                                                onSwipe: () =>
+                                                    _replyToMessage(message),
+                                                child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(vertical: 4),
+                                                    child: (ownMessage)
+                                                        ? ChatMessage(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    14.0,
+                                                                    8.0,
+                                                                    22.0,
+                                                                    8.0),
+                                                            color: Styles
+                                                                .primaryAccent,
+                                                            messageColor:
+                                                                CupertinoColors
+                                                                    .white,
+                                                            message: message,
+                                                            hasTail:
+                                                                isFinalMessage,
+                                                            showSenderName:
+                                                                false,
+                                                          )
+                                                        : ChatMessage(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .fromLTRB(
+                                                                    22.0,
+                                                                    8.0,
+                                                                    14.0,
+                                                                    8.0),
+                                                            color: context.theme
+                                                                .cardBackground,
+                                                            messageColor:
+                                                                context.theme
+                                                                    .primary,
+                                                            message: message,
+                                                            hasTail:
+                                                                isFinalMessage,
+                                                            showSenderName:
+                                                                widget
+                                                                    .isGroupChat,
+                                                          )),
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    )
-                                    .toList()
-                                    .reversed,
-                              ],
-                            );
-                          }),
-                    )),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
+                                          );
+                                        },
+                                      )
+                                      .toList()
+                                      .reversed,
+                                ],
+                              );
+                            }),
+                  )),
+            ),
+            Container(
+              color: context.theme.primary.withOpacity(0.03),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    bottom: 8.0, left: 4, right: 4, top: 4),
                 child: ChatMessageInput(
                   quotedMessage: _quotedMessage,
                   clearQuotedMessage: () =>
@@ -225,9 +239,9 @@ class _MessagesListState extends State<MessagesList> {
                   onNewMessageSent: _onNewMessageSent,
                   focusNode: _inputFocusNode,
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
         if (_showBackToBottomButton)
           Positioned(
@@ -256,4 +270,23 @@ class _MessagesListState extends State<MessagesList> {
 
   bool isSameDay(Message message) =>
       message.createdAt.day == DateTime.now().day;
+}
+
+class _EmptyMessageState extends StatelessWidget {
+  const _EmptyMessageState({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: 0.5,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: const [
+          Icon(CupertinoIcons.chat_bubble_2, size: 80),
+          MyText('Start chatting!')
+        ],
+      ),
+    );
+  }
 }

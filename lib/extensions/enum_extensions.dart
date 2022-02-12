@@ -200,6 +200,22 @@ extension UserProfileScopeExtension on UserProfileScope {
   String get display => describeEnum(this);
 }
 
+extension UserDayLogRatingExtension on UserDayLogRating {
+  Color get color {
+    switch (this) {
+      case UserDayLogRating.good:
+        return Styles.primaryAccent;
+      case UserDayLogRating.average:
+        return CupertinoColors.activeOrange;
+      case UserDayLogRating.bad:
+        return Styles.errorRed;
+      default:
+        throw Exception(
+            'UserDayLogRatingExtension: No color defined for $this');
+    }
+  }
+}
+
 extension WorkoutMoveRepTypeExtension on WorkoutMoveRepType {
   String get display => describeEnum(this).capitalize;
   String get apiValue => describeEnum(this).toUpperCase();

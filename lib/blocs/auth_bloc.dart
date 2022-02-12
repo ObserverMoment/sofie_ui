@@ -19,23 +19,17 @@ enum AuthState { unauthed, authed, loading }
 
 class AuthedUser {
   String id;
-  String displayName;
-  bool hasOnboarded;
   String streamChatToken;
   String streamFeedToken;
 
   AuthedUser(
       {required this.id,
-      required this.displayName,
-      required this.hasOnboarded,
       required this.streamChatToken,
       required this.streamFeedToken});
 
   factory AuthedUser.fromJson(Map<String, dynamic> json) {
     return AuthedUser(
         id: json['id'] as String,
-        displayName: json['displayName'] as String,
-        hasOnboarded: json['hasOnboarded'] as bool,
         streamChatToken: json['streamChatToken'] as String,
         streamFeedToken: json['streamFeedToken'] as String);
   }

@@ -12,11 +12,13 @@ class GQLOpNames {
   static String get bodyTrackingEntries =>
       BodyTrackingEntriesQuery().operationName;
 
-  static String get journalGoals => JournalGoalsQuery().operationName;
+  static String get userGoals => UserGoalsQuery().operationName;
 
-  static String get journalMoods => JournalMoodsQuery().operationName;
-
-  static String get journalNotes => JournalNotesQuery().operationName;
+  static String get userDayLogMoods => UserDayLogMoodsQuery().operationName;
+  static String get userMeditationLogs =>
+      UserMeditationLogsQuery().operationName;
+  static String get userEatWellLogs => UserEatWellLogsQuery().operationName;
+  static String get userSleepWellLogs => UserSleepWellLogsQuery().operationName;
 
   static String get workoutPlanEnrolments =>
       WorkoutPlanEnrolmentsQuery().operationName;

@@ -4,12 +4,14 @@ import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
 import 'package:sofie_ui/components/creators/gym_profile_creator.dart';
-import 'package:sofie_ui/components/creators/journal_creators/journal_goal_creator_page.dart';
-import 'package:sofie_ui/components/creators/journal_creators/journal_mood_creator_page.dart';
 import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_eat_well_log_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_sleep_well_log_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_goal_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_meditation_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_review_creator.dart';
@@ -20,6 +22,7 @@ import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
+import 'package:sofie_ui/pages/authed/progress/user_goals_page.dart';
 import 'package:sofie_ui/components/workout/workout_finders/public/public_workout_finder_page.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart';
 import 'package:sofie_ui/main.dart';
@@ -54,7 +57,6 @@ import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
 import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
-import 'package:sofie_ui/pages/authed/progress/journal_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_bests_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
@@ -122,7 +124,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
           /// User progress, stats and workout history
           AutoRoute(path: 'personal-bests', page: PersonalBestsPage),
-          AutoRoute(path: 'journal', page: JournalPage),
+          AutoRoute(path: 'goals', page: UserGoalsPage),
           AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
           AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
 
@@ -161,8 +163,13 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/collection', page: CollectionCreatorPage),
           AutoRoute(path: 'create/custom-move', page: CustomMoveCreatorPage),
           AutoRoute(path: 'create/gym-profile', page: GymProfileCreatorPage),
-          AutoRoute(path: 'create/journal-goal', page: JournalGoalCreatorPage),
-          AutoRoute(path: 'create/journal-mood', page: JournalMoodCreatorPage),
+          AutoRoute(path: 'create/goal', page: UserGoalCreatorPage),
+          AutoRoute(
+              path: 'create/mindfulness-log',
+              page: UserMeditationLogCreatorPage),
+          AutoRoute(path: 'create/food-log', page: UserEatWellLogCreatorPage),
+          AutoRoute(
+              path: 'create/sleep-log', page: UserSleepWellLogCreatorPage),
           AutoRoute(
               path: 'create/personal-best', page: PersonalBestCreatorPage),
           AutoRoute(path: 'create/post', page: FeedPostCreatorPage),

@@ -279,6 +279,7 @@ extension BuildContextExtension on BuildContext {
   /// Being used for some pickers (wheel style pickers for example)
   Future<void> showActionSheetPopup({
     required Widget child,
+    String cancelCloseText = 'Cancel',
     bool useRootNavigator = false,
   }) async {
     final BuildContext context = this;
@@ -291,7 +292,7 @@ extension BuildContextExtension on BuildContext {
               cancelButton: CupertinoActionSheetAction(
                   onPressed: context.pop,
                   child: MyText(
-                    'Cancel',
+                    cancelCloseText,
                     color: context.theme.primary,
                   )),
             ));

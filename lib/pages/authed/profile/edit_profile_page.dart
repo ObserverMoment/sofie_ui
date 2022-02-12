@@ -31,7 +31,8 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({Key? key}) : super(key: key);
 
-  Future<void> updateUserFields(
+  /// Can also be used by other widgets.
+  static Future<void> updateUserFields(
       BuildContext context, String id, Map<String, dynamic> data) async {
     final variables =
         UpdateUserProfileArguments(data: UpdateUserProfileInput.fromJson(data));

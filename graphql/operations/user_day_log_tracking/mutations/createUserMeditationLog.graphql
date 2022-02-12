@@ -1,0 +1,5 @@
+mutation createUserMeditationLog($data: CreateUserMeditationLogInput!) {
+  createUserMeditationLog(data: $data) {
+    ...UserMeditationLog
+  }
+}

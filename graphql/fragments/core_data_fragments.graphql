@@ -1,0 +1,32 @@
+fragment BodyArea on BodyArea {
+  __typename
+  id
+  name
+  frontBack
+  upperLower
+}
+
+fragment Equipment on Equipment {
+  __typename
+  id
+  name
+  loadAdjustable
+}
+
+fragment LogDataWidget on LogDataWidget {
+  __typename
+  id
+  createdAt
+  name
+  subtitle
+  description
+}
+
+fragment ProgressWidget on ProgressWidget {
+  __typename
+  id
+  createdAt
+  name
+  subtitle
+  description
+}

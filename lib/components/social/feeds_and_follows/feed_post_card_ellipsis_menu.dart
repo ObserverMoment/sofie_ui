@@ -110,10 +110,10 @@ class FeedPostCardEllipsisMenu extends StatelessWidget {
                           _shareObject(feedPostType!, objectId!, typeDisplay)),
                 if (removeActivityFromTimeline != null)
                   BottomSheetMenuItem(
-                      text: 'Remove Post',
-                      icon: CupertinoIcons.delete_simple,
-                      onPressed: removeActivityFromTimeline!,
-                      isDestructive: true),
+                    text: 'Remove from Timeline',
+                    icon: CupertinoIcons.clear_thick,
+                    onPressed: removeActivityFromTimeline!,
+                  ),
                 if (deleteActivity != null)
                   BottomSheetMenuItem(
                       text: 'Delete Post',

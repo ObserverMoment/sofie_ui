@@ -64,6 +64,8 @@ abstract class Utils {
     }
   }
 
+  static bool exclusiveOr(bool a, bool b) => a ^ b;
+
   /// Checks that text is not null and not an empty string.
   static bool textNotNull(String? text) => text != null && text.isNotEmpty;
 

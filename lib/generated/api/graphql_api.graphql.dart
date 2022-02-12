@@ -8,49 +8,6 @@ import 'package:gql/ast.dart';
 import 'package:sofie_ui/coercers.dart';
 part 'graphql_api.graphql.g.dart';
 
-mixin JournalMoodMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late int moodScore;
-  late int energyScore;
-  late List<String> tags;
-  String? textNote;
-}
-mixin JournalGoalMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String name;
-  String? description;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? deadline;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? completedDate;
-}
-mixin JournalNoteMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  String? textNote;
-  String? voiceNoteUri;
-}
 mixin ClubChatSummaryMixin {
   late String id;
   late String name;
@@ -104,6 +61,80 @@ mixin BodyTrackingEntryMixin {
   double? fatPercent;
   String? note;
   late List<String> photoUris;
+}
+mixin UserGoalMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String name;
+  String? description;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? deadline;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? completedDate;
+}
+mixin UserSleepWellLogMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late int year;
+  late int dayNumber;
+  @JsonKey(unknownEnumValue: UserDayLogRating.artemisUnknown)
+  late UserDayLogRating rating;
+  int? minutesSlept;
+  String? note;
+}
+mixin UserMeditationLogMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late int year;
+  late int dayNumber;
+  late int minutesLogged;
+  String? note;
+}
+mixin UserEatWellLogMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late int year;
+  late int dayNumber;
+  @JsonKey(unknownEnumValue: UserDayLogRating.artemisUnknown)
+  late UserDayLogRating rating;
+  String? note;
+}
+mixin UserDayLogMoodMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late int moodScore;
+  late int energyScore;
+  late List<String> tags;
+  String? note;
 }
 mixin EquipmentMixin {
   @JsonKey(name: '__typename')
@@ -549,6 +580,9 @@ mixin UserProfileResultMixin {
   Gender? gender;
   bool? hasOnboarded;
   String? lastname;
+  int? workoutsPerWeekTarget;
+  List<String>? activeProgressWidgets;
+  List<String>? activeLogDataWidgets;
 }
 mixin SkillMixin {
   @JsonKey(name: '__typename')
@@ -628,6 +662,33 @@ mixin UserProfileMixin {
   int? followerCount;
   int? workoutCount;
   int? planCount;
+  int? workoutsPerWeekTarget;
+  List<String>? activeProgressWidgets;
+  List<String>? activeLogDataWidgets;
+}
+mixin ProgressWidgetMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String name;
+  String? subtitle;
+  String? description;
+}
+mixin LogDataWidgetMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late String name;
+  String? subtitle;
+  String? description;
 }
 mixin UserBenchmarkMixin {
   @JsonKey(name: '__typename')
@@ -740,6 +801,21 @@ mixin WorkoutMixin {
   String? introVideoThumbUri;
   String? introAudioUri;
 }
+mixin ClubMemberNoteMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime updatedAt;
+  late String note;
+  late List<String> tags;
+}
 mixin ClubMemberSummaryMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -773,394 +849,6 @@ mixin ClubInviteTokenMixin {
   late bool active;
   late int inviteLimit;
   late List<String> joinedUserIds;
-}
-mixin ClubMemberNoteMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime updatedAt;
-  late String note;
-  late List<String> tags;
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJournalGoalById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteJournalGoalById$Mutation();
-
-  factory DeleteJournalGoalById$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJournalGoalById$MutationFromJson(json);
-
-  late String deleteJournalGoalById;
-
-  @override
-  List<Object?> get props => [deleteJournalGoalById];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJournalGoalById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JournalMood extends JsonSerializable
-    with EquatableMixin, JournalMoodMixin {
-  JournalMood();
-
-  factory JournalMood.fromJson(Map<String, dynamic> json) =>
-      _$JournalMoodFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, moodScore, energyScore, tags, textNote];
-  @override
-  Map<String, dynamic> toJson() => _$JournalMoodToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JournalMoods$Query extends JsonSerializable with EquatableMixin {
-  JournalMoods$Query();
-
-  factory JournalMoods$Query.fromJson(Map<String, dynamic> json) =>
-      _$JournalMoods$QueryFromJson(json);
-
-  late List<JournalMood> journalMoods;
-
-  @override
-  List<Object?> get props => [journalMoods];
-  @override
-  Map<String, dynamic> toJson() => _$JournalMoods$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalMood$Mutation extends JsonSerializable with EquatableMixin {
-  UpdateJournalMood$Mutation();
-
-  factory UpdateJournalMood$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalMood$MutationFromJson(json);
-
-  late JournalMood updateJournalMood;
-
-  @override
-  List<Object?> get props => [updateJournalMood];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalMood$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalMoodInput extends JsonSerializable with EquatableMixin {
-  UpdateJournalMoodInput(
-      {this.energyScore,
-      required this.id,
-      this.moodScore,
-      this.tags,
-      this.textNote});
-
-  factory UpdateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalMoodInputFromJson(json);
-
-  int? energyScore;
-
-  late String id;
-
-  int? moodScore;
-
-  List<String>? tags;
-
-  String? textNote;
-
-  @override
-  List<Object?> get props => [energyScore, id, moodScore, tags, textNote];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalMoodInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JournalGoal extends JsonSerializable
-    with EquatableMixin, JournalGoalMixin {
-  JournalGoal();
-
-  factory JournalGoal.fromJson(Map<String, dynamic> json) =>
-      _$JournalGoalFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, name, description, deadline, completedDate];
-  @override
-  Map<String, dynamic> toJson() => _$JournalGoalToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JournalGoals$Query extends JsonSerializable with EquatableMixin {
-  JournalGoals$Query();
-
-  factory JournalGoals$Query.fromJson(Map<String, dynamic> json) =>
-      _$JournalGoals$QueryFromJson(json);
-
-  late List<JournalGoal> journalGoals;
-
-  @override
-  List<Object?> get props => [journalGoals];
-  @override
-  Map<String, dynamic> toJson() => _$JournalGoals$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalGoal$Mutation extends JsonSerializable with EquatableMixin {
-  CreateJournalGoal$Mutation();
-
-  factory CreateJournalGoal$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalGoal$MutationFromJson(json);
-
-  late JournalGoal createJournalGoal;
-
-  @override
-  List<Object?> get props => [createJournalGoal];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalGoal$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalGoalInput extends JsonSerializable with EquatableMixin {
-  CreateJournalGoalInput({this.deadline, this.description, required this.name});
-
-  factory CreateJournalGoalInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalGoalInputFromJson(json);
-
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? deadline;
-
-  String? description;
-
-  late String name;
-
-  @override
-  List<Object?> get props => [deadline, description, name];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalGoalInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJournalNoteById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteJournalNoteById$Mutation();
-
-  factory DeleteJournalNoteById$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJournalNoteById$MutationFromJson(json);
-
-  late String deleteJournalNoteById;
-
-  @override
-  List<Object?> get props => [deleteJournalNoteById];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJournalNoteById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JournalNote extends JsonSerializable
-    with EquatableMixin, JournalNoteMixin {
-  JournalNote();
-
-  factory JournalNote.fromJson(Map<String, dynamic> json) =>
-      _$JournalNoteFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, textNote, voiceNoteUri];
-  @override
-  Map<String, dynamic> toJson() => _$JournalNoteToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalNote$Mutation extends JsonSerializable with EquatableMixin {
-  UpdateJournalNote$Mutation();
-
-  factory UpdateJournalNote$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalNote$MutationFromJson(json);
-
-  late JournalNote updateJournalNote;
-
-  @override
-  List<Object?> get props => [updateJournalNote];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalNote$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalNoteInput extends JsonSerializable with EquatableMixin {
-  UpdateJournalNoteInput({required this.id, this.textNote, this.voiceNoteUri});
-
-  factory UpdateJournalNoteInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalNoteInputFromJson(json);
-
-  late String id;
-
-  String? textNote;
-
-  String? voiceNoteUri;
-
-  @override
-  List<Object?> get props => [id, textNote, voiceNoteUri];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalNoteInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJournalMoodById$Mutation extends JsonSerializable
-    with EquatableMixin {
-  DeleteJournalMoodById$Mutation();
-
-  factory DeleteJournalMoodById$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJournalMoodById$MutationFromJson(json);
-
-  late String deleteJournalMoodById;
-
-  @override
-  List<Object?> get props => [deleteJournalMoodById];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJournalMoodById$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalGoal$Mutation extends JsonSerializable with EquatableMixin {
-  UpdateJournalGoal$Mutation();
-
-  factory UpdateJournalGoal$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalGoal$MutationFromJson(json);
-
-  late JournalGoal updateJournalGoal;
-
-  @override
-  List<Object?> get props => [updateJournalGoal];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalGoal$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalGoalInput extends JsonSerializable with EquatableMixin {
-  UpdateJournalGoalInput(
-      {this.completedDate,
-      this.deadline,
-      this.description,
-      required this.id,
-      this.name});
-
-  factory UpdateJournalGoalInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalGoalInputFromJson(json);
-
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? completedDate;
-
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
-      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
-  DateTime? deadline;
-
-  String? description;
-
-  late String id;
-
-  String? name;
-
-  @override
-  List<Object?> get props => [completedDate, deadline, description, id, name];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalGoalInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalMood$Mutation extends JsonSerializable with EquatableMixin {
-  CreateJournalMood$Mutation();
-
-  factory CreateJournalMood$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalMood$MutationFromJson(json);
-
-  late JournalMood createJournalMood;
-
-  @override
-  List<Object?> get props => [createJournalMood];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalMood$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalMoodInput extends JsonSerializable with EquatableMixin {
-  CreateJournalMoodInput(
-      {required this.energyScore,
-      required this.moodScore,
-      this.tags,
-      this.textNote});
-
-  factory CreateJournalMoodInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalMoodInputFromJson(json);
-
-  late int energyScore;
-
-  late int moodScore;
-
-  List<String>? tags;
-
-  String? textNote;
-
-  @override
-  List<Object?> get props => [energyScore, moodScore, tags, textNote];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalMoodInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalNote$Mutation extends JsonSerializable with EquatableMixin {
-  CreateJournalNote$Mutation();
-
-  factory CreateJournalNote$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalNote$MutationFromJson(json);
-
-  late JournalNote createJournalNote;
-
-  @override
-  List<Object?> get props => [createJournalNote];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalNote$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalNoteInput extends JsonSerializable with EquatableMixin {
-  CreateJournalNoteInput({this.textNote, this.voiceNoteUri});
-
-  factory CreateJournalNoteInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalNoteInputFromJson(json);
-
-  String? textNote;
-
-  String? voiceNoteUri;
-
-  @override
-  List<Object?> get props => [textNote, voiceNoteUri];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalNoteInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class JournalNotes$Query extends JsonSerializable with EquatableMixin {
-  JournalNotes$Query();
-
-  factory JournalNotes$Query.fromJson(Map<String, dynamic> json) =>
-      _$JournalNotes$QueryFromJson(json);
-
-  late List<JournalNote> journalNotes;
-
-  @override
-  List<Object?> get props => [journalNotes];
-  @override
-  Map<String, dynamic> toJson() => _$JournalNotes$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -1604,6 +1292,560 @@ class BodyTrackingEntries$Query extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [bodyTrackingEntries];
   @override
   Map<String, dynamic> toJson() => _$BodyTrackingEntries$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserGoal extends JsonSerializable with EquatableMixin, UserGoalMixin {
+  UserGoal();
+
+  factory UserGoal.fromJson(Map<String, dynamic> json) =>
+      _$UserGoalFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, name, description, deadline, completedDate];
+  @override
+  Map<String, dynamic> toJson() => _$UserGoalToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserGoal$Mutation extends JsonSerializable with EquatableMixin {
+  CreateUserGoal$Mutation();
+
+  factory CreateUserGoal$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserGoal$MutationFromJson(json);
+
+  late UserGoal createUserGoal;
+
+  @override
+  List<Object?> get props => [createUserGoal];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserGoal$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserGoalInput extends JsonSerializable with EquatableMixin {
+  CreateUserGoalInput({this.deadline, this.description, required this.name});
+
+  factory CreateUserGoalInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserGoalInputFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? deadline;
+
+  String? description;
+
+  late String name;
+
+  @override
+  List<Object?> get props => [deadline, description, name];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserGoalInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserGoal$Mutation extends JsonSerializable with EquatableMixin {
+  DeleteUserGoal$Mutation();
+
+  factory DeleteUserGoal$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserGoal$MutationFromJson(json);
+
+  late String deleteUserGoal;
+
+  @override
+  List<Object?> get props => [deleteUserGoal];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserGoal$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserSleepWellLog extends JsonSerializable
+    with EquatableMixin, UserSleepWellLogMixin {
+  UserSleepWellLog();
+
+  factory UserSleepWellLog.fromJson(Map<String, dynamic> json) =>
+      _$UserSleepWellLogFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, year, dayNumber, rating, minutesSlept, note];
+  @override
+  Map<String, dynamic> toJson() => _$UserSleepWellLogToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserSleepWellLog$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserSleepWellLog$Mutation();
+
+  factory CreateUserSleepWellLog$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserSleepWellLog$MutationFromJson(json);
+
+  late UserSleepWellLog createUserSleepWellLog;
+
+  @override
+  List<Object?> get props => [createUserSleepWellLog];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserSleepWellLog$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserSleepWellLogInput extends JsonSerializable with EquatableMixin {
+  CreateUserSleepWellLogInput(
+      {required this.dayNumber,
+      this.minutesSlept,
+      this.note,
+      required this.rating,
+      required this.year});
+
+  factory CreateUserSleepWellLogInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserSleepWellLogInputFromJson(json);
+
+  late int dayNumber;
+
+  int? minutesSlept;
+
+  String? note;
+
+  @JsonKey(unknownEnumValue: UserDayLogRating.artemisUnknown)
+  late UserDayLogRating rating;
+
+  late int year;
+
+  @override
+  List<Object?> get props => [dayNumber, minutesSlept, note, rating, year];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserSleepWellLogInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserSleepWellLog$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserSleepWellLog$Mutation();
+
+  factory UpdateUserSleepWellLog$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserSleepWellLog$MutationFromJson(json);
+
+  late UserSleepWellLog updateUserSleepWellLog;
+
+  @override
+  List<Object?> get props => [updateUserSleepWellLog];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateUserSleepWellLog$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserSleepWellLogInput extends JsonSerializable with EquatableMixin {
+  UpdateUserSleepWellLogInput(
+      {required this.id, this.minutesSlept, this.note, this.rating});
+
+  factory UpdateUserSleepWellLogInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserSleepWellLogInputFromJson(json);
+
+  late String id;
+
+  int? minutesSlept;
+
+  String? note;
+
+  @JsonKey(unknownEnumValue: UserDayLogRating.artemisUnknown)
+  UserDayLogRating? rating;
+
+  @override
+  List<Object?> get props => [id, minutesSlept, note, rating];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserSleepWellLogInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserGoal$Mutation extends JsonSerializable with EquatableMixin {
+  UpdateUserGoal$Mutation();
+
+  factory UpdateUserGoal$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserGoal$MutationFromJson(json);
+
+  late UserGoal updateUserGoal;
+
+  @override
+  List<Object?> get props => [updateUserGoal];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserGoal$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserGoalInput extends JsonSerializable with EquatableMixin {
+  UpdateUserGoalInput(
+      {this.completedDate,
+      this.deadline,
+      this.description,
+      required this.id,
+      this.name});
+
+  factory UpdateUserGoalInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserGoalInputFromJson(json);
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? completedDate;
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeNullableToDartDateTimeNullable,
+      toJson: fromDartDateTimeNullableToGraphQLDateTimeNullable)
+  DateTime? deadline;
+
+  String? description;
+
+  late String id;
+
+  String? name;
+
+  @override
+  List<Object?> get props => [completedDate, deadline, description, id, name];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserGoalInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMeditationLog extends JsonSerializable
+    with EquatableMixin, UserMeditationLogMixin {
+  UserMeditationLog();
+
+  factory UserMeditationLog.fromJson(Map<String, dynamic> json) =>
+      _$UserMeditationLogFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, year, dayNumber, minutesLogged, note];
+  @override
+  Map<String, dynamic> toJson() => _$UserMeditationLogToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMeditationLog$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMeditationLog$Mutation();
+
+  factory CreateUserMeditationLog$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMeditationLog$MutationFromJson(json);
+
+  late UserMeditationLog createUserMeditationLog;
+
+  @override
+  List<Object?> get props => [createUserMeditationLog];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMeditationLog$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMeditationLogInput extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMeditationLogInput(
+      {required this.dayNumber,
+      required this.minutesLogged,
+      this.note,
+      required this.year});
+
+  factory CreateUserMeditationLogInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserMeditationLogInputFromJson(json);
+
+  late int dayNumber;
+
+  late int minutesLogged;
+
+  String? note;
+
+  late int year;
+
+  @override
+  List<Object?> get props => [dayNumber, minutesLogged, note, year];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserMeditationLogInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserDayLogMood$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserDayLogMood$Mutation();
+
+  factory DeleteUserDayLogMood$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserDayLogMood$MutationFromJson(json);
+
+  late String deleteUserDayLogMood;
+
+  @override
+  List<Object?> get props => [deleteUserDayLogMood];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserDayLogMood$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserEatWellLog extends JsonSerializable
+    with EquatableMixin, UserEatWellLogMixin {
+  UserEatWellLog();
+
+  factory UserEatWellLog.fromJson(Map<String, dynamic> json) =>
+      _$UserEatWellLogFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, year, dayNumber, rating, note];
+  @override
+  Map<String, dynamic> toJson() => _$UserEatWellLogToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserEatWellLog$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserEatWellLog$Mutation();
+
+  factory CreateUserEatWellLog$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserEatWellLog$MutationFromJson(json);
+
+  late UserEatWellLog createUserEatWellLog;
+
+  @override
+  List<Object?> get props => [createUserEatWellLog];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserEatWellLog$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserEatWellLogInput extends JsonSerializable with EquatableMixin {
+  CreateUserEatWellLogInput(
+      {required this.dayNumber,
+      this.note,
+      required this.rating,
+      required this.year});
+
+  factory CreateUserEatWellLogInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserEatWellLogInputFromJson(json);
+
+  late int dayNumber;
+
+  String? note;
+
+  @JsonKey(unknownEnumValue: UserDayLogRating.artemisUnknown)
+  late UserDayLogRating rating;
+
+  late int year;
+
+  @override
+  List<Object?> get props => [dayNumber, note, rating, year];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserEatWellLogInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserMeditationLog$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserMeditationLog$Mutation();
+
+  factory UpdateUserMeditationLog$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateUserMeditationLog$MutationFromJson(json);
+
+  late UserMeditationLog updateUserMeditationLog;
+
+  @override
+  List<Object?> get props => [updateUserMeditationLog];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateUserMeditationLog$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserMeditationLogInput extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserMeditationLogInput(
+      {required this.id, this.minutesLogged, this.note});
+
+  factory UpdateUserMeditationLogInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserMeditationLogInputFromJson(json);
+
+  late String id;
+
+  int? minutesLogged;
+
+  String? note;
+
+  @override
+  List<Object?> get props => [id, minutesLogged, note];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserMeditationLogInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserDayLogMood extends JsonSerializable
+    with EquatableMixin, UserDayLogMoodMixin {
+  UserDayLogMood();
+
+  factory UserDayLogMood.fromJson(Map<String, dynamic> json) =>
+      _$UserDayLogMoodFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, moodScore, energyScore, tags, note];
+  @override
+  Map<String, dynamic> toJson() => _$UserDayLogMoodToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserDayLogMood$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserDayLogMood$Mutation();
+
+  factory CreateUserDayLogMood$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserDayLogMood$MutationFromJson(json);
+
+  late UserDayLogMood createUserDayLogMood;
+
+  @override
+  List<Object?> get props => [createUserDayLogMood];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserDayLogMood$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserDayLogMoodInput extends JsonSerializable with EquatableMixin {
+  CreateUserDayLogMoodInput(
+      {required this.energyScore,
+      required this.moodScore,
+      this.note,
+      this.tags});
+
+  factory CreateUserDayLogMoodInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserDayLogMoodInputFromJson(json);
+
+  late int energyScore;
+
+  late int moodScore;
+
+  String? note;
+
+  List<String>? tags;
+
+  @override
+  List<Object?> get props => [energyScore, moodScore, note, tags];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserDayLogMoodInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserEatWellLog$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserEatWellLog$Mutation();
+
+  factory UpdateUserEatWellLog$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserEatWellLog$MutationFromJson(json);
+
+  late UserEatWellLog updateUserEatWellLog;
+
+  @override
+  List<Object?> get props => [updateUserEatWellLog];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserEatWellLog$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserEatWellLogInput extends JsonSerializable with EquatableMixin {
+  UpdateUserEatWellLogInput({required this.id, this.note, this.rating});
+
+  factory UpdateUserEatWellLogInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserEatWellLogInputFromJson(json);
+
+  late String id;
+
+  String? note;
+
+  @JsonKey(unknownEnumValue: UserDayLogRating.artemisUnknown)
+  UserDayLogRating? rating;
+
+  @override
+  List<Object?> get props => [id, note, rating];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserEatWellLogInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMeditationLogs$Query extends JsonSerializable with EquatableMixin {
+  UserMeditationLogs$Query();
+
+  factory UserMeditationLogs$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserMeditationLogs$QueryFromJson(json);
+
+  late List<UserMeditationLog> userMeditationLogs;
+
+  @override
+  List<Object?> get props => [userMeditationLogs];
+  @override
+  Map<String, dynamic> toJson() => _$UserMeditationLogs$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserEatWellLogs$Query extends JsonSerializable with EquatableMixin {
+  UserEatWellLogs$Query();
+
+  factory UserEatWellLogs$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserEatWellLogs$QueryFromJson(json);
+
+  late List<UserEatWellLog> userEatWellLogs;
+
+  @override
+  List<Object?> get props => [userEatWellLogs];
+  @override
+  Map<String, dynamic> toJson() => _$UserEatWellLogs$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserSleepWellLogs$Query extends JsonSerializable with EquatableMixin {
+  UserSleepWellLogs$Query();
+
+  factory UserSleepWellLogs$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserSleepWellLogs$QueryFromJson(json);
+
+  late List<UserSleepWellLog> userSleepWellLogs;
+
+  @override
+  List<Object?> get props => [userSleepWellLogs];
+  @override
+  Map<String, dynamic> toJson() => _$UserSleepWellLogs$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserGoals$Query extends JsonSerializable with EquatableMixin {
+  UserGoals$Query();
+
+  factory UserGoals$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserGoals$QueryFromJson(json);
+
+  late List<UserGoal> userGoals;
+
+  @override
+  List<Object?> get props => [userGoals];
+  @override
+  Map<String, dynamic> toJson() => _$UserGoals$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserDayLogMoods$Query extends JsonSerializable with EquatableMixin {
+  UserDayLogMoods$Query();
+
+  factory UserDayLogMoods$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserDayLogMoods$QueryFromJson(json);
+
+  late List<UserDayLogMood> userDayLogMoods;
+
+  @override
+  List<Object?> get props => [userDayLogMoods];
+  @override
+  Map<String, dynamic> toJson() => _$UserDayLogMoods$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -5246,7 +5488,10 @@ class UpdateUserProfileResult extends JsonSerializable
         firstname,
         gender,
         hasOnboarded,
-        lastname
+        lastname,
+        workoutsPerWeekTarget,
+        activeProgressWidgets,
+        activeLogDataWidgets
       ];
   @override
   Map<String, dynamic> toJson() => _$UpdateUserProfileResultToJson(this);
@@ -5270,7 +5515,9 @@ class UpdateUserProfile$Mutation extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
   UpdateUserProfileInput(
-      {this.avatarUri,
+      {this.activeLogDataWidgets,
+      this.activeProgressWidgets,
+      this.avatarUri,
       this.bio,
       this.birthdate,
       this.countryCode,
@@ -5287,10 +5534,15 @@ class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
       this.tiktokHandle,
       this.townCity,
       this.userProfileScope,
+      this.workoutsPerWeekTarget,
       this.youtubeHandle});
 
   factory UpdateUserProfileInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateUserProfileInputFromJson(json);
+
+  List<String>? activeLogDataWidgets;
+
+  List<String>? activeProgressWidgets;
 
   String? avatarUri;
 
@@ -5331,10 +5583,14 @@ class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
   @JsonKey(unknownEnumValue: UserProfileScope.artemisUnknown)
   UserProfileScope? userProfileScope;
 
+  int? workoutsPerWeekTarget;
+
   String? youtubeHandle;
 
   @override
   List<Object?> get props => [
+        activeLogDataWidgets,
+        activeProgressWidgets,
         avatarUri,
         bio,
         birthdate,
@@ -5352,6 +5608,7 @@ class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
         tiktokHandle,
         townCity,
         userProfileScope,
+        workoutsPerWeekTarget,
         youtubeHandle
       ];
   @override
@@ -5487,6 +5744,9 @@ class UserProfile extends JsonSerializable
         followerCount,
         workoutCount,
         planCount,
+        workoutsPerWeekTarget,
+        activeProgressWidgets,
+        activeLogDataWidgets,
         clubs,
         lifetimeLogStatsSummary,
         skills,
@@ -5847,6 +6107,36 @@ class DeleteWorkoutSetById$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class ProgressWidget extends JsonSerializable
+    with EquatableMixin, ProgressWidgetMixin {
+  ProgressWidget();
+
+  factory ProgressWidget.fromJson(Map<String, dynamic> json) =>
+      _$ProgressWidgetFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, name, subtitle, description];
+  @override
+  Map<String, dynamic> toJson() => _$ProgressWidgetToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class LogDataWidget extends JsonSerializable
+    with EquatableMixin, LogDataWidgetMixin {
+  LogDataWidget();
+
+  factory LogDataWidget.fromJson(Map<String, dynamic> json) =>
+      _$LogDataWidgetFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, name, subtitle, description];
+  @override
+  Map<String, dynamic> toJson() => _$LogDataWidgetToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class CoreData extends JsonSerializable with EquatableMixin {
   CoreData();
 
@@ -5868,6 +6158,10 @@ class CoreData extends JsonSerializable with EquatableMixin {
 
   late List<Move> standardMoves;
 
+  late List<ProgressWidget> progressWidgets;
+
+  late List<LogDataWidget> logDataWidgets;
+
   @override
   List<Object?> get props => [
         $$typename,
@@ -5876,7 +6170,9 @@ class CoreData extends JsonSerializable with EquatableMixin {
         moveTypes,
         workoutGoals,
         workoutSectionTypes,
-        standardMoves
+        standardMoves,
+        progressWidgets,
+        logDataWidgets
       ];
   @override
   Map<String, dynamic> toJson() => _$CoreDataToJson(this);
@@ -7390,6 +7686,115 @@ class WorkoutById$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class ClubMemberNote extends JsonSerializable
+    with EquatableMixin, ClubMemberNoteMixin {
+  ClubMemberNote();
+
+  factory ClubMemberNote.fromJson(Map<String, dynamic> json) =>
+      _$ClubMemberNoteFromJson(json);
+
+  @JsonKey(name: 'User')
+  UserAvatarData? user;
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, updatedAt, note, tags, user];
+  @override
+  Map<String, dynamic> toJson() => _$ClubMemberNoteToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubMemberNote$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateClubMemberNote$Mutation();
+
+  factory UpdateClubMemberNote$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubMemberNote$MutationFromJson(json);
+
+  late ClubMemberNote updateClubMemberNote;
+
+  @override
+  List<Object?> get props => [updateClubMemberNote];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateClubMemberNote$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateClubMemberNoteInput extends JsonSerializable with EquatableMixin {
+  UpdateClubMemberNoteInput({required this.id, this.note, this.tags});
+
+  factory UpdateClubMemberNoteInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubMemberNoteInputFromJson(json);
+
+  late String id;
+
+  String? note;
+
+  List<String>? tags;
+
+  @override
+  List<Object?> get props => [id, note, tags];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateClubMemberNoteInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubMemberNote$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateClubMemberNote$Mutation();
+
+  factory CreateClubMemberNote$Mutation.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubMemberNote$MutationFromJson(json);
+
+  late ClubMemberNote createClubMemberNote;
+
+  @override
+  List<Object?> get props => [createClubMemberNote];
+  @override
+  Map<String, dynamic> toJson() => _$CreateClubMemberNote$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubMemberNoteInput extends JsonSerializable with EquatableMixin {
+  CreateClubMemberNoteInput(
+      {required this.clubId,
+      required this.memberId,
+      required this.note,
+      required this.tags});
+
+  factory CreateClubMemberNoteInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubMemberNoteInputFromJson(json);
+
+  late String clubId;
+
+  late String memberId;
+
+  late String note;
+
+  late List<String> tags;
+
+  @override
+  List<Object?> get props => [clubId, memberId, note, tags];
+  @override
+  Map<String, dynamic> toJson() => _$CreateClubMemberNoteInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubMemberNotes$Query extends JsonSerializable with EquatableMixin {
+  ClubMemberNotes$Query();
+
+  factory ClubMemberNotes$Query.fromJson(Map<String, dynamic> json) =>
+      _$ClubMemberNotes$QueryFromJson(json);
+
+  late List<ClubMemberNote> clubMemberNotes;
+
+  @override
+  List<Object?> get props => [clubMemberNotes];
+  @override
+  Map<String, dynamic> toJson() => _$ClubMemberNotes$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class RemoveDocumentFromSkill$Mutation extends JsonSerializable
     with EquatableMixin {
   RemoveDocumentFromSkill$Mutation();
@@ -7979,115 +8384,6 @@ class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class ClubMemberNote extends JsonSerializable
-    with EquatableMixin, ClubMemberNoteMixin {
-  ClubMemberNote();
-
-  factory ClubMemberNote.fromJson(Map<String, dynamic> json) =>
-      _$ClubMemberNoteFromJson(json);
-
-  @JsonKey(name: 'User')
-  UserAvatarData? user;
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, updatedAt, note, tags, user];
-  @override
-  Map<String, dynamic> toJson() => _$ClubMemberNoteToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateClubMemberNote$Mutation extends JsonSerializable
-    with EquatableMixin {
-  UpdateClubMemberNote$Mutation();
-
-  factory UpdateClubMemberNote$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClubMemberNote$MutationFromJson(json);
-
-  late ClubMemberNote updateClubMemberNote;
-
-  @override
-  List<Object?> get props => [updateClubMemberNote];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateClubMemberNote$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateClubMemberNoteInput extends JsonSerializable with EquatableMixin {
-  UpdateClubMemberNoteInput({required this.id, this.note, this.tags});
-
-  factory UpdateClubMemberNoteInput.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClubMemberNoteInputFromJson(json);
-
-  late String id;
-
-  String? note;
-
-  List<String>? tags;
-
-  @override
-  List<Object?> get props => [id, note, tags];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateClubMemberNoteInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateClubMemberNote$Mutation extends JsonSerializable
-    with EquatableMixin {
-  CreateClubMemberNote$Mutation();
-
-  factory CreateClubMemberNote$Mutation.fromJson(Map<String, dynamic> json) =>
-      _$CreateClubMemberNote$MutationFromJson(json);
-
-  late ClubMemberNote createClubMemberNote;
-
-  @override
-  List<Object?> get props => [createClubMemberNote];
-  @override
-  Map<String, dynamic> toJson() => _$CreateClubMemberNote$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateClubMemberNoteInput extends JsonSerializable with EquatableMixin {
-  CreateClubMemberNoteInput(
-      {required this.clubId,
-      required this.memberId,
-      required this.note,
-      required this.tags});
-
-  factory CreateClubMemberNoteInput.fromJson(Map<String, dynamic> json) =>
-      _$CreateClubMemberNoteInputFromJson(json);
-
-  late String clubId;
-
-  late String memberId;
-
-  late String note;
-
-  late List<String> tags;
-
-  @override
-  List<Object?> get props => [clubId, memberId, note, tags];
-  @override
-  Map<String, dynamic> toJson() => _$CreateClubMemberNoteInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ClubMemberNotes$Query extends JsonSerializable with EquatableMixin {
-  ClubMemberNotes$Query();
-
-  factory ClubMemberNotes$Query.fromJson(Map<String, dynamic> json) =>
-      _$ClubMemberNotes$QueryFromJson(json);
-
-  late List<ClubMemberNote> clubMemberNotes;
-
-  @override
-  List<Object?> get props => [clubMemberNotes];
-  @override
-  Map<String, dynamic> toJson() => _$ClubMemberNotes$QueryToJson(this);
-}
-
 enum ContentAccessScope {
   @JsonValue('PRIVATE')
   private,
@@ -8101,6 +8397,16 @@ enum BodyweightUnit {
   kg,
   @JsonValue('LB')
   lb,
+  @JsonValue('ARTEMIS_UNKNOWN')
+  artemisUnknown,
+}
+enum UserDayLogRating {
+  @JsonValue('AVERAGE')
+  average,
+  @JsonValue('BAD')
+  bad,
+  @JsonValue('GOOD')
+  good,
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
@@ -8237,1119 +8543,6 @@ enum UserClubMemberStatus {
   owner,
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJournalGoalByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteJournalGoalByIdArguments({required this.id});
-
-  @override
-  factory DeleteJournalGoalByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJournalGoalByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJournalGoalByIdArgumentsToJson(this);
-}
-
-final DELETE_JOURNAL_GOAL_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteJournalGoalById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteJournalGoalById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteJournalGoalByIdMutation extends GraphQLQuery<
-    DeleteJournalGoalById$Mutation, DeleteJournalGoalByIdArguments> {
-  DeleteJournalGoalByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_JOURNAL_GOAL_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteJournalGoalById';
-
-  @override
-  final DeleteJournalGoalByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteJournalGoalById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteJournalGoalById$Mutation.fromJson(json);
-}
-
-final JOURNAL_MOODS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'journalMoods'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'journalMoods'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalMood'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalMood'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalMood'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'textNote'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class JournalMoodsQuery
-    extends GraphQLQuery<JournalMoods$Query, JsonSerializable> {
-  JournalMoodsQuery();
-
-  @override
-  final DocumentNode document = JOURNAL_MOODS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'journalMoods';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  JournalMoods$Query parse(Map<String, dynamic> json) =>
-      JournalMoods$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalMoodArguments extends JsonSerializable with EquatableMixin {
-  UpdateJournalMoodArguments({required this.data});
-
-  @override
-  factory UpdateJournalMoodArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalMoodArgumentsFromJson(json);
-
-  late UpdateJournalMoodInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalMoodArgumentsToJson(this);
-}
-
-final UPDATE_JOURNAL_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateJournalMood'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateJournalMoodInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateJournalMood'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalMood'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalMood'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalMood'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'textNote'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateJournalMoodMutation extends GraphQLQuery<UpdateJournalMood$Mutation,
-    UpdateJournalMoodArguments> {
-  UpdateJournalMoodMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_JOURNAL_MOOD_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateJournalMood';
-
-  @override
-  final UpdateJournalMoodArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateJournalMood$Mutation parse(Map<String, dynamic> json) =>
-      UpdateJournalMood$Mutation.fromJson(json);
-}
-
-final JOURNAL_GOALS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'journalGoals'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'journalGoals'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalGoal'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class JournalGoalsQuery
-    extends GraphQLQuery<JournalGoals$Query, JsonSerializable> {
-  JournalGoalsQuery();
-
-  @override
-  final DocumentNode document = JOURNAL_GOALS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'journalGoals';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  JournalGoals$Query parse(Map<String, dynamic> json) =>
-      JournalGoals$Query.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalGoalArguments extends JsonSerializable with EquatableMixin {
-  CreateJournalGoalArguments({required this.data});
-
-  @override
-  factory CreateJournalGoalArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalGoalArgumentsFromJson(json);
-
-  late CreateJournalGoalInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalGoalArgumentsToJson(this);
-}
-
-final CREATE_JOURNAL_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createJournalGoal'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateJournalGoalInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createJournalGoal'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalGoal'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateJournalGoalMutation extends GraphQLQuery<CreateJournalGoal$Mutation,
-    CreateJournalGoalArguments> {
-  CreateJournalGoalMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_JOURNAL_GOAL_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createJournalGoal';
-
-  @override
-  final CreateJournalGoalArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CreateJournalGoal$Mutation parse(Map<String, dynamic> json) =>
-      CreateJournalGoal$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJournalNoteByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteJournalNoteByIdArguments({required this.id});
-
-  @override
-  factory DeleteJournalNoteByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJournalNoteByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJournalNoteByIdArgumentsToJson(this);
-}
-
-final DELETE_JOURNAL_NOTE_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteJournalNoteById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteJournalNoteById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteJournalNoteByIdMutation extends GraphQLQuery<
-    DeleteJournalNoteById$Mutation, DeleteJournalNoteByIdArguments> {
-  DeleteJournalNoteByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_JOURNAL_NOTE_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteJournalNoteById';
-
-  @override
-  final DeleteJournalNoteByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteJournalNoteById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteJournalNoteById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalNoteArguments extends JsonSerializable with EquatableMixin {
-  UpdateJournalNoteArguments({required this.data});
-
-  @override
-  factory UpdateJournalNoteArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalNoteArgumentsFromJson(json);
-
-  late UpdateJournalNoteInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalNoteArgumentsToJson(this);
-}
-
-final UPDATE_JOURNAL_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateJournalNote'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateJournalNoteInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateJournalNote'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalNote'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalNote'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalNote'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'textNote'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateJournalNoteMutation extends GraphQLQuery<UpdateJournalNote$Mutation,
-    UpdateJournalNoteArguments> {
-  UpdateJournalNoteMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_JOURNAL_NOTE_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateJournalNote';
-
-  @override
-  final UpdateJournalNoteArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateJournalNote$Mutation parse(Map<String, dynamic> json) =>
-      UpdateJournalNote$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class DeleteJournalMoodByIdArguments extends JsonSerializable
-    with EquatableMixin {
-  DeleteJournalMoodByIdArguments({required this.id});
-
-  @override
-  factory DeleteJournalMoodByIdArguments.fromJson(Map<String, dynamic> json) =>
-      _$DeleteJournalMoodByIdArgumentsFromJson(json);
-
-  late String id;
-
-  @override
-  List<Object?> get props => [id];
-  @override
-  Map<String, dynamic> toJson() => _$DeleteJournalMoodByIdArgumentsToJson(this);
-}
-
-final DELETE_JOURNAL_MOOD_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'deleteJournalMoodById'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'id')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'deleteJournalMoodById'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'id'),
-                  value: VariableNode(name: NameNode(value: 'id')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class DeleteJournalMoodByIdMutation extends GraphQLQuery<
-    DeleteJournalMoodById$Mutation, DeleteJournalMoodByIdArguments> {
-  DeleteJournalMoodByIdMutation({required this.variables});
-
-  @override
-  final DocumentNode document = DELETE_JOURNAL_MOOD_BY_ID_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'deleteJournalMoodById';
-
-  @override
-  final DeleteJournalMoodByIdArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  DeleteJournalMoodById$Mutation parse(Map<String, dynamic> json) =>
-      DeleteJournalMoodById$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateJournalGoalArguments extends JsonSerializable with EquatableMixin {
-  UpdateJournalGoalArguments({required this.data});
-
-  @override
-  factory UpdateJournalGoalArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateJournalGoalArgumentsFromJson(json);
-
-  late UpdateJournalGoalInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateJournalGoalArgumentsToJson(this);
-}
-
-final UPDATE_JOURNAL_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateJournalGoal'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateJournalGoalInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateJournalGoal'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalGoal'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalGoal'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalGoal'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'deadline'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedDate'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateJournalGoalMutation extends GraphQLQuery<UpdateJournalGoal$Mutation,
-    UpdateJournalGoalArguments> {
-  UpdateJournalGoalMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_JOURNAL_GOAL_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateJournalGoal';
-
-  @override
-  final UpdateJournalGoalArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateJournalGoal$Mutation parse(Map<String, dynamic> json) =>
-      UpdateJournalGoal$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalMoodArguments extends JsonSerializable with EquatableMixin {
-  CreateJournalMoodArguments({required this.data});
-
-  @override
-  factory CreateJournalMoodArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalMoodArgumentsFromJson(json);
-
-  late CreateJournalMoodInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalMoodArgumentsToJson(this);
-}
-
-final CREATE_JOURNAL_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createJournalMood'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateJournalMoodInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createJournalMood'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalMood'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalMood'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalMood'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'moodScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'energyScore'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'textNote'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateJournalMoodMutation extends GraphQLQuery<CreateJournalMood$Mutation,
-    CreateJournalMoodArguments> {
-  CreateJournalMoodMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_JOURNAL_MOOD_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createJournalMood';
-
-  @override
-  final CreateJournalMoodArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CreateJournalMood$Mutation parse(Map<String, dynamic> json) =>
-      CreateJournalMood$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateJournalNoteArguments extends JsonSerializable with EquatableMixin {
-  CreateJournalNoteArguments({required this.data});
-
-  @override
-  factory CreateJournalNoteArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateJournalNoteArgumentsFromJson(json);
-
-  late CreateJournalNoteInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$CreateJournalNoteArgumentsToJson(this);
-}
-
-final CREATE_JOURNAL_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createJournalNote'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateJournalNoteInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createJournalNote'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalNote'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalNote'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalNote'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'textNote'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateJournalNoteMutation extends GraphQLQuery<CreateJournalNote$Mutation,
-    CreateJournalNoteArguments> {
-  CreateJournalNoteMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_JOURNAL_NOTE_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createJournalNote';
-
-  @override
-  final CreateJournalNoteArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CreateJournalNote$Mutation parse(Map<String, dynamic> json) =>
-      CreateJournalNote$Mutation.fromJson(json);
-}
-
-final JOURNAL_NOTES_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'journalNotes'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'journalNotes'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'JournalNote'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'JournalNote'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'JournalNote'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'textNote'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'voiceNoteUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class JournalNotesQuery
-    extends GraphQLQuery<JournalNotes$Query, JsonSerializable> {
-  JournalNotesQuery();
-
-  @override
-  final DocumentNode document = JOURNAL_NOTES_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'journalNotes';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  JournalNotes$Query parse(Map<String, dynamic> json) =>
-      JournalNotes$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -11227,6 +10420,1642 @@ class BodyTrackingEntriesQuery
   @override
   BodyTrackingEntries$Query parse(Map<String, dynamic> json) =>
       BodyTrackingEntries$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserGoalArguments extends JsonSerializable with EquatableMixin {
+  CreateUserGoalArguments({required this.data});
+
+  @override
+  factory CreateUserGoalArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserGoalArgumentsFromJson(json);
+
+  late CreateUserGoalInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserGoalArgumentsToJson(this);
+}
+
+final CREATE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserGoal'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserGoalInput'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserGoal'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserGoal'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'deadline'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserGoalMutation
+    extends GraphQLQuery<CreateUserGoal$Mutation, CreateUserGoalArguments> {
+  CreateUserGoalMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_USER_GOAL_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserGoal';
+
+  @override
+  final CreateUserGoalArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserGoal$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserGoal$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserGoalArguments extends JsonSerializable with EquatableMixin {
+  DeleteUserGoalArguments({required this.id});
+
+  @override
+  factory DeleteUserGoalArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserGoalArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserGoalArgumentsToJson(this);
+}
+
+final DELETE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserGoal'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserGoal'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserGoalMutation
+    extends GraphQLQuery<DeleteUserGoal$Mutation, DeleteUserGoalArguments> {
+  DeleteUserGoalMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_GOAL_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserGoal';
+
+  @override
+  final DeleteUserGoalArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserGoal$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserGoal$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserSleepWellLogArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserSleepWellLogArguments({required this.data});
+
+  @override
+  factory CreateUserSleepWellLogArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserSleepWellLogArgumentsFromJson(json);
+
+  late CreateUserSleepWellLogInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserSleepWellLogArgumentsToJson(this);
+}
+
+final CREATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserSleepWellLog'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserSleepWellLogInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserSleepWellLog'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserSleepWellLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSleepWellLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSleepWellLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'rating'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesSlept'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserSleepWellLogMutation extends GraphQLQuery<
+    CreateUserSleepWellLog$Mutation, CreateUserSleepWellLogArguments> {
+  CreateUserSleepWellLogMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserSleepWellLog';
+
+  @override
+  final CreateUserSleepWellLogArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserSleepWellLog$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserSleepWellLog$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserSleepWellLogArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserSleepWellLogArguments({required this.data});
+
+  @override
+  factory UpdateUserSleepWellLogArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserSleepWellLogArgumentsFromJson(json);
+
+  late UpdateUserSleepWellLogInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateUserSleepWellLogArgumentsToJson(this);
+}
+
+final UPDATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateUserSleepWellLog'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateUserSleepWellLogInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateUserSleepWellLog'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserSleepWellLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSleepWellLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSleepWellLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'rating'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesSlept'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateUserSleepWellLogMutation extends GraphQLQuery<
+    UpdateUserSleepWellLog$Mutation, UpdateUserSleepWellLogArguments> {
+  UpdateUserSleepWellLogMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateUserSleepWellLog';
+
+  @override
+  final UpdateUserSleepWellLogArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateUserSleepWellLog$Mutation parse(Map<String, dynamic> json) =>
+      UpdateUserSleepWellLog$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserGoalArguments extends JsonSerializable with EquatableMixin {
+  UpdateUserGoalArguments({required this.data});
+
+  @override
+  factory UpdateUserGoalArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserGoalArgumentsFromJson(json);
+
+  late UpdateUserGoalInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserGoalArgumentsToJson(this);
+}
+
+final UPDATE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateUserGoal'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateUserGoalInput'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateUserGoal'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserGoal'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'deadline'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateUserGoalMutation
+    extends GraphQLQuery<UpdateUserGoal$Mutation, UpdateUserGoalArguments> {
+  UpdateUserGoalMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_USER_GOAL_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateUserGoal';
+
+  @override
+  final UpdateUserGoalArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateUserGoal$Mutation parse(Map<String, dynamic> json) =>
+      UpdateUserGoal$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMeditationLogArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMeditationLogArguments({required this.data});
+
+  @override
+  factory CreateUserMeditationLogArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMeditationLogArgumentsFromJson(json);
+
+  late CreateUserMeditationLogInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMeditationLogArgumentsToJson(this);
+}
+
+final CREATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserMeditationLog'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserMeditationLogInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserMeditationLog'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMeditationLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMeditationLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMeditationLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesLogged'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserMeditationLogMutation extends GraphQLQuery<
+    CreateUserMeditationLog$Mutation, CreateUserMeditationLogArguments> {
+  CreateUserMeditationLogMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserMeditationLog';
+
+  @override
+  final CreateUserMeditationLogArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserMeditationLog$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserMeditationLog$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserDayLogMoodArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserDayLogMoodArguments({required this.id});
+
+  @override
+  factory DeleteUserDayLogMoodArguments.fromJson(Map<String, dynamic> json) =>
+      _$DeleteUserDayLogMoodArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() => _$DeleteUserDayLogMoodArgumentsToJson(this);
+}
+
+final DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserDayLogMood'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserDayLogMood'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserDayLogMoodMutation extends GraphQLQuery<
+    DeleteUserDayLogMood$Mutation, DeleteUserDayLogMoodArguments> {
+  DeleteUserDayLogMoodMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserDayLogMood';
+
+  @override
+  final DeleteUserDayLogMoodArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserDayLogMood$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserDayLogMood$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserEatWellLogArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserEatWellLogArguments({required this.data});
+
+  @override
+  factory CreateUserEatWellLogArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserEatWellLogArgumentsFromJson(json);
+
+  late CreateUserEatWellLogInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserEatWellLogArgumentsToJson(this);
+}
+
+final CREATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserEatWellLog'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserEatWellLogInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserEatWellLog'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserEatWellLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserEatWellLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserEatWellLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'rating'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserEatWellLogMutation extends GraphQLQuery<
+    CreateUserEatWellLog$Mutation, CreateUserEatWellLogArguments> {
+  CreateUserEatWellLogMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserEatWellLog';
+
+  @override
+  final CreateUserEatWellLogArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserEatWellLog$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserEatWellLog$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserMeditationLogArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserMeditationLogArguments({required this.data});
+
+  @override
+  factory UpdateUserMeditationLogArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateUserMeditationLogArgumentsFromJson(json);
+
+  late UpdateUserMeditationLogInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateUserMeditationLogArgumentsToJson(this);
+}
+
+final UPDATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateUserMeditationLog'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateUserMeditationLogInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateUserMeditationLog'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMeditationLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMeditationLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMeditationLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesLogged'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateUserMeditationLogMutation extends GraphQLQuery<
+    UpdateUserMeditationLog$Mutation, UpdateUserMeditationLogArguments> {
+  UpdateUserMeditationLogMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateUserMeditationLog';
+
+  @override
+  final UpdateUserMeditationLogArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateUserMeditationLog$Mutation parse(Map<String, dynamic> json) =>
+      UpdateUserMeditationLog$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserDayLogMoodArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserDayLogMoodArguments({required this.data});
+
+  @override
+  factory CreateUserDayLogMoodArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateUserDayLogMoodArgumentsFromJson(json);
+
+  late CreateUserDayLogMoodInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateUserDayLogMoodArgumentsToJson(this);
+}
+
+final CREATE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserDayLogMood'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserDayLogMoodInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserDayLogMood'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserDayLogMood'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserDayLogMood'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserDayLogMood'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'moodScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'energyScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserDayLogMoodMutation extends GraphQLQuery<
+    CreateUserDayLogMood$Mutation, CreateUserDayLogMoodArguments> {
+  CreateUserDayLogMoodMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserDayLogMood';
+
+  @override
+  final CreateUserDayLogMoodArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserDayLogMood$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserDayLogMood$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateUserEatWellLogArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateUserEatWellLogArguments({required this.data});
+
+  @override
+  factory UpdateUserEatWellLogArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserEatWellLogArgumentsFromJson(json);
+
+  late UpdateUserEatWellLogInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateUserEatWellLogArgumentsToJson(this);
+}
+
+final UPDATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateUserEatWellLog'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateUserEatWellLogInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateUserEatWellLog'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserEatWellLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserEatWellLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserEatWellLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'rating'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateUserEatWellLogMutation extends GraphQLQuery<
+    UpdateUserEatWellLog$Mutation, UpdateUserEatWellLogArguments> {
+  UpdateUserEatWellLogMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateUserEatWellLog';
+
+  @override
+  final UpdateUserEatWellLogArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateUserEatWellLog$Mutation parse(Map<String, dynamic> json) =>
+      UpdateUserEatWellLog$Mutation.fromJson(json);
+}
+
+final USER_MEDITATION_LOGS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userMeditationLogs'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userMeditationLogs'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMeditationLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMeditationLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMeditationLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesLogged'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserMeditationLogsQuery
+    extends GraphQLQuery<UserMeditationLogs$Query, JsonSerializable> {
+  UserMeditationLogsQuery();
+
+  @override
+  final DocumentNode document = USER_MEDITATION_LOGS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userMeditationLogs';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserMeditationLogs$Query parse(Map<String, dynamic> json) =>
+      UserMeditationLogs$Query.fromJson(json);
+}
+
+final USER_EAT_WELL_LOGS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userEatWellLogs'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userEatWellLogs'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserEatWellLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserEatWellLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserEatWellLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'rating'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserEatWellLogsQuery
+    extends GraphQLQuery<UserEatWellLogs$Query, JsonSerializable> {
+  UserEatWellLogsQuery();
+
+  @override
+  final DocumentNode document = USER_EAT_WELL_LOGS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userEatWellLogs';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserEatWellLogs$Query parse(Map<String, dynamic> json) =>
+      UserEatWellLogs$Query.fromJson(json);
+}
+
+final USER_SLEEP_WELL_LOGS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userSleepWellLogs'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userSleepWellLogs'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserSleepWellLog'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserSleepWellLog'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserSleepWellLog'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'year'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'dayNumber'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'rating'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'minutesSlept'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserSleepWellLogsQuery
+    extends GraphQLQuery<UserSleepWellLogs$Query, JsonSerializable> {
+  UserSleepWellLogsQuery();
+
+  @override
+  final DocumentNode document = USER_SLEEP_WELL_LOGS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userSleepWellLogs';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserSleepWellLogs$Query parse(Map<String, dynamic> json) =>
+      UserSleepWellLogs$Query.fromJson(json);
+}
+
+final USER_GOALS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userGoals'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userGoals'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserGoal'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserGoal'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserGoal'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'deadline'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedDate'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserGoalsQuery extends GraphQLQuery<UserGoals$Query, JsonSerializable> {
+  UserGoalsQuery();
+
+  @override
+  final DocumentNode document = USER_GOALS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userGoals';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserGoals$Query parse(Map<String, dynamic> json) =>
+      UserGoals$Query.fromJson(json);
+}
+
+final USER_DAY_LOG_MOODS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userDayLogMoods'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userDayLogMoods'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserDayLogMood'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserDayLogMood'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserDayLogMood'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'moodScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'energyScore'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserDayLogMoodsQuery
+    extends GraphQLQuery<UserDayLogMoods$Query, JsonSerializable> {
+  UserDayLogMoodsQuery();
+
+  @override
+  final DocumentNode document = USER_DAY_LOG_MOODS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userDayLogMoods';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserDayLogMoods$Query parse(Map<String, dynamic> json) =>
+      UserDayLogMoods$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -38122,6 +38951,24 @@ final UPDATE_USER_PROFILE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutsPerWeekTarget'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'activeProgressWidgets'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'activeLogDataWidgets'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null)
       ]))
 ]);
@@ -38711,6 +39558,24 @@ final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'planCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'workoutsPerWeekTarget'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'activeProgressWidgets'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'activeLogDataWidgets'),
             alias: null,
             arguments: [],
             directives: [],
@@ -40344,6 +41209,24 @@ final CORE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
                               name: NameNode(value: 'Equipment'),
                               directives: [])
                         ]))
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'progressWidgets'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ProgressWidget'), directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'logDataWidgets'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'LogDataWidget'), directives: [])
                   ]))
             ]))
       ])),
@@ -40581,6 +41464,94 @@ final CORE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ProgressWidget'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ProgressWidget'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'subtitle'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'LogDataWidget'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'LogDataWidget'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'subtitle'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
             alias: null,
             arguments: [],
             directives: [],
@@ -48659,6 +49630,493 @@ class WorkoutByIdQuery
 }
 
 @JsonSerializable(explicitToJson: true)
+class UpdateClubMemberNoteArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateClubMemberNoteArguments({required this.data});
+
+  @override
+  factory UpdateClubMemberNoteArguments.fromJson(Map<String, dynamic> json) =>
+      _$UpdateClubMemberNoteArgumentsFromJson(json);
+
+  late UpdateClubMemberNoteInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateClubMemberNoteArgumentsToJson(this);
+}
+
+final UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateClubMemberNote'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateClubMemberNoteInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateClubMemberNote'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubMemberNote'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubMemberNote'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubMemberNote'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateClubMemberNoteMutation extends GraphQLQuery<
+    UpdateClubMemberNote$Mutation, UpdateClubMemberNoteArguments> {
+  UpdateClubMemberNoteMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'updateClubMemberNote';
+
+  @override
+  final UpdateClubMemberNoteArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateClubMemberNote$Mutation parse(Map<String, dynamic> json) =>
+      UpdateClubMemberNote$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateClubMemberNoteArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateClubMemberNoteArguments({required this.data});
+
+  @override
+  factory CreateClubMemberNoteArguments.fromJson(Map<String, dynamic> json) =>
+      _$CreateClubMemberNoteArgumentsFromJson(json);
+
+  late CreateClubMemberNoteInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() => _$CreateClubMemberNoteArgumentsToJson(this);
+}
+
+final CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createClubMemberNote'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateClubMemberNoteInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createClubMemberNote'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubMemberNote'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubMemberNote'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubMemberNote'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateClubMemberNoteMutation extends GraphQLQuery<
+    CreateClubMemberNote$Mutation, CreateClubMemberNoteArguments> {
+  CreateClubMemberNoteMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createClubMemberNote';
+
+  @override
+  final CreateClubMemberNoteArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateClubMemberNote$Mutation parse(Map<String, dynamic> json) =>
+      CreateClubMemberNote$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class ClubMemberNotesArguments extends JsonSerializable with EquatableMixin {
+  ClubMemberNotesArguments(
+      {required this.clubId, required this.memberId, this.cursor, this.take});
+
+  @override
+  factory ClubMemberNotesArguments.fromJson(Map<String, dynamic> json) =>
+      _$ClubMemberNotesArgumentsFromJson(json);
+
+  late String clubId;
+
+  late String memberId;
+
+  final String? cursor;
+
+  final int? take;
+
+  @override
+  List<Object?> get props => [clubId, memberId, cursor, take];
+  @override
+  Map<String, dynamic> toJson() => _$ClubMemberNotesArgumentsToJson(this);
+}
+
+final CLUB_MEMBER_NOTES_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'clubMemberNotes'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'clubId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'memberId')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'cursor')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: []),
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'take')),
+            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: false),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'clubMemberNotes'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'clubId'),
+                  value: VariableNode(name: NameNode(value: 'clubId'))),
+              ArgumentNode(
+                  name: NameNode(value: 'memberId'),
+                  value: VariableNode(name: NameNode(value: 'memberId'))),
+              ArgumentNode(
+                  name: NameNode(value: 'cursor'),
+                  value: VariableNode(name: NameNode(value: 'cursor'))),
+              ArgumentNode(
+                  name: NameNode(value: 'take'),
+                  value: VariableNode(name: NameNode(value: 'take')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ClubMemberNote'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'User'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'UserAvatarData'), directives: [])
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ClubMemberNote'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ClubMemberNote'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class ClubMemberNotesQuery
+    extends GraphQLQuery<ClubMemberNotes$Query, ClubMemberNotesArguments> {
+  ClubMemberNotesQuery({required this.variables});
+
+  @override
+  final DocumentNode document = CLUB_MEMBER_NOTES_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'clubMemberNotes';
+
+  @override
+  final ClubMemberNotesArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  ClubMemberNotes$Query parse(Map<String, dynamic> json) =>
+      ClubMemberNotes$Query.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
 class RemoveDocumentFromSkillArguments extends JsonSerializable
     with EquatableMixin {
   RemoveDocumentFromSkillArguments({required this.data});
@@ -50991,491 +52449,4 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   @override
   CreateClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       CreateClubInviteToken$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UpdateClubMemberNoteArguments extends JsonSerializable
-    with EquatableMixin {
-  UpdateClubMemberNoteArguments({required this.data});
-
-  @override
-  factory UpdateClubMemberNoteArguments.fromJson(Map<String, dynamic> json) =>
-      _$UpdateClubMemberNoteArgumentsFromJson(json);
-
-  late UpdateClubMemberNoteInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$UpdateClubMemberNoteArgumentsToJson(this);
-}
-
-final UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'updateClubMemberNote'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'UpdateClubMemberNoteInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'updateClubMemberNote'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubMemberNote'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserAvatarData'), directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserAvatarData'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubMemberNote'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubMemberNote'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'updatedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class UpdateClubMemberNoteMutation extends GraphQLQuery<
-    UpdateClubMemberNote$Mutation, UpdateClubMemberNoteArguments> {
-  UpdateClubMemberNoteMutation({required this.variables});
-
-  @override
-  final DocumentNode document = UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'updateClubMemberNote';
-
-  @override
-  final UpdateClubMemberNoteArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  UpdateClubMemberNote$Mutation parse(Map<String, dynamic> json) =>
-      UpdateClubMemberNote$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class CreateClubMemberNoteArguments extends JsonSerializable
-    with EquatableMixin {
-  CreateClubMemberNoteArguments({required this.data});
-
-  @override
-  factory CreateClubMemberNoteArguments.fromJson(Map<String, dynamic> json) =>
-      _$CreateClubMemberNoteArgumentsFromJson(json);
-
-  late CreateClubMemberNoteInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() => _$CreateClubMemberNoteArgumentsToJson(this);
-}
-
-final CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'createClubMemberNote'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'CreateClubMemberNoteInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'createClubMemberNote'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubMemberNote'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserAvatarData'), directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserAvatarData'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubMemberNote'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubMemberNote'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'updatedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class CreateClubMemberNoteMutation extends GraphQLQuery<
-    CreateClubMemberNote$Mutation, CreateClubMemberNoteArguments> {
-  CreateClubMemberNoteMutation({required this.variables});
-
-  @override
-  final DocumentNode document = CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'createClubMemberNote';
-
-  @override
-  final CreateClubMemberNoteArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  CreateClubMemberNote$Mutation parse(Map<String, dynamic> json) =>
-      CreateClubMemberNote$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ClubMemberNotesArguments extends JsonSerializable with EquatableMixin {
-  ClubMemberNotesArguments(
-      {required this.clubId, required this.memberId, this.cursor, this.take});
-
-  @override
-  factory ClubMemberNotesArguments.fromJson(Map<String, dynamic> json) =>
-      _$ClubMemberNotesArgumentsFromJson(json);
-
-  late String clubId;
-
-  late String memberId;
-
-  final String? cursor;
-
-  final int? take;
-
-  @override
-  List<Object?> get props => [clubId, memberId, cursor, take];
-  @override
-  Map<String, dynamic> toJson() => _$ClubMemberNotesArgumentsToJson(this);
-}
-
-final CLUB_MEMBER_NOTES_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'clubMemberNotes'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'clubId')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'memberId')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'cursor')),
-            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: false),
-            defaultValue: DefaultValueNode(value: null),
-            directives: []),
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'take')),
-            type: NamedTypeNode(name: NameNode(value: 'Int'), isNonNull: false),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'clubMemberNotes'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'clubId'),
-                  value: VariableNode(name: NameNode(value: 'clubId'))),
-              ArgumentNode(
-                  name: NameNode(value: 'memberId'),
-                  value: VariableNode(name: NameNode(value: 'memberId'))),
-              ArgumentNode(
-                  name: NameNode(value: 'cursor'),
-                  value: VariableNode(name: NameNode(value: 'cursor'))),
-              ArgumentNode(
-                  name: NameNode(value: 'take'),
-                  value: VariableNode(name: NameNode(value: 'take')))
-            ],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'ClubMemberNote'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'User'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'UserAvatarData'), directives: [])
-                  ]))
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserAvatarData'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'avatarUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'ClubMemberNote'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'ClubMemberNote'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'updatedAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'tags'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class ClubMemberNotesQuery
-    extends GraphQLQuery<ClubMemberNotes$Query, ClubMemberNotesArguments> {
-  ClubMemberNotesQuery({required this.variables});
-
-  @override
-  final DocumentNode document = CLUB_MEMBER_NOTES_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'clubMemberNotes';
-
-  @override
-  final ClubMemberNotesArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  ClubMemberNotes$Query parse(Map<String, dynamic> json) =>
-      ClubMemberNotes$Query.fromJson(json);
 }

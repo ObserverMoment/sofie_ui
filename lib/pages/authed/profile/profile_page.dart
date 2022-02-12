@@ -99,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   CupertinoButton(
                       padding: const EdgeInsets.only(left: 16),
                       child: const Icon(
-                        CupertinoIcons.gear,
+                        CupertinoIcons.settings,
                       ),
                       onPressed: () =>
                           context.navigateTo(const SettingsRoute()))

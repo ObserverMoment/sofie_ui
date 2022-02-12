@@ -59,6 +59,9 @@ fragment UserProfile on UserProfile {
   followerCount
   workoutCount
   planCount
+  workoutsPerWeekTarget
+  activeProgressWidgets
+  activeLogDataWidgets
 }
 
 fragment UserProfileResult on UpdateUserProfileResult {
@@ -82,6 +85,9 @@ fragment UserProfileResult on UpdateUserProfileResult {
   gender
   hasOnboarded
   lastname
+  workoutsPerWeekTarget
+  activeProgressWidgets
+  activeLogDataWidgets
 }
 
 fragment UserProfileSummary on UserProfileSummary {
@@ -96,4 +102,41 @@ fragment UserProfileSummary on UserProfileSummary {
   workoutCount
   planCount
   skills
+}
+
+fragment BodyTrackingEntry on BodyTrackingEntry {
+  __typename
+  id
+  createdAt
+  bodyweightUnit
+  bodyweight
+  fatPercent
+  note
+  photoUris
+}
+
+fragment Collection on Collection {
+  __typename
+  id
+  createdAt
+  name
+  description
+}
+
+fragment GymProfile on GymProfile {
+  __typename
+  id
+  name
+  description
+}
+
+fragment ScheduledWorkout on ScheduledWorkout {
+  __typename
+  id
+  scheduledAt
+  note
+  workoutPlanName
+  workoutPlanEnrolmentId
+  workoutPlanDayWorkoutId
+  loggedWorkoutId
 }

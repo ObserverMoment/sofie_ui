@@ -1,0 +1,5 @@
+mutation updateUserEatWellLog($data: UpdateUserEatWellLogInput!) {
+  updateUserEatWellLog(data: $data) {
+    ...UserEatWellLog
+  }
+}
