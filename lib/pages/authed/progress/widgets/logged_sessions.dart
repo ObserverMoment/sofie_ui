@@ -5,15 +5,44 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/router.gr.dart';
 
 /// For the last [numDays] days - is there a loggedWorkout on that day. If there is then fill the dot.
 class LoggedSessionsWidget extends StatelessWidget {
   final List<LoggedWorkout> loggedWorkouts;
   const LoggedSessionsWidget({Key? key, required this.loggedWorkouts})
       : super(key: key);
+
+  void _handleDayTap(
+      {required BuildContext context,
+      required List<LoggedWorkout>? logsOnDay,
+      required bool isTodayOrFuture,
+      required DateTime date}) {
+    openBottomSheetMenu(
+        context: context,
+        child: BottomSheetMenu(
+            header: BottomSheetMenuHeader(
+              name: date.compactDateString,
+            ),
+            items: [
+              if (isTodayOrFuture)
+                BottomSheetMenuItem(
+                    text: 'Schedule a Workout',
+                    icon: CupertinoIcons.calendar_badge_plus,
+                    onPressed: () => context
+                        .navigateTo(YourScheduleRoute(openAtDate: date))),
+              ...(logsOnDay ?? [])
+                  .map((l) => BottomSheetMenuItem(
+                      text: 'View Log: ${l.name}',
+                      onPressed: () => context
+                          .navigateTo(LoggedWorkoutDetailsRoute(id: l.id))))
+                  .toList(),
+            ]));
+  }
 
   final _numDays = 21;
 
@@ -36,57 +65,68 @@ class LoggedSessionsWidget extends StatelessWidget {
     DateTime date,
   ) {
     final isToday = today.isSameDate(date);
+    final isTodayOrFuture = isToday || date.isAfter(today);
 
     final numLogsOnDay = logsByDay[date]?.length ?? 0;
     final hasLogOnDay = numLogsOnDay > 0;
 
-    return Container(
-      decoration: BoxDecoration(
-        border:
-            isToday ? Border.all(color: Styles.primaryAccent, width: 2) : null,
-        shape: BoxShape.circle,
-      ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            margin: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
-            ),
-          ),
-          if (hasLogOnDay)
-            const Opacity(
-                opacity: 0.25,
-                child:
-                    Icon(MyCustomIcons.medal, size: 18, color: Styles.white)),
-          if (hasLogOnDay)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(9.0),
-                child: Wrap(
-                  alignment: WrapAlignment.center,
-                  runAlignment: WrapAlignment.center,
-                  spacing: 1,
-                  runSpacing: 1,
-                  children: List.generate(
-                      numLogsOnDay,
-                      (i) => const Dot(
-                            diameter: 3,
-                            color: Styles.white,
-                          )),
-                ),
+    return GestureDetector(
+      onTap: hasLogOnDay || isTodayOrFuture
+          ? () => _handleDayTap(
+              context: context,
+              logsOnDay: logsByDay[date],
+              isTodayOrFuture: isTodayOrFuture,
+              date: date)
+          : null,
+      child: Container(
+        decoration: BoxDecoration(
+          border: isToday
+              ? Border.all(color: Styles.primaryAccent, width: 2)
+              : null,
+          shape: BoxShape.circle,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              margin: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
               ),
             ),
-          MyText(
-            date.day.toString(),
-            size: FONTSIZE.zero,
-            color: hasLogOnDay ? Styles.white : null,
-          ),
-        ],
+            if (hasLogOnDay)
+              const Opacity(
+                  opacity: 0.25,
+                  child:
+                      Icon(MyCustomIcons.medal, size: 18, color: Styles.white)),
+            if (hasLogOnDay)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.all(9.0),
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    runAlignment: WrapAlignment.center,
+                    spacing: 1,
+                    runSpacing: 1,
+                    children: List.generate(
+                        numLogsOnDay,
+                        (i) => const Dot(
+                              diameter: 3,
+                              color: Styles.white,
+                            )),
+                  ),
+                ),
+              ),
+            MyText(
+              date.day.toString(),
+              size: FONTSIZE.zero,
+              color: hasLogOnDay ? Styles.white : null,
+            ),
+          ],
+        ),
       ),
     );
   }

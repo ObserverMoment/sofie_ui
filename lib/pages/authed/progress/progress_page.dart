@@ -88,20 +88,6 @@ class ProgressPage extends StatelessWidget {
     }
   }
 
-  Future<void> _activateWidget(
-      {required BuildContext context,
-      required List<String> activeProgressWidgets,
-      required String widgetId}) async {
-    if (!activeProgressWidgets.contains(widgetId)) {
-      final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-
-      activeProgressWidgets.add(widgetId);
-
-      await EditProfilePage.updateUserFields(context, authedUserId,
-          {'activeProgressWidgets': activeProgressWidgets});
-    }
-  }
-
   Widget _buildWidget(
       {required BuildContext context,
       required UserProfile userProfile,
@@ -197,6 +183,7 @@ class ProgressPage extends StatelessWidget {
                 index: index,
                 fullScreen: LoggedSessionsFullScreen(
                   widgetId: widgetId,
+                  loggedWorkouts: data.userLoggedWorkouts,
                 ),
                 headerIcon: kWidgetIdToIconMap['003']!,
                 title: 'Sessions Logged',
