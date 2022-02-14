@@ -112,7 +112,6 @@ class _ClubDetailsMemberNotesState extends State<ClubDetailsMemberNotes> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-          backgroundColor: context.theme.modalBackground,
           middle:
               NavBarTitle('Notes - ${widget.clubMemberSummary.displayName}'),
           trailing: CupertinoButton(

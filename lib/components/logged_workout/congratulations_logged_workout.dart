@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:lottie/lottie.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -135,19 +134,16 @@ class _CongratulationsLoggedWorkoutState
                     ],
                   ),
                   _sharedToFeed
-                      ? ContentBox(
-                          backgroundColor: Styles.primaryAccent,
-                          borderRadius: 60,
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                MyHeaderText('Shared to Feed!'),
-                                SizedBox(width: 6),
-                                Icon(
-                                  CupertinoIcons.checkmark_alt,
-                                  size: 24,
-                                ),
-                              ]))
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                              MyHeaderText('Shared to Feed!'),
+                              SizedBox(width: 6),
+                              Icon(
+                                CupertinoIcons.checkmark_alt,
+                                size: 24,
+                              ),
+                            ])
                       : Column(
                           children: [
                             const MyText('Go on...stick it in your feed.'),
@@ -188,12 +184,9 @@ class _CongratulationsLoggedWorkoutState
                       ),
                     ],
                   ),
-                  FloatingButton(
-                      width: 240,
-                      iconSize: 20,
-                      icon: CupertinoIcons.checkmark_alt,
-                      text: 'DO THE REST OF THE DAY',
-                      onTap: () {
+                  PrimaryButton(
+                      text: 'DONE',
+                      onPressed: () {
                         context.pop();
                         widget.onExit();
                       }),

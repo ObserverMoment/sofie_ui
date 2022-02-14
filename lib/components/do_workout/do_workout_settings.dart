@@ -21,7 +21,6 @@ class DoWorkoutSettings extends StatelessWidget {
 
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        backgroundColor: context.theme.background,
         customLeading: NavBarChevronDownButton(context.pop),
         middle: const NavBarTitle('Workout Settings'),
       ),

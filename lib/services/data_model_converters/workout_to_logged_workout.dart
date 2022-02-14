@@ -10,18 +10,20 @@ import 'package:collection/collection.dart';
 /// Converts a workout to a logged workout.
 LoggedWorkout loggedWorkoutFromWorkout(
     {required Workout workout,
-    ScheduledWorkout? scheduledWorkout,
-    bool copySections = false}) {
+    bool copySections = false,
+    DateTime? completedOn,
+    String? note,
+    GymProfile? gymProfile}) {
   final name = Utils.textNotNull(workout.name)
       ? workout.name
       : DateTime.now().dateString;
   return LoggedWorkout()
     ..$$typename = kLoggedWorkoutTypename
     ..id = workout.id // Temp ID matches the workout
-    ..completedOn = scheduledWorkout?.scheduledAt ?? DateTime.now()
-    ..note = scheduledWorkout?.note
+    ..completedOn = completedOn ?? DateTime.now()
+    ..note = note
     ..name = name
-    ..gymProfile = scheduledWorkout?.gymProfile
+    ..gymProfile = gymProfile
     ..workoutId = workout.id
     ..loggedWorkoutSections = copySections
         ? workout.workoutSections

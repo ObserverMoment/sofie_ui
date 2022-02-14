@@ -113,7 +113,9 @@ abstract class ThemeData {
       greyTwo: Styles.greyTwo,
       greyThree: Styles.greyThree,
       greyFour: Styles.greyFour,
-      cardBackground: const Color(0xff1a1a1c),
+      // cardBackground: const Color(0xff1a1a1c),
+      // cardBackground: Color.fromARGB(255, 20, 20, 20),
+      cardBackground: const Color.fromARGB(255, 33, 35, 41),
       modalBackground: const Color(0xff111112),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
@@ -130,8 +132,12 @@ abstract class ThemeData {
 
   static CupertinoThemeData cupertinoDarkData = CupertinoThemeData(
       brightness: Brightness.dark,
-      barBackgroundColor: const Color(0xff050505),
-      scaffoldBackgroundColor: const Color(0xff050505),
+      // barBackgroundColor: const Color(0xff050505),
+      // barBackgroundColor: Color.fromARGB(255, 27, 29, 28),
+      barBackgroundColor: const Color.fromARGB(255, 21, 21, 29),
+      // scaffoldBackgroundColor: const Color(0xff050505),
+      // scaffoldBackgroundColor: Color.fromARGB(255, 29, 32, 32),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 21, 21, 29),
       primaryColor: CupertinoColors.white,
       primaryContrastingColor: Styles.primaryAccent,
       textTheme: CupertinoTextThemeData(
@@ -142,8 +148,12 @@ abstract class ThemeData {
 
   static CupertinoThemeData cupertinoLightData = CupertinoThemeData(
       brightness: Brightness.light,
-      barBackgroundColor: CupertinoColors.systemGroupedBackground,
-      scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
+      // barBackgroundColor: CupertinoColors.systemGroupedBackground,
+      barBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
+      // barBackgroundColor: const Color(0xffe2e9ef),
+      // scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
+      scaffoldBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
+      // scaffoldBackgroundColor: const Color(0xffe2e9ef),
       primaryColor: CupertinoColors.black,
       primaryContrastingColor: Styles.primaryAccent,
       textTheme: CupertinoTextThemeData(

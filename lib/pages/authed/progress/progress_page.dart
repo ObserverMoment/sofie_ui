@@ -208,6 +208,7 @@ class ProgressPage extends StatelessWidget {
                 index: index,
                 fullScreen: LoggedMoodsFullScreen(
                   widgetId: widgetId,
+                  loggedMoods: data.userDayLogMoods,
                 ),
                 headerIcon: kWidgetIdToIconMap['004']!,
                 title: 'Moods',
@@ -240,6 +241,7 @@ class ProgressPage extends StatelessWidget {
                 index: index,
                 fullScreen: LoggedMeditationsFullScreen(
                   widgetId: widgetId,
+                  userMeditationLogs: data.userMeditationLogs,
                 ),
                 headerIcon: kWidgetIdToIconMap['005']!,
                 title: 'Mindfulness',
@@ -265,6 +267,7 @@ class ProgressPage extends StatelessWidget {
                 index: index,
                 fullScreen: EatWellLogsFullScreen(
                   widgetId: widgetId,
+                  userEatWellLogs: data.userEatWellLogs,
                 ),
                 headerIcon: kWidgetIdToIconMap['006']!,
                 title: 'Food Health',
@@ -291,6 +294,7 @@ class ProgressPage extends StatelessWidget {
                 index: index,
                 fullScreen: SleepWellLogsFullScreen(
                   widgetId: widgetId,
+                  userSleepWellLogs: data.userSleepWellLogs,
                 ),
                 headerIcon: kWidgetIdToIconMap['007']!,
                 title: 'Sleep Health',
@@ -351,12 +355,12 @@ class ProgressPage extends StatelessWidget {
                     ),
                     SubSectionLinkTile(
                       label: 'Goal Tracking',
-                      assetImagePath: 'journal.svg',
+                      assetImagePath: 'goal_target.svg',
                       onTap: () => context.navigateTo(const UserGoalsRoute()),
                     ),
                     SubSectionLinkTile(
                       label: 'Body Tracking',
-                      assetImagePath: 'body_transform.svg',
+                      assetImagePath: 'filter_body_icon.svg',
                       onTap: () =>
                           context.navigateTo(const BodyTrackingRoute()),
                     ),

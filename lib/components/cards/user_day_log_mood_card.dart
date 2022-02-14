@@ -48,14 +48,14 @@ class UserDayLogMoodCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _ScoreMeter(
+              ScoreMeter(
                 label: 'Mood',
-                score: mood.moodScore,
+                score: mood.moodScore.toDouble(),
                 gradient: Styles.primaryAccentGradientVertical,
               ),
-              _ScoreMeter(
+              ScoreMeter(
                 label: 'Energy',
-                score: mood.energyScore,
+                score: mood.energyScore.toDouble(),
                 gradient: Styles.secondaryAccentGradientVertical,
               ),
             ],
@@ -107,18 +107,20 @@ class UserDayLogMoodCard extends StatelessWidget {
   }
 }
 
-class _ScoreMeter extends StatelessWidget {
-  final int score;
+class ScoreMeter extends StatelessWidget {
+  final double score;
   final String label;
   final Gradient gradient;
-  const _ScoreMeter(
+  final double displayWidth;
+  const ScoreMeter(
       {Key? key,
       required this.score,
       required this.label,
-      required this.gradient})
+      required this.gradient,
+      this.displayWidth = 100.0})
       : super(key: key);
 
-  double get _borderPadding => 12.0;
+  double get _borderPadding => displayWidth / 10;
   double get _maxHeight => 140.0;
   double get _fullMeterHeight => _maxHeight - (_borderPadding * 2);
 
@@ -148,9 +150,10 @@ class _ScoreMeter extends StatelessWidget {
           ),
         ),
         Container(
+          margin: const EdgeInsets.symmetric(horizontal: 6),
           padding: EdgeInsets.all(_borderPadding),
           height: _maxHeight,
-          width: 100,
+          width: displayWidth,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
             gradient: Styles.secondaryButtonGradient,
@@ -196,6 +199,7 @@ class _ScoreMeter extends StatelessWidget {
           child: MyText(
             label.toUpperCase(),
             subtext: true,
+            size: FONTSIZE.two,
           ),
         )
       ],

@@ -79,7 +79,6 @@ class _FullScreenAudioPlayerState extends State<FullScreenAudioPlayer> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
         middle: NavBarTitle(widget.pageTitle),
-        backgroundColor: context.theme.background,
         customLeading: CupertinoButton(
             onPressed: context.pop,
             child: const Icon(CupertinoIcons.chevron_down)),

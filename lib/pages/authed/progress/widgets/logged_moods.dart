@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/user_day_log_mood_card.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_day_log_mood_creator_page.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -72,6 +74,25 @@ class _LoggedMoodsWidgetState extends State<LoggedMoodsWidget> {
   Widget build(BuildContext context) {
     final sortedMoods =
         widget.loggedMoods.sortedBy<DateTime>((m) => m.createdAt).toList();
+
+    if (sortedMoods.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          const SizedBox(height: 12),
+          const MyText(
+            'No moods logged yet...',
+            subtext: true,
+          ),
+          const SizedBox(height: 20),
+          PrimaryButton(
+              text: 'How are you feeling?',
+              onPressed: () => context.push(
+                  fullscreenDialog: true,
+                  child: const UserDayLogMoodCreatorPage())),
+        ],
+      );
+    }
 
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);

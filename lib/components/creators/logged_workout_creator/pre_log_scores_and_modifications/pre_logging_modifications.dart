@@ -49,14 +49,19 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
     context.read<WorkoutStructureModificationsBloc>().setSavingLogToDB(true);
 
     final loggedWorkout = loggedWorkoutFromWorkout(
-        workout: workout, scheduledWorkout: scheduledWorkout);
+        workout: workout,
+        completedOn: scheduledWorkout?.scheduledAt,
+        note: scheduledWorkout?.note,
+        gymProfile: scheduledWorkout?.gymProfile);
 
     loggedWorkout.loggedWorkoutSections =
         LoggedWorkoutCreatorBloc.generateLoggedWorkoutSections(
             workout: workout, sectionInputs: sectionInputs);
 
     final result = await LoggedWorkoutCreatorBloc.createLoggedWorkoutAndSave(
-        context: context, loggedWorkout: loggedWorkout.copyAndSortAllChildren);
+        context: context,
+        loggedWorkout: loggedWorkout.copyAndSortAllChildren,
+        scheduledWorkout: scheduledWorkout);
 
     context.read<WorkoutStructureModificationsBloc>().setSavingLogToDB(false);
 

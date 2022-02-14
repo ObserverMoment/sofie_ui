@@ -61,6 +61,8 @@ class _UserMeditationLogCreatorPageState
     _minutesController.addListener(() {
       setState(() => _minutesLogged = int.parse(_minutesController.text));
     });
+
+    _note = widget.userMeditationLog?.note;
   }
 
   void _updateNote(String note) => setState(() => _note = note);
@@ -123,6 +125,8 @@ class _UserMeditationLogCreatorPageState
   void _showErrorToast() => context.showToast(
       message: 'Sorry, there was a problem.', toastType: ToastType.destructive);
 
+  bool get _validToSave => _minutesLogged != 0;
+
   @override
   void dispose() {
     _minutesController.dispose();
@@ -146,14 +150,16 @@ class _UserMeditationLogCreatorPageState
                     NavBarLoadingIndicator(),
                   ],
                 )
-              : FadeInUp(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: NavBarTertiarySaveButton(
-                      _saveAndClose,
-                    ),
-                  ),
-                ),
+              : _validToSave
+                  ? FadeInUp(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: NavBarTertiarySaveButton(
+                          _saveAndClose,
+                        ),
+                      ),
+                    )
+                  : null,
         ),
         child: Column(
           children: [

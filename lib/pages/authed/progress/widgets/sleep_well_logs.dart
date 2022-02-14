@@ -50,18 +50,32 @@ class SleepWellLogWidget extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(6),
-            margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: hasLogOnDay ? rating!.color : null,
+              color: hasLogOnDay ? rating!.color.withOpacity(0.1) : null,
             ),
           ),
-          MyText(
-            date.day.toString(),
-            size: FONTSIZE.zero,
-            color: hasLogOnDay ? Styles.white : null,
-          ),
+          if (hasLogOnDay)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  CupertinoIcons.bed_double,
+                  color: rating!.color,
+                  size: 18,
+                ),
+                if (log!.minutesSlept != null)
+                  MyText(
+                    '${(log.minutesSlept! / 60).stringMyDouble()} hr',
+                    size: FONTSIZE.one,
+                  ),
+              ],
+            ),
+          if (!hasLogOnDay)
+            MyText(
+              date.day.toString(),
+              size: FONTSIZE.zero,
+            ),
         ],
       ),
     );
