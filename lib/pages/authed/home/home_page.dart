@@ -6,6 +6,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/home/components/category_link_tile.dart';
+import 'package:sofie_ui/pages/authed/home/components/recently_viewed_objects.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class HomePage extends StatelessWidget {
@@ -91,11 +92,7 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-            const Card(child: MyText('A recent thing')),
-            const Card(child: MyText('A recent thing')),
-            const Card(child: MyText('A recent thing')),
-            const Card(child: MyText('A recent thing')),
-            const Card(child: MyText('A recent thing')),
+            const RecentlyViewedObjects(),
           ],
         ),
       ),

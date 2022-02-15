@@ -6585,6 +6585,46 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'name': instance.name,
     };
 
+UserRecentlyViewedObject _$UserRecentlyViewedObjectFromJson(
+        Map<String, dynamic> json) =>
+    UserRecentlyViewedObject()
+      ..$$typename = json['__typename'] as String?
+      ..club = json['Club'] == null
+          ? null
+          : ClubSummary.fromJson(json['Club'] as Map<String, dynamic>)
+      ..workout = json['Workout'] == null
+          ? null
+          : WorkoutSummary.fromJson(json['Workout'] as Map<String, dynamic>)
+      ..workoutPlan = json['WorkoutPlan'] == null
+          ? null
+          : WorkoutPlanSummary.fromJson(
+              json['WorkoutPlan'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UserRecentlyViewedObjectToJson(
+        UserRecentlyViewedObject instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'Club': instance.club?.toJson(),
+      'Workout': instance.workout?.toJson(),
+      'WorkoutPlan': instance.workoutPlan?.toJson(),
+    };
+
+UserRecentlyViewedObjects$Query _$UserRecentlyViewedObjects$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserRecentlyViewedObjects$Query()
+      ..userRecentlyViewedObjects =
+          (json['userRecentlyViewedObjects'] as List<dynamic>)
+              .map((e) =>
+                  UserRecentlyViewedObject.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserRecentlyViewedObjects$QueryToJson(
+        UserRecentlyViewedObjects$Query instance) =>
+    <String, dynamic>{
+      'userRecentlyViewedObjects':
+          instance.userRecentlyViewedObjects.map((e) => e.toJson()).toList(),
+    };
+
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubChatSummaryArguments(
