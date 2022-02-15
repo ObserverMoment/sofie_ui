@@ -70,6 +70,10 @@ mixin UserGoalMixin {
       fromJson: fromGraphQLDateTimeToDartDateTime,
       toJson: fromDartDateTimeToGraphQLDateTime)
   late DateTime createdAt;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime updatedAt;
   late String name;
   String? description;
   @JsonKey(
@@ -1302,8 +1306,16 @@ class UserGoal extends JsonSerializable with EquatableMixin, UserGoalMixin {
       _$UserGoalFromJson(json);
 
   @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, name, description, deadline, completedDate];
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        updatedAt,
+        name,
+        description,
+        deadline,
+        completedDate
+      ];
   @override
   Map<String, dynamic> toJson() => _$UserGoalToJson(this);
 }
@@ -10492,6 +10504,12 @@ final CREATE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
             name: NameNode(value: 'name'),
             alias: null,
             arguments: [],
@@ -10915,6 +10933,12 @@ final UPDATE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
             alias: null,
             arguments: [],
             directives: [],
@@ -11925,6 +11949,12 @@ final USER_GOALS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
             alias: null,
             arguments: [],
             directives: [],

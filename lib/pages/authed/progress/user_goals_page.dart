@@ -40,6 +40,34 @@ class UserGoalsPage extends StatelessWidget {
             toastType: ToastType.destructive));
   }
 
+  /// Sort by deadline, then updated at, then completed at.
+  /// List goes:
+  /// With Deadline.
+  /// Without Deadline
+  /// Completed.
+  List<UserGoal> _sortedGoals(List<UserGoal> goals) {
+    final incompleteWithDeadline = goals
+        .where((g) => g.completedDate == null && g.deadline != null)
+        .sortedBy<DateTime>((g) => g.deadline!)
+        .toList();
+
+    final incompleteWithoutDeadline = goals
+        .where((g) => g.completedDate == null && g.deadline == null)
+        .sortedBy<DateTime>((g) => g.updatedAt)
+        .toList();
+
+    final complete = goals
+        .where((g) => g.completedDate != null)
+        .sortedBy<DateTime>((g) => g.completedDate!)
+        .toList();
+
+    return [
+      ...incompleteWithDeadline,
+      ...incompleteWithoutDeadline,
+      ...complete
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
@@ -51,10 +79,7 @@ class UserGoalsPage extends StatelessWidget {
                 query: UserGoalsQuery(),
                 fetchPolicy: QueryFetchPolicy.storeFirst,
                 builder: (data) {
-                  final sortedGoals = data.userGoals
-                      .sortedBy<DateTime>((e) => e.createdAt)
-                      .reversed
-                      .toList();
+                  final sortedGoals = _sortedGoals(data.userGoals);
 
                   return sortedGoals.isEmpty
                       ? YourContentEmptyPlaceholder(

@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/user_day_log_mood_card.dart';
+import 'package:sofie_ui/components/creators/user_day_logs/user_day_log_mood_creator_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -50,7 +52,6 @@ class _LoggedMoodsFullScreenState extends State<LoggedMoodsFullScreen> {
         itemName: mood.createdAt.dateAndTime,
         itemType: 'Mood Entry',
         onConfirm: () {
-          context.pop();
           _deleteUserDayLogMood(mood);
         });
   }
@@ -74,8 +75,10 @@ class _LoggedMoodsFullScreenState extends State<LoggedMoodsFullScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sortedMoods =
-        widget.loggedMoods.sortedBy<DateTime>((m) => m.createdAt).toList();
+    final sortedMoods = widget.loggedMoods
+        .sortedBy<DateTime>((m) => m.createdAt)
+        .reversed
+        .toList();
 
     return CupertinoPageScaffold(
         backgroundColor: context.theme.cardBackground,
@@ -86,11 +89,22 @@ class _LoggedMoodsFullScreenState extends State<LoggedMoodsFullScreen> {
                     leadingIcon: CupertinoIcons.chevron_down,
                     trailing: Padding(
                       padding: const EdgeInsets.only(right: 5.0),
-                      child: CircularBox(
-                        padding: const EdgeInsets.all(10),
-                        color: context.theme.background,
-                        child:
-                            Icon(kWidgetIdToIconMap[widget.widgetId], size: 20),
+                      child: NavBarTrailingRow(
+                        children: [
+                          IconButton(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              onPressed: () => context.push(
+                                  fullscreenDialog: true,
+                                  child: const UserDayLogMoodCreatorPage()),
+                              iconData: CupertinoIcons.plus),
+                          CircularBox(
+                            padding: const EdgeInsets.all(10),
+                            color: context.theme.background,
+                            child: Icon(kWidgetIdToIconMap[widget.widgetId],
+                                size: 20),
+                          ),
+                        ],
                       ),
                     ),
                     backgroundColor: context.theme.cardBackground,
@@ -167,7 +181,7 @@ class _TwoWeekAverages extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.only(bottom: 8.0),
           child: MyHeaderText(
-            'Two Week Average',
+            '14 Day Average',
             weight: FontWeight.normal,
           ),
         ),

@@ -391,6 +391,7 @@ UserGoal _$UserGoalFromJson(Map<String, dynamic> json) => UserGoal()
   ..$$typename = json['__typename'] as String?
   ..id = json['id'] as String
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+  ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..name = json['name'] as String
   ..description = json['description'] as String?
   ..deadline = fromGraphQLDateTimeNullableToDartDateTimeNullable(
@@ -402,6 +403,7 @@ Map<String, dynamic> _$UserGoalToJson(UserGoal instance) => <String, dynamic>{
       '__typename': instance.$$typename,
       'id': instance.id,
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'description': instance.description,
       'deadline':

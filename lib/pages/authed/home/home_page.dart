@@ -19,7 +19,7 @@ class HomePage extends StatelessWidget {
           shrinkWrap: true,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
+              padding: const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
               child: GridView.count(
                 crossAxisSpacing: 8,
                 physics: const NeverScrollableScrollPhysics(),

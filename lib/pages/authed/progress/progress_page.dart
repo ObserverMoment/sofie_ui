@@ -22,6 +22,10 @@ import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_medita
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_moods_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_sessions_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/sleep_well_logs_full_screen.dart';
+import 'package:sofie_ui/pages/authed/progress/widget_containers/eat_well_logs_container.dart';
+import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_meditations_container.dart';
+import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_moods_container.dart';
+import 'package:sofie_ui/pages/authed/progress/widget_containers/sleep_well_logs_container.dart';
 import 'package:sofie_ui/pages/authed/progress/widgets/all_time_stats_summary.dart';
 import 'package:sofie_ui/pages/authed/progress/widgets/eat_well_logs.dart';
 import 'package:sofie_ui/pages/authed/progress/widgets/logged_meditations.dart';
@@ -51,6 +55,10 @@ class ProgressPage extends StatelessWidget {
 
   double get _widgetHeight => 220.0;
   Widget get _widgetLoadingShimmer => ShimmerCard(height: _widgetHeight);
+  Widget get _fullScreenLoadingShimmer => const ShimmerCardList(
+        cardHeight: 300,
+        itemCount: 6,
+      );
 
   /// 'Move up' means reducing the index of the widget ID by 1.
   /// i.e Move physically up the screen.
@@ -197,116 +205,104 @@ class ProgressPage extends StatelessWidget {
               );
             });
       case '004':
-        final query = UserDayLogMoodsQuery();
-        return QueryObserver<UserDayLogMoods$Query, json.JsonSerializable>(
-            key: Key('ProgressPage.LoggedMoodsWidget - ${query.operationName}'),
-            query: query,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainerWithFullScreen(
-                index: index,
-                fullScreen: LoggedMoodsFullScreen(
-                  widgetId: widgetId,
-                  loggedMoods: data.userDayLogMoods,
-                ),
-                headerIcon: kWidgetIdToIconMap['004']!,
-                title: 'Moods',
-                widgetHeight: _widgetHeight,
-                widget: LoggedMoodsWidget(
-                  loggedMoods: data.userDayLogMoods,
-                ),
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-                actions: [
-                  WidgetHeaderAction(
-                      icon: CupertinoIcons.plus,
-                      onPressed: () => context.push(
-                          fullscreenDialog: true,
-                          child: const UserDayLogMoodCreatorPage())),
-                ],
-              );
-            });
+        return ProgressWidgetContainerWithFullScreen(
+          index: index,
+          fullScreen: LoggedMoodsContainer(
+            loadingShimmer: _fullScreenLoadingShimmer,
+            builder: (userDayLogMoods) => LoggedMoodsFullScreen(
+              widgetId: widgetId,
+              loggedMoods: userDayLogMoods,
+            ),
+          ),
+          headerIcon: kWidgetIdToIconMap['004']!,
+          title: 'Moods',
+          widgetHeight: _widgetHeight,
+          widget: LoggedMoodsContainer(
+            loadingShimmer: _widgetLoadingShimmer,
+            builder: (userDayLogMoods) => LoggedMoodsWidget(
+              loggedMoods: userDayLogMoods,
+            ),
+          ),
+          moveWidgetUp: moveWidgetUp,
+          moveWidgetDown: moveWidgetDown,
+          deactivateWidget: deactivateWidget,
+          actions: [
+            WidgetHeaderAction(
+                icon: CupertinoIcons.plus,
+                onPressed: () => context.push(
+                    fullscreenDialog: true,
+                    child: const UserDayLogMoodCreatorPage())),
+          ],
+        );
       case '005':
-        final query = UserMeditationLogsQuery();
-        return QueryObserver<UserMeditationLogs$Query, json.JsonSerializable>(
-            key: Key(
-                'ProgressPage.LoggedMeditationsWidget - ${query.operationName}'),
-            query: query,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainerWithFullScreen(
-                index: index,
-                fullScreen: LoggedMeditationsFullScreen(
-                  widgetId: widgetId,
-                  userMeditationLogs: data.userMeditationLogs,
-                ),
-                headerIcon: kWidgetIdToIconMap['005']!,
-                title: 'Mindfulness',
-                widgetHeight: _widgetHeight,
-                widget: LoggedMeditationsWidget(
-                  userMeditationLogs: data.userMeditationLogs,
-                ),
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-              );
-            });
+        return ProgressWidgetContainerWithFullScreen(
+          index: index,
+          fullScreen: LoggedMeditationsContainer(
+            loadingShimmer: _fullScreenLoadingShimmer,
+            builder: (userMeditationLogs) => LoggedMeditationsFullScreen(
+              widgetId: widgetId,
+              userMeditationLogs: userMeditationLogs,
+            ),
+          ),
+          headerIcon: kWidgetIdToIconMap['005']!,
+          title: 'Mindfulness',
+          widgetHeight: _widgetHeight,
+          widget: LoggedMeditationsContainer(
+            loadingShimmer: _widgetLoadingShimmer,
+            builder: (userMeditationLogs) => LoggedMeditationsWidget(
+              userMeditationLogs: userMeditationLogs,
+            ),
+          ),
+          moveWidgetUp: moveWidgetUp,
+          moveWidgetDown: moveWidgetDown,
+          deactivateWidget: deactivateWidget,
+        );
       case '006':
-        final query = UserEatWellLogsQuery();
-
-        return QueryObserver<UserEatWellLogs$Query, json.JsonSerializable>(
-            key: Key('ProgressPage.EatWellLogWidget - ${query.operationName}'),
-            query: query,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainerWithFullScreen(
-                index: index,
-                fullScreen: EatWellLogsFullScreen(
-                  widgetId: widgetId,
-                  userEatWellLogs: data.userEatWellLogs,
-                ),
-                headerIcon: kWidgetIdToIconMap['006']!,
-                title: 'Food Health',
-                widgetHeight: _widgetHeight,
-                widget: EatWellLogWidget(
-                  userEatWellLogs: data.userEatWellLogs,
-                ),
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-              );
-            });
+        return ProgressWidgetContainerWithFullScreen(
+          index: index,
+          fullScreen: EatWellLogsContainer(
+            loadingShimmer: _fullScreenLoadingShimmer,
+            builder: (userEatWellLogs) => EatWellLogsFullScreen(
+              widgetId: widgetId,
+              userEatWellLogs: userEatWellLogs,
+            ),
+          ),
+          headerIcon: kWidgetIdToIconMap['006']!,
+          title: 'Food Health',
+          widgetHeight: _widgetHeight,
+          widget: EatWellLogsContainer(
+            loadingShimmer: _widgetLoadingShimmer,
+            builder: (userEatWellLogs) => EatWellLogWidget(
+              userEatWellLogs: userEatWellLogs,
+            ),
+          ),
+          moveWidgetUp: moveWidgetUp,
+          moveWidgetDown: moveWidgetDown,
+          deactivateWidget: deactivateWidget,
+        );
       case '007':
-        final query = UserSleepWellLogsQuery();
-
-        return QueryObserver<UserSleepWellLogs$Query, json.JsonSerializable>(
-            key:
-                Key('ProgressPage.SleepWellLogWidget - ${query.operationName}'),
-            query: query,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainerWithFullScreen(
-                index: index,
-                fullScreen: SleepWellLogsFullScreen(
-                  widgetId: widgetId,
-                  userSleepWellLogs: data.userSleepWellLogs,
-                ),
-                headerIcon: kWidgetIdToIconMap['007']!,
-                title: 'Sleep Health',
-                widgetHeight: _widgetHeight,
-                widget: SleepWellLogWidget(
-                  userSleepWellLogs: data.userSleepWellLogs,
-                ),
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-              );
-            });
+        return ProgressWidgetContainerWithFullScreen(
+          index: index,
+          fullScreen: SleepWellLogsContainer(
+            loadingShimmer: _fullScreenLoadingShimmer,
+            builder: (userSleepWellLogs) => SleepWellLogsFullScreen(
+              widgetId: widgetId,
+              userSleepWellLogs: userSleepWellLogs,
+            ),
+          ),
+          headerIcon: kWidgetIdToIconMap['007']!,
+          title: 'Sleep Health',
+          widgetHeight: _widgetHeight,
+          widget: SleepWellLogsContainer(
+            loadingShimmer: _widgetLoadingShimmer,
+            builder: (userSleepWellLogs) => SleepWellLogWidget(
+              userSleepWellLogs: userSleepWellLogs,
+            ),
+          ),
+          moveWidgetUp: moveWidgetUp,
+          moveWidgetDown: moveWidgetDown,
+          deactivateWidget: deactivateWidget,
+        );
 
       default:
         throw Exception(
@@ -338,8 +334,7 @@ class ProgressPage extends StatelessWidget {
                   child: Column(
             children: [
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 2),
+                padding: const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
                 child: GridView.count(
                   crossAxisSpacing: 8,
                   physics: const NeverScrollableScrollPhysics(),
