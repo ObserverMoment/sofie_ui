@@ -142,9 +142,9 @@ class AnimatedNavBar extends StatelessWidget {
   }
 
   Future<void> _createNewPost(BuildContext context) async {
-    await context.navigateTo(ClubPostCreatorRoute(
+    await context.navigateTo(ClubFeedPostCreatorRoute(
         clubId: club.id,
-        onSuccess: (_) => context.showToast(
+        onSuccess: () => context.showToast(
             message: 'Post created. It will display shortly.')));
   }
 
@@ -301,7 +301,7 @@ class AnimatedNavBar extends StatelessWidget {
                                     text: 'Share',
                                     icon: CupertinoIcons.paperplane,
                                     onPressed: () => _shareClub(club)),
-                              if (!_userIsMember && !_userIsOwner)
+                              if (_userIsMember && !_userIsOwner)
                                 BottomSheetMenuItem(
                                     text: 'Leave Club',
                                     isDestructive: true,
@@ -414,120 +414,111 @@ class _ClubSectionButtons extends StatelessWidget {
       {Key? key, required this.club, required this.authedUserMemberType})
       : super(key: key);
 
-  double get _iconSize => 26;
-
-  bool get _userIsOwnerOrAdmin => [
-        UserClubMemberStatus.owner,
-        UserClubMemberStatus.admin,
-      ].contains(authedUserMemberType);
+  double get _iconSize => 26.0;
 
   @override
   Widget build(BuildContext context) {
+    final userIsOwnerOrAdmin = [
+      UserClubMemberStatus.owner,
+      UserClubMemberStatus.admin,
+    ].contains(authedUserMemberType);
+
     return Padding(
-      padding:
-          const EdgeInsets.only(top: 16.0, bottom: 24, left: 8.0, right: 8),
+      padding: const EdgeInsets.only(
+        top: 16.0,
+        bottom: 24,
+      ),
       child: Wrap(
-        spacing: 36,
+        spacing: 20,
         runSpacing: 24,
         children: [
-          _ClubSectionButton(
-            label: 'People',
-            icon: Icon(
-              CupertinoIcons.person_2_fill,
-              size: _iconSize,
-            ),
-            count: club.memberCount,
-            onTap: () => context.push(
-                child: ClubDetailsPeople(
-              authedUserMemberType: authedUserMemberType,
-              clubId: club.id,
-            )),
-          ),
-          _ClubSectionButton(
-            label: 'Workouts',
-            icon: SvgPicture.asset('assets/graphics/dumbbell.svg',
-                height: _iconSize,
-                fit: BoxFit.fitHeight,
-                color: context.theme.primary),
-            count: club.workoutCount,
-            onTap: () => context.push(
-                child: ClubDetailsWorkouts(
-              isOwnerOrAdmin: _userIsOwnerOrAdmin,
-              clubId: club.id,
-            )),
-          ),
-          _ClubSectionButton(
-              label: 'Plans',
-              icon: Icon(CupertinoIcons.calendar, size: _iconSize),
-              count: club.planCount,
+          if (userIsOwnerOrAdmin || club.memberCount > 0)
+            _ClubSectionButton(
+              label: 'People',
+              icon: Icon(
+                CupertinoIcons.person_2_fill,
+                size: _iconSize,
+              ),
+              count: club.memberCount,
               onTap: () => context.push(
-                      child: ClubDetailsWorkoutPlans(
-                    isOwnerOrAdmin: _userIsOwnerOrAdmin,
-                    clubId: club.id,
-                  ))),
-          _ClubSectionButton(
-            label: 'Throwdowns',
-            icon: SvgPicture.asset('assets/graphics/medal.svg',
-                height: _iconSize,
-                fit: BoxFit.fitHeight,
-                color: context.theme.primary),
-            count: 0,
-            onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-          ),
-          _ClubSectionButton(
-            label: 'Coaching',
-            icon: Icon(
-              CupertinoIcons.chart_bar_fill,
-              size: _iconSize,
+                  child: ClubDetailsPeople(
+                authedUserMemberType: authedUserMemberType,
+                clubId: club.id,
+              )),
             ),
-            count: 0,
-            onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-          ),
-          _ClubSectionButton(
-            label: 'Gear',
-            icon: Icon(
-              CupertinoIcons.shopping_cart,
-              size: _iconSize,
+          if (userIsOwnerOrAdmin || club.workoutCount > 0)
+            _ClubSectionButton(
+              label: 'Workouts',
+              icon: SvgPicture.asset('assets/graphics/dumbbell.svg',
+                  height: _iconSize,
+                  fit: BoxFit.fitHeight,
+                  color: context.theme.primary),
+              count: club.workoutCount,
+              onTap: () => context.push(
+                  child: ClubDetailsWorkouts(
+                isOwnerOrAdmin: userIsOwnerOrAdmin,
+                clubId: club.id,
+              )),
             ),
-            count: 0,
-            onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-          ),
+          if (userIsOwnerOrAdmin || club.planCount > 0)
+            _ClubSectionButton(
+                label: 'Plans',
+                icon: Icon(CupertinoIcons.calendar, size: _iconSize),
+                count: club.planCount,
+                onTap: () => context.push(
+                        child: ClubDetailsWorkoutPlans(
+                      isOwnerOrAdmin: userIsOwnerOrAdmin,
+                      clubId: club.id,
+                    ))),
+          if (userIsOwnerOrAdmin || 0 > 0)
+            _ClubSectionButton(
+              label: 'Throwdowns',
+              icon: SvgPicture.asset('assets/graphics/medal.svg',
+                  height: _iconSize,
+                  fit: BoxFit.fitHeight,
+                  color: context.theme.primary),
+              count: 0,
+              onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+            ),
+          if (userIsOwnerOrAdmin || 0 > 0)
+            _ClubSectionButton(
+              label: 'Coaching',
+              icon: Icon(
+                CupertinoIcons.chart_bar_fill,
+                size: _iconSize,
+              ),
+              count: 0,
+              onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+            ),
+          if (userIsOwnerOrAdmin || 0 > 0)
+            _ClubSectionButton(
+              label: 'Gear',
+              icon: Icon(
+                CupertinoIcons.shopping_cart,
+                size: _iconSize,
+              ),
+              count: 0,
+              onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+            ),
           _ClubSectionButton(
             label: 'Chat',
             icon: Icon(
               CupertinoIcons.chat_bubble_text_fill,
-              size: _iconSize,
+              size: _iconSize + 3,
             ),
-            count: 0,
             onTap: () =>
                 context.navigateTo(ClubMembersChatRoute(clubId: club.id)),
           ),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => context.push(
-                child: ClubDetailsInfo(
-              club: club,
-            )),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      CupertinoIcons.info_circle_fill,
-                      size: _iconSize + 3,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 2),
-                const MyText('Club Info', maxLines: 2, size: FONTSIZE.one),
-              ],
-            ),
-          )
+          _ClubSectionButton(
+              label: 'Club Info',
+              icon: Icon(
+                CupertinoIcons.info_circle_fill,
+                size: _iconSize + 3,
+              ),
+              onTap: () => context.push(
+                      child: ClubDetailsInfo(
+                    club: club,
+                  ))),
         ],
       ),
     );
@@ -537,13 +528,13 @@ class _ClubSectionButtons extends StatelessWidget {
 class _ClubSectionButton extends StatelessWidget {
   final String label;
   final Widget icon;
-  final int count;
+  final int? count;
   final VoidCallback onTap;
   const _ClubSectionButton(
       {Key? key,
       required this.label,
       required this.icon,
-      required this.count,
+      this.count,
       required this.onTap})
       : super(key: key);
 
@@ -552,26 +543,32 @@ class _ClubSectionButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              const SizedBox(width: 6),
-              MyText(
-                count.toString(),
-                size: FONTSIZE.six,
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          MyText(label, maxLines: 2, size: FONTSIZE.one),
-        ],
+      child: SizedBox(
+        width: 60,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                icon,
+                if (count != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6.0),
+                    child: MyText(
+                      count.toString(),
+                      size: FONTSIZE.six,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 2),
+            MyText(label, maxLines: 2, size: FONTSIZE.one),
+          ],
+        ),
       ),
     );
   }

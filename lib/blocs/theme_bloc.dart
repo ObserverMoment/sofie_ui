@@ -7,24 +7,17 @@ import 'package:sofie_ui/constants.dart';
 enum ThemeName { dark, light }
 
 class ThemeBloc extends ChangeNotifier {
-  ThemeBloc({Brightness deviceBrightness = Brightness.dark}) {
+  ThemeBloc() {
     // Check for saved setting in local Hive box.
     final themeNameFromSettings = Hive.box(kSettingsHiveBoxName)
         .get(kSettingsHiveBoxThemeKey, defaultValue: null);
 
-    if (themeNameFromSettings != null) {
-      if (themeNameFromSettings == kSettingsDarkThemeKey) {
-        _setToDark();
-      } else {
-        _setToLight();
-      }
+    if (themeNameFromSettings == kSettingsDarkThemeKey) {
+      _setToDark();
+    } else if (themeNameFromSettings == kSettingsLightThemeKey) {
+      _setToLight();
     } else {
-      // Initialise from device or default to dark.
-      if (deviceBrightness == Brightness.dark) {
-        _setToDark();
-      } else {
-        _setToLight();
-      }
+      _setToDark();
     }
   }
 
@@ -113,8 +106,10 @@ abstract class ThemeData {
       greyTwo: Styles.greyTwo,
       greyThree: Styles.greyThree,
       greyFour: Styles.greyFour,
-      cardBackground: const Color(0xff1a1a1c),
-      modalBackground: const Color(0xff111112),
+      // cardBackground: const Color(0xff1a1a1c),
+      // cardBackground: Color.fromARGB(255, 20, 20, 20),
+      cardBackground: const Color.fromARGB(255, 33, 35, 41),
+      modalBackground: const Color.fromARGB(255, 24, 24, 24),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
 
@@ -124,14 +119,18 @@ abstract class ThemeData {
       greyThree: Styles.greyTwo,
       greyFour: Styles.greyOne,
       cardBackground: CupertinoColors.white,
-      modalBackground: CupertinoColors.systemGroupedBackground,
+      modalBackground: const Color.fromARGB(255, 228, 228, 228),
       bottomNavigationBackground: const Color(0xffffffff),
       navbarBottomBorder: Styles.black.withOpacity(0.1));
 
   static CupertinoThemeData cupertinoDarkData = CupertinoThemeData(
       brightness: Brightness.dark,
-      barBackgroundColor: const Color(0xff050505),
-      scaffoldBackgroundColor: const Color(0xff050505),
+      // barBackgroundColor: const Color(0xff050505),
+      // barBackgroundColor: Color.fromARGB(255, 27, 29, 28),
+      barBackgroundColor: const Color.fromARGB(255, 21, 21, 29),
+      // scaffoldBackgroundColor: const Color(0xff050505),
+      // scaffoldBackgroundColor: Color.fromARGB(255, 29, 32, 32),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 21, 21, 29),
       primaryColor: CupertinoColors.white,
       primaryContrastingColor: Styles.primaryAccent,
       textTheme: CupertinoTextThemeData(
@@ -142,8 +141,12 @@ abstract class ThemeData {
 
   static CupertinoThemeData cupertinoLightData = CupertinoThemeData(
       brightness: Brightness.light,
-      barBackgroundColor: CupertinoColors.systemGroupedBackground,
-      scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
+      // barBackgroundColor: CupertinoColors.systemGroupedBackground,
+      barBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
+      // barBackgroundColor: const Color(0xffe2e9ef),
+      // scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
+      scaffoldBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
+      // scaffoldBackgroundColor: const Color(0xffe2e9ef),
       primaryColor: CupertinoColors.black,
       primaryContrastingColor: Styles.primaryAccent,
       textTheme: CupertinoTextThemeData(
@@ -184,23 +187,51 @@ abstract class Styles {
   static const difficultyLevelFive = CupertinoColors.black; // Black
 
   // Design / Accent colors.
-  static const Color primaryAccent = Color(0xff2c8a8a);
+  // static const Color primaryAccent = Color(0xff2c8a8a);
+  static const Color primaryAccent = Color.fromARGB(255, 6, 155, 142);
+  // static const Color primaryAccent = Color(0xfff24c2b);
+  // static const Color primaryAccent = Color(0xfffe7743);
+  // static const Color primaryAccent = Color(0xff079767);
 
   static const LinearGradient primaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
     colors: [
       primaryAccent,
-      Color(0xff3aa1a1),
+      Color.fromARGB(255, 58, 137, 161),
+      // Color(0xfff4532c),
+      // Color(0xffF09819),
+      // Color(0xff34e7ab),
     ],
     stops: [0.0, 1.0],
   );
 
-  static const Color secondaryAccent = Color(0xffF97D5B);
+  static const LinearGradient primaryAccentGradientVertical = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
+    colors: [
+      primaryAccent,
+      Color(0xff3aa1a1),
+      // Color(0xfff4532c),
+      // Color(0xffF09819),
+      // Color(0xff34e7ab),
+    ],
+    stops: [0.0, 1.0],
+  );
+
+  // static const Color secondaryAccent = Color(0xffF97D5B);
+  static const Color secondaryAccent = Color(0xfffe7743);
 
   static const LinearGradient secondaryAccentGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
+    colors: [secondaryAccent, Color(0xffF9A87B)],
+    stops: [0.0, 1.0],
+  );
+
+  static const LinearGradient secondaryAccentGradientVertical = LinearGradient(
+    begin: Alignment.bottomCenter,
+    end: Alignment.topCenter,
     colors: [secondaryAccent, Color(0xffF9A87B)],
     stops: [0.0, 1.0],
   );

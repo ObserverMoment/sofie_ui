@@ -108,7 +108,7 @@ extension BuildContextExtension on BuildContext {
                 MyText(message, textAlign: TextAlign.center),
                 const Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: LoadingDots(
+                  child: LoadingIndicator(
                     size: 14,
                   ),
                 )
@@ -279,6 +279,7 @@ extension BuildContextExtension on BuildContext {
   /// Being used for some pickers (wheel style pickers for example)
   Future<void> showActionSheetPopup({
     required Widget child,
+    String cancelCloseText = 'Cancel',
     bool useRootNavigator = false,
   }) async {
     final BuildContext context = this;
@@ -291,7 +292,7 @@ extension BuildContextExtension on BuildContext {
               cancelButton: CupertinoActionSheetAction(
                   onPressed: context.pop,
                   child: MyText(
-                    'Cancel',
+                    cancelCloseText,
                     color: context.theme.primary,
                   )),
             ));
@@ -330,29 +331,23 @@ extension BuildContextExtension on BuildContext {
   /// Toast + more text and a button for interactivity.
   void showNotification({
     required String title,
-    required String message,
+    required Widget content,
     String? buttonText,
     VoidCallback? onPressed,
-    Widget? icon,
     TextAlign textAlign = TextAlign.start,
     FlushbarPosition flushbarPosition = FlushbarPosition.TOP,
   }) =>
       Flushbar(
-        backgroundColor: CupertinoColors.darkBackgroundGray.withOpacity(0.90),
-        icon: icon,
+        backgroundColor: readTheme.cardBackground,
         flushbarPosition: flushbarPosition,
         animationDuration: const Duration(milliseconds: 300),
-        flushbarStyle: FlushbarStyle.GROUNDED,
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        flushbarStyle: FlushbarStyle.FLOATING,
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        borderRadius: BorderRadius.circular(16),
         title: title,
-        messageText: MyText(
-          message,
-          color: Styles.white,
-          textAlign: textAlign,
-          lineHeight: 1.3,
-          maxLines: 3,
-          size: FONTSIZE.two,
-        ),
+        titleSize: 14,
+        messageText: content,
         mainButton: onPressed != null
             ? TextButton(
                 text: buttonText ?? 'View',
@@ -361,7 +356,7 @@ extension BuildContextExtension on BuildContext {
                 underline: false,
               )
             : null,
-        duration: const Duration(seconds: 3),
+        duration: const Duration(seconds: 4),
         blockBackgroundInteraction: false,
         isDismissible: true,
       )..show(this);

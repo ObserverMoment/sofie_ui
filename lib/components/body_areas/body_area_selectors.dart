@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/body_areas/body_area_selector_overlay.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 
 class BodyAreaSelectorFrontBackPaged extends StatefulWidget {
   final List<BodyArea> selectedBodyAreas;
@@ -40,62 +38,56 @@ class _BodyAreaSelectorFrontBackPagedState
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<BodyAreas$Query, json.JsonSerializable>(
-        key: Key('MoveFiltersBody - ${BodyAreasQuery().operationName}'),
-        query: BodyAreasQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        builder: (data) {
-          final allBodyAreas = data.bodyAreas;
+    final allBodyAreas = CoreDataRepo.bodyAreas;
 
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: MySlidingSegmentedControl<int>(
-                  updateValue: _updatePage,
-                  value: _activePageIndex,
-                  children: const {
-                    0: 'Front',
-                    1: 'Back',
-                  },
-                ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: MySlidingSegmentedControl<int>(
+            updateValue: _updatePage,
+            value: _activePageIndex,
+            children: const {
+              0: 'Front',
+              1: 'Back',
+            },
+          ),
+        ),
+        SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              alignment: Alignment.center,
+              height: widget.bodyGraphicHeight,
+              width: double.infinity,
+              child: IndexedStack(
+                index: _activePageIndex,
+                children: [
+                  BodyAreaSelectorIndicator(
+                      selectedBodyAreas: widget.selectedBodyAreas,
+                      frontBack: BodyAreaFrontBack.front,
+                      allBodyAreas: allBodyAreas,
+                      handleTapBodyArea: widget.handleTapBodyArea,
+                      height: widget.bodyGraphicHeight),
+                  BodyAreaSelectorIndicator(
+                      selectedBodyAreas: widget.selectedBodyAreas,
+                      frontBack: BodyAreaFrontBack.back,
+                      allBodyAreas: allBodyAreas,
+                      handleTapBodyArea: widget.handleTapBodyArea,
+                      height: widget.bodyGraphicHeight),
+                ],
               ),
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: widget.bodyGraphicHeight,
-                    width: double.infinity,
-                    child: IndexedStack(
-                      index: _activePageIndex,
-                      children: [
-                        BodyAreaSelectorIndicator(
-                            selectedBodyAreas: widget.selectedBodyAreas,
-                            frontBack: BodyAreaFrontBack.front,
-                            allBodyAreas: allBodyAreas,
-                            handleTapBodyArea: widget.handleTapBodyArea,
-                            height: widget.bodyGraphicHeight),
-                        BodyAreaSelectorIndicator(
-                            selectedBodyAreas: widget.selectedBodyAreas,
-                            frontBack: BodyAreaFrontBack.back,
-                            allBodyAreas: allBodyAreas,
-                            handleTapBodyArea: widget.handleTapBodyArea,
-                            height: widget.bodyGraphicHeight),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: BodyAreaNamesList(
-                  bodyAreas: widget.selectedBodyAreas,
-                ),
-              ),
-            ],
-          );
-        });
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: BodyAreaNamesList(
+            bodyAreas: widget.selectedBodyAreas,
+          ),
+        ),
+      ],
+    );
   }
 }
 

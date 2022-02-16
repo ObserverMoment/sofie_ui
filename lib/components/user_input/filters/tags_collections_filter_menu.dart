@@ -89,9 +89,9 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
                               )
                             : Row(
                                 children: [
-                                  MyText(selectedTag!,
-                                      weight: FontWeight.bold,
-                                      color: Styles.primaryAccent),
+                                  MyText(
+                                    selectedTag!,
+                                  ),
                                 ],
                               )),
                   if (filterMenuType == FilterMenuType.collection)
@@ -110,9 +110,9 @@ class TagsCollectionsFilterMenu extends StatelessWidget {
                               )
                             : Row(
                                 children: [
-                                  MyText(selectedCollection!.name,
-                                      weight: FontWeight.bold,
-                                      color: Styles.primaryAccent),
+                                  MyText(
+                                    selectedCollection!.name,
+                                  ),
                                 ],
                               )),
                 ],

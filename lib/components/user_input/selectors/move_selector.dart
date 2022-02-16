@@ -18,7 +18,7 @@ import 'package:sofie_ui/components/workout/move_details.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -100,139 +100,129 @@ class _MoveSelectorState extends State<MoveSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<StandardMoves$Query, json.JsonSerializable>(
-        key: Key('MoveSelector - ${StandardMovesQuery().operationName}'),
-        query: StandardMovesQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
+    return QueryObserver<CustomMoves$Query, json.JsonSerializable>(
+        key: Key('MoveSelector - ${CustomMovesQuery().operationName}'),
+        query: CustomMovesQuery(),
         loadingIndicator: _loadingPage,
-        builder: (standardMovesData) {
-          return QueryObserver<UserCustomMoves$Query, json.JsonSerializable>(
-              key:
-                  Key('MoveSelector - ${UserCustomMovesQuery().operationName}'),
-              query: UserCustomMovesQuery(),
-              loadingIndicator: _loadingPage,
-              builder: (customMovesData) {
-                final standardMoves = standardMovesData.standardMoves;
+        builder: (customMovesData) {
+          final standardMoves = CoreDataRepo.standardMoves;
 
-                final customMoves = customMovesData.userCustomMoves;
+          final customMoves = customMovesData.customMoves;
 
-                final displayMoves =
-                    _activeTabIndex == 0 ? standardMoves : customMoves;
+          final displayMoves =
+              _activeTabIndex == 0 ? standardMoves : customMoves;
 
-                final moveFiltersBloc = context.watch<MoveFiltersBloc>();
-                final customFiltered =
-                    widget.customFilter?.call(displayMoves) ?? displayMoves;
+          final moveFiltersBloc = context.watch<MoveFiltersBloc>();
+          final customFiltered =
+              widget.customFilter?.call(displayMoves) ?? displayMoves;
 
-                final filteredMoves = _filterBySearchString(
-                    moveFiltersBloc.filter(customFiltered));
+          final filteredMoves =
+              _filterBySearchString(moveFiltersBloc.filter(customFiltered));
 
-                return MyPageScaffold(
-                    navigationBar: CupertinoNavigationBar(
-                      /// Required because in [WorkoutMoveCreator] this [MoveSelecter] sits as a sibling to another widget which also has a [CupertinoNavBar] - which was causing an 'identical hero tags in tree error'.
-                      transitionBetweenRoutes: false,
-                      leading: NavBarCancelButton(widget.onCancel),
-                      middle: NavBarLargeTitle(widget.pageTitle),
-                    ),
-                    child: FABPage(
-                      rowButtonsAlignment: MainAxisAlignment.end,
-                      rowButtons: [
-                        if (moveFiltersBloc.hasActiveFilters)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4.0),
-                            child: FadeInUp(
-                              child: FloatingButton(
-                                  onTap: () => context
-                                      .read<MoveFiltersBloc>()
-                                      .clearAllFilters(),
-                                  icon: CupertinoIcons.clear),
-                            ),
-                          ),
-                        FloatingButton(
-                            onTap: () =>
-                                context.push(child: const MoveFiltersScreen()),
-                            text: moveFiltersBloc.numActiveFilters == 0
-                                ? null
-                                : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
-                            icon: CupertinoIcons.slider_horizontal_3),
-                        const SizedBox(width: 12),
-                        FloatingButton(
-                            icon: CupertinoIcons.add,
-                            onTap: () =>
-                                context.navigateTo(CustomMoveCreatorRoute())),
-                      ],
-                      child: Column(
-                        children: [
-                          if (widget.includeCustomMoves)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: MySlidingSegmentedControl<int>(
-                                          value: _activeTabIndex,
-                                          children: const {
-                                            0: 'Standard',
-                                            1: 'Custom'
-                                          },
-                                          updateValue: (i) => setState(
-                                              () => _activeTabIndex = i)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: MyCupertinoSearchTextField(
-                              placeholder: 'Search moves library',
-                              onChanged: (value) => setState(
-                                  () => _searchString = value.toLowerCase()),
-                            ),
-                          ),
-                          if (filteredMoves.isEmpty)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: MyText(
-                                    _activeTabIndex == 0
-                                        ? 'No moves found. Create a custom move?'
-                                        : 'No moves found',
-                                    maxLines: 3,
-                                    subtext: true,
-                                  ),
-                                ),
-                              ],
-                            )
-                          else
-                            Expanded(
-                              child: FadeIn(
-                                child: ListView(
-                                  shrinkWrap: true,
-                                  children: filteredMoves
-                                      .sortedBy<String>((move) => move.name)
-                                      .map((move) => GestureDetector(
-                                          onTap: () {
-                                            Utils.hideKeyboard(context);
-                                            widget.selectMove(move);
-                                          },
-                                          child: MoveListItem(
-                                              move: move,
-                                              optionalButton:
-                                                  _buildButton(move))))
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                        ],
+          return MyPageScaffold(
+              navigationBar: CupertinoNavigationBar(
+                /// Required because in [WorkoutMoveCreator] this [MoveSelecter] sits as a sibling to another widget which also has a [CupertinoNavBar] - which was causing an 'identical hero tags in tree error'.
+                transitionBetweenRoutes: false,
+                leading: NavBarCancelButton(widget.onCancel),
+                middle: NavBarTitle(widget.pageTitle),
+              ),
+              child: FABPage(
+                rowButtonsAlignment: MainAxisAlignment.end,
+                rowButtons: [
+                  if (moveFiltersBloc.hasActiveFilters)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: FadeInUp(
+                        child: FloatingButton(
+                            onTap: () => context
+                                .read<MoveFiltersBloc>()
+                                .clearAllFilters(),
+                            icon: CupertinoIcons.clear),
                       ),
-                    ));
-              });
+                    ),
+                  FloatingButton(
+                      onTap: () =>
+                          context.push(child: const MoveFiltersScreen()),
+                      text: moveFiltersBloc.numActiveFilters == 0
+                          ? null
+                          : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
+                      icon: CupertinoIcons.slider_horizontal_3),
+                  const SizedBox(width: 12),
+                  FloatingButton(
+                      icon: CupertinoIcons.add,
+                      onTap: () =>
+                          context.navigateTo(CustomMoveCreatorRoute())),
+                ],
+                child: Column(
+                  children: [
+                    if (widget.includeCustomMoves)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: MySlidingSegmentedControl<int>(
+                                    value: _activeTabIndex,
+                                    children: const {
+                                      0: 'Standard',
+                                      1: 'Custom'
+                                    },
+                                    updateValue: (i) =>
+                                        setState(() => _activeTabIndex = i)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: MyCupertinoSearchTextField(
+                        placeholder: 'Search moves library',
+                        onChanged: (value) =>
+                            setState(() => _searchString = value.toLowerCase()),
+                      ),
+                    ),
+                    if (filteredMoves.isEmpty)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: MyText(
+                              _activeTabIndex == 0
+                                  ? 'No moves found. Create a custom move?'
+                                  : 'No moves found',
+                              maxLines: 3,
+                              subtext: true,
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Expanded(
+                        child: FadeIn(
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: filteredMoves
+                                .sortedBy<String>((move) => move.name)
+                                .map((move) => GestureDetector(
+                                    onTap: () {
+                                      Utils.hideKeyboard(context);
+                                      widget.selectMove(move);
+                                    },
+                                    child: MoveListItem(
+                                        move: move,
+                                        optionalButton: _buildButton(move))))
+                                .toList(),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ));
         });
   }
 }

@@ -113,7 +113,7 @@ class _CoverImageUploaderState extends State<CoverImageUploader> {
               child: AnimatedSwitcher(
                 duration: kStandardAnimationDuration,
                 child: _uploading
-                    ? Center(child: LoadingCircle(color: primary))
+                    ? Center(child: LoadingIndicator(color: primary))
                     : hasImage
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),

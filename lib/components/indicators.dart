@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -134,41 +133,25 @@ class BasicProgressDots extends StatelessWidget {
   }
 }
 
-class LoadingDots extends StatelessWidget {
+class LoadingIndicator extends StatelessWidget {
   final Color? color;
   final double? size;
-  const LoadingDots({Key? key, this.color, this.size}) : super(key: key);
+  const LoadingIndicator({Key? key, this.color, this.size}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SpinKitThreeBounce(
-        color: color ?? CupertinoTheme.of(context).primaryColor,
-        size: size ?? 20);
+    return CupertinoActivityIndicator(radius: size ?? 20);
   }
 }
 
-class NavBarLoadingDots extends StatelessWidget {
+class NavBarLoadingIndicator extends StatelessWidget {
   final Color? color;
-  const NavBarLoadingDots({Key? key, this.color}) : super(key: key);
+  const NavBarLoadingIndicator({Key? key, this.color}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: SpinKitThreeBounce(
-          color: color ?? CupertinoTheme.of(context).primaryColor, size: 13),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.0),
+      child: CupertinoActivityIndicator(radius: 13),
     );
-  }
-}
-
-class LoadingCircle extends StatelessWidget {
-  final Color? color;
-  final double? size;
-  const LoadingCircle({Key? key, this.color, this.size}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return SpinKitRing(
-        lineWidth: 2,
-        color: color ?? CupertinoTheme.of(context).primaryColor,
-        size: size ?? 30);
   }
 }
 

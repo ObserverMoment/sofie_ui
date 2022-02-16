@@ -1,5 +1,0 @@
-query bodyAreas {
-  bodyAreas {
-    ...BodyArea
-  }
-}

@@ -130,7 +130,7 @@ class _PersonalBestCreatorPageState extends State<PersonalBestCreatorPage> {
               : 'Edit Personal Best'),
           trailing: _formIsDirty && _validToSubmit
               ? FadeIn(
-                  child: NavBarSaveButton(
+                  child: NavBarTertiarySaveButton(
                     _saveAndClose,
                     loading: _loading,
                   ),

@@ -77,6 +77,32 @@ class MyText extends StatelessWidget {
   }
 }
 
+class MyRichText extends StatelessWidget {
+  final List<TextSpan> children;
+  final FONTSIZE size;
+  final FontWeight weight;
+  final double? lineHeight;
+  const MyRichText(
+      {Key? key,
+      required this.children,
+      this.size = FONTSIZE.three,
+      this.weight = FontWeight.normal,
+      this.lineHeight = 1.3})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(TextSpan(children: children),
+        style: GoogleFonts.sourceSansPro(
+          textStyle: TextStyle(
+              color: context.theme.primary,
+              fontWeight: weight,
+              fontSize: _fontSizeMap[size],
+              height: lineHeight),
+        ));
+  }
+}
+
 class MyHeaderText extends StatelessWidget {
   final String text;
   final TextAlign textAlign;
@@ -214,10 +240,9 @@ class NavBarTitle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: MyHeaderText(
-        text.toUpperCase(),
+        text,
         size: FONTSIZE.two,
         textAlign: TextAlign.center,
-        weight: FontWeight.normal,
       ),
     );
   }

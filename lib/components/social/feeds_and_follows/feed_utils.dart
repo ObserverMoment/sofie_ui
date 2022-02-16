@@ -1,55 +1,155 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 
+const kDefaultFeedPostVerb = 'post';
+const kDefaultClubFeedPostVerb = 'post-club';
+
+const Map<String, FeedPostType> kStreamNameToFeedPostType = {
+  'announcement': FeedPostType.announcement,
+  'article': FeedPostType.article,
+  'workout': FeedPostType.workout,
+  'workoutPlan': FeedPostType.workoutPlan,
+  'loggedWorkout': FeedPostType.loggedWorkout,
+};
+
+const Map<FeedPostType, String> kFeedPostTypeToStreamName = {
+  FeedPostType.announcement: 'announcement',
+  FeedPostType.article: 'article',
+  FeedPostType.workout: 'workout',
+  FeedPostType.workoutPlan: 'workoutPlan',
+  FeedPostType.loggedWorkout: 'loggedWorkout',
+};
+
+const Map<FeedPostType, String> kFeedPostTypeToDisplay = {
+  FeedPostType.announcement: 'Announcement',
+  FeedPostType.article: 'Article',
+  FeedPostType.workout: 'Workout',
+  FeedPostType.workoutPlan: 'Plan',
+  FeedPostType.loggedWorkout: 'Log',
+};
+
 class FeedUtils {
-  /// Calls our API to get the necessary data for the User (who created the post) and for the referenced object (all posts reference an object in the DB - e.g a Workout).
-  /// Based on [userId] via [activity.actor], and [objectId] | [objectType] via [activity.object]
-  /// [ActivityWithObjectData] is what is needed to display a single post in the UI.
-  static Future<List<ActivityWithObjectData>> getPostsUserAndObjectData(
-      BuildContext context, List<EnrichedActivity> activities) async {
-    final List<TimelinePostDataRequestInput> postDataRequests =
-        activities.map((a) {
-      if (a.object == null) {
-        throw Exception('Error: Activity.object should never be null.');
-      }
-      if (a.actor == null) {
-        throw Exception('Error: Activity.actor should never be null.');
-      }
-      final idAndType = a.object!.split(':');
-
-      return TimelinePostDataRequestInput(
-          activityId: a.id!,
-          posterId: a.actor!.id!,
-          objectId: idAndType[1],
-          objectType: idAndType[0].toTimelinePostType());
-    }).toList();
-
-    /// Call API and get TimelinePostData[]
-    final result = await context.graphQLStore.networkOnlyOperation<
-            TimelinePostsData$Query, TimelinePostsDataArguments>(
-        operation: TimelinePostsDataQuery(
-            variables: TimelinePostsDataArguments(
-                postDataRequests: postDataRequests)));
-
-    if (result.hasErrors || result.data == null) {
-      throw Exception(
-          'getPostUserAndObjectData: Unable to retrieve full timeline posts data.');
-    }
-
-    /// [activities] and [requestedPosts] are in the same order - so we can match without going back into the [activities].
-    /// Find the correct [TimelinePostData] by matching both the userId and the objectId, then add  to [ActivityWithObjectData] along with the [activity].
+  /// Converts the Stream API's [EnrichedActivity] response objects into our own [StreamEnrichedActivity]. It will also filter out any responses that do not have the required data to display correctly.
+  static List<StreamEnrichedActivity> formatStreamAPIResponse(
+      List<EnrichedActivity> activities) {
     return activities
-        .map<ActivityWithObjectData>((activity) => ActivityWithObjectData(
-            activity,
-            result.data?.timelinePostsData
-                .firstWhereOrNull((pd) => pd.activityId == activity.id)))
+        .map((a) => formatStreamEnrichedActivity(a))
+        .whereNotNull()
         .toList();
+  }
+
+  static bool checkActivityDataIsCorrect(EnrichedActivity a) {
+    return !(a.id == null ||
+        a.verb == null ||
+        a.object == null ||
+        a.time == null ||
+        a.actor == null ||
+        a.extraData == null);
+  }
+
+  static StreamEnrichedActivity? formatStreamEnrichedActivity(
+      EnrichedActivity a) {
+    if (checkActivityDataIsCorrect(a)) {
+      final likes = a.reactionCounts?[kLikeReactionName] ?? 0;
+      final comments = a.reactionCounts?[kCommentReactionName] ?? 0;
+
+      final reactionCounts = StreamActivityReactionCounts()
+        ..likes = likes
+        ..comments = comments;
+
+      return StreamEnrichedActivity()
+        ..id = a.id!
+        ..verb = a.verb!
+        ..object = a.object!
+        ..time = a.time!
+        ..reactionCounts = reactionCounts
+        ..actor = formatStreamFeedUser(a.actor!)! // Should never be null!
+        ..extraData = formatStreamActivityExtraData(a.extraData!);
+    } else {
+      return null;
+    }
+  }
+
+  static StreamActivityExtraData formatStreamActivityExtraData(
+      Map<String, Object?> extraData) {
+    return StreamActivityExtraData()
+      ..creator = extraData['creator'] != null
+          ? formatStreamFeedUser(
+              User.fromJson(extraData['creator'] as Map<String, dynamic>))
+          : null
+      ..club = extraData['club'] != null
+          ? formatStreamFeedClub(CollectionEntry.fromJson(
+              extraData['club'] as Map<String, dynamic>))
+          : null
+      ..title = extraData['title'] as String?
+      ..caption = extraData['caption'] as String?
+      ..tags = (extraData['tags'] != null && extraData['tags'] is List)
+          ? (extraData['tags'] as List).map((o) => o.toString()).toList()
+          : <String>[]
+      ..articleUrl = extraData['articleUrl'] as String?
+      ..audioUrl = extraData['audioUrl'] as String?
+      ..imageUrl = extraData['imageUrl'] as String?
+      ..videoUrl = extraData['videoUrl'] as String?
+      ..originalPostId = extraData['originalPostId'] as String?;
+  }
+
+  static StreamFeedUser? formatStreamFeedUser(User user) {
+    if (user.id == null || user.data == null) return null;
+
+    final data = StreamFeedUserData()
+      ..name = (user.data!['name'] as String?)
+      ..image = (user.data!['image'] as String?);
+
+    return StreamFeedUser()
+      ..id = user.id!
+      ..data = data;
+  }
+
+  static StreamFeedClub? formatStreamFeedClub(CollectionEntry entry) {
+    /// TODO: The format of the [entry.data] object appears to have a nested data key inside it where the custom fields are being stored...seems a bit redundant so maybe we are creating the data incorrectly?
+    if (entry.id == null || entry.data?['data'] == null) return null;
+
+    final clubData = entry.data?['data'] as Map<String, dynamic>;
+
+    final data = StreamFeedClubData()
+      ..name = clubData['name'] as String?
+      ..image = clubData['image'] as String?;
+
+    return StreamFeedClub()
+      ..id = entry.id!
+      ..data = data;
+  }
+
+  static String getObjectTypeFromRef(String ref) => ref.split(':')[0];
+
+  static String? getObjectIdFromRef(String ref) {
+    final parts = ref.split(':');
+    if (parts.length > 1) {
+      return parts[1];
+    } else {
+      return null;
+    }
+  }
+
+  static IconData getFeedSharedContentIcon(FeedPostType type) {
+    switch (type) {
+      case FeedPostType.workout:
+        return MyCustomIcons.dumbbell;
+      case FeedPostType.workoutPlan:
+        return CupertinoIcons.calendar_today;
+      case FeedPostType.loggedWorkout:
+        return MyCustomIcons.plansIcon;
+      default:
+        throw Exception(
+            'getFeedSharedContentIcon: No builder provided for $type');
+    }
   }
 
   /// Call our API and get the data necessary to display a user avatar and name.
@@ -93,28 +193,4 @@ class FeedUtils {
           });
         });
   }
-
-  /// The difference between the structures of EnrichedActivity and Activty is awkward...
-  /// Will also change depending if you have stored an object (a user for example) in getStream.
-  /// Here we assume that no enriched data exists.
-  /// [removeTime]: Set true when you are creating a new activity as it is auto-generated.
-  /// [removeId]: Set true when you are creating a new activity as it is auto-generated.
-  static Activity activityFromEnrichedActivity(EnrichedActivity e,
-          {Map<String, dynamic> data = const {},
-          bool removeTime = false,
-          bool removeId = false}) =>
-      Activity(
-        id: removeId ? null : data['id'] as String? ?? e.id,
-        // Must be [SU:id]
-        actor: data['actor'] as String? ?? "SU:${(e.actor!.data as Map)['id']}",
-        // Must be [ObjectType:id]
-        object: data['object'] as String?,
-        verb: data['verb'] as String? ?? e.verb,
-        time: removeTime ? null : data['time'] as DateTime? ?? e.time,
-
-        /// TODO: Does casting here cause issues.
-        extraData: data['extraData'] != null
-            ? data['extraData'] as Map<String, Object>?
-            : e.extraData as Map<String, Object>?,
-      );
 }

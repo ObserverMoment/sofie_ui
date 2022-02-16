@@ -1,24 +1,13 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 
 //// String to enum parser ////
 // https://stackoverflow.com/questions/27673781/enum-from-string
 extension EnumParser on String {
-  TimelinePostType toTimelinePostType() {
-    return TimelinePostType.values.firstWhere(
-        (e) =>
-            e.toString().toLowerCase() ==
-            'TimelinePostType.$this'.toLowerCase(), orElse: () {
-      throw Exception('$this is not a valid TimelinePostType');
-    });
-  }
-
   DifficultyLevel toDifficultyLevel() {
     return DifficultyLevel.values.firstWhere(
         (v) =>
@@ -153,6 +142,14 @@ extension DistanceUnitExtension on DistanceUnit {
   String get apiValue => describeEnum(this).toUpperCase();
 }
 
+extension FeedPostTypeExtension on FeedPostType {
+  bool get hasShareableContent => [
+        FeedPostType.workout,
+        FeedPostType.workoutPlan,
+        FeedPostType.loggedWorkout,
+      ].contains(this);
+}
+
 extension GenderExtension on Gender {
   String get display => describeEnum(this).capitalize;
   String get apiValue => describeEnum(this).toUpperCase();
@@ -177,23 +174,6 @@ extension LoadUnitExtension on LoadUnit {
   String get apiValue => describeEnum(this).toUpperCase();
 }
 
-extension TimelinePostTypeExtension on TimelinePostType {
-  String get apiValue => describeEnum(this).toUpperCase();
-
-  String get display {
-    switch (this) {
-      case TimelinePostType.announcement:
-        return 'Announcement';
-      case TimelinePostType.workout:
-        return 'Workout';
-      case TimelinePostType.workoutplan:
-        return 'Workout Plan';
-      default:
-        throw Exception('This is not a valid TimelinePostType enum: $this');
-    }
-  }
-}
-
 extension TimeUnitExtension on TimeUnit {
   String get shortDisplay {
     switch (this) {
@@ -215,6 +195,22 @@ extension TimeUnitExtension on TimeUnit {
 extension UserProfileScopeExtension on UserProfileScope {
   String get apiValue => describeEnum(this).toUpperCase();
   String get display => describeEnum(this);
+}
+
+extension UserDayLogRatingExtension on UserDayLogRating {
+  Color get color {
+    switch (this) {
+      case UserDayLogRating.good:
+        return Styles.primaryAccent;
+      case UserDayLogRating.average:
+        return CupertinoColors.activeOrange;
+      case UserDayLogRating.bad:
+        return Styles.errorRed;
+      default:
+        throw Exception(
+            'UserDayLogRatingExtension: No color defined for $this');
+    }
+  }
 }
 
 extension WorkoutMoveRepTypeExtension on WorkoutMoveRepType {

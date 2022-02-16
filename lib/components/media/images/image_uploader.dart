@@ -124,7 +124,7 @@ class _ImageUploaderState extends State<ImageUploader> {
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           child: _uploading
-              ? LoadingCircle(
+              ? LoadingIndicator(
                   color: primary,
                 )
               : hasImage

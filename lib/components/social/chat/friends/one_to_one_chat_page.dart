@@ -82,7 +82,7 @@ class OneToOneChatPageState extends State<OneToOneChatPage> {
               navigationBar: MyNavBar(
                 middle: NavBarTitle('Loading Chat...'),
               ),
-              child: LoadingCircle()),
+              child: Center(child: LoadingIndicator())),
     );
   }
 }
@@ -159,8 +159,9 @@ class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
                       );
                     },
                     emptyBuilder: (context) {
-                      return const Center(
-                        child: Text('Nothing here...'),
+                      return const MessagesList(
+                        messages: [],
+                        isGroupChat: false,
                       );
                     },
                     messageListBuilder: (context, messages) {
@@ -174,6 +175,7 @@ class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
                         },
                         child: MessagesList(
                           messages: messages,
+                          isGroupChat: false,
                         ),
                       );
                     }))));

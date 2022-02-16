@@ -232,7 +232,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
         trailing: _savingToDB
             ? const NavBarTrailingRow(
                 children: [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : _activeClub == null
@@ -251,7 +251,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
                       children: const [
                         MyText('Uploading media'),
                         SizedBox(width: 6),
-                        NavBarLoadingDots()
+                        NavBarLoadingIndicator()
                       ],
                     )
                   : _activeClub == null

@@ -1,4 +1,3 @@
-import 'package:audio_session/audio_session.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:just_audio/just_audio.dart';
@@ -6,84 +5,22 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class AudioPlayerController {
-  static Future<AudioPlayer> init({
-    required AudioPlayer player,
-    AudioSessionConfiguration? sessionType,
-    required String audioUri,
-    LoopMode loopMode = LoopMode.one,
-    bool autoPlay = false,
-  }) async {
-    final session = await AudioSession.instance;
-    await session
-        .configure(sessionType ?? const AudioSessionConfiguration.speech());
-
-    try {
-      final url = UploadcareService.getFileUrl(audioUri);
-
-      if (Utils.textNotNull(url)) {
-        await player.setUrl(url!);
-        await player.setLoopMode(loopMode);
-
-        // Listen to errors during playback.
-        player.playbackEventStream.listen(null,
-            onError: (Object e, StackTrace stackTrace) {
-          printLog('A stream error occurred: $e');
-        });
-
-        if (autoPlay) {
-          player.play();
-        }
-      } else {
-        throw Exception('Could not retrieve a valid url for this file.');
-      }
-    } on PlayerException catch (e) {
-      printLog("Error code: ${e.code}");
-      printLog("Error message: ${e.message}");
-    } on PlayerInterruptedException catch (e) {
-      printLog("Connection aborted: ${e.message}");
-    } catch (e) {
-      // Fallback for all errors
-      printLog(e.toString());
-    }
-    return player;
-  }
-
-  static Future<void> openAudioPlayer(
-      {required BuildContext context,
-      required String audioUri,
-      required String audioTitle,
-      String? audioSubtitle,
-      required String pageTitle,
-      bool autoPlay = false}) async {
-    await context.push(
-        fullscreenDialog: true,
-        child: FullAudioPlayer(
-          audioUri: audioUri,
-          pageTitle: pageTitle,
-          audioTitle: audioTitle,
-          audioSubtitle: audioSubtitle,
-          autoPlay: autoPlay,
-        ));
-  }
-}
-
 /// Playes an audio file from an uploadcare uri
-class FullAudioPlayer extends StatefulWidget {
+class FullScreenAudioPlayer extends StatefulWidget {
   final String audioUri;
   final Widget? image;
   final String pageTitle;
   final String audioTitle;
   final String? audioSubtitle;
   final bool autoPlay;
-  const FullAudioPlayer(
+  const FullScreenAudioPlayer(
       {Key? key,
       required this.audioUri,
       this.image,
@@ -94,10 +31,10 @@ class FullAudioPlayer extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FullAudioPlayerState createState() => _FullAudioPlayerState();
+  _FullScreenAudioPlayerState createState() => _FullScreenAudioPlayerState();
 }
 
-class _FullAudioPlayerState extends State<FullAudioPlayer> {
+class _FullScreenAudioPlayerState extends State<FullScreenAudioPlayer> {
   late AudioPlayer _player;
   Duration _totalDuration = Duration.zero;
 
@@ -114,7 +51,7 @@ class _FullAudioPlayerState extends State<FullAudioPlayer> {
   Future<void> _init() async {
     await AudioPlayerController.init(
       player: _player,
-      audioUri: widget.audioUri,
+      audioUrl: UploadcareService.getFileUrl(widget.audioUri)!,
       autoPlay: widget.autoPlay,
     );
     setState(() {
@@ -142,7 +79,6 @@ class _FullAudioPlayerState extends State<FullAudioPlayer> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
         middle: NavBarTitle(widget.pageTitle),
-        backgroundColor: context.theme.background,
         customLeading: CupertinoButton(
             onPressed: context.pop,
             child: const Icon(CupertinoIcons.chevron_down)),
@@ -174,7 +110,7 @@ class _FullAudioPlayerState extends State<FullAudioPlayer> {
                         child: (!snapshot.hasData ||
                                 _totalDuration == Duration.zero)
                             ? const Center(
-                                child: LoadingDots(
+                                child: LoadingIndicator(
                                 size: 12,
                               ))
                             : Column(
@@ -238,7 +174,7 @@ class _FullAudioPlayerState extends State<FullAudioPlayer> {
                   } else {
                     if (!stateSnapShot.hasData) {
                       return const Center(
-                          child: LoadingDots(
+                          child: LoadingIndicator(
                         size: 12,
                       ));
                     } else {
@@ -298,191 +234,5 @@ class _FullAudioPlayerState extends State<FullAudioPlayer> {
         ],
       ),
     );
-  }
-}
-
-/// Displays a WhatsApp voice message style placeholder until play is tapped.
-/// Then retrieves the audio file from Uploadcare and starts to play it.
-class InlineAudioPlayer extends StatefulWidget {
-  final String audioUri;
-  final Axis layout;
-  final double buttonSize;
-  const InlineAudioPlayer(
-      {Key? key,
-      required this.audioUri,
-      this.layout = Axis.horizontal,
-      this.buttonSize = 30})
-      : super(key: key);
-
-  @override
-  _InlineAudioPlayerState createState() => _InlineAudioPlayerState();
-}
-
-class _InlineAudioPlayerState extends State<InlineAudioPlayer> {
-  bool _initialized = false;
-  bool _loading = false;
-  late AudioPlayer _player;
-  Duration? _totalDuration;
-
-  @override
-  void initState() {
-    super.initState();
-    _player = AudioPlayer();
-  }
-
-  Future<void> _playerStateListener(PlayerState event) async {
-    bool atEnd =
-        _player.position.inMilliseconds >= _totalDuration!.inMilliseconds;
-    if (atEnd) {
-      await _player.pause();
-      await _player.seek(Duration.zero);
-    }
-    if (mounted) setState(() {});
-  }
-
-  Future<void> _initialize() async {
-    setState(() {
-      _loading = true;
-    });
-    await AudioPlayerController.init(
-        player: _player,
-        audioUri: widget.audioUri,
-        autoPlay: true,
-        loopMode: LoopMode.off);
-
-    _player.playerStateStream.listen(_playerStateListener);
-
-    setState(() {
-      _totalDuration = _player.duration;
-      _loading = false;
-      _initialized = true;
-    });
-  }
-
-  void _handleScrubSeek(double position) {
-    if (_totalDuration != null) {
-      _player.seek(Duration(
-          milliseconds: (_totalDuration!.inMilliseconds * position).round()));
-    }
-  }
-
-  @override
-  void dispose() async {
-    super.dispose();
-    await _player.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isPlaying = _player.playing;
-
-    final List<Widget> children = [
-      CupertinoButton(
-        padding: EdgeInsets.zero,
-        onPressed: _loading
-            ? null
-            : isPlaying
-                ? _player.pause
-                : _initialized
-                    ? _player.play
-                    : _initialize,
-        child: AnimatedSwitcher(
-          duration: kStandardAnimationDuration,
-          child: _loading
-              ? const LoadingCircle(size: 12)
-              : isPlaying
-                  ? Icon(CupertinoIcons.pause_fill, size: widget.buttonSize)
-                  : Icon(CupertinoIcons.play_fill, size: widget.buttonSize),
-        ),
-      ),
-      widget.layout == Axis.horizontal
-          ? Expanded(
-              child: _InlinePlayerProgressSlider(
-                audioPlayer: _player,
-                handleScrubSeek: _handleScrubSeek,
-                totalDuration: _totalDuration,
-              ),
-            )
-          : _InlinePlayerProgressSlider(
-              audioPlayer: _player,
-              handleScrubSeek: _handleScrubSeek,
-              totalDuration: _totalDuration,
-            ),
-    ];
-
-    return widget.layout == Axis.horizontal
-        ? Row(
-            children: children,
-          )
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          );
-  }
-}
-
-class _InlinePlayerProgressSlider extends StatelessWidget {
-  final AudioPlayer audioPlayer;
-  final Duration? totalDuration;
-  final void Function(double position) handleScrubSeek;
-  const _InlinePlayerProgressSlider(
-      {Key? key,
-      required this.audioPlayer,
-      required this.totalDuration,
-      required this.handleScrubSeek})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<Duration?>(
-        stream: audioPlayer.positionStream,
-        builder: (context, snapshot) {
-          final bool loaded = snapshot.hasData && totalDuration != null;
-          final position = snapshot.data;
-
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 12,
-                child: loaded
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          MyText(snapshot.data!.compactDisplay,
-                              size: FONTSIZE.one),
-                          MyText(totalDuration!.compactDisplay,
-                              size: FONTSIZE.one),
-                        ],
-                      )
-                    : Container(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: material.Material(
-                  color: material.Colors.transparent,
-                  child: material.SliderTheme(
-                    data: material.SliderThemeData(
-                      overlayShape: material.SliderComponentShape.noOverlay,
-                      trackHeight: 3.0,
-                      thumbShape: const material.RoundSliderThumbShape(
-                          enabledThumbRadius: 4),
-                    ),
-                    child: material.Slider(
-                      value: loaded
-                          ? (position!.inMilliseconds /
-                                  totalDuration!.inMilliseconds)
-                              .clamp(0, 1.0)
-                          : 0,
-                      onChanged: handleScrubSeek,
-                      activeColor: context.theme.primary,
-                      inactiveColor: context.theme.primary.withOpacity(0.1),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        });
   }
 }

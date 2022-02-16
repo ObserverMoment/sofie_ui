@@ -91,4 +91,34 @@ class VideoSetupManager {
 
     return positionOnExit ?? Duration.zero;
   }
+
+  /// For use when you already have a full URL for the video source.
+  /// E.g when being hosted on Stream rather than uploadcare.
+  static Future<void> openFullScreenVideoFromUrl(
+      {required BuildContext context,
+      required String videoUrl,
+      bool autoPlay = false,
+      bool autoLoop = false}) async {
+    final controller = VideoPlayerController.network(videoUrl);
+    await controller.initialize();
+
+    if (autoLoop) {
+      controller.setLooping(autoLoop);
+    }
+
+    final isPortrait = controller.value.aspectRatio < 1;
+
+    if (isPortrait) {
+      await Navigator.of(context).push(PortraitVideoEmergingPageRoute(
+          page: PortraitFullScreenVideoPlayer(
+              controller: controller, autoPlay: autoPlay)));
+    } else {
+      await Navigator.of(context).push(LandscapeVideoRotatingPageRoute(
+          page: LandscapeFullScreenVideoPlayer(
+              controller: controller, autoPlay: autoPlay)));
+    }
+
+    /// Dispose of the controller once user is finished.
+    await controller.dispose();
+  }
 }

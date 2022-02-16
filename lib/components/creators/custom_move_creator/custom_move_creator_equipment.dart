@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/info_pages/custom_move_equipments_info.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -8,8 +7,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 
 class CustomMoveCreatorEquipment extends StatelessWidget {
   final Move move;
@@ -20,50 +18,43 @@ class CustomMoveCreatorEquipment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<Equipments$Query, json.JsonSerializable>(
-        key: Key(
-            'CustomMoveCreatorEquipment - ${EquipmentsQuery().operationName}'),
-        query: EquipmentsQuery(),
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        builder: (data) {
-          final allEquipments = data.equipments;
+    final allEquipments = CoreDataRepo.equipment;
 
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-              child: Column(
-                children: [
-                  UserInputContainer(
-                    child: SelectedEquipmentsDisplay(
-                      selectedEquipments: move.requiredEquipments,
-                      title: 'Required Equipment',
-                      allEquipments: allEquipments,
-                      updateSelectedEquipments: (List<Equipment> equipments) {
-                        updateMove({
-                          'RequiredEquipments':
-                              equipments.map((e) => e.toJson()).toList()
-                        });
-                      },
-                    ),
-                  ),
-                  UserInputContainer(
-                    child: SelectedEquipmentsDisplay(
-                      selectedEquipments: move.selectableEquipments,
-                      title: 'Selectable Equipment',
-                      allEquipments: allEquipments,
-                      updateSelectedEquipments: (List<Equipment> equipments) {
-                        updateMove({
-                          'SelectableEquipments':
-                              equipments.map((e) => e.toJson()).toList()
-                        });
-                      },
-                    ),
-                  ),
-                ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: Column(
+          children: [
+            UserInputContainer(
+              child: SelectedEquipmentsDisplay(
+                selectedEquipments: move.requiredEquipments,
+                title: 'Required Equipment',
+                allEquipments: allEquipments,
+                updateSelectedEquipments: (List<Equipment> equipments) {
+                  updateMove({
+                    'RequiredEquipments':
+                        equipments.map((e) => e.toJson()).toList()
+                  });
+                },
               ),
             ),
-          );
-        });
+            UserInputContainer(
+              child: SelectedEquipmentsDisplay(
+                selectedEquipments: move.selectableEquipments,
+                title: 'Selectable Equipment',
+                allEquipments: allEquipments,
+                updateSelectedEquipments: (List<Equipment> equipments) {
+                  updateMove({
+                    'SelectableEquipments':
+                        equipments.map((e) => e.toJson()).toList()
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

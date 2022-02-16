@@ -126,7 +126,7 @@ class _UserAvatarUploaderState extends State<UserAvatarUploader> {
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           child: _uploading
-              ? LoadingCircle(color: primary)
+              ? LoadingIndicator(color: primary)
               : widget.avatarUri != null
                   ? SizedUploadcareImage(widget.avatarUri!)
                   : Icon(

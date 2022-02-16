@@ -37,8 +37,8 @@ class MainTabsPage extends StatelessWidget {
       // https://github.com/Milad-Akarie/auto_route_library/issues/619#issuecomment-945187688
       backgroundColor: context.theme.background,
       routes: const [
+        FeedRoute(),
         DiscoverRoute(),
-        SocialRoute(),
         HomeRoute(),
         ProgressRoute(),
         ProfileRoute(),
@@ -59,16 +59,16 @@ class MainTabsPage extends StatelessWidget {
                       tabsRouter: _tabsRouter,
                       activeIndex: _tabsRouter.activeIndex,
                       tabIndex: 0,
-                      label: 'Discover',
-                      inactiveIconData: CupertinoIcons.compass,
-                      activeIconData: CupertinoIcons.compass_fill),
+                      label: 'Feed',
+                      inactiveIconData: CupertinoIcons.news,
+                      activeIconData: CupertinoIcons.news_solid),
                   _buildTabItem(
                       tabsRouter: _tabsRouter,
                       activeIndex: _tabsRouter.activeIndex,
                       tabIndex: 1,
-                      label: 'Feed',
-                      inactiveIconData: CupertinoIcons.news,
-                      activeIconData: CupertinoIcons.news_solid),
+                      label: 'Discover',
+                      inactiveIconData: CupertinoIcons.compass,
+                      activeIconData: CupertinoIcons.compass_fill),
                   _buildTabItem(
                       tabsRouter: _tabsRouter,
                       activeIndex: _tabsRouter.activeIndex,

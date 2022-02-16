@@ -96,7 +96,9 @@ class _PublicWorkoutPlanFinderPageState
 
   Future<void> _fetchPublicWorkoutPlans(int nextPageKey) async {
     try {
-      /// [nextPageKey] aka cursor defaults to 0 when [_pagingController] is initialised.
+      /// [nextPageKey] defaults to 0 when [_pagingController] is initialised.
+      /// For every subsequent call for a page [nextPageKey] will be [NOT 0]
+      /// Use as a boolean. If [not 0] then pass [_cursor] to the query args.
       final workoutPlans = await _executePublicWorkoutPlansQuery(
           cursor: nextPageKey == 0 ? null : _cursor);
 
@@ -198,13 +200,9 @@ class _PublicWorkoutPlanFinderPageState
                     ),
                   ),
                   firstPageProgressIndicatorBuilder: (c) =>
-                      const CupertinoActivityIndicator(
-                    radius: 12,
-                  ),
+                      const CupertinoActivityIndicator(),
                   newPageProgressIndicatorBuilder: (c) =>
-                      const CupertinoActivityIndicator(
-                    radius: 12,
-                  ),
+                      const CupertinoActivityIndicator(),
                   noItemsFoundIndicatorBuilder: (c) =>
                       const Center(child: NoResultsToDisplay()),
                 ),

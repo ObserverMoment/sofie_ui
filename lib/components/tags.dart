@@ -13,7 +13,6 @@ import 'package:sofie_ui/services/utils.dart';
 
 class Tag extends StatelessWidget {
   final Color? color;
-  final Color? borderColor;
   final Color? textColor;
   final String tag;
 
@@ -23,7 +22,6 @@ class Tag extends StatelessWidget {
   const Tag(
       {Key? key,
       this.color,
-      this.borderColor,
       this.textColor,
       required this.tag,
       this.padding = kDefaultTagPadding,
@@ -34,16 +32,15 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final background = color ?? context.theme.primary.withOpacity(0.95);
-    final border =
-        borderColor ?? color ?? context.theme.primary.withOpacity(0.95);
+
     final text = textColor ?? context.theme.background;
 
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: background,
-          border: Border.all(color: border)),
+        borderRadius: BorderRadius.circular(30),
+        color: background,
+      ),
       child: MyText(
         tag,
         size: fontSize,
@@ -127,8 +124,7 @@ class DifficultyLevelDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isElite = difficultyLevel == DifficultyLevel.elite;
-    final borderColor =
-        isElite ? context.theme.primary : difficultyLevel.displayColor;
+    final borderColor = isElite ? Styles.white : difficultyLevel.displayColor;
 
     return Container(
       width: size,
@@ -145,26 +141,23 @@ class DifficultyLevelIcon extends StatelessWidget {
   final DifficultyLevel difficultyLevel;
 
   final FONTSIZE fontSize;
-  final bool withBackground;
+
+  final Color? backgroundColor;
 
   const DifficultyLevelIcon(
       {Key? key,
       required this.difficultyLevel,
       this.fontSize = FONTSIZE.two,
-      this.withBackground = true})
+      this.backgroundColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final color = difficultyLevel.displayColor;
     return Container(
-      padding: withBackground
-          ? const EdgeInsets.symmetric(vertical: 4, horizontal: 5)
-          : EdgeInsets.zero,
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 5),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(3),
-          color: withBackground
-              ? context.theme.background.withOpacity(0.85)
-              : null),
+          borderRadius: BorderRadius.circular(3), color: backgroundColor),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -176,8 +169,8 @@ class DifficultyLevelIcon extends StatelessWidget {
                   width: 5,
                   decoration: BoxDecoration(
                       color: difficultyLevel.numericValue >= i
-                          ? context.theme.primary.withOpacity(0.85)
-                          : context.theme.primary.withOpacity(0.2),
+                          ? color.withOpacity(0.85)
+                          : color.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(1)),
                 )),
       ),
@@ -392,7 +385,7 @@ class DurationTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentBox(
         backgroundColor: backgroundColor,
-        borderRadius: 4,
+        borderRadius: 6,
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -414,9 +407,9 @@ class DurationTag extends StatelessWidget {
   }
 }
 
-class ProgressJournalGoalAndTagsTag extends StatelessWidget {
-  final JournalGoal progressJournalGoal;
-  const ProgressJournalGoalAndTagsTag(this.progressJournalGoal, {Key? key})
+class ProgressUserGoalAndTagsTag extends StatelessWidget {
+  final UserGoal progressUserGoal;
+  const ProgressUserGoalAndTagsTag(this.progressUserGoal, {Key? key})
       : super(key: key);
 
   @override
@@ -431,9 +424,9 @@ class ProgressJournalGoalAndTagsTag extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           MyText(
-            progressJournalGoal.name,
+            progressUserGoal.name,
             size: FONTSIZE.two,
-            decoration: progressJournalGoal.completedDate != null
+            decoration: progressUserGoal.completedDate != null
                 ? TextDecoration.lineThrough
                 : null,
           ),

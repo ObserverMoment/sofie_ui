@@ -102,11 +102,6 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
                           'Clubs are the heart of the Sofie experience! Use them to organise events and groups, share fitness stuff, build teams, sell services and merch, entertain fans, reward dedicated team members, create competitions and so much more!',
                       actions: [
                           EmptyPlaceholderAction(
-                              action: () =>
-                                  context.navigateTo(ClubCreatorRoute()),
-                              buttonIcon: CupertinoIcons.add,
-                              buttonText: 'Create Club'),
-                          EmptyPlaceholderAction(
                               action: () => context
                                   .navigateTo(const DiscoverClubsRoute()),
                               buttonIcon: CupertinoIcons.compass,

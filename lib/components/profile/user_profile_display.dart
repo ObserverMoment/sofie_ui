@@ -17,7 +17,7 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/country.dart';
-import 'package:sofie_ui/pages/authed/progress/components/lifetime_log_stats_summary.dart';
+import 'package:sofie_ui/pages/authed/progress/components/summary_stat_display.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -160,14 +160,16 @@ class _UserProfileDisplayState extends State<UserProfileDisplay> {
                               number: profile
                                   .lifetimeLogStatsSummary!.minutesWorked,
                             ),
-                          SummaryStatDisplay(
-                            label: 'WORKOUTS',
-                            number: workoutCount,
-                          ),
-                          SummaryStatDisplay(
-                            label: 'PLANS',
-                            number: planCount,
-                          ),
+                          if (isAuthedUserProfile || workoutCount > 0)
+                            SummaryStatDisplay(
+                              label: 'WORKOUTS',
+                              number: workoutCount,
+                            ),
+                          if (isAuthedUserProfile || workoutCount > 0)
+                            SummaryStatDisplay(
+                              label: 'PLANS',
+                              number: planCount,
+                            ),
                         ],
                       )),
                     ),

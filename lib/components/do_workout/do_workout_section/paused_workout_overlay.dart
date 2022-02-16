@@ -61,8 +61,15 @@ class _ScoredSectionInstructions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        const MyHeaderText(
+          'Tap "SET COMPLETE" button each time you finish a set.',
+          maxLines: 6,
+          lineHeight: 1.5,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
         const MyText(
-          'Tap the "SET COMPLETE" button each time you finish a set. This will record your progress, split times and lap times as you go!',
+          'This will record your progress, split times and lap times as you go!',
           maxLines: 6,
           lineHeight: 1.5,
           textAlign: TextAlign.center,
@@ -140,18 +147,20 @@ class _LiftingSectionInstructions extends StatelessWidget {
               ],
             ),
           ),
-          text:
-              'Tap the move name to view info and instructions about the move.',
+          title: 'Tap For Move Info',
+          text: 'Tap the move name for information about the move.',
         ),
         _InstructionRow(
           icon: _buildRepsIndicator(context),
+          title: 'Tap When Set Complete',
           text:
-              'Tap the reps indicator circle to mark the set as complete. Tap again to reverse this.',
+              'Tap rep indicator to mark a set as complete. Tap it again to reverse this.',
         ),
         _InstructionRow(
           icon: _buildRepsIndicator(context),
+          title: 'Long Press to Modify Move',
           text:
-              'Long press the reps indicator circle to modify the exercise. Cannot modify a move which you have marked as complete.',
+              'Long press the reps indicator to modify an exercise. You cannot modify a move which is marked complete.',
         ),
       ],
     );
@@ -159,26 +168,37 @@ class _LiftingSectionInstructions extends StatelessWidget {
 }
 
 class _InstructionRow extends StatelessWidget {
+  final String title;
   final String text;
   final Widget icon;
-  const _InstructionRow({Key? key, required this.text, required this.icon})
+  const _InstructionRow(
+      {Key? key, required this.text, required this.icon, required this.title})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
-      child: Row(
+      child: Column(
         children: [
-          icon,
-          const SizedBox(width: 12),
-          Expanded(
-            child: MyText(
-              text,
-              maxLines: 4,
-              lineHeight: 1.5,
-            ),
-          )
+          MyHeaderText(
+            title,
+            size: FONTSIZE.four,
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              icon,
+              const SizedBox(width: 12),
+              Expanded(
+                child: MyText(
+                  text,
+                  maxLines: 4,
+                  lineHeight: 1.5,
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

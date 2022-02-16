@@ -157,7 +157,7 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
                   progress: _uploadProgress,
                 )
               : _processing
-                  ? LoadingCircle(
+                  ? LoadingIndicator(
                       color: primary,
                     )
                   : Utils.textNotNull(widget.introVideoThumbUri)

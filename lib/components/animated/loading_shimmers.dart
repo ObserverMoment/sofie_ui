@@ -38,6 +38,7 @@ class ShimmerCard extends StatelessWidget {
           highlightColor: context.theme.primary,
           child: Card(
             padding: EdgeInsets.zero,
+            borderRadius: BorderRadius.circular(12),
             margin: const EdgeInsets.all(4),
             height: height,
             child: Container(width: width),

@@ -24,19 +24,25 @@ class CompactTimerIcon extends StatelessWidget {
   /// Compact display = 03:56 for three mins 56 secs.
   /// Standard display would be 3 mins 56 seconds.
   final bool compactDisplay;
+  final double iconSize;
+  final FONTSIZE fontSize;
   const CompactTimerIcon(
-      {Key? key, required this.duration, this.compactDisplay = false})
+      {Key? key,
+      required this.duration,
+      this.compactDisplay = false,
+      this.iconSize = 16,
+      this.fontSize = FONTSIZE.four})
       : super(key: key);
 
   List<Widget> _buildChildren(String display) => [
-        const Icon(
+        Icon(
           CupertinoIcons.timer,
-          size: 16,
+          size: iconSize,
         ),
         const SizedBox(width: 4),
         MyText(
           duration?.compactDisplay ?? '---',
-          size: FONTSIZE.four,
+          size: fontSize,
         )
       ];
 
@@ -184,9 +190,9 @@ class NoResultsToDisplay extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SvgPicture.asset(
-          'assets/placeholder_images/no-results-icon.svg',
-          width: 90,
+        Icon(
+          CupertinoIcons.search,
+          size: 70,
           color: context.theme.primary.withOpacity(0.3),
         ),
         Padding(
@@ -197,6 +203,17 @@ class NoResultsToDisplay extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class NavBarActivityIndicator extends StatelessWidget {
+  const NavBarActivityIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const CupertinoActivityIndicator(
+      radius: 11,
     );
   }
 }

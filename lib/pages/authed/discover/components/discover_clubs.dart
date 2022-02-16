@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/club_card.dart';
@@ -28,11 +27,12 @@ class DiscoverClubs extends StatelessWidget {
                       const MyHeaderText(
                         'Clubs',
                       ),
-                      IconButton(
-                          iconData: CupertinoIcons.compass,
-                          iconColor: Styles.primaryAccent,
+                      TertiaryButton(
+                          text: 'View All',
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 6, horizontal: 8),
                           onPressed: () =>
-                              context.navigateTo(const DiscoverClubsRoute()))
+                              context.navigateTo(const DiscoverClubsRoute())),
                     ],
                   ),
                 ),

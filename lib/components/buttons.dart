@@ -76,9 +76,7 @@ class MyButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      LoadingDots(
-                        color: contentColor,
-                      ),
+                      LoadingIndicator(color: contentColor, size: 10),
                     ],
                   )
                 : Row(
@@ -360,7 +358,7 @@ class BorderButton extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [LoadingDots(size: 10)],
+                  children: const [LoadingIndicator(size: 10)],
                 ),
               ),
             ],
@@ -590,8 +588,8 @@ class PageLink extends StatelessWidget {
                     children: [
                       if (icon != null)
                         Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Icon(icon, size: 20),
+                          padding: const EdgeInsets.only(right: 12.0),
+                          child: Icon(icon, size: 18),
                         ),
                       MyText(
                         linkText,
@@ -600,14 +598,14 @@ class PageLink extends StatelessWidget {
                             : destructiveHighlight
                                 ? Styles.errorRed
                                 : null,
-                        lineHeight: 0.6,
+                        lineHeight: 1,
                         weight: bold ? FontWeight.bold : FontWeight.normal,
                       ),
                       if (loading)
                         const FadeIn(
                           child: Padding(
                             padding: EdgeInsets.only(left: 8.0),
-                            child: LoadingDots(
+                            child: LoadingIndicator(
                               size: 10,
                             ),
                           ),
@@ -678,7 +676,7 @@ class TextButton extends StatelessWidget {
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
         child: loading
-            ? const LoadingDots()
+            ? const LoadingIndicator(size: 10)
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -771,9 +769,7 @@ class CreateTextIconButton extends StatelessWidget {
   List<Widget> _buildChildren() {
     return loading
         ? [
-            const LoadingDots(
-              size: 10,
-            ),
+            const LoadingIndicator(size: 10),
           ]
         : [
             const Icon(
@@ -806,7 +802,13 @@ class CreateTextIconButton extends StatelessWidget {
 class NavBarCancelButton extends StatelessWidget {
   final void Function() onPressed;
   final String text;
-  const NavBarCancelButton(this.onPressed, {Key? key, this.text = 'Cancel'})
+  final Color? color;
+  final FontWeight weight;
+  const NavBarCancelButton(this.onPressed,
+      {Key? key,
+      this.text = 'Cancel',
+      this.color,
+      this.weight = FontWeight.normal})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -815,6 +817,8 @@ class NavBarCancelButton extends StatelessWidget {
         onPressed: onPressed,
         child: MyText(
           text,
+          color: color,
+          weight: weight,
         ));
   }
 }
@@ -869,13 +873,40 @@ class NavBarSaveButton extends StatelessWidget {
             padding: EdgeInsets.zero,
             onPressed: loading ? null : onPressed,
             child: loading
-                ? const LoadingDots(
-                    size: 12,
+                ? const LoadingIndicator(
+                    size: 10,
                   )
                 : MyText(
                     text,
                   )),
       ],
+    );
+  }
+}
+
+class NavBarTertiarySaveButton extends StatelessWidget {
+  final void Function() onPressed;
+  final String text;
+  final bool loading;
+  const NavBarTertiarySaveButton(
+    this.onPressed, {
+    Key? key,
+    this.text = 'Save',
+    this.loading = false,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: kStandardAnimationDuration,
+      child: loading
+          ? const CupertinoActivityIndicator(radius: 9)
+          : TertiaryButton(
+              backgroundColor: Styles.primaryAccent,
+              textColor: Styles.white,
+              onPressed: onPressed,
+              text: text,
+              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+            ),
     );
   }
 }

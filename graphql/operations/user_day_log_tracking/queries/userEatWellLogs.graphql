@@ -1,0 +1,5 @@
+query userEatWellLogs {
+  userEatWellLogs {
+    ...UserEatWellLog
+  }
+}

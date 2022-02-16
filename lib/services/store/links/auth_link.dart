@@ -1,6 +1,7 @@
 import 'dart:async';
 import "package:gql_exec/gql_exec.dart";
-import 'package:sofie_ui/services/store/links/gql_links.dart';
+import 'package:gql_http_link/gql_http_link.dart';
+import 'package:gql_link/gql_link.dart';
 
 typedef _RequestTransformer = FutureOr<Request> Function(Request request);
 

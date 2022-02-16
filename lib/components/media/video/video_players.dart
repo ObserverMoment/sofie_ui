@@ -10,8 +10,13 @@ class PortraitFullScreenVideoPlayer extends StatefulWidget {
   final VideoPlayerController controller;
   final String? title;
   final String? subitle;
+  final bool autoPlay;
   const PortraitFullScreenVideoPlayer(
-      {Key? key, required this.controller, this.title, this.subitle})
+      {Key? key,
+      required this.controller,
+      this.title,
+      this.subitle,
+      this.autoPlay = false})
       : super(key: key);
 
   @override
@@ -36,6 +41,7 @@ class _PortraitFullScreenVideoPlayerState
   void initState() {
     super.initState();
     widget.controller.addListener(_listener);
+    widget.controller.play();
   }
 
   /// This is how [video_player] does it internally.
@@ -151,7 +157,7 @@ class _LandscapeInlineVideoPlayerState
             ),
           )
         : const Center(
-            child: LoadingCircle(),
+            child: LoadingIndicator(),
           );
   }
 }
@@ -160,8 +166,13 @@ class LandscapeFullScreenVideoPlayer extends StatefulWidget {
   final VideoPlayerController controller;
   final String? title;
   final String? subitle;
+  final bool autoPlay;
   const LandscapeFullScreenVideoPlayer(
-      {Key? key, required this.controller, this.title, this.subitle})
+      {Key? key,
+      required this.controller,
+      this.title,
+      this.subitle,
+      this.autoPlay = false})
       : super(key: key);
 
   @override
@@ -186,6 +197,7 @@ class _LandscapeFullScreenVideoPlayerState
   void initState() {
     super.initState();
     widget.controller.addListener(_listener);
+    widget.controller.play();
   }
 
   /// This is how [video_player] does it internally.

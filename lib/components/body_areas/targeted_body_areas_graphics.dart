@@ -95,6 +95,7 @@ class TargetedBodyAreasScoreIndicator extends StatelessWidget {
 /// Boolean - on or off for each body area.
 class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
   final Color? activeColor;
+  final Color? inactiveColor;
 
   final BodyAreaFrontBack frontBack;
   final List<BodyArea> selectedBodyAreas;
@@ -104,6 +105,7 @@ class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
   const TargetedBodyAreasSelectedIndicator({
     Key? key,
     this.activeColor,
+    this.inactiveColor,
     required this.selectedBodyAreas,
     required this.frontBack,
     required this.allBodyAreas,
@@ -112,7 +114,8 @@ class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nonActiveColor = context.theme.primary.withOpacity(0.2);
+    final _inactiveColor =
+        inactiveColor ?? context.theme.primary.withOpacity(0.2);
     final _activeColor = activeColor ?? context.watch<ThemeBloc>().primary;
 
     final List<BodyArea> bodyAreasToDisplay = allBodyAreas
@@ -131,7 +134,7 @@ class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
                   ? 'assets/body_areas/front/background_front.svg'
                   : 'assets/body_areas/back/background_back.svg',
               height: height,
-              color: nonActiveColor),
+              color: _inactiveColor),
           ...bodyAreasToDisplay
               .map(
                 (bodyArea) => SvgPicture.asset(
@@ -139,7 +142,7 @@ class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
                     height: height,
                     color: selectedBodyAreas.contains(bodyArea)
                         ? _activeColor
-                        : nonActiveColor),
+                        : _inactiveColor),
               )
               .toList()
         ],

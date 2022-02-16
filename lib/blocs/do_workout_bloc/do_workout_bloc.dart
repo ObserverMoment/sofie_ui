@@ -7,14 +7,17 @@ import 'package:sofie_ui/blocs/do_workout_bloc/controllers/amrap_section_control
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/timed_section_controller.dart';
+import 'package:sofie_ui/blocs/do_workout_bloc/user_workout_settings_bloc.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
-import 'package:sofie_ui/components/media/audio/audio_players.dart';
+import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
+import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/audio_session_manager.dart';
 import 'package:sofie_ui/services/data_utils.dart';
+import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:uuid/uuid.dart';
@@ -65,9 +68,9 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// Wakelock settings.
   /// Revert to this once the workout session is finished.
   bool? _initialWakelockSetting;
-  bool activeWakelockSetting = true;
 
-  int countdownToStartSeconds = 3;
+  /// Get these settings from the settings Hive box persisted locally on the users device.
+  late UserWorkoutSettingsBloc userWorkoutSettingsBloc;
 
   AudioSession? _session;
 
@@ -86,6 +89,9 @@ class DoWorkoutBloc extends ChangeNotifier {
       this.scheduledWorkout,
       this.workoutPlanDayWorkoutId,
       this.workoutPlanEnrolmentId}) {
+    /// Init / retrieve the settings
+    userWorkoutSettingsBloc = UserWorkoutSettingsBloc();
+
     activeWorkout = originalWorkout.copyAndSortAllChildren;
 
     final workoutSections = activeWorkout.workoutSections;
@@ -132,7 +138,8 @@ class DoWorkoutBloc extends ChangeNotifier {
         await Future.wait(activeWorkout.workoutSections.map((section) async {
       if (Utils.textNotNull(section.classAudioUri)) {
         final player = await AudioPlayerController.init(
-            audioUri: section.classAudioUri!, player: AudioPlayer());
+            audioUrl: UploadcareService.getFileUrl(section.classAudioUri!)!,
+            player: AudioPlayer());
 
         return player;
       } else {
@@ -249,12 +256,23 @@ class DoWorkoutBloc extends ChangeNotifier {
   //// User Inputs Start ////
   Future<void> toggleWakelock(bool enable) async {
     await Wakelock.toggle(enable: enable);
-    activeWakelockSetting = enable;
+    userWorkoutSettingsBloc.updateSettings({'activeWakelockSetting': enable});
     notifyListeners();
   }
 
   Future<void> adjustCountdownToStartSeconds(int seconds) async {
-    countdownToStartSeconds = seconds;
+    userWorkoutSettingsBloc
+        .updateSettings({'countdownToStartSeconds': seconds});
+    notifyListeners();
+  }
+
+  Future<void> toggleEnableAutoRestTimer(bool enable) async {
+    userWorkoutSettingsBloc.updateSettings({'enableAutoRestTimer': enable});
+    notifyListeners();
+  }
+
+  Future<void> adjustAutoRestTime(int seconds) async {
+    userWorkoutSettingsBloc.updateSettings({'autoRestTimerSeconds': seconds});
     notifyListeners();
   }
 
@@ -363,13 +381,14 @@ class DoWorkoutBloc extends ChangeNotifier {
   //////////////////////////////////////////////////////////////////
   /// Modify WorkoutSection, WorkoutSet and WorkoutMove methods ////
   /// Modify sets and moves before starting the workout ////////////
-  /// or (if Free Session) during the workout //////////////////////
+  /// or (if Lifting / Custom) during the workout //////////////////
   //////////////////////////////////////////////////////////////////
 
+  /// IMPORTANT: [Modify WorkoutSection, WorkoutSet and WorkoutMove methods] will all reset / re-initialize the section controller unless the [doNotReset] flag is passed as true.
+  /// When updating moves from the Lifting Moves List (during the workout) make sure that you pass this flag to avoid abrupt reset!
+  /// Methods that DO NOT have this flag as an optional arg should never be able to be called by the user while they are doing a workout.
   /// TODO: Quite heavy handed to reset / re-init the controller after each change the user makes. Revisit this for a better solution.
-
-  /// IMPORTANT: [updateWorkoutSectionRounds] will re-initialize section controller progress.
-  /// No check for [isCustomSession] as FreeSession should never have rounds.
+  ///////////////
   Future<void> updateWorkoutSectionRounds(int sectionIndex, int rounds) async {
     final section = WorkoutSection.fromJson(
         activeWorkout.workoutSections[sectionIndex].toJson());
@@ -384,8 +403,6 @@ class DoWorkoutBloc extends ChangeNotifier {
   }
 
   /// For AMRAPs.
-  /// IMPORTANT: [updateWorkoutSectionTimecap] will re-initialize section controller progress.
-  /// No check for [isCustomSession] as FreeSession should never have rounds.
   Future<void> updateWorkoutSectionTimecap(
       int sectionIndex, int seconds) async {
     final section = WorkoutSection.fromJson(
@@ -400,12 +417,11 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Allows the user to add a single move set (i.e) not a SuperSet to the end of the section.
-  /// Primarily for use in a Free Session so the user can extend their workout / add extra moves easily whilst they are in progress. But also available via the [DoWorkoutSectionModifications] screen.
   /// Always making a copy of the section as this is what the provider.select listener is checking.
-  /// IMPORTANT: [addWorkoutMoveToSection] and [addWorkoutSetToSection] will re-initialize section controller progress unless it is a FreeSession or a Lifting Session.
-  Future<void> addWorkoutSetToSection(
-      int sectionIndex, WorkoutSet workoutSet) async {
+  /// This method can be called during the workout (Lifting and Custom sections).
+  /// Make sure you pass [doNotReset] as true to avoid resetting section progress.
+  Future<void> addWorkoutSetToSection(int sectionIndex, WorkoutSet workoutSet,
+      {bool doNotReset = false}) async {
     final section = WorkoutSection.fromJson(
         activeWorkout.workoutSections[sectionIndex].toJson());
 
@@ -413,7 +429,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     activeWorkout.workoutSections[sectionIndex] = section;
 
-    if (!section.isCustomSession && !section.isLifting) {
+    if (!doNotReset) {
       /// Re-init the controller.
       await resetSection(sectionIndex);
     }
@@ -421,30 +437,6 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addWorkoutMoveToSection(
-      int sectionIndex, WorkoutMove workoutMove) async {
-    final section = WorkoutSection.fromJson(
-        activeWorkout.workoutSections[sectionIndex].toJson());
-
-    final newWorkoutSet = WorkoutSet()
-      ..id = const Uuid().v1()
-      ..sortPosition = section.workoutSets.length
-      ..duration = 60
-      ..workoutMoves = [workoutMove];
-
-    section.workoutSets.add(newWorkoutSet);
-
-    activeWorkout.workoutSections[sectionIndex] = section;
-
-    if (!section.isCustomSession && !section.isLifting) {
-      /// Re-init the controller.
-      await resetSection(sectionIndex);
-    }
-
-    notifyListeners();
-  }
-
-  /// IMPORTANT: [removeWorkoutSetFromSection] will re-initialize section controller progress.
   Future<void> removeWorkoutSetFromSection(
       int sectionIndex, int setIndex) async {
     final section = WorkoutSection.fromJson(
@@ -464,8 +456,6 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// IMPORTANT: [updateWorkoutSetDuration] will re-initialize section controller progress unless it is a FreeSession.
-  /// No check for [isCustomSession] as FreeSession should never have sets with duration (for timed types only).
   Future<void> updateWorkoutSetDuration(
       int sectionIndex, int setIndex, int seconds) async {
     final section = WorkoutSection.fromJson(
@@ -481,9 +471,108 @@ class DoWorkoutBloc extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// IMPORTANT: [updateWorkoutMove] will re-initialize section controller unless it is a Custom or Lifting section.
-  Future<void> updateWorkoutMove(
+  /// Will call editSet on all sets one after another in series to perform this update.
+  Future<void> updateAllSetDurations(
+      int sectionIndex, int seconds, DurationUpdateType type) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    section.workoutSets.forEachIndexed((i, w) {
+      if (type == DurationUpdateType.sets && !w.isRestSet ||
+          type == DurationUpdateType.rests && w.isRestSet) {
+        /// [updateWorkoutSetDuration] will reset section and notify listeners.
+        updateWorkoutSetDuration(sectionIndex, i, seconds);
+      }
+    });
+  }
+
+  Future<void> duplicateWorkoutSet(int sectionIndex, int setIndex) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    final toDuplicate = section.workoutSets[setIndex];
+
+    section.workoutSets.insert(
+        setIndex + 1,
+        WorkoutSet.fromJson({
+          ...toDuplicate.toJson(),
+          'id': 'temp-${const Uuid().v1()}',
+        }));
+
+    _updateWorkoutSetsSortPosition(section.workoutSets);
+
+    activeWorkout.workoutSections[sectionIndex] = section;
+
+    /// Re-init the controller.
+    await resetSection(sectionIndex);
+
+    notifyListeners();
+  }
+
+  Future<void> deleteWorkoutSet(int sectionIndex, int setIndex) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    section.workoutSets.removeAt(setIndex);
+
+    _updateWorkoutSetsSortPosition(section.workoutSets);
+
+    activeWorkout.workoutSections[sectionIndex] = section;
+
+    /// Re-init the controller.
+    await resetSection(sectionIndex);
+
+    notifyListeners();
+  }
+
+  Future<void> reorderWorkoutSets(int sectionIndex, int from, int to) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    // Check that user is not trying to move beyond the bounds of the list.
+    if (to >= 0 && to < section.workoutSets.length) {
+      final workoutSets = section.workoutSets;
+
+      final inTransit = workoutSets.removeAt(from);
+      workoutSets.insert(to, inTransit);
+
+      _updateWorkoutSetsSortPosition(workoutSets);
+
+      activeWorkout.workoutSections[sectionIndex] = section;
+
+      /// Re-init the controller.
+      await resetSection(sectionIndex);
+
+      notifyListeners();
+    }
+  }
+
+  void _updateWorkoutSetsSortPosition(List<WorkoutSet> workoutSets) {
+    workoutSets.forEachIndexed((i, workoutSet) {
+      workoutSet.sortPosition = i;
+    });
+  }
+
+  Future<void> addWorkoutMoveToSet(
       int sectionIndex, int setIndex, WorkoutMove workoutMove) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    section.workoutSets[setIndex].workoutMoves.add(workoutMove);
+
+    activeWorkout.workoutSections[sectionIndex] = section;
+
+    /// Re-init the controller.
+    await resetSection(sectionIndex);
+
+    notifyListeners();
+  }
+
+  /// This method can be called during the workout (Lifting and Custom sections).
+  /// Make sure you pass [doNotReset] as true to avoid resetting section progress.
+  Future<void> updateWorkoutMove(
+      int sectionIndex, int setIndex, WorkoutMove workoutMove,
+      {bool doNotReset = true}) async {
     final section = WorkoutSection.fromJson(
         activeWorkout.workoutSections[sectionIndex].toJson());
 
@@ -494,12 +583,88 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     activeWorkout.workoutSections[sectionIndex] = section;
 
-    if (!section.isCustomSession && !section.isLifting) {
+    if (!doNotReset) {
       /// Re-init the controller.
       await resetSection(sectionIndex);
     }
 
     notifyListeners();
+  }
+
+  Future<void> duplicateWorkoutMove(
+      int sectionIndex, int setIndex, int workoutMoveIndex) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    final toDuplicate =
+        section.workoutSets[setIndex].workoutMoves[workoutMoveIndex];
+
+    section.workoutSets[setIndex].workoutMoves.insert(
+        workoutMoveIndex + 1,
+        WorkoutMove.fromJson({
+          ...toDuplicate.toJson(),
+          'id': 'temp-${const Uuid().v1()}',
+        }));
+
+    _updateWorkoutMovesSortPosition(section.workoutSets[setIndex].workoutMoves);
+
+    activeWorkout.workoutSections[sectionIndex] = section;
+
+    /// Re-init the controller.
+    await resetSection(sectionIndex);
+
+    notifyListeners();
+  }
+
+  Future<void> deleteWorkoutMove(
+      int sectionIndex, int setIndex, int workoutMoveIndex) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    section.workoutSets[setIndex].workoutMoves.removeAt(workoutMoveIndex);
+
+    _updateWorkoutMovesSortPosition(section.workoutSets[setIndex].workoutMoves);
+
+    activeWorkout.workoutSections[sectionIndex] = section;
+
+    /// Re-init the controller.
+    await resetSection(sectionIndex);
+
+    notifyListeners();
+  }
+
+  Future<void> reorderWorkoutMoves(
+      int sectionIndex, int setIndex, int from, int to) async {
+    final section = WorkoutSection.fromJson(
+        activeWorkout.workoutSections[sectionIndex].toJson());
+
+    // https://api.flutter.dev/flutter/material/ReorderableListView-class.html
+    // // Necessary because of how flutters reorderable list calculates drop position...I think.
+    final moveTo = from < to ? to - 1 : to;
+
+    // Check that user is not trying to move beyond the bounds of the list.
+    if (moveTo >= 0 &&
+        moveTo < section.workoutSets[setIndex].workoutMoves.length) {
+      final inTransit =
+          section.workoutSets[setIndex].workoutMoves.removeAt(from);
+      section.workoutSets[setIndex].workoutMoves.insert(moveTo, inTransit);
+
+      _updateWorkoutMovesSortPosition(
+          section.workoutSets[setIndex].workoutMoves);
+
+      activeWorkout.workoutSections[sectionIndex] = section;
+
+      /// Re-init the controller.
+      await resetSection(sectionIndex);
+
+      notifyListeners();
+    }
+  }
+
+  void _updateWorkoutMovesSortPosition(List<WorkoutMove> workoutMoves) {
+    workoutMoves.forEachIndexed((i, workoutMove) {
+      workoutMove.sortPosition = i;
+    });
   }
 
   /// Modify Section, Set and Move methods END////

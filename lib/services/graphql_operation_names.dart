@@ -6,14 +6,19 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 /// Variables / args are ignored - just the operation name is returned.
 class GQLOpNames {
   /// List type queries where variables are not used.
+  static String get announcementUpdates =>
+      AnnouncementUpdatesQuery().operationName;
+
   static String get bodyTrackingEntries =>
       BodyTrackingEntriesQuery().operationName;
 
-  static String get journalGoals => JournalGoalsQuery().operationName;
+  static String get userGoals => UserGoalsQuery().operationName;
 
-  static String get journalMoods => JournalMoodsQuery().operationName;
-
-  static String get journalNotes => JournalNotesQuery().operationName;
+  static String get userDayLogMoods => UserDayLogMoodsQuery().operationName;
+  static String get userMeditationLogs =>
+      UserMeditationLogsQuery().operationName;
+  static String get userEatWellLogs => UserEatWellLogsQuery().operationName;
+  static String get userSleepWellLogs => UserSleepWellLogsQuery().operationName;
 
   static String get workoutPlanEnrolments =>
       WorkoutPlanEnrolmentsQuery().operationName;
@@ -30,7 +35,7 @@ class GQLOpNames {
   static String get userClubs => UserClubsQuery().operationName;
   static String get userCollections => UserCollectionsQuery().operationName;
 
-  static String get userCustomMoves => UserCustomMovesQuery().operationName;
+  static String get customMoves => CustomMovesQuery().operationName;
 
   /// TODO: Does this key trigger all workoutById queries?
   static String get workoutById =>

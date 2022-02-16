@@ -40,6 +40,7 @@ const kImageOverlayOpacity = 0.7;
 
 /// Object Type names for the store.
 /// For use in [__typename:id] normalization and store ops.
+const kAnnouncementUpdateTypename = 'AnnouncementUpdate';
 const kBodyTrackingEntryTypename = 'BodyTrackingEntry';
 const kCollectionTypename = 'Collection';
 const kCollectionSummaryTypename = 'CollectionSummary';
@@ -75,9 +76,8 @@ const kLoggedWorkoutSectionTypename = 'LoggedWorkoutSection';
 const kLoggedWorkoutSetTypename = 'LoggedWorkoutSet';
 const kLoggedWorkoutMoveTypename = 'LoggedWorkoutMove';
 
-const kJournalNoteTypename = 'JournalNote';
-const kJournalMoodTypename = 'JournalMood';
-const kJournalGoalTypename = 'JournalGoal';
+const kUserDayLogMoodTypename = 'UserDayLogMood';
+const kUserGoalTypename = 'UserGoal';
 
 const kSkillTypeName = 'Skill';
 
@@ -133,6 +133,30 @@ const String kUserPostVerbName = 'post';
 // Posts to club feeds - they are private.
 const String kClubMembersPostVerbName = 'club-post';
 
+//// Notification Type Verbs ////
+const String kNotifyNotificationVerb = 'notify';
+const String kJoinClubNotificationVerb = 'join-club';
+const String kLeaveClubNotificationVerb = 'leave-club';
+const String kJoinPlanNotificationVerb = 'join-plan';
+const String kLeavePlanNotificationVerb = 'leave-plan';
+const String kLogWorkoutNotificationVerb = 'log-workout';
+const String kFollowNotificationVerb = 'follow';
+const String kCommentNotificationVerb = 'comment';
+const String kLikeNotificationVerb = 'like';
+
+//// Verb to Adverb Map ////
+const kNotifyVerbToDisplay = {
+  kNotifyNotificationVerb: 'Update',
+  kJoinClubNotificationVerb: 'joined club',
+  kLeaveClubNotificationVerb: 'left club',
+  kJoinPlanNotificationVerb: 'joined plan',
+  kLeavePlanNotificationVerb: 'left plan',
+  kLogWorkoutNotificationVerb: 'logged workout',
+  kFollowNotificationVerb: 'followed',
+  kCommentNotificationVerb: 'commented on',
+  kLikeNotificationVerb: 'liked'
+};
+
 const String kUserFeedName = 'user_feed'; // Post to this.
 const String kUserTimelineName =
     'user_timeline'; // View this / follow other feeds with this.
@@ -140,10 +164,12 @@ const String kUserNotificationName =
     'user_notification'; // System notifications
 const String kClubMembersFeedName =
     'club_members_feed'; // Club members can follow this (optionally) with their timeline.
-const String kLikeReactionName = 'like'; // Activity reaction type.
-const String kShareReactionName = 'share'; // Activity reaction type.
 
-/// Hive
+const String kLikeReactionName = 'like'; // Activity reaction type.
+const String kCommentReactionName = 'comment'; // Activity reaction type.
+
+/// Hive ////
+/////////////
 const String kSettingsHiveBoxName = 'settings_box';
 
 /// Theme ///
@@ -151,14 +177,15 @@ const String kSettingsHiveBoxThemeKey = 'theme_name';
 const String kSettingsLightThemeKey = 'light';
 const String kSettingsDarkThemeKey = 'dark';
 
+/// Filters and Settings Hive Box Info///
+const String kSettingsHiveBoxMoveFiltersKey = 'move_filters';
+const String kSettingsHiveBoxWorkoutFiltersKey = 'workout_filters';
+const String kSettingsHiveBoxWorkoutSettingsKey = 'workout_settings';
+const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
+
 /// Journal Entry Scoring ///
 const Color kGoodScoreColor = Styles.infoBlue;
 const Color kBadScoreColor = Styles.errorRed;
-
-/// Move Filters ///
-const String kSettingsHiveBoxMoveFiltersKey = 'move_filters';
-const String kSettingsHiveBoxWorkoutFiltersKey = 'workout_filters';
-const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
 
 /// Messages ///
 const String kDefaultErrorMessage = "Sorry, that didn't work";
@@ -168,3 +195,15 @@ const kLinkedinBaseUrl = 'https://www.linkedin.com/in';
 const kYoutubeBaseUrl = 'https://www.youtube.com';
 const kTiktokBaseUrl = 'https://www.tiktok.com';
 const kInstagramBaseUrl = 'https://www.instagram.com';
+
+//// Media File Type Extensions ////
+const kAudioAllowedExtensions = [
+  'wav',
+  'aiff',
+  'alac',
+  'flac',
+  'mp3',
+  'aac',
+  'wma',
+  'ogg'
+];

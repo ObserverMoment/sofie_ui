@@ -147,7 +147,7 @@ class _BodyTrackingEntryCreatorPageState
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: const [
-                  NavBarLoadingDots(),
+                  NavBarLoadingIndicator(),
                 ],
               )
             : _existsInDB

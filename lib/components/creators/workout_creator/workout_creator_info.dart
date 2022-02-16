@@ -5,7 +5,6 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
-import 'package:sofie_ui/components/user_input/selectors/difficulty_level_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/workout_goals_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/workout_tags_selector.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
@@ -59,12 +58,6 @@ class WorkoutCreatorInfo extends StatelessWidget {
           selectedWorkoutTags: workoutData.workoutTags,
           updateSelectedWorkoutTags: (tags) => _updateWorkoutMeta(
               {'WorkoutTags': tags.map((t) => t.toJson()).toList()}),
-        ),
-        DifficultyLevelSelectorRow(
-          difficultyLevel: workoutData.difficultyLevel,
-          unselectedLabel: 'Not Specified',
-          updateDifficultyLevel: (level) =>
-              _updateWorkoutMeta({'difficultyLevel': level?.apiValue}),
         ),
         ContentAccessScopeSelector(
             contentAccessScope: workoutData.contentAccessScope,

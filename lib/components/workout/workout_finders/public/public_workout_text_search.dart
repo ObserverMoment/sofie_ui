@@ -117,7 +117,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                               );
                             } else if (stateSnapshot.data ==
                                 TextSearchState.loading) {
-                              return const Center(child: LoadingCircle());
+                              return const Center(child: LoadingIndicator());
                             } else if (stateSnapshot.data ==
                                 TextSearchState.empty) {
                               // Or show placeholder message.
