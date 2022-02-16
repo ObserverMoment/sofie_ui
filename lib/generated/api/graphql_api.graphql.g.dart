@@ -391,6 +391,7 @@ UserGoal _$UserGoalFromJson(Map<String, dynamic> json) => UserGoal()
   ..$$typename = json['__typename'] as String?
   ..id = json['id'] as String
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+  ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..name = json['name'] as String
   ..description = json['description'] as String?
   ..deadline = fromGraphQLDateTimeNullableToDartDateTimeNullable(
@@ -402,6 +403,7 @@ Map<String, dynamic> _$UserGoalToJson(UserGoal instance) => <String, dynamic>{
       '__typename': instance.$$typename,
       'id': instance.id,
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'description': instance.description,
       'deadline':
@@ -6581,6 +6583,46 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'clubId': instance.clubId,
       'inviteLimit': instance.inviteLimit,
       'name': instance.name,
+    };
+
+UserRecentlyViewedObject _$UserRecentlyViewedObjectFromJson(
+        Map<String, dynamic> json) =>
+    UserRecentlyViewedObject()
+      ..$$typename = json['__typename'] as String?
+      ..club = json['Club'] == null
+          ? null
+          : ClubSummary.fromJson(json['Club'] as Map<String, dynamic>)
+      ..workout = json['Workout'] == null
+          ? null
+          : WorkoutSummary.fromJson(json['Workout'] as Map<String, dynamic>)
+      ..workoutPlan = json['WorkoutPlan'] == null
+          ? null
+          : WorkoutPlanSummary.fromJson(
+              json['WorkoutPlan'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UserRecentlyViewedObjectToJson(
+        UserRecentlyViewedObject instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'Club': instance.club?.toJson(),
+      'Workout': instance.workout?.toJson(),
+      'WorkoutPlan': instance.workoutPlan?.toJson(),
+    };
+
+UserRecentlyViewedObjects$Query _$UserRecentlyViewedObjects$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserRecentlyViewedObjects$Query()
+      ..userRecentlyViewedObjects =
+          (json['userRecentlyViewedObjects'] as List<dynamic>)
+              .map((e) =>
+                  UserRecentlyViewedObject.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserRecentlyViewedObjects$QueryToJson(
+        UserRecentlyViewedObjects$Query instance) =>
+    <String, dynamic>{
+      'userRecentlyViewedObjects':
+          instance.userRecentlyViewedObjects.map((e) => e.toJson()).toList(),
     };
 
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(

@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:intl/intl.dart';
-import 'package:meta/meta.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -55,14 +55,20 @@ class EatWellLogWidget extends StatelessWidget {
             margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: hasLogOnDay ? rating!.color : null,
+              color: hasLogOnDay ? rating!.color.withOpacity(0.1) : null,
             ),
           ),
-          MyText(
-            date.day.toString(),
-            size: FONTSIZE.zero,
-            color: hasLogOnDay ? Styles.white : null,
-          ),
+          if (hasLogOnDay)
+            Icon(
+              material.Icons.restaurant,
+              color: rating!.color,
+              size: 20,
+            ),
+          if (!hasLogOnDay)
+            MyText(
+              date.day.toString(),
+              size: FONTSIZE.zero,
+            ),
         ],
       ),
     );

@@ -24,19 +24,25 @@ class CompactTimerIcon extends StatelessWidget {
   /// Compact display = 03:56 for three mins 56 secs.
   /// Standard display would be 3 mins 56 seconds.
   final bool compactDisplay;
+  final double iconSize;
+  final FONTSIZE fontSize;
   const CompactTimerIcon(
-      {Key? key, required this.duration, this.compactDisplay = false})
+      {Key? key,
+      required this.duration,
+      this.compactDisplay = false,
+      this.iconSize = 16,
+      this.fontSize = FONTSIZE.four})
       : super(key: key);
 
   List<Widget> _buildChildren(String display) => [
-        const Icon(
+        Icon(
           CupertinoIcons.timer,
-          size: 16,
+          size: iconSize,
         ),
         const SizedBox(width: 4),
         MyText(
           duration?.compactDisplay ?? '---',
-          size: FONTSIZE.four,
+          size: fontSize,
         )
       ];
 

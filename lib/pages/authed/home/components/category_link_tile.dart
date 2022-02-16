@@ -28,18 +28,18 @@ class CategoryLinkTile extends StatelessWidget {
           children: [
             SvgPicture.asset(
               'assets/category_icons/$assetImagePath',
-              height: 44,
+              height: 40,
               fit: BoxFit.cover,
               color: context.theme.primary,
             ),
+            const SizedBox(height: 10),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8, horizontal: 16.0),
-              child: MyHeaderText(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: MyText(
                 label,
-                weight: FontWeight.normal,
-                maxLines: 3,
+                maxLines: 2,
                 textAlign: TextAlign.center,
+                size: FONTSIZE.two,
               ),
             ),
           ],

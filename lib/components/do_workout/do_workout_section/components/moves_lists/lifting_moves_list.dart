@@ -11,6 +11,8 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_section_creator/workout_set_generator_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_move_creator.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_set_definition.dart';
+import 'package:sofie_ui/components/do_workout/do_workout_section/components/timers/mini_rest_timer.dart';
+import 'package:sofie_ui/components/do_workout/do_workout_settings.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
@@ -24,7 +26,7 @@ import 'package:sofie_ui/services/utils.dart';
 
 /// Using this style list for [Custom] and [Lifting] sections.
 /// Both user [LiftingSectionController]
-class LiftingMovesList extends StatelessWidget {
+class LiftingMovesList extends StatefulWidget {
   final WorkoutSection workoutSection;
   final WorkoutSectionProgressState state;
   const LiftingMovesList({
@@ -33,26 +35,68 @@ class LiftingMovesList extends StatelessWidget {
     required this.state,
   }) : super(key: key);
 
+  @override
+  State<LiftingMovesList> createState() => _LiftingMovesListState();
+}
+
+class _LiftingMovesListState extends State<LiftingMovesList> {
+  bool _showRestTimer = false;
+
   Future<void> _openWorkoutSetGeneratorCreator(BuildContext context) async {
     await context.push(
         child: WorkoutSetGeneratorCreator(
       handleGeneratedSet: (workoutSet) {
         context.read<DoWorkoutBloc>().addWorkoutSetToSection(
-            workoutSection.sortPosition, workoutSet,
+            widget.workoutSection.sortPosition, workoutSet,
             doNotReset: true);
         context.pop();
       },
-      validRepTypes:
-          workoutSection.isCustomSession ? [] : [WorkoutMoveRepType.reps],
-      newSetSortPosition: workoutSection.workoutSets.length,
+      validRepTypes: widget.workoutSection.isCustomSession
+          ? []
+          : [WorkoutMoveRepType.reps],
+      newSetSortPosition: widget.workoutSection.workoutSets.length,
     ));
+  }
+
+  void _markWorkoutMoveComplete(
+      {required LiftingSectionController controller,
+      required WorkoutSet workoutSet,
+      required WorkoutMove workoutMove,
+      required bool enableAutoRestTimer,
+      required int autoRestTimerSeconds}) {
+    Vibrate.feedback(FeedbackType.light);
+    controller.markWorkoutMoveComplete(workoutSet, workoutMove);
+    if (enableAutoRestTimer && autoRestTimerSeconds != 0) {
+      setState(() {
+        _showRestTimer = true;
+      });
+    }
+  }
+
+  void _closeTimerAndOpenSettings() {
+    setState(() {
+      _showRestTimer = false;
+    });
+    final _bloc = context.read<DoWorkoutBloc>();
+    context.push(
+        fullscreenDialog: true,
+        child: ChangeNotifierProvider<DoWorkoutBloc>.value(
+          value: _bloc,
+          child: const DoWorkoutSettings(),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
+    final enableAutoRestTimer = context.select<DoWorkoutBloc, bool>(
+        (b) => b.userWorkoutSettingsBloc.settings.enableAutoRestTimer);
+
+    final autoRestTimerSeconds = context.select<DoWorkoutBloc, int>(
+        (b) => b.userWorkoutSettingsBloc.settings.autoRestTimerSeconds);
+
     final controller = context
             .read<DoWorkoutBloc>()
-            .getControllerForSection(workoutSection.sortPosition)
+            .getControllerForSection(widget.workoutSection.sortPosition)
         as LiftingSectionController;
 
     return ChangeNotifierProvider<LiftingSectionController>.value(
@@ -64,53 +108,93 @@ class LiftingMovesList extends StatelessWidget {
         final completedWorkoutMoveIds =
             controller.completedWorkoutMoveIds.toList();
 
-        return Column(
+        return Stack(
           children: [
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4.0),
-              child: LinearPercentIndicator(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                lineHeight: 4,
-                percent: state.percentComplete.clamp(0.0, 1.0),
-                backgroundColor: context.theme.primary.withOpacity(0.07),
-                linearGradient: Styles.primaryAccentGradient,
-                barRadius: const Radius.circular(60),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: workoutSection.workoutSets.length + 1,
-                itemBuilder: (c, i) {
-                  if (i == workoutSection.workoutSets.length) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CreateTextIconButton(
-                        text: 'Add Set',
-                        onPressed: () =>
-                            _openWorkoutSetGeneratorCreator(context),
+            Column(
+              children: [
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: LinearPercentIndicator(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        lineHeight: 4,
+                        percent: widget.state.percentComplete.clamp(0.0, 1.0),
+                        backgroundColor:
+                            context.theme.primary.withOpacity(0.07),
+                        linearGradient: Styles.primaryAccentGradient,
+                        barRadius: const Radius.circular(60),
                       ),
-                    );
-                  } else {
-                    final setIsMarkedComplete = completedSetIds
-                        .contains(workoutSection.workoutSets[i].id);
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 6.0),
+                      child: MyText(
+                        '${(widget.state.percentComplete * 100).round()}%',
+                        size: FONTSIZE.two,
+                        weight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemCount: widget.workoutSection.workoutSets.length + 1,
+                    itemBuilder: (c, i) {
+                      if (i == widget.workoutSection.workoutSets.length) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CreateTextIconButton(
+                            text: 'Add Set',
+                            onPressed: () =>
+                                _openWorkoutSetGeneratorCreator(context),
+                          ),
+                        );
+                      } else {
+                        final setIsMarkedComplete = completedSetIds
+                            .contains(widget.workoutSection.workoutSets[i].id);
 
-                    return Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: _WorkoutSetInLiftingSession(
-                        workoutSet: workoutSection.workoutSets[i],
-                        setIsMarkedComplete: setIsMarkedComplete,
-                        completedWorkoutMoveIds: completedWorkoutMoveIds,
-                        sectionController: controller,
-                        sectionIndex: workoutSection.sortPosition,
-                        workoutSectionType: workoutSection.workoutSectionType,
-                      ),
-                    );
-                  }
-                },
-              ),
+                        final workoutSet = widget.workoutSection.workoutSets[i];
+
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: _WorkoutSetInLiftingSession(
+                            workoutSet: workoutSet,
+                            setIsMarkedComplete: setIsMarkedComplete,
+                            completedWorkoutMoveIds: completedWorkoutMoveIds,
+                            sectionController: controller,
+                            sectionIndex: widget.workoutSection.sortPosition,
+                            workoutSectionType:
+                                widget.workoutSection.workoutSectionType,
+                            markWorkoutMoveComplete: (workoutMove) =>
+                                _markWorkoutMoveComplete(
+                                    autoRestTimerSeconds: autoRestTimerSeconds,
+                                    controller: controller,
+                                    enableAutoRestTimer: enableAutoRestTimer,
+                                    workoutMove: workoutMove,
+                                    workoutSet: workoutSet),
+                            markWorkoutMoveIncomplete: (workoutMove) =>
+                                controller.markWorkoutMoveIncomplete(
+                                    workoutSet, workoutMove),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
+            if (enableAutoRestTimer && _showRestTimer)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: FadeInUp(
+                    child: MiniRestTimer(
+                  seconds: autoRestTimerSeconds,
+                  closeTimer: () => setState(() => _showRestTimer = false),
+                  closeTimerAndOpenSettings: _closeTimerAndOpenSettings,
+                )),
+              )
           ],
         );
       },
@@ -125,6 +209,8 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
   final bool setIsMarkedComplete;
   final LiftingSectionController sectionController;
   final List<String> completedWorkoutMoveIds;
+  final void Function(WorkoutMove workoutMove) markWorkoutMoveComplete;
+  final void Function(WorkoutMove workoutMove) markWorkoutMoveIncomplete;
   const _WorkoutSetInLiftingSession({
     Key? key,
     required this.workoutSet,
@@ -133,16 +219,9 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
     required this.sectionIndex,
     required this.completedWorkoutMoveIds,
     required this.workoutSectionType,
+    required this.markWorkoutMoveComplete,
+    required this.markWorkoutMoveIncomplete,
   }) : super(key: key);
-
-  void _markWorkoutMoveComplete(WorkoutMove workoutMove) {
-    Vibrate.feedback(FeedbackType.light);
-    sectionController.markWorkoutMoveComplete(workoutSet, workoutMove);
-  }
-
-  void _markWorkoutMoveIncomplete(WorkoutMove workoutMove) {
-    sectionController.markWorkoutMoveIncomplete(workoutSet, workoutMove);
-  }
 
   void _openModifyMove(BuildContext context, WorkoutMove originalWorkoutMove) {
     Vibrate.feedback(FeedbackType.selection);
@@ -233,9 +312,9 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
                             .map((wm) => _WorkoutMoveInMultiMoveSet(
                                   workoutMove: wm,
                                   markWorkoutMoveComplete: () =>
-                                      _markWorkoutMoveComplete(wm),
+                                      markWorkoutMoveComplete(wm),
                                   markWorkoutMoveIncomplete: () =>
-                                      _markWorkoutMoveIncomplete(wm),
+                                      markWorkoutMoveIncomplete(wm),
                                   isMarkedComplete:
                                       completedWorkoutMoveIds.contains(wm.id),
                                   openModifyMove: () =>
@@ -252,9 +331,9 @@ class _WorkoutSetInLiftingSession extends StatelessWidget {
                               .map((wm) => _WorkoutMoveInSingleMoveSet(
                                     workoutMove: wm,
                                     markWorkoutMoveComplete: () =>
-                                        _markWorkoutMoveComplete(wm),
+                                        markWorkoutMoveComplete(wm),
                                     markWorkoutMoveIncomplete: () =>
-                                        _markWorkoutMoveIncomplete(wm),
+                                        markWorkoutMoveIncomplete(wm),
                                     isMarkedComplete:
                                         completedWorkoutMoveIds.contains(wm.id),
                                     openModifyMove: () =>
@@ -350,7 +429,7 @@ class _WorkoutMoveInMultiMoveSet extends StatelessWidget {
 
   Widget _buildRepSuffix() {
     return SizedBox(
-      width: 28,
+      width: 32,
       child: MyText(
         workoutMove.repDisplay,
         size: FONTSIZE.two,

@@ -1021,6 +1021,7 @@ type Query {
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
+  userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userSleepWellLogs: [UserSleepWellLog!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
@@ -1552,6 +1553,7 @@ type UserGoal {
   description: String
   id: ID!
   name: String!
+  updatedAt: DateTime!
 }
 
 type UserMeditationLog {
@@ -1609,6 +1611,12 @@ type UserProfileSummary {
   townCity: String
   userProfileScope: UserProfileScope!
   workoutCount: Int!
+}
+
+type UserRecentlyViewedObject {
+  Club: ClubSummary
+  Workout: WorkoutSummary
+  WorkoutPlan: WorkoutPlanSummary
 }
 
 type UserSleepWellLog {

@@ -588,8 +588,8 @@ class PageLink extends StatelessWidget {
                     children: [
                       if (icon != null)
                         Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Icon(icon, size: 20),
+                          padding: const EdgeInsets.only(right: 12.0),
+                          child: Icon(icon, size: 18),
                         ),
                       MyText(
                         linkText,
@@ -598,7 +598,7 @@ class PageLink extends StatelessWidget {
                             : destructiveHighlight
                                 ? Styles.errorRed
                                 : null,
-                        lineHeight: 0.6,
+                        lineHeight: 1,
                         weight: bold ? FontWeight.bold : FontWeight.normal,
                       ),
                       if (loading)

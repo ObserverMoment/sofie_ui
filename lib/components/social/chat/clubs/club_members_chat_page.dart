@@ -104,7 +104,6 @@ class _ClubMembersChatChannelPageState
 
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
-        backgroundColor: context.theme.modalBackground,
         middle: CupertinoButton(
             padding: EdgeInsets.zero,
             onPressed: null,

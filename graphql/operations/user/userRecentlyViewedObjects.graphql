@@ -1,0 +1,20 @@
+query userRecentlyViewedObjects {
+  userRecentlyViewedObjects {
+    __typename
+    Club {
+      ...ClubSummary
+      Owner {
+        ...UserAvatarData
+      }
+      Admins {
+        ...UserAvatarData
+      }
+    }
+    Workout {
+      ...WorkoutSummary
+    }
+    WorkoutPlan {
+      ...WorkoutPlanSummary
+    }
+  }
+}

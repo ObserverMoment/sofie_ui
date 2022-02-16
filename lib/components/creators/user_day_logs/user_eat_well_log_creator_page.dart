@@ -49,6 +49,8 @@ class _UserEatWellLogCreatorPageState extends State<UserEatWellLogCreatorPage> {
 
     _rating =
         _isCreate ? UserDayLogRating.average : widget.userEatWellLog!.rating;
+
+    _note = widget.userEatWellLog?.note;
   }
 
   void _updateNote(String note) => setState(() => _note = note);

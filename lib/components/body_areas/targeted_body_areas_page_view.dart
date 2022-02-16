@@ -52,7 +52,6 @@ class _TargetedBodyAreasPageViewState extends State<TargetedBodyAreasPageView> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
           customLeading: NavBarChevronDownButton(context.pop),
-          backgroundColor: context.theme.background,
           middle: const NavBarTitle('Targeted Body Areas')),
       child: LayoutBuilder(builder: (context, constraints) {
         return Container(

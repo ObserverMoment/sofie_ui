@@ -208,7 +208,7 @@ class SingleMonthColumns extends StatelessWidget {
           gradient: Styles.secondaryAccentGradientVertical,
           value: data.logCount,
         ),
-        const SizedBox(width: 14),
+        const SizedBox(width: 8),
         _buildChartColumn(
           height: minsHeight,
           gradient: Styles.primaryAccentGradientVertical,

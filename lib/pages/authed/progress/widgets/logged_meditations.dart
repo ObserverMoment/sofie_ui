@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -12,7 +12,7 @@ class LoggedMeditationsWidget extends StatelessWidget {
   const LoggedMeditationsWidget({Key? key, required this.userMeditationLogs})
       : super(key: key);
 
-  Color get _highlightColor => const Color.fromARGB(255, 170, 75, 153);
+  Color get _highlightColor => const Color.fromARGB(255, 192, 104, 176);
 
   final _numDays = 21;
 
@@ -51,14 +51,20 @@ class LoggedMeditationsWidget extends StatelessWidget {
             margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: hasLogOnDay ? _highlightColor : null,
+              color: hasLogOnDay ? _highlightColor.withOpacity(0.2) : null,
             ),
           ),
-          MyText(
-            date.day.toString(),
-            size: FONTSIZE.zero,
-            color: hasLogOnDay ? Styles.white : null,
-          ),
+          if (hasLogOnDay)
+            Icon(
+              MyCustomIcons.mindfulnessIcon,
+              color: _highlightColor,
+              size: 20,
+            ),
+          if (!hasLogOnDay)
+            MyText(
+              date.day.toString(),
+              size: FONTSIZE.zero,
+            ),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
@@ -20,6 +21,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/country.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/profile/components/social_handles_input.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -212,6 +214,30 @@ class EditProfilePage extends StatelessWidget {
                           ),
                         ),
                         Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ContentBox(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 16),
+                              child: SocialHandlesInput(
+                                profile: userProfile,
+                                update: (key, value) => updateUserFields(
+                                    context, userProfile.id, {key: value}),
+                              )),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0, top: 16),
+                          child: ContentBox(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 8),
+                            child: PageLink(
+                                linkText: 'Gym Profiles',
+                                bold: true,
+                                separator: false,
+                                onPress: () => context
+                                    .navigateTo(const YourGymProfilesRoute())),
+                          ),
+                        ),
+                        Padding(
                           padding: const EdgeInsets.only(bottom: 8.0, top: 16),
                           child: ContentBox(
                             padding: const EdgeInsets.symmetric(
@@ -223,17 +249,6 @@ class EditProfilePage extends StatelessWidget {
                                 onPress: () =>
                                     context.push(child: const SkillsManager())),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ContentBox(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 16),
-                              child: SocialHandlesInput(
-                                profile: userProfile,
-                                update: (key, value) => updateUserFields(
-                                    context, userProfile.id, {key: value}),
-                              )),
                         ),
                         UserInputContainer(
                           child: Padding(

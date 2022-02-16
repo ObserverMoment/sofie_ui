@@ -196,9 +196,8 @@ class PreLoggingSectionModifications extends StatelessWidget {
     final nextSetSortPosition = activeWorkoutSection.workoutSets.length;
 
     return MyPageScaffold(
-      navigationBar: MyNavBar(
-        backgroundColor: context.theme.background,
-        middle: const NavBarTitle(
+      navigationBar: const MyNavBar(
+        middle: NavBarTitle(
           'View / Modify',
         ),
       ),

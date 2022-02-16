@@ -12,6 +12,7 @@ fragment UserGoal on UserGoal {
   __typename
   id
   createdAt
+  updatedAt
   name
   description
   deadline

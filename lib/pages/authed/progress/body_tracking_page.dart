@@ -92,7 +92,7 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
                           ),
                         ],
                     body: FABPage(
-                      columnButtons: [
+                      rowButtons: [
                         if ((_activeTabIndex == 0 && entries.isNotEmpty) ||
                             (_activeTabIndex == 1 && allPhotoUris.isNotEmpty))
                           FloatingButton(

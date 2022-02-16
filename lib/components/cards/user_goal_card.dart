@@ -83,12 +83,12 @@ class UserGoalCard extends StatelessWidget {
                       child: isComplete
                           ? const Icon(
                               CupertinoIcons.checkmark_alt_circle_fill,
-                              size: 48,
+                              size: 38,
                               color: Styles.primaryAccent,
                             )
                           : const Icon(
                               CupertinoIcons.circle,
-                              size: 48,
+                              size: 38,
                             )),
                   onPressed: () => _toggleComplete(context)),
             ),

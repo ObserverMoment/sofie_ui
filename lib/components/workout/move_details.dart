@@ -101,7 +101,6 @@ class MoveDetails extends StatelessWidget {
     return CupertinoPageScaffold(
         navigationBar: MyNavBar(
           customLeading: NavBarChevronDownButton(context.pop),
-          backgroundColor: context.theme.background,
           middle: NavBarTitle(move.name),
         ),
         child: SingleChildScrollView(

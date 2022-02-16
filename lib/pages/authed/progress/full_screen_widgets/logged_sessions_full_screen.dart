@@ -166,7 +166,7 @@ class _DayDisplay extends StatelessWidget {
       required this.hasLogDayAfter})
       : super(key: key);
 
-  /// TODO: Exact duplicate of the widget / minimized version of this widget.
+  /// Note: Exact duplicate of the widget / minimized version of this widget. Feb 2022.
   void _handleDayTap(
       {required BuildContext context,
       required List<LoggedWorkout>? logsOnDay,
@@ -227,73 +227,76 @@ class _DayDisplay extends StatelessWidget {
                 isTodayOrFuture: isTodayOrFuture,
                 date: date)
             : null,
-        child: Container(
-          decoration: BoxDecoration(
-            border: isToday
-                ? Border.all(color: Styles.primaryAccent, width: 2)
-                : null,
-            shape: BoxShape.circle,
-          ),
-          child: Stack(
-            clipBehavior: Clip.none,
-            alignment: Alignment.center,
-            children: [
-              if (isStreakDay)
-                Opacity(
-                  opacity: 0.3,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: borderRadius,
-                        color: Styles.primaryAccent),
-                  ),
-                ),
-              Container(
-                margin: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
-                ),
-              ),
-              if (hasLogOnDay)
-                const Opacity(
-                    opacity: 0.25,
-                    child: Icon(MyCustomIcons.medal,
-                        size: 21, color: Styles.white)),
-              if (hasLogOnDay)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.all(9.0),
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      runAlignment: WrapAlignment.center,
-                      spacing: 2,
-                      runSpacing: 2,
-                      children: List.generate(
-                          numLogsOnDay,
-                          (i) => const Dot(
-                                diameter: 5,
-                                color: Styles.white,
-                              )),
+        child: Stack(
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                if (isStreakDay)
+                  Opacity(
+                    opacity: 0.3,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: borderRadius,
+                          color: Styles.primaryAccent),
                     ),
                   ),
+                Container(
+                  margin: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: hasLogOnDay ? Styles.primaryAccentGradient : null,
+                  ),
                 ),
-              MyText(
-                date.day.toString(),
-                size: FONTSIZE.one,
-                color: hasLogOnDay ? Styles.white : null,
-              ),
-              if (isStreakDay)
-                const Positioned(
-                    top: 4,
-                    right: 6,
-                    child: Icon(
-                      CupertinoIcons.flame_fill,
-                      color: Styles.secondaryAccent,
-                      size: 12,
-                    ))
-            ],
-          ),
+                if (hasLogOnDay)
+                  const Opacity(
+                      opacity: 0.25,
+                      child: Icon(MyCustomIcons.medal,
+                          size: 21, color: Styles.white)),
+                if (hasLogOnDay)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.all(9.0),
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        runAlignment: WrapAlignment.center,
+                        spacing: 2,
+                        runSpacing: 2,
+                        children: List.generate(
+                            numLogsOnDay,
+                            (i) => const Dot(
+                                  diameter: 5,
+                                  color: Styles.white,
+                                )),
+                      ),
+                    ),
+                  ),
+                MyText(
+                  date.day.toString(),
+                  size: FONTSIZE.one,
+                  color: hasLogOnDay ? Styles.white : null,
+                ),
+                if (isStreakDay)
+                  const Positioned(
+                      top: 4,
+                      right: 6,
+                      child: Icon(
+                        CupertinoIcons.flame_fill,
+                        color: Styles.secondaryAccent,
+                        size: 12,
+                      ))
+              ],
+            ),
+            if (isToday)
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Styles.primaryAccent, width: 2),
+                  shape: BoxShape.circle,
+                ),
+              )
+          ],
         ),
       ),
     );

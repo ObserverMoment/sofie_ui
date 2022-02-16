@@ -14,6 +14,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class UserSleepWellLogCreatorPage extends StatefulWidget {
   final int? year;
@@ -58,13 +59,16 @@ class _UserSleepWellLogCreatorPageState
     _rating =
         _isCreate ? UserDayLogRating.average : widget.userSleepWellLog!.rating;
 
-    _minutesSlept = _isCreate ? null : widget.userSleepWellLog!.minutesSlept;
+    _minutesSlept = widget.userSleepWellLog?.minutesSlept;
     _hoursController.text =
         _minutesSlept != null ? (_minutesSlept! / 60).round().toString() : '';
 
+    _note = widget.userSleepWellLog?.note;
+
     _hoursController.addListener(() {
-      setState(() =>
-          _minutesSlept = (double.parse(_hoursController.text) * 60).round());
+      setState(() => _minutesSlept = Utils.textNotNull(_hoursController.text)
+          ? (double.parse(_hoursController.text) * 60).round()
+          : 0);
     });
   }
 
@@ -96,6 +100,7 @@ class _UserSleepWellLogCreatorPageState
       year: _year,
       dayNumber: _dayNumber,
       rating: _rating,
+      minutesSlept: _minutesSlept,
       note: _note,
     ));
 
@@ -113,6 +118,7 @@ class _UserSleepWellLogCreatorPageState
         data: UpdateUserSleepWellLogInput(
       id: widget.userSleepWellLog!.id,
       rating: _rating,
+      minutesSlept: _minutesSlept,
       note: _note,
     ));
 

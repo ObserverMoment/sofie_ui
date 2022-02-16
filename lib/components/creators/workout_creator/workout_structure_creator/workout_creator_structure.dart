@@ -12,57 +12,27 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
-class WorkoutCreatorStructure extends StatefulWidget {
+class WorkoutCreatorStructure extends StatelessWidget {
   const WorkoutCreatorStructure({Key? key}) : super(key: key);
 
-  @override
-  _WorkoutCreatorStructureState createState() =>
-      _WorkoutCreatorStructureState();
-}
-
-class _WorkoutCreatorStructureState extends State<WorkoutCreatorStructure> {
-  late WorkoutCreatorBloc _bloc;
-  late List<WorkoutSection> _sortedworkoutSections;
-
-  void _checkForNewData() {
-    final updated = _bloc.workout.workoutSections;
-
-    if (!_sortedworkoutSections.equals(updated)) {
-      setState(() {
-        _sortedworkoutSections = [
-          ...updated.sortedBy<num>((ws) => ws.sortPosition)
-        ];
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _bloc = context.read<WorkoutCreatorBloc>();
-
-    _sortedworkoutSections = [
-      ..._bloc.workout.workoutSections.sortedBy<num>((ws) => ws.sortPosition)
-    ];
-    _bloc.addListener(_checkForNewData);
-  }
-
-  Future<void> _openCreateSection() async {
+  Future<void> _openCreateSection(BuildContext context, WorkoutCreatorBloc bloc,
+      int nextSortPosition) async {
     await context.push(
         fullscreenDialog: true,
         child: AddWorkoutSection(
-          sortPosition: _sortedworkoutSections.length,
-          addWorkoutSection: _bloc.createWorkoutSection,
+          sortPosition: nextSortPosition,
+          addWorkoutSection: bloc.createWorkoutSection,
         ));
   }
 
-  void _openEditSection(int sectionIndex) {
+  void _openEditSection(
+      BuildContext context, WorkoutCreatorBloc bloc, int sectionIndex) {
     // https://stackoverflow.com/questions/57598029/how-to-pass-provider-with-navigator
     Navigator.push(
       context,
       CupertinoPageRoute(
         builder: (context) => ChangeNotifierProvider<WorkoutCreatorBloc>.value(
-          value: _bloc,
+          value: bloc,
           child: WorkoutSectionCreator(
               key: Key(sectionIndex.toString()), sectionIndex: sectionIndex),
         ),
@@ -71,25 +41,25 @@ class _WorkoutCreatorStructureState extends State<WorkoutCreatorStructure> {
   }
 
   @override
-  void dispose() {
-    _bloc.removeListener(_checkForNewData);
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    /// Using [watch] rather than [select] Almost all updates will required this widget to rebuild so we are not worrying about select filtering on the rebuilds.
+    final bloc = context.watch<WorkoutCreatorBloc>();
+    final sortedworkoutSections =
+        bloc.workout.workoutSections.sortedBy<num>((ws) => ws.sortPosition);
+
     return FABPage(
       rowButtons: [
         FloatingButton(
             text: 'Add Section',
             icon: CupertinoIcons.add,
-            onTap: _openCreateSection)
+            onTap: () =>
+                _openCreateSection(context, bloc, sortedworkoutSections.length))
       ],
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 10.0,
         ),
-        child: _sortedworkoutSections.isEmpty
+        child: sortedworkoutSections.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -111,7 +81,7 @@ class _WorkoutCreatorStructureState extends State<WorkoutCreatorStructure> {
             : ImplicitlyAnimatedList<WorkoutSection>(
                 padding: const EdgeInsets.only(
                     left: 4, top: 4, right: 4, bottom: 60),
-                items: _sortedworkoutSections,
+                items: sortedworkoutSections,
                 shrinkWrap: true,
                 areItemsTheSame: (a, b) => a.id == b.id,
                 itemBuilder: (context, animation, item, index) {
@@ -122,12 +92,12 @@ class _WorkoutCreatorStructureState extends State<WorkoutCreatorStructure> {
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: GestureDetector(
-                        onTap: () => _openEditSection(index),
+                        onTap: () => _openEditSection(context, bloc, index),
                         child: WorkoutStructureWorkoutSectionCard(
                           key: Key(item.id),
                           workoutSection: item,
                           index: index,
-                          canReorder: _sortedworkoutSections.length > 1,
+                          canReorder: sortedworkoutSections.length > 1,
                         ),
                       ),
                     ),

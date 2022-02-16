@@ -25,7 +25,8 @@ class StartResumeButton extends StatelessWidget {
       playSection(sectionIndex);
     } else {
       /// Save refs before pushing route which will have new context which will not have access to [DoWorkoutBloc].
-      final countdownToStartSeconds = bloc.countdownToStartSeconds;
+      final countdownToStartSeconds =
+          bloc.userWorkoutSettingsBloc.settings.countdownToStartSeconds;
 
       showCupertinoModalPopup(
           context: context,
