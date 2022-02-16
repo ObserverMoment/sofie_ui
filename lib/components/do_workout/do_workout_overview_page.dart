@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/abstract_section_controller.dart';
@@ -57,24 +55,21 @@ class DoWorkoutOverview extends StatelessWidget {
               'assets/placeholder_images/workout.jpg',
               fit: BoxFit.cover,
             ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: const [
-                    0.0,
-                    0.35,
-                    1.0
-                  ],
-                      colors: [
-                    Styles.black.withOpacity(0.95),
-                    Styles.black.withOpacity(0.6),
-                    Styles.black.withOpacity(0.3),
-                  ])),
-            ),
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    stops: const [
+                  0.0,
+                  0.35,
+                  1.0
+                ],
+                    colors: [
+                  Styles.black.withOpacity(0.6),
+                  Styles.black.withOpacity(0.5),
+                  Styles.black.withOpacity(0.4),
+                ])),
           ),
           Column(
             children: [

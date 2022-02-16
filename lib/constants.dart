@@ -168,7 +168,8 @@ const String kClubMembersFeedName =
 const String kLikeReactionName = 'like'; // Activity reaction type.
 const String kCommentReactionName = 'comment'; // Activity reaction type.
 
-/// Hive
+/// Hive ////
+/////////////
 const String kSettingsHiveBoxName = 'settings_box';
 
 /// Theme ///
@@ -176,14 +177,15 @@ const String kSettingsHiveBoxThemeKey = 'theme_name';
 const String kSettingsLightThemeKey = 'light';
 const String kSettingsDarkThemeKey = 'dark';
 
+/// Filters and Settings Hive Box Info///
+const String kSettingsHiveBoxMoveFiltersKey = 'move_filters';
+const String kSettingsHiveBoxWorkoutFiltersKey = 'workout_filters';
+const String kSettingsHiveBoxWorkoutSettingsKey = 'workout_settings';
+const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
+
 /// Journal Entry Scoring ///
 const Color kGoodScoreColor = Styles.infoBlue;
 const Color kBadScoreColor = Styles.errorRed;
-
-/// Move Filters ///
-const String kSettingsHiveBoxMoveFiltersKey = 'move_filters';
-const String kSettingsHiveBoxWorkoutFiltersKey = 'workout_filters';
-const String kSettingsHiveBoxWorkoutPlanFiltersKey = 'workout_plan_filters';
 
 /// Messages ///
 const String kDefaultErrorMessage = "Sorry, that didn't work";

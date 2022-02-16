@@ -7,24 +7,17 @@ import 'package:sofie_ui/constants.dart';
 enum ThemeName { dark, light }
 
 class ThemeBloc extends ChangeNotifier {
-  ThemeBloc({Brightness deviceBrightness = Brightness.dark}) {
+  ThemeBloc() {
     // Check for saved setting in local Hive box.
     final themeNameFromSettings = Hive.box(kSettingsHiveBoxName)
         .get(kSettingsHiveBoxThemeKey, defaultValue: null);
 
-    if (themeNameFromSettings != null) {
-      if (themeNameFromSettings == kSettingsDarkThemeKey) {
-        _setToDark();
-      } else {
-        _setToLight();
-      }
+    if (themeNameFromSettings == kSettingsDarkThemeKey) {
+      _setToDark();
+    } else if (themeNameFromSettings == kSettingsLightThemeKey) {
+      _setToLight();
     } else {
-      // Initialise from device or default to dark.
-      if (deviceBrightness == Brightness.dark) {
-        _setToDark();
-      } else {
-        _setToLight();
-      }
+      _setToDark();
     }
   }
 
@@ -116,7 +109,7 @@ abstract class ThemeData {
       // cardBackground: const Color(0xff1a1a1c),
       // cardBackground: Color.fromARGB(255, 20, 20, 20),
       cardBackground: const Color.fromARGB(255, 33, 35, 41),
-      modalBackground: const Color(0xff111112),
+      modalBackground: const Color.fromARGB(255, 24, 24, 24),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
 
@@ -126,7 +119,7 @@ abstract class ThemeData {
       greyThree: Styles.greyTwo,
       greyFour: Styles.greyOne,
       cardBackground: CupertinoColors.white,
-      modalBackground: CupertinoColors.white,
+      modalBackground: const Color.fromARGB(255, 228, 228, 228),
       bottomNavigationBackground: const Color(0xffffffff),
       navbarBottomBorder: Styles.black.withOpacity(0.1));
 
@@ -195,7 +188,7 @@ abstract class Styles {
 
   // Design / Accent colors.
   // static const Color primaryAccent = Color(0xff2c8a8a);
-  static const Color primaryAccent = Color(0xff06a3a4);
+  static const Color primaryAccent = Color.fromARGB(255, 6, 155, 142);
   // static const Color primaryAccent = Color(0xfff24c2b);
   // static const Color primaryAccent = Color(0xfffe7743);
   // static const Color primaryAccent = Color(0xff079767);
@@ -205,7 +198,7 @@ abstract class Styles {
     end: Alignment.bottomRight,
     colors: [
       primaryAccent,
-      Color(0xff3aa1a1),
+      Color.fromARGB(255, 58, 137, 161),
       // Color(0xfff4532c),
       // Color(0xffF09819),
       // Color(0xff34e7ab),

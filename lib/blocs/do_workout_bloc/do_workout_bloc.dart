@@ -7,6 +7,7 @@ import 'package:sofie_ui/blocs/do_workout_bloc/controllers/amrap_section_control
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/fortime_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/lifting_section_controller.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/controllers/timed_section_controller.dart';
+import 'package:sofie_ui/blocs/do_workout_bloc/user_workout_settings_bloc.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
@@ -67,9 +68,9 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// Wakelock settings.
   /// Revert to this once the workout session is finished.
   bool? _initialWakelockSetting;
-  bool activeWakelockSetting = true;
 
-  int countdownToStartSeconds = 3;
+  /// Get these settings from the settings Hive box persisted locally on the users device.
+  late UserWorkoutSettingsBloc userWorkoutSettingsBloc;
 
   AudioSession? _session;
 
@@ -88,6 +89,9 @@ class DoWorkoutBloc extends ChangeNotifier {
       this.scheduledWorkout,
       this.workoutPlanDayWorkoutId,
       this.workoutPlanEnrolmentId}) {
+    /// Init / retrieve the settings
+    userWorkoutSettingsBloc = UserWorkoutSettingsBloc();
+
     activeWorkout = originalWorkout.copyAndSortAllChildren;
 
     final workoutSections = activeWorkout.workoutSections;
@@ -252,12 +256,23 @@ class DoWorkoutBloc extends ChangeNotifier {
   //// User Inputs Start ////
   Future<void> toggleWakelock(bool enable) async {
     await Wakelock.toggle(enable: enable);
-    activeWakelockSetting = enable;
+    userWorkoutSettingsBloc.updateSettings({'activeWakelockSetting': enable});
     notifyListeners();
   }
 
   Future<void> adjustCountdownToStartSeconds(int seconds) async {
-    countdownToStartSeconds = seconds;
+    userWorkoutSettingsBloc
+        .updateSettings({'countdownToStartSeconds': seconds});
+    notifyListeners();
+  }
+
+  Future<void> toggleEnableAutoRestTimer(bool enable) async {
+    userWorkoutSettingsBloc.updateSettings({'enableAutoRestTimer': enable});
+    notifyListeners();
+  }
+
+  Future<void> adjustAutoRestTime(int seconds) async {
+    userWorkoutSettingsBloc.updateSettings({'autoRestTimerSeconds': seconds});
     notifyListeners();
   }
 

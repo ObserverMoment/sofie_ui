@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
@@ -55,15 +54,11 @@ class AuthRouter extends StatefulWidget {
 class _AuthRouterState extends State<AuthRouter> {
   final _authBloc = AuthBloc();
   final _appRouter = AppRouter();
-  late Brightness _userDeviceBrightness;
 
   @override
   void initState() {
     super.initState();
     GetIt.I.registerSingleton<AuthBloc>(_authBloc);
-
-    _userDeviceBrightness =
-        SchedulerBinding.instance?.window.platformBrightness ?? Brightness.dark;
   }
 
   @override
@@ -81,8 +76,7 @@ class _AuthRouterState extends State<AuthRouter> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthBloc>.value(value: _authBloc),
-        ChangeNotifierProvider<ThemeBloc>(
-            create: (_) => ThemeBloc(deviceBrightness: _userDeviceBrightness)),
+        ChangeNotifierProvider<ThemeBloc>(create: (_) => ThemeBloc()),
         Provider<GraphQLStore>(
           create: (_) => GraphQLStore(),
           dispose: (context, store) => store.dispose(),

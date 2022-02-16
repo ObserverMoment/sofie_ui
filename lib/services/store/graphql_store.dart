@@ -1,6 +1,8 @@
 import 'package:artemis/artemis.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gql_exec/gql_exec.dart';
+import 'package:gql_http_link/gql_http_link.dart';
+import 'package:gql_link/gql_link.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:normalize/normalize.dart';
@@ -9,7 +11,6 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/services/store/links/auth_link.dart';
-import 'package:sofie_ui/services/store/links/gql_links.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -43,7 +44,7 @@ class GraphQLStore {
 
     _link = _authLink.concat(_httpLink);
 
-    /// This must already have been opened (in main.dart probably).
+    /// This must already have been opened (in main.dart...probably).
     _box = Hive.box(boxName);
 
     /// Run a clean up of the data on init.
