@@ -125,6 +125,7 @@ class _CollectionWorkoutPlansList extends StatelessWidget {
     return workoutPlans.isEmpty
         ? const Center(child: NoResultsToDisplay())
         : ListView.builder(
+            cacheExtent: 3000,
             shrinkWrap: true,
             itemCount: workoutPlans.length,
             itemBuilder: (c, i) => GestureDetector(

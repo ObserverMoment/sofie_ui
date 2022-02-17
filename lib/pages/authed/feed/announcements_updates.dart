@@ -1,17 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
-import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -94,18 +89,19 @@ class AnnouncementUpdateCard extends StatelessWidget {
   const AnnouncementUpdateCard({Key? key, required this.announcement})
       : super(key: key);
 
-  Future<void> _markAnnouncementAsSeen(BuildContext context) async {
-    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-    final variables = MarkAnnouncementUpdateAsSeenArguments(
-        data: MarkAnnouncementUpdateAsSeenInput(
-            announcementUpdateId: announcement.id, userId: authedUserId));
+  /// TODO: Uncomment this when you want people to be able to dismiss messages.
+  // Future<void> _markAnnouncementAsSeen(BuildContext context) async {
+  //   final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+  //   final variables = MarkAnnouncementUpdateAsSeenArguments(
+  //       data: MarkAnnouncementUpdateAsSeenInput(
+  //           announcementUpdateId: announcement.id, userId: authedUserId));
 
-    await context.graphQLStore.delete(
-        mutation: MarkAnnouncementUpdateAsSeenMutation(variables: variables),
-        objectId: announcement.id,
-        typename: kAnnouncementUpdateTypename,
-        removeRefFromQueries: [GQLOpNames.announcementUpdates]);
-  }
+  //   await context.graphQLStore.delete(
+  //       mutation: MarkAnnouncementUpdateAsSeenMutation(variables: variables),
+  //       objectId: announcement.id,
+  //       typename: kAnnouncementUpdateTypename,
+  //       removeRefFromQueries: [GQLOpNames.announcementUpdates]);
+  // }
 
   double get _borderRadius => 12.0;
 
@@ -125,13 +121,25 @@ class AnnouncementUpdateCard extends StatelessWidget {
                 displaySize: const Size(800, 400),
               ),
             ),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(_borderRadius - 2),
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Styles.black.withOpacity(0.65),
+                      Styles.black.withOpacity(0.1),
+                    ])),
+          ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,38 +148,47 @@ class AnnouncementUpdateCard extends StatelessWidget {
                             announcement.title,
                             size: FONTSIZE.five,
                             color: Styles.white,
+                            weight: FontWeight.bold,
                           ),
-                          TertiaryButton(
-                              text: 'Got It',
-                              iconSize: 14,
-                              backgroundColor: context.theme.modalBackground,
-                              suffixIconData: CupertinoIcons.clear_thick,
-                              onPressed: () => _markAnnouncementAsSeen(context))
+
+                          /// TODO: Uncomment this when you want people to be able to dismiss messages.
+                          // TertiaryButton(
+                          //     text: 'Got It',
+                          //     iconSize: 14,
+                          //     backgroundColor: context.theme.modalBackground,
+                          //     suffixIconData: CupertinoIcons.clear_thick,
+                          //     onPressed: () => _markAnnouncementAsSeen(context))
                         ]),
                     if (Utils.textNotNull(announcement.subtitle))
                       Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
+                        padding: const EdgeInsets.only(top: 8.0),
                         child: MyHeaderText(
                           announcement.subtitle!,
-                          size: FONTSIZE.two,
                           maxLines: 2,
                           lineHeight: 1.4,
                           color: Styles.white,
+                          size: FONTSIZE.two,
                         ),
                       ),
                   ],
                 ),
                 if (Utils.textNotNull(announcement.bodyOne))
-                  MyText(
-                    announcement.bodyOne!,
-                    maxLines: 3,
-                    color: Styles.white,
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: MyText(
+                      announcement.bodyOne!,
+                      maxLines: 3,
+                      color: Styles.white,
+                    ),
                   ),
                 if (Utils.textNotNull(announcement.bodyTwo))
-                  MyText(
-                    announcement.bodyTwo!,
-                    maxLines: 3,
-                    color: Styles.white,
+                  Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: MyText(
+                      announcement.bodyTwo!,
+                      maxLines: 3,
+                      color: Styles.white,
+                    ),
                   ),
                 if (Utils.textNotNull(announcement.articleUrl))
                   UpdateAnnouncementArticleLink(
@@ -183,7 +200,7 @@ class AnnouncementUpdateCard extends StatelessWidget {
                     child: Wrap(
                       spacing: 12,
                       runSpacing: 12,
-                      alignment: WrapAlignment.spaceEvenly,
+                      alignment: WrapAlignment.end,
                       children: announcement.actions
                           .map((a) => UpdateAnnouncementActionLink(action: a))
                           .toList(),

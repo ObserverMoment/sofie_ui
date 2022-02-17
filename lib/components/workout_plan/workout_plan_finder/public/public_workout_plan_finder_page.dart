@@ -182,6 +182,7 @@ class _PublicWorkoutPlanFinderPageState
                     icon: CupertinoIcons.slider_horizontal_3),
               ],
               child: PagedListView<int, WorkoutPlanSummary>(
+                cacheExtent: 3000,
                 padding: const EdgeInsets.only(
                     top: 8, left: 2, right: 2, bottom: 130),
                 pagingController: _pagingController,

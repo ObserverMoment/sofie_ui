@@ -3,19 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class DiscoverCreators extends StatelessWidget {
   const DiscoverCreators({Key? key}) : super(key: key);
-
-  double get _tileHeight => 190;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +18,14 @@ class DiscoverCreators extends StatelessWidget {
 
     return LayoutBuilder(builder: (context, constraints) {
       final screenWidth = constraints.biggest.width;
-      final tileWidth = screenWidth / 2.22;
+      final tileWidth = screenWidth / 3.4;
+      final tileHeight = tileWidth * 1.38;
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 6.0, top: 8, bottom: 10),
+            padding: const EdgeInsets.only(left: 6.0, top: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -49,31 +45,31 @@ class DiscoverCreators extends StatelessWidget {
               key: Key('DiscoverCreators- ${query.operationName}'),
               query: query,
               loadingIndicator: ShimmerCirclesGrid(
-                itemCount: 4,
+                itemCount: 8,
                 maxDiameter: tileWidth,
               ),
               builder: (data) {
                 return Container(
                   padding: const EdgeInsets.only(left: 8),
-                  height: _tileHeight * 2,
+                  height: tileHeight * 2,
                   child: GridView.count(
-                    childAspectRatio: _tileHeight / tileWidth,
+                    childAspectRatio: tileHeight / tileWidth,
                     padding: EdgeInsets.zero,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
                     scrollDirection: Axis.horizontal,
                     crossAxisCount: 2,
                     children: data.userProfiles
                         .map((p) => SizedBox(
                               width: tileWidth,
-                              height: _tileHeight,
+                              height: tileHeight,
                               child: GestureDetector(
                                 onTap: () => context.navigateTo(
                                     UserPublicProfileDetailsRoute(
                                         userId: p.id)),
                                 child: _CreatorCard(
                                   profileSummary: p,
-                                  avatarSize: _tileHeight,
+                                  avatarSize: tileWidth,
                                 ),
                               ),
                             ))
@@ -98,59 +94,28 @@ class _CreatorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
         UserAvatar(
+          border: true,
           size: avatarSize,
           avatarUri: profileSummary.avatarUri,
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: const EdgeInsets.all(3.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ContentBox(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                  backgroundColor:
-                      context.theme.cardBackground.withOpacity(0.95),
-                  borderRadius: borderRadius,
-                  child: MyText(
-                    profileSummary.displayName,
-                    maxLines: 2,
-                    size: FONTSIZE.two,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                if (profileSummary.skills.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0),
-                    child: ContentBox(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 4),
-                      borderRadius: borderRadius,
-                      backgroundColor:
-                          context.theme.cardBackground.withOpacity(0.95),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: CommaSeparatedList(
-                              profileSummary.skills,
-                              fontSize: FONTSIZE.zero,
-                              alignment: WrapAlignment.center,
-                              runSpacing: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
+        const SizedBox(height: 4),
+        MyText(
+          profileSummary.displayName,
+          size: FONTSIZE.one,
+          textAlign: TextAlign.center,
+        ),
+        if (profileSummary.skills.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 2.0),
+            child: MyText(
+              profileSummary.skills.join(', '),
+              size: FONTSIZE.zero,
+              lineHeight: 1.3,
             ),
           ),
-        ),
       ],
     );
   }

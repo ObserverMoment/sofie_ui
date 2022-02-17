@@ -281,6 +281,7 @@ class _FeedPageState extends State<FeedPage> {
 
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
+        backgroundColor: context.theme.modalBackground,
         withoutLeading: true,
         middle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -333,7 +334,7 @@ class _FeedPageState extends State<FeedPage> {
                           delay: index,
                           delayBasis: 10,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: activity.extraData.club != null
                                 ? ClubFeedPostCard(
                                     activity: activity,

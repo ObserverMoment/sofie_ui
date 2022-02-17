@@ -209,6 +209,7 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                                     ])
                               : Expanded(
                                   child: ListView.builder(
+                                      cacheExtent: 3000,
                                       padding: const EdgeInsets.only(
                                         top: 8,
                                         bottom: 120,

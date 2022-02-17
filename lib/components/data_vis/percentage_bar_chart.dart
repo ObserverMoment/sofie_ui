@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 
 class PercentageBarChartSingle extends StatelessWidget {
@@ -71,16 +72,12 @@ class PercentageBarChartSingle extends StatelessWidget {
               .map((i) => Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: i.color,
-                          shape: BoxShape.circle,
-                        ),
+                      Dot(
+                        color: i.color,
+                        diameter: 8,
                       ),
                       const SizedBox(width: 5),
-                      MyText(i.name, size: FONTSIZE.two, color: textColor),
+                      MyText(i.name, size: FONTSIZE.one, color: textColor),
                     ],
                   ))
               .toList(),

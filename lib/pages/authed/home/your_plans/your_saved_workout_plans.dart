@@ -115,6 +115,7 @@ class _FilterableSavedWorkoutPlansState
                   onTap: () => context.navigateTo(WorkoutPlanCreatorRoute())),
             ],
             child: ListView.builder(
+                cacheExtent: 3000,
                 padding: const EdgeInsets.only(top: 6, bottom: 60),
                 shrinkWrap: true,
                 itemCount: sortedPlans.length,

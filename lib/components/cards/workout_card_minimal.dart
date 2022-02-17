@@ -81,13 +81,6 @@ class MinimalWorkoutCard extends StatelessWidget {
                       workout.name,
                       size: FONTSIZE.two,
                     ),
-                    if (workout.tags.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6.0),
-                        child: CommaSeparatedList(
-                          workout.tags,
-                        ),
-                      ),
                     if (showEquipment && workout.equipments.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 6.0),

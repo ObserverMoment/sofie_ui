@@ -4,7 +4,6 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
@@ -22,8 +21,7 @@ class ClubCard extends StatelessWidget {
     // // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
     final double width = MediaQuery.of(context).size.width;
     final Dimensions dimensions = Dimensions.square((width * 1.5).toInt());
-    final Color contentOverlayColor =
-        Styles.black.withOpacity(kImageOverlayOpacity);
+    final Color contentOverlayColor = Styles.black.withOpacity(0.85);
 
     /// The lower section seems to need to have a border radius of one lower than that of the whole card to avoid a small peak of the underlying image - why does the corner get cut by 1 px?
     const borderRadius = 8.0;
@@ -85,7 +83,7 @@ class ClubCard extends StatelessWidget {
                 )),
             Container(
               decoration: BoxDecoration(
-                  color: Styles.black.withOpacity(kImageOverlayOpacity),
+                  color: contentOverlayColor,
                   borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(borderRadius),
                       bottomLeft: Radius.circular(borderRadius))),
@@ -106,6 +104,7 @@ class ClubCard extends StatelessWidget {
                                   club.name,
                                   weight: FontWeight.bold,
                                   color: infoFontColor,
+                                  size: FONTSIZE.four,
                                 ),
                                 if (Utils.textNotNull(club.location))
                                   Padding(
@@ -130,7 +129,7 @@ class ClubCard extends StatelessWidget {
                                   ),
                               ],
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 3),
                             MyText(
                               club.owner.displayName.toUpperCase(),
                               color: infoFontColor,
