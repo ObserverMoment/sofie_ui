@@ -178,6 +178,7 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
                       icon: CupertinoIcons.slider_horizontal_3),
                 ],
                 child: PagedListView<int, WorkoutSummary>(
+                  cacheExtent: 3000,
                   padding: const EdgeInsets.only(
                       top: 8, left: 2, right: 2, bottom: 130),
                   pagingController: _pagingController,

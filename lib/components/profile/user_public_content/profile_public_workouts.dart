@@ -94,6 +94,7 @@ class __FilterablePublicWorkoutsState extends State<_FilterablePublicWorkouts> {
                 padding: const EdgeInsets.only(top: 6, bottom: 60),
                 shrinkWrap: true,
                 itemCount: sortedWorkouts.length,
+                cacheExtent: 3000,
                 itemBuilder: (c, i) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),

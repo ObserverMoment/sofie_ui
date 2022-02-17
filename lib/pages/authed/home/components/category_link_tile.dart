@@ -19,7 +19,6 @@ class CategoryLinkTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(1),
         decoration: BoxDecoration(
             color: context.theme.cardBackground.withOpacity(0.6),
             borderRadius: BorderRadius.circular(20)),
@@ -34,7 +33,7 @@ class CategoryLinkTile extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
               child: MyText(
                 label,
                 maxLines: 2,

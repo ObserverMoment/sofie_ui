@@ -126,6 +126,7 @@ class _CollectionWorkoutsList extends StatelessWidget {
         ? const Center(child: NoResultsToDisplay())
         : ListView.builder(
             shrinkWrap: true,
+            cacheExtent: 3000,
             itemCount: workouts.length,
             itemBuilder: (c, i) => GestureDetector(
               onTap: () => openBottomSheetMenu(
