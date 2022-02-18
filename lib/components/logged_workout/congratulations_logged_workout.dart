@@ -61,7 +61,6 @@ class _CongratulationsLoggedWorkoutState
       activityInput: activity,
       title: 'Share to Feed',
       onComplete: () {
-        context.showToast(message: 'Log Posted to Feed');
         setState(() {
           _sharedToFeed = true;
         });

@@ -268,7 +268,6 @@ class _WorkoutCardTag extends StatelessWidget {
         MyText(
           name,
           size: FONTSIZE.two,
-          weight: FontWeight.bold,
         ),
       ]),
     );
