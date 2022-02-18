@@ -54,6 +54,14 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
         note: scheduledWorkout?.note,
         gymProfile: scheduledWorkout?.gymProfile);
 
+    final includedSectionIds =
+        context.read<WorkoutStructureModificationsBloc>().includedSectionIds;
+
+    /// Remove the sections that are not included.
+    workout.workoutSections = workout.workoutSections
+        .where((ws) => includedSectionIds.contains(ws.id))
+        .toList();
+
     loggedWorkout.loggedWorkoutSections =
         LoggedWorkoutCreatorBloc.generateLoggedWorkoutSections(
             workout: workout, sectionInputs: sectionInputs);
