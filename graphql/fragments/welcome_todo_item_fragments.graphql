@@ -1,0 +1,8 @@
+fragment WelcomeTodoItem on WelcomeTodoItem {
+  __typename
+  id
+  createdAt
+  videoUri
+  routeTo
+  title
+}

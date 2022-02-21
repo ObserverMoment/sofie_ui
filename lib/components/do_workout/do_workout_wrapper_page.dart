@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_do_workout_page.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -35,9 +36,9 @@ class DoWorkoutWrapperPage extends StatefulWidget {
 
 class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
   /// https://stackoverflow.com/questions/57793479/flutter-futurebuilder-gets-constantly-called
-  late Future<Workout> _initWorkoutFuture;
+  late Future<Workout?> _initWorkoutFuture;
 
-  Future<Workout> _getWorkoutById() async {
+  Future<Workout?> _getWorkoutById() async {
     final variables = WorkoutByIdArguments(id: widget.id);
     final query = WorkoutByIdQuery(variables: variables);
 
@@ -83,23 +84,28 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilderHandler<Workout>(
+    return FutureBuilderHandler<Workout?>(
         loadingWidget: _loadingWidget,
         future: _initWorkoutFuture,
-        builder: (workout) => ChangeNotifierProvider<DoWorkoutBloc>(
-              create: (context) => DoWorkoutBloc(
-                  originalWorkout: workout,
-                  scheduledWorkout: widget.scheduledWorkout,
-                  workoutPlanDayWorkoutId: widget.workoutPlanDayWorkoutId,
-                  workoutPlanEnrolmentId: widget.workoutPlanEnrolmentId),
-              builder: (context, _) {
-                final mediaSetupComplete = context.select<DoWorkoutBloc, bool>(
-                    (b) => b.audioInitSuccess && b.videoInitSuccess);
+        builder: (workout) => workout == null
+            ? const ObjectNotFoundIndicator(
+                notFoundItemName: 'the required Workout data',
+              )
+            : ChangeNotifierProvider<DoWorkoutBloc>(
+                create: (context) => DoWorkoutBloc(
+                    originalWorkout: workout,
+                    scheduledWorkout: widget.scheduledWorkout,
+                    workoutPlanDayWorkoutId: widget.workoutPlanDayWorkoutId,
+                    workoutPlanEnrolmentId: widget.workoutPlanEnrolmentId),
+                builder: (context, _) {
+                  final mediaSetupComplete =
+                      context.select<DoWorkoutBloc, bool>(
+                          (b) => b.audioInitSuccess && b.videoInitSuccess);
 
-                if (!mediaSetupComplete) return _loadingWidget;
+                  if (!mediaSetupComplete) return _loadingWidget;
 
-                return const DoWorkoutDoWorkoutPage();
-              },
-            ));
+                  return const DoWorkoutDoWorkoutPage();
+                },
+              ));
   }
 }

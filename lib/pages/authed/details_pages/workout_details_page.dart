@@ -11,6 +11,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/pre_logging_modifications.dart';
 import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/logged_workout/log_count_by_workout.dart';
@@ -251,7 +252,13 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
               builder: (collectionsData) {
-                final Workout workout = workoutData.workoutById;
+                if (workoutData.workoutById == null) {
+                  return const ObjectNotFoundIndicator(
+                    notFoundItemName: "this Workout's data",
+                  );
+                }
+
+                final workout = workoutData.workoutById!;
 
                 final List<Collection> collections = collectionsData
                     .userCollections

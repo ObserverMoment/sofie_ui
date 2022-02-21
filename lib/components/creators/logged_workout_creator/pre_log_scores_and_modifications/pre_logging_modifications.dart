@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/required_user_input.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/section_modifications.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/logged_workout/congratulations_logged_workout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -98,89 +99,94 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
         query: query,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         parameterizeQuery: true,
-        builder: (data) => ChangeNotifierProvider(
-              create: (context) => WorkoutStructureModificationsBloc(
-                context,
-                data.workoutById,
-              ),
-              builder: (context, child) {
-                final originalWorkout = data.workoutById;
+        builder: (data) => data.workoutById == null
+            ? const ObjectNotFoundIndicator(
+                notFoundItemName: "the required data",
+              )
+            : ChangeNotifierProvider(
+                create: (context) => WorkoutStructureModificationsBloc(
+                  context,
+                  data.workoutById!,
+                ),
+                builder: (context, child) {
+                  final originalWorkout = data.workoutById!;
 
-                final includedSectionIds = context.select<
-                    WorkoutStructureModificationsBloc,
-                    List<String>>((b) => b.includedSectionIds);
+                  final includedSectionIds = context.select<
+                      WorkoutStructureModificationsBloc,
+                      List<String>>((b) => b.includedSectionIds);
 
-                final sectionInputs = context.select<
-                    WorkoutStructureModificationsBloc,
-                    List<WorkoutSectionInput>>((b) => b.sectionInputs);
+                  final sectionInputs = context.select<
+                      WorkoutStructureModificationsBloc,
+                      List<WorkoutSectionInput>>((b) => b.sectionInputs);
 
-                final _savingLogToDB =
-                    context.select<WorkoutStructureModificationsBloc, bool>(
-                        (b) => b.savingLogToDB);
+                  final _savingLogToDB =
+                      context.select<WorkoutStructureModificationsBloc, bool>(
+                          (b) => b.savingLogToDB);
 
-                final validInputs = includedSectionIds.isNotEmpty &&
-                    includedSectionIds.every((id) {
-                      final input = sectionInputs
-                          .firstWhereOrNull(
-                              (input) => input.workoutSection.id == id)
-                          ?.input;
-                      return input != null && input != 0;
-                    });
+                  final validInputs = includedSectionIds.isNotEmpty &&
+                      includedSectionIds.every((id) {
+                        final input = sectionInputs
+                            .firstWhereOrNull(
+                                (input) => input.workoutSection.id == id)
+                            ?.input;
+                        return input != null && input != 0;
+                      });
 
-                return MyPageScaffold(
-                    navigationBar: MyNavBar(
-                      customLeading: NavBarCancelButton(context.pop),
-                      middle: const NavBarTitle('Scores and Modifications'),
-                      trailing: validInputs
-                          ? FadeInUp(
-                              child: NavBarTertiarySaveButton(
-                                () {
-                                  final bloc = context.read<
-                                      WorkoutStructureModificationsBloc>();
-                                  _createAndSaveLog(
-                                      context: context,
-                                      sectionInputs: bloc.sectionInputs,
-                                      workout: bloc.workout);
-                                },
-                                text: 'Done',
-                                loading: _savingLogToDB,
-                              ),
-                            )
-                          : null,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4, right: 8, bottom: 16),
-                          child: MyText(
-                            originalWorkout.name,
-                            size: FONTSIZE.four,
-                            weight: FontWeight.bold,
+                  return MyPageScaffold(
+                      navigationBar: MyNavBar(
+                        customLeading: NavBarCancelButton(context.pop),
+                        middle: const NavBarTitle('Scores and Modifications'),
+                        trailing: validInputs
+                            ? FadeInUp(
+                                child: NavBarTertiarySaveButton(
+                                  () {
+                                    final bloc = context.read<
+                                        WorkoutStructureModificationsBloc>();
+                                    _createAndSaveLog(
+                                        context: context,
+                                        sectionInputs: bloc.sectionInputs,
+                                        workout: bloc.workout);
+                                  },
+                                  text: 'Done',
+                                  loading: _savingLogToDB,
+                                ),
+                              )
+                            : null,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, top: 4, right: 8, bottom: 16),
+                            child: MyText(
+                              originalWorkout.name,
+                              size: FONTSIZE.four,
+                              weight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (c, i) => Padding(
-                                      padding: const EdgeInsets.all(4.0),
-                                      child: _WorkoutSectionCard(
-                                        workoutSection:
-                                            originalWorkout.workoutSections[i],
-                                        includedSectionIds: includedSectionIds,
-                                        toggleIncludeSectionId: (id) => context
-                                            .read<
-                                                WorkoutStructureModificationsBloc>()
-                                            .toggleIncludeSectionId(id),
+                          Expanded(
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemBuilder: (c, i) => Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: _WorkoutSectionCard(
+                                          workoutSection: originalWorkout
+                                              .workoutSections[i],
+                                          includedSectionIds:
+                                              includedSectionIds,
+                                          toggleIncludeSectionId: (id) => context
+                                              .read<
+                                                  WorkoutStructureModificationsBloc>()
+                                              .toggleIncludeSectionId(id),
+                                        ),
                                       ),
-                                    ),
-                                itemCount:
-                                    originalWorkout.workoutSections.length)),
-                      ],
-                    ));
-              },
-            ));
+                                  itemCount:
+                                      originalWorkout.workoutSections.length)),
+                        ],
+                      ));
+                },
+              ));
   }
 }
 

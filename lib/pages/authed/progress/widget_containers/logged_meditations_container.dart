@@ -4,7 +4,7 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 
-/// Date retrieval wrapper for both the full screen and minimised version of the widget.
+/// Data retrieval wrapper for both the full screen and minimised version of the widget.
 class LoggedMeditationsContainer extends StatelessWidget {
   final Widget loadingShimmer;
   final Widget Function(List<UserMeditationLog> userMeditationLogs) builder;

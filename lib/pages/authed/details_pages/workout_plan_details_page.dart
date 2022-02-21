@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/navigation.dart';
@@ -231,13 +232,20 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         query: query,
         parameterizeQuery: true,
         builder: (workoutPlanData) {
+          if (workoutPlanData.workoutPlanById == null) {
+            return const ObjectNotFoundIndicator(
+              notFoundItemName: "this Plan's data",
+            );
+          }
+
+          final workoutPlan = workoutPlanData.workoutPlanById!;
+
           return QueryObserver<UserCollections$Query, json.JsonSerializable>(
               key: Key(
                   'WorkoutPlanDetailsPage - ${UserCollectionsQuery().operationName}'),
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
               builder: (collectionsData) {
-                final workoutPlan = workoutPlanData.workoutPlanById;
                 final enrolments = workoutPlan.workoutPlanEnrolments;
 
                 final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;

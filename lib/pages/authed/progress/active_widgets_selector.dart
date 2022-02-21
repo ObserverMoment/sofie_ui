@@ -5,6 +5,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -70,7 +71,11 @@ class _ActiveWidgetsSelectorState extends State<ActiveWidgetsSelector> {
         fetchPolicy: QueryFetchPolicy.storeFirst,
         parameterizeQuery: true,
         builder: (userData) {
-          final userProfile = userData.userProfile;
+          if (userData.userProfile == null) {
+            return const ObjectNotFoundIndicator();
+          }
+
+          final userProfile = userData.userProfile!;
           final activeWidgets = userProfile.activeProgressWidgets ?? [];
 
           return MyPageScaffold(

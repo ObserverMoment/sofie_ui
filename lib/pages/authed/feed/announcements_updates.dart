@@ -35,35 +35,21 @@ class AnnouncementsUpdates extends StatelessWidget {
   }
 }
 
-class AnnouncementUpdatesList extends StatefulWidget {
+class AnnouncementUpdatesList extends StatelessWidget {
   final List<AnnouncementUpdate> announcements;
   const AnnouncementUpdatesList({Key? key, required this.announcements})
       : super(key: key);
 
   @override
-  State<AnnouncementUpdatesList> createState() =>
-      _AnnouncementUpdatesListState();
-}
-
-class _AnnouncementUpdatesListState extends State<AnnouncementUpdatesList> {
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final onlyOne = widget.announcements.length == 1;
+    final onlyOne = announcements.length == 1;
 
     return Padding(
       padding:
           EdgeInsets.only(left: onlyOne ? 10.0 : 0, right: onlyOne ? 10 : 0),
       child: PageView(
         controller: PageController(viewportFraction: onlyOne ? 1 : 0.95),
-        children: widget.announcements
+        children: announcements
             .map((a) => Padding(
                   padding: EdgeInsets.only(
                       left: onlyOne ? 0 : 5, right: onlyOne ? 0 : 5.0),

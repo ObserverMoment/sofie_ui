@@ -102,9 +102,11 @@ class ClubCard extends StatelessWidget {
                               children: [
                                 MyHeaderText(
                                   club.name,
-                                  weight: FontWeight.bold,
+                                  lineHeight: 1.3,
                                   color: infoFontColor,
+                                  maxLines: 2,
                                   size: FONTSIZE.four,
+                                  weight: FontWeight.bold,
                                 ),
                                 if (Utils.textNotNull(club.location))
                                   Padding(
@@ -133,7 +135,7 @@ class ClubCard extends StatelessWidget {
                             MyText(
                               club.owner.displayName.toUpperCase(),
                               color: infoFontColor,
-                              size: FONTSIZE.two,
+                              size: FONTSIZE.one,
                             ),
                           ],
                         ),

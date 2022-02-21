@@ -17,6 +17,7 @@ import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/feed/announcements_updates.dart';
 import 'package:sofie_ui/pages/authed/feed/followers_following.dart';
+import 'package:sofie_ui/pages/authed/feed/welcome_onboarding_messages.dart';
 import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/stream.dart';
@@ -322,7 +323,25 @@ class _FeedPageState extends State<FeedPage> {
                   child: AnnouncementsUpdates(),
                 ),
                 const SliverToBoxAdapter(
+                  child: WelcomeTodoItems(),
+                ),
+                const SliverToBoxAdapter(
                   child: ComingUpList(),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 8),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          CupertinoIcons.square_list,
+                        ),
+                        SizedBox(width: 6),
+                        MyHeaderText('Activity'),
+                      ],
+                    ),
+                  ),
                 ),
                 PagedSliverList<int, StreamEnrichedActivity>(
                     pagingController: _pagingController,

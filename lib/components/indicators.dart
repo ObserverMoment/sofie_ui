@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -225,6 +227,110 @@ class Dot extends StatelessWidget {
         shape: BoxShape.circle,
         color: color ?? context.theme.primary,
       ),
+    );
+  }
+}
+
+/// Full page indicator wrapped in a CupertinoPageScaffold.
+/// For use when objects can be "not found" by the API (i.e when return result is nullable and the object has been deleted).
+class ObjectNotFoundIndicator extends StatelessWidget {
+  final double size;
+
+  /// E.g. Workout or User's Profile. For display in message.
+  final String? notFoundItemName;
+
+  /// Message will override any [objectType]
+  final String? message;
+  const ObjectNotFoundIndicator(
+      {Key? key, this.size = 90, this.message, this.notFoundItemName})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final msg = message ??
+        'Sorry, we could not find ${notFoundItemName ?? "the required data"}. It may have been moved or deleted.';
+
+    return MyPageScaffold(
+      navigationBar: const MyNavBar(
+        middle: NavBarTitle('Item Not Found'),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Opacity(
+                opacity: 0.6,
+                child: Icon(MyCustomIcons.itemNotFoundIcon, size: size)),
+            const SizedBox(height: 32),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: MyText(
+                msg,
+                maxLines: 3,
+                subtext: true,
+                lineHeight: 1.4,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NoResultsToDisplay extends StatelessWidget {
+  final String message;
+  const NoResultsToDisplay({Key? key, this.message = 'No results to display'})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          CupertinoIcons.search,
+          size: 70,
+          color: context.theme.primary.withOpacity(0.3),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
+          child: MyText(
+            message,
+            color: context.theme.primary.withOpacity(0.8),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PageResultsErrorIndicator extends StatelessWidget {
+  final String message;
+  const PageResultsErrorIndicator(
+      {Key? key, this.message = 'Something went wrong...'})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          CupertinoIcons.exclamationmark_octagon_fill,
+          size: 70,
+          color: context.theme.primary.withOpacity(0.3),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
+          child: MyText(
+            message,
+            subtext: true,
+          ),
+        ),
+      ],
     );
   }
 }

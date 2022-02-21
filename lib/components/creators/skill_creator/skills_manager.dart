@@ -170,7 +170,11 @@ class _SkillsManagerState extends State<SkillsManager> {
       parameterizeQuery: true,
       fetchPolicy: QueryFetchPolicy.storeFirst,
       builder: (data) {
-        final skills = data.userProfile.skills;
+        if (data.userProfile == null) {
+          return const ObjectNotFoundIndicator();
+        }
+
+        final skills = data.userProfile!.skills;
 
         return MyPageScaffold(
             child: NestedScrollView(
