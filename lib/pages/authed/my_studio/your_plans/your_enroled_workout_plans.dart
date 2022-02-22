@@ -9,7 +9,7 @@ import 'package:sofie_ui/components/workout_plan/selectable_workout_plan_card.da
 import 'package:sofie_ui/components/workout_plan_enrolment/workout_plan_enrolment_progress_summary.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -111,6 +111,7 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
                   onTap: () => context.navigateTo(WorkoutPlanCreatorRoute()))
             ],
             child: ListView.builder(
+                cacheExtent: 3000,
                 padding: const EdgeInsets.only(top: 6, bottom: 60),
                 shrinkWrap: true,
                 itemCount: filteredEnrolments.length,

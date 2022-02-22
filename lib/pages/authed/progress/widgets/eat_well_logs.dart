@@ -80,12 +80,11 @@ class EatWellLogWidget extends StatelessWidget {
     final todayDayNumber = now.dayNumberInYear;
 
     /// [startDay] should be the Monday 3 and a bit weeks ago.
-    /// You show 4 weeks - including the week the user is currently in.
-
+    /// You show 3 weeks - including the week the user is currently in.
     final weekDayNumber = now.weekday;
     final numDaysBeforeToday = (_numDays - 7) + (weekDayNumber - 1);
     final startDay =
-        DateTime(now.year, now.month, todayDayNumber - numDaysBeforeToday);
+        DateTime(now.year, now.month, now.day - numDaysBeforeToday);
     final startDayNumber = todayDayNumber - numDaysBeforeToday;
 
     /// Should only be one log per dayNumber.

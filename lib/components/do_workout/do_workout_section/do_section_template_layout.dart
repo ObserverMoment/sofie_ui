@@ -47,6 +47,7 @@ class DoSectionTemplateLayout extends StatelessWidget {
               index: activePageIndex,
               children: [
                 SafeArea(
+                  bottom: false,
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 8.0,
@@ -56,6 +57,7 @@ class DoSectionTemplateLayout extends StatelessWidget {
                   ),
                 ),
                 SafeArea(
+                  bottom: false,
                   child: Padding(
                     padding: const EdgeInsets.only(
                         left: 8.0,

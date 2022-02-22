@@ -1,11 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/creators/skill_creator/skills_manager.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_clubs.dart';
 import 'package:sofie_ui/pages/authed/discover/components/discover_creators.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -23,75 +20,26 @@ class DiscoverPage extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
-                  child: ContentBox(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                    child: PageLink(
-                        linkText: 'Workouts',
-                        icon: MyCustomIcons.dumbbell,
-                        bold: true,
-                        separator: false,
-                        onPress: () =>
-                            context.navigateTo(PublicWorkoutFinderRoute())),
-                  ),
+                child: DiscoverPageTopButton(
+                  iconData: MyCustomIcons.dumbbell,
+                  onPressed: () =>
+                      context.navigateTo(PublicWorkoutFinderRoute()),
+                  text: 'Workouts',
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
-                  child: ContentBox(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                    child: PageLink(
-                        linkText: 'Plans',
-                        icon: MyCustomIcons.plansIcon,
-                        bold: true,
-                        separator: false,
-                        onPress: () =>
-                            context.navigateTo(PublicWorkoutPlanFinderRoute())),
-                  ),
+                child: DiscoverPageTopButton(
+                  iconData: MyCustomIcons.plansIcon,
+                  onPressed: () =>
+                      context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                  text: 'Plans',
                 ),
               ),
             ],
           ),
-          // GridView.count(
-          //   padding: const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
-          //   crossAxisSpacing: 8,
-          //   physics: const NeverScrollableScrollPhysics(),
-          //   mainAxisSpacing: 8,
-          //   shrinkWrap: true,
-          //   crossAxisCount: 2,
-          //   children: [
-
-          // DiscoverPageButton(
-          //     text: 'Workouts',
-          //     onPressed: () =>
-          //         context.navigateTo(PublicWorkoutFinderRoute())),
-          // DiscoverPageButton(
-          //     text: 'Plans',
-          //     onPressed: () =>
-          //         context.navigateTo(PublicWorkoutPlanFinderRoute())),
-          // DiscoverPageButton(
-          //     text: 'Throwdowns',
-          //     onPressed: () =>
-          //         context.showAlertDialog(title: 'Coming Soon!')),
-          // DiscoverPageButton(
-          //     text: 'Coaching',
-          //     onPressed: () =>
-          //         context.showAlertDialog(title: 'Coming Soon!')),
-          // DiscoverPageButton(
-          //     text: 'Gear',
-          //     onPressed: () =>
-          //         context.showAlertDialog(title: 'Coming Soon!')),
-          // ],
-          // ),
-          // const SizedBox(height: 6),
           _verticalPadding(child: const DiscoverCreators()),
           _verticalPadding(child: const DiscoverClubs()),
         ],
@@ -100,27 +48,42 @@ class DiscoverPage extends StatelessWidget {
   }
 }
 
-class DiscoverPageButton extends StatelessWidget {
+class DiscoverPageTopButton extends StatelessWidget {
   final String text;
-  final void Function() onPressed;
-  const DiscoverPageButton(
-      {Key? key, required this.text, required this.onPressed})
+  final IconData iconData;
+  final VoidCallback onPressed;
+  const DiscoverPageTopButton(
+      {Key? key,
+      required this.text,
+      required this.iconData,
+      required this.onPressed})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
-      decoration: BoxDecoration(
-        color: context.theme.cardBackground,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: CupertinoButton(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        onPressed: onPressed,
-        child: MyHeaderText(
-          text,
-          size: FONTSIZE.two,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      child: GestureDetector(
+        onTap: onPressed,
+        behavior: HitTestBehavior.opaque,
+        child: ContentBox(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(iconData, size: 16),
+                  const SizedBox(width: 8),
+                  MyText(
+                    text,
+                    weight: FontWeight.bold,
+                  )
+                ],
+              ),
+              const Icon(CupertinoIcons.chevron_right, size: 18)
+            ],
+          ),
         ),
       ),
     );

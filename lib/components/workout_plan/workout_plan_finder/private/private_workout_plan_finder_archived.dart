@@ -7,8 +7,8 @@
 // import 'package:sofie_ui/components/workout_plan/workout_plan_finder/private/private_plans_text_search.dart';
 // import 'package:sofie_ui/extensions/context_extensions.dart';
 // import 'package:sofie_ui/generated/api/graphql_api.dart';
-// import 'package:sofie_ui/pages/authed/home/your_plans/your_created_workout_plans.dart';
-// import 'package:sofie_ui/pages/authed/home/your_plans/your_saved_workout_plans.dart';
+// import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_created_workout_plans.dart';
+// import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_saved_workout_plans.dart';
 // import 'package:sofie_ui/router.gr.dart';
 // import 'package:sofie_ui/services/store/query_observer.dart';
 

@@ -180,33 +180,6 @@ class JumpSeekIcon extends StatelessWidget {
   }
 }
 
-class NoResultsToDisplay extends StatelessWidget {
-  final String message;
-  const NoResultsToDisplay({Key? key, this.message = 'No results to display'})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          CupertinoIcons.search,
-          size: 70,
-          color: context.theme.primary.withOpacity(0.3),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, top: 16, right: 16),
-          child: MyText(
-            message,
-            color: context.theme.primary.withOpacity(0.8),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class NavBarActivityIndicator extends StatelessWidget {
   const NavBarActivityIndicator({Key? key}) : super(key: key);
 

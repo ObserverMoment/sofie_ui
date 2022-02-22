@@ -166,6 +166,7 @@ class ClubFeedPostCard extends StatelessWidget {
                               size: FONTSIZE.two,
                               lineHeight: 1.3,
                               maxLines: 2,
+                              weight: FontWeight.normal,
                             ),
                             const SizedBox(height: 4),
                             MyText(

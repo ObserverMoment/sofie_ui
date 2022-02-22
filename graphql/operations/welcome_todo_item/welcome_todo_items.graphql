@@ -1,0 +1,5 @@
+query welcomeTodoItems {
+  welcomeTodoItems {
+    ...WelcomeTodoItem
+  }
+}

@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_reviews_summary.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -38,6 +37,7 @@ class WorkoutPlanCard extends StatelessWidget {
               '${workoutPlan.lengthWeeks} weeks',
               size: FONTSIZE.two,
               color: Styles.white,
+              weight: FontWeight.bold,
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -50,6 +50,7 @@ class WorkoutPlanCard extends StatelessWidget {
               '${workoutPlan.daysPerWeek} days / week',
               size: FONTSIZE.two,
               color: Styles.white,
+              weight: FontWeight.bold,
             ),
           ],
         ),
@@ -67,7 +68,7 @@ class WorkoutPlanCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(CupertinoIcons.person,
+                      const Icon(CupertinoIcons.person_fill,
                           size: 15, color: Styles.white),
                       const SizedBox(width: 2),
                       MyText(workoutPlan.enrolmentsCount.displayLong,
@@ -75,7 +76,7 @@ class WorkoutPlanCard extends StatelessWidget {
                     ],
                   ),
                   const MyText('enrolled',
-                      size: FONTSIZE.one, color: Styles.white),
+                      size: FONTSIZE.zero, color: Styles.white),
                 ],
               ),
             )
@@ -92,8 +93,7 @@ class WorkoutPlanCard extends StatelessWidget {
     // final planDifficulty = workoutPlan.calcDifficulty;
     const overlayContentPadding =
         EdgeInsets.symmetric(vertical: 4, horizontal: 8);
-    final Color contentOverlayColor =
-        Styles.black.withOpacity(kImageOverlayOpacity);
+    final Color contentOverlayColor = Styles.black.withOpacity(0.85);
 
     /// The lower section seems to need to have a border radius of one lower than that of the whole card to avoid a small peak of the underlying image - why does the corner get cut by 1 px?
     const borderRadius = 8.0;
@@ -156,11 +156,11 @@ class WorkoutPlanCard extends StatelessWidget {
           ),
           Container(
               decoration: BoxDecoration(
-                  color: Styles.black.withOpacity(kImageOverlayOpacity),
+                  color: Styles.black.withOpacity(0.85),
                   borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(borderRadius),
                       bottomLeft: Radius.circular(borderRadius))),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -174,7 +174,6 @@ class WorkoutPlanCard extends StatelessWidget {
                             lineHeight: 1.3,
                             color: infoFontColor,
                           ),
-                          const SizedBox(height: 3),
                           MyText(
                             workoutPlan.user.displayName.toUpperCase(),
                             size: FONTSIZE.two,
@@ -188,8 +187,13 @@ class WorkoutPlanCard extends StatelessWidget {
                   if (Utils.textNotNull(workoutPlan.description))
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
-                      child:
-                          MyText(workoutPlan.description!, color: Styles.white),
+                      child: MyText(
+                        workoutPlan.description!,
+                        color: Styles.white,
+                        maxLines: 3,
+                        lineHeight: 1.3,
+                        size: FONTSIZE.two,
+                      ),
                     ),
                   if (workoutPlan.tags.isNotEmpty)
                     Padding(
@@ -203,7 +207,7 @@ class WorkoutPlanCard extends StatelessWidget {
                       child: PercentageBarChartSingle(
                         inputs: DataUtils.waffleChartInputsFromGoals(
                             workoutPlan.goals),
-                        barHeight: 4,
+                        barHeight: 5,
                         textColor: infoFontColor,
                       ),
                     ),

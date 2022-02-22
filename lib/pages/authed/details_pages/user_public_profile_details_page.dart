@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/profile/user_profile_display.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -30,7 +31,12 @@ class UserPublicProfileDetailsPage extends StatelessWidget {
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          final userPublicProfile = data.userProfile;
+          if (data.userProfile == null) {
+            return const ObjectNotFoundIndicator(
+              notFoundItemName: "this User's profile",
+            );
+          }
+          final userPublicProfile = data.userProfile!;
 
           final profileIsPublic =
               userPublicProfile.userProfileScope == UserProfileScope.public;

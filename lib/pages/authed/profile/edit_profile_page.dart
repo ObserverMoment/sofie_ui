@@ -5,6 +5,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/coercers.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/skill_creator/skills_manager.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/user_avatar_uploader.dart';
 import 'package:sofie_ui/components/media/video/user_intro_video_uploader.dart';
@@ -77,7 +78,11 @@ class EditProfilePage extends StatelessWidget {
         parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final userProfile = data.userProfile;
+          if (data.userProfile == null) {
+            return const ObjectNotFoundIndicator();
+          }
+
+          final userProfile = data.userProfile!;
 
           return MyPageScaffold(
               child: NestedScrollView(

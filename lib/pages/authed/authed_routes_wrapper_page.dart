@@ -79,8 +79,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     /// All [QueryObservers] watching this query in the app should be set with
     /// [fetchPolicy: QueryFetchPolicy.storeFirst] - as the data should already be there and should never be updated independently by anyone else than the user.
     /// final query =
-    final query =
-        UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments());
+    final query = UserLoggedWorkoutsQuery();
     await context.graphQLStore.query(query: query);
     _coreAppDataInitialized = true;
   }

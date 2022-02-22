@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/club_card.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -109,7 +108,10 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
   @override
   Widget build(BuildContext context) {
     return !_initDataRetrieved
-        ? Container()
+        ? const Padding(
+            padding: EdgeInsets.all(32.0),
+            child: CupertinoActivityIndicator(),
+          )
         : _recents.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -128,6 +130,7 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
               )
             : ListView.separated(
                 shrinkWrap: true,
+                cacheExtent: 3000,
                 padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _recents.length,

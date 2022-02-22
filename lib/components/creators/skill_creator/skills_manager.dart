@@ -19,7 +19,7 @@ import 'package:sofie_ui/components/media/multi_media_viewer.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -170,7 +170,11 @@ class _SkillsManagerState extends State<SkillsManager> {
       parameterizeQuery: true,
       fetchPolicy: QueryFetchPolicy.storeFirst,
       builder: (data) {
-        final skills = data.userProfile.skills;
+        if (data.userProfile == null) {
+          return const ObjectNotFoundIndicator();
+        }
+
+        final skills = data.userProfile!.skills;
 
         return MyPageScaffold(
             child: NestedScrollView(

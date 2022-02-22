@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/icons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 
 class EmptyPlaceholderAction {
@@ -37,13 +37,7 @@ class YourContentEmptyPlaceholder extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            showIcon
-                ? NoResultsToDisplay(
-                    message: message,
-                  )
-                : MyText(
-                    message,
-                  ),
+            showIcon ? NoResultsToDisplay(message: message) : MyText(message),
             const SizedBox(height: 20),
             if (explainer != null)
               Padding(

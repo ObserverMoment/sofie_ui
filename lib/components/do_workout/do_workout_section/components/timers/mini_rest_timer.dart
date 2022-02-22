@@ -142,7 +142,7 @@ class _MiniRestTimerState extends State<MiniRestTimer> {
                   duration: kStandardAnimationDuration,
                   child: _hasEnded
                       ? const MyText(
-                          'Ok, back to work!',
+                          "Ok, let's go!",
                           size: FONTSIZE.five,
                         )
                       : TimerDisplayText(

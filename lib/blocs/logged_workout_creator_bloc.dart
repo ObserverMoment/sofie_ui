@@ -75,7 +75,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   bool writeAllChangesToStore() {
     final success = context.graphQLStore.writeDataToStore(
         data: loggedWorkout.toJson(),
-        broadcastQueryIds: [GQLNullVarsKeys.userLoggedWorkouts]);
+        broadcastQueryIds: [GQLOpNames.userLoggedWorkouts]);
     return success;
   }
 
@@ -338,7 +338,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     final result = await context.graphQLStore.create(
         mutation: CreateLoggedWorkoutMutation(variables: variables),
-        addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
+        addRefToQueries: [GQLOpNames.userLoggedWorkouts]);
 
     checkOperationResult(context, result,
         onFail: () => context.showToast(

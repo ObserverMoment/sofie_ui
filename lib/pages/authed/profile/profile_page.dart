@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/profile/user_profile_display.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -79,7 +80,11 @@ class _ProfilePageState extends State<ProfilePage> {
         parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final profile = data.userProfile;
+          if (data.userProfile == null) {
+            return const ObjectNotFoundIndicator();
+          }
+
+          final profile = data.userProfile!;
 
           return MyPageScaffold(
               navigationBar: MyNavBar(

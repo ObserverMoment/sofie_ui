@@ -94,7 +94,7 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
 
           final result = await context.graphQLStore.create(
               mutation: CreateLoggedWorkoutMutation(variables: variables),
-              addRefToQueries: [GQLNullVarsKeys.userLoggedWorkouts]);
+              addRefToQueries: [GQLOpNames.userLoggedWorkouts]);
 
           checkOperationResult(context, result,
               onFail: () => context.showToast(

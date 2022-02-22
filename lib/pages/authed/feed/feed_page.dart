@@ -17,7 +17,8 @@ import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/feed/announcements_updates.dart';
 import 'package:sofie_ui/pages/authed/feed/followers_following.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/feed/welcome_todo_items.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -281,6 +282,7 @@ class _FeedPageState extends State<FeedPage> {
 
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
+        backgroundColor: context.theme.modalBackground,
         withoutLeading: true,
         middle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -321,7 +323,25 @@ class _FeedPageState extends State<FeedPage> {
                   child: AnnouncementsUpdates(),
                 ),
                 const SliverToBoxAdapter(
+                  child: WelcomeTodoItems(),
+                ),
+                const SliverToBoxAdapter(
                   child: ComingUpList(),
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 8),
+                    child: Row(
+                      children: const [
+                        Icon(
+                          CupertinoIcons.square_list,
+                        ),
+                        SizedBox(width: 6),
+                        MyHeaderText('Activity'),
+                      ],
+                    ),
+                  ),
                 ),
                 PagedSliverList<int, StreamEnrichedActivity>(
                     pagingController: _pagingController,
@@ -333,7 +353,7 @@ class _FeedPageState extends State<FeedPage> {
                           delay: index,
                           delayBasis: 10,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: activity.extraData.club != null
                                 ? ClubFeedPostCard(
                                     activity: activity,

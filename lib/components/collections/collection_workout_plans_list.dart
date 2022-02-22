@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
-import 'package:sofie_ui/components/icons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
@@ -125,6 +125,7 @@ class _CollectionWorkoutPlansList extends StatelessWidget {
     return workoutPlans.isEmpty
         ? const Center(child: NoResultsToDisplay())
         : ListView.builder(
+            cacheExtent: 3000,
             shrinkWrap: true,
             itemCount: workoutPlans.length,
             itemBuilder: (c, i) => GestureDetector(

@@ -120,34 +120,39 @@ class FeedPostCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => context.navigateTo(
-                          UserPublicProfileDetailsRoute(
-                              userId: activity.actor.id)),
-                      child: UserAvatar(
-                        size: 40,
-                        avatarUri: activity.actor.data.image,
+                Flexible(
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () => context.navigateTo(
+                            UserPublicProfileDetailsRoute(
+                                userId: activity.actor.id)),
+                        child: UserAvatar(
+                          size: 40,
+                          avatarUri: activity.actor.data.image,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MyHeaderText(
-                          activity.extraData.title ?? 'Post',
-                          size: FONTSIZE.two,
-                          lineHeight: 1.3,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            MyHeaderText(
+                              activity.extraData.title ?? 'Post',
+                              size: FONTSIZE.two,
+                              lineHeight: 1.3,
+                              weight: FontWeight.normal,
+                            ),
+                            MyText(
+                              activity.actor.data.name ?? '',
+                              lineHeight: 1.4,
+                              size: FONTSIZE.two,
+                            ),
+                          ],
                         ),
-                        MyText(
-                          activity.actor.data.name ?? '',
-                          lineHeight: 1.4,
-                          size: FONTSIZE.two,
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
                 isPreview
                     ? const Icon(CupertinoIcons.ellipsis)

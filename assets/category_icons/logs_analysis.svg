@@ -1,0 +1,25 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g>
+    <path d="M71.05,101.88H132.7v20.55H71.05Z" fill-rule="evenodd"/>
+    <path d="M153.25,101.88H256v20.55H153.25Z" fill-rule="evenodd"/>
+    <path d="M71.05,143H132.7v20.55H71.05Z" fill-rule="evenodd"/>
+    <path d="M153.25,143H256v20.55H153.25Z" fill-rule="evenodd"/>
+    <path d="M71.05,184.07H132.7v20.55H71.05Z" fill-rule="evenodd"/>
+    <path d="M153.25,184.07H256v20.55H153.25Z" fill-rule="evenodd"/>
+    <path d="M71.05,225.18H132.7v20.55H71.05Z" fill-rule="evenodd"/>
+    <path d="M317.65,307.37h41.1v20.55h-41.1Z" fill-rule="evenodd"/>
+    <path d="M317.65,348.48h41.1V369h-41.1Z" fill-rule="evenodd"/>
+    <path d="M317.65,389.57h41.1v20.55h-41.1Z" fill-rule="evenodd"/>
+    <path d="M379.3,307.37H441v20.55H379.3Z" fill-rule="evenodd"/>
+    <path d="M341.79,240.39A72,72,0,0,1,321,120.27l37,55.45Zm19.94,5c2.4.24,4.84.36,7.3.36A71.93,71.93,0,0,0,441,173.8c0-2.47-.13-4.9-.37-7.3L377.5,182.27Zm-23.65-136.5a72,72,0,0,1,97.54,37.7l-62.06,15.51Z" fill-rule="evenodd"/>
+    <path d="M9.4,60.75A20.54,20.54,0,0,1,30,40.22H482A20.44,20.44,0,0,1,502.6,60.75v390.5A20.54,20.54,0,0,1,482,471.78H30A20.44,20.44,0,0,1,9.4,451.25Zm20.55,0V451.22H482.06V60.77Z" fill-rule="evenodd"/>
+    <path d="M379.3,348.48H441V369H379.3Z" fill-rule="evenodd"/>
+    <path d="M379.3,389.57H441v20.55H379.3Z" fill-rule="evenodd"/>
+    <path d="M71.05,286.83H91.6v123.3H71.05Z" fill-rule="evenodd"/>
+    <path d="M112.15,369H132.7v41.11H112.15Z" fill-rule="evenodd"/>
+    <path d="M153.25,327.92H173.8v82.2H153.25Z" fill-rule="evenodd"/>
+    <path d="M194.35,327.92H214.9v82.2H194.35Z" fill-rule="evenodd"/>
+    <path d="M235.45,348.48H256v61.65H235.45Z" fill-rule="evenodd"/>
+    <path d="M153.25,225.18H256v20.55H153.25Z" fill-rule="evenodd"/>
+  </g>
+</svg>

@@ -572,7 +572,7 @@ class DoWorkoutBloc extends ChangeNotifier {
   /// Make sure you pass [doNotReset] as true to avoid resetting section progress.
   Future<void> updateWorkoutMove(
       int sectionIndex, int setIndex, WorkoutMove workoutMove,
-      {bool doNotReset = true}) async {
+      {bool doNotReset = false}) async {
     final section = WorkoutSection.fromJson(
         activeWorkout.workoutSections[sectionIndex].toJson());
 

@@ -163,23 +163,31 @@ class ShimmerCirclesGrid extends StatelessWidget {
   final int itemCount;
   final double maxDiameter;
   final EdgeInsets cardPadding;
+  final Axis scrollDirection;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
   const ShimmerCirclesGrid(
       {Key? key,
       this.itemCount = 20,
       this.maxDiameter = 80,
-      this.cardPadding = const EdgeInsets.all(6.0)})
+      this.cardPadding = const EdgeInsets.all(6.0),
+      this.scrollDirection = Axis.vertical,
+      this.mainAxisSpacing = 16,
+      this.crossAxisSpacing = 16})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      height: scrollDirection == Axis.horizontal ? maxDiameter * 2 : null,
       padding: const EdgeInsets.only(top: 12.0, left: 12, right: 12),
       child: GridView.builder(
+          scrollDirection: scrollDirection,
           shrinkWrap: true,
           itemCount: itemCount,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: maxDiameter,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16),
+              crossAxisSpacing: crossAxisSpacing,
+              mainAxisSpacing: mainAxisSpacing),
           itemBuilder: (c, i) => ShimmerCircle(
                 diameter: maxDiameter,
               )),

@@ -7,7 +7,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:collection/collection.dart';
@@ -94,6 +94,7 @@ class __FilterablePublicWorkoutsState extends State<_FilterablePublicWorkouts> {
                 padding: const EdgeInsets.only(top: 6, bottom: 60),
                 shrinkWrap: true,
                 itemCount: sortedWorkouts.length,
+                cacheExtent: 3000,
                 itemBuilder: (c, i) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),

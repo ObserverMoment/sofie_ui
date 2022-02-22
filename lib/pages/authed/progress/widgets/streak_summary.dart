@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_picker_modal.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -39,11 +38,11 @@ class StreaksSummaryWidget extends StatelessWidget {
         {'workoutsPerWeekTarget': workoutsPerWeekTarget});
   }
 
-  String _yearWeekKey(DateTime date) => '${date.year}:${date.weekNumberInYear}';
+  /// Get the date of the nearest past Monday of [date].
+  DateTime _mondayBeforeDate(DateTime date) =>
+      DateTime(date.year, date.month, date.day - date.weekday + 1);
 
   int get _weekStreakCount {
-    final now = DateTime.now();
-
     final perWeekTarget = userProfile.workoutsPerWeekTarget;
 
     if (perWeekTarget == null) {
@@ -52,31 +51,25 @@ class StreaksSummaryWidget extends StatelessWidget {
       return 0;
     }
 
-    /// Go back through week grouped logs starting from last week. Increment count for each week where count >= [perWeekTarget].
-    final currentWeek = now.weekNumberInYear;
-    final currentYear = now.year;
-
-    /// Keys are formatted like [year:week]
-    final logsByWeekAndYear =
-        loggedWorkouts.groupListsBy((l) => _yearWeekKey(l.completedOn));
+    /// Group logs by week by assigning them to key of the nearest past Monday via [_mondayBeforeDate]
+    final logsByWeek =
+        loggedWorkouts.groupListsBy((l) => _mondayBeforeDate(l.completedOn));
 
     int weekStreakCount = 0;
 
-    /// Start from last week.
-    int weekCursor = currentWeek;
-    int yearCursor = currentYear;
+    final now = DateTime.now();
+
+    /// Start checking from the most recent Sunday (i.e. the first week to consider is "last" week) to the previous Monday and then move back both days one week at a time to check each preceeding week.
+    DateTime mondayCursor =
+        DateTime(now.year, now.month, now.day - 7 - (now.weekday - 1));
 
     while (true) {
-      final logs = logsByWeekAndYear['$yearCursor:$weekCursor'];
+      final logs = logsByWeek[mondayCursor];
 
       if (logs != null && logs.length >= perWeekTarget) {
         weekStreakCount++;
-        if (weekCursor == 1) {
-          weekCursor = 52;
-          yearCursor--;
-        } else {
-          weekCursor--;
-        }
+        mondayCursor = DateTime(
+            mondayCursor.year, mondayCursor.month, mondayCursor.day - 7);
       } else {
         break;
       }

@@ -1,5 +1,5 @@
-query userLoggedWorkouts($take: Int) {
-  userLoggedWorkouts(take: $take) {
+query userLoggedWorkouts {
+  userLoggedWorkouts {
     ...LoggedWorkout
     User {
       ...UserAvatarData
