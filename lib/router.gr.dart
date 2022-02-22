@@ -70,17 +70,17 @@ import 'pages/authed/discover/discover_people_page.dart' as _i33;
 import 'pages/authed/feed/feed_page.dart' as _i59;
 import 'pages/authed/feed/notifications_page.dart' as _i13;
 import 'pages/authed/feed/your_posts_page.dart' as _i21;
-import 'pages/authed/home/home_page.dart' as _i61;
-import 'pages/authed/home/your_clubs.dart' as _i16;
-import 'pages/authed/home/your_collections.dart' as _i17;
-import 'pages/authed/home/your_gym_profiles.dart' as _i18;
-import 'pages/authed/home/your_moves_library.dart' as _i19;
-import 'pages/authed/home/your_plans/your_plans.dart' as _i20;
-import 'pages/authed/home/your_schedule.dart' as _i22;
-import 'pages/authed/home/your_throwdowns.dart' as _i23;
-import 'pages/authed/home/your_workouts/your_workouts.dart' as _i24;
 import 'pages/authed/landing_pages/club_invite_landing_page.dart' as _i8;
 import 'pages/authed/main_tabs_page.dart' as _i4;
+import 'pages/authed/my_studio/my_studio_page.dart' as _i61;
+import 'pages/authed/my_studio/your_clubs.dart' as _i16;
+import 'pages/authed/my_studio/your_collections.dart' as _i17;
+import 'pages/authed/my_studio/your_gym_profiles.dart' as _i18;
+import 'pages/authed/my_studio/your_moves_library.dart' as _i19;
+import 'pages/authed/my_studio/your_plans/your_plans.dart' as _i20;
+import 'pages/authed/my_studio/your_schedule.dart' as _i22;
+import 'pages/authed/my_studio/your_throwdowns.dart' as _i23;
+import 'pages/authed/my_studio/your_workouts/your_workouts.dart' as _i24;
 import 'pages/authed/page_not_found.dart' as _i58;
 import 'pages/authed/profile/archive_page.dart' as _i11;
 import 'pages/authed/profile/edit_profile_page.dart' as _i14;
@@ -539,9 +539,9 @@ class AppRouter extends _i64.RootStackRouter {
       return _i64.CupertinoPageX<dynamic>(
           routeData: routeData, child: const _i60.DiscoverPage());
     },
-    HomeRoute.name: (routeData) {
+    MyStudioRoute.name: (routeData) {
       return _i64.CupertinoPageX<dynamic>(
-          routeData: routeData, child: const _i61.HomePage());
+          routeData: routeData, child: const _i61.MyStudioPage());
     },
     ProgressRoute.name: (routeData) {
       return _i64.CupertinoPageX<dynamic>(
@@ -566,7 +566,7 @@ class AppRouter extends _i64.RootStackRouter {
                     path: '', parent: MainTabsRoute.name),
                 _i64.RouteConfig(DiscoverRoute.name,
                     path: 'discover', parent: MainTabsRoute.name),
-                _i64.RouteConfig(HomeRoute.name,
+                _i64.RouteConfig(MyStudioRoute.name,
                     path: 'studio', parent: MainTabsRoute.name),
                 _i64.RouteConfig(ProgressRoute.name,
                     path: 'progress', parent: MainTabsRoute.name),
@@ -1135,7 +1135,7 @@ class LoggedWorkoutsRoute extends _i64.PageRouteInfo<LoggedWorkoutsRouteArgs> {
   LoggedWorkoutsRoute(
       {_i66.Key? key,
       void Function(_i67.LoggedWorkout)? selectLoggedWorkout,
-      String pageTitle = 'Workout Logs'})
+      String pageTitle = 'Logs & Analysis'})
       : super(LoggedWorkoutsRoute.name,
             path: 'workout-logs',
             args: LoggedWorkoutsRouteArgs(
@@ -1148,7 +1148,7 @@ class LoggedWorkoutsRoute extends _i64.PageRouteInfo<LoggedWorkoutsRouteArgs> {
 
 class LoggedWorkoutsRouteArgs {
   const LoggedWorkoutsRouteArgs(
-      {this.key, this.selectLoggedWorkout, this.pageTitle = 'Workout Logs'});
+      {this.key, this.selectLoggedWorkout, this.pageTitle = 'Logs & Analysis'});
 
   final _i66.Key? key;
 
@@ -2026,11 +2026,11 @@ class DiscoverRoute extends _i64.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i61.HomePage]
-class HomeRoute extends _i64.PageRouteInfo<void> {
-  const HomeRoute() : super(HomeRoute.name, path: 'studio');
+/// [_i61.MyStudioPage]
+class MyStudioRoute extends _i64.PageRouteInfo<void> {
+  const MyStudioRoute() : super(MyStudioRoute.name, path: 'studio');
 
-  static const String name = 'HomeRoute';
+  static const String name = 'MyStudioRoute';
 }
 
 /// generated route for

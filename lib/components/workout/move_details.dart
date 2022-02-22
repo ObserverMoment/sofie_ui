@@ -55,7 +55,7 @@ class MoveDetails extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  const H3('Selectable Equipment'),
+                  const H3('Equipment Variants'),
                   const SizedBox(height: 10),
                   const MyText(
                     'You can select one of these for completing the move. Generally, these will be different modes of load / resistance (free weights, bands, machines etc), or items needed for certain modifications.',

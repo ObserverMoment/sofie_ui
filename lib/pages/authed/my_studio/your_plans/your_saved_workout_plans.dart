@@ -7,7 +7,7 @@ import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/workout_plan/selectable_workout_plan_card.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/components/user_input/filters/tags_collections_filter_menu.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:auto_route/auto_route.dart';

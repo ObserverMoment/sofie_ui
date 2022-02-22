@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
+import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
+import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -36,7 +38,7 @@ class WelcomeTodoItems extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 16, bottom: 16),
                 child: WelcomeTodoList(
                   welcomeTodoItems: data.welcomeTodoItems
-                      .sortedBy<DateTime>((a) => a.createdAt),
+                      .sortedBy<num>((a) => int.parse(a.id)),
                 ),
               ));
         });
@@ -49,6 +51,9 @@ class WelcomeTodoList extends StatelessWidget {
       : super(key: key);
 
   double get _cardHeight => 70.0;
+  int _nextIndex(int i) => (i * 3) + 3;
+  int? _clampedIndex(int i) =>
+      _nextIndex(i) > welcomeTodoItems.length ? null : _nextIndex(i);
 
   @override
   Widget build(BuildContext context) {
@@ -64,20 +69,29 @@ class WelcomeTodoList extends StatelessWidget {
               ? _cardHeight
               : _cardHeight * 3,
       child: PageView.builder(
-        itemCount: (welcomeTodoItems.length / 3).ceil(),
-        controller: PageController(viewportFraction: onlyOne ? 1 : 0.93),
-        itemBuilder: (c, i) => Column(
-          children: welcomeTodoItems
-              .slice(i * 3, (i * 3) + 3)
-              .map((msg) => GestureDetector(
-                    onTap: () => print('TODO'),
-                    child: WelcomeTodoItemCard(
-                      welcomeTodoItem: msg,
-                    ),
-                  ))
-              .toList(),
-        ),
-      ),
+          itemCount: (welcomeTodoItems.length / 3).ceil(),
+          controller: PageController(viewportFraction: onlyOne ? 1 : 0.93),
+          itemBuilder: (c, i) => ImplicitlyAnimatedList<WelcomeTodoItem>(
+              items: welcomeTodoItems.slice(i * 3, _clampedIndex(i)),
+              itemBuilder: (context, animation, item, index) =>
+                  SizeFadeTransition(
+                    animation: animation,
+                    sizeFraction: 0.7,
+                    curve: Curves.easeInOut,
+                    child: GestureDetector(
+                        onTap: item.routeTo != null
+                            ? () => context.navigateNamedTo(item.routeTo!)
+                            : item.videoUri != null
+                                ? () =>
+                                    VideoSetupManager.openFullScreenVideoPlayer(
+                                        context: context,
+                                        videoUri: item.videoUri!)
+                                : null,
+                        child: WelcomeTodoItemCard(
+                          welcomeTodoItem: item,
+                        )),
+                  ),
+              areItemsTheSame: (a, b) => a.id == b.id)),
     );
   }
 }
@@ -118,41 +132,12 @@ class WelcomeTodoItemCard extends StatelessWidget {
           ],
         ),
         TertiaryButton(
-            text: 'Got It',
+            text: 'Clear',
             backgroundColor: context.theme.background,
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             fontSize: FONTSIZE.one,
             onPressed: () => _markWelcomeTodoItemAsSeen(context))
       ],
     ));
-  }
-}
-
-class UpdateAnnouncementLink extends StatelessWidget {
-  final String routeTo;
-  const UpdateAnnouncementLink({Key? key, required this.routeTo})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.navigateNamedTo(routeTo),
-      child: ContentBox(
-        backgroundColor: context.theme.modalBackground,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            MyText('GO'),
-            SizedBox(width: 6),
-            Icon(
-              CupertinoIcons.chevron_right,
-              size: 16,
-            )
-          ],
-        ),
-      ),
-    );
   }
 }

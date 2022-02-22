@@ -12,7 +12,7 @@ import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.da
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';

@@ -367,6 +367,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                             )
                         ],
                         child: ListView(
+                          cacheExtent: 3000,
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           children: [
@@ -388,6 +389,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                                     bottom: 8,
                                     right: 8,
                                     child: LogCountByWorkout(
+                                      key: Key(workout.id),
                                       workoutId: workout.id,
                                     ),
                                   ),
