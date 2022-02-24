@@ -1446,7 +1446,7 @@ packages:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "19.4.50"
+    version: "19.4.53"
   syncfusion_flutter_gauges:
     dependency: "direct main"
     description:
@@ -1489,6 +1489,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "19.4.50-beta"
+  syncfusion_flutter_treemap:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_treemap
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "19.4.53-beta"
   synchronized:
     dependency: transitive
     description:

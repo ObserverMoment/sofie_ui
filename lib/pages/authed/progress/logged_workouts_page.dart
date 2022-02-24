@@ -3,7 +3,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/pickers/date_and_range_picker.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -12,6 +11,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/filterable_logged_workouts_list.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/log_analysis_averages_widget.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/session_type_and_info_widgets.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -46,23 +46,22 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
         query: query,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
-          final logs = data.userLoggedWorkouts
+          final allLogs = data.userLoggedWorkouts
               .sortedBy<DateTime>((l) => l.completedOn)
               .reversed
               .toList();
 
-          final filteredLogs = logs
+          final filteredSortedLogs = allLogs
               .where((l) => l.completedOn.isBetweenDates(_from, _to))
+              .sortedBy<DateTime>((l) => l.completedOn)
               .toList();
-
-          print(filteredLogs.length);
 
           return CupertinoPageScaffold(
               child: NestedScrollView(
                   headerSliverBuilder: (c, i) => [
                         MySliverNavbar(
                           title: widget.pageTitle,
-                          trailing: logs.isEmpty
+                          trailing: allLogs.isEmpty
                               ? null
                               : NavBarTrailingRow(children: [
                                   IconButton(
@@ -70,7 +69,7 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                                       onPressed: () => context.push(
                                               child:
                                                   FilterableLoggedWorkoutsList(
-                                            logs: logs,
+                                            logs: allLogs,
                                             selectLoggedWorkout:
                                                 widget.selectLoggedWorkout,
                                           ))),
@@ -79,7 +78,7 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                       ],
                   body: Column(
                     children: [
-                      logs.isEmpty
+                      filteredSortedLogs.isEmpty
                           ? YourContentEmptyPlaceholder(
                               message: 'No logs...',
                               explainer:
@@ -96,14 +95,16 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                                   shrinkWrap: true,
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 4, horizontal: 8),
-                                  itemCount: 1,
+                                  itemCount: 2,
                                   itemBuilder: (c, i) {
                                     switch (i) {
                                       case 0:
                                         return LogAnalysisAveragesWidget(
-                                          loggedWorkouts: filteredLogs,
-                                          fromDate: DateTime.now(),
-                                          toDate: DateTime.now(),
+                                          loggedWorkouts: filteredSortedLogs,
+                                        );
+                                      case 1:
+                                        return SessionTypeAndInfoWidgets(
+                                          loggedWorkouts: filteredSortedLogs,
                                         );
                                       default:
                                         throw Exception(

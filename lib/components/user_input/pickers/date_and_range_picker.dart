@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/pickers/date_time_pickers.dart';
 import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -80,6 +81,27 @@ class _DateAndRangePickerDisplayState extends State<DateAndRangePickerDisplay> {
     }
   }
 
+  void _openFromDatePicker() {
+    _openDatePicker(widget.from, 'From Date', (d) => _updateFromDate(d));
+  }
+
+  void _openToDatePicker() {
+    _openDatePicker(widget.to, 'To Date', (d) => _updateToDate(d));
+  }
+
+  void _openDatePicker(
+      DateTime? date, String title, void Function(DateTime) saveDateTime) {
+    context.showBottomSheet(
+        expand: false,
+        child: DateTimePicker(
+          title: title,
+          dateTime: date,
+          showDate: true,
+          showTime: false,
+          saveDateTime: saveDateTime,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ContentBox(
@@ -91,12 +113,14 @@ class _DateAndRangePickerDisplayState extends State<DateAndRangePickerDisplay> {
               date: widget.from,
               label: 'From',
               placeholder: 'Big Bang',
+              onTap: _openFromDatePicker,
             ),
             const SizedBox(width: 6),
             _DatePickerinputDisplay(
               date: widget.to,
               label: 'To',
               placeholder: 'Today',
+              onTap: _openToDatePicker,
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -142,36 +166,45 @@ class _DatePickerinputDisplay extends StatelessWidget {
   final DateTime? date;
   final String label;
   final String placeholder;
+  final VoidCallback onTap;
   const _DatePickerinputDisplay(
       {Key? key,
       required this.date,
       required this.placeholder,
-      required this.label})
+      required this.label,
+      required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 100,
-      height: 56,
-      child: ContentBox(
-        backgroundColor: context.theme.background,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            MyText(
-              label,
-              size: FONTSIZE.one,
-            ),
-            const SizedBox(height: 4),
-            date != null
-                ? MyText(date!.minimalDateStringYear)
-                : MyText(
-                    placeholder,
-                    subtext: true,
-                  ),
-          ],
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap,
+      child: SizedBox(
+        width: 100,
+        height: 56,
+        child: ContentBox(
+          backgroundColor: context.theme.background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              MyText(
+                label,
+                size: FONTSIZE.one,
+              ),
+              const SizedBox(height: 4),
+              date != null
+                  ? MyText(
+                      date!.minimalDateStringYear,
+                      weight: FontWeight.bold,
+                    )
+                  : MyText(
+                      placeholder,
+                      subtext: true,
+                    ),
+            ],
+          ),
         ),
       ),
     );

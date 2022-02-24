@@ -76,6 +76,9 @@ extension DateTimeExtension on DateTime {
         tomorrow.year == year;
   }
 
+  /// Truncates hours, mins, secs etc.
+  DateTime get roundedToDay => DateTime(year, month, day);
+
   bool isSameDate(DateTime other) {
     return year == other.year && month == other.month && day == other.day;
   }
