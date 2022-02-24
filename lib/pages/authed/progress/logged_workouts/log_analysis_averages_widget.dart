@@ -45,26 +45,39 @@ class LogAnalysisAveragesWidget extends StatelessWidget {
     final monthSessions = total.sessions / numMonths;
     final monthMinutes = total.minutes / numMonths;
 
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      crossAxisCount: 3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _AvgStatDisplay(
-          label: 'Daily Avg',
-          minutes: dayMinutes,
-          sessions: daySessions,
+        const Padding(
+          padding: EdgeInsets.only(left: 8.0, bottom: 8, right: 8, top: 16),
+          child: MyText(
+            'Averages by Period',
+            size: FONTSIZE.four,
+            weight: FontWeight.bold,
+          ),
         ),
-        _AvgStatDisplay(
-          label: 'Weekly Avg',
-          minutes: weekMinutes,
-          sessions: weekSessions,
-        ),
-        _AvgStatDisplay(
-          label: 'Monthly Avg',
-          minutes: monthMinutes,
-          sessions: monthSessions,
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          crossAxisCount: 3,
+          children: [
+            _AvgStatDisplay(
+              label: 'Daily Avg',
+              minutes: dayMinutes,
+              sessions: daySessions,
+            ),
+            _AvgStatDisplay(
+              label: 'Weekly Avg',
+              minutes: weekMinutes,
+              sessions: weekSessions,
+            ),
+            _AvgStatDisplay(
+              label: 'Monthly Avg',
+              minutes: monthMinutes,
+              sessions: monthSessions,
+            ),
+          ],
         ),
       ],
     );

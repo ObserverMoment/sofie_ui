@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -7,97 +8,43 @@ import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:supercharged/supercharged.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_treemap/treemap.dart';
 
-class SessionTypeAndInfoWidgets extends StatelessWidget {
+class SessionTypeAndMoveTypeWidgets extends StatelessWidget {
   final List<LoggedWorkout> loggedWorkouts;
-  const SessionTypeAndInfoWidgets({Key? key, required this.loggedWorkouts})
+  const SessionTypeAndMoveTypeWidgets({Key? key, required this.loggedWorkouts})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
-      shrinkWrap: true,
-      crossAxisCount: 2,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _AvgSessionLength(
-          loggedWorkouts: loggedWorkouts,
+        const Padding(
+          padding: EdgeInsets.only(left: 8.0, bottom: 8, right: 8, top: 16),
+          child: MyText(
+            'Session Types and Move Types',
+            size: FONTSIZE.four,
+            weight: FontWeight.bold,
+          ),
         ),
-        _WorkoutSectionTypes(
-          loggedWorkouts: loggedWorkouts,
-        ),
-        _WorkoutGoalsTargeted(
-          loggedWorkouts: loggedWorkouts,
-        ),
-        _MoveTypes(
-          loggedWorkouts: loggedWorkouts,
+        GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          crossAxisCount: 2,
+          children: [
+            _WorkoutSectionTypes(
+              loggedWorkouts: loggedWorkouts,
+            ),
+            _MoveTypes(
+              loggedWorkouts: loggedWorkouts,
+            ),
+          ],
         ),
       ],
-    );
-  }
-}
-
-class _AvgSessionLength extends StatelessWidget {
-  final List<LoggedWorkout> loggedWorkouts;
-  const _AvgSessionLength({Key? key, required this.loggedWorkouts})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final sessionTimes =
-        loggedWorkouts.map((l) => l.totalSessionTime.inSeconds);
-
-    final average = sessionTimes.average;
-    final sum = sessionTimes.sum;
-
-    final avgDuration = Duration(seconds: average.round());
-    final sumDuration = Duration(seconds: sum.round());
-
-    return Card(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Column(
-            children: [
-              MyHeaderText(
-                loggedWorkouts.length.toString(),
-                size: FONTSIZE.two,
-              ),
-              MyHeaderText(
-                'sessions',
-                size: FONTSIZE.two,
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              MyHeaderText(
-                sumDuration.displayString,
-                size: FONTSIZE.two,
-              ),
-              MyHeaderText(
-                'minutes',
-                size: FONTSIZE.two,
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              MyHeaderText(
-                avgDuration.displayString,
-                size: FONTSIZE.two,
-              ),
-              MyHeaderText(
-                'Per Session',
-                size: FONTSIZE.two,
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }
@@ -140,9 +87,12 @@ class _WorkoutSectionTypes extends StatelessWidget {
     final chartData =
         counts.entries.map((e) => _SectionTypeCount(e.key, e.value)).toList();
 
+    final highestCount = chartData.map((d) => d.count).max() ?? 0;
+    final highestPercentage = highestCount / totalSections;
+
     return LayoutBuilder(
         builder: (context, constraints) => Card(
-              padding: const EdgeInsets.all(0),
+              padding: EdgeInsets.zero,
               child: Center(
                 child: SizedBox(
                   height: constraints.maxHeight,
@@ -157,6 +107,8 @@ class _WorkoutSectionTypes extends StatelessWidget {
                       },
                       levels: [
                         TreemapLevel(
+                          colorValueMapper: (tile) => Styles.secondaryAccent
+                              .withOpacity(tile.weight / highestPercentage),
                           border: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(4)),
                           labelBuilder:
@@ -172,6 +124,7 @@ class _WorkoutSectionTypes extends StatelessWidget {
                                     weight: FontWeight.bold,
                                     maxLines: 2,
                                     overflow: TextOverflow.fade,
+                                    color: Styles.white,
                                   ),
                                 ],
                               ),
@@ -188,38 +141,6 @@ class _WorkoutSectionTypes extends StatelessWidget {
                 ),
               ),
             ));
-  }
-}
-
-class _WorkoutGoalsTargeted extends StatelessWidget {
-  final List<LoggedWorkout> loggedWorkouts;
-  const _WorkoutGoalsTargeted({Key? key, required this.loggedWorkouts})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        children: [
-          MyHeaderText(
-            'Overview',
-            size: FONTSIZE.two,
-          ),
-          MyHeaderText(
-            'Average Session Length',
-            size: FONTSIZE.two,
-          ),
-          MyHeaderText(
-            'Total Sessions',
-            size: FONTSIZE.two,
-          ),
-          MyHeaderText(
-            'Total Minutes',
-            size: FONTSIZE.two,
-          ),
-        ],
-      ),
-    );
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/date_and_range_picker.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -11,7 +12,8 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/filterable_logged_workouts_list.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/log_analysis_averages_widget.dart';
-import 'package:sofie_ui/pages/authed/progress/logged_workouts/session_type_and_info_widgets.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/session_type_and_move_type_widgets.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/workout_goals_targeted_widget.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -57,68 +59,68 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
               .toList();
 
           return CupertinoPageScaffold(
-              child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                        MySliverNavbar(
-                          title: widget.pageTitle,
-                          trailing: allLogs.isEmpty
-                              ? null
-                              : NavBarTrailingRow(children: [
-                                  IconButton(
-                                      iconData: CupertinoIcons.list_bullet,
-                                      onPressed: () => context.push(
-                                              child:
-                                                  FilterableLoggedWorkoutsList(
-                                            logs: allLogs,
-                                            selectLoggedWorkout:
-                                                widget.selectLoggedWorkout,
-                                          ))),
-                                ]),
-                        )
-                      ],
-                  body: Column(
-                    children: [
-                      filteredSortedLogs.isEmpty
-                          ? YourContentEmptyPlaceholder(
-                              message: 'No logs...',
-                              explainer:
-                                  'There is no workout log data available for the date range selected. ',
-                              actions: [
-                                  EmptyPlaceholderAction(
-                                      action: () => context.navigateTo(
-                                          PublicWorkoutFinderRoute()),
-                                      buttonIcon: CupertinoIcons.compass,
-                                      buttonText: 'Find a Workout'),
-                                ])
-                          : Expanded(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 4, horizontal: 8),
-                                  itemCount: 2,
-                                  itemBuilder: (c, i) {
-                                    switch (i) {
-                                      case 0:
-                                        return LogAnalysisAveragesWidget(
-                                          loggedWorkouts: filteredSortedLogs,
-                                        );
-                                      case 1:
-                                        return SessionTypeAndInfoWidgets(
-                                          loggedWorkouts: filteredSortedLogs,
-                                        );
-                                      default:
-                                        throw Exception(
-                                            'LoggedWorkoutsPage: Widget builder - no widget defined at this index - Index:$i');
-                                    }
-                                  }),
-                            ),
-                      DateAndRangePickerDisplay(
-                        from: _from,
-                        to: _to,
-                        updateRange: _updateDateRange,
-                      )
-                    ],
-                  )));
+              navigationBar: MyNavBar(
+                middle: NavBarTitle(widget.pageTitle),
+                trailing: allLogs.isEmpty
+                    ? null
+                    : NavBarTrailingRow(children: [
+                        IconButton(
+                            iconData: CupertinoIcons.list_bullet,
+                            onPressed: () => context.push(
+                                    child: FilterableLoggedWorkoutsList(
+                                  logs: allLogs,
+                                  selectLoggedWorkout:
+                                      widget.selectLoggedWorkout,
+                                ))),
+                      ]),
+              ),
+              child: Column(
+                children: [
+                  filteredSortedLogs.isEmpty
+                      ? YourContentEmptyPlaceholder(
+                          message: 'No logs...',
+                          explainer:
+                              'There is no workout log data available for the date range selected. ',
+                          actions: [
+                              EmptyPlaceholderAction(
+                                  action: () => context
+                                      .navigateTo(PublicWorkoutFinderRoute()),
+                                  buttonIcon: CupertinoIcons.compass,
+                                  buttonText: 'Find a Workout'),
+                            ])
+                      : Expanded(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
+                              itemCount: 3,
+                              itemBuilder: (c, i) {
+                                switch (i) {
+                                  case 0:
+                                    return LogAnalysisAveragesWidget(
+                                      loggedWorkouts: filteredSortedLogs,
+                                    );
+                                  case 1:
+                                    return WorkoutGoalsTargetedWidget(
+                                      loggedWorkouts: filteredSortedLogs,
+                                    );
+                                  case 2:
+                                    return SessionTypeAndMoveTypeWidgets(
+                                      loggedWorkouts: filteredSortedLogs,
+                                    );
+                                  default:
+                                    throw Exception(
+                                        'LoggedWorkoutsPage: Widget builder - no widget defined at this index - Index:$i');
+                                }
+                              }),
+                        ),
+                  DateAndRangePickerDisplay(
+                    from: _from,
+                    to: _to,
+                    updateRange: _updateDateRange,
+                  )
+                ],
+              ));
         });
   }
 }
