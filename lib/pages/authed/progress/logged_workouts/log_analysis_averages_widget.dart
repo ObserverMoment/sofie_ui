@@ -5,7 +5,13 @@ import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 
 class LogAnalysisAveragesWidget extends StatelessWidget {
   final List<LoggedWorkout> loggedWorkouts;
-  const LogAnalysisAveragesWidget({Key? key, required this.loggedWorkouts})
+  final DateTime fromDate;
+  final DateTime toDate;
+  const LogAnalysisAveragesWidget(
+      {Key? key,
+      required this.loggedWorkouts,
+      required this.fromDate,
+      required this.toDate})
       : super(key: key);
 
   @override

@@ -126,6 +126,17 @@ extension DateTimeExtension on DateTime {
     int dayOfDec28 = int.parse(DateFormat("D").format(dec28));
     return ((dayOfDec28 - dec28.weekday + 10) / 7).floor();
   }
+
+  /// Adding and subtracting. Pass negative
+  DateTime daysBefore(int days) => DateTime(year, month, day - days);
+  DateTime daysAfter(int days) => DateTime(year, month, day + days);
+
+  /// Checking date falling within a range.
+  bool isBeforeOrSame(DateTime to) => isAtSameMomentAs(to) || isBefore(to);
+  bool isAfterOrSame(DateTime from) => isAtSameMomentAs(from) || isAfter(from);
+  bool isBetweenDates(DateTime? from, DateTime? to) =>
+      (from == null || isAfterOrSame(from)) &&
+      (to == null || isBeforeOrSame(to));
 }
 
 extension DoubleExtension on double {

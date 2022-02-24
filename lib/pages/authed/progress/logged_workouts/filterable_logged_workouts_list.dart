@@ -125,7 +125,6 @@ class _FilterableLoggedWorkoutsListState
                   const SizedBox(height: 10),
                   Expanded(
                     child: FABPage(
-                        rowButtonsAlignment: MainAxisAlignment.end,
                         rowButtons: [
                           if (_filterFrom != null || _filterTo != null)
                             FadeInUp(

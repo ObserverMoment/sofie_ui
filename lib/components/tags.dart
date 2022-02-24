@@ -58,6 +58,7 @@ class SelectableTag extends StatelessWidget {
   final Color selectedColor;
   final FONTSIZE fontSize;
   final EdgeInsets padding;
+  final BorderRadius? borderRadius;
 
   const SelectableTag(
       {Key? key,
@@ -66,7 +67,8 @@ class SelectableTag extends StatelessWidget {
       required this.text,
       this.fontSize = FONTSIZE.three,
       this.selectedColor = Styles.primaryAccent,
-      this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8)})
+      this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      this.borderRadius})
       : super(key: key);
 
   @override
@@ -81,7 +83,7 @@ class SelectableTag extends StatelessWidget {
                 ? Border.all(color: selectedColor)
                 : Border.all(color: context.theme.primary.withOpacity(0.5)),
             color: isSelected ? selectedColor : context.theme.background,
-            borderRadius: BorderRadius.circular(30)),
+            borderRadius: borderRadius ?? BorderRadius.circular(30)),
         padding: padding,
         child: MyText(
           text,
