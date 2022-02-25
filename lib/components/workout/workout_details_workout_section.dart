@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_page_view.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';

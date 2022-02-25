@@ -111,6 +111,8 @@ class MoveTypeTag extends StatelessWidget {
       child: MyText(
         moveType.name,
         size: fontSize,
+        color: Styles.infoBlue,
+        lineHeight: 1,
       ),
     );
   }

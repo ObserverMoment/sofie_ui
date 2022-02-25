@@ -271,6 +271,18 @@ mixin CollectionMixin {
   late String name;
   String? description;
 }
+mixin WelcomeTodoItemMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  String? videoUri;
+  String? routeTo;
+  late String title;
+}
 mixin WorkoutDataMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -682,18 +694,6 @@ mixin ProgressWidgetMixin {
   String? subtitle;
   String? description;
 }
-mixin LogDataWidgetMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  late String name;
-  String? subtitle;
-  String? description;
-}
 mixin UserBenchmarkMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -853,18 +853,6 @@ mixin ClubInviteTokenMixin {
   late bool active;
   late int inviteLimit;
   late List<String> joinedUserIds;
-}
-mixin WelcomeTodoItemMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  String? videoUri;
-  String? routeTo;
-  late String title;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2659,6 +2647,73 @@ class RemoveWorkoutFromCollectionInput extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$RemoveWorkoutFromCollectionInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MarkWelcomeTodoItemAsSeen$Mutation extends JsonSerializable
+    with EquatableMixin {
+  MarkWelcomeTodoItemAsSeen$Mutation();
+
+  factory MarkWelcomeTodoItemAsSeen$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$MarkWelcomeTodoItemAsSeen$MutationFromJson(json);
+
+  late String markWelcomeTodoItemAsSeen;
+
+  @override
+  List<Object?> get props => [markWelcomeTodoItemAsSeen];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$MarkWelcomeTodoItemAsSeen$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MarkWelcomeTodoItemAsSeenInput extends JsonSerializable
+    with EquatableMixin {
+  MarkWelcomeTodoItemAsSeenInput(
+      {required this.userId, required this.welcomeTodoItemId});
+
+  factory MarkWelcomeTodoItemAsSeenInput.fromJson(Map<String, dynamic> json) =>
+      _$MarkWelcomeTodoItemAsSeenInputFromJson(json);
+
+  late String userId;
+
+  late String welcomeTodoItemId;
+
+  @override
+  List<Object?> get props => [userId, welcomeTodoItemId];
+  @override
+  Map<String, dynamic> toJson() => _$MarkWelcomeTodoItemAsSeenInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WelcomeTodoItem extends JsonSerializable
+    with EquatableMixin, WelcomeTodoItemMixin {
+  WelcomeTodoItem();
+
+  factory WelcomeTodoItem.fromJson(Map<String, dynamic> json) =>
+      _$WelcomeTodoItemFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, videoUri, routeTo, title];
+  @override
+  Map<String, dynamic> toJson() => _$WelcomeTodoItemToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WelcomeTodoItems$Query extends JsonSerializable with EquatableMixin {
+  WelcomeTodoItems$Query();
+
+  factory WelcomeTodoItems$Query.fromJson(Map<String, dynamic> json) =>
+      _$WelcomeTodoItems$QueryFromJson(json);
+
+  late List<WelcomeTodoItem> welcomeTodoItems;
+
+  @override
+  List<Object?> get props => [welcomeTodoItems];
+  @override
+  Map<String, dynamic> toJson() => _$WelcomeTodoItems$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -6188,21 +6243,6 @@ class ProgressWidget extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class LogDataWidget extends JsonSerializable
-    with EquatableMixin, LogDataWidgetMixin {
-  LogDataWidget();
-
-  factory LogDataWidget.fromJson(Map<String, dynamic> json) =>
-      _$LogDataWidgetFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, name, subtitle, description];
-  @override
-  Map<String, dynamic> toJson() => _$LogDataWidgetToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class CoreData extends JsonSerializable with EquatableMixin {
   CoreData();
 
@@ -6226,8 +6266,6 @@ class CoreData extends JsonSerializable with EquatableMixin {
 
   late List<ProgressWidget> progressWidgets;
 
-  late List<LogDataWidget> logDataWidgets;
-
   @override
   List<Object?> get props => [
         $$typename,
@@ -6237,8 +6275,7 @@ class CoreData extends JsonSerializable with EquatableMixin {
         workoutGoals,
         workoutSectionTypes,
         standardMoves,
-        progressWidgets,
-        logDataWidgets
+        progressWidgets
       ];
   @override
   Map<String, dynamic> toJson() => _$CoreDataToJson(this);
@@ -8448,73 +8485,6 @@ class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [clubId, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class MarkWelcomeTodoItemAsSeen$Mutation extends JsonSerializable
-    with EquatableMixin {
-  MarkWelcomeTodoItemAsSeen$Mutation();
-
-  factory MarkWelcomeTodoItemAsSeen$Mutation.fromJson(
-          Map<String, dynamic> json) =>
-      _$MarkWelcomeTodoItemAsSeen$MutationFromJson(json);
-
-  late String markWelcomeTodoItemAsSeen;
-
-  @override
-  List<Object?> get props => [markWelcomeTodoItemAsSeen];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$MarkWelcomeTodoItemAsSeen$MutationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class MarkWelcomeTodoItemAsSeenInput extends JsonSerializable
-    with EquatableMixin {
-  MarkWelcomeTodoItemAsSeenInput(
-      {required this.userId, required this.welcomeTodoItemId});
-
-  factory MarkWelcomeTodoItemAsSeenInput.fromJson(Map<String, dynamic> json) =>
-      _$MarkWelcomeTodoItemAsSeenInputFromJson(json);
-
-  late String userId;
-
-  late String welcomeTodoItemId;
-
-  @override
-  List<Object?> get props => [userId, welcomeTodoItemId];
-  @override
-  Map<String, dynamic> toJson() => _$MarkWelcomeTodoItemAsSeenInputToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WelcomeTodoItem extends JsonSerializable
-    with EquatableMixin, WelcomeTodoItemMixin {
-  WelcomeTodoItem();
-
-  factory WelcomeTodoItem.fromJson(Map<String, dynamic> json) =>
-      _$WelcomeTodoItemFromJson(json);
-
-  @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, videoUri, routeTo, title];
-  @override
-  Map<String, dynamic> toJson() => _$WelcomeTodoItemToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class WelcomeTodoItems$Query extends JsonSerializable with EquatableMixin {
-  WelcomeTodoItems$Query();
-
-  factory WelcomeTodoItems$Query.fromJson(Map<String, dynamic> json) =>
-      _$WelcomeTodoItems$QueryFromJson(json);
-
-  late List<WelcomeTodoItem> welcomeTodoItems;
-
-  @override
-  List<Object?> get props => [welcomeTodoItems];
-  @override
-  Map<String, dynamic> toJson() => _$WelcomeTodoItems$QueryToJson(this);
 }
 
 enum ContentAccessScope {
@@ -17355,6 +17325,155 @@ class RemoveWorkoutFromCollectionMutation extends GraphQLQuery<
   @override
   RemoveWorkoutFromCollection$Mutation parse(Map<String, dynamic> json) =>
       RemoveWorkoutFromCollection$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MarkWelcomeTodoItemAsSeenArguments extends JsonSerializable
+    with EquatableMixin {
+  MarkWelcomeTodoItemAsSeenArguments({required this.data});
+
+  @override
+  factory MarkWelcomeTodoItemAsSeenArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$MarkWelcomeTodoItemAsSeenArgumentsFromJson(json);
+
+  late MarkWelcomeTodoItemAsSeenInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$MarkWelcomeTodoItemAsSeenArgumentsToJson(this);
+}
+
+final MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'markWelcomeTodoItemAsSeen'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'MarkWelcomeTodoItemAsSeenInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'markWelcomeTodoItemAsSeen'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class MarkWelcomeTodoItemAsSeenMutation extends GraphQLQuery<
+    MarkWelcomeTodoItemAsSeen$Mutation, MarkWelcomeTodoItemAsSeenArguments> {
+  MarkWelcomeTodoItemAsSeenMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'markWelcomeTodoItemAsSeen';
+
+  @override
+  final MarkWelcomeTodoItemAsSeenArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  MarkWelcomeTodoItemAsSeen$Mutation parse(Map<String, dynamic> json) =>
+      MarkWelcomeTodoItemAsSeen$Mutation.fromJson(json);
+}
+
+final WELCOME_TODO_ITEMS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'welcomeTodoItems'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'welcomeTodoItems'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WelcomeTodoItem'), directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WelcomeTodoItem'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WelcomeTodoItem'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'routeTo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'title'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class WelcomeTodoItemsQuery
+    extends GraphQLQuery<WelcomeTodoItems$Query, JsonSerializable> {
+  WelcomeTodoItemsQuery();
+
+  @override
+  final DocumentNode document = WELCOME_TODO_ITEMS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'welcomeTodoItems';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  WelcomeTodoItems$Query parse(Map<String, dynamic> json) =>
+      WelcomeTodoItems$Query.fromJson(json);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -41831,15 +41950,6 @@ final CORE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'ProgressWidget'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'logDataWidgets'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'LogDataWidget'), directives: [])
                   ]))
             ]))
       ])),
@@ -42087,50 +42197,6 @@ final CORE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(
               name: NameNode(value: 'ProgressWidget'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'subtitle'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'LogDataWidget'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'LogDataWidget'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -53062,153 +53128,4 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   @override
   CreateClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       CreateClubInviteToken$Mutation.fromJson(json);
-}
-
-@JsonSerializable(explicitToJson: true)
-class MarkWelcomeTodoItemAsSeenArguments extends JsonSerializable
-    with EquatableMixin {
-  MarkWelcomeTodoItemAsSeenArguments({required this.data});
-
-  @override
-  factory MarkWelcomeTodoItemAsSeenArguments.fromJson(
-          Map<String, dynamic> json) =>
-      _$MarkWelcomeTodoItemAsSeenArgumentsFromJson(json);
-
-  late MarkWelcomeTodoItemAsSeenInput data;
-
-  @override
-  List<Object?> get props => [data];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$MarkWelcomeTodoItemAsSeenArgumentsToJson(this);
-}
-
-final MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT =
-    DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.mutation,
-      name: NameNode(value: 'markWelcomeTodoItemAsSeen'),
-      variableDefinitions: [
-        VariableDefinitionNode(
-            variable: VariableNode(name: NameNode(value: 'data')),
-            type: NamedTypeNode(
-                name: NameNode(value: 'MarkWelcomeTodoItemAsSeenInput'),
-                isNonNull: true),
-            defaultValue: DefaultValueNode(value: null),
-            directives: [])
-      ],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'markWelcomeTodoItemAsSeen'),
-            alias: null,
-            arguments: [
-              ArgumentNode(
-                  name: NameNode(value: 'data'),
-                  value: VariableNode(name: NameNode(value: 'data')))
-            ],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class MarkWelcomeTodoItemAsSeenMutation extends GraphQLQuery<
-    MarkWelcomeTodoItemAsSeen$Mutation, MarkWelcomeTodoItemAsSeenArguments> {
-  MarkWelcomeTodoItemAsSeenMutation({required this.variables});
-
-  @override
-  final DocumentNode document =
-      MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT;
-
-  @override
-  final String operationName = 'markWelcomeTodoItemAsSeen';
-
-  @override
-  final MarkWelcomeTodoItemAsSeenArguments variables;
-
-  @override
-  List<Object?> get props => [document, operationName, variables];
-  @override
-  MarkWelcomeTodoItemAsSeen$Mutation parse(Map<String, dynamic> json) =>
-      MarkWelcomeTodoItemAsSeen$Mutation.fromJson(json);
-}
-
-final WELCOME_TODO_ITEMS_QUERY_DOCUMENT = DocumentNode(definitions: [
-  OperationDefinitionNode(
-      type: OperationType.query,
-      name: NameNode(value: 'welcomeTodoItems'),
-      variableDefinitions: [],
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: 'welcomeTodoItems'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(
-                  name: NameNode(value: 'WelcomeTodoItem'), directives: [])
-            ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'WelcomeTodoItem'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'WelcomeTodoItem'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'routeTo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'title'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ]))
-]);
-
-class WelcomeTodoItemsQuery
-    extends GraphQLQuery<WelcomeTodoItems$Query, JsonSerializable> {
-  WelcomeTodoItemsQuery();
-
-  @override
-  final DocumentNode document = WELCOME_TODO_ITEMS_QUERY_DOCUMENT;
-
-  @override
-  final String operationName = 'welcomeTodoItems';
-
-  @override
-  List<Object?> get props => [document, operationName];
-  @override
-  WelcomeTodoItems$Query parse(Map<String, dynamic> json) =>
-      WelcomeTodoItems$Query.fromJson(json);
 }

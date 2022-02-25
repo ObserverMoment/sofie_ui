@@ -31,37 +31,44 @@ class YourContentEmptyPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            showIcon ? NoResultsToDisplay(message: message) : MyText(message),
-            const SizedBox(height: 20),
-            if (explainer != null)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: MyText(
-                  explainer!,
-                  maxLines: 10,
-                  lineHeight: 1.5,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ...actions
-                .map((a) => Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: PrimaryButton(
-                        onPressed: a.action,
-                        prefixIconData: a.buttonIcon,
-                        text: a.buttonText,
-                      ),
-                    ))
-                .toList()
-          ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                showIcon
+                    ? NoResultsToDisplay(message: message)
+                    : MyText(message),
+                const SizedBox(height: 20),
+                if (explainer != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: MyText(
+                      explainer!,
+                      maxLines: 10,
+                      lineHeight: 1.5,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ...actions
+                    .map((a) => Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: PrimaryButton(
+                            onPressed: a.action,
+                            prefixIconData: a.buttonIcon,
+                            text: a.buttonText,
+                          ),
+                        ))
+                    .toList()
+              ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }

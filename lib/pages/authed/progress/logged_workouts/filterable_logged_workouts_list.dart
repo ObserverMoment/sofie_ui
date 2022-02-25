@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/logged_workout_card.dart';
@@ -10,12 +11,13 @@ import 'package:sofie_ui/components/user_input/pickers/date_time_pickers.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/services/store/graphql_store.dart';
+import 'package:sofie_ui/services/store/query_observer.dart';
 
 class FilterableLoggedWorkoutsList extends StatefulWidget {
-  final List<LoggedWorkout> logs;
   final void Function(LoggedWorkout loggedWorkout)? selectLoggedWorkout;
-  const FilterableLoggedWorkoutsList(
-      {Key? key, required this.logs, this.selectLoggedWorkout})
+  const FilterableLoggedWorkoutsList({Key? key, this.selectLoggedWorkout})
       : super(key: key);
 
   @override
@@ -87,91 +89,107 @@ class _FilterableLoggedWorkoutsListState
 
   @override
   Widget build(BuildContext context) {
-    /// One day added / subtracted so as to get the range inclusively.
-    final logsAfterFromDate = _filterFrom == null
-        ? widget.logs
-        : widget.logs
-            .where((l) => l.completedOn
-                .isAfter(_filterFrom!.subtract(const Duration(days: 1))))
-            .toList();
+    final query = UserLoggedWorkoutsQuery();
+    return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
+        key: Key('LoggedWorkoutsPage - ${query.operationName}'),
+        query: query,
+        fetchPolicy: QueryFetchPolicy.storeFirst,
+        builder: (data) {
+          final logs = data.userLoggedWorkouts;
 
-    final logsBeforeToDate = _filterTo == null
-        ? logsAfterFromDate
-        : logsAfterFromDate
-            .where((l) =>
-                l.completedOn.isBefore(_filterTo!.add(const Duration(days: 1))))
-            .toList();
+          /// One day added / subtracted so as to get the range inclusively.
+          final logsAfterFromDate = _filterFrom == null
+              ? logs
+              : logs
+                  .where((l) => l.completedOn
+                      .isAfter(_filterFrom!.subtract(const Duration(days: 1))))
+                  .toList();
 
-    final filteredLogs = _filterBySearchString(logsBeforeToDate);
+          final logsBeforeToDate = _filterTo == null
+              ? logsAfterFromDate
+              : logsAfterFromDate
+                  .where((l) => l.completedOn
+                      .isBefore(_filterTo!.add(const Duration(days: 1))))
+                  .toList();
 
-    return MyPageScaffold(
-        child: NestedScrollView(
-            headerSliverBuilder: (c, i) => [
-                  const MySliverNavbar(
-                    title: 'Workout Logs',
-                  )
-                ],
-            body: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                    child: MyCupertinoSearchTextField(
-                      placeholder: 'Search logs',
-                      onChanged: (v) => setState(() => _searchString = v),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: FABPage(
-                        rowButtons: [
-                          if (_filterFrom != null || _filterTo != null)
-                            FadeInUp(
-                                child: FloatingButton(
-                              onTap: _clearDateRange,
-                              icon: CupertinoIcons.clear_thick,
-                            )),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: FABPageButtonContainer(
-                              padding: EdgeInsets.zero,
-                              child: Row(
-                                children: [
-                                  DateRangePickerDisplay(
-                                    textColor: context.theme.primary,
-                                    from: _filterFrom,
-                                    to: _filterTo,
-                                    updateRange: (from, to) => setState(() {
-                                      _filterFrom = from;
-                                      _filterTo = to;
-                                    }),
-                                  ),
-                                ],
-                              ),
-                            ),
+          final filteredLogs = _filterBySearchString(logsBeforeToDate);
+          final sortedLogs = filteredLogs
+              .sortedBy<DateTime>((l) => l.completedOn)
+              .reversed
+              .toList();
+
+          return MyPageScaffold(
+              child: NestedScrollView(
+                  headerSliverBuilder: (c, i) => [
+                        const MySliverNavbar(
+                          title: 'Workout Logs',
+                        )
+                      ],
+                  body: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          child: MyCupertinoSearchTextField(
+                            placeholder: 'Search logs',
+                            onChanged: (v) => setState(() => _searchString = v),
                           ),
-                        ],
-                        child: ContentBox(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.only(top: 8, bottom: 60),
-                            itemBuilder: (c, i) => Padding(
-                              padding: const EdgeInsets.only(bottom: 6.0),
-                              child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () => _handleLoggedWorkoutCardTap(
-                                      filteredLogs[i]),
-                                  child: LoggedWorkoutCard(
-                                    loggedWorkout: filteredLogs[i],
+                        ),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: FABPage(
+                              rowButtons: [
+                                if (_filterFrom != null || _filterTo != null)
+                                  FadeInUp(
+                                      child: FloatingButton(
+                                    onTap: _clearDateRange,
+                                    icon: CupertinoIcons.clear_thick,
                                   )),
-                            ),
-                            itemCount: filteredLogs.length,
-                          ),
-                        )),
-                  ),
-                ],
-              ),
-            )));
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: FABPageButtonContainer(
+                                    padding: EdgeInsets.zero,
+                                    child: Row(
+                                      children: [
+                                        DateRangePickerDisplay(
+                                          textColor: context.theme.primary,
+                                          from: _filterFrom,
+                                          to: _filterTo,
+                                          updateRange: (from, to) =>
+                                              setState(() {
+                                            _filterFrom = from;
+                                            _filterTo = to;
+                                          }),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                              child: ContentBox(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  padding:
+                                      const EdgeInsets.only(top: 8, bottom: 60),
+                                  itemBuilder: (c, i) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 6.0),
+                                    child: GestureDetector(
+                                        behavior: HitTestBehavior.opaque,
+                                        onTap: () =>
+                                            _handleLoggedWorkoutCardTap(
+                                                sortedLogs[i]),
+                                        child: LoggedWorkoutCard(
+                                          loggedWorkout: sortedLogs[i],
+                                        )),
+                                  ),
+                                  itemCount: sortedLogs.length,
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                  )));
+        });
   }
 }

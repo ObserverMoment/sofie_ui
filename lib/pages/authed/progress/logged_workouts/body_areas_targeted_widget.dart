@@ -1,9 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart';
 import 'package:sofie_ui/components/data_vis/percentage_bar_chart.dart';
-import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/widget_header.dart';

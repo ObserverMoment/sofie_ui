@@ -37,8 +37,5 @@ query coreData {
     progressWidgets {
       ...ProgressWidget
     }
-    logDataWidgets {
-      ...LogDataWidget
-    }
   }
 }

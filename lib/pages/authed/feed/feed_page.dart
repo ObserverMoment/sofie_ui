@@ -330,8 +330,8 @@ class _FeedPageState extends State<FeedPage> {
                 ),
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 8),
+                    padding: const EdgeInsets.only(
+                        left: 20.0, right: 20, top: 16, bottom: 8),
                     child: Row(
                       children: const [
                         Icon(
@@ -415,7 +415,7 @@ class _FeedPageState extends State<FeedPage> {
           ),
           if (_newActivities.isNotEmpty)
             Positioned(
-                bottom: EnvironmentConfig.bottomNavBarHeight + 20,
+                top: 40,
                 child: SizeFadeIn(
                     child: FloatingButton(
                   icon: CupertinoIcons.news,

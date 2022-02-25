@@ -1637,6 +1637,64 @@ Map<String, dynamic> _$RemoveWorkoutFromCollectionInputToJson(
       'collectionId': instance.collectionId,
     };
 
+MarkWelcomeTodoItemAsSeen$Mutation _$MarkWelcomeTodoItemAsSeen$MutationFromJson(
+        Map<String, dynamic> json) =>
+    MarkWelcomeTodoItemAsSeen$Mutation()
+      ..markWelcomeTodoItemAsSeen = json['markWelcomeTodoItemAsSeen'] as String;
+
+Map<String, dynamic> _$MarkWelcomeTodoItemAsSeen$MutationToJson(
+        MarkWelcomeTodoItemAsSeen$Mutation instance) =>
+    <String, dynamic>{
+      'markWelcomeTodoItemAsSeen': instance.markWelcomeTodoItemAsSeen,
+    };
+
+MarkWelcomeTodoItemAsSeenInput _$MarkWelcomeTodoItemAsSeenInputFromJson(
+        Map<String, dynamic> json) =>
+    MarkWelcomeTodoItemAsSeenInput(
+      userId: json['userId'] as String,
+      welcomeTodoItemId: json['welcomeTodoItemId'] as String,
+    );
+
+Map<String, dynamic> _$MarkWelcomeTodoItemAsSeenInputToJson(
+        MarkWelcomeTodoItemAsSeenInput instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'welcomeTodoItemId': instance.welcomeTodoItemId,
+    };
+
+WelcomeTodoItem _$WelcomeTodoItemFromJson(Map<String, dynamic> json) =>
+    WelcomeTodoItem()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..videoUri = json['videoUri'] as String?
+      ..routeTo = json['routeTo'] as String?
+      ..title = json['title'] as String;
+
+Map<String, dynamic> _$WelcomeTodoItemToJson(WelcomeTodoItem instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'videoUri': instance.videoUri,
+      'routeTo': instance.routeTo,
+      'title': instance.title,
+    };
+
+WelcomeTodoItems$Query _$WelcomeTodoItems$QueryFromJson(
+        Map<String, dynamic> json) =>
+    WelcomeTodoItems$Query()
+      ..welcomeTodoItems = (json['welcomeTodoItems'] as List<dynamic>)
+          .map((e) => WelcomeTodoItem.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$WelcomeTodoItems$QueryToJson(
+        WelcomeTodoItems$Query instance) =>
+    <String, dynamic>{
+      'welcomeTodoItems':
+          instance.welcomeTodoItems.map((e) => e.toJson()).toList(),
+    };
+
 ReorderWorkoutPlanDayWorkouts$Mutation
     _$ReorderWorkoutPlanDayWorkouts$MutationFromJson(
             Map<String, dynamic> json) =>
@@ -4846,25 +4904,6 @@ Map<String, dynamic> _$ProgressWidgetToJson(ProgressWidget instance) =>
       'description': instance.description,
     };
 
-LogDataWidget _$LogDataWidgetFromJson(Map<String, dynamic> json) =>
-    LogDataWidget()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-      ..name = json['name'] as String
-      ..subtitle = json['subtitle'] as String?
-      ..description = json['description'] as String?;
-
-Map<String, dynamic> _$LogDataWidgetToJson(LogDataWidget instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'name': instance.name,
-      'subtitle': instance.subtitle,
-      'description': instance.description,
-    };
-
 CoreData _$CoreDataFromJson(Map<String, dynamic> json) => CoreData()
   ..$$typename = json['__typename'] as String?
   ..bodyAreas = (json['bodyAreas'] as List<dynamic>)
@@ -4887,9 +4926,6 @@ CoreData _$CoreDataFromJson(Map<String, dynamic> json) => CoreData()
       .toList()
   ..progressWidgets = (json['progressWidgets'] as List<dynamic>)
       .map((e) => ProgressWidget.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..logDataWidgets = (json['logDataWidgets'] as List<dynamic>)
-      .map((e) => LogDataWidget.fromJson(e as Map<String, dynamic>))
       .toList();
 
 Map<String, dynamic> _$CoreDataToJson(CoreData instance) => <String, dynamic>{
@@ -4903,7 +4939,6 @@ Map<String, dynamic> _$CoreDataToJson(CoreData instance) => <String, dynamic>{
       'standardMoves': instance.standardMoves.map((e) => e.toJson()).toList(),
       'progressWidgets':
           instance.progressWidgets.map((e) => e.toJson()).toList(),
-      'logDataWidgets': instance.logDataWidgets.map((e) => e.toJson()).toList(),
     };
 
 CoreData$Query _$CoreData$QueryFromJson(Map<String, dynamic> json) =>
@@ -6638,64 +6673,6 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'name': instance.name,
     };
 
-MarkWelcomeTodoItemAsSeen$Mutation _$MarkWelcomeTodoItemAsSeen$MutationFromJson(
-        Map<String, dynamic> json) =>
-    MarkWelcomeTodoItemAsSeen$Mutation()
-      ..markWelcomeTodoItemAsSeen = json['markWelcomeTodoItemAsSeen'] as String;
-
-Map<String, dynamic> _$MarkWelcomeTodoItemAsSeen$MutationToJson(
-        MarkWelcomeTodoItemAsSeen$Mutation instance) =>
-    <String, dynamic>{
-      'markWelcomeTodoItemAsSeen': instance.markWelcomeTodoItemAsSeen,
-    };
-
-MarkWelcomeTodoItemAsSeenInput _$MarkWelcomeTodoItemAsSeenInputFromJson(
-        Map<String, dynamic> json) =>
-    MarkWelcomeTodoItemAsSeenInput(
-      userId: json['userId'] as String,
-      welcomeTodoItemId: json['welcomeTodoItemId'] as String,
-    );
-
-Map<String, dynamic> _$MarkWelcomeTodoItemAsSeenInputToJson(
-        MarkWelcomeTodoItemAsSeenInput instance) =>
-    <String, dynamic>{
-      'userId': instance.userId,
-      'welcomeTodoItemId': instance.welcomeTodoItemId,
-    };
-
-WelcomeTodoItem _$WelcomeTodoItemFromJson(Map<String, dynamic> json) =>
-    WelcomeTodoItem()
-      ..$$typename = json['__typename'] as String?
-      ..id = json['id'] as String
-      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
-      ..videoUri = json['videoUri'] as String?
-      ..routeTo = json['routeTo'] as String?
-      ..title = json['title'] as String;
-
-Map<String, dynamic> _$WelcomeTodoItemToJson(WelcomeTodoItem instance) =>
-    <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
-      'videoUri': instance.videoUri,
-      'routeTo': instance.routeTo,
-      'title': instance.title,
-    };
-
-WelcomeTodoItems$Query _$WelcomeTodoItems$QueryFromJson(
-        Map<String, dynamic> json) =>
-    WelcomeTodoItems$Query()
-      ..welcomeTodoItems = (json['welcomeTodoItems'] as List<dynamic>)
-          .map((e) => WelcomeTodoItem.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-Map<String, dynamic> _$WelcomeTodoItems$QueryToJson(
-        WelcomeTodoItems$Query instance) =>
-    <String, dynamic>{
-      'welcomeTodoItems':
-          instance.welcomeTodoItems.map((e) => e.toJson()).toList(),
-    };
-
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(
         Map<String, dynamic> json) =>
     ClubChatSummaryArguments(
@@ -7135,6 +7112,19 @@ RemoveWorkoutFromCollectionArguments
 
 Map<String, dynamic> _$RemoveWorkoutFromCollectionArgumentsToJson(
         RemoveWorkoutFromCollectionArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+MarkWelcomeTodoItemAsSeenArguments _$MarkWelcomeTodoItemAsSeenArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    MarkWelcomeTodoItemAsSeenArguments(
+      data: MarkWelcomeTodoItemAsSeenInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$MarkWelcomeTodoItemAsSeenArgumentsToJson(
+        MarkWelcomeTodoItemAsSeenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
     };
@@ -8634,19 +8624,6 @@ CreateClubInviteTokenArguments _$CreateClubInviteTokenArgumentsFromJson(
 
 Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-MarkWelcomeTodoItemAsSeenArguments _$MarkWelcomeTodoItemAsSeenArgumentsFromJson(
-        Map<String, dynamic> json) =>
-    MarkWelcomeTodoItemAsSeenArguments(
-      data: MarkWelcomeTodoItemAsSeenInput.fromJson(
-          json['data'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$MarkWelcomeTodoItemAsSeenArgumentsToJson(
-        MarkWelcomeTodoItemAsSeenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
     };

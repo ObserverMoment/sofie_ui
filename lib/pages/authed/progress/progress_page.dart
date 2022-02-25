@@ -55,7 +55,10 @@ class ProgressPage extends StatelessWidget {
   const ProgressPage({Key? key}) : super(key: key);
 
   double get _widgetHeight => 220.0;
-  Widget get _widgetLoadingShimmer => ShimmerCard(height: _widgetHeight);
+  Widget get _widgetLoadingShimmer => const Center(
+          child: CupertinoActivityIndicator(
+        radius: 16,
+      ));
   Widget get _fullScreenLoadingShimmer => const ShimmerCardList(
         cardHeight: 300,
         itemCount: 6,

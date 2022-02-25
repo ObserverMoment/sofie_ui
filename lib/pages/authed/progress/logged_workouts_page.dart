@@ -71,7 +71,6 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                             iconData: CupertinoIcons.list_bullet,
                             onPressed: () => context.push(
                                     child: FilterableLoggedWorkoutsList(
-                                  logs: allLogs,
                                   selectLoggedWorkout:
                                       widget.selectLoggedWorkout,
                                 ))),
