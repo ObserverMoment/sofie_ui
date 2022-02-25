@@ -74,17 +74,22 @@ class _FilterableSavedWorkoutPlansState
         widget.allCollections.where((c) => c.workoutPlans.isNotEmpty).toList();
 
     return sortedPlans.isEmpty
-        ? YourContentEmptyPlaceholder(message: 'No saved plans', actions: [
-            EmptyPlaceholderAction(
-                action: () => context.navigateTo(WorkoutPlanCreatorRoute()),
-                buttonIcon: CupertinoIcons.add,
-                buttonText: 'Create Plan'),
-            EmptyPlaceholderAction(
-                action: () =>
-                    context.navigateTo(PublicWorkoutPlanFinderRoute()),
-                buttonIcon: CupertinoIcons.compass,
-                buttonText: 'Find Plan'),
-          ])
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              YourContentEmptyPlaceholder(message: 'No saved plans', actions: [
+                EmptyPlaceholderAction(
+                    action: () => context.navigateTo(WorkoutPlanCreatorRoute()),
+                    buttonIcon: CupertinoIcons.add,
+                    buttonText: 'Create Plan'),
+                EmptyPlaceholderAction(
+                    action: () =>
+                        context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                    buttonIcon: CupertinoIcons.compass,
+                    buttonText: 'Find Plan'),
+              ]),
+            ],
+          )
         : FABPage(
             rowButtonsAlignment: MainAxisAlignment.end,
             columnButtons: [

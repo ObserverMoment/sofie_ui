@@ -81,12 +81,20 @@ class _FilterableCreatedWorkoutPlansState
         .toList();
 
     return sortedPlans.isEmpty
-        ? YourContentEmptyPlaceholder(message: 'No created plans', actions: [
-            EmptyPlaceholderAction(
-                action: () => context.navigateTo(WorkoutPlanCreatorRoute()),
-                buttonIcon: CupertinoIcons.add,
-                buttonText: 'Create Plan'),
-          ])
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              YourContentEmptyPlaceholder(
+                  message: 'No created plans',
+                  actions: [
+                    EmptyPlaceholderAction(
+                        action: () =>
+                            context.navigateTo(WorkoutPlanCreatorRoute()),
+                        buttonIcon: CupertinoIcons.add,
+                        buttonText: 'Create Plan'),
+                  ]),
+            ],
+          )
         : FABPage(
             rowButtonsAlignment: MainAxisAlignment.end,
             columnButtons: [

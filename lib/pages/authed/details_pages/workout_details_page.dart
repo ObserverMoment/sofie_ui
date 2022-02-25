@@ -238,301 +238,337 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
     final workoutByIdQuery =
         WorkoutByIdQuery(variables: WorkoutByIdArguments(id: widget.id));
 
+    final logCountByWorkoutIdQuery = LogCountByWorkoutQuery(
+        variables: LogCountByWorkoutArguments(id: widget.id));
+
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return QueryObserver<WorkoutById$Query, WorkoutByIdArguments>(
+    return QueryObserver<LogCountByWorkout$Query, LogCountByWorkoutArguments>(
         key: Key(
-            'WorkoutDetailsPage - ${workoutByIdQuery.operationName}-${widget.id}'),
-        query: workoutByIdQuery,
+            'WorkoutDetailsPage - ${logCountByWorkoutIdQuery.operationName}-${widget.id}'),
+        query: logCountByWorkoutIdQuery,
         parameterizeQuery: true,
-        builder: (workoutData) {
-          return QueryObserver<UserCollections$Query, json.JsonSerializable>(
+        builder: (data) {
+          final logCount = data.logCountByWorkout;
+
+          return QueryObserver<WorkoutById$Query, WorkoutByIdArguments>(
               key: Key(
-                  'WorkoutDetailsPage - ${UserCollectionsQuery().operationName}'),
-              query: UserCollectionsQuery(),
-              fetchPolicy: QueryFetchPolicy.storeFirst,
-              builder: (collectionsData) {
-                if (workoutData.workoutById == null) {
-                  return const ObjectNotFoundIndicator(
-                    notFoundItemName: "this Workout's data",
-                  );
-                }
+                  'WorkoutDetailsPage - ${workoutByIdQuery.operationName}-${widget.id}'),
+              query: workoutByIdQuery,
+              parameterizeQuery: true,
+              builder: (workoutData) {
+                return QueryObserver<UserCollections$Query,
+                        json.JsonSerializable>(
+                    key: Key(
+                        'WorkoutDetailsPage - ${UserCollectionsQuery().operationName}'),
+                    query: UserCollectionsQuery(),
+                    fetchPolicy: QueryFetchPolicy.storeFirst,
+                    builder: (collectionsData) {
+                      if (workoutData.workoutById == null) {
+                        return const ObjectNotFoundIndicator(
+                          notFoundItemName: "this Workout's data",
+                        );
+                      }
 
-                final workout = workoutData.workoutById!;
+                      final workout = workoutData.workoutById!;
 
-                final List<Collection> collections = collectionsData
-                    .userCollections
-                    .where((collection) => collection.workouts
-                        .map((w) => w.id)
-                        .contains(workout.id))
-                    .toList();
+                      final List<Collection> collections = collectionsData
+                          .userCollections
+                          .where((collection) => collection.workouts
+                              .map((w) => w.id)
+                              .contains(workout.id))
+                          .toList();
 
-                final List<WorkoutSection> sortedWorkoutSections = workout
-                    .workoutSections
-                    .sortedBy<num>((ws) => ws.sortPosition);
+                      final List<WorkoutSection> sortedWorkoutSections = workout
+                          .workoutSections
+                          .sortedBy<num>((ws) => ws.sortPosition);
 
-                final allEquipments = workout.allEquipment;
+                      final allEquipments = workout.allEquipment;
 
-                final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
-                final bool isOwner = workout.user.id == authedUserId;
+                      final String? authedUserId =
+                          GetIt.I<AuthBloc>().authedUser?.id;
+                      final bool isOwner = workout.user.id == authedUserId;
 
-                return CupertinoPageScaffold(
-                    navigationBar: MyNavBar(
-                      middle: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          NavBarTitle(workout.name),
-                          MyText(
-                            workout.user.displayName.toUpperCase(),
-                            size: FONTSIZE.one,
-                            subtext: true,
-                          ),
-                        ],
-                      ),
-                      trailing: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        child: const Icon(CupertinoIcons.ellipsis),
-                        onPressed: () => openBottomSheetMenu(
-                            context: context,
-                            child: BottomSheetMenu(
-                                header: BottomSheetMenuHeader(
-                                  name: workout.name,
-                                  subtitle: 'Workout',
-                                  imageUri: workout.coverImageUri,
+                      return CupertinoPageScaffold(
+                          navigationBar: MyNavBar(
+                            middle: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                NavBarTitle(workout.name),
+                                MyText(
+                                  workout.user.displayName.toUpperCase(),
+                                  size: FONTSIZE.one,
+                                  subtext: true,
                                 ),
-                                items: [
-                                  if (!isOwner)
-                                    BottomSheetMenuItem(
-                                        text: 'View creator',
-                                        icon: CupertinoIcons.profile_circled,
-                                        onPressed: () => context.navigateTo(
-                                            UserPublicProfileDetailsRoute(
-                                                userId: workout.user.id))),
-                                  if (isOwner ||
-                                      workout.contentAccessScope ==
-                                          ContentAccessScope.public)
-                                    BottomSheetMenuItem(
-                                        text: 'Share',
-                                        icon: CupertinoIcons.paperplane,
-                                        onPressed: _shareWorkout),
-                                  if (isOwner)
-                                    BottomSheetMenuItem(
-                                        text: 'Edit',
-                                        icon: CupertinoIcons.pencil,
-                                        onPressed: () => context.navigateTo(
-                                            WorkoutCreatorRoute(
-                                                workout: workout))),
-                                  if (isOwner)
-                                    BottomSheetMenuItem(
-                                        text: 'Copy',
-                                        icon: CupertinoIcons
-                                            .plus_rectangle_on_rectangle,
-                                        onPressed: () =>
-                                            _copyWorkout(workout.id)),
-                                  if (isOwner)
-                                    BottomSheetMenuItem(
-                                        text: 'Export',
-                                        icon: CupertinoIcons.download_circle,
-                                        onPressed: () =>
-                                            context.showAlertDialog(
-                                                title: 'Coming soon!')),
-                                  if (isOwner)
-                                    BottomSheetMenuItem(
-                                        text: workout.archived
-                                            ? 'Unarchive'
-                                            : 'Archive',
-                                        icon: CupertinoIcons.archivebox,
-                                        isDestructive: !workout.archived,
-                                        onPressed: () => workout.archived
-                                            ? _unarchiveWorkout(workout)
-                                            : _archiveWorkout(workout)),
-                                ])),
-                      ),
-                    ),
-                    child: FABPage(
-                        rowButtons: [
-                          if (workout.hasSomeSections)
-                            FloatingButton(
-                              icon: CupertinoIcons.arrow_right_square,
-                              text: 'START WORKOUT',
-                              width: screenWidth * 0.8,
-                              onTap: () => context.navigateTo(
-                                  DoWorkoutWrapperRoute(
-                                      id: widget.id,
-                                      scheduledWorkout: widget.scheduledWorkout,
-                                      workoutPlanDayWorkoutId:
-                                          widget.workoutPlanDayWorkoutId,
-                                      workoutPlanEnrolmentId:
-                                          widget.workoutPlanEnrolmentId)),
-                            )
-                        ],
-                        child: ListView(
-                          cacheExtent: 3000,
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          children: [
-                            SizedBox(
-                              height: 150,
-                              child: Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  Utils.textNotNull(workout.coverImageUri)
-                                      ? SizedUploadcareImage(
-                                          workout.coverImageUri!,
-                                          fit: BoxFit.cover)
-                                      : Image.asset(
-                                          'assets/placeholder_images/workout.jpg',
-                                          width: double.infinity,
-                                          fit: BoxFit.cover),
-                                  _buildMetaInfoRow(workout),
-                                  Positioned(
-                                    bottom: 8,
-                                    right: 8,
-                                    child: LogCountByWorkout(
-                                      key: Key(workout.id),
-                                      workoutId: workout.id,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              ],
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                            trailing: CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              child: const Icon(CupertinoIcons.ellipsis),
+                              onPressed: () => openBottomSheetMenu(
+                                  context: context,
+                                  child: BottomSheetMenu(
+                                      header: BottomSheetMenuHeader(
+                                        name: workout.name,
+                                        subtitle: 'Workout',
+                                        imageUri: workout.coverImageUri,
+                                      ),
+                                      items: [
+                                        if (!isOwner)
+                                          BottomSheetMenuItem(
+                                              text: 'View creator',
+                                              icon: CupertinoIcons
+                                                  .profile_circled,
+                                              onPressed: () => context.navigateTo(
+                                                  UserPublicProfileDetailsRoute(
+                                                      userId:
+                                                          workout.user.id))),
+                                        if (isOwner ||
+                                            workout.contentAccessScope ==
+                                                ContentAccessScope.public)
+                                          BottomSheetMenuItem(
+                                              text: 'Share',
+                                              icon: CupertinoIcons.paperplane,
+                                              onPressed: _shareWorkout),
+                                        if (isOwner)
+                                          BottomSheetMenuItem(
+                                              text: 'Edit',
+                                              icon: CupertinoIcons.pencil,
+                                              onPressed: () =>
+                                                  context.navigateTo(
+                                                      WorkoutCreatorRoute(
+                                                          workout: workout))),
+                                        if (isOwner)
+                                          BottomSheetMenuItem(
+                                              text: 'Copy',
+                                              icon: CupertinoIcons
+                                                  .plus_rectangle_on_rectangle,
+                                              onPressed: () =>
+                                                  _copyWorkout(workout.id)),
+                                        if (isOwner)
+                                          BottomSheetMenuItem(
+                                              text: 'Export',
+                                              icon: CupertinoIcons
+                                                  .download_circle,
+                                              onPressed: () =>
+                                                  context.showAlertDialog(
+                                                      title: 'Coming soon!')),
+                                        if (isOwner)
+                                          BottomSheetMenuItem(
+                                              text: workout.archived
+                                                  ? 'Unarchive'
+                                                  : 'Archive',
+                                              icon: CupertinoIcons.archivebox,
+                                              isDestructive: !workout.archived,
+                                              onPressed: () => workout.archived
+                                                  ? _unarchiveWorkout(workout)
+                                                  : _archiveWorkout(workout)),
+                                      ])),
+                            ),
+                          ),
+                          child: FABPage(
+                              rowButtons: [
+                                if (workout.hasSomeSections)
+                                  FloatingButton(
+                                    icon: CupertinoIcons.arrow_right_square,
+                                    text: 'START WORKOUT',
+                                    width: screenWidth * 0.8,
+                                    onTap: () => context.navigateTo(
+                                        DoWorkoutWrapperRoute(
+                                            id: widget.id,
+                                            scheduledWorkout:
+                                                widget.scheduledWorkout,
+                                            workoutPlanDayWorkoutId:
+                                                widget.workoutPlanDayWorkoutId,
+                                            workoutPlanEnrolmentId:
+                                                widget.workoutPlanEnrolmentId)),
+                                  )
+                              ],
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _ActionIconButton(
-                                      icon: const Icon(
-                                          CupertinoIcons.calendar_badge_plus),
-                                      label: 'Schedule',
-                                      onPressed: () =>
-                                          _openScheduleWorkout(workout.summary),
-                                    ),
-                                    _ActionIconButton(
-                                        icon: const Icon(CupertinoIcons
-                                            .text_badge_checkmark),
-                                        label: 'Log It',
-                                        onPressed: () => context.push(
-                                            child: PreLoggingModificationsAndUserInputs(
-                                                workoutId: workout.id,
-                                                scheduledWorkout:
-                                                    widget.scheduledWorkout,
-                                                workoutPlanDayWorkoutId: widget
-                                                    .workoutPlanDayWorkoutId,
-                                                workoutPlanEnrolmentId: widget
-                                                    .workoutPlanEnrolmentId))),
-                                    if (Utils.textNotNull(
-                                        workout.introVideoUri))
-                                      _ActionIconButton(
-                                          icon: const Icon(CupertinoIcons.tv),
-                                          label: 'Intro',
-                                          onPressed: () => VideoSetupManager
-                                              .openFullScreenVideoPlayer(
-                                                  context: context,
-                                                  videoUri:
-                                                      workout.introVideoUri!,
-                                                  videoThumbUri: workout
-                                                      .introVideoThumbUri!,
-                                                  autoPlay: true,
-                                                  autoLoop: true)),
-                                    if (Utils.textNotNull(
-                                        workout.introAudioUri))
-                                      _ActionIconButton(
-                                          icon: const Icon(
-                                              CupertinoIcons.headphones),
-                                          label: 'Intro',
-                                          onPressed: () => AudioPlayerController
-                                              .openAudioPlayer(
-                                                  context: context,
-                                                  audioUri:
-                                                      workout.introAudioUri!,
-                                                  pageTitle: 'Intro Audio',
-                                                  audioTitle: workout.name,
-                                                  autoPlay: true)),
-
-                                    /// The heart is appearing smaller than other items for some reason - so manually making it larger and removing gap underneath between text.
-                                    CupertinoButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        Vibrate.feedback(
-                                            FeedbackType.selection);
-                                        CollectionManager
-                                            .addOrRemoveObjectFromCollection(
-                                                context, workout,
-                                                alreadyInCollections:
-                                                    collections);
-                                      },
-                                      child: Column(
+                                    SizedBox(
+                                      height: 150,
+                                      child: Stack(
+                                        alignment: Alignment.topCenter,
                                         children: [
-                                          AnimatedLikeHeart(
-                                              active: collections.isNotEmpty,
-                                              size: 26),
-                                          const MyText(
-                                            'SAVE',
-                                            size: FONTSIZE.one,
-                                          ),
+                                          Utils.textNotNull(
+                                                  workout.coverImageUri)
+                                              ? SizedUploadcareImage(
+                                                  workout.coverImageUri!,
+                                                  fit: BoxFit.cover)
+                                              : Image.asset(
+                                                  'assets/placeholder_images/workout.jpg',
+                                                  width: double.infinity,
+                                                  fit: BoxFit.cover),
+                                          _buildMetaInfoRow(workout),
+                                          if (logCount > 0)
+                                            Positioned(
+                                              bottom: 8,
+                                              right: 8,
+                                              child:
+                                                  LogCountByWorkoutOverlayDisplay(
+                                                count: logCount,
+                                              ),
+                                            ),
                                         ],
                                       ),
                                     ),
-                                  ]),
-                            ),
-                            const HorizontalLine(verticalPadding: 0),
-                            if (Utils.textNotNull(workout.description))
-                              _InfoSection(
-                                content: ReadMoreTextBlock(
-                                    text: workout.description!,
-                                    title: workout.name),
-                                header: 'Description',
-                                icon: CupertinoIcons.doc_text,
-                              ),
-                            if (workout.workoutGoals.isNotEmpty)
-                              _InfoSection(
-                                content: CommaSeparatedList(
-                                    workout.workoutGoals
-                                        .map((g) => g.name)
+                                    Padding(
+                                      key: Key(widget.id),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            _ActionIconButton(
+                                              icon: const Icon(CupertinoIcons
+                                                  .calendar_badge_plus),
+                                              label: 'Schedule',
+                                              onPressed: () =>
+                                                  _openScheduleWorkout(
+                                                      workout.summary),
+                                            ),
+                                            _ActionIconButton(
+                                                icon: const Icon(CupertinoIcons
+                                                    .text_badge_checkmark),
+                                                label: 'Log It',
+                                                onPressed: () => context.push(
+                                                    child: PreLoggingModificationsAndUserInputs(
+                                                        workoutId: workout.id,
+                                                        scheduledWorkout: widget
+                                                            .scheduledWorkout,
+                                                        workoutPlanDayWorkoutId:
+                                                            widget
+                                                                .workoutPlanDayWorkoutId,
+                                                        workoutPlanEnrolmentId:
+                                                            widget
+                                                                .workoutPlanEnrolmentId))),
+                                            if (Utils.textNotNull(workout
+                                                .introVideoUri))
+                                              _ActionIconButton(
+                                                  icon:
+                                                      const Icon(CupertinoIcons
+                                                          .tv),
+                                                  label: 'Intro',
+                                                  onPressed: () => VideoSetupManager
+                                                      .openFullScreenVideoPlayer(
+                                                          context: context,
+                                                          videoUri: workout
+                                                              .introVideoUri!,
+                                                          videoThumbUri: workout
+                                                              .introVideoThumbUri!,
+                                                          autoPlay: true,
+                                                          autoLoop: true)),
+                                            if (Utils.textNotNull(workout
+                                                .introAudioUri))
+                                              _ActionIconButton(
+                                                  icon: const Icon(
+                                                      CupertinoIcons
+                                                          .headphones),
+                                                  label: 'Intro',
+                                                  onPressed:
+                                                      () => AudioPlayerController
+                                                          .openAudioPlayer(
+                                                              context: context,
+                                                              audioUri: workout
+                                                                  .introAudioUri!,
+                                                              pageTitle:
+                                                                  'Intro Audio',
+                                                              audioTitle:
+                                                                  workout.name,
+                                                              autoPlay: true)),
+
+                                            /// The heart is appearing smaller than other items for some reason - so manually making it larger and removing gap underneath between text.
+                                            CupertinoButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: () {
+                                                Vibrate.feedback(
+                                                    FeedbackType.selection);
+                                                CollectionManager
+                                                    .addOrRemoveObjectFromCollection(
+                                                        context, workout,
+                                                        alreadyInCollections:
+                                                            collections);
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  AnimatedLikeHeart(
+                                                      active: collections
+                                                          .isNotEmpty,
+                                                      size: 26),
+                                                  const MyText(
+                                                    'SAVE',
+                                                    size: FONTSIZE.one,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ]),
+                                    ),
+                                    const HorizontalLine(verticalPadding: 0),
+                                    if (Utils.textNotNull(workout.description))
+                                      _InfoSection(
+                                        content: ReadMoreTextBlock(
+                                            text: workout.description!,
+                                            title: workout.name),
+                                        header: 'Description',
+                                        icon: CupertinoIcons.doc_text,
+                                      ),
+                                    if (workout.workoutGoals.isNotEmpty)
+                                      _InfoSection(
+                                        content: CommaSeparatedList(
+                                            workout.workoutGoals
+                                                .map((g) => g.name)
+                                                .toList(),
+                                            fontSize: FONTSIZE.three),
+                                        header: 'Goals',
+                                        icon: CupertinoIcons.scope,
+                                      ),
+                                    if (workout.workoutTags.isNotEmpty)
+                                      _InfoSection(
+                                        content: CommaSeparatedList(
+                                            workout.workoutTags
+                                                .map((t) => t.tag)
+                                                .toList(),
+                                            fontSize: FONTSIZE.three),
+                                        header: 'Tags',
+                                        icon: CupertinoIcons.tag,
+                                      ),
+                                    _InfoSection(
+                                      content: allEquipments.isEmpty
+                                          ? const MyText(
+                                              'No equipment required',
+                                              subtext: true,
+                                            )
+                                          : CommaSeparatedList(
+                                              allEquipments
+                                                  .map((e) => e.name)
+                                                  .toList(),
+                                              fontSize: FONTSIZE.three),
+                                      header: 'Equipment',
+                                      icon: CupertinoIcons.cube,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    ...sortedWorkoutSections
+                                        .map((ws) => Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 8.0,
+                                                  left: 6,
+                                                  right: 6,
+                                                  bottom: 16),
+                                              child:
+                                                  WorkoutDetailsWorkoutSection(
+                                                      ws),
+                                            ))
                                         .toList(),
-                                    fontSize: FONTSIZE.three),
-                                header: 'Goals',
-                                icon: CupertinoIcons.scope,
-                              ),
-                            if (workout.workoutTags.isNotEmpty)
-                              _InfoSection(
-                                content: CommaSeparatedList(
-                                    workout.workoutTags
-                                        .map((t) => t.tag)
-                                        .toList(),
-                                    fontSize: FONTSIZE.three),
-                                header: 'Tags',
-                                icon: CupertinoIcons.tag,
-                              ),
-                            _InfoSection(
-                              content: allEquipments.isEmpty
-                                  ? const MyText(
-                                      'No equipment required',
-                                      subtext: true,
-                                    )
-                                  : CommaSeparatedList(
-                                      allEquipments.map((e) => e.name).toList(),
-                                      fontSize: FONTSIZE.three),
-                              header: 'Equipment',
-                              icon: CupertinoIcons.cube,
-                            ),
-                            const SizedBox(height: 16),
-                            ...sortedWorkoutSections
-                                .map((ws) => Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8.0,
-                                          left: 6,
-                                          right: 6,
-                                          bottom: 16),
-                                      child: WorkoutDetailsWorkoutSection(ws),
-                                    ))
-                                .toList(),
-                            const SizedBox(height: 70)
-                          ],
-                        )));
+                                    const SizedBox(height: 70)
+                                  ],
+                                ),
+                              )));
+                    });
               });
         });
   }
