@@ -120,7 +120,6 @@ class BodyAreaSelectorIndicator extends StatelessWidget {
             height: height),
         BodyAreaSelectorOverlay(
             frontBack: frontBack,
-            allBodyAreas: allBodyAreas,
             onTapBodyArea: handleTapBodyArea,
             height: height)
       ],

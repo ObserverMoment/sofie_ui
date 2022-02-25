@@ -7,7 +7,7 @@ import 'package:sofie_ui/components/cards/personal_best_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 

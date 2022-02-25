@@ -8,6 +8,7 @@ import 'package:sofie_ui/blocs/logged_workout_creator_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/body_areas/body_area_selectors.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/logged_workout_creator_with_sections.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/logged_workout/logged_workout_section_moves_list.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
@@ -56,7 +57,7 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
               getParameterizedQueryId(LoggedWorkoutByIdQuery(
                   variables: LoggedWorkoutByIdArguments(id: id)))
             ],
-            removeRefFromQueries: [GQLNullVarsKeys.userLoggedWorkouts],
+            removeRefFromQueries: [GQLOpNames.userLoggedWorkouts],
           );
 
           if (result.hasErrors) {
@@ -85,7 +86,12 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
         parameterizeQuery: true,
         fetchPolicy: QueryFetchPolicy.networkOnly,
         builder: (data) {
-          final loggedWorkout = data.loggedWorkoutById;
+          if (data.loggedWorkoutById == null) {
+            return const ObjectNotFoundIndicator(
+              notFoundItemName: 'the required log data',
+            );
+          }
+          final loggedWorkout = data.loggedWorkoutById!;
 
           final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
           final bool isOwner = loggedWorkout.user?.id == authedUserId;

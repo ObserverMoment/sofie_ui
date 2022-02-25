@@ -303,22 +303,21 @@ class DoWorkoutSectionModifications extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
                         Icon(CupertinoIcons.exclamationmark_circle,
-                            color: Styles.errorRed, size: 18),
+                            color: Styles.errorRed, size: 26),
                         SizedBox(width: 6),
-                        MyText(
-                          'You have already started this section.',
-                          size: FONTSIZE.two,
-                          maxLines: 3,
-                        )
+                        MyText('You have already started this section.',
+                            size: FONTSIZE.four,
+                            maxLines: 3,
+                            color: Styles.errorRed)
                       ],
                     ),
                     const SizedBox(height: 10),
                     const MyText(
-                      'Making any modifications here will cause the section to reset.',
-                      size: FONTSIZE.two,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                    )
+                        'Making modifications here will cause the section to reset.',
+                        size: FONTSIZE.four,
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        color: Styles.errorRed)
                   ],
                 ),
               ),

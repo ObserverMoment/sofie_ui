@@ -9,6 +9,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_day_log_mood_creator_page.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
@@ -25,6 +26,7 @@ import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/sleep_well_lo
 import 'package:sofie_ui/pages/authed/progress/widget_containers/eat_well_logs_container.dart';
 import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_meditations_container.dart';
 import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_moods_container.dart';
+import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_sessions_container.dart';
 import 'package:sofie_ui/pages/authed/progress/widget_containers/sleep_well_logs_container.dart';
 import 'package:sofie_ui/pages/authed/progress/widgets/all_time_stats_summary.dart';
 import 'package:sofie_ui/pages/authed/progress/widgets/eat_well_logs.dart';
@@ -37,7 +39,6 @@ import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 const kWidgetIdToIconMap = {
@@ -54,7 +55,10 @@ class ProgressPage extends StatelessWidget {
   const ProgressPage({Key? key}) : super(key: key);
 
   double get _widgetHeight => 220.0;
-  Widget get _widgetLoadingShimmer => ShimmerCard(height: _widgetHeight);
+  Widget get _widgetLoadingShimmer => const Center(
+          child: CupertinoActivityIndicator(
+        radius: 16,
+      ));
   Widget get _fullScreenLoadingShimmer => const ShimmerCardList(
         cardHeight: 300,
         itemCount: 6,
@@ -101,8 +105,6 @@ class ProgressPage extends StatelessWidget {
       required UserProfile userProfile,
       required String widgetId,
       required int index}) {
-    final logDataQuery =
-        UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments());
     final activeProgressWidgets = userProfile.activeProgressWidgets ?? [];
 
     /// When index less than [totalActiveWidgets - 1], show [_moveWidgetDown] option in bottom sheet menu.
@@ -137,73 +139,61 @@ class ProgressPage extends StatelessWidget {
 
     switch (widgetId) {
       case '001':
-        return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
-            key: Key(
-                'ProgressPage.AllTimeStatsSummaryWidget - ${logDataQuery.operationName}'),
-            query: logDataQuery,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainer(
-                index: index,
-                headerIcon: kWidgetIdToIconMap['001']!,
-                title: 'Summary',
-                widgetHeight: _widgetHeight,
-                widget: AllTimeStatsSummaryWidget(
-                  loggedWorkouts: data.userLoggedWorkouts,
-                ),
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-              );
-            });
+        return LoggedSessionsContainer(
+          loadingShimmer: _widgetLoadingShimmer,
+          builder: (logs) => ProgressWidgetContainer(
+            index: index,
+            headerIcon: kWidgetIdToIconMap['001']!,
+            title: 'Summary',
+            widgetHeight: _widgetHeight,
+            widget: AllTimeStatsSummaryWidget(
+              loggedWorkouts: logs,
+            ),
+            moveWidgetUp: moveWidgetUp,
+            moveWidgetDown: moveWidgetDown,
+            deactivateWidget: deactivateWidget,
+          ),
+        );
       case '002':
-        return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
-            key: Key(
-                'ProgressPage.StreaksSummaryWidget - ${logDataQuery.operationName}'),
-            query: logDataQuery,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainer(
-                index: index,
-                headerIcon: kWidgetIdToIconMap['002']!,
-                title: 'Streaks',
-                widgetHeight: _widgetHeight,
-                widget: StreaksSummaryWidget(
-                  loggedWorkouts: data.userLoggedWorkouts,
-                  userProfile: userProfile,
-                ),
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-              );
-            });
+        return LoggedSessionsContainer(
+          loadingShimmer: _widgetLoadingShimmer,
+          builder: (logs) => ProgressWidgetContainer(
+            index: index,
+            headerIcon: kWidgetIdToIconMap['002']!,
+            title: 'Streaks',
+            widgetHeight: _widgetHeight,
+            widget: StreaksSummaryWidget(
+              loggedWorkouts: logs,
+              userProfile: userProfile,
+            ),
+            moveWidgetUp: moveWidgetUp,
+            moveWidgetDown: moveWidgetDown,
+            deactivateWidget: deactivateWidget,
+          ),
+        );
       case '003':
-        return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
-            key: Key(
-                'ProgressPage.LoggedSessionsWidget - ${logDataQuery.operationName}'),
-            query: logDataQuery,
-            loadingIndicator: _widgetLoadingShimmer,
-            fetchPolicy: QueryFetchPolicy.storeFirst,
-            builder: (data) {
-              return ProgressWidgetContainerWithFullScreen(
-                index: index,
-                fullScreen: LoggedSessionsFullScreen(
-                  widgetId: widgetId,
-                  loggedWorkouts: data.userLoggedWorkouts,
-                ),
-                headerIcon: kWidgetIdToIconMap['003']!,
-                title: 'Sessions Logged',
-                widget: LoggedSessionsWidget(
-                  loggedWorkouts: data.userLoggedWorkouts,
-                ),
-                widgetHeight: _widgetHeight,
-                moveWidgetUp: moveWidgetUp,
-                moveWidgetDown: moveWidgetDown,
-                deactivateWidget: deactivateWidget,
-              );
-            });
+        return ProgressWidgetContainerWithFullScreen(
+          index: index,
+          fullScreen: LoggedSessionsContainer(
+            loadingShimmer: _fullScreenLoadingShimmer,
+            builder: (logs) => LoggedSessionsFullScreen(
+              widgetId: widgetId,
+              loggedWorkouts: logs,
+            ),
+          ),
+          headerIcon: kWidgetIdToIconMap['003']!,
+          title: 'Sessions Logged',
+          widget: LoggedSessionsContainer(
+            loadingShimmer: _widgetLoadingShimmer,
+            builder: (logs) => LoggedSessionsWidget(
+              loggedWorkouts: logs,
+            ),
+          ),
+          widgetHeight: _widgetHeight,
+          moveWidgetUp: moveWidgetUp,
+          moveWidgetDown: moveWidgetDown,
+          deactivateWidget: deactivateWidget,
+        );
       case '004':
         return ProgressWidgetContainerWithFullScreen(
           index: index,
@@ -324,7 +314,11 @@ class ProgressPage extends StatelessWidget {
         fetchPolicy: QueryFetchPolicy.storeFirst,
         parameterizeQuery: true,
         builder: (userData) {
-          final userProfile = userData.userProfile;
+          if (userData.userProfile == null) {
+            return const ObjectNotFoundIndicator();
+          }
+
+          final userProfile = userData.userProfile!;
           final activeWidgets = userProfile.activeProgressWidgets ?? [];
           final showAddWidgetButton =
               activeWidgets.length < CoreDataRepo.progressWidgets.length;
@@ -360,8 +354,8 @@ class ProgressPage extends StatelessWidget {
                           context.navigateTo(const BodyTrackingRoute()),
                     ),
                     SubSectionLinkTile(
-                      label: 'Workout Logs',
-                      assetImagePath: 'logs.svg',
+                      label: 'Logs & Analysis',
+                      assetImagePath: 'logs_analysis.svg',
                       onTap: () => context.navigateTo(LoggedWorkoutsRoute()),
                     ),
                   ],

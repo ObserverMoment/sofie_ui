@@ -40,15 +40,15 @@ import 'package:sofie_ui/pages/authed/discover/discover_page.dart';
 import 'package:sofie_ui/pages/authed/feed/feed_page.dart';
 import 'package:sofie_ui/pages/authed/feed/notifications_page.dart';
 import 'package:sofie_ui/pages/authed/feed/your_posts_page.dart';
-import 'package:sofie_ui/pages/authed/home/home_page.dart';
-import 'package:sofie_ui/pages/authed/home/your_clubs.dart';
-import 'package:sofie_ui/pages/authed/home/your_collections.dart';
-import 'package:sofie_ui/pages/authed/home/your_gym_profiles.dart';
-import 'package:sofie_ui/pages/authed/home/your_moves_library.dart';
-import 'package:sofie_ui/pages/authed/home/your_throwdowns.dart';
-import 'package:sofie_ui/pages/authed/home/your_plans/your_plans.dart';
-import 'package:sofie_ui/pages/authed/home/your_schedule.dart';
-import 'package:sofie_ui/pages/authed/home/your_workouts/your_workouts.dart';
+import 'package:sofie_ui/pages/authed/my_studio/my_studio_page.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_clubs.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_collections.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_gym_profiles.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_moves_library.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_throwdowns.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_plans.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_schedule.dart';
+import 'package:sofie_ui/pages/authed/my_studio/your_workouts/your_workouts.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
 import 'package:sofie_ui/pages/authed/main_tabs_page.dart';
 import 'package:sofie_ui/pages/authed/page_not_found.dart';
@@ -85,7 +85,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
               path: 'discover',
               page: DiscoverPage,
             ),
-            AutoRoute(path: 'studio', page: HomePage),
+            AutoRoute(path: 'studio', page: MyStudioPage),
             AutoRoute(
               path: 'progress',
               page: ProgressPage,

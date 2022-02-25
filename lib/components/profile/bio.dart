@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Retrieves and displays all the skills of a user in a list.

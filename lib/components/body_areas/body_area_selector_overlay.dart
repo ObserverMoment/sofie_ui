@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:xml/xml.dart';
 
@@ -12,7 +13,6 @@ import 'package:xml/xml.dart';
 /// This widget is invisible and is for creating clickable areas based on the body area SVG paths.
 class BodyAreaSelectorOverlay extends StatelessWidget {
   final BodyAreaFrontBack frontBack;
-  final List<BodyArea> allBodyAreas;
   final Function(BodyArea bodyArea) onTapBodyArea;
   final double height;
 
@@ -20,7 +20,6 @@ class BodyAreaSelectorOverlay extends StatelessWidget {
       {Key? key,
       required this.frontBack,
       required this.onTapBodyArea,
-      required this.allBodyAreas,
       required this.height})
       : super(key: key);
 
@@ -71,7 +70,7 @@ class BodyAreaSelectorOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<BodyArea> bodyAreasToDraw = allBodyAreas
+    final List<BodyArea> bodyAreasToDraw = CoreDataRepo.bodyAreas
         .where((ba) =>
             ba.frontBack == frontBack || ba.frontBack == BodyAreaFrontBack.both)
         .toList();

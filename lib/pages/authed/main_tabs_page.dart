@@ -39,7 +39,7 @@ class MainTabsPage extends StatelessWidget {
       routes: const [
         FeedRoute(),
         DiscoverRoute(),
-        HomeRoute(),
+        MyStudioRoute(),
         ProgressRoute(),
         ProfileRoute(),
       ],

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/collections/collection_manager.dart';
-import 'package:sofie_ui/components/icons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';

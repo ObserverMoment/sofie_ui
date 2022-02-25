@@ -8,6 +8,7 @@ class GQLOpNames {
   /// List type queries where variables are not used.
   static String get announcementUpdates =>
       AnnouncementUpdatesQuery().operationName;
+  static String get welcomeTodoItems => WelcomeTodoItemsQuery().operationName;
 
   static String get bodyTrackingEntries =>
       BodyTrackingEntriesQuery().operationName;
@@ -37,6 +38,9 @@ class GQLOpNames {
 
   static String get customMoves => CustomMovesQuery().operationName;
 
+  static String get userLoggedWorkouts =>
+      UserLoggedWorkoutsQuery().operationName;
+
   /// TODO: Does this key trigger all workoutById queries?
   static String get workoutById =>
       WorkoutByIdQuery(variables: WorkoutByIdArguments(id: '')).operationName;
@@ -58,13 +62,6 @@ class GQLOpNames {
 
   static String get userArchivedCustomMoves =>
       UserArchivedCustomMovesQuery().operationName;
-}
-
-/// Observable queries whose operations can accept variables, but whose keys are being stored with the variables nulled.
-/// /// For example [workoutById({"id": null})]
-class GQLNullVarsKeys {
-  static String get userLoggedWorkouts => getNulledVarsQueryId(
-      UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments()));
 }
 
 /// Observable queries whose operations accept variables and whose keys are being generated based on the variables being passed.

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/club_card.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/home/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/router.gr.dart';
 

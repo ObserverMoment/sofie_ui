@@ -314,6 +314,7 @@ class ClubFeedPostCard extends StatelessWidget {
   }
 }
 
+/// Duplicated in [ClubFeedCard]
 class _SharedContentDisplay extends StatelessWidget {
   final FeedPostType feedPostType;
   final StreamActivityExtraData activityExtraData;
@@ -340,8 +341,8 @@ class _SharedContentDisplay extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: SizedBox(
-                            height: 60,
-                            width: 60,
+                            height: 50,
+                            width: 50,
                             child: CachedNetworkImage(
                                 fit: BoxFit.cover,
                                 imageUrl: activityExtraData.imageUrl!)),
@@ -360,10 +361,11 @@ class _SharedContentDisplay extends StatelessWidget {
                             Icon(
                                 FeedUtils.getFeedSharedContentIcon(
                                     feedPostType),
-                                size: 19),
+                                size: 17),
                             const SizedBox(width: 8),
                             MyHeaderText(
                               kFeedPostTypeToDisplay[feedPostType]!,
+                              size: FONTSIZE.two,
                             ),
                           ],
                         ),
@@ -375,6 +377,7 @@ class _SharedContentDisplay extends StatelessWidget {
                           child: MyText(
                             'By $creatorName',
                             weight: FontWeight.normal,
+                            size: FONTSIZE.two,
                           ),
                         ),
                     ],

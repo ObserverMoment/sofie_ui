@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/fab_page.dart';
-import 'package:sofie_ui/components/icons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_plan_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/screens/workout_plan_filters_screen.dart';
@@ -200,6 +200,10 @@ class _PublicWorkoutPlanFinderPageState
                       ),
                     ),
                   ),
+                  firstPageErrorIndicatorBuilder: (c) =>
+                      const PageResultsErrorIndicator(),
+                  newPageErrorIndicatorBuilder: (c) =>
+                      const PageResultsErrorIndicator(),
                   firstPageProgressIndicatorBuilder: (c) =>
                       const CupertinoActivityIndicator(),
                   newPageProgressIndicatorBuilder: (c) =>

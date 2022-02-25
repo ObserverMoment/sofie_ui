@@ -142,7 +142,6 @@ class PrimaryButton extends StatelessWidget {
       disabled: disabled,
       loading: loading,
       backgroundGradient: Styles.primaryAccentGradient,
-      backgroundColor: context.theme.primary,
       contentColor: Styles.white,
       withMinWidth: withMinWidth,
     );
@@ -267,7 +266,7 @@ class TertiaryButton extends StatelessWidget {
                   text.toUpperCase(),
                   color: textColor,
                   size: fontSize,
-                  lineHeight: 1.1,
+                  lineHeight: 1,
                   weight: fontWeight,
                 ),
               ),

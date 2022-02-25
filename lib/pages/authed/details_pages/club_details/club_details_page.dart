@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -110,7 +111,13 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
             query: clubSummaryQuery,
             parameterizeQuery: true,
             builder: (clubData) {
-              final club = clubData.clubSummary;
+              if (clubData.clubSummary == null) {
+                return const ObjectNotFoundIndicator(
+                  notFoundItemName: "this Club's data",
+                );
+              }
+
+              final club = clubData.clubSummary!;
 
               return CupertinoPageScaffold(
                   child: _userIsMember

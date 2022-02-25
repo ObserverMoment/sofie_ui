@@ -1,124 +1,108 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
-import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 
-class PercentageBarChartSingle extends StatelessWidget {
-  final List<WaffleChartInput> inputs;
-  final double barHeight;
-  final Color? textColor;
-
-  /// Show the legened only - useful to display a summary list of the input categories when no percentage quantity required.
-  final bool hideBar;
-
-  /// Aligns the wrapped legend items.
-  final WrapAlignment lengendAlignment;
-
-  const PercentageBarChartSingle(
+/// Classic Horizontal Bar Chart in a modern minimal style.
+/// No x or y axis or grid lines.
+class PercentageBarChart extends StatelessWidget {
+  final List<BarChartItem> items;
+  final double? itemHeight; // Auto calced when null.
+  final double min;
+  final double max;
+  final Gradient gradient;
+  final FONTSIZE fontSize;
+  final double barPadding;
+  const PercentageBarChart(
       {Key? key,
-      required this.inputs,
-      this.barHeight = 30,
-      this.textColor,
-      this.hideBar = false,
-      this.lengendAlignment = WrapAlignment.center})
+      required this.items,
+      this.itemHeight,
+      this.min = 0,
+      required this.max,
+      required this.gradient,
+      this.fontSize = FONTSIZE.two,
+      this.barPadding = 3})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final sortedInputs =
-        inputs.sortedBy<num>((i) => i.fraction).reversed.toList();
-    final borderRadius = BorderRadius.circular(30);
-
-    return Column(
-      children: [
-        if (!hideBar)
-          Stack(
-            children: [
-              SizedBox(
-                  width: double.infinity,
-                  height: barHeight,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: borderRadius,
-                        gradient: sortedInputs.length > 1
-                            ? LinearGradient(
-                                colors:
-                                    sortedInputs.map((i) => i.color).toList())
-                            : null),
-                  )),
-              Opacity(
-                opacity: 0.7,
-                child: SizedBox(
-                  width: double.infinity,
-                  height: barHeight,
-                  child: ClipRRect(
-                    borderRadius: borderRadius,
-                    child: CustomPaint(
-                      painter:
-                          GoalsBreakdownGraphicPainter(inputs: sortedInputs),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        if (!hideBar) const SizedBox(height: 10),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          alignment: lengendAlignment,
-          children: sortedInputs
-              .map((i) => Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Dot(
-                        color: i.color,
-                        diameter: 8,
-                      ),
-                      const SizedBox(width: 5),
-                      MyText(i.name, size: FONTSIZE.one, color: textColor),
-                    ],
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        width: constraints.maxWidth,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: items
+              .map((i) => _BarChartBar(
+                    item: i,
+                    max: max,
+                    min: min,
+                    itemHeight:
+                        itemHeight ?? (constraints.maxHeight / items.length),
+                    maxWidth: constraints.maxWidth,
+                    gradient: gradient,
+                    fontSize: fontSize,
+                    barPadding: barPadding,
                   ))
               .toList(),
-        )
-      ],
+        ),
+      );
+    });
+  }
+}
+
+class _BarChartBar extends StatelessWidget {
+  final BarChartItem item;
+  final double min;
+  final double max;
+  final double maxWidth;
+  final double itemHeight;
+  final Gradient gradient;
+  final FONTSIZE fontSize;
+  final double barPadding;
+  const _BarChartBar(
+      {Key? key,
+      required this.item,
+      required this.min,
+      required this.max,
+      required this.maxWidth,
+      required this.itemHeight,
+      required this.gradient,
+      this.fontSize = FONTSIZE.two,
+      this.barPadding = 3})
+      : super(key: key);
+
+  int _percentageFromFraction(double fraction) => (fraction * 100).round();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: barPadding),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          Container(
+            height: itemHeight - (barPadding * 2),
+            width: (item.fraction / max) * maxWidth,
+            decoration: BoxDecoration(
+                gradient: gradient, borderRadius: BorderRadius.circular(4)),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: MyText(
+              '${item.label} (${_percentageFromFraction(item.fraction)}%)',
+              size: fontSize,
+              lineHeight: 1,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
 
-class GoalsBreakdownGraphicPainter extends CustomPainter {
-  final List<WaffleChartInput> inputs;
-  GoalsBreakdownGraphicPainter({required this.inputs});
+class BarChartItem {
+  final String label;
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    /// The offset will move across the screen when we move to start drawing bar for a new goal.
-    /// This will be a fraction of [size] and will end at 1.0.
-    double offset = 0.0;
-
-    inputs.forEachIndexed((i, e) {
-      final paint = Paint()
-        ..color = inputs[i].color
-        ..style = PaintingStyle.fill;
-
-      final itemFraction = inputs[i].fraction;
-      final itemWidth = itemFraction * size.width;
-      final startAt = offset * size.width;
-
-      if (i == inputs.length - 1) {
-        /// Paint from sortedInputs[i].fraction * size to 1.0 * size.
-        canvas.drawRect(
-            Offset(startAt, 0) & Size(itemWidth, size.height), paint);
-      } else {
-        /// Paint from sortedInputs[i].fraction * size to sortedInputs[i + 1].fraction
-        canvas.drawRect(
-            Offset(startAt, 0) & Size(itemWidth, size.height), paint);
-      }
-      offset += itemFraction;
-    });
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  /// Must be between 0 and 1.0.
+  final double fraction;
+  BarChartItem(this.label, this.fraction);
 }

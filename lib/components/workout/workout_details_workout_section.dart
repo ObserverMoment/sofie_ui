@@ -8,6 +8,7 @@ import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/workout/single_move_workout_set_display.dart';
 import 'package:sofie_ui/components/workout/workout_set_display.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
@@ -32,7 +33,7 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
   }
 
   EdgeInsets get headerSpacerPadding => const EdgeInsets.only(
-        bottom: 12.0,
+        bottom: 8.0,
         left: 8,
         right: 8,
       );
@@ -76,7 +77,8 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
             padding: headerSpacerPadding,
             child: MyHeaderText(
               workoutSection.name!,
-              weight: FontWeight.normal,
+              size: FONTSIZE.two,
+              subtext: true,
             ),
           ),
         if (Utils.textNotNull(workoutSection.note))
@@ -164,12 +166,20 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
               children: sortedSets
                   .map((workoutSet) => Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
-                        child: WorkoutSetDisplay(
-                            workoutSet: workoutSet,
-                            padding: const EdgeInsets.only(
-                                top: 6, bottom: 4, left: 10, right: 10),
-                            workoutSectionType:
-                                workoutSection.workoutSectionType),
+                        child: workoutSet.isMultiMoveSet ||
+                                workoutSet.workoutMoves.length == 1
+                            ? WorkoutSetDisplay(
+                                workoutSet: workoutSet,
+                                padding: const EdgeInsets.only(
+                                    top: 6, bottom: 4, left: 10, right: 10),
+                                workoutSectionType:
+                                    workoutSection.workoutSectionType)
+                            : SingleMoveWorkoutSetDisplay(
+                                workoutSet: workoutSet,
+                                padding: const EdgeInsets.only(
+                                    top: 6, bottom: 4, left: 10, right: 10),
+                                workoutSectionType:
+                                    workoutSection.workoutSectionType),
                       ))
                   .toList(),
             ),

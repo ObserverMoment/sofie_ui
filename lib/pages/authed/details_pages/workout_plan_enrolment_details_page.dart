@@ -6,6 +6,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/review_card.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/navigation.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -231,7 +232,13 @@ class _WorkoutPlanEnrolmentDetailsPageState
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          final enrolmentWithPlan = data.workoutPlanEnrolmentById;
+          if (data.workoutPlanEnrolmentById == null) {
+            return const ObjectNotFoundIndicator(
+              notFoundItemName: "this Plan's data",
+            );
+          }
+
+          final enrolmentWithPlan = data.workoutPlanEnrolmentById!;
           final enrolment = enrolmentWithPlan.workoutPlanEnrolment;
           final workoutPlan = enrolmentWithPlan.workoutPlan;
 

@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
 
 class CustomMoveCreatorBody extends StatefulWidget {
   final Move move;
@@ -43,8 +42,6 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
 
   @override
   Widget build(BuildContext context) {
-    final allBodyAreas = CoreDataRepo.bodyAreas;
-
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -80,7 +77,6 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
                 BodyAreaSelectorScoreIndicator(
                   bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
                   frontBack: BodyAreaFrontBack.front,
-                  allBodyAreas: allBodyAreas,
                   indicatePercentWithColor: true,
                   handleTapBodyArea: _handleTapBodyArea,
                   height: _kBodyAreaGraphicHeight,
@@ -88,7 +84,6 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
                 BodyAreaSelectorScoreIndicator(
                   bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
                   frontBack: BodyAreaFrontBack.back,
-                  allBodyAreas: allBodyAreas,
                   indicatePercentWithColor: true,
                   handleTapBodyArea: _handleTapBodyArea,
                   height: _kBodyAreaGraphicHeight,

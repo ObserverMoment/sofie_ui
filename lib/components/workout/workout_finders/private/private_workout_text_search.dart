@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/icons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';

@@ -5,6 +5,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -27,32 +28,34 @@ class ActiveWidgetsSelector extends StatefulWidget {
 }
 
 class _ActiveWidgetsSelectorState extends State<ActiveWidgetsSelector> {
-  String? processingWidgetId;
+  String? _processingId;
 
   Future<void> _toggleActivateWidget(
       List<String> activeProgressWidgets, String id) async {
-    if (processingWidgetId != id) {
-      setState(() {
-        processingWidgetId = id;
-      });
-
-      late List<String> updated;
-
-      final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-
-      if (activeProgressWidgets.contains(id)) {
-        updated = activeProgressWidgets.where((w) => w != id).toList();
-      } else {
-        updated = [...activeProgressWidgets, id];
-      }
-
-      await EditProfilePage.updateUserFields(
-          context, authedUserId, {'activeProgressWidgets': updated});
-
-      setState(() {
-        processingWidgetId = null;
-      });
+    if (_processingId != null) {
+      return;
     }
+
+    setState(() {
+      _processingId = id;
+    });
+
+    late List<String> updated;
+
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+
+    if (activeProgressWidgets.contains(id)) {
+      updated = activeProgressWidgets.where((w) => w != id).toList();
+    } else {
+      updated = [...activeProgressWidgets, id];
+    }
+
+    await EditProfilePage.updateUserFields(
+        context, authedUserId, {'activeProgressWidgets': updated});
+
+    setState(() {
+      _processingId = null;
+    });
   }
 
   @override
@@ -70,7 +73,11 @@ class _ActiveWidgetsSelectorState extends State<ActiveWidgetsSelector> {
         fetchPolicy: QueryFetchPolicy.storeFirst,
         parameterizeQuery: true,
         builder: (userData) {
-          final userProfile = userData.userProfile;
+          if (userData.userProfile == null) {
+            return const ObjectNotFoundIndicator();
+          }
+
+          final userProfile = userData.userProfile!;
           final activeWidgets = userProfile.activeProgressWidgets ?? [];
 
           return MyPageScaffold(
@@ -92,7 +99,7 @@ class _ActiveWidgetsSelectorState extends State<ActiveWidgetsSelector> {
                           widget: w,
                           onTap: () =>
                               _toggleActivateWidget(activeWidgets, w.id),
-                          loading: processingWidgetId == w.id,
+                          processingId: _processingId,
                         ),
                       ))
                   .toList(),
@@ -106,13 +113,13 @@ class _WidgetSelectorTile extends StatelessWidget {
   final List<String> activatedWidgets;
   final ProgressWidget widget;
   final VoidCallback onTap;
-  final bool loading;
+  final String? processingId;
   const _WidgetSelectorTile(
       {Key? key,
       required this.activatedWidgets,
       required this.widget,
       required this.onTap,
-      required this.loading})
+      required this.processingId})
       : super(key: key);
 
   bool get _isActive => activatedWidgets.contains(widget.id);
@@ -123,7 +130,7 @@ class _WidgetSelectorTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: !loading ? onTap : null,
+      onTap: processingId == null ? onTap : null,
       child: ContentBox(
         child: Stack(
           fit: StackFit.expand,
@@ -171,8 +178,7 @@ class _WidgetSelectorTile extends StatelessWidget {
                 )
               ],
             ),
-            if (loading) const Center(child: ModalBarrier()),
-            if (loading)
+            if (processingId == widget.id)
               SizeFadeIn(
                   child: Center(
                 child: material.CircularProgressIndicator(

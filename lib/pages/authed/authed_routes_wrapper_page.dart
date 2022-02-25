@@ -75,13 +75,14 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     /// Core app data such as equipment, moves, body areas and other non user generated content.
     await CoreDataRepo.initCoreData(context);
 
-    /// Get the users log history here as well.
-    /// All [QueryObservers] watching this query in the app should be set with
-    /// [fetchPolicy: QueryFetchPolicy.storeFirst] - as the data should already be there and should never be updated independently by anyone else than the user.
-    /// final query =
-    final query =
-        UserLoggedWorkoutsQuery(variables: UserLoggedWorkoutsArguments());
-    await context.graphQLStore.query(query: query);
+    /// Get data required to display the Feed page that the user lands on.
+    final queryOne = AnnouncementUpdatesQuery();
+    await context.graphQLStore.query(query: queryOne);
+    final queryTwo = WelcomeTodoItemsQuery();
+    await context.graphQLStore.query(query: queryTwo);
+    final queryThree = UserScheduledWorkoutsQuery();
+    await context.graphQLStore.query(query: queryThree);
+
     _coreAppDataInitialized = true;
   }
 

@@ -108,7 +108,10 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
   @override
   Widget build(BuildContext context) {
     return !_initDataRetrieved
-        ? Container()
+        ? const Padding(
+            padding: EdgeInsets.all(32.0),
+            child: CupertinoActivityIndicator(),
+          )
         : _recents.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(24.0),

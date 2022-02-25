@@ -83,7 +83,6 @@ class _LoggedWorkoutCreatorSectionMovesListState
               title: 'Show Sets',
               updateValue: (v) => setState(() => _showSets = v),
               value: _showSets),
-          const HorizontalLine(),
           Expanded(
             child: ListView.builder(
                 shrinkWrap: true,
@@ -156,7 +155,7 @@ class _SingleRoundData extends StatelessWidget {
                         border: Border(
                             bottom: BorderSide(
                                 color:
-                                    context.theme.primary.withOpacity(0.2)))),
+                                    context.theme.primary.withOpacity(0.1)))),
                     child: _SingleSetData(
                       index: i,
                       workoutSectionType: workoutSectionType,

@@ -670,9 +670,9 @@ input MarkAnnouncementUpdateAsSeenInput {
   userId: ID!
 }
 
-input MarkOnboardingMessageAsSeenInput {
-  onboardingMessageId: ID!
+input MarkWelcomeTodoItemAsSeenInput {
   userId: ID!
+  welcomeTodoItemId: ID!
 }
 
 type Move {
@@ -830,7 +830,7 @@ type Mutation {
   giveMemberAdminStatus(clubId: ID!, userId: ID!): ClubMembers!
   makeCopyWorkoutById(id: ID!): Workout!
   markAnnouncementUpdateAsSeen(data: MarkAnnouncementUpdateAsSeenInput!): ID!
-  markOnboardingMessageAsSeen(data: MarkOnboardingMessageAsSeenInput!): ID!
+  markWelcomeTodoItemAsSeen(data: MarkWelcomeTodoItemAsSeenInput!): ID!
   moveWorkoutPlanDayToAnotherDay(
     data: MoveWorkoutPlanDayToAnotherDayInput!
   ): WorkoutPlanDay!
@@ -917,19 +917,6 @@ type Mutation {
   userJoinPublicClub(clubId: ID!): ID!
 }
 
-type OnboardingMessage {
-  articleUrl: String
-  audioUri: String
-  bodyOne: String
-  bodyTwo: String
-  createdAt: DateTime!
-  id: ID!
-  imageUri: String
-  subtitle: String
-  title: String!
-  videoUri: String
-}
-
 type ProgressWidget {
   createdAt: DateTime!
   description: String
@@ -961,7 +948,7 @@ type Query {
   checkUniqueClubName(name: String!): Boolean!
   checkUniqueDisplayName(displayName: String!): Boolean!
   checkUserClubMemberStatus(clubId: ID!): UserClubMemberStatus!
-  clubChatSummary(clubId: ID!): ClubChatSummary!
+  clubChatSummary(clubId: ID!): ClubChatSummary
   clubInviteTokens(clubId: ID!): ClubInviteTokens!
   clubMemberNotes(
     clubId: ID!
@@ -976,7 +963,7 @@ type Query {
     offset: Int!
   ): [StreamEnrichedActivity!]!
   clubSummaries(ids: [ID!]!): [ClubSummary!]!
-  clubSummary(id: ID!): ClubSummary!
+  clubSummary(id: ID!): ClubSummary
   clubWorkoutPlans(clubId: ID!): ClubWorkoutPlans!
   clubWorkouts(clubId: ID!): ClubWorkouts!
   coreData: CoreData!
@@ -984,7 +971,7 @@ type Query {
   gymProfiles: [GymProfile!]!
   lifetimeLogStatsSummary(userId: ID!): LifetimeLogStatsSummary!
   logCountByWorkout(id: ID!): Int!
-  loggedWorkoutById(id: ID!): LoggedWorkout!
+  loggedWorkoutById(id: ID!): LoggedWorkout
   publicClubs: [ClubSummary!]!
   publicWorkoutPlans(
     cursor: ID
@@ -1005,7 +992,7 @@ type Query {
   userArchivedCustomMoves: [Move!]!
   userArchivedWorkoutPlans: [WorkoutPlan!]!
   userArchivedWorkouts: [Workout!]!
-  userAvatarById(id: ID!): UserAvatarData!
+  userAvatarById(id: ID!): UserAvatarData
   userAvatars(ids: [ID!]!): [UserAvatarData!]!
   userBenchmark(id: ID!): UserBenchmark!
   userBenchmarks: [UserBenchmark!]!
@@ -1015,9 +1002,9 @@ type Query {
   userDayLogMoods: [UserDayLogMood!]!
   userEatWellLogs: [UserEatWellLog!]!
   userGoals: [UserGoal!]!
-  userLoggedWorkouts(take: Int): [LoggedWorkout!]!
+  userLoggedWorkouts: [LoggedWorkout!]!
   userMeditationLogs: [UserMeditationLog!]!
-  userProfile(userId: ID!): UserProfile!
+  userProfile(userId: ID!): UserProfile
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
@@ -1028,9 +1015,10 @@ type Query {
   userWorkoutTags: [WorkoutTag!]!
   userWorkouts: [WorkoutSummary!]!
   validateToken: Boolean!
-  workoutById(id: ID!): Workout!
-  workoutPlanById(id: ID!): WorkoutPlan!
-  workoutPlanEnrolmentById(id: ID!): WorkoutPlanEnrolmentWithPlan!
+  welcomeTodoItems: [WelcomeTodoItem!]!
+  workoutById(id: ID!): Workout
+  workoutPlanById(id: ID!): WorkoutPlan
+  workoutPlanEnrolmentById(id: ID!): WorkoutPlanEnrolmentWithPlan
   workoutPlanEnrolments: [WorkoutPlanEnrolmentSummary!]!
 }
 
@@ -1627,6 +1615,14 @@ type UserSleepWellLog {
   note: String
   rating: UserDayLogRating!
   year: Int!
+}
+
+type WelcomeTodoItem {
+  createdAt: DateTime!
+  id: ID!
+  routeTo: String
+  title: String!
+  videoUri: String
 }
 
 type Workout {

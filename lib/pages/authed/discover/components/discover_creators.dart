@@ -46,7 +46,8 @@ class DiscoverCreators extends StatelessWidget {
               query: query,
               loadingIndicator: ShimmerCirclesGrid(
                 itemCount: 8,
-                maxDiameter: tileWidth,
+                maxDiameter: tileHeight,
+                scrollDirection: Axis.horizontal,
               ),
               builder: (data) {
                 return Container(
