@@ -52,6 +52,19 @@ extension LoggedWorkoutExtension on LoggedWorkout {
   /// Adds up all timetakenSeconds from sections.
   Duration get totalSessionTime => loggedWorkoutSections.fold(Duration.zero,
       (acum, next) => acum + Duration(seconds: next.timeTakenSeconds));
+
+  /// A list of all the moves included in the workout. Returns a list of [Moves] which includes all duplicates and repeats.
+  List<Move> get allMoves => loggedWorkoutSections.fold<List<Move>>(
+      [],
+      (acum, next) => [
+            ...acum,
+            ...next.loggedWorkoutSets.fold(
+                [],
+                (acum, next) => [
+                      ...acum,
+                      ...next.loggedWorkoutMoves.map((lwm) => lwm.move).toList()
+                    ])
+          ]);
 }
 
 extension LoggedWorkoutSectionExtension on LoggedWorkoutSection {

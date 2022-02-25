@@ -10,8 +10,11 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/body_areas_targeted_widget.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/filterable_logged_workouts_list.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/log_analysis_averages_widget.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/most_logged_moves.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/most_logged_workouts.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/session_type_and_move_type_widgets.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/workout_goals_targeted_widget.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -93,7 +96,7 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                               shrinkWrap: true,
                               padding: const EdgeInsets.symmetric(
                                   vertical: 4, horizontal: 8),
-                              itemCount: 3,
+                              itemCount: 6,
                               itemBuilder: (c, i) {
                                 switch (i) {
                                   case 0:
@@ -105,6 +108,18 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                                       loggedWorkouts: filteredSortedLogs,
                                     );
                                   case 2:
+                                    return BodyAreasTargetedWidget(
+                                      loggedWorkouts: filteredSortedLogs,
+                                    );
+                                  case 3:
+                                    return MostLoggedWorkoutsWidget(
+                                      loggedWorkouts: filteredSortedLogs,
+                                    );
+                                  case 4:
+                                    return MostLoggedMovesWidget(
+                                      loggedWorkouts: filteredSortedLogs,
+                                    );
+                                  case 5:
                                     return SessionTypeAndMoveTypeWidgets(
                                       loggedWorkouts: filteredSortedLogs,
                                     );

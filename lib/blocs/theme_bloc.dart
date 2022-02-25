@@ -229,6 +229,9 @@ abstract class Styles {
     stops: [0.0, 1.0],
   );
 
+  static const LinearGradient blueAccentGradient = LinearGradient(
+      colors: [Styles.infoBlue, Color.fromARGB(255, 0, 174, 255)]);
+
   static const LinearGradient secondaryAccentGradientVertical = LinearGradient(
     begin: Alignment.bottomCenter,
     end: Alignment.topCenter,

@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/widget_header.dart';
 
 class LogAnalysisAveragesWidget extends StatelessWidget {
   /// These should be sorted by [completedOn] date.
@@ -48,13 +49,8 @@ class LogAnalysisAveragesWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 8.0, bottom: 8, right: 8, top: 16),
-          child: MyText(
-            'Averages by Period',
-            size: FONTSIZE.four,
-            weight: FontWeight.bold,
-          ),
+        const LogAnalysisWidgetHeader(
+          heading: 'Sessions and Session Length',
         ),
         GridView.count(
           shrinkWrap: true,

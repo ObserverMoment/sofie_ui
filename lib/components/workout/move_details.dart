@@ -8,7 +8,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Info about and exercise. Video and description.
@@ -96,8 +95,6 @@ class MoveDetails extends StatelessWidget {
     final bool _bodyWeightOnly =
         move.requiredEquipments.isEmpty && move.selectableEquipments.isEmpty;
 
-    final bodyAreas = CoreDataRepo.bodyAreas;
-
     return CupertinoPageScaffold(
         navigationBar: MyNavBar(
           customLeading: NavBarChevronDownButton(context.pop),
@@ -147,12 +144,10 @@ class MoveDetails extends StatelessWidget {
                                 TargetedBodyAreasScoreIndicator(
                                     bodyAreaMoveScores: move.bodyAreaMoveScores,
                                     frontBack: BodyAreaFrontBack.front,
-                                    allBodyAreas: bodyAreas,
                                     height: kBodyGraphicHeight),
                                 TargetedBodyAreasScoreIndicator(
                                     bodyAreaMoveScores: move.bodyAreaMoveScores,
                                     frontBack: BodyAreaFrontBack.back,
-                                    allBodyAreas: bodyAreas,
                                     height: kBodyGraphicHeight)
                               ],
                             )
