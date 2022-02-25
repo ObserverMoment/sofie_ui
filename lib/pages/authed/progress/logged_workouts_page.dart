@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,19 +79,22 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                       ]),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: [
                   filteredSortedLogs.isEmpty
-                      ? YourContentEmptyPlaceholder(
-                          message: 'No logs...',
-                          explainer:
-                              'There is no workout log data available for the date range selected. ',
-                          actions: [
-                              EmptyPlaceholderAction(
-                                  action: () => context
-                                      .navigateTo(PublicWorkoutFinderRoute()),
-                                  buttonIcon: CupertinoIcons.compass,
-                                  buttonText: 'Find a Workout'),
-                            ])
+                      ? Expanded(
+                          child: YourContentEmptyPlaceholder(
+                              message: 'No logs...',
+                              explainer:
+                                  'There is no workout log data available for the date range selected. ',
+                              actions: [
+                                EmptyPlaceholderAction(
+                                    action: () => context
+                                        .navigateTo(PublicWorkoutFinderRoute()),
+                                    buttonIcon: CupertinoIcons.compass,
+                                    buttonText: 'Find a Workout'),
+                              ]),
+                        )
                       : Expanded(
                           child: ListView.builder(
                               shrinkWrap: true,
@@ -128,10 +133,14 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                                 }
                               }),
                         ),
-                  DateAndRangePickerDisplay(
-                    from: _from,
-                    to: _to,
-                    updateRange: _updateDateRange,
+                  Container(
+                    color: context.theme.cardBackground,
+                    padding: EdgeInsets.only(bottom: Platform.isIOS ? 16 : 0),
+                    child: DateAndRangePickerDisplay(
+                      from: _from,
+                      to: _to,
+                      updateRange: _updateDateRange,
+                    ),
                   )
                 ],
               ));

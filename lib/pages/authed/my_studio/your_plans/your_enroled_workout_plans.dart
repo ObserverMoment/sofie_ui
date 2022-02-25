@@ -74,13 +74,18 @@ class __FilterableEnroledPlansState extends State<_FilterableEnroledPlans> {
             .toList();
 
     return filteredEnrolments.isEmpty
-        ? YourContentEmptyPlaceholder(message: 'No plans joined', actions: [
-            EmptyPlaceholderAction(
-                action: () =>
-                    context.navigateTo(PublicWorkoutPlanFinderRoute()),
-                buttonIcon: CupertinoIcons.compass,
-                buttonText: 'Find Plans'),
-          ])
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              YourContentEmptyPlaceholder(message: 'No plans joined', actions: [
+                EmptyPlaceholderAction(
+                    action: () =>
+                        context.navigateTo(PublicWorkoutPlanFinderRoute()),
+                    buttonIcon: CupertinoIcons.compass,
+                    buttonText: 'Find Plans'),
+              ]),
+            ],
+          )
         : FABPage(
             rowButtonsAlignment: MainAxisAlignment.end,
             columnButtons: [
