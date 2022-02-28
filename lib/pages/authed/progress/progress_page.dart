@@ -337,10 +337,10 @@ class ProgressPage extends StatelessWidget {
                   crossAxisCount: 4,
                   children: [
                     SubSectionLinkTile(
-                      label: 'Personal Bests',
-                      assetImagePath: 'personal_bests.svg',
+                      label: 'Personal Scorebook',
+                      assetImagePath: 'logs.svg',
                       onTap: () =>
-                          context.navigateTo(const PersonalBestsRoute()),
+                          context.navigateTo(const PersonalScoresRoute()),
                     ),
                     SubSectionLinkTile(
                       label: 'Goal Tracking',

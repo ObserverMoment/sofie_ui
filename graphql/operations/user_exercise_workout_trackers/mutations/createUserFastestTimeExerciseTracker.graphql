@@ -1,0 +1,7 @@
+mutation createUserFastestTimeExerciseTracker(
+  $data: CreateUserFastestTimeExerciseTrackerInput!
+) {
+  createUserFastestTimeExerciseTracker(data: $data) {
+    ...UserFastestTimeExerciseTracker
+  }
+}

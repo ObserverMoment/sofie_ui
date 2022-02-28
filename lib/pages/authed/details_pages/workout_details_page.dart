@@ -619,6 +619,7 @@ class _InfoSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+      width: double.infinity,
       decoration: BoxDecoration(
           border: Border(
               bottom:

@@ -1,0 +1,78 @@
+fragment UserScoredWorkoutTracker on UserScoredWorkoutTracker {
+  __typename
+  id
+  createdAt
+  Workout {
+    ...WorkoutSummary
+  }
+  WorkoutExerciseTrackerManualEntries {
+    ...WorkoutExerciseTrackerManualEntry
+  }
+}
+
+fragment UserMaxLoadExerciseTracker on UserMaxLoadExerciseTracker {
+  __typename
+  id
+  createdAt
+  reps
+  loadUnit
+  Move {
+    ...Move
+  }
+  Equipment {
+    ...Equipment
+  }
+  WorkoutExerciseTrackerManualEntries {
+    ...WorkoutExerciseTrackerManualEntry
+  }
+}
+
+fragment UserFastestTimeExerciseTracker on UserFastestTimeExerciseTracker {
+  __typename
+  id
+  createdAt
+  repType
+  reps
+  distanceUnit
+  loadAmount
+  loadUnit
+  Move {
+    ...Move
+  }
+  Equipment {
+    ...Equipment
+  }
+  WorkoutExerciseTrackerManualEntries {
+    ...WorkoutExerciseTrackerManualEntry
+  }
+}
+
+fragment UserMaxUnbrokenExerciseTracker on UserMaxUnbrokenExerciseTracker {
+  __typename
+  id
+  createdAt
+
+  repType
+  distanceUnit
+  loadAmount
+  loadUnit
+  Move {
+    ...Move
+  }
+  Equipment {
+    ...Equipment
+  }
+  WorkoutExerciseTrackerManualEntries {
+    ...WorkoutExerciseTrackerManualEntry
+  }
+}
+
+fragment WorkoutExerciseTrackerManualEntry on WorkoutExerciseTrackerManualEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  score
+  videoUri
+  videoThumbUri
+}

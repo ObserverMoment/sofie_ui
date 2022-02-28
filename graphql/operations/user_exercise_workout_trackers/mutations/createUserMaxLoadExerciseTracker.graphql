@@ -1,0 +1,7 @@
+mutation createUserMaxLoadExerciseTracker(
+  $data: CreateUserMaxLoadExerciseTrackerInput!
+) {
+  createUserMaxLoadExerciseTracker(data: $data) {
+    ...UserMaxLoadExerciseTracker
+  }
+}

@@ -1,0 +1,7 @@
+mutation createWorkoutExerciseTrackerManualEntry(
+  $data: CreateWorkoutExerciseTrackerManualEntryInput!
+) {
+  createWorkoutExerciseTrackerManualEntry(data: $data) {
+    ...WorkoutExerciseTrackerManualEntry
+  }
+}

@@ -6230,6 +6230,553 @@ Map<String, dynamic> _$ClubMemberNotes$QueryToJson(
           instance.clubMemberNotes.map((e) => e.toJson()).toList(),
     };
 
+UserMaxUnbrokenExerciseTracker _$UserMaxUnbrokenExerciseTrackerFromJson(
+        Map<String, dynamic> json) =>
+    UserMaxUnbrokenExerciseTracker()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..repType = $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+          unknownValue: WorkoutMoveRepType.artemisUnknown)
+      ..distanceUnit = $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+          unknownValue: DistanceUnit.artemisUnknown)
+      ..loadAmount = (json['loadAmount'] as num).toDouble()
+      ..loadUnit = $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+          unknownValue: LoadUnit.artemisUnknown)
+      ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
+      ..equipment = json['Equipment'] == null
+          ? null
+          : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>)
+      ..workoutExerciseTrackerManualEntries =
+          (json['WorkoutExerciseTrackerManualEntries'] as List<dynamic>)
+              .map((e) => WorkoutExerciseTrackerManualEntry.fromJson(
+                  e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackerToJson(
+        UserMaxUnbrokenExerciseTracker instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'Move': instance.move.toJson(),
+      'Equipment': instance.equipment?.toJson(),
+      'WorkoutExerciseTrackerManualEntries': instance
+          .workoutExerciseTrackerManualEntries
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserMaxUnbrokenExerciseTrackers$Query
+    _$UserMaxUnbrokenExerciseTrackers$QueryFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxUnbrokenExerciseTrackers$Query()
+          ..userMaxUnbrokenExerciseTrackers =
+              (json['userMaxUnbrokenExerciseTrackers'] as List<dynamic>)
+                  .map((e) => UserMaxUnbrokenExerciseTracker.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList();
+
+Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackers$QueryToJson(
+        UserMaxUnbrokenExerciseTrackers$Query instance) =>
+    <String, dynamic>{
+      'userMaxUnbrokenExerciseTrackers': instance
+          .userMaxUnbrokenExerciseTrackers
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserMaxUnbrokenExerciseTrackerMixin$Move
+    _$UserMaxUnbrokenExerciseTrackerMixin$MoveFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxUnbrokenExerciseTrackerMixin$Move()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..name = json['name'] as String
+          ..searchTerms = json['searchTerms'] as String?
+          ..description = json['description'] as String?
+          ..demoVideoUri = json['demoVideoUri'] as String?
+          ..demoVideoThumbUri = json['demoVideoThumbUri'] as String?
+          ..scope = $enumDecode(_$MoveScopeEnumMap, json['scope'],
+              unknownValue: MoveScope.artemisUnknown)
+          ..validRepTypes = (json['validRepTypes'] as List<dynamic>)
+              .map((e) => $enumDecode(_$WorkoutMoveRepTypeEnumMap, e,
+                  unknownValue: WorkoutMoveRepType.artemisUnknown))
+              .toList();
+
+Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackerMixin$MoveToJson(
+        UserMaxUnbrokenExerciseTrackerMixin$Move instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'searchTerms': instance.searchTerms,
+      'description': instance.description,
+      'demoVideoUri': instance.demoVideoUri,
+      'demoVideoThumbUri': instance.demoVideoThumbUri,
+      'scope': _$MoveScopeEnumMap[instance.scope],
+      'validRepTypes': instance.validRepTypes
+          .map((e) => _$WorkoutMoveRepTypeEnumMap[e])
+          .toList(),
+    };
+
+UserMaxUnbrokenExerciseTrackerMixin$Equipment
+    _$UserMaxUnbrokenExerciseTrackerMixin$EquipmentFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxUnbrokenExerciseTrackerMixin$Equipment()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..name = json['name'] as String
+          ..loadAdjustable = json['loadAdjustable'] as bool;
+
+Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackerMixin$EquipmentToJson(
+        UserMaxUnbrokenExerciseTrackerMixin$Equipment instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'loadAdjustable': instance.loadAdjustable,
+    };
+
+UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+    _$UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..createdAt =
+              fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+          ..completedOn =
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
+          ..score = (json['score'] as num).toDouble()
+          ..videoUri = json['videoUri'] as String?
+          ..videoThumbUri = json['videoThumbUri'] as String?;
+
+Map<String, dynamic>
+    _$UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+            UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+                instance) =>
+        <String, dynamic>{
+          '__typename': instance.$$typename,
+          'id': instance.id,
+          'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+          'completedOn':
+              fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+          'score': instance.score,
+          'videoUri': instance.videoUri,
+          'videoThumbUri': instance.videoThumbUri,
+        };
+
+UserMaxLoadExerciseTracker _$UserMaxLoadExerciseTrackerFromJson(
+        Map<String, dynamic> json) =>
+    UserMaxLoadExerciseTracker()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..reps = json['reps'] as int
+      ..loadUnit = $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+          unknownValue: LoadUnit.artemisUnknown)
+      ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
+      ..equipment = json['Equipment'] == null
+          ? null
+          : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>)
+      ..workoutExerciseTrackerManualEntries =
+          (json['WorkoutExerciseTrackerManualEntries'] as List<dynamic>)
+              .map((e) => WorkoutExerciseTrackerManualEntry.fromJson(
+                  e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserMaxLoadExerciseTrackerToJson(
+        UserMaxLoadExerciseTracker instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'reps': instance.reps,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'Move': instance.move.toJson(),
+      'Equipment': instance.equipment?.toJson(),
+      'WorkoutExerciseTrackerManualEntries': instance
+          .workoutExerciseTrackerManualEntries
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserMaxLoadExerciseTrackers$Query _$UserMaxLoadExerciseTrackers$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserMaxLoadExerciseTrackers$Query()
+      ..userMaxLoadExerciseTrackers = (json['userMaxLoadExerciseTrackers']
+              as List<dynamic>)
+          .map((e) =>
+              UserMaxLoadExerciseTracker.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserMaxLoadExerciseTrackers$QueryToJson(
+        UserMaxLoadExerciseTrackers$Query instance) =>
+    <String, dynamic>{
+      'userMaxLoadExerciseTrackers':
+          instance.userMaxLoadExerciseTrackers.map((e) => e.toJson()).toList(),
+    };
+
+UserMaxLoadExerciseTrackerMixin$Move
+    _$UserMaxLoadExerciseTrackerMixin$MoveFromJson(Map<String, dynamic> json) =>
+        UserMaxLoadExerciseTrackerMixin$Move()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..name = json['name'] as String
+          ..searchTerms = json['searchTerms'] as String?
+          ..description = json['description'] as String?
+          ..demoVideoUri = json['demoVideoUri'] as String?
+          ..demoVideoThumbUri = json['demoVideoThumbUri'] as String?
+          ..scope = $enumDecode(_$MoveScopeEnumMap, json['scope'],
+              unknownValue: MoveScope.artemisUnknown)
+          ..validRepTypes = (json['validRepTypes'] as List<dynamic>)
+              .map((e) => $enumDecode(_$WorkoutMoveRepTypeEnumMap, e,
+                  unknownValue: WorkoutMoveRepType.artemisUnknown))
+              .toList();
+
+Map<String, dynamic> _$UserMaxLoadExerciseTrackerMixin$MoveToJson(
+        UserMaxLoadExerciseTrackerMixin$Move instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'searchTerms': instance.searchTerms,
+      'description': instance.description,
+      'demoVideoUri': instance.demoVideoUri,
+      'demoVideoThumbUri': instance.demoVideoThumbUri,
+      'scope': _$MoveScopeEnumMap[instance.scope],
+      'validRepTypes': instance.validRepTypes
+          .map((e) => _$WorkoutMoveRepTypeEnumMap[e])
+          .toList(),
+    };
+
+UserMaxLoadExerciseTrackerMixin$Equipment
+    _$UserMaxLoadExerciseTrackerMixin$EquipmentFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxLoadExerciseTrackerMixin$Equipment()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..name = json['name'] as String
+          ..loadAdjustable = json['loadAdjustable'] as bool;
+
+Map<String, dynamic> _$UserMaxLoadExerciseTrackerMixin$EquipmentToJson(
+        UserMaxLoadExerciseTrackerMixin$Equipment instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'loadAdjustable': instance.loadAdjustable,
+    };
+
+UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+    _$UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..createdAt =
+              fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+          ..completedOn =
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
+          ..score = (json['score'] as num).toDouble()
+          ..videoUri = json['videoUri'] as String?
+          ..videoThumbUri = json['videoThumbUri'] as String?;
+
+Map<String, dynamic>
+    _$UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+            UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+                instance) =>
+        <String, dynamic>{
+          '__typename': instance.$$typename,
+          'id': instance.id,
+          'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+          'completedOn':
+              fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+          'score': instance.score,
+          'videoUri': instance.videoUri,
+          'videoThumbUri': instance.videoThumbUri,
+        };
+
+UserFastestTimeExerciseTracker _$UserFastestTimeExerciseTrackerFromJson(
+        Map<String, dynamic> json) =>
+    UserFastestTimeExerciseTracker()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..repType = $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+          unknownValue: WorkoutMoveRepType.artemisUnknown)
+      ..reps = (json['reps'] as num).toDouble()
+      ..distanceUnit = $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+          unknownValue: DistanceUnit.artemisUnknown)
+      ..loadAmount = (json['loadAmount'] as num).toDouble()
+      ..loadUnit = $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+          unknownValue: LoadUnit.artemisUnknown)
+      ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
+      ..equipment = json['Equipment'] == null
+          ? null
+          : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>)
+      ..workoutExerciseTrackerManualEntries =
+          (json['WorkoutExerciseTrackerManualEntries'] as List<dynamic>)
+              .map((e) => WorkoutExerciseTrackerManualEntry.fromJson(
+                  e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserFastestTimeExerciseTrackerToJson(
+        UserFastestTimeExerciseTracker instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+      'reps': instance.reps,
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'Move': instance.move.toJson(),
+      'Equipment': instance.equipment?.toJson(),
+      'WorkoutExerciseTrackerManualEntries': instance
+          .workoutExerciseTrackerManualEntries
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserFastestTimeExerciseTrackers$Query
+    _$UserFastestTimeExerciseTrackers$QueryFromJson(
+            Map<String, dynamic> json) =>
+        UserFastestTimeExerciseTrackers$Query()
+          ..userFastestTimeExerciseTrackers =
+              (json['userFastestTimeExerciseTrackers'] as List<dynamic>)
+                  .map((e) => UserFastestTimeExerciseTracker.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList();
+
+Map<String, dynamic> _$UserFastestTimeExerciseTrackers$QueryToJson(
+        UserFastestTimeExerciseTrackers$Query instance) =>
+    <String, dynamic>{
+      'userFastestTimeExerciseTrackers': instance
+          .userFastestTimeExerciseTrackers
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserFastestTimeExerciseTrackerMixin$Move
+    _$UserFastestTimeExerciseTrackerMixin$MoveFromJson(
+            Map<String, dynamic> json) =>
+        UserFastestTimeExerciseTrackerMixin$Move()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..name = json['name'] as String
+          ..searchTerms = json['searchTerms'] as String?
+          ..description = json['description'] as String?
+          ..demoVideoUri = json['demoVideoUri'] as String?
+          ..demoVideoThumbUri = json['demoVideoThumbUri'] as String?
+          ..scope = $enumDecode(_$MoveScopeEnumMap, json['scope'],
+              unknownValue: MoveScope.artemisUnknown)
+          ..validRepTypes = (json['validRepTypes'] as List<dynamic>)
+              .map((e) => $enumDecode(_$WorkoutMoveRepTypeEnumMap, e,
+                  unknownValue: WorkoutMoveRepType.artemisUnknown))
+              .toList();
+
+Map<String, dynamic> _$UserFastestTimeExerciseTrackerMixin$MoveToJson(
+        UserFastestTimeExerciseTrackerMixin$Move instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'searchTerms': instance.searchTerms,
+      'description': instance.description,
+      'demoVideoUri': instance.demoVideoUri,
+      'demoVideoThumbUri': instance.demoVideoThumbUri,
+      'scope': _$MoveScopeEnumMap[instance.scope],
+      'validRepTypes': instance.validRepTypes
+          .map((e) => _$WorkoutMoveRepTypeEnumMap[e])
+          .toList(),
+    };
+
+UserFastestTimeExerciseTrackerMixin$Equipment
+    _$UserFastestTimeExerciseTrackerMixin$EquipmentFromJson(
+            Map<String, dynamic> json) =>
+        UserFastestTimeExerciseTrackerMixin$Equipment()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..name = json['name'] as String
+          ..loadAdjustable = json['loadAdjustable'] as bool;
+
+Map<String, dynamic> _$UserFastestTimeExerciseTrackerMixin$EquipmentToJson(
+        UserFastestTimeExerciseTrackerMixin$Equipment instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'loadAdjustable': instance.loadAdjustable,
+    };
+
+UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+    _$UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+            Map<String, dynamic> json) =>
+        UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..createdAt =
+              fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+          ..completedOn =
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
+          ..score = (json['score'] as num).toDouble()
+          ..videoUri = json['videoUri'] as String?
+          ..videoThumbUri = json['videoThumbUri'] as String?;
+
+Map<String, dynamic>
+    _$UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+            UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+                instance) =>
+        <String, dynamic>{
+          '__typename': instance.$$typename,
+          'id': instance.id,
+          'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+          'completedOn':
+              fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+          'score': instance.score,
+          'videoUri': instance.videoUri,
+          'videoThumbUri': instance.videoThumbUri,
+        };
+
+UserScoredWorkoutTracker _$UserScoredWorkoutTrackerFromJson(
+        Map<String, dynamic> json) =>
+    UserScoredWorkoutTracker()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..workout =
+          WorkoutSummary.fromJson(json['Workout'] as Map<String, dynamic>)
+      ..workoutExerciseTrackerManualEntries =
+          (json['WorkoutExerciseTrackerManualEntries'] as List<dynamic>)
+              .map((e) => WorkoutExerciseTrackerManualEntry.fromJson(
+                  e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserScoredWorkoutTrackerToJson(
+        UserScoredWorkoutTracker instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'Workout': instance.workout.toJson(),
+      'WorkoutExerciseTrackerManualEntries': instance
+          .workoutExerciseTrackerManualEntries
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserScoredWorkoutTrackers$Query _$UserScoredWorkoutTrackers$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserScoredWorkoutTrackers$Query()
+      ..userScoredWorkoutTrackers =
+          (json['userScoredWorkoutTrackers'] as List<dynamic>)
+              .map((e) =>
+                  UserScoredWorkoutTracker.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+Map<String, dynamic> _$UserScoredWorkoutTrackers$QueryToJson(
+        UserScoredWorkoutTrackers$Query instance) =>
+    <String, dynamic>{
+      'userScoredWorkoutTrackers':
+          instance.userScoredWorkoutTrackers.map((e) => e.toJson()).toList(),
+    };
+
+UserScoredWorkoutTrackerMixin$WorkoutSummary
+    _$UserScoredWorkoutTrackerMixin$WorkoutSummaryFromJson(
+            Map<String, dynamic> json) =>
+        UserScoredWorkoutTrackerMixin$WorkoutSummary()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..createdAt =
+              fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+          ..updatedAt =
+              fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
+          ..archived = json['archived'] as bool
+          ..name = json['name'] as String
+          ..user = UserAvatarData.fromJson(json['User'] as Map<String, dynamic>)
+          ..lengthMinutes = json['lengthMinutes'] as int?
+          ..coverImageUri = json['coverImageUri'] as String?
+          ..description = json['description'] as String?
+          ..difficultyLevel = $enumDecodeNullable(
+              _$DifficultyLevelEnumMap, json['difficultyLevel'],
+              unknownValue: DifficultyLevel.artemisUnknown)
+          ..loggedSessionsCount = json['loggedSessionsCount'] as int
+          ..hasClassVideo = json['hasClassVideo'] as bool
+          ..hasClassAudio = json['hasClassAudio'] as bool
+          ..equipments = (json['equipments'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList()
+          ..sectionTypes = (json['sectionTypes'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList()
+          ..goals =
+              (json['goals'] as List<dynamic>).map((e) => e as String).toList()
+          ..tags =
+              (json['tags'] as List<dynamic>).map((e) => e as String).toList()
+          ..bodyAreas = (json['bodyAreas'] as List<dynamic>)
+              .map((e) => e as String)
+              .toList();
+
+Map<String, dynamic> _$UserScoredWorkoutTrackerMixin$WorkoutSummaryToJson(
+        UserScoredWorkoutTrackerMixin$WorkoutSummary instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
+      'archived': instance.archived,
+      'name': instance.name,
+      'User': instance.user.toJson(),
+      'lengthMinutes': instance.lengthMinutes,
+      'coverImageUri': instance.coverImageUri,
+      'description': instance.description,
+      'difficultyLevel': _$DifficultyLevelEnumMap[instance.difficultyLevel],
+      'loggedSessionsCount': instance.loggedSessionsCount,
+      'hasClassVideo': instance.hasClassVideo,
+      'hasClassAudio': instance.hasClassAudio,
+      'equipments': instance.equipments,
+      'sectionTypes': instance.sectionTypes,
+      'goals': instance.goals,
+      'tags': instance.tags,
+      'bodyAreas': instance.bodyAreas,
+    };
+
+UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntry
+    _$UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+            Map<String, dynamic> json) =>
+        UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntry()
+          ..$$typename = json['__typename'] as String?
+          ..id = json['id'] as String
+          ..createdAt =
+              fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+          ..completedOn =
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
+          ..score = (json['score'] as num).toDouble()
+          ..videoUri = json['videoUri'] as String?
+          ..videoThumbUri = json['videoThumbUri'] as String?;
+
+Map<String, dynamic>
+    _$UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+            UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntry
+                instance) =>
+        <String, dynamic>{
+          '__typename': instance.$$typename,
+          'id': instance.id,
+          'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+          'completedOn':
+              fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+          'score': instance.score,
+          'videoUri': instance.videoUri,
+          'videoThumbUri': instance.videoThumbUri,
+        };
+
 RemoveDocumentFromSkill$Mutation _$RemoveDocumentFromSkill$MutationFromJson(
         Map<String, dynamic> json) =>
     RemoveDocumentFromSkill$Mutation()
@@ -6671,6 +7218,323 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'clubId': instance.clubId,
       'inviteLimit': instance.inviteLimit,
       'name': instance.name,
+    };
+
+CreateUserMaxUnbrokenExerciseTracker$Mutation
+    _$CreateUserMaxUnbrokenExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenExerciseTracker$Mutation()
+          ..createUserMaxUnbrokenExerciseTracker =
+              UserMaxUnbrokenExerciseTracker.fromJson(
+                  json['createUserMaxUnbrokenExerciseTracker']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTracker$MutationToJson(
+        CreateUserMaxUnbrokenExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserMaxUnbrokenExerciseTracker':
+          instance.createUserMaxUnbrokenExerciseTracker.toJson(),
+    };
+
+CreateUserMaxUnbrokenExerciseTrackerInput
+    _$CreateUserMaxUnbrokenExerciseTrackerInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenExerciseTrackerInput(
+          equipment: json['Equipment'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['Equipment'] as Map<String, dynamic>),
+          move: ConnectRelationInput.fromJson(
+              json['Move'] as Map<String, dynamic>),
+          distanceUnit: $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+              unknownValue: DistanceUnit.artemisUnknown),
+          loadAmount: (json['loadAmount'] as num).toDouble(),
+          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+              unknownValue: LoadUnit.artemisUnknown),
+          repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+              unknownValue: WorkoutMoveRepType.artemisUnknown),
+        );
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTrackerInputToJson(
+        CreateUserMaxUnbrokenExerciseTrackerInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+    };
+
+WorkoutExerciseTrackerManualEntry _$WorkoutExerciseTrackerManualEntryFromJson(
+        Map<String, dynamic> json) =>
+    WorkoutExerciseTrackerManualEntry()
+      ..$$typename = json['__typename'] as String?
+      ..id = json['id'] as String
+      ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
+      ..completedOn =
+          fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int)
+      ..score = (json['score'] as num).toDouble()
+      ..videoUri = json['videoUri'] as String?
+      ..videoThumbUri = json['videoThumbUri'] as String?;
+
+Map<String, dynamic> _$WorkoutExerciseTrackerManualEntryToJson(
+        WorkoutExerciseTrackerManualEntry instance) =>
+    <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
+      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+      'score': instance.score,
+      'videoUri': instance.videoUri,
+      'videoThumbUri': instance.videoThumbUri,
+    };
+
+CreateWorkoutExerciseTrackerManualEntry$Mutation
+    _$CreateWorkoutExerciseTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateWorkoutExerciseTrackerManualEntry$Mutation()
+          ..createWorkoutExerciseTrackerManualEntry =
+              WorkoutExerciseTrackerManualEntry.fromJson(
+                  json['createWorkoutExerciseTrackerManualEntry']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateWorkoutExerciseTrackerManualEntry$MutationToJson(
+        CreateWorkoutExerciseTrackerManualEntry$Mutation instance) =>
+    <String, dynamic>{
+      'createWorkoutExerciseTrackerManualEntry':
+          instance.createWorkoutExerciseTrackerManualEntry.toJson(),
+    };
+
+CreateWorkoutExerciseTrackerManualEntryInput
+    _$CreateWorkoutExerciseTrackerManualEntryInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateWorkoutExerciseTrackerManualEntryInput(
+          userFastestTimeExerciseTracker:
+              json['UserFastestTimeExerciseTracker'] == null
+                  ? null
+                  : ConnectRelationInput.fromJson(
+                      json['UserFastestTimeExerciseTracker']
+                          as Map<String, dynamic>),
+          userMaxLoadExerciseTracker: json['UserMaxLoadExerciseTracker'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['UserMaxLoadExerciseTracker'] as Map<String, dynamic>),
+          userMaxUnbrokenExerciseTracker:
+              json['UserMaxUnbrokenExerciseTracker'] == null
+                  ? null
+                  : ConnectRelationInput.fromJson(
+                      json['UserMaxUnbrokenExerciseTracker']
+                          as Map<String, dynamic>),
+          userScoredWorkoutTracker: json['UserScoredWorkoutTracker'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['UserScoredWorkoutTracker'] as Map<String, dynamic>),
+          completedOn:
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
+          score: (json['score'] as num).toDouble(),
+          videoThumbUri: json['videoThumbUri'] as String?,
+          videoUri: json['videoUri'] as String?,
+        );
+
+Map<String, dynamic> _$CreateWorkoutExerciseTrackerManualEntryInputToJson(
+        CreateWorkoutExerciseTrackerManualEntryInput instance) =>
+    <String, dynamic>{
+      'UserFastestTimeExerciseTracker':
+          instance.userFastestTimeExerciseTracker?.toJson(),
+      'UserMaxLoadExerciseTracker':
+          instance.userMaxLoadExerciseTracker?.toJson(),
+      'UserMaxUnbrokenExerciseTracker':
+          instance.userMaxUnbrokenExerciseTracker?.toJson(),
+      'UserScoredWorkoutTracker': instance.userScoredWorkoutTracker?.toJson(),
+      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+      'score': instance.score,
+      'videoThumbUri': instance.videoThumbUri,
+      'videoUri': instance.videoUri,
+    };
+
+DeleteWorkoutExerciseTrackerManualEntry$Mutation
+    _$DeleteWorkoutExerciseTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteWorkoutExerciseTrackerManualEntry$Mutation()
+          ..deleteWorkoutExerciseTrackerManualEntry =
+              json['deleteWorkoutExerciseTrackerManualEntry'] as String;
+
+Map<String, dynamic> _$DeleteWorkoutExerciseTrackerManualEntry$MutationToJson(
+        DeleteWorkoutExerciseTrackerManualEntry$Mutation instance) =>
+    <String, dynamic>{
+      'deleteWorkoutExerciseTrackerManualEntry':
+          instance.deleteWorkoutExerciseTrackerManualEntry,
+    };
+
+CreateUserFastestTimeExerciseTracker$Mutation
+    _$CreateUserFastestTimeExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeExerciseTracker$Mutation()
+          ..createUserFastestTimeExerciseTracker =
+              UserFastestTimeExerciseTracker.fromJson(
+                  json['createUserFastestTimeExerciseTracker']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserFastestTimeExerciseTracker$MutationToJson(
+        CreateUserFastestTimeExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserFastestTimeExerciseTracker':
+          instance.createUserFastestTimeExerciseTracker.toJson(),
+    };
+
+CreateUserFastestTimeExerciseTrackerInput
+    _$CreateUserFastestTimeExerciseTrackerInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeExerciseTrackerInput(
+          equipment: json['Equipment'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['Equipment'] as Map<String, dynamic>),
+          move: ConnectRelationInput.fromJson(
+              json['Move'] as Map<String, dynamic>),
+          distanceUnit: $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+              unknownValue: DistanceUnit.artemisUnknown),
+          loadAmount: (json['loadAmount'] as num).toDouble(),
+          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+              unknownValue: LoadUnit.artemisUnknown),
+          repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+              unknownValue: WorkoutMoveRepType.artemisUnknown),
+          reps: (json['reps'] as num).toDouble(),
+        );
+
+Map<String, dynamic> _$CreateUserFastestTimeExerciseTrackerInputToJson(
+        CreateUserFastestTimeExerciseTrackerInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+      'reps': instance.reps,
+    };
+
+CreateUserMaxLoadExerciseTracker$Mutation
+    _$CreateUserMaxLoadExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadExerciseTracker$Mutation()
+          ..createUserMaxLoadExerciseTracker =
+              UserMaxLoadExerciseTracker.fromJson(
+                  json['createUserMaxLoadExerciseTracker']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserMaxLoadExerciseTracker$MutationToJson(
+        CreateUserMaxLoadExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserMaxLoadExerciseTracker':
+          instance.createUserMaxLoadExerciseTracker.toJson(),
+    };
+
+CreateUserMaxLoadExerciseTrackerInput
+    _$CreateUserMaxLoadExerciseTrackerInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadExerciseTrackerInput(
+          equipment: json['Equipment'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['Equipment'] as Map<String, dynamic>),
+          move: ConnectRelationInput.fromJson(
+              json['Move'] as Map<String, dynamic>),
+          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+              unknownValue: LoadUnit.artemisUnknown),
+          reps: json['reps'] as int,
+        );
+
+Map<String, dynamic> _$CreateUserMaxLoadExerciseTrackerInputToJson(
+        CreateUserMaxLoadExerciseTrackerInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'reps': instance.reps,
+    };
+
+DeleteUserMaxLoadExerciseTracker$Mutation
+    _$DeleteUserMaxLoadExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxLoadExerciseTracker$Mutation()
+          ..deleteUserMaxLoadExerciseTracker =
+              json['deleteUserMaxLoadExerciseTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserMaxLoadExerciseTracker$MutationToJson(
+        DeleteUserMaxLoadExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserMaxLoadExerciseTracker':
+          instance.deleteUserMaxLoadExerciseTracker,
+    };
+
+DeleteUserMaxUnbrokenExerciseTracker$Mutation
+    _$DeleteUserMaxUnbrokenExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxUnbrokenExerciseTracker$Mutation()
+          ..deleteUserMaxUnbrokenExerciseTracker =
+              json['deleteUserMaxUnbrokenExerciseTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserMaxUnbrokenExerciseTracker$MutationToJson(
+        DeleteUserMaxUnbrokenExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserMaxUnbrokenExerciseTracker':
+          instance.deleteUserMaxUnbrokenExerciseTracker,
+    };
+
+DeleteUserScoredWorkoutTracker$Mutation
+    _$DeleteUserScoredWorkoutTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserScoredWorkoutTracker$Mutation()
+          ..deleteUserScoredWorkoutTracker =
+              json['deleteUserScoredWorkoutTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserScoredWorkoutTracker$MutationToJson(
+        DeleteUserScoredWorkoutTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserScoredWorkoutTracker': instance.deleteUserScoredWorkoutTracker,
+    };
+
+DeleteUserFastestTimeExerciseTracker$Mutation
+    _$DeleteUserFastestTimeExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserFastestTimeExerciseTracker$Mutation()
+          ..deleteUserFastestTimeExerciseTracker =
+              json['deleteUserFastestTimeExerciseTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserFastestTimeExerciseTracker$MutationToJson(
+        DeleteUserFastestTimeExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserFastestTimeExerciseTracker':
+          instance.deleteUserFastestTimeExerciseTracker,
+    };
+
+CreateUserScoredWorkoutTracker$Mutation
+    _$CreateUserScoredWorkoutTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserScoredWorkoutTracker$Mutation()
+          ..createUserScoredWorkoutTracker = UserScoredWorkoutTracker.fromJson(
+              json['createUserScoredWorkoutTracker'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserScoredWorkoutTracker$MutationToJson(
+        CreateUserScoredWorkoutTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserScoredWorkoutTracker':
+          instance.createUserScoredWorkoutTracker.toJson(),
+    };
+
+CreateUserScoredWorkoutTrackerInput
+    _$CreateUserScoredWorkoutTrackerInputFromJson(Map<String, dynamic> json) =>
+        CreateUserScoredWorkoutTrackerInput(
+          workout: ConnectRelationInput.fromJson(
+              json['Workout'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserScoredWorkoutTrackerInputToJson(
+        CreateUserScoredWorkoutTrackerInput instance) =>
+    <String, dynamic>{
+      'Workout': instance.workout.toJson(),
     };
 
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(
@@ -8624,6 +9488,141 @@ CreateClubInviteTokenArguments _$CreateClubInviteTokenArgumentsFromJson(
 
 Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserMaxUnbrokenExerciseTrackerArguments
+    _$CreateUserMaxUnbrokenExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenExerciseTrackerArguments(
+          data: CreateUserMaxUnbrokenExerciseTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTrackerArgumentsToJson(
+        CreateUserMaxUnbrokenExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateWorkoutExerciseTrackerManualEntryArguments
+    _$CreateWorkoutExerciseTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateWorkoutExerciseTrackerManualEntryArguments(
+          data: CreateWorkoutExerciseTrackerManualEntryInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateWorkoutExerciseTrackerManualEntryArgumentsToJson(
+        CreateWorkoutExerciseTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteWorkoutExerciseTrackerManualEntryArguments
+    _$DeleteWorkoutExerciseTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteWorkoutExerciseTrackerManualEntryArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteWorkoutExerciseTrackerManualEntryArgumentsToJson(
+        DeleteWorkoutExerciseTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+CreateUserFastestTimeExerciseTrackerArguments
+    _$CreateUserFastestTimeExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeExerciseTrackerArguments(
+          data: CreateUserFastestTimeExerciseTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserFastestTimeExerciseTrackerArgumentsToJson(
+        CreateUserFastestTimeExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserMaxLoadExerciseTrackerArguments
+    _$CreateUserMaxLoadExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadExerciseTrackerArguments(
+          data: CreateUserMaxLoadExerciseTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserMaxLoadExerciseTrackerArgumentsToJson(
+        CreateUserMaxLoadExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteUserMaxLoadExerciseTrackerArguments
+    _$DeleteUserMaxLoadExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxLoadExerciseTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserMaxLoadExerciseTrackerArgumentsToJson(
+        DeleteUserMaxLoadExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DeleteUserMaxUnbrokenExerciseTrackerArguments
+    _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxUnbrokenExerciseTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsToJson(
+        DeleteUserMaxUnbrokenExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DeleteUserScoredWorkoutTrackerArguments
+    _$DeleteUserScoredWorkoutTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserScoredWorkoutTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserScoredWorkoutTrackerArgumentsToJson(
+        DeleteUserScoredWorkoutTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DeleteUserFastestTimeExerciseTrackerArguments
+    _$DeleteUserFastestTimeExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserFastestTimeExerciseTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserFastestTimeExerciseTrackerArgumentsToJson(
+        DeleteUserFastestTimeExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+CreateUserScoredWorkoutTrackerArguments
+    _$CreateUserScoredWorkoutTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserScoredWorkoutTrackerArguments(
+          data: CreateUserScoredWorkoutTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserScoredWorkoutTrackerArgumentsToJson(
+        CreateUserScoredWorkoutTrackerArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
     };

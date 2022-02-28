@@ -1,0 +1,3 @@
+mutation deleteUserScoredWorkoutTracker($id: ID!) {
+  deleteUserScoredWorkoutTracker(id: $id)
+}

@@ -820,6 +820,102 @@ mixin ClubMemberNoteMixin {
   late String note;
   late List<String> tags;
 }
+mixin UserMaxUnbrokenExerciseTrackerMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  @JsonKey(unknownEnumValue: WorkoutMoveRepType.artemisUnknown)
+  late WorkoutMoveRepType repType;
+  @JsonKey(unknownEnumValue: DistanceUnit.artemisUnknown)
+  late DistanceUnit distanceUnit;
+  late double loadAmount;
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
+  @JsonKey(name: 'Move')
+  late Move move;
+  @JsonKey(name: 'Equipment')
+  Equipment? equipment;
+  @JsonKey(name: 'WorkoutExerciseTrackerManualEntries')
+  late List<WorkoutExerciseTrackerManualEntry>
+      workoutExerciseTrackerManualEntries;
+}
+mixin WorkoutExerciseTrackerManualEntryMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime completedOn;
+  late double score;
+  String? videoUri;
+  String? videoThumbUri;
+}
+mixin UserMaxLoadExerciseTrackerMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  late int reps;
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
+  @JsonKey(name: 'Move')
+  late Move move;
+  @JsonKey(name: 'Equipment')
+  Equipment? equipment;
+  @JsonKey(name: 'WorkoutExerciseTrackerManualEntries')
+  late List<WorkoutExerciseTrackerManualEntry>
+      workoutExerciseTrackerManualEntries;
+}
+mixin UserFastestTimeExerciseTrackerMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  @JsonKey(unknownEnumValue: WorkoutMoveRepType.artemisUnknown)
+  late WorkoutMoveRepType repType;
+  late double reps;
+  @JsonKey(unknownEnumValue: DistanceUnit.artemisUnknown)
+  late DistanceUnit distanceUnit;
+  late double loadAmount;
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
+  @JsonKey(name: 'Move')
+  late Move move;
+  @JsonKey(name: 'Equipment')
+  Equipment? equipment;
+  @JsonKey(name: 'WorkoutExerciseTrackerManualEntries')
+  late List<WorkoutExerciseTrackerManualEntry>
+      workoutExerciseTrackerManualEntries;
+}
+mixin UserScoredWorkoutTrackerMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  @JsonKey(name: 'Workout')
+  late WorkoutSummary workout;
+  @JsonKey(name: 'WorkoutExerciseTrackerManualEntries')
+  late List<WorkoutExerciseTrackerManualEntry>
+      workoutExerciseTrackerManualEntries;
+}
 mixin ClubMemberSummaryMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -7898,6 +7994,408 @@ class ClubMemberNotes$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class UserMaxUnbrokenExerciseTracker extends JsonSerializable
+    with EquatableMixin, UserMaxUnbrokenExerciseTrackerMixin {
+  UserMaxUnbrokenExerciseTracker();
+
+  factory UserMaxUnbrokenExerciseTracker.fromJson(Map<String, dynamic> json) =>
+      _$UserMaxUnbrokenExerciseTrackerFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        repType,
+        distanceUnit,
+        loadAmount,
+        loadUnit,
+        move,
+        equipment,
+        workoutExerciseTrackerManualEntries
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$UserMaxUnbrokenExerciseTrackerToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxUnbrokenExerciseTrackers$Query extends JsonSerializable
+    with EquatableMixin {
+  UserMaxUnbrokenExerciseTrackers$Query();
+
+  factory UserMaxUnbrokenExerciseTrackers$Query.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxUnbrokenExerciseTrackers$QueryFromJson(json);
+
+  late List<UserMaxUnbrokenExerciseTracker> userMaxUnbrokenExerciseTrackers;
+
+  @override
+  List<Object?> get props => [userMaxUnbrokenExerciseTrackers];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxUnbrokenExerciseTrackers$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxUnbrokenExerciseTrackerMixin$Move extends JsonSerializable
+    with EquatableMixin, MoveMixin {
+  UserMaxUnbrokenExerciseTrackerMixin$Move();
+
+  factory UserMaxUnbrokenExerciseTrackerMixin$Move.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxUnbrokenExerciseTrackerMixin$MoveFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        name,
+        searchTerms,
+        description,
+        demoVideoUri,
+        demoVideoThumbUri,
+        scope,
+        validRepTypes
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxUnbrokenExerciseTrackerMixin$MoveToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxUnbrokenExerciseTrackerMixin$Equipment extends JsonSerializable
+    with EquatableMixin, EquipmentMixin {
+  UserMaxUnbrokenExerciseTrackerMixin$Equipment();
+
+  factory UserMaxUnbrokenExerciseTrackerMixin$Equipment.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxUnbrokenExerciseTrackerMixin$EquipmentFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, name, loadAdjustable];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxUnbrokenExerciseTrackerMixin$EquipmentToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+    extends JsonSerializable
+    with EquatableMixin, WorkoutExerciseTrackerManualEntryMixin {
+  UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry();
+
+  factory UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+          json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, completedOn, score, videoUri, videoThumbUri];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxUnbrokenExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxLoadExerciseTracker extends JsonSerializable
+    with EquatableMixin, UserMaxLoadExerciseTrackerMixin {
+  UserMaxLoadExerciseTracker();
+
+  factory UserMaxLoadExerciseTracker.fromJson(Map<String, dynamic> json) =>
+      _$UserMaxLoadExerciseTrackerFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        reps,
+        loadUnit,
+        move,
+        equipment,
+        workoutExerciseTrackerManualEntries
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$UserMaxLoadExerciseTrackerToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxLoadExerciseTrackers$Query extends JsonSerializable
+    with EquatableMixin {
+  UserMaxLoadExerciseTrackers$Query();
+
+  factory UserMaxLoadExerciseTrackers$Query.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxLoadExerciseTrackers$QueryFromJson(json);
+
+  late List<UserMaxLoadExerciseTracker> userMaxLoadExerciseTrackers;
+
+  @override
+  List<Object?> get props => [userMaxLoadExerciseTrackers];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxLoadExerciseTrackers$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxLoadExerciseTrackerMixin$Move extends JsonSerializable
+    with EquatableMixin, MoveMixin {
+  UserMaxLoadExerciseTrackerMixin$Move();
+
+  factory UserMaxLoadExerciseTrackerMixin$Move.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxLoadExerciseTrackerMixin$MoveFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        name,
+        searchTerms,
+        description,
+        demoVideoUri,
+        demoVideoThumbUri,
+        scope,
+        validRepTypes
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxLoadExerciseTrackerMixin$MoveToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxLoadExerciseTrackerMixin$Equipment extends JsonSerializable
+    with EquatableMixin, EquipmentMixin {
+  UserMaxLoadExerciseTrackerMixin$Equipment();
+
+  factory UserMaxLoadExerciseTrackerMixin$Equipment.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxLoadExerciseTrackerMixin$EquipmentFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, name, loadAdjustable];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxLoadExerciseTrackerMixin$EquipmentToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+    extends JsonSerializable
+    with EquatableMixin, WorkoutExerciseTrackerManualEntryMixin {
+  UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry();
+
+  factory UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+          json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, completedOn, score, videoUri, videoThumbUri];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserMaxLoadExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserFastestTimeExerciseTracker extends JsonSerializable
+    with EquatableMixin, UserFastestTimeExerciseTrackerMixin {
+  UserFastestTimeExerciseTracker();
+
+  factory UserFastestTimeExerciseTracker.fromJson(Map<String, dynamic> json) =>
+      _$UserFastestTimeExerciseTrackerFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        repType,
+        reps,
+        distanceUnit,
+        loadAmount,
+        loadUnit,
+        move,
+        equipment,
+        workoutExerciseTrackerManualEntries
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$UserFastestTimeExerciseTrackerToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserFastestTimeExerciseTrackers$Query extends JsonSerializable
+    with EquatableMixin {
+  UserFastestTimeExerciseTrackers$Query();
+
+  factory UserFastestTimeExerciseTrackers$Query.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserFastestTimeExerciseTrackers$QueryFromJson(json);
+
+  late List<UserFastestTimeExerciseTracker> userFastestTimeExerciseTrackers;
+
+  @override
+  List<Object?> get props => [userFastestTimeExerciseTrackers];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserFastestTimeExerciseTrackers$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserFastestTimeExerciseTrackerMixin$Move extends JsonSerializable
+    with EquatableMixin, MoveMixin {
+  UserFastestTimeExerciseTrackerMixin$Move();
+
+  factory UserFastestTimeExerciseTrackerMixin$Move.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserFastestTimeExerciseTrackerMixin$MoveFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        name,
+        searchTerms,
+        description,
+        demoVideoUri,
+        demoVideoThumbUri,
+        scope,
+        validRepTypes
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserFastestTimeExerciseTrackerMixin$MoveToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserFastestTimeExerciseTrackerMixin$Equipment extends JsonSerializable
+    with EquatableMixin, EquipmentMixin {
+  UserFastestTimeExerciseTrackerMixin$Equipment();
+
+  factory UserFastestTimeExerciseTrackerMixin$Equipment.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserFastestTimeExerciseTrackerMixin$EquipmentFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, name, loadAdjustable];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserFastestTimeExerciseTrackerMixin$EquipmentToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry
+    extends JsonSerializable
+    with EquatableMixin, WorkoutExerciseTrackerManualEntryMixin {
+  UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry();
+
+  factory UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntry.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+          json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, completedOn, score, videoUri, videoThumbUri];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserFastestTimeExerciseTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserScoredWorkoutTracker extends JsonSerializable
+    with EquatableMixin, UserScoredWorkoutTrackerMixin {
+  UserScoredWorkoutTracker();
+
+  factory UserScoredWorkoutTracker.fromJson(Map<String, dynamic> json) =>
+      _$UserScoredWorkoutTrackerFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, workout, workoutExerciseTrackerManualEntries];
+  @override
+  Map<String, dynamic> toJson() => _$UserScoredWorkoutTrackerToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserScoredWorkoutTrackers$Query extends JsonSerializable
+    with EquatableMixin {
+  UserScoredWorkoutTrackers$Query();
+
+  factory UserScoredWorkoutTrackers$Query.fromJson(Map<String, dynamic> json) =>
+      _$UserScoredWorkoutTrackers$QueryFromJson(json);
+
+  late List<UserScoredWorkoutTracker> userScoredWorkoutTrackers;
+
+  @override
+  List<Object?> get props => [userScoredWorkoutTrackers];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserScoredWorkoutTrackers$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserScoredWorkoutTrackerMixin$WorkoutSummary extends JsonSerializable
+    with EquatableMixin, WorkoutSummaryMixin {
+  UserScoredWorkoutTrackerMixin$WorkoutSummary();
+
+  factory UserScoredWorkoutTrackerMixin$WorkoutSummary.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserScoredWorkoutTrackerMixin$WorkoutSummaryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        updatedAt,
+        archived,
+        name,
+        user,
+        lengthMinutes,
+        coverImageUri,
+        description,
+        difficultyLevel,
+        loggedSessionsCount,
+        hasClassVideo,
+        hasClassAudio,
+        equipments,
+        sectionTypes,
+        goals,
+        tags,
+        bodyAreas
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserScoredWorkoutTrackerMixin$WorkoutSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntry
+    extends JsonSerializable
+    with EquatableMixin, WorkoutExerciseTrackerManualEntryMixin {
+  UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntry();
+
+  factory UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntry.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntryFromJson(
+          json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, completedOn, score, videoUri, videoThumbUri];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserScoredWorkoutTrackerMixin$WorkoutExerciseTrackerManualEntryToJson(
+          this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class RemoveDocumentFromSkill$Mutation extends JsonSerializable
     with EquatableMixin {
   RemoveDocumentFromSkill$Mutation();
@@ -8485,6 +8983,393 @@ class CreateClubInviteTokenInput extends JsonSerializable with EquatableMixin {
   List<Object?> get props => [clubId, inviteLimit, name];
   @override
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMaxUnbrokenExerciseTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMaxUnbrokenExerciseTracker$Mutation();
+
+  factory CreateUserMaxUnbrokenExerciseTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMaxUnbrokenExerciseTracker$MutationFromJson(json);
+
+  late UserMaxUnbrokenExerciseTracker createUserMaxUnbrokenExerciseTracker;
+
+  @override
+  List<Object?> get props => [createUserMaxUnbrokenExerciseTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMaxUnbrokenExerciseTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMaxUnbrokenExerciseTrackerInput extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMaxUnbrokenExerciseTrackerInput(
+      {this.equipment,
+      required this.move,
+      required this.distanceUnit,
+      required this.loadAmount,
+      required this.loadUnit,
+      required this.repType});
+
+  factory CreateUserMaxUnbrokenExerciseTrackerInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMaxUnbrokenExerciseTrackerInputFromJson(json);
+
+  @JsonKey(name: 'Equipment')
+  ConnectRelationInput? equipment;
+
+  @JsonKey(name: 'Move')
+  late ConnectRelationInput move;
+
+  @JsonKey(unknownEnumValue: DistanceUnit.artemisUnknown)
+  late DistanceUnit distanceUnit;
+
+  late double loadAmount;
+
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
+
+  @JsonKey(unknownEnumValue: WorkoutMoveRepType.artemisUnknown)
+  late WorkoutMoveRepType repType;
+
+  @override
+  List<Object?> get props =>
+      [equipment, move, distanceUnit, loadAmount, loadUnit, repType];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMaxUnbrokenExerciseTrackerInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class WorkoutExerciseTrackerManualEntry extends JsonSerializable
+    with EquatableMixin, WorkoutExerciseTrackerManualEntryMixin {
+  WorkoutExerciseTrackerManualEntry();
+
+  factory WorkoutExerciseTrackerManualEntry.fromJson(
+          Map<String, dynamic> json) =>
+      _$WorkoutExerciseTrackerManualEntryFromJson(json);
+
+  @override
+  List<Object?> get props =>
+      [$$typename, id, createdAt, completedOn, score, videoUri, videoThumbUri];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$WorkoutExerciseTrackerManualEntryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateWorkoutExerciseTrackerManualEntry$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateWorkoutExerciseTrackerManualEntry$Mutation();
+
+  factory CreateWorkoutExerciseTrackerManualEntry$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateWorkoutExerciseTrackerManualEntry$MutationFromJson(json);
+
+  late WorkoutExerciseTrackerManualEntry
+      createWorkoutExerciseTrackerManualEntry;
+
+  @override
+  List<Object?> get props => [createWorkoutExerciseTrackerManualEntry];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateWorkoutExerciseTrackerManualEntry$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateWorkoutExerciseTrackerManualEntryInput extends JsonSerializable
+    with EquatableMixin {
+  CreateWorkoutExerciseTrackerManualEntryInput(
+      {this.userFastestTimeExerciseTracker,
+      this.userMaxLoadExerciseTracker,
+      this.userMaxUnbrokenExerciseTracker,
+      this.userScoredWorkoutTracker,
+      required this.completedOn,
+      required this.score,
+      this.videoThumbUri,
+      this.videoUri});
+
+  factory CreateWorkoutExerciseTrackerManualEntryInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateWorkoutExerciseTrackerManualEntryInputFromJson(json);
+
+  @JsonKey(name: 'UserFastestTimeExerciseTracker')
+  ConnectRelationInput? userFastestTimeExerciseTracker;
+
+  @JsonKey(name: 'UserMaxLoadExerciseTracker')
+  ConnectRelationInput? userMaxLoadExerciseTracker;
+
+  @JsonKey(name: 'UserMaxUnbrokenExerciseTracker')
+  ConnectRelationInput? userMaxUnbrokenExerciseTracker;
+
+  @JsonKey(name: 'UserScoredWorkoutTracker')
+  ConnectRelationInput? userScoredWorkoutTracker;
+
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime completedOn;
+
+  late double score;
+
+  String? videoThumbUri;
+
+  String? videoUri;
+
+  @override
+  List<Object?> get props => [
+        userFastestTimeExerciseTracker,
+        userMaxLoadExerciseTracker,
+        userMaxUnbrokenExerciseTracker,
+        userScoredWorkoutTracker,
+        completedOn,
+        score,
+        videoThumbUri,
+        videoUri
+      ];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateWorkoutExerciseTrackerManualEntryInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteWorkoutExerciseTrackerManualEntry$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteWorkoutExerciseTrackerManualEntry$Mutation();
+
+  factory DeleteWorkoutExerciseTrackerManualEntry$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteWorkoutExerciseTrackerManualEntry$MutationFromJson(json);
+
+  late String deleteWorkoutExerciseTrackerManualEntry;
+
+  @override
+  List<Object?> get props => [deleteWorkoutExerciseTrackerManualEntry];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteWorkoutExerciseTrackerManualEntry$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserFastestTimeExerciseTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserFastestTimeExerciseTracker$Mutation();
+
+  factory CreateUserFastestTimeExerciseTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserFastestTimeExerciseTracker$MutationFromJson(json);
+
+  late UserFastestTimeExerciseTracker createUserFastestTimeExerciseTracker;
+
+  @override
+  List<Object?> get props => [createUserFastestTimeExerciseTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserFastestTimeExerciseTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserFastestTimeExerciseTrackerInput extends JsonSerializable
+    with EquatableMixin {
+  CreateUserFastestTimeExerciseTrackerInput(
+      {this.equipment,
+      required this.move,
+      required this.distanceUnit,
+      required this.loadAmount,
+      required this.loadUnit,
+      required this.repType,
+      required this.reps});
+
+  factory CreateUserFastestTimeExerciseTrackerInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserFastestTimeExerciseTrackerInputFromJson(json);
+
+  @JsonKey(name: 'Equipment')
+  ConnectRelationInput? equipment;
+
+  @JsonKey(name: 'Move')
+  late ConnectRelationInput move;
+
+  @JsonKey(unknownEnumValue: DistanceUnit.artemisUnknown)
+  late DistanceUnit distanceUnit;
+
+  late double loadAmount;
+
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
+
+  @JsonKey(unknownEnumValue: WorkoutMoveRepType.artemisUnknown)
+  late WorkoutMoveRepType repType;
+
+  late double reps;
+
+  @override
+  List<Object?> get props =>
+      [equipment, move, distanceUnit, loadAmount, loadUnit, repType, reps];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserFastestTimeExerciseTrackerInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMaxLoadExerciseTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMaxLoadExerciseTracker$Mutation();
+
+  factory CreateUserMaxLoadExerciseTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMaxLoadExerciseTracker$MutationFromJson(json);
+
+  late UserMaxLoadExerciseTracker createUserMaxLoadExerciseTracker;
+
+  @override
+  List<Object?> get props => [createUserMaxLoadExerciseTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMaxLoadExerciseTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMaxLoadExerciseTrackerInput extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMaxLoadExerciseTrackerInput(
+      {this.equipment,
+      required this.move,
+      required this.loadUnit,
+      required this.reps});
+
+  factory CreateUserMaxLoadExerciseTrackerInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMaxLoadExerciseTrackerInputFromJson(json);
+
+  @JsonKey(name: 'Equipment')
+  ConnectRelationInput? equipment;
+
+  @JsonKey(name: 'Move')
+  late ConnectRelationInput move;
+
+  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
+  late LoadUnit loadUnit;
+
+  late int reps;
+
+  @override
+  List<Object?> get props => [equipment, move, loadUnit, reps];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMaxLoadExerciseTrackerInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserMaxLoadExerciseTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserMaxLoadExerciseTracker$Mutation();
+
+  factory DeleteUserMaxLoadExerciseTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserMaxLoadExerciseTracker$MutationFromJson(json);
+
+  late String deleteUserMaxLoadExerciseTracker;
+
+  @override
+  List<Object?> get props => [deleteUserMaxLoadExerciseTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserMaxLoadExerciseTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserMaxUnbrokenExerciseTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserMaxUnbrokenExerciseTracker$Mutation();
+
+  factory DeleteUserMaxUnbrokenExerciseTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserMaxUnbrokenExerciseTracker$MutationFromJson(json);
+
+  late String deleteUserMaxUnbrokenExerciseTracker;
+
+  @override
+  List<Object?> get props => [deleteUserMaxUnbrokenExerciseTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserMaxUnbrokenExerciseTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserScoredWorkoutTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserScoredWorkoutTracker$Mutation();
+
+  factory DeleteUserScoredWorkoutTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserScoredWorkoutTracker$MutationFromJson(json);
+
+  late String deleteUserScoredWorkoutTracker;
+
+  @override
+  List<Object?> get props => [deleteUserScoredWorkoutTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserScoredWorkoutTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserFastestTimeExerciseTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserFastestTimeExerciseTracker$Mutation();
+
+  factory DeleteUserFastestTimeExerciseTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserFastestTimeExerciseTracker$MutationFromJson(json);
+
+  late String deleteUserFastestTimeExerciseTracker;
+
+  @override
+  List<Object?> get props => [deleteUserFastestTimeExerciseTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserFastestTimeExerciseTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserScoredWorkoutTracker$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateUserScoredWorkoutTracker$Mutation();
+
+  factory CreateUserScoredWorkoutTracker$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserScoredWorkoutTracker$MutationFromJson(json);
+
+  late UserScoredWorkoutTracker createUserScoredWorkoutTracker;
+
+  @override
+  List<Object?> get props => [createUserScoredWorkoutTracker];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserScoredWorkoutTracker$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserScoredWorkoutTrackerInput extends JsonSerializable
+    with EquatableMixin {
+  CreateUserScoredWorkoutTrackerInput({required this.workout});
+
+  factory CreateUserScoredWorkoutTrackerInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserScoredWorkoutTrackerInputFromJson(json);
+
+  @JsonKey(name: 'Workout')
+  late ConnectRelationInput workout;
+
+  @override
+  List<Object?> get props => [workout];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserScoredWorkoutTrackerInputToJson(this);
 }
 
 enum ContentAccessScope {
@@ -50795,6 +51680,1073 @@ class ClubMemberNotesQuery
       ClubMemberNotes$Query.fromJson(json);
 }
 
+final USER_MAX_UNBROKEN_EXERCISE_TRACKERS_QUERY_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userMaxUnbrokenExerciseTrackers'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userMaxUnbrokenExerciseTrackers'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMaxUnbrokenExerciseTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMaxUnbrokenExerciseTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMaxUnbrokenExerciseTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'repType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'distanceUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAmount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Move'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Equipment'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'Equipment'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserMaxUnbrokenExerciseTrackersQuery extends GraphQLQuery<
+    UserMaxUnbrokenExerciseTrackers$Query, JsonSerializable> {
+  UserMaxUnbrokenExerciseTrackersQuery();
+
+  @override
+  final DocumentNode document =
+      USER_MAX_UNBROKEN_EXERCISE_TRACKERS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userMaxUnbrokenExerciseTrackers';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserMaxUnbrokenExerciseTrackers$Query parse(Map<String, dynamic> json) =>
+      UserMaxUnbrokenExerciseTrackers$Query.fromJson(json);
+}
+
+final USER_MAX_LOAD_EXERCISE_TRACKERS_QUERY_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userMaxLoadExerciseTrackers'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userMaxLoadExerciseTrackers'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMaxLoadExerciseTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMaxLoadExerciseTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMaxLoadExerciseTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Move'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Equipment'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'Equipment'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserMaxLoadExerciseTrackersQuery
+    extends GraphQLQuery<UserMaxLoadExerciseTrackers$Query, JsonSerializable> {
+  UserMaxLoadExerciseTrackersQuery();
+
+  @override
+  final DocumentNode document = USER_MAX_LOAD_EXERCISE_TRACKERS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userMaxLoadExerciseTrackers';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserMaxLoadExerciseTrackers$Query parse(Map<String, dynamic> json) =>
+      UserMaxLoadExerciseTrackers$Query.fromJson(json);
+}
+
+final USER_FASTEST_TIME_EXERCISE_TRACKERS_QUERY_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userFastestTimeExerciseTrackers'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userFastestTimeExerciseTrackers'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserFastestTimeExerciseTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserFastestTimeExerciseTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserFastestTimeExerciseTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'repType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'distanceUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAmount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Move'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Equipment'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'Equipment'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserFastestTimeExerciseTrackersQuery extends GraphQLQuery<
+    UserFastestTimeExerciseTrackers$Query, JsonSerializable> {
+  UserFastestTimeExerciseTrackersQuery();
+
+  @override
+  final DocumentNode document =
+      USER_FASTEST_TIME_EXERCISE_TRACKERS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userFastestTimeExerciseTrackers';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserFastestTimeExerciseTrackers$Query parse(Map<String, dynamic> json) =>
+      UserFastestTimeExerciseTrackers$Query.fromJson(json);
+}
+
+final USER_SCORED_WORKOUT_TRACKERS_QUERY_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.query,
+      name: NameNode(value: 'userScoredWorkoutTrackers'),
+      variableDefinitions: [],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'userScoredWorkoutTrackers'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserScoredWorkoutTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserScoredWorkoutTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserScoredWorkoutTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Workout'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutSummary'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'archived'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'lengthMinutes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'difficultyLevel'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedSessionsCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hasClassVideo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hasClassAudio'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'equipments'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'sectionTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'goals'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'bodyAreas'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UserScoredWorkoutTrackersQuery
+    extends GraphQLQuery<UserScoredWorkoutTrackers$Query, JsonSerializable> {
+  UserScoredWorkoutTrackersQuery();
+
+  @override
+  final DocumentNode document = USER_SCORED_WORKOUT_TRACKERS_QUERY_DOCUMENT;
+
+  @override
+  final String operationName = 'userScoredWorkoutTrackers';
+
+  @override
+  List<Object?> get props => [document, operationName];
+  @override
+  UserScoredWorkoutTrackers$Query parse(Map<String, dynamic> json) =>
+      UserScoredWorkoutTrackers$Query.fromJson(json);
+}
+
 @JsonSerializable(explicitToJson: true)
 class RemoveDocumentFromSkillArguments extends JsonSerializable
     with EquatableMixin {
@@ -53128,4 +55080,1688 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   @override
   CreateClubInviteToken$Mutation parse(Map<String, dynamic> json) =>
       CreateClubInviteToken$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMaxUnbrokenExerciseTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMaxUnbrokenExerciseTrackerArguments({required this.data});
+
+  @override
+  factory CreateUserMaxUnbrokenExerciseTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMaxUnbrokenExerciseTrackerArgumentsFromJson(json);
+
+  late CreateUserMaxUnbrokenExerciseTrackerInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMaxUnbrokenExerciseTrackerArgumentsToJson(this);
+}
+
+final CREATE_USER_MAX_UNBROKEN_EXERCISE_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserMaxUnbrokenExerciseTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(
+                    value: 'CreateUserMaxUnbrokenExerciseTrackerInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserMaxUnbrokenExerciseTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMaxUnbrokenExerciseTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMaxUnbrokenExerciseTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMaxUnbrokenExerciseTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'repType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'distanceUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAmount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Move'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Equipment'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'Equipment'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserMaxUnbrokenExerciseTrackerMutation extends GraphQLQuery<
+    CreateUserMaxUnbrokenExerciseTracker$Mutation,
+    CreateUserMaxUnbrokenExerciseTrackerArguments> {
+  CreateUserMaxUnbrokenExerciseTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_USER_MAX_UNBROKEN_EXERCISE_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserMaxUnbrokenExerciseTracker';
+
+  @override
+  final CreateUserMaxUnbrokenExerciseTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserMaxUnbrokenExerciseTracker$Mutation parse(
+          Map<String, dynamic> json) =>
+      CreateUserMaxUnbrokenExerciseTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateWorkoutExerciseTrackerManualEntryArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateWorkoutExerciseTrackerManualEntryArguments({required this.data});
+
+  @override
+  factory CreateWorkoutExerciseTrackerManualEntryArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateWorkoutExerciseTrackerManualEntryArgumentsFromJson(json);
+
+  late CreateWorkoutExerciseTrackerManualEntryInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateWorkoutExerciseTrackerManualEntryArgumentsToJson(this);
+}
+
+final CREATE_WORKOUT_EXERCISE_TRACKER_MANUAL_ENTRY_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createWorkoutExerciseTrackerManualEntry'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(
+                    value: 'CreateWorkoutExerciseTrackerManualEntryInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createWorkoutExerciseTrackerManualEntry'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateWorkoutExerciseTrackerManualEntryMutation extends GraphQLQuery<
+    CreateWorkoutExerciseTrackerManualEntry$Mutation,
+    CreateWorkoutExerciseTrackerManualEntryArguments> {
+  CreateWorkoutExerciseTrackerManualEntryMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_WORKOUT_EXERCISE_TRACKER_MANUAL_ENTRY_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createWorkoutExerciseTrackerManualEntry';
+
+  @override
+  final CreateWorkoutExerciseTrackerManualEntryArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateWorkoutExerciseTrackerManualEntry$Mutation parse(
+          Map<String, dynamic> json) =>
+      CreateWorkoutExerciseTrackerManualEntry$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteWorkoutExerciseTrackerManualEntryArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteWorkoutExerciseTrackerManualEntryArguments({required this.id});
+
+  @override
+  factory DeleteWorkoutExerciseTrackerManualEntryArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteWorkoutExerciseTrackerManualEntryArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteWorkoutExerciseTrackerManualEntryArgumentsToJson(this);
+}
+
+final DELETE_WORKOUT_EXERCISE_TRACKER_MANUAL_ENTRY_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteWorkoutExerciseTrackerManualEntry'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteWorkoutExerciseTrackerManualEntry'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteWorkoutExerciseTrackerManualEntryMutation extends GraphQLQuery<
+    DeleteWorkoutExerciseTrackerManualEntry$Mutation,
+    DeleteWorkoutExerciseTrackerManualEntryArguments> {
+  DeleteWorkoutExerciseTrackerManualEntryMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      DELETE_WORKOUT_EXERCISE_TRACKER_MANUAL_ENTRY_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteWorkoutExerciseTrackerManualEntry';
+
+  @override
+  final DeleteWorkoutExerciseTrackerManualEntryArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteWorkoutExerciseTrackerManualEntry$Mutation parse(
+          Map<String, dynamic> json) =>
+      DeleteWorkoutExerciseTrackerManualEntry$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserFastestTimeExerciseTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserFastestTimeExerciseTrackerArguments({required this.data});
+
+  @override
+  factory CreateUserFastestTimeExerciseTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserFastestTimeExerciseTrackerArgumentsFromJson(json);
+
+  late CreateUserFastestTimeExerciseTrackerInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserFastestTimeExerciseTrackerArgumentsToJson(this);
+}
+
+final CREATE_USER_FASTEST_TIME_EXERCISE_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserFastestTimeExerciseTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(
+                    value: 'CreateUserFastestTimeExerciseTrackerInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserFastestTimeExerciseTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserFastestTimeExerciseTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserFastestTimeExerciseTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserFastestTimeExerciseTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'repType'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'distanceUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAmount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Move'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Equipment'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'Equipment'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserFastestTimeExerciseTrackerMutation extends GraphQLQuery<
+    CreateUserFastestTimeExerciseTracker$Mutation,
+    CreateUserFastestTimeExerciseTrackerArguments> {
+  CreateUserFastestTimeExerciseTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_USER_FASTEST_TIME_EXERCISE_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserFastestTimeExerciseTracker';
+
+  @override
+  final CreateUserFastestTimeExerciseTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserFastestTimeExerciseTracker$Mutation parse(
+          Map<String, dynamic> json) =>
+      CreateUserFastestTimeExerciseTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserMaxLoadExerciseTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserMaxLoadExerciseTrackerArguments({required this.data});
+
+  @override
+  factory CreateUserMaxLoadExerciseTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserMaxLoadExerciseTrackerArgumentsFromJson(json);
+
+  late CreateUserMaxLoadExerciseTrackerInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserMaxLoadExerciseTrackerArgumentsToJson(this);
+}
+
+final CREATE_USER_MAX_LOAD_EXERCISE_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserMaxLoadExerciseTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserMaxLoadExerciseTrackerInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserMaxLoadExerciseTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserMaxLoadExerciseTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserMaxLoadExerciseTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserMaxLoadExerciseTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadUnit'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Move'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'Equipment'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'Equipment'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserMaxLoadExerciseTrackerMutation extends GraphQLQuery<
+    CreateUserMaxLoadExerciseTracker$Mutation,
+    CreateUserMaxLoadExerciseTrackerArguments> {
+  CreateUserMaxLoadExerciseTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_USER_MAX_LOAD_EXERCISE_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserMaxLoadExerciseTracker';
+
+  @override
+  final CreateUserMaxLoadExerciseTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserMaxLoadExerciseTracker$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserMaxLoadExerciseTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserMaxLoadExerciseTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserMaxLoadExerciseTrackerArguments({required this.id});
+
+  @override
+  factory DeleteUserMaxLoadExerciseTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserMaxLoadExerciseTrackerArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserMaxLoadExerciseTrackerArgumentsToJson(this);
+}
+
+final DELETE_USER_MAX_LOAD_EXERCISE_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserMaxLoadExerciseTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserMaxLoadExerciseTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserMaxLoadExerciseTrackerMutation extends GraphQLQuery<
+    DeleteUserMaxLoadExerciseTracker$Mutation,
+    DeleteUserMaxLoadExerciseTrackerArguments> {
+  DeleteUserMaxLoadExerciseTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      DELETE_USER_MAX_LOAD_EXERCISE_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserMaxLoadExerciseTracker';
+
+  @override
+  final DeleteUserMaxLoadExerciseTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserMaxLoadExerciseTracker$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserMaxLoadExerciseTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserMaxUnbrokenExerciseTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserMaxUnbrokenExerciseTrackerArguments({required this.id});
+
+  @override
+  factory DeleteUserMaxUnbrokenExerciseTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsToJson(this);
+}
+
+final DELETE_USER_MAX_UNBROKEN_EXERCISE_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserMaxUnbrokenExerciseTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserMaxUnbrokenExerciseTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserMaxUnbrokenExerciseTrackerMutation extends GraphQLQuery<
+    DeleteUserMaxUnbrokenExerciseTracker$Mutation,
+    DeleteUserMaxUnbrokenExerciseTrackerArguments> {
+  DeleteUserMaxUnbrokenExerciseTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      DELETE_USER_MAX_UNBROKEN_EXERCISE_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserMaxUnbrokenExerciseTracker';
+
+  @override
+  final DeleteUserMaxUnbrokenExerciseTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserMaxUnbrokenExerciseTracker$Mutation parse(
+          Map<String, dynamic> json) =>
+      DeleteUserMaxUnbrokenExerciseTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserScoredWorkoutTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserScoredWorkoutTrackerArguments({required this.id});
+
+  @override
+  factory DeleteUserScoredWorkoutTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserScoredWorkoutTrackerArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserScoredWorkoutTrackerArgumentsToJson(this);
+}
+
+final DELETE_USER_SCORED_WORKOUT_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserScoredWorkoutTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserScoredWorkoutTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserScoredWorkoutTrackerMutation extends GraphQLQuery<
+    DeleteUserScoredWorkoutTracker$Mutation,
+    DeleteUserScoredWorkoutTrackerArguments> {
+  DeleteUserScoredWorkoutTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      DELETE_USER_SCORED_WORKOUT_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserScoredWorkoutTracker';
+
+  @override
+  final DeleteUserScoredWorkoutTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserScoredWorkoutTracker$Mutation parse(Map<String, dynamic> json) =>
+      DeleteUserScoredWorkoutTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteUserFastestTimeExerciseTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteUserFastestTimeExerciseTrackerArguments({required this.id});
+
+  @override
+  factory DeleteUserFastestTimeExerciseTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteUserFastestTimeExerciseTrackerArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteUserFastestTimeExerciseTrackerArgumentsToJson(this);
+}
+
+final DELETE_USER_FASTEST_TIME_EXERCISE_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteUserFastestTimeExerciseTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteUserFastestTimeExerciseTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteUserFastestTimeExerciseTrackerMutation extends GraphQLQuery<
+    DeleteUserFastestTimeExerciseTracker$Mutation,
+    DeleteUserFastestTimeExerciseTrackerArguments> {
+  DeleteUserFastestTimeExerciseTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      DELETE_USER_FASTEST_TIME_EXERCISE_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'deleteUserFastestTimeExerciseTracker';
+
+  @override
+  final DeleteUserFastestTimeExerciseTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteUserFastestTimeExerciseTracker$Mutation parse(
+          Map<String, dynamic> json) =>
+      DeleteUserFastestTimeExerciseTracker$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateUserScoredWorkoutTrackerArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateUserScoredWorkoutTrackerArguments({required this.data});
+
+  @override
+  factory CreateUserScoredWorkoutTrackerArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateUserScoredWorkoutTrackerArgumentsFromJson(json);
+
+  late CreateUserScoredWorkoutTrackerInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateUserScoredWorkoutTrackerArgumentsToJson(this);
+}
+
+final CREATE_USER_SCORED_WORKOUT_TRACKER_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createUserScoredWorkoutTracker'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateUserScoredWorkoutTrackerInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createUserScoredWorkoutTracker'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserScoredWorkoutTracker'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserScoredWorkoutTracker'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserScoredWorkoutTracker'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'Workout'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutSummary'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'WorkoutExerciseTrackerManualEntries'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+                  directives: [])
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutSummary'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutSummary'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'archived'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'User'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'UserAvatarData'), directives: [])
+            ])),
+        FieldNode(
+            name: NameNode(value: 'lengthMinutes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'coverImageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'difficultyLevel'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loggedSessionsCount'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hasClassVideo'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'hasClassAudio'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'equipments'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'sectionTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'goals'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'tags'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'bodyAreas'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'UserAvatarData'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'UserAvatarData'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'avatarUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'displayName'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'WorkoutExerciseTrackerManualEntry'),
+              isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'completedOn'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'score'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'videoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateUserScoredWorkoutTrackerMutation extends GraphQLQuery<
+    CreateUserScoredWorkoutTracker$Mutation,
+    CreateUserScoredWorkoutTrackerArguments> {
+  CreateUserScoredWorkoutTrackerMutation({required this.variables});
+
+  @override
+  final DocumentNode document =
+      CREATE_USER_SCORED_WORKOUT_TRACKER_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName = 'createUserScoredWorkoutTracker';
+
+  @override
+  final CreateUserScoredWorkoutTrackerArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateUserScoredWorkoutTracker$Mutation parse(Map<String, dynamic> json) =>
+      CreateUserScoredWorkoutTracker$Mutation.fromJson(json);
 }
