@@ -49,7 +49,9 @@ type AnnouncementUpdateAction {
   text: String!
 }
 
-"""Enums"""
+"""
+Enums
+"""
 enum BenchmarkType {
   AMRAP
   FASTESTTIME
@@ -303,6 +305,16 @@ input CreateEquipmentInput {
   name: String!
 }
 
+input CreateExerciseTrackerManualEntryInput {
+  UserFastestTimeExerciseTracker: ConnectRelationInput
+  UserMaxLoadExerciseTracker: ConnectRelationInput
+  UserMaxUnbrokenExerciseTracker: ConnectRelationInput
+  completedOn: DateTime!
+  score: Float!
+  videoThumbUri: String
+  videoUri: String
+}
+
 input CreateGymProfileInput {
   Equipments: [ConnectRelationInput!]
   description: String
@@ -472,27 +484,12 @@ input CreateUserMeditationLogInput {
   year: Int!
 }
 
-input CreateUserScoredWorkoutTrackerInput {
-  Workout: ConnectRelationInput!
-}
-
 input CreateUserSleepWellLogInput {
   dayNumber: Int!
   minutesSlept: Int
   note: String
   rating: UserDayLogRating!
   year: Int!
-}
-
-input CreateWorkoutExerciseTrackerManualEntryInput {
-  UserFastestTimeExerciseTracker: ConnectRelationInput
-  UserMaxLoadExerciseTracker: ConnectRelationInput
-  UserMaxUnbrokenExerciseTracker: ConnectRelationInput
-  UserScoredWorkoutTracker: ConnectRelationInput
-  completedOn: DateTime!
-  score: Float!
-  videoThumbUri: String
-  videoUri: String
 }
 
 input CreateWorkoutInput {
@@ -612,6 +609,15 @@ type Equipment {
   id: ID!
   loadAdjustable: Boolean!
   name: String!
+}
+
+type ExerciseTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  score: Float!
+  videoThumbUri: String
+  videoUri: String
 }
 
 enum Gender {
@@ -763,7 +769,9 @@ type Mutation {
   addDocumentToSkill(data: AddDocumentToSkillInput!): Skill!
   addUserToClubViaInviteToken(clubInviteTokenId: ID!, userId: ID!): ID!
   addWorkoutPlanToClub(clubId: ID!, workoutPlanId: ID!): ClubWorkoutPlans!
-  addWorkoutPlanToCollection(data: AddWorkoutPlanToCollectionInput!): Collection!
+  addWorkoutPlanToCollection(
+    data: AddWorkoutPlanToCollectionInput!
+  ): Collection!
   addWorkoutToClub(clubId: ID!, workoutId: ID!): ClubWorkouts!
   addWorkoutToCollection(data: AddWorkoutToCollectionInput!): Collection!
   archiveCustomMoveById(id: ID!): Move!
@@ -771,50 +779,83 @@ type Mutation {
   archiveWorkoutPlanById(id: ID!): WorkoutPlan!
   clearScheduleForPlanEnrolment(enrolmentId: ID!): WorkoutPlanEnrolment!
   clearWorkoutPlanEnrolmentProgress(enrolmentId: ID!): WorkoutPlanEnrolment!
-  copyWorkoutPlanDayToAnotherDay(data: CopyWorkoutPlanDayToAnotherDayInput!): WorkoutPlanDay!
-  createBodyTrackingEntry(data: CreateBodyTrackingEntryInput!): BodyTrackingEntry!
+  copyWorkoutPlanDayToAnotherDay(
+    data: CopyWorkoutPlanDayToAnotherDayInput!
+  ): WorkoutPlanDay!
+  createBodyTrackingEntry(
+    data: CreateBodyTrackingEntryInput!
+  ): BodyTrackingEntry!
   createClub(data: CreateClubInput!): ClubSummary!
   createClubInviteToken(data: CreateClubInviteTokenInput!): ClubInviteTokens!
   createClubMemberNote(data: CreateClubMemberNoteInput!): ClubMemberNote!
-  createClubMembersFeedPost(clubId: ID!, data: CreateStreamFeedActivityInput!): StreamEnrichedActivity!
+  createClubMembersFeedPost(
+    clubId: ID!
+    data: CreateStreamFeedActivityInput!
+  ): StreamEnrichedActivity!
   createCollection(data: CreateCollectionInput!): Collection!
-  createCompletedWorkoutPlanDayWorkout(data: CreateCompletedWorkoutPlanDayWorkoutInput!): WorkoutPlanEnrolment!
+  createCompletedWorkoutPlanDayWorkout(
+    data: CreateCompletedWorkoutPlanDayWorkoutInput!
+  ): WorkoutPlanEnrolment!
   createEquipment(data: CreateEquipmentInput!): Equipment
+  createExerciseTrackerManualEntry(
+    data: CreateExerciseTrackerManualEntryInput!
+  ): ExerciseTrackerManualEntry!
   createGymProfile(data: CreateGymProfileInput!): GymProfile!
   createLoggedWorkout(data: CreateLoggedWorkoutInput!): LoggedWorkout!
   createMove(data: CreateMoveInput!): Move!
-  createScheduleForPlanEnrolment(data: CreateScheduleForPlanEnrolmentInput!): WorkoutPlanEnrolment!
+  createScheduleForPlanEnrolment(
+    data: CreateScheduleForPlanEnrolmentInput!
+  ): WorkoutPlanEnrolment!
   createScheduledWorkout(data: CreateScheduledWorkoutInput!): ScheduledWorkout!
   createSkill(data: CreateSkillInput!): Skill!
   createUserBenchmark(data: CreateUserBenchmarkInput!): UserBenchmark!
-  createUserBenchmarkEntry(data: CreateUserBenchmarkEntryInput!): UserBenchmarkEntry!
+  createUserBenchmarkEntry(
+    data: CreateUserBenchmarkEntryInput!
+  ): UserBenchmarkEntry!
   createUserDayLogMood(data: CreateUserDayLogMoodInput!): UserDayLogMood!
   createUserEatWellLog(data: CreateUserEatWellLogInput!): UserEatWellLog!
-  createUserFastestTimeExerciseTracker(data: CreateUserFastestTimeExerciseTrackerInput!): UserFastestTimeExerciseTracker!
+  createUserFastestTimeExerciseTracker(
+    data: CreateUserFastestTimeExerciseTrackerInput!
+  ): UserFastestTimeExerciseTracker!
   createUserGoal(data: CreateUserGoalInput!): UserGoal!
-  createUserMaxLoadExerciseTracker(data: CreateUserMaxLoadExerciseTrackerInput!): UserMaxLoadExerciseTracker!
-  createUserMaxUnbrokenExerciseTracker(data: CreateUserMaxUnbrokenExerciseTrackerInput!): UserMaxUnbrokenExerciseTracker!
-  createUserMeditationLog(data: CreateUserMeditationLogInput!): UserMeditationLog!
-  createUserScoredWorkoutTracker(data: CreateUserScoredWorkoutTrackerInput!): UserScoredWorkoutTracker!
+  createUserMaxLoadExerciseTracker(
+    data: CreateUserMaxLoadExerciseTrackerInput!
+  ): UserMaxLoadExerciseTracker!
+  createUserMaxUnbrokenExerciseTracker(
+    data: CreateUserMaxUnbrokenExerciseTrackerInput!
+  ): UserMaxUnbrokenExerciseTracker!
+  createUserMeditationLog(
+    data: CreateUserMeditationLogInput!
+  ): UserMeditationLog!
   createUserSleepWellLog(data: CreateUserSleepWellLogInput!): UserSleepWellLog!
   createWorkout(data: CreateWorkoutInput!): Workout!
-  createWorkoutExerciseTrackerManualEntry(data: CreateWorkoutExerciseTrackerManualEntryInput!): WorkoutExerciseTrackerManualEntry!
   createWorkoutMove(data: CreateWorkoutMoveInput!): WorkoutMove!
   createWorkoutPlan(data: CreateWorkoutPlanInput!): WorkoutPlan!
-  createWorkoutPlanDayWithWorkout(data: CreateWorkoutPlanDayWithWorkoutInput!): WorkoutPlanDay!
-  createWorkoutPlanDayWorkout(data: CreateWorkoutPlanDayWorkoutInput!): WorkoutPlanDayWorkout!
+  createWorkoutPlanDayWithWorkout(
+    data: CreateWorkoutPlanDayWithWorkoutInput!
+  ): WorkoutPlanDay!
+  createWorkoutPlanDayWorkout(
+    data: CreateWorkoutPlanDayWorkoutInput!
+  ): WorkoutPlanDayWorkout!
   createWorkoutPlanEnrolment(workoutPlanId: ID!): WorkoutPlanEnrolmentWithPlan!
-  createWorkoutPlanReview(data: CreateWorkoutPlanReviewInput!): WorkoutPlanReview!
+  createWorkoutPlanReview(
+    data: CreateWorkoutPlanReviewInput!
+  ): WorkoutPlanReview!
   createWorkoutSection(data: CreateWorkoutSectionInput!): WorkoutSection!
   createWorkoutSet(data: CreateWorkoutSetInput!): WorkoutSet!
-  createWorkoutSetWithWorkoutMoves(data: CreateWorkoutSetWithWorkoutMovesInput!): WorkoutSet!
+  createWorkoutSetWithWorkoutMoves(
+    data: CreateWorkoutSetWithWorkoutMovesInput!
+  ): WorkoutSet!
   createWorkoutTag(data: CreateWorkoutTagInput!): WorkoutTag!
   deleteBodyTrackingEntryById(id: ID!): ID!
   deleteClub(id: ID!): ID!
   deleteClubInviteToken(data: DeleteClubInviteTokenInput!): ClubInviteTokens!
   deleteClubMembersFeedPost(activityId: ID!): ID!
   deleteCollectionById(id: ID!): ID!
-  deleteCompletedWorkoutPlanDayWorkout(data: DeleteCompletedWorkoutPlanDayWorkoutInput!): WorkoutPlanEnrolment!
+  deleteCompletedWorkoutPlanDayWorkout(
+    data: DeleteCompletedWorkoutPlanDayWorkoutInput!
+  ): WorkoutPlanEnrolment!
+  deleteExerciseTrackerManualEntry(id: ID!): ID!
   deleteGymProfileById(id: ID!): ID
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteLoggedWorkoutMove(id: ID!): ID!
@@ -827,8 +868,6 @@ type Mutation {
   deleteUserGoal(id: ID!): ID!
   deleteUserMaxLoadExerciseTracker(id: ID!): ID!
   deleteUserMaxUnbrokenExerciseTracker(id: ID!): ID!
-  deleteUserScoredWorkoutTracker(id: ID!): ID!
-  deleteWorkoutExerciseTrackerManualEntry(id: ID!): ID!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
   deleteWorkoutPlanDaysById(ids: [ID!]!): [ID!]!
@@ -844,54 +883,86 @@ type Mutation {
   makeCopyWorkoutById(id: ID!): Workout!
   markAnnouncementUpdateAsSeen(data: MarkAnnouncementUpdateAsSeenInput!): ID!
   markWelcomeTodoItemAsSeen(data: MarkWelcomeTodoItemAsSeenInput!): ID!
-  moveWorkoutPlanDayToAnotherDay(data: MoveWorkoutPlanDayToAnotherDayInput!): WorkoutPlanDay!
+  moveWorkoutPlanDayToAnotherDay(
+    data: MoveWorkoutPlanDayToAnotherDayInput!
+  ): WorkoutPlanDay!
   removeDocumentFromSkill(data: RemoveDocumentFromSkillInput!): Skill!
   removeMemberAdminStatus(clubId: ID!, userId: ID!): ClubMembers!
   removeUserFromClub(clubId: ID!, userToRemoveId: ID!): ClubMembers!
   removeWorkoutFromClub(clubId: ID!, workoutId: ID!): ClubWorkouts!
-  removeWorkoutFromCollection(data: RemoveWorkoutFromCollectionInput!): Collection!
+  removeWorkoutFromCollection(
+    data: RemoveWorkoutFromCollectionInput!
+  ): Collection!
   removeWorkoutPlanFromClub(clubId: ID!, workoutPlanId: ID!): ClubWorkoutPlans!
-  removeWorkoutPlanFromCollection(data: RemoveWorkoutPlanFromCollectionInput!): Collection!
-  reorderWorkoutMoves(data: [UpdateSortPositionInput!]!): [SortPositionUpdated!]!
-  reorderWorkoutPlanDayWorkouts(data: [UpdateSortPositionInput!]!): [SortPositionUpdated!]!
-  reorderWorkoutSections(data: [UpdateSortPositionInput!]!): [SortPositionUpdated!]!
+  removeWorkoutPlanFromCollection(
+    data: RemoveWorkoutPlanFromCollectionInput!
+  ): Collection!
+  reorderWorkoutMoves(
+    data: [UpdateSortPositionInput!]!
+  ): [SortPositionUpdated!]!
+  reorderWorkoutPlanDayWorkouts(
+    data: [UpdateSortPositionInput!]!
+  ): [SortPositionUpdated!]!
+  reorderWorkoutSections(
+    data: [UpdateSortPositionInput!]!
+  ): [SortPositionUpdated!]!
   reorderWorkoutSets(data: [UpdateSortPositionInput!]!): [SortPositionUpdated!]!
   softDeleteMoveById(id: ID!): ID!
   softDeleteWorkoutPlanById(id: ID!): ID!
   unarchiveCustomMoveById(id: ID!): Move!
   unarchiveWorkoutById(id: ID!): Workout!
   unarchiveWorkoutPlanById(id: ID!): WorkoutPlan!
-  updateBodyTrackingEntry(data: UpdateBodyTrackingEntryInput!): BodyTrackingEntry!
+  updateBodyTrackingEntry(
+    data: UpdateBodyTrackingEntryInput!
+  ): BodyTrackingEntry!
   updateClubInviteToken(data: UpdateClubInviteTokenInput!): ClubInviteTokens!
   updateClubMemberNote(data: UpdateClubMemberNoteInput!): ClubMemberNote!
-  updateClubMetaDataAdmin(data: UpdateClubMetaDataAdminInput!): ClubMetaDataAdmin!
+  updateClubMetaDataAdmin(
+    data: UpdateClubMetaDataAdminInput!
+  ): ClubMetaDataAdmin!
   updateClubSummary(data: UpdateClubSummaryInput!): ClubSummary!
   updateCollection(data: UpdateCollectionInput!): Collection!
   updateEquipment(data: UpdateEquipmentInput!): Equipment
   updateGymProfile(data: UpdateGymProfileInput!): GymProfile!
   updateLoggedWorkout(data: UpdateLoggedWorkoutInput!): LoggedWorkout!
-  updateLoggedWorkoutMove(data: UpdateLoggedWorkoutMoveInput!): LoggedWorkoutMove!
-  updateLoggedWorkoutSection(data: UpdateLoggedWorkoutSectionInput!): LoggedWorkoutSection!
+  updateLoggedWorkoutMove(
+    data: UpdateLoggedWorkoutMoveInput!
+  ): LoggedWorkoutMove!
+  updateLoggedWorkoutSection(
+    data: UpdateLoggedWorkoutSectionInput!
+  ): LoggedWorkoutSection!
   updateLoggedWorkoutSet(data: UpdateLoggedWorkoutSetInput!): LoggedWorkoutSet!
   updateMove(data: UpdateMoveInput!): Move!
   updateScheduledWorkout(data: UpdateScheduledWorkoutInput!): ScheduledWorkout!
   updateSkill(data: UpdateSkillInput!): Skill!
   updateUserBenchmark(data: UpdateUserBenchmarkInput!): UserBenchmark!
-  updateUserBenchmarkEntry(data: UpdateUserBenchmarkEntryInput!): UserBenchmarkEntry!
+  updateUserBenchmarkEntry(
+    data: UpdateUserBenchmarkEntryInput!
+  ): UserBenchmarkEntry!
   updateUserEatWellLog(data: UpdateUserEatWellLogInput!): UserEatWellLog!
   updateUserGoal(data: UpdateUserGoalInput!): UserGoal!
-  updateUserMeditationLog(data: UpdateUserMeditationLogInput!): UserMeditationLog!
+  updateUserMeditationLog(
+    data: UpdateUserMeditationLogInput!
+  ): UserMeditationLog!
   updateUserProfile(data: UpdateUserProfileInput!): UpdateUserProfileResult!
   updateUserSleepWellLog(data: UpdateUserSleepWellLogInput!): UserSleepWellLog!
   updateWorkout(data: UpdateWorkoutInput!): Workout!
-  updateWorkoutMetaDataAdmin(data: UpdateWorkoutMetaDataAdminInput!): WorkoutMetaDataAdmin!
+  updateWorkoutMetaDataAdmin(
+    data: UpdateWorkoutMetaDataAdminInput!
+  ): WorkoutMetaDataAdmin!
   updateWorkoutMove(data: UpdateWorkoutMoveInput!): WorkoutMove!
   updateWorkoutMoves(data: [UpdateWorkoutMoveInput!]!): [WorkoutMove!]!
   updateWorkoutPlan(data: UpdateWorkoutPlanInput!): WorkoutPlan!
   updateWorkoutPlanDay(data: UpdateWorkoutPlanDayInput!): WorkoutPlanDay!
-  updateWorkoutPlanDayWorkout(data: UpdateWorkoutPlanDayWorkoutInput!): WorkoutPlanDayWorkout!
-  updateWorkoutPlanMetaDataAdmin(data: UpdateWorkoutPlanMetaDataAdminInput!): WorkoutPlanMetaDataAdmin
-  updateWorkoutPlanReview(data: UpdateWorkoutPlanReviewInput!): WorkoutPlanReview!
+  updateWorkoutPlanDayWorkout(
+    data: UpdateWorkoutPlanDayWorkoutInput!
+  ): WorkoutPlanDayWorkout!
+  updateWorkoutPlanMetaDataAdmin(
+    data: UpdateWorkoutPlanMetaDataAdminInput!
+  ): WorkoutPlanMetaDataAdmin
+  updateWorkoutPlanReview(
+    data: UpdateWorkoutPlanReviewInput!
+  ): WorkoutPlanReview!
   updateWorkoutSection(data: UpdateWorkoutSectionInput!): WorkoutSection!
   updateWorkoutSet(data: UpdateWorkoutSetInput!): WorkoutSet!
   updateWorkoutTag(data: UpdateWorkoutTagInput!): WorkoutTag!
@@ -914,9 +985,15 @@ enum PublicContentValidationStatus {
 }
 
 type Query {
-  adminPublicClubs(status: PublicContentValidationStatus!): [ClubWithMetaDataAdmin!]!
-  adminPublicWorkoutPlans(status: PublicContentValidationStatus!): [WorkoutPlanWithMetaDataAdmin!]!
-  adminPublicWorkouts(status: PublicContentValidationStatus!): [WorkoutWithMetaDataAdmin!]!
+  adminPublicClubs(
+    status: PublicContentValidationStatus!
+  ): [ClubWithMetaDataAdmin!]!
+  adminPublicWorkoutPlans(
+    status: PublicContentValidationStatus!
+  ): [WorkoutPlanWithMetaDataAdmin!]!
+  adminPublicWorkouts(
+    status: PublicContentValidationStatus!
+  ): [WorkoutWithMetaDataAdmin!]!
   announcementUpdates: [AnnouncementUpdate!]!
   bodyTrackingEntries: [BodyTrackingEntry!]!
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
@@ -925,9 +1002,18 @@ type Query {
   checkUserClubMemberStatus(clubId: ID!): UserClubMemberStatus!
   clubChatSummary(clubId: ID!): ClubChatSummary
   clubInviteTokens(clubId: ID!): ClubInviteTokens!
-  clubMemberNotes(clubId: ID!, cursor: ID, memberId: ID!, take: Int): [ClubMemberNote!]!
+  clubMemberNotes(
+    clubId: ID!
+    cursor: ID
+    memberId: ID!
+    take: Int
+  ): [ClubMemberNote!]!
   clubMembers(clubId: ID!): ClubMembers!
-  clubMembersFeedPosts(clubId: ID!, limit: Int!, offset: Int!): [StreamEnrichedActivity!]!
+  clubMembersFeedPosts(
+    clubId: ID!
+    limit: Int!
+    offset: Int!
+  ): [StreamEnrichedActivity!]!
   clubSummaries(ids: [ID!]!): [ClubSummary!]!
   clubSummary(id: ID!): ClubSummary
   clubWorkoutPlans(clubId: ID!): ClubWorkoutPlans!
@@ -939,8 +1025,16 @@ type Query {
   logCountByWorkout(id: ID!): Int!
   loggedWorkoutById(id: ID!): LoggedWorkout
   publicClubs: [ClubSummary!]!
-  publicWorkoutPlans(cursor: ID, filters: WorkoutPlanFiltersInput, take: Int): [WorkoutPlanSummary!]!
-  publicWorkouts(cursor: ID, filters: WorkoutFiltersInput, take: Int): [WorkoutSummary!]!
+  publicWorkoutPlans(
+    cursor: ID
+    filters: WorkoutPlanFiltersInput
+    take: Int
+  ): [WorkoutPlanSummary!]!
+  publicWorkouts(
+    cursor: ID
+    filters: WorkoutFiltersInput
+    take: Int
+  ): [WorkoutSummary!]!
   textSearchUserNames(text: String!): [TextSearchResult!]
   textSearchUserProfiles(text: String!): [UserProfileSummary!]
   textSearchWorkoutNames(text: String!): [TextSearchResult!]
@@ -971,7 +1065,6 @@ type Query {
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
-  userScoredWorkoutTrackers: [UserScoredWorkoutTracker!]!
   userSleepWellLogs: [UserSleepWellLog!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
   userWorkoutTags: [WorkoutTag!]!
@@ -1498,8 +1591,8 @@ type UserEatWellLog {
 
 type UserFastestTimeExerciseTracker {
   Equipment: Equipment
+  ExerciseTrackerManualEntries: [ExerciseTrackerManualEntry!]!
   Move: Move!
-  WorkoutExerciseTrackerManualEntries: [WorkoutExerciseTrackerManualEntry!]!
   createdAt: DateTime!
   distanceUnit: DistanceUnit!
   id: ID!
@@ -1521,8 +1614,8 @@ type UserGoal {
 
 type UserMaxLoadExerciseTracker {
   Equipment: Equipment
+  ExerciseTrackerManualEntries: [ExerciseTrackerManualEntry!]!
   Move: Move!
-  WorkoutExerciseTrackerManualEntries: [WorkoutExerciseTrackerManualEntry!]!
   createdAt: DateTime!
   id: ID!
   loadUnit: LoadUnit!
@@ -1531,8 +1624,8 @@ type UserMaxLoadExerciseTracker {
 
 type UserMaxUnbrokenExerciseTracker {
   Equipment: Equipment
+  ExerciseTrackerManualEntries: [ExerciseTrackerManualEntry!]!
   Move: Move!
-  WorkoutExerciseTrackerManualEntries: [WorkoutExerciseTrackerManualEntry!]!
   createdAt: DateTime!
   distanceUnit: DistanceUnit!
   id: ID!
@@ -1604,13 +1697,6 @@ type UserRecentlyViewedObject {
   WorkoutPlan: WorkoutPlanSummary
 }
 
-type UserScoredWorkoutTracker {
-  Workout: WorkoutSummary!
-  WorkoutExerciseTrackerManualEntries: [WorkoutExerciseTrackerManualEntry!]!
-  createdAt: DateTime!
-  id: ID!
-}
-
 type UserSleepWellLog {
   createdAt: DateTime!
   dayNumber: Int!
@@ -1647,15 +1733,6 @@ type Workout {
   lengthMinutes: Int
   name: String!
   updatedAt: DateTime!
-}
-
-type WorkoutExerciseTrackerManualEntry {
-  completedOn: DateTime!
-  createdAt: DateTime!
-  id: ID!
-  score: Float!
-  videoThumbUri: String
-  videoUri: String
 }
 
 input WorkoutFiltersInput {

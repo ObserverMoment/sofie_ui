@@ -247,7 +247,8 @@ class AppRouter extends _i64.RootStackRouter {
               showCreateButton: args.showCreateButton,
               showDiscoverButton: args.showDiscoverButton,
               pageTitle: args.pageTitle,
-              showSaved: args.showSaved));
+              showSaved: args.showSaved,
+              displayFilter: args.displayFilter));
     },
     PersonalScoresRoute.name: (routeData) {
       return _i64.CupertinoPageX<dynamic>(
@@ -1062,7 +1063,8 @@ class YourWorkoutsRoute extends _i64.PageRouteInfo<YourWorkoutsRouteArgs> {
       bool showCreateButton = false,
       bool showDiscoverButton = false,
       String? pageTitle,
-      bool showSaved = true})
+      bool showSaved = true,
+      bool Function(_i67.WorkoutSummary)? displayFilter})
       : super(YourWorkoutsRoute.name,
             path: 'your-workouts',
             args: YourWorkoutsRouteArgs(
@@ -1071,7 +1073,8 @@ class YourWorkoutsRoute extends _i64.PageRouteInfo<YourWorkoutsRouteArgs> {
                 showCreateButton: showCreateButton,
                 showDiscoverButton: showDiscoverButton,
                 pageTitle: pageTitle,
-                showSaved: showSaved));
+                showSaved: showSaved,
+                displayFilter: displayFilter));
 
   static const String name = 'YourWorkoutsRoute';
 }
@@ -1083,7 +1086,8 @@ class YourWorkoutsRouteArgs {
       this.showCreateButton = false,
       this.showDiscoverButton = false,
       this.pageTitle,
-      this.showSaved = true});
+      this.showSaved = true,
+      this.displayFilter});
 
   final _i66.Key? key;
 
@@ -1097,9 +1101,11 @@ class YourWorkoutsRouteArgs {
 
   final bool showSaved;
 
+  final bool Function(_i67.WorkoutSummary)? displayFilter;
+
   @override
   String toString() {
-    return 'YourWorkoutsRouteArgs{key: $key, selectWorkout: $selectWorkout, showCreateButton: $showCreateButton, showDiscoverButton: $showDiscoverButton, pageTitle: $pageTitle, showSaved: $showSaved}';
+    return 'YourWorkoutsRouteArgs{key: $key, selectWorkout: $selectWorkout, showCreateButton: $showCreateButton, showDiscoverButton: $showDiscoverButton, pageTitle: $pageTitle, showSaved: $showSaved, displayFilter: $displayFilter}';
   }
 }
 

@@ -1,23 +1,42 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 
 class UserFastestTimeExerciseTrackers extends StatelessWidget {
-  const UserFastestTimeExerciseTrackers({Key? key}) : super(key: key);
+  final List<UserFastestTimeExerciseTracker> trackers;
+  final List<LoggedWorkout> loggedWorkouts;
+  const UserFastestTimeExerciseTrackers(
+      {Key? key, required this.trackers, required this.loggedWorkouts})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final query = UserFastestTimeExerciseTrackersQuery();
-    return QueryObserver<UserFastestTimeExerciseTrackers$Query,
-            json.JsonSerializable>(
-        key: Key('UserFastestTimeExerciseTrackers - ${query.operationName}'),
-        query: query,
-        loadingIndicator: Container(),
-        builder: (data) {
-          final trackers = data.userFastestTimeExerciseTrackers;
-          return MyText(trackers.length.toString());
-        });
+    return ListView(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: trackers
+          .map((t) => _FastestTimeExerciseDisplayWidget(
+                tracker: t,
+                loggedWorkouts: loggedWorkouts,
+              ))
+          .toList(),
+    );
+  }
+}
+
+class _FastestTimeExerciseDisplayWidget extends StatelessWidget {
+  final UserFastestTimeExerciseTracker tracker;
+  final List<LoggedWorkout> loggedWorkouts;
+  const _FastestTimeExerciseDisplayWidget(
+      {Key? key, required this.tracker, required this.loggedWorkouts})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: MyText('Fastest Time'),
+    );
   }
 }

@@ -20,6 +20,10 @@ enum WorkoutsPageTab { created, saved }
 
 class YourWorkoutsPage extends StatefulWidget {
   final void Function(WorkoutSummary workout)? selectWorkout;
+
+  /// Parent can pass a filter to restrict which items display.
+  /// Initially built for scored workout tracker to only display AMRAP / For Time.
+  final bool Function(WorkoutSummary workout)? displayFilter;
   final bool showCreateButton;
   final bool showDiscoverButton;
   final String? pageTitle;
@@ -30,7 +34,8 @@ class YourWorkoutsPage extends StatefulWidget {
       this.showCreateButton = false,
       this.showDiscoverButton = false,
       this.pageTitle,
-      this.showSaved = true})
+      this.showSaved = true,
+      this.displayFilter})
       : super(key: key);
 
   @override
@@ -80,15 +85,20 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
 
   List<WorkoutSummary> _filteredWorkouts(
       List<WorkoutSummary> userWorkouts, List<WorkoutSummary> savedWorkouts) {
+    Iterable<WorkoutSummary> filtered = [];
     if (_displayTabs[_activeTabIndex] == WorkoutsPageTab.created) {
-      return _selectedTag == null
+      filtered = _selectedTag == null
           ? userWorkouts
           : userWorkouts.where((w) => w.tags.contains(_selectedTag)).toList();
     } else {
-      return _selectedCollection == null
+      filtered = _selectedCollection == null
           ? savedWorkouts
           : _selectedCollection!.workouts;
     }
+
+    return widget.displayFilter != null
+        ? filtered.where((w) => widget.displayFilter!(w)).toList()
+        : filtered.toList();
   }
 
   @override
@@ -170,14 +180,16 @@ class _YourWorkoutsPageState extends State<YourWorkoutsPage> {
                           updateSelectedTag: (t) =>
                               setState(() => _selectedTag = t),
                         ),
-                        const SizedBox(width: 12),
                         if (widget.showCreateButton)
-                          FloatingButton(
-                              text: 'Create Workout',
-                              iconSize: 19,
-                              icon: CupertinoIcons.add,
-                              onTap: () =>
-                                  context.navigateTo(WorkoutCreatorRoute())),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: FloatingButton(
+                                text: 'Create Workout',
+                                iconSize: 19,
+                                icon: CupertinoIcons.add,
+                                onTap: () =>
+                                    context.navigateTo(WorkoutCreatorRoute())),
+                          ),
                       ],
                       child: Column(
                         children: [

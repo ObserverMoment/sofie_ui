@@ -1,7 +1,0 @@
-mutation createUserScoredWorkoutTracker(
-  $data: CreateUserScoredWorkoutTrackerInput!
-) {
-  createUserScoredWorkoutTracker(data: $data) {
-    ...UserScoredWorkoutTracker
-  }
-}
