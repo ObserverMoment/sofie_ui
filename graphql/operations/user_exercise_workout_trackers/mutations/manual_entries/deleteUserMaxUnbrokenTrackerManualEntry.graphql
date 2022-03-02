@@ -1,0 +1,3 @@
+mutation deleteUserMaxUnbrokenTrackerManualEntry($id: ID!) {
+  deleteUserMaxUnbrokenTrackerManualEntry(id: $id)
+}

@@ -6,13 +6,37 @@ fragment UserMaxLoadExerciseTracker on UserMaxLoadExerciseTracker {
   loadUnit
   Move {
     ...Move
+    MoveType {
+      ...MoveType
+    }
+    BodyAreaMoveScores {
+      score
+      BodyArea {
+        ...BodyArea
+      }
+    }
+    RequiredEquipments {
+      ...Equipment
+    }
+    SelectableEquipments {
+      ...Equipment
+    }
   }
   Equipment {
     ...Equipment
   }
-  ExerciseTrackerManualEntries {
-    ...ExerciseTrackerManualEntry
+  ManualEntries {
+    ...UserMaxLoadTrackerManualEntry
   }
+}
+
+fragment UserMaxLoadTrackerManualEntry on UserMaxLoadTrackerManualEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  loadAmount
+  videoUri
 }
 
 fragment UserFastestTimeExerciseTracker on UserFastestTimeExerciseTracker {
@@ -26,41 +50,78 @@ fragment UserFastestTimeExerciseTracker on UserFastestTimeExerciseTracker {
   loadUnit
   Move {
     ...Move
+    MoveType {
+      ...MoveType
+    }
+    BodyAreaMoveScores {
+      score
+      BodyArea {
+        ...BodyArea
+      }
+    }
+    RequiredEquipments {
+      ...Equipment
+    }
+    SelectableEquipments {
+      ...Equipment
+    }
   }
   Equipment {
     ...Equipment
   }
-  ExerciseTrackerManualEntries {
-    ...ExerciseTrackerManualEntry
+  ManualEntries {
+    ...UserFastestTimeTrackerManualEntry
   }
+}
+
+fragment UserFastestTimeTrackerManualEntry on UserFastestTimeTrackerManualEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  timeTakenMs
+  videoUri
 }
 
 fragment UserMaxUnbrokenExerciseTracker on UserMaxUnbrokenExerciseTracker {
   __typename
   id
   createdAt
-
   repType
   distanceUnit
   loadAmount
   loadUnit
   Move {
     ...Move
+    MoveType {
+      ...MoveType
+    }
+    BodyAreaMoveScores {
+      score
+      BodyArea {
+        ...BodyArea
+      }
+    }
+    RequiredEquipments {
+      ...Equipment
+    }
+    SelectableEquipments {
+      ...Equipment
+    }
   }
   Equipment {
     ...Equipment
   }
-  ExerciseTrackerManualEntries {
-    ...ExerciseTrackerManualEntry
+  ManualEntries {
+    ...UserMaxUnbrokenTrackerManualEntry
   }
 }
 
-fragment ExerciseTrackerManualEntry on ExerciseTrackerManualEntry {
+fragment UserMaxUnbrokenTrackerManualEntry on UserMaxUnbrokenTrackerManualEntry {
   __typename
   id
   createdAt
   completedOn
   score
   videoUri
-  videoThumbUri
 }

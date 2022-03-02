@@ -82,9 +82,10 @@ const kUserGoalTypename = 'UserGoal';
 
 const kSkillTypeName = 'Skill';
 
-const kUserBenchmarkTypename = 'UserBenchmark';
-const kUserBenchmarkEntryTypename = 'UserBenchmarkEntry';
-const kUserBenchmarkTagTypename = 'UserBenchmarkTag';
+/// Exercise Tracker Typenames ////
+const kUserMaxLoadExerciseTracker = 'UserMaxLoadExerciseTracker';
+const kUserFastestTimeExerciseTracker = 'UserFastestTimeExerciseTracker';
+const kUserMaxUnbrokenExerciseTracker = 'UserMaxUnbrokenExerciseTracker';
 
 const kExcludeFromNormalization = [
   // Within the Workout

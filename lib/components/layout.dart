@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -212,6 +213,45 @@ class CreateEditPageNavBar extends CupertinoNavigationBar {
                               onPressed: handleClose),
                       ],
                     )),
+        );
+}
+
+class CreateEditNavBarSimple extends CupertinoNavigationBar {
+  final String title;
+  final bool validToSave;
+  final bool loading;
+  final VoidCallback onSave;
+  final VoidCallback onCancel;
+  CreateEditNavBarSimple(
+      {Key? key,
+      required this.title,
+      required this.onSave,
+      required this.onCancel,
+      required this.validToSave,
+      required this.loading})
+      : super(
+          key: key,
+          border: null,
+          automaticallyImplyLeading: false,
+          middle: Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  NavBarLargeTitle(title),
+                ],
+              )),
+          trailing: loading
+              ? const NavBarActivityIndicator()
+              : NavBarTrailingRow(children: [
+                  if (validToSave)
+                    FadeInUp(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: NavBarTertiarySaveButton(onSave),
+                      ),
+                    ),
+                  NavBarCancelButton(onCancel),
+                ]),
         );
 }
 

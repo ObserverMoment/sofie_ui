@@ -1,0 +1,7 @@
+mutation createUserMaxUnbrokenTrackerManualEntry(
+  $data: CreateUserMaxUnbrokenTrackerManualEntryInput!
+) {
+  createUserMaxUnbrokenTrackerManualEntry(data: $data) {
+    ...UserMaxUnbrokenTrackerManualEntry
+  }
+}

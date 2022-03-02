@@ -253,7 +253,7 @@ class TertiaryButton extends StatelessWidget {
             children: [
               if (prefixIconData != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 6.0, right: 4),
+                  padding: const EdgeInsets.only(left: 2.0, right: 4),
                   child: Icon(
                     prefixIconData,
                     color: textColor,
@@ -272,7 +272,7 @@ class TertiaryButton extends StatelessWidget {
               ),
               if (suffixIconData != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 6),
+                  padding: const EdgeInsets.only(left: 4.0, right: 2),
                   child: Icon(
                     suffixIconData,
                     color: textColor,

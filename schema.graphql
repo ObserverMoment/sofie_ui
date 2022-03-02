@@ -305,16 +305,6 @@ input CreateEquipmentInput {
   name: String!
 }
 
-input CreateExerciseTrackerManualEntryInput {
-  UserFastestTimeExerciseTracker: ConnectRelationInput
-  UserMaxLoadExerciseTracker: ConnectRelationInput
-  UserMaxUnbrokenExerciseTracker: ConnectRelationInput
-  completedOn: DateTime!
-  score: Float!
-  videoThumbUri: String
-  videoUri: String
-}
-
 input CreateGymProfileInput {
   Equipments: [ConnectRelationInput!]
   description: String
@@ -455,6 +445,13 @@ input CreateUserFastestTimeExerciseTrackerInput {
   reps: Float!
 }
 
+input CreateUserFastestTimeTrackerManualEntryInput {
+  UserFastestTimeExerciseTracker: ConnectRelationInput!
+  completedOn: DateTime!
+  timeTakenMs: Int!
+  videoUri: String
+}
+
 input CreateUserGoalInput {
   deadline: DateTime
   description: String
@@ -468,6 +465,13 @@ input CreateUserMaxLoadExerciseTrackerInput {
   reps: Int!
 }
 
+input CreateUserMaxLoadTrackerManualEntryInput {
+  UserMaxLoadExerciseTracker: ConnectRelationInput!
+  completedOn: DateTime!
+  loadAmount: Float!
+  videoUri: String
+}
+
 input CreateUserMaxUnbrokenExerciseTrackerInput {
   Equipment: ConnectRelationInput
   Move: ConnectRelationInput!
@@ -475,6 +479,13 @@ input CreateUserMaxUnbrokenExerciseTrackerInput {
   loadAmount: Float!
   loadUnit: LoadUnit!
   repType: WorkoutMoveRepType!
+}
+
+input CreateUserMaxUnbrokenTrackerManualEntryInput {
+  UserMaxUnbrokenExerciseTracker: ConnectRelationInput!
+  completedOn: DateTime!
+  score: Int!
+  videoUri: String
 }
 
 input CreateUserMeditationLogInput {
@@ -609,15 +620,6 @@ type Equipment {
   id: ID!
   loadAdjustable: Boolean!
   name: String!
-}
-
-type ExerciseTrackerManualEntry {
-  completedOn: DateTime!
-  createdAt: DateTime!
-  id: ID!
-  score: Float!
-  videoThumbUri: String
-  videoUri: String
 }
 
 enum Gender {
@@ -797,9 +799,6 @@ type Mutation {
     data: CreateCompletedWorkoutPlanDayWorkoutInput!
   ): WorkoutPlanEnrolment!
   createEquipment(data: CreateEquipmentInput!): Equipment
-  createExerciseTrackerManualEntry(
-    data: CreateExerciseTrackerManualEntryInput!
-  ): ExerciseTrackerManualEntry!
   createGymProfile(data: CreateGymProfileInput!): GymProfile!
   createLoggedWorkout(data: CreateLoggedWorkoutInput!): LoggedWorkout!
   createMove(data: CreateMoveInput!): Move!
@@ -817,13 +816,22 @@ type Mutation {
   createUserFastestTimeExerciseTracker(
     data: CreateUserFastestTimeExerciseTrackerInput!
   ): UserFastestTimeExerciseTracker!
+  createUserFastestTimeTrackerManualEntry(
+    data: CreateUserFastestTimeTrackerManualEntryInput!
+  ): UserFastestTimeTrackerManualEntry!
   createUserGoal(data: CreateUserGoalInput!): UserGoal!
   createUserMaxLoadExerciseTracker(
     data: CreateUserMaxLoadExerciseTrackerInput!
   ): UserMaxLoadExerciseTracker!
+  createUserMaxLoadTrackerManualEntry(
+    data: CreateUserMaxLoadTrackerManualEntryInput!
+  ): UserMaxLoadTrackerManualEntry!
   createUserMaxUnbrokenExerciseTracker(
     data: CreateUserMaxUnbrokenExerciseTrackerInput!
   ): UserMaxUnbrokenExerciseTracker!
+  createUserMaxUnbrokenTrackerManualEntry(
+    data: CreateUserMaxUnbrokenTrackerManualEntryInput!
+  ): UserMaxUnbrokenTrackerManualEntry!
   createUserMeditationLog(
     data: CreateUserMeditationLogInput!
   ): UserMeditationLog!
@@ -855,7 +863,6 @@ type Mutation {
   deleteCompletedWorkoutPlanDayWorkout(
     data: DeleteCompletedWorkoutPlanDayWorkoutInput!
   ): WorkoutPlanEnrolment!
-  deleteExerciseTrackerManualEntry(id: ID!): ID!
   deleteGymProfileById(id: ID!): ID
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteLoggedWorkoutMove(id: ID!): ID!
@@ -865,9 +872,12 @@ type Mutation {
   deleteUserBenchmarkEntry(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
   deleteUserFastestTimeExerciseTracker(id: ID!): ID!
+  deleteUserFastestTimeTrackerManualEntry(id: ID!): ID!
   deleteUserGoal(id: ID!): ID!
   deleteUserMaxLoadExerciseTracker(id: ID!): ID!
+  deleteUserMaxLoadTrackerManualEntry(id: ID!): ID!
   deleteUserMaxUnbrokenExerciseTracker(id: ID!): ID!
+  deleteUserMaxUnbrokenTrackerManualEntry(id: ID!): ID!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
   deleteWorkoutPlanDaysById(ids: [ID!]!): [ID!]!
@@ -1591,7 +1601,7 @@ type UserEatWellLog {
 
 type UserFastestTimeExerciseTracker {
   Equipment: Equipment
-  ExerciseTrackerManualEntries: [ExerciseTrackerManualEntry!]!
+  ManualEntries: [UserFastestTimeTrackerManualEntry!]!
   Move: Move!
   createdAt: DateTime!
   distanceUnit: DistanceUnit!
@@ -1600,6 +1610,14 @@ type UserFastestTimeExerciseTracker {
   loadUnit: LoadUnit!
   repType: WorkoutMoveRepType!
   reps: Float!
+}
+
+type UserFastestTimeTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  timeTakenMs: Int!
+  videoUri: String
 }
 
 type UserGoal {
@@ -1614,7 +1632,7 @@ type UserGoal {
 
 type UserMaxLoadExerciseTracker {
   Equipment: Equipment
-  ExerciseTrackerManualEntries: [ExerciseTrackerManualEntry!]!
+  ManualEntries: [UserMaxLoadTrackerManualEntry!]!
   Move: Move!
   createdAt: DateTime!
   id: ID!
@@ -1622,9 +1640,17 @@ type UserMaxLoadExerciseTracker {
   reps: Int!
 }
 
+type UserMaxLoadTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  loadAmount: Float!
+  videoUri: String
+}
+
 type UserMaxUnbrokenExerciseTracker {
   Equipment: Equipment
-  ExerciseTrackerManualEntries: [ExerciseTrackerManualEntry!]!
+  ManualEntries: [UserMaxUnbrokenTrackerManualEntry!]!
   Move: Move!
   createdAt: DateTime!
   distanceUnit: DistanceUnit!
@@ -1632,6 +1658,14 @@ type UserMaxUnbrokenExerciseTracker {
   loadAmount: Float!
   loadUnit: LoadUnit!
   repType: WorkoutMoveRepType!
+}
+
+type UserMaxUnbrokenTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  score: Int!
+  videoUri: String
 }
 
 type UserMeditationLog {

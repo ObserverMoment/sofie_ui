@@ -1,7 +1,0 @@
-mutation createExerciseTrackerManualEntry(
-  $data: CreateExerciseTrackerManualEntryInput!
-) {
-  createExerciseTrackerManualEntry(data: $data) {
-    ...ExerciseTrackerManualEntry
-  }
-}

@@ -1,0 +1,3 @@
+mutation deleteUserFastestTimeTrackerManualEntry($id: ID!) {
+  deleteUserFastestTimeTrackerManualEntry(id: $id)
+}

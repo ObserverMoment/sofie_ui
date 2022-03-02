@@ -4,12 +4,14 @@ import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
 import 'package:sofie_ui/components/creators/gym_profile_creator.dart';
-import 'package:sofie_ui/components/creators/personal_best_creator/personal_best_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_eat_well_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_sleep_well_log_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_exercise_trackers/fastest_time_tracker_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_exercise_trackers/max_load_tracker_creator_page.dart';
+import 'package:sofie_ui/components/creators/user_exercise_trackers/max_unbroken_tracker_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_goal_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_meditation_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
@@ -30,7 +32,6 @@ import 'package:sofie_ui/pages/authed/authed_routes_wrapper_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/club_details/club_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/collection_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/logged_workout_details_page.dart';
-import 'package:sofie_ui/pages/authed/details_pages/personal_best_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_details_page.dart';
@@ -146,7 +147,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           /// Details pages - for certain object types.
           AutoRoute(path: 'club/:id', page: ClubDetailsPage),
           AutoRoute(path: 'logged-workout/:id', page: LoggedWorkoutDetailsPage),
-          AutoRoute(path: 'personal-best/:id', page: PersonalBestDetailsPage),
           AutoRoute(
               path: 'profile/:userId', page: UserPublicProfileDetailsPage),
 
@@ -170,8 +170,6 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'create/food-log', page: UserEatWellLogCreatorPage),
           AutoRoute(
               path: 'create/sleep-log', page: UserSleepWellLogCreatorPage),
-          AutoRoute(
-              path: 'create/personal-best', page: PersonalBestCreatorPage),
           AutoRoute(path: 'create/post', page: FeedPostCreatorPage),
           AutoRoute(path: 'create/club-post', page: ClubFeedPostCreatorPage),
           AutoRoute(
@@ -182,6 +180,17 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(
               path: 'create/workout-plan-review',
               page: WorkoutPlanReviewCreatorPage),
+
+          /// Create exercise tracker widgets.
+          AutoRoute(
+              path: 'create/max-lift-tracker', page: MaxLoadTrackerCreatorPage),
+          AutoRoute(
+              path: 'create/fastest-time-tracker',
+              page: FastestTimeTrackerCreatorPage),
+          AutoRoute(
+              path: 'create/max-unbroken-tracker',
+              page: MaxUnbrokenTrackerCreatorPage),
+
           AutoRoute(page: PageNotFoundPage, path: '404'),
           RedirectRoute(path: '*', redirectTo: '404')
         ]),

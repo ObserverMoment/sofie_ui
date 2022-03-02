@@ -1,0 +1,7 @@
+mutation createUserFastestTimeTrackerManualEntry(
+  $data: CreateUserFastestTimeTrackerManualEntryInput!
+) {
+  createUserFastestTimeTrackerManualEntry(data: $data) {
+    ...UserFastestTimeTrackerManualEntry
+  }
+}

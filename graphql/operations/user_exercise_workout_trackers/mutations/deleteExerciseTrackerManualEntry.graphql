@@ -1,3 +1,0 @@
-mutation deleteExerciseTrackerManualEntry($id: ID!) {
-  deleteExerciseTrackerManualEntry(id: $id)
-}
