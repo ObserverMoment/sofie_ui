@@ -106,9 +106,9 @@ class MaxLoadTrackerCreatorPageState extends State<MaxLoadTrackerCreatorPage> {
       ),
       child: _move == null
           ? YourContentEmptyPlaceholder(
-              message: 'Max Lift Tracker!',
+              message: 'Track progress over time for your lifts!',
               explainer:
-                  'Track your progress over time for your max lifts. Specify move, equipment and number of reps. For e.g. "3 Reps of Bench Press with Barbell"',
+                  'Specify move, equipment and number of reps. For e.g. "3 Reps of Bench Press with Barbell". Anything that you log during a workout will be automatically submitted!',
               showIcon: false,
               actions: [
                   EmptyPlaceholderAction(

@@ -56,7 +56,8 @@ class _MaxLoadExerciseDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<ExerciseTrackersBloc>();
-    final trackerRelevantScores = bloc.retrieveTrackerRelevantScores(tracker);
+    final trackerRelevantScores =
+        bloc.retrieveMaxLoadTrackerRelevantScores(tracker);
 
     final repString = tracker.reps == 1 ? 'rep' : 'reps';
 

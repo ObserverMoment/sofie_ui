@@ -109,7 +109,7 @@ abstract class ThemeData {
       // cardBackground: const Color(0xff1a1a1c),
       // cardBackground: Color.fromARGB(255, 20, 20, 20),
       cardBackground: const Color.fromARGB(255, 33, 35, 41),
-      modalBackground: const Color.fromARGB(255, 19, 19, 19),
+      modalBackground: const Color.fromARGB(255, 39, 40, 44),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
 

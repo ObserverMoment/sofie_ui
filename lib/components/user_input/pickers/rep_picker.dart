@@ -76,19 +76,18 @@ class RepPickerDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.showBottomSheet(
-          expand: expandPopup,
+      onTap: () => context.pushFullscreenDialog(
           child: RepPickerModal(
-            reps: reps,
-            updateReps: updateReps,
-            repType: repType,
-            validRepTypes: validRepTypes,
-            updateRepType: updateRepType,
-            distanceUnit: distanceUnit,
-            updateDistanceUnit: updateDistanceUnit,
-            timeUnit: timeUnit,
-            updateTimeUnit: updateTimeUnit,
-          )),
+        reps: reps,
+        updateReps: updateReps,
+        repType: repType,
+        validRepTypes: validRepTypes,
+        updateRepType: updateRepType,
+        distanceUnit: distanceUnit,
+        updateDistanceUnit: updateDistanceUnit,
+        timeUnit: timeUnit,
+        updateTimeUnit: updateTimeUnit,
+      )),
       child: ContentBox(
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -188,7 +187,7 @@ class _RepPickerModalState extends State<RepPickerModal> {
       cancel: context.pop,
       save: _saveChanges,
       validToSave: Utils.textNotNull(_repsController.text),
-      title: 'Reps',
+      title: _activeRepType.display,
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: Column(

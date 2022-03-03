@@ -1,6 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -55,6 +54,15 @@ extension BuildContextExtension on BuildContext {
     final T? res = await Navigator.of(context, rootNavigator: rootNavigator)
         .push(CupertinoPageRoute(
             fullscreenDialog: fullscreenDialog, builder: (context) => child));
+    return res;
+  }
+
+  Future<T?> pushFullscreenDialog<T>(
+      {required Widget child, bool rootNavigator = false}) async {
+    final BuildContext context = this;
+    final T? res = await Navigator.of(context, rootNavigator: rootNavigator)
+        .push(CupertinoPageRoute(
+            fullscreenDialog: true, builder: (context) => child));
     return res;
   }
 
@@ -257,22 +265,11 @@ extension BuildContextExtension on BuildContext {
   //////////////////////////////////////////
   Future<T?> showBottomSheet<T>({
     required Widget child,
-    bool expand = true,
-    bool useRootNavigator = true,
   }) async {
     final BuildContext context = this;
-    final Color _backgroundColor = context.readTheme.modalBackground;
-    final T? result = await showCupertinoModalBottomSheet(
-        expand: expand,
-        context: context,
-        useRootNavigator: useRootNavigator,
-        backgroundColor: _backgroundColor,
-        barrierColor: Styles.black.withOpacity(0.75),
-        builder: (context) => Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: child,
-            ));
-    return result;
+    final T? res = await Navigator.of(context).push(CupertinoPageRoute(
+        fullscreenDialog: true, builder: (context) => child));
+    return res;
   }
 
   /// Classic iOS action sheet with a cancel button underneath.

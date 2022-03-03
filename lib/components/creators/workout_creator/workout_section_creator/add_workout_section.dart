@@ -63,8 +63,7 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
   }
 
   void _openTimecapPicker() {
-    context.showBottomSheet(
-        expand: false,
+    context.showActionSheetPopup(
         child: DurationPicker(
             duration: _workoutSection?.timecap != null
                 ? Duration(seconds: _workoutSection!.timecap)

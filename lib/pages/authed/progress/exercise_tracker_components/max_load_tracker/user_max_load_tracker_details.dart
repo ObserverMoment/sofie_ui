@@ -68,7 +68,7 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
 
     final trackerRelevantScores = context
         .select<ExerciseTrackersBloc, List<MaxLoadScoreWithCompletedOnDate>>(
-            (b) => b.retrieveTrackerRelevantScores(tracker));
+            (b) => b.retrieveMaxLoadTrackerRelevantScores(tracker));
 
     final repString = tracker.reps == 1 ? 'rep' : 'reps';
     final equipmentString =

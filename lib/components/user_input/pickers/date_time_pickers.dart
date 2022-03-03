@@ -34,16 +34,15 @@ class DateTimePickerDisplay extends StatelessWidget {
         super(key: key);
 
   void _openDateTimePicker(BuildContext context, DateTimePickerMode mode) {
-    context.showBottomSheet(
-        expand: false,
+    context.showActionSheetPopup(
         child: DateTimePicker(
-          title: title,
-          dateTime: dateTime,
-          showDate: showDate,
-          showTime: showTime,
-          mode: mode,
-          saveDateTime: saveDateTime,
-        ));
+      title: title,
+      dateTime: dateTime,
+      showDate: showDate,
+      showTime: showTime,
+      mode: mode,
+      saveDateTime: saveDateTime,
+    ));
   }
 
   @override

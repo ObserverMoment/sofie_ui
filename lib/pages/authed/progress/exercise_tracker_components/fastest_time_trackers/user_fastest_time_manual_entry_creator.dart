@@ -20,19 +20,19 @@ import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 
-class UserMaxLoadManualEntryCreator extends StatefulWidget {
-  final UserMaxLoadExerciseTracker parent;
-  const UserMaxLoadManualEntryCreator({
+class UserFastestTimeManualEntryCreator extends StatefulWidget {
+  final UserFastestTimeExerciseTracker parent;
+  const UserFastestTimeManualEntryCreator({
     Key? key,
     required this.parent,
   }) : super(key: key);
   @override
-  _UserMaxLoadManualEntryCreatorState createState() =>
-      _UserMaxLoadManualEntryCreatorState();
+  _UserFastestTimeManualEntryCreatorState createState() =>
+      _UserFastestTimeManualEntryCreatorState();
 }
 
-class _UserMaxLoadManualEntryCreatorState
-    extends State<UserMaxLoadManualEntryCreator> {
+class _UserFastestTimeManualEntryCreatorState
+    extends State<UserFastestTimeManualEntryCreator> {
   bool _loading = false;
   bool _uploadingVideo = false;
   bool _processingVideo = false;
@@ -41,25 +41,25 @@ class _UserMaxLoadManualEntryCreatorState
   String? _uploadedVideoThumbUri;
   final CancelToken _mediaUploadCancelToken = CancelToken();
 
-  final TextEditingController _loadAmountController = TextEditingController();
-  double? _loadAmount;
+  final TextEditingController _timeTakenMsController = TextEditingController();
+  int? _timetakenMs;
   DateTime _completedOn = DateTime.now();
   String? _localVideoPath;
 
   @override
   void initState() {
     super.initState();
-    _loadAmountController.addListener(() {
+    _timeTakenMsController.addListener(() {
       setState(() {
-        _loadAmount = Utils.textNotNull(_loadAmountController.text)
-            ? double.parse(_loadAmountController.text)
+        _timetakenMs = Utils.textNotNull(_timeTakenMsController.text)
+            ? int.parse(_timeTakenMsController.text)
             : null;
       });
     });
   }
 
   Future<void> _createManualEntry() async {
-    if (_loadAmount == null) {
+    if (_timetakenMs == null) {
       return;
     }
 
@@ -70,25 +70,26 @@ class _UserMaxLoadManualEntryCreatorState
 
     setState(() => _loading = true);
 
-    final variables = CreateUserMaxLoadTrackerManualEntryArguments(
-        data: CreateUserMaxLoadTrackerManualEntryInput(
+    final variables = CreateUserFastestTimeTrackerManualEntryArguments(
+        data: CreateUserFastestTimeTrackerManualEntryInput(
             completedOn: _completedOn,
-            loadAmount: _loadAmount!,
             videoUri: _uploadedVideoUri,
             videoThumbUri: _uploadedVideoThumbUri,
-            userMaxLoadExerciseTracker:
-                ConnectRelationInput(id: widget.parent.id)));
+            userFastestTimeExerciseTracker:
+                ConnectRelationInput(id: widget.parent.id),
+            timeTakenMs: _timetakenMs!));
 
     final result = await context.graphQLStore.mutate(
-        mutation:
-            CreateUserMaxLoadTrackerManualEntryMutation(variables: variables),
-        broadcastQueryIds: [GQLOpNames.userMaxLoadExerciseTrackers]);
+        mutation: CreateUserFastestTimeTrackerManualEntryMutation(
+            variables: variables),
+        broadcastQueryIds: [GQLOpNames.userFastestTimeExerciseTrackers]);
 
     setState(() => _loading = false);
 
     checkOperationResult(context, result, onSuccess: context.pop);
   }
 
+  /// TODO: Can extract - is the same across all manual entry tracker creators.
   Future<void> _uploadVideo() async {
     if (_localVideoPath == null) {
       return;
@@ -121,11 +122,11 @@ class _UserMaxLoadManualEntryCreatorState
     }
   }
 
-  bool get _validToSubmit => _loadAmount != null;
+  bool get _validToSubmit => _timetakenMs != null;
 
   @override
   void dispose() {
-    _loadAmountController.dispose();
+    _timeTakenMsController.dispose();
 
     /// If user bails out then cancel the upload.
     if (!_mediaUploadCancelToken.isCanceled) {
@@ -141,7 +142,7 @@ class _UserMaxLoadManualEntryCreatorState
     return MyPageScaffold(
       navigationBar: MyNavBar(
         withoutLeading: _uploadingVideo || _processingVideo,
-        middle: const NavBarTitle('Submit Max Lift'),
+        middle: const NavBarTitle('Submit Fastest Time'),
         trailing: _loading || _uploadingVideo || _processingVideo
             ? const NavBarLoadingIndicator()
             : _validToSubmit
@@ -175,7 +176,7 @@ class _UserMaxLoadManualEntryCreatorState
               ),
               const SizedBox(height: 8),
               MyNumberInput(
-                _loadAmountController,
+                _timeTakenMsController,
                 allowDouble: true,
                 autoFocus: true,
               ),

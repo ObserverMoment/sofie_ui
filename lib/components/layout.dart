@@ -237,7 +237,7 @@ class CreateEditNavBarSimple extends CupertinoNavigationBar {
               alignment: Alignment.centerLeft,
               child: Row(
                 children: [
-                  NavBarLargeTitle(title),
+                  NavBarTitle(title),
                 ],
               )),
           trailing: loading
@@ -402,44 +402,37 @@ class ModalPageScaffold extends StatelessWidget {
   final void Function()? save;
   final bool validToSave;
   final bool loading;
-  final bool resizeToAvoidBottomInset;
-  const ModalPageScaffold(
-      {Key? key,
-      required this.child,
-      required this.title,
-      this.cancel,
-      this.save,
-      this.loading = false,
-      this.validToSave = false,
-      this.resizeToAvoidBottomInset = false})
-      : super(key: key);
+
+  const ModalPageScaffold({
+    Key? key,
+    required this.child,
+    required this.title,
+    this.cancel,
+    this.save,
+    this.loading = false,
+    this.validToSave = false,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: CupertinoPageScaffold(
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        backgroundColor: context.theme.modalBackground,
-        navigationBar: MyNavBar(
-          customLeading: cancel != null ? NavBarCancelButton(cancel!) : null,
-          backgroundColor: context.theme.modalBackground,
-          middle: NavBarTitle(title),
-          trailing: loading
-              ? const FadeIn(
-                  child: NavBarTrailingRow(
-                    children: [
-                      NavBarLoadingIndicator(),
-                    ],
-                  ),
-                )
-              : save != null && validToSave
-                  ? FadeIn(child: NavBarTertiarySaveButton(save!))
-                  : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 4.0, bottom: 12),
-          child: child,
-        ),
+    return MyPageScaffold(
+      navigationBar: MyNavBar(
+        customLeading: cancel != null ? NavBarCancelButton(cancel!) : null,
+        middle: NavBarTitle(title),
+        trailing: loading
+            ? const FadeIn(
+                child: NavBarTrailingRow(
+                  children: [
+                    NavBarLoadingIndicator(),
+                  ],
+                ),
+              )
+            : save != null && validToSave
+                ? FadeIn(child: NavBarTertiarySaveButton(save!))
+                : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 4.0, bottom: 12),
+        child: child,
       ),
     );
   }
