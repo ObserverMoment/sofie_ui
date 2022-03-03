@@ -90,7 +90,6 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
         initialData: _observableQuery.latest,
         stream: _observableQuery.subject.stream,
         builder: (context, snapshot) {
-          // if (snapshot.hasData) {
           if (snapshot.hasData) {
             if (snapshot.data!.hasErrors) {
               for (final e in snapshot.data!.errors!) {

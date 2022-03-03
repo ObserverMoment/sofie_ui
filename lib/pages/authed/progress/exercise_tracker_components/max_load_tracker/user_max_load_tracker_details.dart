@@ -1,18 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/user_max_load_exercise_trackers.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_load_tracker/user_max_load_manual_entry_creator.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -22,13 +23,12 @@ import 'package:sofie_ui/extensions/enum_extensions.dart';
 
 /// Displays a graph at the top of the screen showing progress over time + a list below the graph of the top x entries (including manual entries) + any videos that the user has uploaded.
 class UserMaxLoadTrackerDetails extends StatelessWidget {
-  final UserMaxLoadExerciseTracker tracker;
-  final List<MaxLoadScoreWithCompletedOnDate> scores;
-  const UserMaxLoadTrackerDetails(
-      {Key? key, required this.tracker, required this.scores})
+  final String trackerId;
+  const UserMaxLoadTrackerDetails({Key? key, required this.trackerId})
       : super(key: key);
 
-  Future<void> _confirmDeleteTracker(BuildContext context) async {
+  Future<void> _confirmDeleteTracker(
+      BuildContext context, UserMaxLoadExerciseTracker tracker) async {
     context.showConfirmDeleteDialog(
         message:
             'Deleting this tracker will also delete all manual entries that you have previously submitted. This cannot be undone. OK?',
@@ -46,19 +46,41 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
         });
   }
 
-  String get _repString => tracker.reps == 1 ? 'rep' : 'reps';
-  String get _equipmentString =>
-      tracker.equipment == null ? '' : ' - ${tracker.equipment!.name}';
+  Future<void> _submitManualEntry(
+      BuildContext context, UserMaxLoadExerciseTracker tracker) async {
+    context.push(
+        child: UserMaxLoadManualEntryCreator(
+      parent: tracker,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final tracker =
+        context.select<ExerciseTrackersBloc, UserMaxLoadExerciseTracker?>((b) =>
+            b.userMaxLoadExerciseTrackers
+                .firstWhereOrNull((t) => t.id == trackerId));
+
+    /// It has probably been deleted so this page will pop shortly.
+    if (tracker == null) {
+      return Container();
+    }
+
+    final trackerRelevantScores = context
+        .select<ExerciseTrackersBloc, List<MaxLoadScoreWithCompletedOnDate>>(
+            (b) => b.retrieveTrackerRelevantScores(tracker));
+
+    final repString = tracker.reps == 1 ? 'rep' : 'reps';
+    final equipmentString =
+        tracker.equipment == null ? '' : ' - ${tracker.equipment!.name}';
+
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
         middle: TertiaryButton(
             prefixIconData: MyCustomIcons.medal,
             iconSize: 14,
             fontSize: FONTSIZE.three,
-            onPressed: () => print('create manual score'),
+            onPressed: () => _submitManualEntry(context, tracker),
             text: 'Submit a Score'),
         trailing: CupertinoButton(
             padding: EdgeInsets.zero,
@@ -66,7 +88,7 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
               CupertinoIcons.trash,
               size: 20,
             ),
-            onPressed: () => _confirmDeleteTracker(context)),
+            onPressed: () => _confirmDeleteTracker(context, tracker)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,13 +105,13 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: MyHeaderText(
-              '${tracker.reps} $_repString$_equipmentString - ${tracker.loadUnit.display}',
+              '${tracker.reps} $repString$equipmentString - ${tracker.loadUnit.display}',
               size: FONTSIZE.two,
               weight: FontWeight.normal,
             ),
           ),
           const SizedBox(height: 14),
-          if (scores.isEmpty)
+          if (trackerRelevantScores.isEmpty)
             const Center(
               child: Padding(
                 padding: EdgeInsets.all(32.0),
@@ -99,18 +121,18 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
                 ),
               ),
             ),
-          if (scores.isNotEmpty)
+          if (trackerRelevantScores.isNotEmpty)
             Expanded(
               child: ListView(
                 shrinkWrap: true,
                 children: [
                   _MaxLiftProgressGraph(
-                    scores: scores,
+                    scores: trackerRelevantScores,
                     tracker: tracker,
                   ),
                   _TopTenScoresList(
                     tracker: tracker,
-                    scores: scores,
+                    scores: trackerRelevantScores,
                   ),
                 ],
               ),
@@ -133,22 +155,8 @@ class _MaxLiftProgressGraph extends StatelessWidget {
     final gridlineColor = context.theme.primary.withOpacity(0.07);
     final labelStyle = TextStyle(color: context.theme.primary, fontSize: 10);
 
-    /// We only need the highest score in a given day, otherwise the graph can get very messy.
-    /// We could open this out if needed to be on a given hour etc...
-    final topScoresPerDay = <DateTime, MaxLoadScoreWithCompletedOnDate>{};
-
-    for (final score in scores) {
-      final dayDate = DateTime(score.completedOn.year, score.completedOn.month,
-          score.completedOn.day);
-      if ((topScoresPerDay[dayDate] == null) ||
-          (topScoresPerDay[dayDate]!.loadAmount < score.loadAmount)) {
-        topScoresPerDay[dayDate] = score;
-      }
-    }
-
-    final chartData = topScoresPerDay.entries.map((e) => e.value).toList();
-
-    return Padding(
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.6,
       padding: const EdgeInsets.only(right: 10.0),
       child: SfCartesianChart(
           enableAxisAnimation: false,
@@ -160,18 +168,27 @@ class _MaxLiftProgressGraph extends StatelessWidget {
               enableDoubleTapZooming: true),
           primaryYAxis: NumericAxis(
               labelStyle: labelStyle,
+              rangePadding: ChartRangePadding.round,
               decimalPlaces: 2,
               majorGridLines: MajorGridLines(color: gridlineColor)),
           primaryXAxis: DateTimeAxis(
               labelStyle: labelStyle,
+              rangePadding: ChartRangePadding.round,
+              desiredIntervals: 6,
               majorGridLines: MajorGridLines(color: gridlineColor)),
           series: <ChartSeries>[
-            AreaSeries<MaxLoadScoreWithCompletedOnDate, DateTime>(
-                color: Styles.primaryAccent,
-                dataSource: chartData,
-                xValueMapper: (score, _) => score.completedOn,
-                yValueMapper: (score, _) => score.loadAmount,
-                gradient: Styles.primaryAccentGradient)
+            LineSeries<MaxLoadScoreWithCompletedOnDate, DateTime>(
+              dataSource: scores.sorted((a, b) {
+                if (a.completedOn == b.completedOn) {
+                  return a.loadAmount.compareTo(b.loadAmount);
+                } else {
+                  return a.completedOn.compareTo(b.completedOn);
+                }
+              }),
+              xValueMapper: (score, _) => score.completedOn,
+              yValueMapper: (score, _) => score.loadAmount,
+              color: Styles.primaryAccent,
+            )
           ]),
     );
   }
@@ -184,12 +201,33 @@ class _TopTenScoresList extends StatelessWidget {
       {Key? key, required this.scores, required this.tracker})
       : super(key: key);
 
+  void _confirmDeleteManualEntry(
+    BuildContext context,
+    String entryId,
+  ) {
+    context.showConfirmDeleteDialog(
+        message:
+            'This will delete the score entry and also any video that has been uploaded. Ok?',
+        itemType: 'Score Tracker Entry',
+        onConfirm: () async {
+          final result = await context.graphQLStore.mutate(
+              mutation: DeleteUserMaxLoadTrackerManualEntryMutation(
+                  variables: DeleteUserMaxLoadTrackerManualEntryArguments(
+                      entryId: entryId, parentId: tracker.id)),
+              broadcastQueryIds: [GQLOpNames.userMaxLoadExerciseTrackers]);
+
+          checkOperationResult(context, result);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final topTenScores = scores
         .sortedBy<MaxLoadScoreWithCompletedOnDate>((s) => s)
         .reversed
         .take(10);
+
+    final buttonTagColor = context.theme.background.withOpacity(0.5);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
@@ -215,7 +253,7 @@ class _TopTenScoresList extends StatelessWidget {
                                 MyText(
                                   s.loadAmount.stringMyDouble(),
                                   color: Styles.primaryAccent,
-                                  size: FONTSIZE.seven,
+                                  size: FONTSIZE.six,
                                 ),
                                 const SizedBox(width: 2),
                                 MyText(
@@ -225,13 +263,12 @@ class _TopTenScoresList extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: 8),
                           if (Utils.textNotNull(s.loggedWorkoutId))
                             TertiaryButton(
                                 fontSize: FONTSIZE.one,
                                 iconSize: 14,
-                                backgroundColor:
-                                    context.theme.background.withOpacity(0.5),
+                                backgroundColor: buttonTagColor,
                                 suffixIconData: CupertinoIcons.chevron_right,
                                 text: 'View Log',
                                 onPressed: () => context.navigateTo(
@@ -241,8 +278,7 @@ class _TopTenScoresList extends StatelessWidget {
                             TertiaryButton(
                                 fontSize: FONTSIZE.one,
                                 iconSize: 14,
-                                backgroundColor:
-                                    context.theme.background.withOpacity(0.5),
+                                backgroundColor: buttonTagColor,
                                 suffixIconData: CupertinoIcons.tv,
                                 text: 'View Video',
                                 onPressed: () =>
@@ -251,17 +287,36 @@ class _TopTenScoresList extends StatelessWidget {
                                         videoUri: s.videoUri!)),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      Row(
                         children: [
-                          MyText(
-                            s.completedOn.compactDateString,
-                            size: FONTSIZE.two,
-                          ),
-                          const SizedBox(height: 2),
-                          MyText(
-                            s.completedOn.timeString,
-                            size: FONTSIZE.two,
+                          if (s.manualEntryId != null)
+                            IconButton(
+                                iconData: CupertinoIcons.trash,
+                                size: 20,
+                                onPressed: () => _confirmDeleteManualEntry(
+                                    context, s.manualEntryId!)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              MyText(
+                                s.completedOn.compactDateString,
+                                size: FONTSIZE.two,
+                              ),
+                              const SizedBox(height: 2),
+                              MyText(
+                                s.completedOn.timeString,
+                                size: FONTSIZE.one,
+                              ),
+                              if (s.manualEntryId != null)
+                                const Padding(
+                                  padding: EdgeInsets.only(top: 2.0),
+                                  child: MyText(
+                                    'Submitted Manually',
+                                    size: FONTSIZE.zero,
+                                    color: Styles.primaryAccent,
+                                  ),
+                                )
+                            ],
                           ),
                         ],
                       )

@@ -449,6 +449,7 @@ input CreateUserFastestTimeTrackerManualEntryInput {
   UserFastestTimeExerciseTracker: ConnectRelationInput!
   completedOn: DateTime!
   timeTakenMs: Int!
+  videoThumbUri: String
   videoUri: String
 }
 
@@ -469,6 +470,7 @@ input CreateUserMaxLoadTrackerManualEntryInput {
   UserMaxLoadExerciseTracker: ConnectRelationInput!
   completedOn: DateTime!
   loadAmount: Float!
+  videoThumbUri: String
   videoUri: String
 }
 
@@ -485,6 +487,7 @@ input CreateUserMaxUnbrokenTrackerManualEntryInput {
   UserMaxUnbrokenExerciseTracker: ConnectRelationInput!
   completedOn: DateTime!
   score: Int!
+  videoThumbUri: String
   videoUri: String
 }
 
@@ -818,20 +821,20 @@ type Mutation {
   ): UserFastestTimeExerciseTracker!
   createUserFastestTimeTrackerManualEntry(
     data: CreateUserFastestTimeTrackerManualEntryInput!
-  ): UserFastestTimeTrackerManualEntry!
+  ): UserFastestTimeExerciseTracker!
   createUserGoal(data: CreateUserGoalInput!): UserGoal!
   createUserMaxLoadExerciseTracker(
     data: CreateUserMaxLoadExerciseTrackerInput!
   ): UserMaxLoadExerciseTracker!
   createUserMaxLoadTrackerManualEntry(
     data: CreateUserMaxLoadTrackerManualEntryInput!
-  ): UserMaxLoadTrackerManualEntry!
+  ): UserMaxLoadExerciseTracker!
   createUserMaxUnbrokenExerciseTracker(
     data: CreateUserMaxUnbrokenExerciseTrackerInput!
   ): UserMaxUnbrokenExerciseTracker!
   createUserMaxUnbrokenTrackerManualEntry(
     data: CreateUserMaxUnbrokenTrackerManualEntryInput!
-  ): UserMaxUnbrokenTrackerManualEntry!
+  ): UserMaxUnbrokenExerciseTracker!
   createUserMeditationLog(
     data: CreateUserMeditationLogInput!
   ): UserMeditationLog!
@@ -872,12 +875,21 @@ type Mutation {
   deleteUserBenchmarkEntry(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
   deleteUserFastestTimeExerciseTracker(id: ID!): ID!
-  deleteUserFastestTimeTrackerManualEntry(id: ID!): ID!
+  deleteUserFastestTimeTrackerManualEntry(
+    entryId: ID!
+    parentId: ID!
+  ): UserFastestTimeExerciseTracker!
   deleteUserGoal(id: ID!): ID!
   deleteUserMaxLoadExerciseTracker(id: ID!): ID!
-  deleteUserMaxLoadTrackerManualEntry(id: ID!): ID!
+  deleteUserMaxLoadTrackerManualEntry(
+    entryId: ID!
+    parentId: ID!
+  ): UserMaxLoadExerciseTracker!
   deleteUserMaxUnbrokenExerciseTracker(id: ID!): ID!
-  deleteUserMaxUnbrokenTrackerManualEntry(id: ID!): ID!
+  deleteUserMaxUnbrokenTrackerManualEntry(
+    entryId: ID!
+    parentId: ID!
+  ): UserMaxUnbrokenExerciseTracker!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
   deleteWorkoutPlanDaysById(ids: [ID!]!): [ID!]!
@@ -1617,6 +1629,7 @@ type UserFastestTimeTrackerManualEntry {
   createdAt: DateTime!
   id: ID!
   timeTakenMs: Int!
+  videoThumbUri: String
   videoUri: String
 }
 
@@ -1645,6 +1658,7 @@ type UserMaxLoadTrackerManualEntry {
   createdAt: DateTime!
   id: ID!
   loadAmount: Float!
+  videoThumbUri: String
   videoUri: String
 }
 
@@ -1665,6 +1679,7 @@ type UserMaxUnbrokenTrackerManualEntry {
   createdAt: DateTime!
   id: ID!
   score: Int!
+  videoThumbUri: String
   videoUri: String
 }
 

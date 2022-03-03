@@ -1,17 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
 
 class UserFastestTimeExerciseTrackers extends StatelessWidget {
-  final List<UserFastestTimeExerciseTracker> trackers;
   final List<LoggedWorkout> loggedWorkouts;
   const UserFastestTimeExerciseTrackers(
-      {Key? key, required this.trackers, required this.loggedWorkouts})
+      {Key? key, required this.loggedWorkouts})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final trackers = context
+        .select<ExerciseTrackersBloc, List<UserFastestTimeExerciseTracker>>(
+            (b) => b.userFastestTimeExerciseTrackers);
+
     return ListView(
       padding: EdgeInsets.zero,
       shrinkWrap: true,

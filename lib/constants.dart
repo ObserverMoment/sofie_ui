@@ -84,8 +84,11 @@ const kSkillTypeName = 'Skill';
 
 /// Exercise Tracker Typenames ////
 const kUserMaxLoadExerciseTracker = 'UserMaxLoadExerciseTracker';
+const kUserMaxLoadTrackerManualEntry = 'UserMaxLoadTrackerManualEntry';
 const kUserFastestTimeExerciseTracker = 'UserFastestTimeExerciseTracker';
+const kUserFastestTimeTrackerManualEntry = 'UserFastestTimeTrackerManualEntry';
 const kUserMaxUnbrokenExerciseTracker = 'UserMaxUnbrokenExerciseTracker';
+const kUserMaxUnbrokenTrackerManualEntry = 'UserMaxUnbrokenTrackerManualEntry';
 
 const kExcludeFromNormalization = [
   // Within the Workout
@@ -100,6 +103,10 @@ const kExcludeFromNormalization = [
   kSkillTypeName,
   // Within the WorkoutPlan
   kWorkoutPlanReviewTypename,
+  // Always retrieve the full parent ExerciseTracker object and normalize that.
+  kUserMaxLoadTrackerManualEntry,
+  kUserFastestTimeTrackerManualEntry,
+  kUserMaxUnbrokenTrackerManualEntry,
 ];
 
 /// WorkoutSectionTypeNames

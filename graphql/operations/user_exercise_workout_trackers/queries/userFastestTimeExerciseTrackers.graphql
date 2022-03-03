@@ -1,5 +1,29 @@
 query userFastestTimeExerciseTrackers {
   userFastestTimeExerciseTrackers {
     ...UserFastestTimeExerciseTracker
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+    ManualEntries {
+      ...UserFastestTimeTrackerManualEntry
+    }
   }
 }

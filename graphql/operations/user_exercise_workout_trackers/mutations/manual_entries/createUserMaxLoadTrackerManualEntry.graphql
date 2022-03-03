@@ -2,6 +2,30 @@ mutation createUserMaxLoadTrackerManualEntry(
   $data: CreateUserMaxLoadTrackerManualEntryInput!
 ) {
   createUserMaxLoadTrackerManualEntry(data: $data) {
-    ...UserMaxLoadTrackerManualEntry
+    ...UserMaxLoadExerciseTracker
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+    ManualEntries {
+      ...UserMaxLoadTrackerManualEntry
+    }
   }
 }

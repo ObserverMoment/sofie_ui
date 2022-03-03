@@ -4,30 +4,6 @@ fragment UserMaxLoadExerciseTracker on UserMaxLoadExerciseTracker {
   createdAt
   reps
   loadUnit
-  Move {
-    ...Move
-    MoveType {
-      ...MoveType
-    }
-    BodyAreaMoveScores {
-      score
-      BodyArea {
-        ...BodyArea
-      }
-    }
-    RequiredEquipments {
-      ...Equipment
-    }
-    SelectableEquipments {
-      ...Equipment
-    }
-  }
-  Equipment {
-    ...Equipment
-  }
-  ManualEntries {
-    ...UserMaxLoadTrackerManualEntry
-  }
 }
 
 fragment UserMaxLoadTrackerManualEntry on UserMaxLoadTrackerManualEntry {
@@ -37,6 +13,7 @@ fragment UserMaxLoadTrackerManualEntry on UserMaxLoadTrackerManualEntry {
   completedOn
   loadAmount
   videoUri
+  videoThumbUri
 }
 
 fragment UserFastestTimeExerciseTracker on UserFastestTimeExerciseTracker {
@@ -48,30 +25,6 @@ fragment UserFastestTimeExerciseTracker on UserFastestTimeExerciseTracker {
   distanceUnit
   loadAmount
   loadUnit
-  Move {
-    ...Move
-    MoveType {
-      ...MoveType
-    }
-    BodyAreaMoveScores {
-      score
-      BodyArea {
-        ...BodyArea
-      }
-    }
-    RequiredEquipments {
-      ...Equipment
-    }
-    SelectableEquipments {
-      ...Equipment
-    }
-  }
-  Equipment {
-    ...Equipment
-  }
-  ManualEntries {
-    ...UserFastestTimeTrackerManualEntry
-  }
 }
 
 fragment UserFastestTimeTrackerManualEntry on UserFastestTimeTrackerManualEntry {
@@ -81,6 +34,7 @@ fragment UserFastestTimeTrackerManualEntry on UserFastestTimeTrackerManualEntry 
   completedOn
   timeTakenMs
   videoUri
+  videoThumbUri
 }
 
 fragment UserMaxUnbrokenExerciseTracker on UserMaxUnbrokenExerciseTracker {
@@ -91,30 +45,6 @@ fragment UserMaxUnbrokenExerciseTracker on UserMaxUnbrokenExerciseTracker {
   distanceUnit
   loadAmount
   loadUnit
-  Move {
-    ...Move
-    MoveType {
-      ...MoveType
-    }
-    BodyAreaMoveScores {
-      score
-      BodyArea {
-        ...BodyArea
-      }
-    }
-    RequiredEquipments {
-      ...Equipment
-    }
-    SelectableEquipments {
-      ...Equipment
-    }
-  }
-  Equipment {
-    ...Equipment
-  }
-  ManualEntries {
-    ...UserMaxUnbrokenTrackerManualEntry
-  }
 }
 
 fragment UserMaxUnbrokenTrackerManualEntry on UserMaxUnbrokenTrackerManualEntry {
@@ -124,4 +54,5 @@ fragment UserMaxUnbrokenTrackerManualEntry on UserMaxUnbrokenTrackerManualEntry 
   completedOn
   score
   videoUri
+  videoThumbUri
 }
