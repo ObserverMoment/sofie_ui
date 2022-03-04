@@ -160,7 +160,7 @@ class _WorkoutSetDurationPickerState extends State<WorkoutSetDurationPicker> {
           if (widget.title != null)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: H2(widget.title!),
+              child: H3(widget.title!),
             ),
           if (widget.allowCopyToAll)
             Padding(
@@ -170,7 +170,8 @@ class _WorkoutSetDurationPickerState extends State<WorkoutSetDurationPicker> {
                   updateValue: (v) => setState(() => _copyToAll = v),
                   value: _copyToAll),
             ),
-          Padding(
+          Container(
+            height: 220,
             padding: const EdgeInsets.all(16.0),
             child: CupertinoTimerPicker(
                 initialTimerDuration: _activeDuration ?? Duration.zero,
@@ -226,8 +227,7 @@ class _DurationPickerState extends State<DurationPicker> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 400,
+    return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -235,9 +235,10 @@ class _DurationPickerState extends State<DurationPicker> {
           if (widget.title != null)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: H2(widget.title!.toUpperCase()),
+              child: H3(widget.title!.toUpperCase()),
             ),
-          Padding(
+          Container(
+            height: 220,
             padding: const EdgeInsets.all(16.0),
             child: CupertinoTimerPicker(
                 initialTimerDuration: _activeDuration ?? Duration.zero,

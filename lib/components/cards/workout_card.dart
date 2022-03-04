@@ -259,7 +259,7 @@ class _WorkoutCardTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentBox(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      backgroundColor: context.theme.modalBackground,
+      backgroundColor: context.theme.background,
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(_icon, size: 12),
         const SizedBox(width: 4),

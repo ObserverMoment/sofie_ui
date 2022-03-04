@@ -3,18 +3,18 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/save_and_close_picker.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
-class DatePicker extends StatefulWidget {
+class DatePickerCupertino extends StatefulWidget {
   final void Function(DateTime date) saveDate;
   final DateTime? selectedDate;
   final DateTime? initialDate;
-  const DatePicker(
+  const DatePickerCupertino(
       {Key? key, required this.saveDate, this.selectedDate, this.initialDate})
       : super(key: key);
   @override
-  _DatePickerState createState() => _DatePickerState();
+  _DatePickerCupertinoState createState() => _DatePickerCupertinoState();
 }
 
-class _DatePickerState extends State<DatePicker> {
+class _DatePickerCupertinoState extends State<DatePickerCupertino> {
   DateTime? _selectedDate;
 
   @override
@@ -43,7 +43,7 @@ class _DatePickerState extends State<DatePicker> {
         children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: H2('Select Date'),
+            child: H3('Select Date'),
           ),
           SizedBox(
             height: 300,

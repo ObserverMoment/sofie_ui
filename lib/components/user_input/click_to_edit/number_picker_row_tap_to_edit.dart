@@ -60,13 +60,15 @@ class DoublePickerRowTapToEdit extends StatelessWidget {
   final double? value;
   final void Function(double) saveValue;
   final bool allowNegative;
+  final String? inputUnitDisplay;
   const DoublePickerRowTapToEdit(
       {Key? key,
       this.value,
       required this.saveValue,
       required this.title,
       this.suffix,
-      this.allowNegative = false})
+      this.allowNegative = false,
+      this.inputUnitDisplay})
       : super(key: key);
 
   @override
@@ -77,6 +79,7 @@ class DoublePickerRowTapToEdit extends StatelessWidget {
                 value: value,
                 saveValue: saveValue,
                 title: title,
+                unitDisplay: inputUnitDisplay,
                 allowNegative: allowNegative)),
         display: Row(
           children: [

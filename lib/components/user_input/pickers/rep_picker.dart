@@ -76,7 +76,7 @@ class RepPickerDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushFullscreenDialog(
+      onTap: () => context.showBottomSheet(
           child: RepPickerModal(
         reps: reps,
         updateReps: updateReps,

@@ -341,8 +341,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final gradientBasisColor = context.theme.background;
 
-    return Container(
-      color: context.theme.modalBackground,
+    return SizedBox(
       height: maxHeaderSize,
       child: Stack(
         fit: StackFit.expand,

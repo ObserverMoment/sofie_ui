@@ -165,7 +165,7 @@ class UpdateAnnouncementArticleLink extends StatelessWidget {
     return GestureDetector(
       onTap: () => _openLink(context),
       child: ContentBox(
-        backgroundColor: context.theme.modalBackground,
+        backgroundColor: context.theme.cardBackground,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -194,7 +194,7 @@ class UpdateAnnouncementActionLink extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.navigateNamedTo(action.routeTo),
       child: ContentBox(
-        backgroundColor: context.theme.modalBackground,
+        backgroundColor: context.theme.cardBackground,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         child: Row(
           mainAxisSize: MainAxisSize.min,

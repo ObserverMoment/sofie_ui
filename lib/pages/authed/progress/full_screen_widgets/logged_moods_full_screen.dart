@@ -173,53 +173,59 @@ class _TwoWeekAverages extends StatelessWidget {
         loggedMoods.where((m) => m.createdAt.isAfter(twoWeeksAgo)).toList();
 
     /// + 1 as input data is 0 -> 4 but we want to display as 1 -> 5.
-    final moodAverage = twoWeeksOfMoods.map((m) => m.moodScore + 1).average;
-    final energyAverage = twoWeeksOfMoods.map((m) => m.energyScore + 1).average;
+    final moodAverage = twoWeeksOfMoods.isNotEmpty
+        ? twoWeeksOfMoods.map((m) => m.moodScore + 1).average
+        : null;
+    final energyAverage = twoWeeksOfMoods.isNotEmpty
+        ? twoWeeksOfMoods.map((m) => m.energyScore + 1).average
+        : null;
 
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 8.0),
-          child: MyHeaderText(
-            '14 Day Average',
-            weight: FontWeight.normal,
+        if (twoWeeksOfMoods.isNotEmpty)
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: MyHeaderText(
+              '14 Day Average',
+              weight: FontWeight.normal,
+            ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _AvgSummaryDisplay(
-                  average: moodAverage,
-                  label: 'Mood',
-                ),
-                ScoreMeter(
-                  label: 'Mood',
-                  score: moodAverage,
-                  gradient: Styles.primaryAccentGradientVertical,
-                  displayWidth: 60,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ScoreMeter(
-                  label: 'Energy',
-                  score: energyAverage,
-                  gradient: Styles.secondaryAccentGradient,
-                  displayWidth: 60,
-                ),
-                _AvgSummaryDisplay(
-                  average: energyAverage,
-                  label: 'Energy',
-                ),
-              ],
-            ),
-          ],
-        ),
+        if (twoWeeksOfMoods.isNotEmpty)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _AvgSummaryDisplay(
+                    average: moodAverage!,
+                    label: 'Mood',
+                  ),
+                  ScoreMeter(
+                    label: 'Mood',
+                    score: moodAverage,
+                    gradient: Styles.primaryAccentGradientVertical,
+                    displayWidth: 60,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ScoreMeter(
+                    label: 'Energy',
+                    score: energyAverage!,
+                    gradient: Styles.secondaryAccentGradient,
+                    displayWidth: 60,
+                  ),
+                  _AvgSummaryDisplay(
+                    average: energyAverage,
+                    label: 'Energy',
+                  ),
+                ],
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -275,7 +281,12 @@ class _MoodGraph extends StatelessWidget {
       child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
-          primaryXAxis: DateTimeAxis(),
+          primaryXAxis: DateTimeAxis(
+            desiredIntervals: 6,
+            maximum: DateTime.now(),
+            majorGridLines: const MajorGridLines(width: 0),
+            labelStyle: TextStyle(color: context.theme.primary, fontSize: 12),
+          ),
           primaryYAxis: NumericAxis(
               minimum: 0,
               // When this is 4 (the actual max) the spline curvature can mean that the top of the line can get cut off
@@ -317,7 +328,12 @@ class _EnergyGraph extends StatelessWidget {
       child: SfCartesianChart(
           borderWidth: 0,
           plotAreaBorderWidth: 0,
-          primaryXAxis: DateTimeAxis(),
+          primaryXAxis: DateTimeAxis(
+            desiredIntervals: 6,
+            maximum: DateTime.now(),
+            majorGridLines: const MajorGridLines(width: 0),
+            labelStyle: TextStyle(color: context.theme.primary, fontSize: 12),
+          ),
           primaryYAxis: NumericAxis(
               minimum: 0,
               // When this is 4 (the actual max) the spline curvature can mean that the top of the line can get cut off

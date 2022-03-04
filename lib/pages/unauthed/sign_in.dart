@@ -62,64 +62,66 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          Row(children: const [NavBarBackButton()]),
-          const NavBarTitle(
-            'Sign In',
-          ),
-          const SizedBox(height: 16),
-          if (_signInError != null)
-            GrowIn(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MyText(
-                  _signInError!,
-                  color: Styles.errorRed,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
+    return MyPageScaffold(
+      navigationBar: const MyNavBar(
+        middle: NavBarTitle(
+          'Sign In',
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            if (_signInError != null)
+              GrowIn(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MyText(
+                    _signInError!,
+                    color: Styles.errorRed,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: MyTextFormFieldRow(
+                placeholder: 'Email',
+                keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
+                validator: _validateEmail,
+                autofocus: true,
+                autofillHints: const <String>[AutofillHints.email],
+                backgroundColor: context.theme.cardBackground,
+              ),
             ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyTextFormFieldRow(
-              placeholder: 'Email',
-              keyboardType: TextInputType.emailAddress,
-              controller: _emailController,
-              validator: _validateEmail,
-              autofocus: true,
-              autofillHints: const <String>[AutofillHints.email],
-              backgroundColor: context.theme.background,
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: MyPasswordFieldRow(
+                controller: _passwordController,
+                validator: _validatePassword,
+                autofillHints: const <String>[AutofillHints.password],
+                backgroundColor: context.theme.cardBackground,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: MyPasswordFieldRow(
-              controller: _passwordController,
-              validator: _validatePassword,
-              autofillHints: const <String>[AutofillHints.password],
-              backgroundColor: context.theme.background,
+            const SizedBox(height: 24),
+            PrimaryButton(
+                loading: _signingInUser,
+                onPressed: _signIn,
+                text: 'Sign In',
+                disabled: !_canSubmit()),
+            const SizedBox(height: 12),
+            TextButton(
+              underline: false,
+              onPressed: () =>
+                  context.showBottomSheet(child: const ResetPassword()),
+              text: 'FORGOT PASSWORD',
             ),
-          ),
-          const SizedBox(height: 24),
-          PrimaryButton(
-              loading: _signingInUser,
-              onPressed: _signIn,
-              text: 'Sign In',
-              disabled: !_canSubmit()),
-          const SizedBox(height: 12),
-          TextButton(
-            underline: false,
-            onPressed: () =>
-                context.showBottomSheet(child: const ResetPassword()),
-            text: 'FORGOT PASSWORD',
-          ),
-          const SizedBox(height: 12),
-        ],
+            const SizedBox(height: 12),
+          ],
+        ),
       ),
     );
   }

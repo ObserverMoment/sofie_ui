@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -54,15 +55,6 @@ extension BuildContextExtension on BuildContext {
     final T? res = await Navigator.of(context, rootNavigator: rootNavigator)
         .push(CupertinoPageRoute(
             fullscreenDialog: fullscreenDialog, builder: (context) => child));
-    return res;
-  }
-
-  Future<T?> pushFullscreenDialog<T>(
-      {required Widget child, bool rootNavigator = false}) async {
-    final BuildContext context = this;
-    final T? res = await Navigator.of(context, rootNavigator: rootNavigator)
-        .push(CupertinoPageRoute(
-            fullscreenDialog: true, builder: (context) => child));
     return res;
   }
 
@@ -263,12 +255,22 @@ extension BuildContextExtension on BuildContext {
   //////////////////////////////////////////
   //// Bottom sheets, menus and Actions ////
   //////////////////////////////////////////
+  /// https://stackoverflow.com/questions/53311553/how-to-set-showmodalbottomsheet-to-full-height
   Future<T?> showBottomSheet<T>({
     required Widget child,
+    double heightFactor = 0.9,
   }) async {
-    final BuildContext context = this;
-    final T? res = await Navigator.of(context).push(CupertinoPageRoute(
-        fullscreenDialog: true, builder: (context) => child));
+    final T? res = await material.showModalBottomSheet<T>(
+        backgroundColor: readTheme.background,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        context: this,
+        builder: (context) => Wrap(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: child,
+              )
+            ]));
     return res;
   }
 

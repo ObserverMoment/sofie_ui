@@ -91,7 +91,7 @@ class _DateAndRangePickerDisplayState extends State<DateAndRangePickerDisplay> {
 
   void _openDatePicker(
       DateTime? date, String title, void Function(DateTime) saveDateTime) {
-    context.showActionSheetPopup(
+    context.showBottomSheet(
         child: DateTimePicker(
       title: title,
       dateTime: date,

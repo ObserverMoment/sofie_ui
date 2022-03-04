@@ -34,7 +34,7 @@ class DateTimePickerDisplay extends StatelessWidget {
         super(key: key);
 
   void _openDateTimePicker(BuildContext context, DateTimePickerMode mode) {
-    context.showActionSheetPopup(
+    context.showBottomSheet(
         child: DateTimePicker(
       title: title,
       dateTime: dateTime,
@@ -212,13 +212,11 @@ class _DateTimePickerState extends State<DateTimePicker> {
                 dateTime: _activeDateTime,
                 showDate: widget.showDate,
                 showTime: widget.showTime,
-                contentBoxColor: context.theme.background,
                 onTapDate: () => setState(() => _activePickerIndex = 0),
                 onTapTime: () => setState(() => _activePickerIndex = 1),
                 activePickerIndex: _activePickerIndex),
             const SizedBox(height: 10),
             ContentBox(
-              backgroundColor: context.theme.background,
               child: IndexedStack(
                 index: _activePickerIndex,
                 children: [
@@ -355,7 +353,7 @@ class _DatePickerCalendarState extends State<DatePickerCalendar> {
             index: _activeTabIndex,
             children: [
               Material(
-                color: context.theme.background,
+                color: context.theme.cardBackground,
                 child: TableCalendar(
                     headerVisible: false,
                     onDaySelected: _onDaySelected,
@@ -535,49 +533,45 @@ class _DateRangePickerState extends State<DateRangePicker> {
       validToSave: _inputsValid(),
       cancel: context.pop,
       title: 'Select Date Range',
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
-          children: [
-            ContentBox(
-                backgroundColor: context.theme.background,
-                child: Column(
-                  children: [
-                    DateRangePickerRow(
-                      onTapDate: () => setState(() => _activePickerIndex = 0),
-                      pickerActive: _activePickerIndex == 0,
-                      dateTime: _from,
-                      title: 'Start date',
-                      selectedDateIsValid: _inputsValid(),
-                      clearDateTime: () => _updateFrom(null),
-                    ),
-                    GrowInOut(
-                        show: _activePickerIndex == 0,
-                        child: DatePickerCalendar(
-                            dateTime: _from, updateDateTime: _updateFrom)),
-                  ],
-                )),
-            const SizedBox(height: 12),
-            ContentBox(
-                backgroundColor: context.theme.background,
-                child: Column(
-                  children: [
-                    DateRangePickerRow(
-                      onTapDate: () => setState(() => _activePickerIndex = 1),
-                      pickerActive: _activePickerIndex == 1,
-                      dateTime: _to,
-                      title: 'End date',
-                      selectedDateIsValid: _inputsValid(),
-                      clearDateTime: () => _updateTo(null),
-                    ),
-                    GrowInOut(
-                        show: _activePickerIndex == 1,
-                        child: DatePickerCalendar(
-                            dateTime: _to, updateDateTime: _updateTo)),
-                  ],
-                )),
-          ],
-        ),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          ContentBox(
+              child: Column(
+            children: [
+              DateRangePickerRow(
+                onTapDate: () => setState(() => _activePickerIndex = 0),
+                pickerActive: _activePickerIndex == 0,
+                dateTime: _from,
+                title: 'Start date',
+                selectedDateIsValid: _inputsValid(),
+                clearDateTime: () => _updateFrom(null),
+              ),
+              GrowInOut(
+                  show: _activePickerIndex == 0,
+                  child: DatePickerCalendar(
+                      dateTime: _from, updateDateTime: _updateFrom)),
+            ],
+          )),
+          const SizedBox(height: 12),
+          ContentBox(
+              child: Column(
+            children: [
+              DateRangePickerRow(
+                onTapDate: () => setState(() => _activePickerIndex = 1),
+                pickerActive: _activePickerIndex == 1,
+                dateTime: _to,
+                title: 'End date',
+                selectedDateIsValid: _inputsValid(),
+                clearDateTime: () => _updateTo(null),
+              ),
+              GrowInOut(
+                  show: _activePickerIndex == 1,
+                  child: DatePickerCalendar(
+                      dateTime: _to, updateDateTime: _updateTo)),
+            ],
+          )),
+        ],
       ),
     );
   }

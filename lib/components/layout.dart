@@ -452,7 +452,6 @@ class DialogContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ContentBox(
-            backgroundColor: context.theme.modalBackground,
             child: child,
           ),
         ],

@@ -193,34 +193,35 @@ class TextViewer extends StatelessWidget {
   const TextViewer(this.text, this.title, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    child: const Padding(
-                      padding: EdgeInsets.only(bottom: 16.0, top: 8),
-                      child: Icon(CupertinoIcons.chevron_down),
-                    ),
-                    onTap: context.pop)
-              ],
-            ),
-            H2(title),
-            const SizedBox(height: 16),
-            MyText(
-              text,
-              maxLines: 999,
-              lineHeight: 1.4,
-              size: FONTSIZE.four,
-            ),
+            GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0, top: 8),
+                  child: Icon(
+                    CupertinoIcons.clear_circled_solid,
+                    color: context.theme.primary.withOpacity(0.6),
+                  ),
+                ),
+                onTap: context.pop)
           ],
         ),
-      ),
+        H2(title),
+        const SizedBox(height: 16),
+        SingleChildScrollView(
+          child: MyText(
+            text,
+            maxLines: 999,
+            lineHeight: 1.4,
+            size: FONTSIZE.four,
+          ),
+        ),
+      ],
     );
   }
 }

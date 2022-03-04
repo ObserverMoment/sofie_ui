@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/pages/unauthed/register_details.dart';
 import 'package:sofie_ui/services/debounce.dart';
@@ -87,47 +88,44 @@ class _RegisterBetaTestingState extends State<RegisterBetaTesting> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(children: [
-        Row(children: [
-          CupertinoButton(
-              onPressed: context.pop,
-              child: const Opacity(
-                  opacity: 0.7,
-                  child: Icon(CupertinoIcons.clear_circled_solid))),
-          const NavBarLargeTitle(
-            'Welcome to Sofie Beta!',
-          ),
-        ]),
-        const SizedBox(height: 8),
-        if (_registrationError != null)
-          GrowIn(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MyText(
-                _registrationError!,
-                color: Styles.errorRed,
-                maxLines: 2,
-                textAlign: TextAlign.center,
+    return MyPageScaffold(
+      navigationBar: const MyNavBar(
+        middle: NavBarTitle(
+          'Welcome to Sofie Beta!',
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: [
+          const SizedBox(height: 8),
+          if (_registrationError != null)
+            GrowIn(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: MyText(
+                  _registrationError!,
+                  color: Styles.errorRed,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
+          Expanded(
+            child: RegisterDetails(
+              canSubmit: _canSubmitRegisterDetails,
+              displayNameController: _displayNameController,
+              nameIsValid: _nameIsValid,
+              nameIsAvailable: _nameIsAvailable,
+              passwordController: _passwordController,
+              emailController: _emailController,
+              registerNewUserAndContinue: _registerNewUserAndContinue,
+              validateEmail: _validateEmail,
+              validatePassword: _validatePassword,
+              registeringNewUser: _registeringNewUser,
+            ),
           ),
-        Expanded(
-          child: RegisterDetails(
-            canSubmit: _canSubmitRegisterDetails,
-            displayNameController: _displayNameController,
-            nameIsValid: _nameIsValid,
-            nameIsAvailable: _nameIsAvailable,
-            passwordController: _passwordController,
-            emailController: _emailController,
-            registerNewUserAndContinue: _registerNewUserAndContinue,
-            validateEmail: _validateEmail,
-            validatePassword: _validatePassword,
-            registeringNewUser: _registeringNewUser,
-          ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 }
