@@ -9,7 +9,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/pages/unauthed/register_details.dart';
 import 'package:sofie_ui/services/debounce.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class RegisterBetaTesting extends StatefulWidget {
   const RegisterBetaTesting({Key? key}) : super(key: key);

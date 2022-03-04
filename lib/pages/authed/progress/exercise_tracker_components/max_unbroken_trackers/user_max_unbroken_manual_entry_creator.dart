@@ -9,9 +9,11 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/file_uploading_progress.dart';
 import 'package:sofie_ui/components/media/video/local_video_selector.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/number_input.dart';
 import 'package:sofie_ui/components/user_input/pickers/date_time_pickers.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -19,19 +21,19 @@ import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 
-class UserFastestTimeManualEntryCreator extends StatefulWidget {
-  final UserFastestTimeExerciseTracker parent;
-  const UserFastestTimeManualEntryCreator({
+class UserMaxUnbrokenManualEntryCreator extends StatefulWidget {
+  final UserMaxUnbrokenExerciseTracker parent;
+  const UserMaxUnbrokenManualEntryCreator({
     Key? key,
     required this.parent,
   }) : super(key: key);
   @override
-  _UserFastestTimeManualEntryCreatorState createState() =>
-      _UserFastestTimeManualEntryCreatorState();
+  _UserMaxUnbrokenManualEntryCreatorState createState() =>
+      _UserMaxUnbrokenManualEntryCreatorState();
 }
 
-class _UserFastestTimeManualEntryCreatorState
-    extends State<UserFastestTimeManualEntryCreator> {
+class _UserMaxUnbrokenManualEntryCreatorState
+    extends State<UserMaxUnbrokenManualEntryCreator> {
   bool _loading = false;
   bool _uploadingVideo = false;
   bool _processingVideo = false;
@@ -40,12 +42,27 @@ class _UserFastestTimeManualEntryCreatorState
   String? _uploadedVideoThumbUri;
   final CancelToken _mediaUploadCancelToken = CancelToken();
 
-  Duration? _timetaken;
+  int? _score;
   DateTime _completedOn = DateTime.now();
   String? _localVideoPath;
 
+  final TextEditingController _repsCalsScoreController =
+      TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _repsCalsScoreController.addListener(() {
+      setState(() {
+        _score = Utils.textNotNull(_repsCalsScoreController.text)
+            ? int.parse(_repsCalsScoreController.text)
+            : null;
+      });
+    });
+  }
+
   Future<void> _createManualEntry() async {
-    if (_timetaken == null) {
+    if (_score == null) {
       return;
     }
 
@@ -56,19 +73,19 @@ class _UserFastestTimeManualEntryCreatorState
 
     setState(() => _loading = true);
 
-    final variables = CreateUserFastestTimeTrackerManualEntryArguments(
-        data: CreateUserFastestTimeTrackerManualEntryInput(
+    final variables = CreateUserMaxUnbrokenTrackerManualEntryArguments(
+        data: CreateUserMaxUnbrokenTrackerManualEntryInput(
             completedOn: _completedOn,
             videoUri: _uploadedVideoUri,
             videoThumbUri: _uploadedVideoThumbUri,
-            userFastestTimeExerciseTracker:
+            userMaxUnbrokenExerciseTracker:
                 ConnectRelationInput(id: widget.parent.id),
-            timeTakenMs: _timetaken!.inMilliseconds));
+            score: _score!));
 
     final result = await context.graphQLStore.mutate(
-        mutation: CreateUserFastestTimeTrackerManualEntryMutation(
+        mutation: CreateUserMaxUnbrokenTrackerManualEntryMutation(
             variables: variables),
-        broadcastQueryIds: [GQLOpNames.userFastestTimeExerciseTrackers]);
+        broadcastQueryIds: [GQLOpNames.userMaxUnbrokenExerciseTrackers]);
 
     setState(() => _loading = false);
 
@@ -108,10 +125,58 @@ class _UserFastestTimeManualEntryCreatorState
     }
   }
 
-  bool get _validToSubmit => _timetaken != null;
+  bool get _validToSubmit => _score != null;
+
+  Widget _buildScoreInput() {
+    switch (widget.parent.repType) {
+      case WorkoutMoveRepType.reps:
+      case WorkoutMoveRepType.calories:
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MyNumberInput(
+              _repsCalsScoreController,
+              allowDouble: true,
+              autoFocus: true,
+            ),
+            const SizedBox(height: 8),
+            MyText(
+              widget.parent.repType.display.toUpperCase(),
+              size: FONTSIZE.four,
+            ),
+          ],
+        );
+      case WorkoutMoveRepType.time:
+        return DurationPickerDisplay(
+          updateDuration: (d) => setState(() => _score = d.inMilliseconds),
+          duration: _score != null ? Duration(milliseconds: _score!) : null,
+          iconSize: 28,
+          fontSize: FONTSIZE.eight,
+        );
+      case WorkoutMoveRepType.distance:
+        return Column(children: [
+          MyNumberInput(
+            _repsCalsScoreController,
+            allowDouble: true,
+            autoFocus: true,
+          ),
+          const SizedBox(height: 8),
+          MyText(
+            widget.parent.distanceUnit.display.toUpperCase(),
+            size: FONTSIZE.four,
+          ),
+        ]);
+
+      default:
+        throw Exception(
+            'UserMaxUnbrokenManualEntryCreator._buildScoreInput: No builder specified for ${widget.parent.repType}');
+    }
+  }
 
   @override
   void dispose() {
+    _repsCalsScoreController.dispose();
+
     /// If user bails out then cancel the upload.
     if (!_mediaUploadCancelToken.isCanceled) {
       _mediaUploadCancelToken.cancel();
@@ -126,7 +191,7 @@ class _UserFastestTimeManualEntryCreatorState
     return MyPageScaffold(
       navigationBar: MyNavBar(
         withoutLeading: _uploadingVideo || _processingVideo,
-        middle: const NavBarTitle('Submit Fastest Time'),
+        middle: const NavBarTitle('Submit Unbroken Time'),
         trailing: _loading || _uploadingVideo || _processingVideo
             ? const NavBarLoadingIndicator()
             : _validToSubmit
@@ -156,14 +221,11 @@ class _UserFastestTimeManualEntryCreatorState
               child: Column(
             children: [
               const MyText(
-                'How Fast?',
+                'Unbroken for',
               ),
-              const SizedBox(height: 8),
-              DurationPickerDisplay(
-                updateDuration: (d) => setState(() => _timetaken = d),
-                duration: _timetaken,
-                iconSize: 28,
-                fontSize: FONTSIZE.eight,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: _buildScoreInput(),
               ),
             ],
           )),

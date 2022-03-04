@@ -8,9 +8,9 @@ import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/main.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/fastest_time_trackers/user_fastest_time_exercise_trackers.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_load_tracker/user_max_load_exercise_trackers.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_unbroken_trackers/user_max_unbroken_exercise_tracker.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/fastest_time_trackers/user_fastest_time_exercise_display_widget.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_load_tracker/user_max_load_exercise_display_widget.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_unbroken_trackers/user_max_unbroken_exercise_display_widget.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class PersonalScoresPage extends StatelessWidget {
@@ -63,14 +63,21 @@ class _TrackersUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final noTrackers = context.select<ExerciseTrackersBloc, bool>((b) =>
-        b.userMaxLoadExerciseTrackers.isEmpty &&
-        b.userFastestTimeExerciseTrackers.isEmpty &&
-        b.userMaxUnbrokenExerciseTrackers.isEmpty);
+    final userMaxLoadExerciseTrackers =
+        context.select<ExerciseTrackersBloc, List<UserMaxLoadExerciseTracker>>(
+            (b) => b.userMaxLoadExerciseTrackers);
 
-    final loggedWorkouts =
-        context.select<ExerciseTrackersBloc, List<LoggedWorkout>>(
-            (b) => b.loggedWorkouts);
+    final userFastestTimeExerciseTrackers = context
+        .select<ExerciseTrackersBloc, List<UserFastestTimeExerciseTracker>>(
+            (b) => b.userFastestTimeExerciseTrackers);
+
+    final userMaxUnbrokenExerciseTrackers = context
+        .select<ExerciseTrackersBloc, List<UserMaxUnbrokenExerciseTracker>>(
+            (b) => b.userMaxUnbrokenExerciseTrackers);
+
+    final noTrackers = userMaxLoadExerciseTrackers.isEmpty &&
+        userFastestTimeExerciseTrackers.isEmpty &&
+        userMaxUnbrokenExerciseTrackers.isEmpty;
 
     return MyPageScaffold(
         child: NestedScrollView(
@@ -103,21 +110,21 @@ class _TrackersUI extends StatelessWidget {
                               horizontal: 16, vertical: 11),
                           onTap: () => _openCreateTrackerSelectType(context))
                     ],
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      children: [
-                        UserMaxLoadExerciseTrackers(
-                          loggedWorkouts: loggedWorkouts,
-                        ),
-                        UserFastestTimeExerciseTrackers(
-                          loggedWorkouts: loggedWorkouts,
-                        ),
-                        UserMaxUnbrokenExerciseTrackers(
-                          loggedWorkouts: loggedWorkouts,
-                        ),
-                      ],
-                    ),
+                    child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        padding: const EdgeInsets.only(
+                            left: 8, right: 8, top: 4, bottom: 80),
+                        shrinkWrap: true,
+                        children: [
+                          ...userMaxLoadExerciseTrackers.map(
+                              (t) => MaxLoadExerciseDisplayWidget(tracker: t)),
+                          ...userFastestTimeExerciseTrackers.map((t) =>
+                              FastestTimeExerciseDisplayWidget(tracker: t)),
+                          ...userMaxUnbrokenExerciseTrackers.map((t) =>
+                              MaxUnbrokenExerciseDisplayWidget(tracker: t)),
+                        ]),
                   )));
   }
 }

@@ -6262,11 +6262,11 @@ UserMaxUnbrokenExerciseTracker _$UserMaxUnbrokenExerciseTrackerFromJson(
       ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
       ..repType = $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
           unknownValue: WorkoutMoveRepType.artemisUnknown)
-      ..distanceUnit = $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
-          unknownValue: DistanceUnit.artemisUnknown)
       ..loadAmount = (json['loadAmount'] as num).toDouble()
       ..loadUnit = $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
           unknownValue: LoadUnit.artemisUnknown)
+      ..distanceUnit = $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+          unknownValue: DistanceUnit.artemisUnknown)
       ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
       ..equipment = json['Equipment'] == null
           ? null
@@ -6283,31 +6283,28 @@ Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackerToJson(
       'id': instance.id,
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
-      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
       'loadAmount': instance.loadAmount,
       'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
       'Move': instance.move.toJson(),
       'Equipment': instance.equipment?.toJson(),
       'ManualEntries': instance.manualEntries.map((e) => e.toJson()).toList(),
     };
 
-UserMaxUnbrokenExerciseTrackers$Query
-    _$UserMaxUnbrokenExerciseTrackers$QueryFromJson(
+DeleteUserMaxUnbrokenTrackerManualEntry$Mutation
+    _$DeleteUserMaxUnbrokenTrackerManualEntry$MutationFromJson(
             Map<String, dynamic> json) =>
-        UserMaxUnbrokenExerciseTrackers$Query()
-          ..userMaxUnbrokenExerciseTrackers =
-              (json['userMaxUnbrokenExerciseTrackers'] as List<dynamic>)
-                  .map((e) => UserMaxUnbrokenExerciseTracker.fromJson(
-                      e as Map<String, dynamic>))
-                  .toList();
+        DeleteUserMaxUnbrokenTrackerManualEntry$Mutation()
+          ..deleteUserMaxUnbrokenTrackerManualEntry =
+              UserMaxUnbrokenExerciseTracker.fromJson(
+                  json['deleteUserMaxUnbrokenTrackerManualEntry']
+                      as Map<String, dynamic>);
 
-Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackers$QueryToJson(
-        UserMaxUnbrokenExerciseTrackers$Query instance) =>
+Map<String, dynamic> _$DeleteUserMaxUnbrokenTrackerManualEntry$MutationToJson(
+        DeleteUserMaxUnbrokenTrackerManualEntry$Mutation instance) =>
     <String, dynamic>{
-      'userMaxUnbrokenExerciseTrackers': instance
-          .userMaxUnbrokenExerciseTrackers
-          .map((e) => e.toJson())
-          .toList(),
+      'deleteUserMaxUnbrokenTrackerManualEntry':
+          instance.deleteUserMaxUnbrokenTrackerManualEntry.toJson(),
     };
 
 UserMaxLoadTrackerManualEntry _$UserMaxLoadTrackerManualEntryFromJson(
@@ -6365,20 +6362,100 @@ Map<String, dynamic> _$UserMaxLoadExerciseTrackerToJson(
       'ManualEntries': instance.manualEntries.map((e) => e.toJson()).toList(),
     };
 
-UserMaxLoadExerciseTrackers$Query _$UserMaxLoadExerciseTrackers$QueryFromJson(
-        Map<String, dynamic> json) =>
-    UserMaxLoadExerciseTrackers$Query()
-      ..userMaxLoadExerciseTrackers = (json['userMaxLoadExerciseTrackers']
-              as List<dynamic>)
-          .map((e) =>
-              UserMaxLoadExerciseTracker.fromJson(e as Map<String, dynamic>))
-          .toList();
+CreateUserMaxLoadTrackerManualEntry$Mutation
+    _$CreateUserMaxLoadTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadTrackerManualEntry$Mutation()
+          ..createUserMaxLoadTrackerManualEntry =
+              UserMaxLoadExerciseTracker.fromJson(
+                  json['createUserMaxLoadTrackerManualEntry']
+                      as Map<String, dynamic>);
 
-Map<String, dynamic> _$UserMaxLoadExerciseTrackers$QueryToJson(
-        UserMaxLoadExerciseTrackers$Query instance) =>
+Map<String, dynamic> _$CreateUserMaxLoadTrackerManualEntry$MutationToJson(
+        CreateUserMaxLoadTrackerManualEntry$Mutation instance) =>
     <String, dynamic>{
-      'userMaxLoadExerciseTrackers':
-          instance.userMaxLoadExerciseTrackers.map((e) => e.toJson()).toList(),
+      'createUserMaxLoadTrackerManualEntry':
+          instance.createUserMaxLoadTrackerManualEntry.toJson(),
+    };
+
+CreateUserMaxLoadTrackerManualEntryInput
+    _$CreateUserMaxLoadTrackerManualEntryInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadTrackerManualEntryInput(
+          userMaxLoadExerciseTracker: ConnectRelationInput.fromJson(
+              json['UserMaxLoadExerciseTracker'] as Map<String, dynamic>),
+          completedOn:
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
+          loadAmount: (json['loadAmount'] as num).toDouble(),
+          videoThumbUri: json['videoThumbUri'] as String?,
+          videoUri: json['videoUri'] as String?,
+        );
+
+Map<String, dynamic> _$CreateUserMaxLoadTrackerManualEntryInputToJson(
+        CreateUserMaxLoadTrackerManualEntryInput instance) =>
+    <String, dynamic>{
+      'UserMaxLoadExerciseTracker':
+          instance.userMaxLoadExerciseTracker.toJson(),
+      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+      'loadAmount': instance.loadAmount,
+      'videoThumbUri': instance.videoThumbUri,
+      'videoUri': instance.videoUri,
+    };
+
+DeleteUserMaxLoadTrackerManualEntry$Mutation
+    _$DeleteUserMaxLoadTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxLoadTrackerManualEntry$Mutation()
+          ..deleteUserMaxLoadTrackerManualEntry =
+              UserMaxLoadExerciseTracker.fromJson(
+                  json['deleteUserMaxLoadTrackerManualEntry']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$DeleteUserMaxLoadTrackerManualEntry$MutationToJson(
+        DeleteUserMaxLoadTrackerManualEntry$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserMaxLoadTrackerManualEntry':
+          instance.deleteUserMaxLoadTrackerManualEntry.toJson(),
+    };
+
+CreateUserMaxUnbrokenTrackerManualEntry$Mutation
+    _$CreateUserMaxUnbrokenTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenTrackerManualEntry$Mutation()
+          ..createUserMaxUnbrokenTrackerManualEntry =
+              UserMaxUnbrokenExerciseTracker.fromJson(
+                  json['createUserMaxUnbrokenTrackerManualEntry']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenTrackerManualEntry$MutationToJson(
+        CreateUserMaxUnbrokenTrackerManualEntry$Mutation instance) =>
+    <String, dynamic>{
+      'createUserMaxUnbrokenTrackerManualEntry':
+          instance.createUserMaxUnbrokenTrackerManualEntry.toJson(),
+    };
+
+CreateUserMaxUnbrokenTrackerManualEntryInput
+    _$CreateUserMaxUnbrokenTrackerManualEntryInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenTrackerManualEntryInput(
+          userMaxUnbrokenExerciseTracker: ConnectRelationInput.fromJson(
+              json['UserMaxUnbrokenExerciseTracker'] as Map<String, dynamic>),
+          completedOn:
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
+          score: json['score'] as int,
+          videoThumbUri: json['videoThumbUri'] as String?,
+          videoUri: json['videoUri'] as String?,
+        );
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenTrackerManualEntryInputToJson(
+        CreateUserMaxUnbrokenTrackerManualEntryInput instance) =>
+    <String, dynamic>{
+      'UserMaxUnbrokenExerciseTracker':
+          instance.userMaxUnbrokenExerciseTracker.toJson(),
+      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+      'score': instance.score,
+      'videoThumbUri': instance.videoThumbUri,
+      'videoUri': instance.videoUri,
     };
 
 UserFastestTimeTrackerManualEntry _$UserFastestTimeTrackerManualEntryFromJson(
@@ -6442,6 +6519,273 @@ Map<String, dynamic> _$UserFastestTimeExerciseTrackerToJson(
       'Move': instance.move.toJson(),
       'Equipment': instance.equipment?.toJson(),
       'ManualEntries': instance.manualEntries.map((e) => e.toJson()).toList(),
+    };
+
+CreateUserFastestTimeTrackerManualEntry$Mutation
+    _$CreateUserFastestTimeTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeTrackerManualEntry$Mutation()
+          ..createUserFastestTimeTrackerManualEntry =
+              UserFastestTimeExerciseTracker.fromJson(
+                  json['createUserFastestTimeTrackerManualEntry']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserFastestTimeTrackerManualEntry$MutationToJson(
+        CreateUserFastestTimeTrackerManualEntry$Mutation instance) =>
+    <String, dynamic>{
+      'createUserFastestTimeTrackerManualEntry':
+          instance.createUserFastestTimeTrackerManualEntry.toJson(),
+    };
+
+CreateUserFastestTimeTrackerManualEntryInput
+    _$CreateUserFastestTimeTrackerManualEntryInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeTrackerManualEntryInput(
+          userFastestTimeExerciseTracker: ConnectRelationInput.fromJson(
+              json['UserFastestTimeExerciseTracker'] as Map<String, dynamic>),
+          completedOn:
+              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
+          timeTakenMs: json['timeTakenMs'] as int,
+          videoThumbUri: json['videoThumbUri'] as String?,
+          videoUri: json['videoUri'] as String?,
+        );
+
+Map<String, dynamic> _$CreateUserFastestTimeTrackerManualEntryInputToJson(
+        CreateUserFastestTimeTrackerManualEntryInput instance) =>
+    <String, dynamic>{
+      'UserFastestTimeExerciseTracker':
+          instance.userFastestTimeExerciseTracker.toJson(),
+      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
+      'timeTakenMs': instance.timeTakenMs,
+      'videoThumbUri': instance.videoThumbUri,
+      'videoUri': instance.videoUri,
+    };
+
+DeleteUserFastestTimeTrackerManualEntry$Mutation
+    _$DeleteUserFastestTimeTrackerManualEntry$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserFastestTimeTrackerManualEntry$Mutation()
+          ..deleteUserFastestTimeTrackerManualEntry =
+              UserFastestTimeExerciseTracker.fromJson(
+                  json['deleteUserFastestTimeTrackerManualEntry']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$DeleteUserFastestTimeTrackerManualEntry$MutationToJson(
+        DeleteUserFastestTimeTrackerManualEntry$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserFastestTimeTrackerManualEntry':
+          instance.deleteUserFastestTimeTrackerManualEntry.toJson(),
+    };
+
+CreateUserMaxUnbrokenExerciseTracker$Mutation
+    _$CreateUserMaxUnbrokenExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenExerciseTracker$Mutation()
+          ..createUserMaxUnbrokenExerciseTracker =
+              UserMaxUnbrokenExerciseTracker.fromJson(
+                  json['createUserMaxUnbrokenExerciseTracker']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTracker$MutationToJson(
+        CreateUserMaxUnbrokenExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserMaxUnbrokenExerciseTracker':
+          instance.createUserMaxUnbrokenExerciseTracker.toJson(),
+    };
+
+CreateUserMaxUnbrokenExerciseTrackerInput
+    _$CreateUserMaxUnbrokenExerciseTrackerInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenExerciseTrackerInput(
+          equipment: json['Equipment'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['Equipment'] as Map<String, dynamic>),
+          move: ConnectRelationInput.fromJson(
+              json['Move'] as Map<String, dynamic>),
+          distanceUnit: $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+              unknownValue: DistanceUnit.artemisUnknown),
+          loadAmount: (json['loadAmount'] as num).toDouble(),
+          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+              unknownValue: LoadUnit.artemisUnknown),
+          repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+              unknownValue: WorkoutMoveRepType.artemisUnknown),
+        );
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTrackerInputToJson(
+        CreateUserMaxUnbrokenExerciseTrackerInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+    };
+
+CreateUserFastestTimeExerciseTracker$Mutation
+    _$CreateUserFastestTimeExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeExerciseTracker$Mutation()
+          ..createUserFastestTimeExerciseTracker =
+              UserFastestTimeExerciseTracker.fromJson(
+                  json['createUserFastestTimeExerciseTracker']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserFastestTimeExerciseTracker$MutationToJson(
+        CreateUserFastestTimeExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserFastestTimeExerciseTracker':
+          instance.createUserFastestTimeExerciseTracker.toJson(),
+    };
+
+CreateUserFastestTimeExerciseTrackerInput
+    _$CreateUserFastestTimeExerciseTrackerInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeExerciseTrackerInput(
+          equipment: json['Equipment'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['Equipment'] as Map<String, dynamic>),
+          move: ConnectRelationInput.fromJson(
+              json['Move'] as Map<String, dynamic>),
+          distanceUnit: $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
+              unknownValue: DistanceUnit.artemisUnknown),
+          loadAmount: (json['loadAmount'] as num).toDouble(),
+          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+              unknownValue: LoadUnit.artemisUnknown),
+          repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
+              unknownValue: WorkoutMoveRepType.artemisUnknown),
+          reps: (json['reps'] as num).toDouble(),
+        );
+
+Map<String, dynamic> _$CreateUserFastestTimeExerciseTrackerInputToJson(
+        CreateUserFastestTimeExerciseTrackerInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
+      'loadAmount': instance.loadAmount,
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
+      'reps': instance.reps,
+    };
+
+CreateUserMaxLoadExerciseTracker$Mutation
+    _$CreateUserMaxLoadExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadExerciseTracker$Mutation()
+          ..createUserMaxLoadExerciseTracker =
+              UserMaxLoadExerciseTracker.fromJson(
+                  json['createUserMaxLoadExerciseTracker']
+                      as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateUserMaxLoadExerciseTracker$MutationToJson(
+        CreateUserMaxLoadExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'createUserMaxLoadExerciseTracker':
+          instance.createUserMaxLoadExerciseTracker.toJson(),
+    };
+
+CreateUserMaxLoadExerciseTrackerInput
+    _$CreateUserMaxLoadExerciseTrackerInputFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadExerciseTrackerInput(
+          equipment: json['Equipment'] == null
+              ? null
+              : ConnectRelationInput.fromJson(
+                  json['Equipment'] as Map<String, dynamic>),
+          move: ConnectRelationInput.fromJson(
+              json['Move'] as Map<String, dynamic>),
+          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
+              unknownValue: LoadUnit.artemisUnknown),
+          reps: json['reps'] as int,
+        );
+
+Map<String, dynamic> _$CreateUserMaxLoadExerciseTrackerInputToJson(
+        CreateUserMaxLoadExerciseTrackerInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
+      'reps': instance.reps,
+    };
+
+DeleteUserMaxLoadExerciseTracker$Mutation
+    _$DeleteUserMaxLoadExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxLoadExerciseTracker$Mutation()
+          ..deleteUserMaxLoadExerciseTracker =
+              json['deleteUserMaxLoadExerciseTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserMaxLoadExerciseTracker$MutationToJson(
+        DeleteUserMaxLoadExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserMaxLoadExerciseTracker':
+          instance.deleteUserMaxLoadExerciseTracker,
+    };
+
+DeleteUserMaxUnbrokenExerciseTracker$Mutation
+    _$DeleteUserMaxUnbrokenExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxUnbrokenExerciseTracker$Mutation()
+          ..deleteUserMaxUnbrokenExerciseTracker =
+              json['deleteUserMaxUnbrokenExerciseTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserMaxUnbrokenExerciseTracker$MutationToJson(
+        DeleteUserMaxUnbrokenExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserMaxUnbrokenExerciseTracker':
+          instance.deleteUserMaxUnbrokenExerciseTracker,
+    };
+
+DeleteUserFastestTimeExerciseTracker$Mutation
+    _$DeleteUserFastestTimeExerciseTracker$MutationFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserFastestTimeExerciseTracker$Mutation()
+          ..deleteUserFastestTimeExerciseTracker =
+              json['deleteUserFastestTimeExerciseTracker'] as String;
+
+Map<String, dynamic> _$DeleteUserFastestTimeExerciseTracker$MutationToJson(
+        DeleteUserFastestTimeExerciseTracker$Mutation instance) =>
+    <String, dynamic>{
+      'deleteUserFastestTimeExerciseTracker':
+          instance.deleteUserFastestTimeExerciseTracker,
+    };
+
+UserMaxUnbrokenExerciseTrackers$Query
+    _$UserMaxUnbrokenExerciseTrackers$QueryFromJson(
+            Map<String, dynamic> json) =>
+        UserMaxUnbrokenExerciseTrackers$Query()
+          ..userMaxUnbrokenExerciseTrackers =
+              (json['userMaxUnbrokenExerciseTrackers'] as List<dynamic>)
+                  .map((e) => UserMaxUnbrokenExerciseTracker.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList();
+
+Map<String, dynamic> _$UserMaxUnbrokenExerciseTrackers$QueryToJson(
+        UserMaxUnbrokenExerciseTrackers$Query instance) =>
+    <String, dynamic>{
+      'userMaxUnbrokenExerciseTrackers': instance
+          .userMaxUnbrokenExerciseTrackers
+          .map((e) => e.toJson())
+          .toList(),
+    };
+
+UserMaxLoadExerciseTrackers$Query _$UserMaxLoadExerciseTrackers$QueryFromJson(
+        Map<String, dynamic> json) =>
+    UserMaxLoadExerciseTrackers$Query()
+      ..userMaxLoadExerciseTrackers = (json['userMaxLoadExerciseTrackers']
+              as List<dynamic>)
+          .map((e) =>
+              UserMaxLoadExerciseTracker.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+Map<String, dynamic> _$UserMaxLoadExerciseTrackers$QueryToJson(
+        UserMaxLoadExerciseTrackers$Query instance) =>
+    <String, dynamic>{
+      'userMaxLoadExerciseTrackers':
+          instance.userMaxLoadExerciseTrackers.map((e) => e.toJson()).toList(),
     };
 
 UserFastestTimeExerciseTrackers$Query
@@ -6904,350 +7248,6 @@ Map<String, dynamic> _$CreateClubInviteTokenInputToJson(
       'clubId': instance.clubId,
       'inviteLimit': instance.inviteLimit,
       'name': instance.name,
-    };
-
-DeleteUserMaxUnbrokenTrackerManualEntry$Mutation
-    _$DeleteUserMaxUnbrokenTrackerManualEntry$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxUnbrokenTrackerManualEntry$Mutation()
-          ..deleteUserMaxUnbrokenTrackerManualEntry =
-              UserMaxUnbrokenExerciseTracker.fromJson(
-                  json['deleteUserMaxUnbrokenTrackerManualEntry']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$DeleteUserMaxUnbrokenTrackerManualEntry$MutationToJson(
-        DeleteUserMaxUnbrokenTrackerManualEntry$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserMaxUnbrokenTrackerManualEntry':
-          instance.deleteUserMaxUnbrokenTrackerManualEntry.toJson(),
-    };
-
-CreateUserMaxLoadTrackerManualEntry$Mutation
-    _$CreateUserMaxLoadTrackerManualEntry$MutationFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxLoadTrackerManualEntry$Mutation()
-          ..createUserMaxLoadTrackerManualEntry =
-              UserMaxLoadExerciseTracker.fromJson(
-                  json['createUserMaxLoadTrackerManualEntry']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserMaxLoadTrackerManualEntry$MutationToJson(
-        CreateUserMaxLoadTrackerManualEntry$Mutation instance) =>
-    <String, dynamic>{
-      'createUserMaxLoadTrackerManualEntry':
-          instance.createUserMaxLoadTrackerManualEntry.toJson(),
-    };
-
-CreateUserMaxLoadTrackerManualEntryInput
-    _$CreateUserMaxLoadTrackerManualEntryInputFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxLoadTrackerManualEntryInput(
-          userMaxLoadExerciseTracker: ConnectRelationInput.fromJson(
-              json['UserMaxLoadExerciseTracker'] as Map<String, dynamic>),
-          completedOn:
-              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
-          loadAmount: (json['loadAmount'] as num).toDouble(),
-          videoThumbUri: json['videoThumbUri'] as String?,
-          videoUri: json['videoUri'] as String?,
-        );
-
-Map<String, dynamic> _$CreateUserMaxLoadTrackerManualEntryInputToJson(
-        CreateUserMaxLoadTrackerManualEntryInput instance) =>
-    <String, dynamic>{
-      'UserMaxLoadExerciseTracker':
-          instance.userMaxLoadExerciseTracker.toJson(),
-      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
-      'loadAmount': instance.loadAmount,
-      'videoThumbUri': instance.videoThumbUri,
-      'videoUri': instance.videoUri,
-    };
-
-DeleteUserMaxLoadTrackerManualEntry$Mutation
-    _$DeleteUserMaxLoadTrackerManualEntry$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxLoadTrackerManualEntry$Mutation()
-          ..deleteUserMaxLoadTrackerManualEntry =
-              UserMaxLoadExerciseTracker.fromJson(
-                  json['deleteUserMaxLoadTrackerManualEntry']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$DeleteUserMaxLoadTrackerManualEntry$MutationToJson(
-        DeleteUserMaxLoadTrackerManualEntry$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserMaxLoadTrackerManualEntry':
-          instance.deleteUserMaxLoadTrackerManualEntry.toJson(),
-    };
-
-CreateUserMaxUnbrokenTrackerManualEntry$Mutation
-    _$CreateUserMaxUnbrokenTrackerManualEntry$MutationFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxUnbrokenTrackerManualEntry$Mutation()
-          ..createUserMaxUnbrokenTrackerManualEntry =
-              UserMaxUnbrokenExerciseTracker.fromJson(
-                  json['createUserMaxUnbrokenTrackerManualEntry']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserMaxUnbrokenTrackerManualEntry$MutationToJson(
-        CreateUserMaxUnbrokenTrackerManualEntry$Mutation instance) =>
-    <String, dynamic>{
-      'createUserMaxUnbrokenTrackerManualEntry':
-          instance.createUserMaxUnbrokenTrackerManualEntry.toJson(),
-    };
-
-CreateUserMaxUnbrokenTrackerManualEntryInput
-    _$CreateUserMaxUnbrokenTrackerManualEntryInputFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxUnbrokenTrackerManualEntryInput(
-          userMaxUnbrokenExerciseTracker: ConnectRelationInput.fromJson(
-              json['UserMaxUnbrokenExerciseTracker'] as Map<String, dynamic>),
-          completedOn:
-              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
-          score: json['score'] as int,
-          videoThumbUri: json['videoThumbUri'] as String?,
-          videoUri: json['videoUri'] as String?,
-        );
-
-Map<String, dynamic> _$CreateUserMaxUnbrokenTrackerManualEntryInputToJson(
-        CreateUserMaxUnbrokenTrackerManualEntryInput instance) =>
-    <String, dynamic>{
-      'UserMaxUnbrokenExerciseTracker':
-          instance.userMaxUnbrokenExerciseTracker.toJson(),
-      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
-      'score': instance.score,
-      'videoThumbUri': instance.videoThumbUri,
-      'videoUri': instance.videoUri,
-    };
-
-CreateUserFastestTimeTrackerManualEntry$Mutation
-    _$CreateUserFastestTimeTrackerManualEntry$MutationFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserFastestTimeTrackerManualEntry$Mutation()
-          ..createUserFastestTimeTrackerManualEntry =
-              UserFastestTimeExerciseTracker.fromJson(
-                  json['createUserFastestTimeTrackerManualEntry']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserFastestTimeTrackerManualEntry$MutationToJson(
-        CreateUserFastestTimeTrackerManualEntry$Mutation instance) =>
-    <String, dynamic>{
-      'createUserFastestTimeTrackerManualEntry':
-          instance.createUserFastestTimeTrackerManualEntry.toJson(),
-    };
-
-CreateUserFastestTimeTrackerManualEntryInput
-    _$CreateUserFastestTimeTrackerManualEntryInputFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserFastestTimeTrackerManualEntryInput(
-          userFastestTimeExerciseTracker: ConnectRelationInput.fromJson(
-              json['UserFastestTimeExerciseTracker'] as Map<String, dynamic>),
-          completedOn:
-              fromGraphQLDateTimeToDartDateTime(json['completedOn'] as int),
-          timeTakenMs: json['timeTakenMs'] as int,
-          videoThumbUri: json['videoThumbUri'] as String?,
-          videoUri: json['videoUri'] as String?,
-        );
-
-Map<String, dynamic> _$CreateUserFastestTimeTrackerManualEntryInputToJson(
-        CreateUserFastestTimeTrackerManualEntryInput instance) =>
-    <String, dynamic>{
-      'UserFastestTimeExerciseTracker':
-          instance.userFastestTimeExerciseTracker.toJson(),
-      'completedOn': fromDartDateTimeToGraphQLDateTime(instance.completedOn),
-      'timeTakenMs': instance.timeTakenMs,
-      'videoThumbUri': instance.videoThumbUri,
-      'videoUri': instance.videoUri,
-    };
-
-DeleteUserFastestTimeTrackerManualEntry$Mutation
-    _$DeleteUserFastestTimeTrackerManualEntry$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserFastestTimeTrackerManualEntry$Mutation()
-          ..deleteUserFastestTimeTrackerManualEntry =
-              UserFastestTimeExerciseTracker.fromJson(
-                  json['deleteUserFastestTimeTrackerManualEntry']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$DeleteUserFastestTimeTrackerManualEntry$MutationToJson(
-        DeleteUserFastestTimeTrackerManualEntry$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserFastestTimeTrackerManualEntry':
-          instance.deleteUserFastestTimeTrackerManualEntry.toJson(),
-    };
-
-CreateUserMaxUnbrokenExerciseTracker$Mutation
-    _$CreateUserMaxUnbrokenExerciseTracker$MutationFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxUnbrokenExerciseTracker$Mutation()
-          ..createUserMaxUnbrokenExerciseTracker =
-              UserMaxUnbrokenExerciseTracker.fromJson(
-                  json['createUserMaxUnbrokenExerciseTracker']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTracker$MutationToJson(
-        CreateUserMaxUnbrokenExerciseTracker$Mutation instance) =>
-    <String, dynamic>{
-      'createUserMaxUnbrokenExerciseTracker':
-          instance.createUserMaxUnbrokenExerciseTracker.toJson(),
-    };
-
-CreateUserMaxUnbrokenExerciseTrackerInput
-    _$CreateUserMaxUnbrokenExerciseTrackerInputFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxUnbrokenExerciseTrackerInput(
-          equipment: json['Equipment'] == null
-              ? null
-              : ConnectRelationInput.fromJson(
-                  json['Equipment'] as Map<String, dynamic>),
-          move: ConnectRelationInput.fromJson(
-              json['Move'] as Map<String, dynamic>),
-          distanceUnit: $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
-              unknownValue: DistanceUnit.artemisUnknown),
-          loadAmount: (json['loadAmount'] as num).toDouble(),
-          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
-              unknownValue: LoadUnit.artemisUnknown),
-          repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
-              unknownValue: WorkoutMoveRepType.artemisUnknown),
-        );
-
-Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTrackerInputToJson(
-        CreateUserMaxUnbrokenExerciseTrackerInput instance) =>
-    <String, dynamic>{
-      'Equipment': instance.equipment?.toJson(),
-      'Move': instance.move.toJson(),
-      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
-      'loadAmount': instance.loadAmount,
-      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
-      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
-    };
-
-CreateUserFastestTimeExerciseTracker$Mutation
-    _$CreateUserFastestTimeExerciseTracker$MutationFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserFastestTimeExerciseTracker$Mutation()
-          ..createUserFastestTimeExerciseTracker =
-              UserFastestTimeExerciseTracker.fromJson(
-                  json['createUserFastestTimeExerciseTracker']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserFastestTimeExerciseTracker$MutationToJson(
-        CreateUserFastestTimeExerciseTracker$Mutation instance) =>
-    <String, dynamic>{
-      'createUserFastestTimeExerciseTracker':
-          instance.createUserFastestTimeExerciseTracker.toJson(),
-    };
-
-CreateUserFastestTimeExerciseTrackerInput
-    _$CreateUserFastestTimeExerciseTrackerInputFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserFastestTimeExerciseTrackerInput(
-          equipment: json['Equipment'] == null
-              ? null
-              : ConnectRelationInput.fromJson(
-                  json['Equipment'] as Map<String, dynamic>),
-          move: ConnectRelationInput.fromJson(
-              json['Move'] as Map<String, dynamic>),
-          distanceUnit: $enumDecode(_$DistanceUnitEnumMap, json['distanceUnit'],
-              unknownValue: DistanceUnit.artemisUnknown),
-          loadAmount: (json['loadAmount'] as num).toDouble(),
-          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
-              unknownValue: LoadUnit.artemisUnknown),
-          repType: $enumDecode(_$WorkoutMoveRepTypeEnumMap, json['repType'],
-              unknownValue: WorkoutMoveRepType.artemisUnknown),
-          reps: (json['reps'] as num).toDouble(),
-        );
-
-Map<String, dynamic> _$CreateUserFastestTimeExerciseTrackerInputToJson(
-        CreateUserFastestTimeExerciseTrackerInput instance) =>
-    <String, dynamic>{
-      'Equipment': instance.equipment?.toJson(),
-      'Move': instance.move.toJson(),
-      'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
-      'loadAmount': instance.loadAmount,
-      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
-      'repType': _$WorkoutMoveRepTypeEnumMap[instance.repType],
-      'reps': instance.reps,
-    };
-
-CreateUserMaxLoadExerciseTracker$Mutation
-    _$CreateUserMaxLoadExerciseTracker$MutationFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxLoadExerciseTracker$Mutation()
-          ..createUserMaxLoadExerciseTracker =
-              UserMaxLoadExerciseTracker.fromJson(
-                  json['createUserMaxLoadExerciseTracker']
-                      as Map<String, dynamic>);
-
-Map<String, dynamic> _$CreateUserMaxLoadExerciseTracker$MutationToJson(
-        CreateUserMaxLoadExerciseTracker$Mutation instance) =>
-    <String, dynamic>{
-      'createUserMaxLoadExerciseTracker':
-          instance.createUserMaxLoadExerciseTracker.toJson(),
-    };
-
-CreateUserMaxLoadExerciseTrackerInput
-    _$CreateUserMaxLoadExerciseTrackerInputFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxLoadExerciseTrackerInput(
-          equipment: json['Equipment'] == null
-              ? null
-              : ConnectRelationInput.fromJson(
-                  json['Equipment'] as Map<String, dynamic>),
-          move: ConnectRelationInput.fromJson(
-              json['Move'] as Map<String, dynamic>),
-          loadUnit: $enumDecode(_$LoadUnitEnumMap, json['loadUnit'],
-              unknownValue: LoadUnit.artemisUnknown),
-          reps: json['reps'] as int,
-        );
-
-Map<String, dynamic> _$CreateUserMaxLoadExerciseTrackerInputToJson(
-        CreateUserMaxLoadExerciseTrackerInput instance) =>
-    <String, dynamic>{
-      'Equipment': instance.equipment?.toJson(),
-      'Move': instance.move.toJson(),
-      'loadUnit': _$LoadUnitEnumMap[instance.loadUnit],
-      'reps': instance.reps,
-    };
-
-DeleteUserMaxLoadExerciseTracker$Mutation
-    _$DeleteUserMaxLoadExerciseTracker$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxLoadExerciseTracker$Mutation()
-          ..deleteUserMaxLoadExerciseTracker =
-              json['deleteUserMaxLoadExerciseTracker'] as String;
-
-Map<String, dynamic> _$DeleteUserMaxLoadExerciseTracker$MutationToJson(
-        DeleteUserMaxLoadExerciseTracker$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserMaxLoadExerciseTracker':
-          instance.deleteUserMaxLoadExerciseTracker,
-    };
-
-DeleteUserMaxUnbrokenExerciseTracker$Mutation
-    _$DeleteUserMaxUnbrokenExerciseTracker$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxUnbrokenExerciseTracker$Mutation()
-          ..deleteUserMaxUnbrokenExerciseTracker =
-              json['deleteUserMaxUnbrokenExerciseTracker'] as String;
-
-Map<String, dynamic> _$DeleteUserMaxUnbrokenExerciseTracker$MutationToJson(
-        DeleteUserMaxUnbrokenExerciseTracker$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserMaxUnbrokenExerciseTracker':
-          instance.deleteUserMaxUnbrokenExerciseTracker,
-    };
-
-DeleteUserFastestTimeExerciseTracker$Mutation
-    _$DeleteUserFastestTimeExerciseTracker$MutationFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserFastestTimeExerciseTracker$Mutation()
-          ..deleteUserFastestTimeExerciseTracker =
-              json['deleteUserFastestTimeExerciseTracker'] as String;
-
-Map<String, dynamic> _$DeleteUserFastestTimeExerciseTracker$MutationToJson(
-        DeleteUserFastestTimeExerciseTracker$Mutation instance) =>
-    <String, dynamic>{
-      'deleteUserFastestTimeExerciseTracker':
-          instance.deleteUserFastestTimeExerciseTracker,
     };
 
 ClubChatSummaryArguments _$ClubChatSummaryArgumentsFromJson(
@@ -8988,6 +8988,174 @@ Map<String, dynamic> _$ClubMemberNotesArgumentsToJson(
       'take': instance.take,
     };
 
+DeleteUserMaxUnbrokenTrackerManualEntryArguments
+    _$DeleteUserMaxUnbrokenTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxUnbrokenTrackerManualEntryArguments(
+          entryId: json['entryId'] as String,
+          parentId: json['parentId'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserMaxUnbrokenTrackerManualEntryArgumentsToJson(
+        DeleteUserMaxUnbrokenTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'entryId': instance.entryId,
+      'parentId': instance.parentId,
+    };
+
+CreateUserMaxLoadTrackerManualEntryArguments
+    _$CreateUserMaxLoadTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadTrackerManualEntryArguments(
+          data: CreateUserMaxLoadTrackerManualEntryInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserMaxLoadTrackerManualEntryArgumentsToJson(
+        CreateUserMaxLoadTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteUserMaxLoadTrackerManualEntryArguments
+    _$DeleteUserMaxLoadTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxLoadTrackerManualEntryArguments(
+          entryId: json['entryId'] as String,
+          parentId: json['parentId'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserMaxLoadTrackerManualEntryArgumentsToJson(
+        DeleteUserMaxLoadTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'entryId': instance.entryId,
+      'parentId': instance.parentId,
+    };
+
+CreateUserMaxUnbrokenTrackerManualEntryArguments
+    _$CreateUserMaxUnbrokenTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenTrackerManualEntryArguments(
+          data: CreateUserMaxUnbrokenTrackerManualEntryInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenTrackerManualEntryArgumentsToJson(
+        CreateUserMaxUnbrokenTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserFastestTimeTrackerManualEntryArguments
+    _$CreateUserFastestTimeTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeTrackerManualEntryArguments(
+          data: CreateUserFastestTimeTrackerManualEntryInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserFastestTimeTrackerManualEntryArgumentsToJson(
+        CreateUserFastestTimeTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteUserFastestTimeTrackerManualEntryArguments
+    _$DeleteUserFastestTimeTrackerManualEntryArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserFastestTimeTrackerManualEntryArguments(
+          entryId: json['entryId'] as String,
+          parentId: json['parentId'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserFastestTimeTrackerManualEntryArgumentsToJson(
+        DeleteUserFastestTimeTrackerManualEntryArguments instance) =>
+    <String, dynamic>{
+      'entryId': instance.entryId,
+      'parentId': instance.parentId,
+    };
+
+CreateUserMaxUnbrokenExerciseTrackerArguments
+    _$CreateUserMaxUnbrokenExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxUnbrokenExerciseTrackerArguments(
+          data: CreateUserMaxUnbrokenExerciseTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTrackerArgumentsToJson(
+        CreateUserMaxUnbrokenExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserFastestTimeExerciseTrackerArguments
+    _$CreateUserFastestTimeExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserFastestTimeExerciseTrackerArguments(
+          data: CreateUserFastestTimeExerciseTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserFastestTimeExerciseTrackerArgumentsToJson(
+        CreateUserFastestTimeExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateUserMaxLoadExerciseTrackerArguments
+    _$CreateUserMaxLoadExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        CreateUserMaxLoadExerciseTrackerArguments(
+          data: CreateUserMaxLoadExerciseTrackerInput.fromJson(
+              json['data'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$CreateUserMaxLoadExerciseTrackerArgumentsToJson(
+        CreateUserMaxLoadExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteUserMaxLoadExerciseTrackerArguments
+    _$DeleteUserMaxLoadExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxLoadExerciseTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserMaxLoadExerciseTrackerArgumentsToJson(
+        DeleteUserMaxLoadExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DeleteUserMaxUnbrokenExerciseTrackerArguments
+    _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserMaxUnbrokenExerciseTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsToJson(
+        DeleteUserMaxUnbrokenExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DeleteUserFastestTimeExerciseTrackerArguments
+    _$DeleteUserFastestTimeExerciseTrackerArgumentsFromJson(
+            Map<String, dynamic> json) =>
+        DeleteUserFastestTimeExerciseTrackerArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DeleteUserFastestTimeExerciseTrackerArgumentsToJson(
+        DeleteUserFastestTimeExerciseTrackerArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
 RemoveDocumentFromSkillArguments _$RemoveDocumentFromSkillArgumentsFromJson(
         Map<String, dynamic> json) =>
     RemoveDocumentFromSkillArguments(
@@ -9203,172 +9371,4 @@ Map<String, dynamic> _$CreateClubInviteTokenArgumentsToJson(
         CreateClubInviteTokenArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
-    };
-
-DeleteUserMaxUnbrokenTrackerManualEntryArguments
-    _$DeleteUserMaxUnbrokenTrackerManualEntryArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxUnbrokenTrackerManualEntryArguments(
-          entryId: json['entryId'] as String,
-          parentId: json['parentId'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserMaxUnbrokenTrackerManualEntryArgumentsToJson(
-        DeleteUserMaxUnbrokenTrackerManualEntryArguments instance) =>
-    <String, dynamic>{
-      'entryId': instance.entryId,
-      'parentId': instance.parentId,
-    };
-
-CreateUserMaxLoadTrackerManualEntryArguments
-    _$CreateUserMaxLoadTrackerManualEntryArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxLoadTrackerManualEntryArguments(
-          data: CreateUserMaxLoadTrackerManualEntryInput.fromJson(
-              json['data'] as Map<String, dynamic>),
-        );
-
-Map<String, dynamic> _$CreateUserMaxLoadTrackerManualEntryArgumentsToJson(
-        CreateUserMaxLoadTrackerManualEntryArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-DeleteUserMaxLoadTrackerManualEntryArguments
-    _$DeleteUserMaxLoadTrackerManualEntryArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxLoadTrackerManualEntryArguments(
-          entryId: json['entryId'] as String,
-          parentId: json['parentId'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserMaxLoadTrackerManualEntryArgumentsToJson(
-        DeleteUserMaxLoadTrackerManualEntryArguments instance) =>
-    <String, dynamic>{
-      'entryId': instance.entryId,
-      'parentId': instance.parentId,
-    };
-
-CreateUserMaxUnbrokenTrackerManualEntryArguments
-    _$CreateUserMaxUnbrokenTrackerManualEntryArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxUnbrokenTrackerManualEntryArguments(
-          data: CreateUserMaxUnbrokenTrackerManualEntryInput.fromJson(
-              json['data'] as Map<String, dynamic>),
-        );
-
-Map<String, dynamic> _$CreateUserMaxUnbrokenTrackerManualEntryArgumentsToJson(
-        CreateUserMaxUnbrokenTrackerManualEntryArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-CreateUserFastestTimeTrackerManualEntryArguments
-    _$CreateUserFastestTimeTrackerManualEntryArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserFastestTimeTrackerManualEntryArguments(
-          data: CreateUserFastestTimeTrackerManualEntryInput.fromJson(
-              json['data'] as Map<String, dynamic>),
-        );
-
-Map<String, dynamic> _$CreateUserFastestTimeTrackerManualEntryArgumentsToJson(
-        CreateUserFastestTimeTrackerManualEntryArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-DeleteUserFastestTimeTrackerManualEntryArguments
-    _$DeleteUserFastestTimeTrackerManualEntryArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserFastestTimeTrackerManualEntryArguments(
-          entryId: json['entryId'] as String,
-          parentId: json['parentId'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserFastestTimeTrackerManualEntryArgumentsToJson(
-        DeleteUserFastestTimeTrackerManualEntryArguments instance) =>
-    <String, dynamic>{
-      'entryId': instance.entryId,
-      'parentId': instance.parentId,
-    };
-
-CreateUserMaxUnbrokenExerciseTrackerArguments
-    _$CreateUserMaxUnbrokenExerciseTrackerArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxUnbrokenExerciseTrackerArguments(
-          data: CreateUserMaxUnbrokenExerciseTrackerInput.fromJson(
-              json['data'] as Map<String, dynamic>),
-        );
-
-Map<String, dynamic> _$CreateUserMaxUnbrokenExerciseTrackerArgumentsToJson(
-        CreateUserMaxUnbrokenExerciseTrackerArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-CreateUserFastestTimeExerciseTrackerArguments
-    _$CreateUserFastestTimeExerciseTrackerArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserFastestTimeExerciseTrackerArguments(
-          data: CreateUserFastestTimeExerciseTrackerInput.fromJson(
-              json['data'] as Map<String, dynamic>),
-        );
-
-Map<String, dynamic> _$CreateUserFastestTimeExerciseTrackerArgumentsToJson(
-        CreateUserFastestTimeExerciseTrackerArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-CreateUserMaxLoadExerciseTrackerArguments
-    _$CreateUserMaxLoadExerciseTrackerArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        CreateUserMaxLoadExerciseTrackerArguments(
-          data: CreateUserMaxLoadExerciseTrackerInput.fromJson(
-              json['data'] as Map<String, dynamic>),
-        );
-
-Map<String, dynamic> _$CreateUserMaxLoadExerciseTrackerArgumentsToJson(
-        CreateUserMaxLoadExerciseTrackerArguments instance) =>
-    <String, dynamic>{
-      'data': instance.data.toJson(),
-    };
-
-DeleteUserMaxLoadExerciseTrackerArguments
-    _$DeleteUserMaxLoadExerciseTrackerArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxLoadExerciseTrackerArguments(
-          id: json['id'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserMaxLoadExerciseTrackerArgumentsToJson(
-        DeleteUserMaxLoadExerciseTrackerArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-DeleteUserMaxUnbrokenExerciseTrackerArguments
-    _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserMaxUnbrokenExerciseTrackerArguments(
-          id: json['id'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserMaxUnbrokenExerciseTrackerArgumentsToJson(
-        DeleteUserMaxUnbrokenExerciseTrackerArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
-
-DeleteUserFastestTimeExerciseTrackerArguments
-    _$DeleteUserFastestTimeExerciseTrackerArgumentsFromJson(
-            Map<String, dynamic> json) =>
-        DeleteUserFastestTimeExerciseTrackerArguments(
-          id: json['id'] as String,
-        );
-
-Map<String, dynamic> _$DeleteUserFastestTimeExerciseTrackerArgumentsToJson(
-        DeleteUserFastestTimeExerciseTrackerArguments instance) =>
-    <String, dynamic>{
-      'id': instance.id,
     };

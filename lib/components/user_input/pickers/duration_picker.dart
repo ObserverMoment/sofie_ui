@@ -11,11 +11,17 @@ class DurationPickerDisplay extends StatelessWidget {
   final String modalTitle;
   final Duration? duration;
   final void Function(Duration duration) updateDuration;
+  final double iconSize;
+  final FONTSIZE fontSize;
+  final Color? color;
   const DurationPickerDisplay(
       {Key? key,
       required this.updateDuration,
       this.duration,
-      this.modalTitle = 'Enter Duration'})
+      this.modalTitle = 'Enter Duration',
+      this.iconSize = 20,
+      this.fontSize = FONTSIZE.four,
+      this.color})
       : super(key: key);
 
   @override
@@ -30,6 +36,9 @@ class DurationPickerDisplay extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: CompactTimerIcon(
         duration: duration,
+        iconSize: iconSize,
+        color: color,
+        fontSize: fontSize,
       ),
     );
   }

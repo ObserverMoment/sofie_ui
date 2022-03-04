@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
@@ -91,7 +92,7 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
             onPressed: () => _confirmDeleteTracker(context, tracker)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 14),
           Padding(
@@ -156,7 +157,6 @@ class _MaxLiftProgressGraph extends StatelessWidget {
     final labelStyle = TextStyle(color: context.theme.primary, fontSize: 10);
 
     return Container(
-      width: MediaQuery.of(context).size.width * 0.6,
       padding: const EdgeInsets.only(right: 10.0),
       child: SfCartesianChart(
           enableAxisAnimation: false,
@@ -201,23 +201,17 @@ class _TopTenScoresList extends StatelessWidget {
       {Key? key, required this.scores, required this.tracker})
       : super(key: key);
 
-  void _confirmDeleteManualEntry(
+  Future<void> _confirmDeleteManualEntry(
     BuildContext context,
     String entryId,
-  ) {
-    context.showConfirmDeleteDialog(
-        message:
-            'This will delete the score entry and also any video that has been uploaded. Ok?',
-        itemType: 'Score Tracker Entry',
-        onConfirm: () async {
-          final result = await context.graphQLStore.mutate(
-              mutation: DeleteUserMaxLoadTrackerManualEntryMutation(
-                  variables: DeleteUserMaxLoadTrackerManualEntryArguments(
-                      entryId: entryId, parentId: tracker.id)),
-              broadcastQueryIds: [GQLOpNames.userMaxLoadExerciseTrackers]);
+  ) async {
+    final result = await context.graphQLStore.mutate(
+        mutation: DeleteUserMaxLoadTrackerManualEntryMutation(
+            variables: DeleteUserMaxLoadTrackerManualEntryArguments(
+                entryId: entryId, parentId: tracker.id)),
+        broadcastQueryIds: [GQLOpNames.userMaxLoadExerciseTrackers]);
 
-          checkOperationResult(context, result);
-        });
+    checkOperationResult(context, result);
   }
 
   @override
@@ -227,104 +221,113 @@ class _TopTenScoresList extends StatelessWidget {
         .reversed
         .take(10);
 
-    final buttonTagColor = context.theme.background.withOpacity(0.5);
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
       child: Column(
         children: topTenScores
-            .map((s) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6.0),
-                  child: ContentBox(
-                      child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          ContentBox(
-                            borderRadius: 30,
-                            backgroundColor:
-                                context.theme.background.withOpacity(0.2),
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MyText(
-                                  s.loadAmount.stringMyDouble(),
-                                  color: Styles.primaryAccent,
-                                  size: FONTSIZE.six,
-                                ),
-                                const SizedBox(width: 2),
-                                MyText(
-                                  tracker.loadUnit.display,
-                                  color: Styles.primaryAccent,
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          if (Utils.textNotNull(s.loggedWorkoutId))
-                            TertiaryButton(
-                                fontSize: FONTSIZE.one,
-                                iconSize: 14,
-                                backgroundColor: buttonTagColor,
-                                suffixIconData: CupertinoIcons.chevron_right,
-                                text: 'View Log',
-                                onPressed: () => context.navigateTo(
-                                    LoggedWorkoutDetailsRoute(
-                                        id: s.loggedWorkoutId!))),
-                          if (Utils.textNotNull(s.videoUri))
-                            TertiaryButton(
-                                fontSize: FONTSIZE.one,
-                                iconSize: 14,
-                                backgroundColor: buttonTagColor,
-                                suffixIconData: CupertinoIcons.tv,
-                                text: 'View Video',
-                                onPressed: () =>
-                                    VideoSetupManager.openFullScreenVideoPlayer(
-                                        context: context,
-                                        videoUri: s.videoUri!)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          if (s.manualEntryId != null)
-                            IconButton(
-                                iconData: CupertinoIcons.trash,
-                                size: 20,
-                                onPressed: () => _confirmDeleteManualEntry(
-                                    context, s.manualEntryId!)),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              MyText(
-                                s.completedOn.compactDateString,
-                                size: FONTSIZE.two,
-                              ),
-                              const SizedBox(height: 2),
-                              MyText(
-                                s.completedOn.timeString,
-                                size: FONTSIZE.one,
-                              ),
-                              if (s.manualEntryId != null)
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 2.0),
-                                  child: MyText(
-                                    'Submitted Manually',
-                                    size: FONTSIZE.zero,
-                                    color: Styles.primaryAccent,
-                                  ),
-                                )
-                            ],
-                          ),
-                        ],
-                      )
-                    ],
-                  )),
-                ))
+            .mapIndexed((i, s) => s.manualEntryId != null
+                ? AnimatedSlidable(
+                    index: i,
+                    itemType: 'Max Lift Score',
+                    key: Key(s.manualEntryId!),
+                    removeItem: (int index) =>
+                        _confirmDeleteManualEntry(context, s.manualEntryId!),
+                    secondaryActions: const [],
+                    child: _SingleEntryDisplay(tracker: tracker, score: s))
+                : _SingleEntryDisplay(tracker: tracker, score: s))
             .toList(),
       ),
+    );
+  }
+}
+
+class _SingleEntryDisplay extends StatelessWidget {
+  final UserMaxLoadExerciseTracker tracker;
+  final MaxLoadScoreWithCompletedOnDate score;
+  const _SingleEntryDisplay(
+      {Key? key, required this.tracker, required this.score})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final buttonTagColor = context.theme.background.withOpacity(0.5);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6.0),
+      child: ContentBox(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              ContentBox(
+                borderRadius: 30,
+                backgroundColor: context.theme.background.withOpacity(0.2),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MyText(
+                      score.loadAmount.stringMyDouble(),
+                      color: Styles.primaryAccent,
+                      size: FONTSIZE.six,
+                    ),
+                    const SizedBox(width: 2),
+                    MyText(
+                      tracker.loadUnit.display,
+                      color: Styles.primaryAccent,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              if (Utils.textNotNull(score.loggedWorkoutId))
+                TertiaryButton(
+                    fontSize: FONTSIZE.one,
+                    iconSize: 14,
+                    backgroundColor: buttonTagColor,
+                    suffixIconData: CupertinoIcons.chevron_right,
+                    text: 'View Log',
+                    onPressed: () => context.navigateTo(
+                        LoggedWorkoutDetailsRoute(id: score.loggedWorkoutId!))),
+              if (Utils.textNotNull(score.videoUri))
+                TertiaryButton(
+                    fontSize: FONTSIZE.one,
+                    iconSize: 14,
+                    backgroundColor: buttonTagColor,
+                    suffixIconData: CupertinoIcons.tv,
+                    text: 'View Video',
+                    onPressed: () =>
+                        VideoSetupManager.openFullScreenVideoPlayer(
+                            context: context, videoUri: score.videoUri!)),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              MyText(
+                score.completedOn.compactDateString,
+                size: FONTSIZE.two,
+              ),
+              const SizedBox(height: 2),
+              MyText(
+                score.completedOn.timeString,
+                size: FONTSIZE.one,
+              ),
+              if (score.manualEntryId != null)
+                const Padding(
+                  padding: EdgeInsets.only(top: 2.0),
+                  child: MyText(
+                    'Submitted Manually',
+                    size: FONTSIZE.zero,
+                    color: Styles.primaryAccent,
+                  ),
+                )
+            ],
+          )
+        ],
+      )),
     );
   }
 }

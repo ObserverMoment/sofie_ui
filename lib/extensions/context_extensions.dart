@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
@@ -258,19 +260,28 @@ extension BuildContextExtension on BuildContext {
   /// https://stackoverflow.com/questions/53311553/how-to-set-showmodalbottomsheet-to-full-height
   Future<T?> showBottomSheet<T>({
     required Widget child,
-    double heightFactor = 0.9,
   }) async {
     final T? res = await material.showModalBottomSheet<T>(
-        backgroundColor: readTheme.background,
+        backgroundColor: material.Colors.transparent,
         isScrollControlled: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         context: this,
-        builder: (context) => Wrap(children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: child,
-              )
-            ]));
+        builder: (context) => BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: context.readTheme.background,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16))),
+                child: Wrap(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 16),
+                    child: child,
+                  )
+                ]),
+              ),
+            ));
     return res;
   }
 
@@ -284,6 +295,7 @@ extension BuildContextExtension on BuildContext {
     final BuildContext context = this;
 
     await showCupertinoModalPopup(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         context: context,
         useRootNavigator: useRootNavigator,
         builder: (context) => CupertinoActionSheet(

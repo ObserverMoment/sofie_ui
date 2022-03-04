@@ -13,7 +13,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/fastest_time_trackers/user_fastest_time_manual_entry_creator.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_unbroken_trackers/user_max_unbroken_manual_entry_creator.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -21,26 +21,26 @@ import 'package:supercharged/supercharged.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 
-class UserFastestTimeTrackerDetails extends StatelessWidget {
+class UserMaxUnbrokenTrackerDetails extends StatelessWidget {
   final String trackerId;
-  const UserFastestTimeTrackerDetails({Key? key, required this.trackerId})
+  const UserMaxUnbrokenTrackerDetails({Key? key, required this.trackerId})
       : super(key: key);
 
   Future<void> _confirmDeleteTracker(
-      BuildContext context, UserFastestTimeExerciseTracker tracker) async {
+      BuildContext context, UserMaxUnbrokenExerciseTracker tracker) async {
     context.showConfirmDeleteDialog(
         message:
             'Deleting this tracker will also delete all manual entries that you have previously submitted. This cannot be undone. OK?',
         itemType: 'Score Tracker',
         onConfirm: () async {
           final result = await context.graphQLStore.delete(
-              mutation: DeleteUserFastestTimeExerciseTrackerMutation(
-                  variables: DeleteUserFastestTimeExerciseTrackerArguments(
+              mutation: DeleteUserMaxUnbrokenExerciseTrackerMutation(
+                  variables: DeleteUserMaxUnbrokenExerciseTrackerArguments(
                       id: tracker.id)),
               objectId: tracker.id,
-              typename: kUserFastestTimeExerciseTracker,
+              typename: kUserMaxUnbrokenExerciseTracker,
               removeRefFromQueries: [
-                GQLOpNames.userFastestTimeExerciseTrackers
+                GQLOpNames.userMaxUnbrokenExerciseTrackers
               ]);
 
           checkOperationResult(context, result, onSuccess: context.pop);
@@ -48,9 +48,9 @@ class UserFastestTimeTrackerDetails extends StatelessWidget {
   }
 
   Future<void> _submitManualEntry(
-      BuildContext context, UserFastestTimeExerciseTracker tracker) async {
+      BuildContext context, UserMaxUnbrokenExerciseTracker tracker) async {
     context.push(
-        child: UserFastestTimeManualEntryCreator(
+        child: UserMaxUnbrokenManualEntryCreator(
       parent: tracker,
     ));
   }
@@ -58,8 +58,8 @@ class UserFastestTimeTrackerDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tracker =
-        context.select<ExerciseTrackersBloc, UserFastestTimeExerciseTracker?>(
-            (b) => b.userFastestTimeExerciseTrackers
+        context.select<ExerciseTrackersBloc, UserMaxUnbrokenExerciseTracker?>(
+            (b) => b.userMaxUnbrokenExerciseTrackers
                 .firstWhereOrNull((t) => t.id == trackerId));
 
     /// It has probably been deleted so this page will pop shortly.
@@ -105,7 +105,7 @@ class UserFastestTimeTrackerDetails extends StatelessWidget {
               child: ListView(
                 shrinkWrap: true,
                 children: [
-                  _FastestTimesProgressGraph(
+                  _MaxUnbrokensProgressGraph(
                     tracker: tracker,
                   ),
                   _TopTenScoresList(
@@ -121,7 +121,7 @@ class UserFastestTimeTrackerDetails extends StatelessWidget {
 }
 
 class _ExerciseDefinition extends StatelessWidget {
-  final UserFastestTimeExerciseTracker tracker;
+  final UserMaxUnbrokenExerciseTracker tracker;
   const _ExerciseDefinition({Key? key, required this.tracker})
       : super(key: key);
 
@@ -178,34 +178,45 @@ class _ExerciseDefinition extends StatelessWidget {
                 ],
               ),
             ),
-          MyHeaderText(
-            '${tracker.reps.stringMyDouble()} ${tracker.repType.display}',
-            size: FONTSIZE.two,
-            weight: FontWeight.normal,
-          ),
         ],
       ),
     );
   }
 }
 
-class _FastestTimesProgressGraph extends StatelessWidget {
-  final UserFastestTimeExerciseTracker tracker;
-  const _FastestTimesProgressGraph({Key? key, required this.tracker})
+class _MaxUnbrokensProgressGraph extends StatelessWidget {
+  final UserMaxUnbrokenExerciseTracker tracker;
+  const _MaxUnbrokensProgressGraph({Key? key, required this.tracker})
       : super(key: key);
 
   double get _yAxisPadPercentRange => 0.15;
 
+  String _buildMarkerLabel(UserMaxUnbrokenTrackerManualEntry entry) {
+    switch (tracker.repType) {
+      case WorkoutMoveRepType.reps:
+      case WorkoutMoveRepType.calories:
+        return entry.score.toString();
+      case WorkoutMoveRepType.time:
+        return Duration(milliseconds: entry.score).compactDisplay;
+      case WorkoutMoveRepType.distance:
+        return '${entry.score} ${tracker.distanceUnit.shortDisplay.toUpperCase()}';
+
+      default:
+        throw Exception(
+            'UserMaxUnbrokenTrackerDetails._MaxUnbrokensProgressGraph._buildMarkerLabel: No builder provided for ${tracker.repType}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final labelStyle = TextStyle(color: context.theme.primary, fontSize: 10);
-    final timesMs = tracker.manualEntries.map((e) => e.timeTakenMs);
+    final scores = tracker.manualEntries.map((e) => e.score);
 
-    final minTimeMs = timesMs.min() ?? 0.0;
-    final maxTimeMs = timesMs.max();
+    final minScore = scores.min() ?? 0.0;
+    final maxScore = scores.max();
 
     /// Use this to add some padding to the numeric axis - based on a percantage of the range.
-    final range = maxTimeMs != null ? maxTimeMs - minTimeMs : null;
+    final range = maxScore != null ? maxScore - minScore : null;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -221,39 +232,38 @@ class _FastestTimesProgressGraph extends StatelessWidget {
               rangePadding: ChartRangePadding.additional,
               isVisible: false,
               minimum: range != null
-                  ? (minTimeMs - range * _yAxisPadPercentRange)
-                      .clamp(0.0, minTimeMs)
+                  ? (minScore - range * _yAxisPadPercentRange)
+                      .clamp(0.0, minScore)
                       .toDouble()
-                  : minTimeMs - 1000,
-              maximum: (maxTimeMs != null && range != null)
-                  ? (maxTimeMs + range * _yAxisPadPercentRange)
+                  : minScore - 1000,
+              maximum: (maxScore != null && range != null)
+                  ? (maxScore + range * _yAxisPadPercentRange)
                   : null),
           primaryXAxis: DateTimeAxis(
               labelStyle: labelStyle,
               majorGridLines: const MajorGridLines(width: 0)),
           series: <ChartSeries>[
-            LineSeries<UserFastestTimeTrackerManualEntry, DateTime>(
+            LineSeries<UserMaxUnbrokenTrackerManualEntry, DateTime>(
               markerSettings: MarkerSettings(
                   width: 10,
                   height: 10,
                   isVisible: true,
                   color: context.theme.background),
+              dataLabelMapper: (entry, _) => _buildMarkerLabel(entry),
               dataLabelSettings: DataLabelSettings(
                   margin: EdgeInsets.zero,
                   textStyle:
                       TextStyle(color: context.theme.primary, fontSize: 12),
                   isVisible: true),
-              dataLabelMapper: (datum, index) =>
-                  Duration(milliseconds: datum.timeTakenMs).compactDisplay,
               dataSource: tracker.manualEntries.sorted((a, b) {
                 if (a.completedOn == b.completedOn) {
-                  return b.timeTakenMs.compareTo(a.timeTakenMs);
+                  return a.score.compareTo(b.score);
                 } else {
                   return a.completedOn.compareTo(b.completedOn);
                 }
               }),
               xValueMapper: (e, _) => e.completedOn,
-              yValueMapper: (e, _) => e.timeTakenMs,
+              yValueMapper: (e, _) => e.score,
               color: Styles.primaryAccent,
             )
           ]),
@@ -262,7 +272,7 @@ class _FastestTimesProgressGraph extends StatelessWidget {
 }
 
 class _TopTenScoresList extends StatelessWidget {
-  final UserFastestTimeExerciseTracker tracker;
+  final UserMaxUnbrokenExerciseTracker tracker;
   const _TopTenScoresList({Key? key, required this.tracker}) : super(key: key);
 
   Future<void> _confirmDeleteManualEntry(
@@ -270,18 +280,60 @@ class _TopTenScoresList extends StatelessWidget {
     String entryId,
   ) async {
     final result = await context.graphQLStore.mutate(
-        mutation: DeleteUserFastestTimeTrackerManualEntryMutation(
-            variables: DeleteUserFastestTimeTrackerManualEntryArguments(
+        mutation: DeleteUserMaxUnbrokenTrackerManualEntryMutation(
+            variables: DeleteUserMaxUnbrokenTrackerManualEntryArguments(
                 entryId: entryId, parentId: tracker.id)),
-        broadcastQueryIds: [GQLOpNames.userFastestTimeExerciseTrackers]);
+        broadcastQueryIds: [GQLOpNames.userMaxUnbrokenExerciseTrackers]);
 
     checkOperationResult(context, result);
+  }
+
+  /// Very simlar / duplicated (diff font sizes) in [ExerciseDisplayWidget]
+  Widget _buildScoreDisplay(UserMaxUnbrokenTrackerManualEntry entry) {
+    switch (tracker.repType) {
+      case WorkoutMoveRepType.reps:
+      case WorkoutMoveRepType.calories:
+        return Row(children: [
+          MyText(
+            entry.score.toString(),
+            size: FONTSIZE.six,
+            color: Styles.primaryAccent,
+          ),
+          const SizedBox(width: 6),
+          MyText(
+            tracker.repType.display.toUpperCase(),
+            color: Styles.primaryAccent,
+          ),
+        ]);
+      case WorkoutMoveRepType.time:
+        return MyText(
+          Duration(milliseconds: entry.score).compactDisplay,
+          size: FONTSIZE.six,
+          color: Styles.primaryAccent,
+        );
+      case WorkoutMoveRepType.distance:
+        return Row(children: [
+          MyText(
+            entry.score.toString(),
+            size: FONTSIZE.six,
+            color: Styles.primaryAccent,
+          ),
+          const SizedBox(width: 6),
+          MyText(
+            tracker.distanceUnit.shortDisplay.toUpperCase(),
+            color: Styles.primaryAccent,
+          ),
+        ]);
+      default:
+        throw Exception(
+            'UserMaxUnbrokenTrackerDetails._TopTenScoresList._buildScoreDisplay: No builder provided for ${tracker.repType}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final topTenScores =
-        tracker.manualEntries.sortedBy<num>((e) => e.timeTakenMs).take(10);
+        tracker.manualEntries.sortedBy<num>((e) => e.score).reversed.take(10);
 
     final buttonTagColor = context.theme.background.withOpacity(0.5);
 
@@ -291,7 +343,7 @@ class _TopTenScoresList extends StatelessWidget {
         children: topTenScores
             .mapIndexed((i, e) => AnimatedSlidable(
                   index: i,
-                  itemType: 'Fastest Time Score',
+                  itemType: 'Max Unbroken Score',
                   key: Key(e.id),
                   removeItem: (int index) =>
                       _confirmDeleteManualEntry(context, e.id),
@@ -310,12 +362,7 @@ class _TopTenScoresList extends StatelessWidget {
                                   context.theme.background.withOpacity(0.2),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 6, horizontal: 10),
-                              child: MyText(
-                                Duration(milliseconds: e.timeTakenMs)
-                                    .compactDisplay,
-                                size: FONTSIZE.six,
-                                color: Styles.primaryAccent,
-                              ),
+                              child: _buildScoreDisplay(e),
                             ),
                             const SizedBox(width: 8),
                             if (Utils.textNotNull(e.videoUri))

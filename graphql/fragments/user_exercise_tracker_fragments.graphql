@@ -42,9 +42,9 @@ fragment UserMaxUnbrokenExerciseTracker on UserMaxUnbrokenExerciseTracker {
   id
   createdAt
   repType
-  distanceUnit
   loadAmount
   loadUnit
+  distanceUnit
 }
 
 fragment UserMaxUnbrokenTrackerManualEntry on UserMaxUnbrokenTrackerManualEntry {

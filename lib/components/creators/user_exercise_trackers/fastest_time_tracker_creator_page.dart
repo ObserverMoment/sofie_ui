@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_move_creator.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -96,9 +95,9 @@ class FastestTimeTrackerCreatorPageState
         ),
         child: _workoutMove == null
             ? YourContentEmptyPlaceholder(
-                message: 'Track Fastest Time Score Progress!',
+                message: 'Track Fastest Time Scores!',
                 explainer:
-                    'Specify exercise, distance or reps, and any equipment. For e.g. "400m sprint, 1000m row, 100 burpees with 10kg vest". Anything that you log during a workout will be automatically submitted!',
+                    'Specify exercise, distance or reps, and any equipment. For e.g. "400m sprint, 1000m row, 100 burpees with 10kg vest"',
                 showIcon: false,
                 actions: [
                     EmptyPlaceholderAction(
@@ -136,12 +135,7 @@ class _WorkoutMoveForTrackerDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showLoad = Utils.hasLoad(workoutMove.loadAmount) &&
-        (workoutMove.equipment != null &&
-                workoutMove.equipment!.loadAdjustable ||
-            workoutMove.move.requiredEquipments.isNotEmpty &&
-                workoutMove.move.requiredEquipments
-                    .any((e) => e.loadAdjustable));
+    final showLoad = workoutMove.loadAdjustable;
 
     return ContentBox(
       child: Column(

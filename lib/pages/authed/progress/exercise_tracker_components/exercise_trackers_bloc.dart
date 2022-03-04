@@ -8,6 +8,8 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 
 /// Bloc that manages all the data needed to display the three types of exercise trackers, plus the log history data that they need.
+/// [userMaxLoadExerciseTrackers] search log history for heaviest lifts + accept manual input.
+/// [userFastestTimeExerciseTrackers] and [userMaxUnbrokenExerciseTrackers] currently (March 2022) only accept manual input.
 class ExerciseTrackersBloc extends ChangeNotifier {
   List<LoggedWorkout> loggedWorkouts = [];
 
@@ -66,20 +68,15 @@ class ExerciseTrackersBloc extends ChangeNotifier {
         fetchPolicy: QueryFetchPolicy.storeFirst,
         garbageCollectAfterFetch: false);
 
-    /// TODO: The same for FastestTime and MaxUnbroken
     _convertAllMaxLoadScoresFromLogHistory();
-    // convertAllMaxLoadScoresFromLogHistory();
-    // convertAllMaxLoadScoresFromLogHistory();
 
     _userLoggedWorkoutsQueryListener =
         _userLoggedWorkoutsQuery.subject.listen((value) {
       if (!value.hasErrors && value.data != null) {
         loggedWorkouts = [...value.data!.userLoggedWorkouts];
 
-        /// TODO: The same for FastestTime and MaxUnbroken
         _convertAllMaxLoadScoresFromLogHistory();
-        // convertAllMaxLoadScoresFromLogHistory();
-        // convertAllMaxLoadScoresFromLogHistory();
+
         notifyListeners();
       }
     });
@@ -264,39 +261,6 @@ class MaxLoadScoreWithCompletedOnDate
   int compareTo(MaxLoadScoreWithCompletedOnDate other) {
     if (loadAmount != other.loadAmount) {
       return loadAmount.compareTo(other.loadAmount);
-    } else {
-      return completedOn.compareTo(other.completedOn);
-    }
-  }
-}
-
-class FastestTimeScoreWithCompletedOnDate
-    implements Comparable<FastestTimeScoreWithCompletedOnDate> {
-  DateTime completedOn;
-  WorkoutMove workoutMove;
-  int timeTakenMs;
-  String? videoUri;
-  String? videoThumbUri;
-
-  /// [loggedWorkoutId] XOR [manualEntryId]
-  String? loggedWorkoutId;
-  String? manualEntryId;
-
-  FastestTimeScoreWithCompletedOnDate({
-    required this.workoutMove,
-    required this.completedOn,
-    required this.timeTakenMs,
-    this.manualEntryId,
-    this.loggedWorkoutId,
-    this.videoUri,
-    this.videoThumbUri,
-  });
-
-  /// Sorts by highest loadAmount and then by date.
-  @override
-  int compareTo(FastestTimeScoreWithCompletedOnDate other) {
-    if (timeTakenMs != other.timeTakenMs) {
-      return timeTakenMs.compareTo(other.timeTakenMs);
     } else {
       return completedOn.compareTo(other.completedOn);
     }

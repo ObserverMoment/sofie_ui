@@ -12,36 +12,9 @@ import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exerc
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_load_tracker/user_max_load_tracker_details.dart';
 import 'package:supercharged/supercharged.dart';
 
-class UserMaxLoadExerciseTrackers extends StatelessWidget {
-  final List<LoggedWorkout> loggedWorkouts;
-  const UserMaxLoadExerciseTrackers({Key? key, required this.loggedWorkouts})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final trackers =
-        context.select<ExerciseTrackersBloc, List<UserMaxLoadExerciseTracker>>(
-            (b) => b.userMaxLoadExerciseTrackers);
-
-    return GridView.count(
-      crossAxisCount: 2,
-      crossAxisSpacing: 8,
-      mainAxisSpacing: 8,
-      padding: const EdgeInsets.all(8),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: trackers
-          .map((t) => _MaxLoadExerciseDisplayWidget(
-                tracker: t,
-              ))
-          .toList(),
-    );
-  }
-}
-
-class _MaxLoadExerciseDisplayWidget extends StatelessWidget {
+class MaxLoadExerciseDisplayWidget extends StatelessWidget {
   final UserMaxLoadExerciseTracker tracker;
-  const _MaxLoadExerciseDisplayWidget({Key? key, required this.tracker})
+  const MaxLoadExerciseDisplayWidget({Key? key, required this.tracker})
       : super(key: key);
 
   Widget _buildInfoHeader(String text) => MyHeaderText(
@@ -105,14 +78,12 @@ class _MaxLoadExerciseDisplayWidget extends StatelessWidget {
                         MyText(
                           topScoreString,
                           color: Styles.primaryAccent,
-                          size: FONTSIZE.seven,
-                          weight: FontWeight.bold,
+                          size: FONTSIZE.eight,
                         ),
                         const SizedBox(width: 2),
                         MyText(
                           tracker.loadUnit.display,
                           color: Styles.primaryAccent,
-                          weight: FontWeight.bold,
                         ),
                       ],
                     ),
