@@ -55,7 +55,7 @@ import 'components/workout/workout_finders/public/public_workout_finder_page.dar
     as _i31;
 import 'components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart'
     as _i32;
-import 'generated/api/graphql_api.dart' as _i68;
+import 'generated/api/graphql_api.graphql.dart' as _i68;
 import 'main.dart' as _i2;
 import 'pages/authed/authed_routes_wrapper_page.dart' as _i3;
 import 'pages/authed/details_pages/club_details/club_details_page.dart' as _i35;

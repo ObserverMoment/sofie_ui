@@ -75,7 +75,6 @@ class _UserFastestTimeManualEntryCreatorState
     checkOperationResult(context, result, onSuccess: context.pop);
   }
 
-  /// TODO: Can extract - is the same across all manual entry tracker creators.
   Future<void> _uploadVideo() async {
     if (_localVideoPath == null) {
       return;

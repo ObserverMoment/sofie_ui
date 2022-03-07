@@ -88,7 +88,7 @@ class _MonthDisplay extends StatelessWidget {
     List<UserMeditationLog?> emptyList =
         List.generate(daysInMonth, (index) => null, growable: false);
 
-    /// TODO: Consider using this in min size widget as well.
+    /// NOTE: Consider using this in min size widget as well.
     /// Logs are inserted at their day index - 1.
     final logsIndexedByDay =
         meditationLogs.fold<List<UserMeditationLog?>>(emptyList, (acum, next) {

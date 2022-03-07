@@ -89,7 +89,7 @@ class _MonthDisplay extends StatelessWidget {
     List<UserEatWellLog?> emptyList =
         List.generate(daysInMonth, (index) => null, growable: false);
 
-    /// TODO: Consider using this in min size widget as well.
+    /// NOTE: Consider using this in min size widget as well.
     /// Logs are inserted at their day index - 1.
     final logsIndexedByDay =
         eatWellLogs.fold<List<UserEatWellLog?>>(emptyList, (acum, next) {

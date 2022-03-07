@@ -619,38 +619,6 @@ mixin SkillMixin {
   String? certificateRef;
   String? documentUri;
 }
-mixin UserBenchmarkSummaryMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime lastEntryAt;
-  late String name;
-  String? equipmentInfo;
-  @JsonKey(unknownEnumValue: BenchmarkType.artemisUnknown)
-  late BenchmarkType benchmarkType;
-  @JsonKey(unknownEnumValue: LoadUnit.artemisUnknown)
-  late LoadUnit loadUnit;
-}
-mixin UserBenchmarkEntryMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime createdAt;
-  @JsonKey(
-      fromJson: fromGraphQLDateTimeToDartDateTime,
-      toJson: fromDartDateTimeToGraphQLDateTime)
-  late DateTime completedOn;
-  late double score;
-  String? note;
-  String? videoUri;
-  String? videoThumbUri;
-}
 mixin UserProfileMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -693,6 +661,23 @@ mixin ProgressWidgetMixin {
   late String name;
   String? subtitle;
   String? description;
+}
+mixin UserBenchmarkEntryMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime createdAt;
+  @JsonKey(
+      fromJson: fromGraphQLDateTimeToDartDateTime,
+      toJson: fromDartDateTimeToGraphQLDateTime)
+  late DateTime completedOn;
+  late double score;
+  String? note;
+  String? videoUri;
+  String? videoThumbUri;
 }
 mixin UserBenchmarkMixin {
   @JsonKey(name: '__typename')
@@ -5811,70 +5796,6 @@ class Skill extends JsonSerializable with EquatableMixin, SkillMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class UserBenchmarkSummary extends JsonSerializable
-    with EquatableMixin, UserBenchmarkSummaryMixin {
-  UserBenchmarkSummary();
-
-  factory UserBenchmarkSummary.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkSummaryFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        lastEntryAt,
-        name,
-        equipmentInfo,
-        benchmarkType,
-        loadUnit
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkEntry extends JsonSerializable
-    with EquatableMixin, UserBenchmarkEntryMixin {
-  UserBenchmarkEntry();
-
-  factory UserBenchmarkEntry.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkEntryFromJson(json);
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        completedOn,
-        score,
-        note,
-        videoUri,
-        videoThumbUri
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkEntryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserBenchmarkWithBestEntry extends JsonSerializable with EquatableMixin {
-  UserBenchmarkWithBestEntry();
-
-  factory UserBenchmarkWithBestEntry.fromJson(Map<String, dynamic> json) =>
-      _$UserBenchmarkWithBestEntryFromJson(json);
-
-  @JsonKey(name: 'UserBenchmarkSummary')
-  late UserBenchmarkSummary userBenchmarkSummary;
-
-  @JsonKey(name: 'BestEntry')
-  UserBenchmarkEntry? bestEntry;
-
-  @override
-  List<Object?> get props => [userBenchmarkSummary, bestEntry];
-  @override
-  Map<String, dynamic> toJson() => _$UserBenchmarkWithBestEntryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
 class UserProfile extends JsonSerializable
     with EquatableMixin, UserProfileMixin {
   UserProfile();
@@ -5890,9 +5811,6 @@ class UserProfile extends JsonSerializable
 
   @JsonKey(name: 'Skills')
   late List<Skill> skills;
-
-  @JsonKey(name: 'BenchmarksWithBestEntries')
-  late List<UserBenchmarkWithBestEntry> benchmarksWithBestEntries;
 
   @override
   List<Object?> get props => [
@@ -5921,8 +5839,7 @@ class UserProfile extends JsonSerializable
         activeLogDataWidgets,
         clubs,
         lifetimeLogStatsSummary,
-        skills,
-        benchmarksWithBestEntries
+        skills
       ];
   @override
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
@@ -6403,6 +6320,29 @@ class CheckUniqueDisplayName$Query extends JsonSerializable
   List<Object?> get props => [checkUniqueDisplayName];
   @override
   Map<String, dynamic> toJson() => _$CheckUniqueDisplayName$QueryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserBenchmarkEntry extends JsonSerializable
+    with EquatableMixin, UserBenchmarkEntryMixin {
+  UserBenchmarkEntry();
+
+  factory UserBenchmarkEntry.fromJson(Map<String, dynamic> json) =>
+      _$UserBenchmarkEntryFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        completedOn,
+        score,
+        note,
+        videoUri,
+        videoThumbUri
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$UserBenchmarkEntryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -40086,33 +40026,6 @@ final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'Skill'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'BenchmarksWithBestEntries'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'UserBenchmarkSummary'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserBenchmarkSummary'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BestEntry'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'UserBenchmarkEntry'),
-                              directives: [])
-                        ]))
                   ]))
             ]))
       ])),
@@ -40329,112 +40242,6 @@ final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'documentUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkSummary'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkSummary'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'lastEntryAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'equipmentInfo'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'benchmarkType'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadUnit'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'UserBenchmarkEntry'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'UserBenchmarkEntry'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'createdAt'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'completedOn'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'score'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'note'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'videoThumbUri'),
             alias: null,
             arguments: [],
             directives: [],

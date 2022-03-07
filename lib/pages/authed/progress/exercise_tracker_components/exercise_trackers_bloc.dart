@@ -148,7 +148,7 @@ class ExerciseTrackersBloc extends ChangeNotifier {
     });
   }
 
-  /// Covert all relevant log history to a list of [MaxLoadScoreWithCompletedOnDate] and save them to local state. Run this on init and whenever [userLoggedWorkoutQuery] is updated.
+  /// Convert all relevant log history to a list of [MaxLoadScoreWithCompletedOnDate] and save them to local state. Run this on init and whenever [userLoggedWorkoutQuery] is updated.
   void _convertAllMaxLoadScoresFromLogHistory() {
     final List<MaxLoadScoreWithCompletedOnDate> allScores = [];
 

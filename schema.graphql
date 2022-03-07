@@ -1693,7 +1693,6 @@ type UserMeditationLog {
 }
 
 type UserProfile {
-  BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
   Skills: [Skill!]!
