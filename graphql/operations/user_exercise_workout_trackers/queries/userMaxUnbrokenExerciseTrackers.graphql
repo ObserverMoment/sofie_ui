@@ -1,0 +1,29 @@
+query userMaxUnbrokenExerciseTrackers {
+  userMaxUnbrokenExerciseTrackers {
+    ...UserMaxUnbrokenExerciseTracker
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+    ManualEntries {
+      ...UserMaxUnbrokenTrackerManualEntry
+    }
+  }
+}

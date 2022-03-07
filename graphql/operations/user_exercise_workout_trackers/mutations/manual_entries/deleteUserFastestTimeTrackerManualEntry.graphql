@@ -1,0 +1,35 @@
+mutation deleteUserFastestTimeTrackerManualEntry(
+  $entryId: ID!
+  $parentId: ID!
+) {
+  deleteUserFastestTimeTrackerManualEntry(
+    entryId: $entryId
+    parentId: $parentId
+  ) {
+    ...UserFastestTimeExerciseTracker
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+    ManualEntries {
+      ...UserFastestTimeTrackerManualEntry
+    }
+  }
+}

@@ -282,7 +282,6 @@ class _FeedPageState extends State<FeedPage> {
 
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
-        backgroundColor: context.theme.modalBackground,
         withoutLeading: true,
         middle: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,

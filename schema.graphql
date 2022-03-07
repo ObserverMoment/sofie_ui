@@ -254,7 +254,6 @@ input CopyWorkoutPlanDayToAnotherDayInput {
 type CoreData {
   bodyAreas: [BodyArea!]!
   equipment: [Equipment!]!
-  logDataWidgets: [LogDataWidget!]!
   moveTypes: [MoveType!]!
   progressWidgets: [ProgressWidget!]!
   standardMoves: [Move!]!
@@ -436,10 +435,60 @@ input CreateUserEatWellLogInput {
   year: Int!
 }
 
+input CreateUserFastestTimeExerciseTrackerInput {
+  Equipment: ConnectRelationInput
+  Move: ConnectRelationInput!
+  distanceUnit: DistanceUnit!
+  loadAmount: Float!
+  loadUnit: LoadUnit!
+  repType: WorkoutMoveRepType!
+  reps: Float!
+}
+
+input CreateUserFastestTimeTrackerManualEntryInput {
+  UserFastestTimeExerciseTracker: ConnectRelationInput!
+  completedOn: DateTime!
+  timeTakenMs: Int!
+  videoThumbUri: String
+  videoUri: String
+}
+
 input CreateUserGoalInput {
   deadline: DateTime
   description: String
   name: String!
+}
+
+input CreateUserMaxLoadExerciseTrackerInput {
+  Equipment: ConnectRelationInput
+  Move: ConnectRelationInput!
+  loadUnit: LoadUnit!
+  reps: Int!
+}
+
+input CreateUserMaxLoadTrackerManualEntryInput {
+  UserMaxLoadExerciseTracker: ConnectRelationInput!
+  completedOn: DateTime!
+  loadAmount: Float!
+  videoThumbUri: String
+  videoUri: String
+}
+
+input CreateUserMaxUnbrokenExerciseTrackerInput {
+  Equipment: ConnectRelationInput
+  Move: ConnectRelationInput!
+  distanceUnit: DistanceUnit!
+  loadAmount: Float!
+  loadUnit: LoadUnit!
+  repType: WorkoutMoveRepType!
+}
+
+input CreateUserMaxUnbrokenTrackerManualEntryInput {
+  UserMaxUnbrokenExerciseTracker: ConnectRelationInput!
+  completedOn: DateTime!
+  score: Int!
+  videoThumbUri: String
+  videoUri: String
 }
 
 input CreateUserMeditationLogInput {
@@ -614,14 +663,6 @@ enum LoadUnit {
   PERCENTMAX
 }
 
-type LogDataWidget {
-  createdAt: DateTime!
-  description: String
-  id: ID!
-  name: String!
-  subtitle: String
-}
-
 type LoggedWorkout {
   GymProfile: GymProfile
   LoggedWorkoutSections: [LoggedWorkoutSection!]!
@@ -775,7 +816,25 @@ type Mutation {
   ): UserBenchmarkEntry!
   createUserDayLogMood(data: CreateUserDayLogMoodInput!): UserDayLogMood!
   createUserEatWellLog(data: CreateUserEatWellLogInput!): UserEatWellLog!
+  createUserFastestTimeExerciseTracker(
+    data: CreateUserFastestTimeExerciseTrackerInput!
+  ): UserFastestTimeExerciseTracker!
+  createUserFastestTimeTrackerManualEntry(
+    data: CreateUserFastestTimeTrackerManualEntryInput!
+  ): UserFastestTimeExerciseTracker!
   createUserGoal(data: CreateUserGoalInput!): UserGoal!
+  createUserMaxLoadExerciseTracker(
+    data: CreateUserMaxLoadExerciseTrackerInput!
+  ): UserMaxLoadExerciseTracker!
+  createUserMaxLoadTrackerManualEntry(
+    data: CreateUserMaxLoadTrackerManualEntryInput!
+  ): UserMaxLoadExerciseTracker!
+  createUserMaxUnbrokenExerciseTracker(
+    data: CreateUserMaxUnbrokenExerciseTrackerInput!
+  ): UserMaxUnbrokenExerciseTracker!
+  createUserMaxUnbrokenTrackerManualEntry(
+    data: CreateUserMaxUnbrokenTrackerManualEntryInput!
+  ): UserMaxUnbrokenExerciseTracker!
   createUserMeditationLog(
     data: CreateUserMeditationLogInput!
   ): UserMeditationLog!
@@ -815,7 +874,22 @@ type Mutation {
   deleteUserBenchmark(id: ID!): ID!
   deleteUserBenchmarkEntry(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
+  deleteUserFastestTimeExerciseTracker(id: ID!): ID!
+  deleteUserFastestTimeTrackerManualEntry(
+    entryId: ID!
+    parentId: ID!
+  ): UserFastestTimeExerciseTracker!
   deleteUserGoal(id: ID!): ID!
+  deleteUserMaxLoadExerciseTracker(id: ID!): ID!
+  deleteUserMaxLoadTrackerManualEntry(
+    entryId: ID!
+    parentId: ID!
+  ): UserMaxLoadExerciseTracker!
+  deleteUserMaxUnbrokenExerciseTracker(id: ID!): ID!
+  deleteUserMaxUnbrokenTrackerManualEntry(
+    entryId: ID!
+    parentId: ID!
+  ): UserMaxUnbrokenExerciseTracker!
   deleteWorkoutMoveById(id: ID!): ID!
   deleteWorkoutPlanDayWorkoutById(id: ID!): ID!
   deleteWorkoutPlanDaysById(ids: [ID!]!): [ID!]!
@@ -1001,8 +1075,11 @@ type Query {
   userCollections: [Collection!]!
   userDayLogMoods: [UserDayLogMood!]!
   userEatWellLogs: [UserEatWellLog!]!
+  userFastestTimeExerciseTrackers: [UserFastestTimeExerciseTracker!]!
   userGoals: [UserGoal!]!
   userLoggedWorkouts: [LoggedWorkout!]!
+  userMaxLoadExerciseTrackers: [UserMaxLoadExerciseTracker!]!
+  userMaxUnbrokenExerciseTrackers: [UserMaxUnbrokenExerciseTracker!]!
   userMeditationLogs: [UserMeditationLog!]!
   userProfile(userId: ID!): UserProfile
   userProfiles(cursor: ID, take: Int): [UserProfileSummary!]!
@@ -1534,6 +1611,28 @@ type UserEatWellLog {
   year: Int!
 }
 
+type UserFastestTimeExerciseTracker {
+  Equipment: Equipment
+  ManualEntries: [UserFastestTimeTrackerManualEntry!]!
+  Move: Move!
+  createdAt: DateTime!
+  distanceUnit: DistanceUnit!
+  id: ID!
+  loadAmount: Float!
+  loadUnit: LoadUnit!
+  repType: WorkoutMoveRepType!
+  reps: Float!
+}
+
+type UserFastestTimeTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  timeTakenMs: Int!
+  videoThumbUri: String
+  videoUri: String
+}
+
 type UserGoal {
   completedDate: DateTime
   createdAt: DateTime!
@@ -1542,6 +1641,46 @@ type UserGoal {
   id: ID!
   name: String!
   updatedAt: DateTime!
+}
+
+type UserMaxLoadExerciseTracker {
+  Equipment: Equipment
+  ManualEntries: [UserMaxLoadTrackerManualEntry!]!
+  Move: Move!
+  createdAt: DateTime!
+  id: ID!
+  loadUnit: LoadUnit!
+  reps: Int!
+}
+
+type UserMaxLoadTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  loadAmount: Float!
+  videoThumbUri: String
+  videoUri: String
+}
+
+type UserMaxUnbrokenExerciseTracker {
+  Equipment: Equipment
+  ManualEntries: [UserMaxUnbrokenTrackerManualEntry!]!
+  Move: Move!
+  createdAt: DateTime!
+  distanceUnit: DistanceUnit!
+  id: ID!
+  loadAmount: Float!
+  loadUnit: LoadUnit!
+  repType: WorkoutMoveRepType!
+}
+
+type UserMaxUnbrokenTrackerManualEntry {
+  completedOn: DateTime!
+  createdAt: DateTime!
+  id: ID!
+  score: Int!
+  videoThumbUri: String
+  videoUri: String
 }
 
 type UserMeditationLog {
@@ -1554,7 +1693,6 @@ type UserMeditationLog {
 }
 
 type UserProfile {
-  BenchmarksWithBestEntries: [UserBenchmarkWithBestEntry!]!
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
   Skills: [Skill!]!

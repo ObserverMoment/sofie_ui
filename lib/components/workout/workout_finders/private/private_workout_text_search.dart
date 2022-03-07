@@ -31,7 +31,7 @@ class _PrivateWorkoutTextSearchState extends State<PrivateWorkoutTextSearch> {
 
   void _handleSearchStringUpdate(String text) {
     setState(() => _searchString = text.toLowerCase());
-    if (_searchString.length > 2) {
+    if (_searchString.length > 1) {
       setState(() {
         _filteredUserWorkouts = TextSearchFilters.workoutsBySearchString(
             widget.userWorkouts, _searchString);
@@ -54,7 +54,7 @@ class _PrivateWorkoutTextSearchState extends State<PrivateWorkoutTextSearch> {
           ),
           trailing: NavBarTextButton(context.pop, 'Close'),
         ),
-        child: _searchString.length > 2
+        child: _searchString.length > 1
             ? _filteredUserWorkouts.isEmpty
                 ? const Center(child: NoResultsToDisplay())
                 : VerticalWorkoutsList(
@@ -62,7 +62,7 @@ class _PrivateWorkoutTextSearchState extends State<PrivateWorkoutTextSearch> {
                     workouts: _filteredUserWorkouts)
             : const Center(
                 child: MyText(
-                'Enter at least 3 characters',
+                'Enter at least 2 characters',
                 subtext: true,
               )));
   }

@@ -7,6 +7,10 @@ import 'package:supercharged/supercharged.dart';
 import 'package:collection/collection.dart';
 
 class DataUtils {
+  /// https://www.unitconverters.net/weight-and-mass/kg-to-lbs.htm
+  static double convertKgToLb(double kg) => kg * 2.2046226218;
+  static double convertLbToKg(double lb) => lb * 0.45359237;
+
   static List<WaffleChartInput> waffleChartInputsFromGoals(
       List<WorkoutGoal> goals) {
     final data = goals.fold<Map<WorkoutGoal, int>>({}, (acum, next) {

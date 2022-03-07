@@ -91,7 +91,7 @@ class MostLoggedMovesWidget extends StatelessWidget {
                                       MyText(
                                         e.move.moveType.name,
                                         size: FONTSIZE.one,
-                                        color: Styles.infoBlue,
+                                        color: Styles.primaryAccent,
                                       ),
                                     ],
                                   ),

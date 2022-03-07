@@ -82,31 +82,50 @@ class WorkoutCard extends StatelessWidget {
                   ) as ImageProvider),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            MyText(
+              workout.name,
+              lineHeight: 1.3,
+              color: infoFontColor,
+              size: FONTSIZE.four,
+              weight: FontWeight.bold,
+            ),
+            const SizedBox(height: 2),
+            MyText(
+              workout.user.displayName.toUpperCase(),
+              size: FONTSIZE.one,
+              color: infoFontColor,
+            ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      MyText(
-                        workout.name,
-                        lineHeight: 1.3,
-                        color: infoFontColor,
-                        maxLines: 2,
-                        size: FONTSIZE.four,
-                        weight: FontWeight.bold,
-                      ),
-                      const SizedBox(height: 3),
-                      MyText(
-                        workout.user.displayName.toUpperCase(),
-                        size: FONTSIZE.one,
-                        color: infoFontColor,
-                      ),
-                      const SizedBox(height: 12),
+                      if (workout.lengthMinutes != null)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 12.0),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                CupertinoIcons.timer,
+                                size: 17,
+                                color: infoFontColor,
+                              ),
+                              const SizedBox(width: 5),
+                              MyText(
+                                Duration(minutes: workout.lengthMinutes!)
+                                    .displayString,
+                                color: infoFontColor,
+                                weight: FontWeight.bold,
+                              )
+                            ],
+                          ),
+                        ),
                       Wrap(
                         spacing: 8,
                         runSpacing: 4,
@@ -129,7 +148,7 @@ class WorkoutCard extends StatelessWidget {
                               .toList(),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
                       Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           spacing: 8,
@@ -152,7 +171,7 @@ class WorkoutCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 12.0, top: 4),
+                  padding: const EdgeInsets.only(left: 12.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -169,28 +188,7 @@ class WorkoutCard extends StatelessWidget {
                               const SizedBox(width: 6),
                               MyText(
                                 workout.difficultyLevel!.display,
-                                size: FONTSIZE.two,
-                                color: infoFontColor,
-                                weight: FontWeight.bold,
-                              )
-                            ],
-                          ),
-                        ),
-                      if (workout.lengthMinutes != null)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 6.0),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                CupertinoIcons.timer,
-                                size: 14,
-                                color: infoFontColor,
-                              ),
-                              const SizedBox(width: 5),
-                              MyText(
-                                Duration(minutes: workout.lengthMinutes!)
-                                    .displayString,
-                                size: FONTSIZE.two,
+                                size: FONTSIZE.one,
                                 color: infoFontColor,
                                 weight: FontWeight.bold,
                               )
@@ -261,7 +259,7 @@ class _WorkoutCardTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentBox(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      backgroundColor: context.theme.modalBackground,
+      backgroundColor: context.theme.background,
       child: Row(mainAxisSize: MainAxisSize.min, children: [
         Icon(_icon, size: 12),
         const SizedBox(width: 4),

@@ -66,7 +66,7 @@ class UnauthedLandingPage extends StatelessWidget {
               const SizedBox(height: 12),
               PrimaryButton(
                 text: 'Sign In',
-                onPressed: () => context.showBottomSheet(child: const SignIn()),
+                onPressed: () => context.push(child: const SignIn()),
               ),
               const SizedBox(height: 24),
               const MyText(
@@ -77,7 +77,7 @@ class UnauthedLandingPage extends StatelessWidget {
               SecondaryButton(
                 text: 'Sign Up to Beta Testing',
                 onPressed: () =>
-                    context.showBottomSheet(child: const RegisterBetaTesting()),
+                    context.push(child: const RegisterBetaTesting()),
               ),
             ],
           ),

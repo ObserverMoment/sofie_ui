@@ -13,7 +13,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/display_name_edit_row.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
-import 'package:sofie_ui/components/user_input/pickers/date_picker.dart';
+import 'package:sofie_ui/components/user_input/pickers/date_picker_cupertino.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/user_input/selectors/country_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
@@ -300,7 +300,7 @@ class EditProfilePage extends StatelessWidget {
                                             userProfile.birthdate!.dateString))
                                     : null,
                                 onTap: () => context.showActionSheetPopup(
-                                        child: DatePicker(
+                                        child: DatePickerCupertino(
                                       selectedDate: userProfile.birthdate,
                                       saveDate: (date) => updateUserFields(
                                           context, userProfile.id, {

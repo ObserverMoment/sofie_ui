@@ -1,0 +1,29 @@
+mutation deleteUserMaxLoadTrackerManualEntry($entryId: ID!, $parentId: ID!) {
+  deleteUserMaxLoadTrackerManualEntry(entryId: $entryId, parentId: $parentId) {
+    ...UserMaxLoadExerciseTracker
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+    ManualEntries {
+      ...UserMaxLoadTrackerManualEntry
+    }
+  }
+}

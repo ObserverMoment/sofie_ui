@@ -146,7 +146,7 @@ class _CreateGoalState extends State<_CreateGoal> {
               keyboardType: TextInputType.text,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 16),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

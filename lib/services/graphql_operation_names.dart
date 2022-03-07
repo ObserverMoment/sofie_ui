@@ -21,6 +21,14 @@ class GQLOpNames {
   static String get userEatWellLogs => UserEatWellLogsQuery().operationName;
   static String get userSleepWellLogs => UserSleepWellLogsQuery().operationName;
 
+  /// Exercise Score Trackers
+  static String get userMaxLoadExerciseTrackers =>
+      UserMaxLoadExerciseTrackersQuery().operationName;
+  static String get userFastestTimeExerciseTrackers =>
+      UserFastestTimeExerciseTrackersQuery().operationName;
+  static String get userMaxUnbrokenExerciseTrackers =>
+      UserMaxUnbrokenExerciseTrackersQuery().operationName;
+
   static String get workoutPlanEnrolments =>
       WorkoutPlanEnrolmentsQuery().operationName;
 

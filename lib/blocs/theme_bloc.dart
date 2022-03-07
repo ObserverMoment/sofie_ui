@@ -34,7 +34,6 @@ class ThemeBloc extends ChangeNotifier {
   Color get primary => theme.cupertinoThemeData.primaryColor;
   Color get background => theme.cupertinoThemeData.scaffoldBackgroundColor;
   Color get cardBackground => theme.customThemeData.cardBackground;
-  Color get modalBackground => theme.customThemeData.modalBackground;
   LinearGradient get fabBackground => Styles.primaryAccentGradient;
   Color get barBackground => theme.cupertinoThemeData.barBackgroundColor;
   Color get navbarBottomBorder => theme.customThemeData.navbarBottomBorder;
@@ -84,7 +83,6 @@ class CustomThemeData {
   final Color greyFour;
   final Color bottomNavigationBackground;
   final Color cardBackground;
-  final Color modalBackground;
   final Color navbarBottomBorder;
   CustomThemeData(
       {required this.greyOne,
@@ -93,7 +91,6 @@ class CustomThemeData {
       required this.greyFour,
       required this.bottomNavigationBackground,
       required this.cardBackground,
-      required this.modalBackground,
       required this.navbarBottomBorder});
 }
 
@@ -109,7 +106,6 @@ abstract class ThemeData {
       // cardBackground: const Color(0xff1a1a1c),
       // cardBackground: Color.fromARGB(255, 20, 20, 20),
       cardBackground: const Color.fromARGB(255, 33, 35, 41),
-      modalBackground: const Color.fromARGB(255, 24, 24, 24),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
 
@@ -119,7 +115,6 @@ abstract class ThemeData {
       greyThree: Styles.greyTwo,
       greyFour: Styles.greyOne,
       cardBackground: CupertinoColors.white,
-      modalBackground: const Color.fromARGB(255, 228, 228, 228),
       bottomNavigationBackground: const Color(0xffffffff),
       navbarBottomBorder: Styles.black.withOpacity(0.1));
 

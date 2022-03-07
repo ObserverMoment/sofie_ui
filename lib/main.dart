@@ -137,7 +137,10 @@ class GlobalLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoPageScaffold(child: SizedBox.expand());
+    return const CupertinoPageScaffold(
+        child: SizedBox.expand(
+      child: CupertinoActivityIndicator(),
+    ));
   }
 }
 

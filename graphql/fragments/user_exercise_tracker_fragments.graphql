@@ -1,0 +1,58 @@
+fragment UserMaxLoadExerciseTracker on UserMaxLoadExerciseTracker {
+  __typename
+  id
+  createdAt
+  reps
+  loadUnit
+}
+
+fragment UserMaxLoadTrackerManualEntry on UserMaxLoadTrackerManualEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  loadAmount
+  videoUri
+  videoThumbUri
+}
+
+fragment UserFastestTimeExerciseTracker on UserFastestTimeExerciseTracker {
+  __typename
+  id
+  createdAt
+  repType
+  reps
+  distanceUnit
+  loadAmount
+  loadUnit
+}
+
+fragment UserFastestTimeTrackerManualEntry on UserFastestTimeTrackerManualEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  timeTakenMs
+  videoUri
+  videoThumbUri
+}
+
+fragment UserMaxUnbrokenExerciseTracker on UserMaxUnbrokenExerciseTracker {
+  __typename
+  id
+  createdAt
+  repType
+  loadAmount
+  loadUnit
+  distanceUnit
+}
+
+fragment UserMaxUnbrokenTrackerManualEntry on UserMaxUnbrokenTrackerManualEntry {
+  __typename
+  id
+  createdAt
+  completedOn
+  score
+  videoUri
+  videoThumbUri
+}

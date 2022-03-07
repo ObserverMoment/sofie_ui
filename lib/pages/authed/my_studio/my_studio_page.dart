@@ -19,9 +19,9 @@ class MyStudioPage extends StatelessWidget {
           children: [
             GridView.count(
               padding: const EdgeInsets.only(bottom: 10.0, left: 10, right: 10),
-              crossAxisSpacing: 12,
+              crossAxisSpacing: 8,
               physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
+              mainAxisSpacing: 8,
               shrinkWrap: true,
               crossAxisCount: 3,
               children: [

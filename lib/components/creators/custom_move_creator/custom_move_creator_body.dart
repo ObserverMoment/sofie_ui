@@ -26,18 +26,16 @@ class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
 
   Future<void> _handleTapBodyArea(BodyArea bodyArea) async {
     await context.showBottomSheet(
-        useRootNavigator: false,
         child: BodyAreaScoreAdjuster(
-          bodyArea: bodyArea,
-          bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
-          updateBodyAreaMoveScores: (updatedScores) {
-            widget.updateMove({
-              'BodyAreaMoveScores':
-                  updatedScores.map((s) => s.toJson()).toList()
-            });
-            context.pop();
-          },
-        ));
+      bodyArea: bodyArea,
+      bodyAreaMoveScores: widget.move.bodyAreaMoveScores,
+      updateBodyAreaMoveScores: (updatedScores) {
+        widget.updateMove({
+          'BodyAreaMoveScores': updatedScores.map((s) => s.toJson()).toList()
+        });
+        context.pop();
+      },
+    ));
   }
 
   @override

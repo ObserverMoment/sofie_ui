@@ -53,7 +53,7 @@ class BodyAreasTargetedWidget extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             child: PercentageBarChart(
               max: highestFraction,
-              gradient: Styles.blueAccentGradient,
+              gradient: Styles.secondaryAccentGradient,
               barPadding: 2,
               itemHeight: 28,
               items: chartData

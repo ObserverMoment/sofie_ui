@@ -49,7 +49,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
   /// When they click on a text result this will trigger a full search via the API which will return full [Workout] objects.s
   void _handleSearchStringUpdate(String text) {
     setState(() => _searchString = text.toLowerCase());
-    if (_searchString.length > 2) {
+    if (_searchString.length > 1) {
       // Clear the previous Workout list search results. We revert now to text list while user is inputting text.
       _workoutsTextSearchBloc.clear(gotoState: TextSearchState.loading);
 
@@ -90,7 +90,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
         ),
         trailing: NavBarTextButton(context.pop, 'Close'),
       ),
-      child: _searchString.length > 2
+      child: _searchString.length > 1
           ? StreamBuilder<TextSearchState>(
               initialData: TextSearchState.empty,
               stream: StreamGroup.merge([
@@ -122,7 +122,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                               // Or show placeholder message.
                               return const Center(
                                   child: MyText(
-                                'Enter at least 3 characters',
+                                'Enter at least 2 characters',
                                 subtext: true,
                               ));
                             } else {
@@ -155,7 +155,7 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
               })
           : const Center(
               child: MyText(
-              'Enter at least 3 characters',
+              'Enter at least 2 characters',
               subtext: true,
             )),
     );

@@ -1,6 +1,8 @@
+import 'dart:ui';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
@@ -255,24 +257,32 @@ extension BuildContextExtension on BuildContext {
   //////////////////////////////////////////
   //// Bottom sheets, menus and Actions ////
   //////////////////////////////////////////
+  /// https://stackoverflow.com/questions/53311553/how-to-set-showmodalbottomsheet-to-full-height
   Future<T?> showBottomSheet<T>({
     required Widget child,
-    bool expand = true,
-    bool useRootNavigator = true,
   }) async {
-    final BuildContext context = this;
-    final Color _backgroundColor = context.readTheme.modalBackground;
-    final T? result = await showCupertinoModalBottomSheet(
-        expand: expand,
-        context: context,
-        useRootNavigator: useRootNavigator,
-        backgroundColor: _backgroundColor,
-        barrierColor: Styles.black.withOpacity(0.75),
-        builder: (context) => Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: child,
+    final T? res = await material.showModalBottomSheet<T>(
+        backgroundColor: material.Colors.transparent,
+        isScrollControlled: true,
+        context: this,
+        builder: (context) => BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: context.readTheme.background,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16))),
+                child: Wrap(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 16),
+                    child: child,
+                  )
+                ]),
+              ),
             ));
-    return result;
+    return res;
   }
 
   /// Classic iOS action sheet with a cancel button underneath.
@@ -285,6 +295,7 @@ extension BuildContextExtension on BuildContext {
     final BuildContext context = this;
 
     await showCupertinoModalPopup(
+        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
         context: context,
         useRootNavigator: useRootNavigator,
         builder: (context) => CupertinoActionSheet(
