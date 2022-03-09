@@ -1,0 +1,7 @@
+fragment UserExerciseLoadTracker on UserExerciseLoadTracker {
+  __typename
+  id
+  createdAt
+  reps
+  loadUnit
+}

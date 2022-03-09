@@ -1,6 +1,5 @@
 import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:supercharged/supercharged.dart';
@@ -181,22 +180,6 @@ class DataUtils {
 
       return map;
     });
-  }
-
-  static String buildBenchmarkEntryScoreText(BenchmarkType benchmarkType,
-      LoadUnit loadUnit, UserBenchmarkEntry entry) {
-    switch (benchmarkType) {
-      case BenchmarkType.maxload:
-        return '${entry.score.stringMyDouble()}${loadUnit.display}';
-      case BenchmarkType.fastesttime:
-      case BenchmarkType.unbrokentime:
-        return Duration(seconds: entry.score.round()).compactDisplay;
-      case BenchmarkType.amrap:
-      case BenchmarkType.unbrokenreps:
-        return '${entry.score.stringMyDouble()} reps';
-      default:
-        return entry.score.stringMyDouble();
-    }
   }
 
   /// 0 = true / yes

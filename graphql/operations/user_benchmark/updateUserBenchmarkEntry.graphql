@@ -1,5 +1,0 @@
-mutation updateUserBenchmarkEntry($data: UpdateUserBenchmarkEntryInput!) {
-  updateUserBenchmarkEntry(data: $data) {
-    ...UserBenchmarkEntry
-  }
-}

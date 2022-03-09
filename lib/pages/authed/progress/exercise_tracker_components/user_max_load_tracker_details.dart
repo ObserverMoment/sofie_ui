@@ -3,18 +3,14 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
-import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_load_tracker/user_max_load_manual_entry_creator.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -29,47 +25,39 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
       : super(key: key);
 
   Future<void> _confirmDeleteTracker(
-      BuildContext context, UserMaxLoadExerciseTracker tracker) async {
+      BuildContext context, UserExerciseLoadTracker tracker) async {
     context.showConfirmDeleteDialog(
         message:
             'Deleting this tracker will also delete all manual entries that you have previously submitted. This cannot be undone. OK?',
         itemType: 'Score Tracker',
         onConfirm: () async {
           final result = await context.graphQLStore.delete(
-              mutation: DeleteUserMaxLoadExerciseTrackerMutation(
-                  variables: DeleteUserMaxLoadExerciseTrackerArguments(
-                      id: tracker.id)),
+              mutation: DeleteUserExerciseLoadTrackerMutation(
+                  variables:
+                      DeleteUserExerciseLoadTrackerArguments(id: tracker.id)),
               objectId: tracker.id,
-              typename: kUserMaxLoadExerciseTracker,
-              removeRefFromQueries: [GQLOpNames.userMaxLoadExerciseTrackers]);
+              typename: kUserExerciseLoadTracker,
+              removeRefFromQueries: [GQLOpNames.userExerciseLoadTrackers]);
 
           checkOperationResult(context, result, onSuccess: context.pop);
         });
   }
 
-  Future<void> _submitManualEntry(
-      BuildContext context, UserMaxLoadExerciseTracker tracker) async {
-    context.push(
-        child: UserMaxLoadManualEntryCreator(
-      parent: tracker,
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     final tracker =
-        context.select<ExerciseTrackersBloc, UserMaxLoadExerciseTracker?>((b) =>
-            b.userMaxLoadExerciseTrackers
-                .firstWhereOrNull((t) => t.id == trackerId));
+        context.select<ExerciseTrackersBloc, UserExerciseLoadTracker?>((b) => b
+            .userExerciseLoadTrackers
+            .firstWhereOrNull((t) => t.id == trackerId));
 
     /// It has probably been deleted so this page will pop shortly.
     if (tracker == null) {
       return Container();
     }
 
-    final trackerRelevantScores = context
-        .select<ExerciseTrackersBloc, List<MaxLoadScoreWithCompletedOnDate>>(
-            (b) => b.retrieveMaxLoadTrackerRelevantScores(tracker));
+    final trackerRelevantScores = context.select<ExerciseTrackersBloc,
+            List<ExerciseLoadScoreWithCompletedOnDate>>(
+        (b) => b.retrieveMaxLoadTrackerRelevantScores(tracker));
 
     final repString = tracker.reps == 1 ? 'rep' : 'reps';
     final equipmentString =
@@ -77,12 +65,8 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
 
     return CupertinoPageScaffold(
       navigationBar: MyNavBar(
-        middle: TertiaryButton(
-            prefixIconData: MyCustomIcons.medal,
-            iconSize: 14,
-            fontSize: FONTSIZE.three,
-            onPressed: () => _submitManualEntry(context, tracker),
-            text: 'Submit a Score'),
+        middle: NavBarTitle(
+            '${tracker.move.name} - ${tracker.reps} $repString$equipmentString - ${tracker.loadUnit.display}'),
         trailing: CupertinoButton(
             padding: EdgeInsets.zero,
             child: const Icon(
@@ -95,29 +79,12 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 14),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: MyHeaderText(
-              tracker.move.name,
-              weight: FontWeight.normal,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: MyHeaderText(
-              '${tracker.reps} $repString$equipmentString - ${tracker.loadUnit.display}',
-              size: FONTSIZE.two,
-              weight: FontWeight.normal,
-            ),
-          ),
-          const SizedBox(height: 14),
           if (trackerRelevantScores.isEmpty)
             const Center(
               child: Padding(
                 padding: EdgeInsets.all(32.0),
                 child: MyText(
-                  'No scores logged or submitted yet',
+                  'No scores logged yet',
                   subtext: true,
                 ),
               ),
@@ -145,8 +112,8 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
 }
 
 class _MaxLiftProgressGraph extends StatelessWidget {
-  final UserMaxLoadExerciseTracker tracker;
-  final List<MaxLoadScoreWithCompletedOnDate> scores;
+  final UserExerciseLoadTracker tracker;
+  final List<ExerciseLoadScoreWithCompletedOnDate> scores;
   const _MaxLiftProgressGraph(
       {Key? key, required this.tracker, required this.scores})
       : super(key: key);
@@ -177,7 +144,7 @@ class _MaxLiftProgressGraph extends StatelessWidget {
               desiredIntervals: 6,
               majorGridLines: MajorGridLines(color: gridlineColor)),
           series: <ChartSeries>[
-            LineSeries<MaxLoadScoreWithCompletedOnDate, DateTime>(
+            LineSeries<ExerciseLoadScoreWithCompletedOnDate, DateTime>(
               dataSource: scores.sorted((a, b) {
                 if (a.completedOn == b.completedOn) {
                   return a.loadAmount.compareTo(b.loadAmount);
@@ -195,29 +162,16 @@ class _MaxLiftProgressGraph extends StatelessWidget {
 }
 
 class _TopTenScoresList extends StatelessWidget {
-  final UserMaxLoadExerciseTracker tracker;
-  final List<MaxLoadScoreWithCompletedOnDate> scores;
+  final UserExerciseLoadTracker tracker;
+  final List<ExerciseLoadScoreWithCompletedOnDate> scores;
   const _TopTenScoresList(
       {Key? key, required this.scores, required this.tracker})
       : super(key: key);
 
-  Future<void> _confirmDeleteManualEntry(
-    BuildContext context,
-    String entryId,
-  ) async {
-    final result = await context.graphQLStore.mutate(
-        mutation: DeleteUserMaxLoadTrackerManualEntryMutation(
-            variables: DeleteUserMaxLoadTrackerManualEntryArguments(
-                entryId: entryId, parentId: tracker.id)),
-        broadcastQueryIds: [GQLOpNames.userMaxLoadExerciseTrackers]);
-
-    checkOperationResult(context, result);
-  }
-
   @override
   Widget build(BuildContext context) {
     final topTenScores = scores
-        .sortedBy<MaxLoadScoreWithCompletedOnDate>((s) => s)
+        .sortedBy<ExerciseLoadScoreWithCompletedOnDate>((s) => s)
         .reversed
         .take(10);
 
@@ -225,16 +179,7 @@ class _TopTenScoresList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
       child: Column(
         children: topTenScores
-            .mapIndexed((i, s) => s.manualEntryId != null
-                ? AnimatedSlidable(
-                    index: i,
-                    itemType: 'Max Lift Score',
-                    key: Key(s.manualEntryId!),
-                    removeItem: (int index) =>
-                        _confirmDeleteManualEntry(context, s.manualEntryId!),
-                    secondaryActions: const [],
-                    child: _SingleEntryDisplay(tracker: tracker, score: s))
-                : _SingleEntryDisplay(tracker: tracker, score: s))
+            .map((s) => _SingleEntryDisplay(tracker: tracker, score: s))
             .toList(),
       ),
     );
@@ -242,8 +187,8 @@ class _TopTenScoresList extends StatelessWidget {
 }
 
 class _SingleEntryDisplay extends StatelessWidget {
-  final UserMaxLoadExerciseTracker tracker;
-  final MaxLoadScoreWithCompletedOnDate score;
+  final UserExerciseLoadTracker tracker;
+  final ExerciseLoadScoreWithCompletedOnDate score;
   const _SingleEntryDisplay(
       {Key? key, required this.tracker, required this.score})
       : super(key: key);
@@ -291,16 +236,6 @@ class _SingleEntryDisplay extends StatelessWidget {
                     text: 'View Log',
                     onPressed: () => context.navigateTo(
                         LoggedWorkoutDetailsRoute(id: score.loggedWorkoutId!))),
-              if (Utils.textNotNull(score.videoUri))
-                TertiaryButton(
-                    fontSize: FONTSIZE.one,
-                    iconSize: 14,
-                    backgroundColor: buttonTagColor,
-                    suffixIconData: CupertinoIcons.tv,
-                    text: 'View Video',
-                    onPressed: () =>
-                        VideoSetupManager.openFullScreenVideoPlayer(
-                            context: context, videoUri: score.videoUri!)),
             ],
           ),
           Column(
@@ -315,15 +250,6 @@ class _SingleEntryDisplay extends StatelessWidget {
                 score.completedOn.timeString,
                 size: FONTSIZE.one,
               ),
-              if (score.manualEntryId != null)
-                const Padding(
-                  padding: EdgeInsets.only(top: 2.0),
-                  child: MyText(
-                    'Submitted Manually',
-                    size: FONTSIZE.zero,
-                    color: Styles.primaryAccent,
-                  ),
-                )
             ],
           )
         ],

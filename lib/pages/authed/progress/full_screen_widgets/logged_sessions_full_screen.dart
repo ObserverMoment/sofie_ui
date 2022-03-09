@@ -88,7 +88,7 @@ class _MonthDisplay extends StatelessWidget {
     List<List<LoggedWorkout>> emptyList =
         List.generate(daysInMonth, (index) => [], growable: false);
 
-    /// TODO: Consider using this in min size widget as well.
+    /// NOTE: Consider using this in min size widget as well.
     /// Logs are inserted at their day index - 1.
     final logListsIndexedByDay =
         loggedWorkouts.fold<List<List<LoggedWorkout>>>(emptyList, (acum, next) {
@@ -278,15 +278,6 @@ class _DayDisplay extends StatelessWidget {
                   size: FONTSIZE.one,
                   color: hasLogOnDay ? Styles.white : null,
                 ),
-                if (isStreakDay)
-                  const Positioned(
-                      top: 4,
-                      right: 6,
-                      child: Icon(
-                        CupertinoIcons.flame_fill,
-                        color: Styles.secondaryAccent,
-                        size: 12,
-                      ))
               ],
             ),
             if (isToday)

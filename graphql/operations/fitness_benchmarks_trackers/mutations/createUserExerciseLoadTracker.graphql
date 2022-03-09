@@ -1,8 +1,8 @@
-mutation createUserMaxUnbrokenTrackerManualEntry(
-  $data: CreateUserMaxUnbrokenTrackerManualEntryInput!
+mutation createUserExerciseLoadTracker(
+  $data: CreateUserExerciseLoadTrackerInput!
 ) {
-  createUserMaxUnbrokenTrackerManualEntry(data: $data) {
-    ...UserMaxUnbrokenExerciseTracker
+  createUserExerciseLoadTracker(data: $data) {
+    ...UserExerciseLoadTracker
     Move {
       ...Move
       MoveType {
@@ -23,9 +23,6 @@ mutation createUserMaxUnbrokenTrackerManualEntry(
     }
     Equipment {
       ...Equipment
-    }
-    ManualEntries {
-      ...UserMaxUnbrokenTrackerManualEntry
     }
   }
 }

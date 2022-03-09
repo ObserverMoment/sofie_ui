@@ -1,8 +1,0 @@
-query userBenchmark($id: ID!) {
-  userBenchmark(id: $id) {
-    ...UserBenchmark
-    UserBenchmarkEntries {
-      ...UserBenchmarkEntry
-    }
-  }
-}

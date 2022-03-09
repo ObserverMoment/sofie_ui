@@ -7,12 +7,11 @@ import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
-import 'package:sofie_ui/components/profile/bio.dart';
 import 'package:sofie_ui/components/profile/club_summaries_list.dart';
 import 'package:sofie_ui/components/profile/skills_list.dart';
 import 'package:sofie_ui/components/profile/social_media_links.dart';
+import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/country.dart';
@@ -64,14 +63,11 @@ class UserProfileDisplay extends StatelessWidget {
                           ? () => openFullScreenImageViewer(
                               context, profile.avatarUri!)
                           : null,
-                      child: Hero(
-                        tag: kFullScreenImageViewerHeroTag,
-                        child: UserAvatar(
-                          avatarUri: profile.avatarUri,
-                          size: _avatarSize,
-                          border: true,
-                          borderWidth: 2,
-                        ),
+                      child: UserAvatar(
+                        avatarUri: profile.avatarUri,
+                        size: _avatarSize,
+                        border: true,
+                        borderWidth: 2,
                       ),
                     ),
                   ),
@@ -186,7 +182,11 @@ class UserProfileDisplay extends StatelessWidget {
               _InfoSection(
                   header: 'Bio',
                   icon: CupertinoIcons.person,
-                  content: ProfileBio(bio: profile.bio!)),
+                  content: ReadMoreTextBlock(
+                    title: 'Bio',
+                    text: profile.bio!,
+                    trimLines: 8,
+                  )),
             if (profile.clubs.isNotEmpty)
               _InfoSection(
                 header: 'Clubs',

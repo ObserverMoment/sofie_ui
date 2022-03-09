@@ -15,15 +15,16 @@ import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
-class MaxLoadTrackerCreatorPage extends StatefulWidget {
-  const MaxLoadTrackerCreatorPage({Key? key}) : super(key: key);
+class ExerciseLoadTrackerCreatorPage extends StatefulWidget {
+  const ExerciseLoadTrackerCreatorPage({Key? key}) : super(key: key);
 
   @override
-  MaxLoadTrackerCreatorPageState createState() =>
-      MaxLoadTrackerCreatorPageState();
+  ExerciseLoadTrackerCreatorPageState createState() =>
+      ExerciseLoadTrackerCreatorPageState();
 }
 
-class MaxLoadTrackerCreatorPageState extends State<MaxLoadTrackerCreatorPage> {
+class ExerciseLoadTrackerCreatorPageState
+    extends State<ExerciseLoadTrackerCreatorPage> {
   bool _loading = false;
 
   LoadUnit _loadUnit = LoadUnit.kg;
@@ -51,8 +52,8 @@ class MaxLoadTrackerCreatorPageState extends State<MaxLoadTrackerCreatorPage> {
       _loading = true;
     });
 
-    final variables = CreateUserMaxLoadExerciseTrackerArguments(
-        data: CreateUserMaxLoadExerciseTrackerInput(
+    final variables = CreateUserExerciseLoadTrackerArguments(
+        data: CreateUserExerciseLoadTrackerInput(
             loadUnit: _loadUnit,
             move: ConnectRelationInput(id: _move!.id),
             reps: _reps,
@@ -61,9 +62,8 @@ class MaxLoadTrackerCreatorPageState extends State<MaxLoadTrackerCreatorPage> {
                 : null));
 
     final result = await context.graphQLStore.create(
-        mutation:
-            CreateUserMaxLoadExerciseTrackerMutation(variables: variables),
-        addRefToQueries: [GQLOpNames.userMaxLoadExerciseTrackers]);
+        mutation: CreateUserExerciseLoadTrackerMutation(variables: variables),
+        addRefToQueries: [GQLOpNames.userExerciseLoadTrackers]);
 
     checkOperationResult(context, result, onSuccess: () {
       setState(() {
@@ -101,7 +101,7 @@ class MaxLoadTrackerCreatorPageState extends State<MaxLoadTrackerCreatorPage> {
       navigationBar: CreateEditNavBarSimple(
         loading: _loading,
         onSave: _createMaxLoadTracker,
-        title: 'Max Lift Tracker',
+        title: 'Exercise Load Tracker',
         validToSave: _validToSave,
         onCancel: context.pop,
       ),

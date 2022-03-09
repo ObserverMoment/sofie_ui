@@ -1,3 +1,0 @@
-mutation deleteUserMaxUnbrokenExerciseTracker($id: ID!) {
-  deleteUserMaxUnbrokenExerciseTracker(id: $id)
-}

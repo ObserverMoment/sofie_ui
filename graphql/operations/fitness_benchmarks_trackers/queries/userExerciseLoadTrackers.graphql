@@ -1,8 +1,6 @@
-mutation createUserFastestTimeTrackerManualEntry(
-  $data: CreateUserFastestTimeTrackerManualEntryInput!
-) {
-  createUserFastestTimeTrackerManualEntry(data: $data) {
-    ...UserFastestTimeExerciseTracker
+query userExerciseLoadTrackers {
+  userExerciseLoadTrackers {
+    ...UserExerciseLoadTracker
     Move {
       ...Move
       MoveType {
@@ -23,9 +21,6 @@ mutation createUserFastestTimeTrackerManualEntry(
     }
     Equipment {
       ...Equipment
-    }
-    ManualEntries {
-      ...UserFastestTimeTrackerManualEntry
     }
   }
 }

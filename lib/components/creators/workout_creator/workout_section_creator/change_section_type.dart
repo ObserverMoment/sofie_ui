@@ -6,8 +6,8 @@ import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/components/user_input/selectors/workout_section_type_multi_selector.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 /// This screen is for when the user is changing the section type - to ensure that correct fields are copied or removed - as required depending on the type. Pass [previousSection] for this.
@@ -36,8 +36,11 @@ class _ChangeSectionTypeState extends State<ChangeSectionType> {
   void _handleUpdateSelectedType(WorkoutSectionType type) {
     _workoutSection.workoutSectionType = type;
 
-    if (type.name == kAMRAPName) {
+    if (type.isAMRAP) {
       _openTimecapPicker();
+    } else if (type.isLifting || type.isCustom) {
+      /// Always reset to 1 for these workout types.
+      _workoutSection.rounds = 1;
     }
     setState(() {});
   }
@@ -70,35 +73,20 @@ class _ChangeSectionTypeState extends State<ChangeSectionType> {
       child: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                MyHeaderText('Selected type'),
-              ],
-            ),
-          ),
-          Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: SizedBox(
-              height: 46,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: WorkoutSectionTypeTag(
-                      workoutSection: _workoutSection,
-                      fontSize: FONTSIZE.four,
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: WorkoutSectionTypeTag(
+                    workoutSection: _workoutSection,
+                    fontSize: FONTSIZE.four,
+                    showMediaIcons: false,
                   ),
-                  const Positioned(
-                    right: 0,
-                    child:
-                        InfoPopupButton(infoWidget: WorkoutSectionTypesInfo()),
-                  )
-                ],
-              ),
+                ),
+                const InfoPopupButton(infoWidget: WorkoutSectionTypesInfo())
+              ],
             ),
           ),
           WorkoutSectionTypeMultiSelector(

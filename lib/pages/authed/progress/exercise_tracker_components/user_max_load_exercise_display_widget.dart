@@ -9,11 +9,11 @@ import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
-import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/max_load_tracker/user_max_load_tracker_details.dart';
+import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/user_max_load_tracker_details.dart';
 import 'package:supercharged/supercharged.dart';
 
 class MaxLoadExerciseDisplayWidget extends StatelessWidget {
-  final UserMaxLoadExerciseTracker tracker;
+  final UserExerciseLoadTracker tracker;
   const MaxLoadExerciseDisplayWidget({Key? key, required this.tracker})
       : super(key: key);
 
@@ -97,7 +97,7 @@ class MaxLoadExerciseDisplayWidget extends StatelessWidget {
                   '${tracker.reps} $repString',
                 ),
                 _buildInfoHeader(
-                  'Max Lift',
+                  'Highest',
                 ),
               ],
             ),

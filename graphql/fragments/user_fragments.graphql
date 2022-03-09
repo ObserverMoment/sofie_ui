@@ -5,39 +5,6 @@ fragment UserAvatarData on UserAvatarData {
   displayName
 }
 
-fragment UserBenchmarkSummary on UserBenchmarkSummary {
-  __typename
-  id
-  lastEntryAt
-  name
-  equipmentInfo
-  benchmarkType
-  loadUnit
-}
-
-fragment UserBenchmark on UserBenchmark {
-  __typename
-  id
-  createdAt
-  lastEntryAt
-  name
-  description
-  equipmentInfo
-  benchmarkType
-  loadUnit
-}
-
-fragment UserBenchmarkEntry on UserBenchmarkEntry {
-  __typename
-  id
-  createdAt
-  completedOn
-  score
-  note
-  videoUri
-  videoThumbUri
-}
-
 fragment UserProfile on UserProfile {
   __typename
   id

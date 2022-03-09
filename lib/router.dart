@@ -9,9 +9,7 @@ import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_eat_well_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_sleep_well_log_creator_page.dart';
-import 'package:sofie_ui/components/creators/user_exercise_trackers/fastest_time_tracker_creator_page.dart';
-import 'package:sofie_ui/components/creators/user_exercise_trackers/max_load_tracker_creator_page.dart';
-import 'package:sofie_ui/components/creators/user_exercise_trackers/max_unbroken_tracker_creator_page.dart';
+import 'package:sofie_ui/components/creators/exercise_load_tracker_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_goal_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_meditation_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
@@ -183,13 +181,8 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
           /// Create exercise tracker widgets.
           AutoRoute(
-              path: 'create/max-lift-tracker', page: MaxLoadTrackerCreatorPage),
-          AutoRoute(
-              path: 'create/fastest-time-tracker',
-              page: FastestTimeTrackerCreatorPage),
-          AutoRoute(
-              path: 'create/max-unbroken-tracker',
-              page: MaxUnbrokenTrackerCreatorPage),
+              path: 'create/max-lift-tracker',
+              page: ExerciseLoadTrackerCreatorPage),
 
           AutoRoute(page: PageNotFoundPage, path: '404'),
           RedirectRoute(path: '*', redirectTo: '404')
