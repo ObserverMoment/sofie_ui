@@ -39,7 +39,7 @@ class SubSectionLinkTile extends StatelessWidget {
                 label,
                 maxLines: 2,
                 textAlign: TextAlign.center,
-                size: FONTSIZE.one,
+                size: FONTSIZE.zero,
               ),
             ),
           ],

@@ -478,7 +478,6 @@ class _ClubFeedPostCreatorPageState extends State<ClubFeedPostCreatorPage> {
                         assetImageUri: 'assets/placeholder_images/workout.jpg',
                         onPressed: () => context.navigateTo(YourWorkoutsRoute(
                             pageTitle: 'Select Workout',
-                            showCreateButton: true,
                             selectWorkout: _selectWorkout)),
                       ),
                       ShareObjectTypeSelectorButton(

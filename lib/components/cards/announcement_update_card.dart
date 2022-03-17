@@ -55,8 +55,8 @@ class AnnouncementUpdateCard extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Styles.black.withOpacity(0.65),
-                      Styles.black.withOpacity(0.1),
+                      Styles.black.withOpacity(0.6),
+                      Styles.black.withOpacity(0.05),
                     ])),
           ),
           Padding(

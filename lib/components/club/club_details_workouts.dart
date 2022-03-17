@@ -64,7 +64,6 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     context.navigateTo(YourWorkoutsRoute(
         pageTitle: 'Select Workout',
         showSaved: false,
-        showCreateButton: true,
         selectWorkout: (w) => _addWorkoutToClub(context, w)));
   }
 

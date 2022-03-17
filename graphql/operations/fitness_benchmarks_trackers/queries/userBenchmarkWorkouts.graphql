@@ -1,0 +1,9 @@
+# Standard and Custom + all scores relating to them.
+query userBenchmarkWorkouts {
+  userBenchmarkWorkouts {
+    ...FitnessBenchmarkWorkout
+    FitnessBenchmarkWorkoutScores {
+      ...FitnessBenchmarkWorkoutScore
+    }
+  }
+}

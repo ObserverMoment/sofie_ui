@@ -31,7 +31,7 @@ class YourWorkoutsPage extends StatefulWidget {
   const YourWorkoutsPage(
       {Key? key,
       this.selectWorkout,
-      this.showCreateButton = false,
+      this.showCreateButton = true,
       this.showDiscoverButton = false,
       this.pageTitle,
       this.showSaved = true,

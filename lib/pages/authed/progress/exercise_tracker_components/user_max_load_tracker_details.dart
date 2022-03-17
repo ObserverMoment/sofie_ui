@@ -28,7 +28,7 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
       BuildContext context, UserExerciseLoadTracker tracker) async {
     context.showConfirmDeleteDialog(
         message:
-            'Deleting this tracker will also delete all manual entries that you have previously submitted. This cannot be undone. OK?',
+            'Deleting this tracker will not delete anything from your logs, scores or history.',
         itemType: 'Score Tracker',
         onConfirm: () async {
           final result = await context.graphQLStore.delete(

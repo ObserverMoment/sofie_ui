@@ -1044,7 +1044,7 @@ class YourWorkoutsRoute extends _i63.PageRouteInfo<YourWorkoutsRouteArgs> {
   YourWorkoutsRoute(
       {_i65.Key? key,
       void Function(_i66.WorkoutSummary)? selectWorkout,
-      bool showCreateButton = false,
+      bool showCreateButton = true,
       bool showDiscoverButton = false,
       String? pageTitle,
       bool showSaved = true,
@@ -1067,7 +1067,7 @@ class YourWorkoutsRouteArgs {
   const YourWorkoutsRouteArgs(
       {this.key,
       this.selectWorkout,
-      this.showCreateButton = false,
+      this.showCreateButton = true,
       this.showDiscoverButton = false,
       this.pageTitle,
       this.showSaved = true,

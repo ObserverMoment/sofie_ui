@@ -11,6 +11,7 @@ class CoreDataRepo {
   static List<WorkoutSectionType> workoutSectionTypes = [];
   static List<Move> standardMoves = [];
   static List<ProgressWidget> progressWidgets = [];
+  static List<FitnessBenchmarkCategory> fitnessBenchmarkCategories = [];
 
   static Future<void> initCoreData(BuildContext context) async {
     final result = await context.graphQLStore
@@ -27,6 +28,7 @@ class CoreDataRepo {
           workoutSectionTypes = coreData.workoutSectionTypes;
           standardMoves = coreData.standardMoves;
           progressWidgets = coreData.progressWidgets;
+          fitnessBenchmarkCategories = coreData.fitnessBenchmarkCategories;
         });
   }
 }

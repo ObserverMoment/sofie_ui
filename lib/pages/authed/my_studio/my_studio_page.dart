@@ -33,8 +33,8 @@ class MyStudioPage extends StatelessWidget {
                 CategoryLinkTile(
                   label: 'Workouts',
                   assetImagePath: 'workouts.svg',
-                  onTap: () => context.navigateTo(YourWorkoutsRoute(
-                      showCreateButton: true, showDiscoverButton: true)),
+                  onTap: () => context
+                      .navigateTo(YourWorkoutsRoute(showDiscoverButton: true)),
                 ),
                 CategoryLinkTile(
                   label: 'Plans',

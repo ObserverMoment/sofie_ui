@@ -38,7 +38,7 @@ class _UserAvatarUploaderState extends State<UserAvatarUploader> {
     try {
       final XFile? pickedFile = await ImagePicker().pickImage(source: source);
       if (pickedFile != null) {
-        final File? croppedFile = await ImageCropper.cropImage(
+        final File? croppedFile = await ImageCropper().cropImage(
           cropStyle: CropStyle.circle,
           sourcePath: pickedFile.path,
         );

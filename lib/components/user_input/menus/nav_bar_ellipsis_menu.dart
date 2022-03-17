@@ -37,7 +37,7 @@ class _NavBarEllipsisMenuState extends State<NavBarEllipsisMenu> {
           size: Styles.buttonIconSize,
         ),
       ),
-      menuBuilder: () => DropdownMenu(
+      menuBuilder: () => NavBarEllipsisDropdownMenu(
         items: widget.items,
         controller: _controller,
       ),
@@ -46,10 +46,11 @@ class _NavBarEllipsisMenuState extends State<NavBarEllipsisMenu> {
 }
 
 /// Drop down / context menu UI - use with custom_popup_menu to display options next to clicked item.
-class DropdownMenu extends StatelessWidget {
+class NavBarEllipsisDropdownMenu extends StatelessWidget {
   final List<ContextMenuItem> items;
   final CustomPopupMenuController controller;
-  const DropdownMenu({Key? key, required this.items, required this.controller})
+  const NavBarEllipsisDropdownMenu(
+      {Key? key, required this.items, required this.controller})
       : super(key: key);
 
   @override
@@ -161,7 +162,7 @@ class _ContextMenuDelegateState extends State<ContextMenuDelegate> {
       pressType: PressType.singleClick,
       showArrow: false,
       child: widget.tappable,
-      menuBuilder: () => DropdownMenu(
+      menuBuilder: () => NavBarEllipsisDropdownMenu(
         items: widget.items,
         controller: _controller,
       ),
