@@ -258,8 +258,12 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                             RepPickerDisplay(
                               expandPopup: true,
                               reps: _activeWorkoutMove!.reps,
-                              validRepTypes:
-                                  _activeWorkoutMove!.move.validRepTypes,
+                              validRepTypes: (widget.validRepTypes ?? [])
+                                  .toSet()
+                                  .intersection(_activeWorkoutMove!
+                                      .move.validRepTypes
+                                      .toSet())
+                                  .toList(),
                               repType: _activeWorkoutMove!.repType,
                               updateReps: (reps) =>
                                   _updateWorkoutMove({'reps': reps}),
@@ -276,7 +280,6 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                           if (_showLoadPicker())
                             FadeIn(
                               child: LoadPickerDisplay(
-                                expandPopup: true,
                                 loadAmount: _activeWorkoutMove!.loadAmount,
                                 loadUnit: _activeWorkoutMove!.loadUnit,
                                 updateLoad: (loadAmount, loadUnit) =>

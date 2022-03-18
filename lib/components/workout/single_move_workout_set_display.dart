@@ -51,29 +51,21 @@ class SingleMoveWorkoutSetDisplay extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          MyText(
-                            templateWorkoutMove.move.name,
-                          ),
-                          if (workoutSectionType.isCustom)
-                            Padding(
-                              padding: const EdgeInsets.only(left: 6.0),
-                              child: MyText(
-                                  '(${templateWorkoutMove.repDisplay.capitalize})'),
-                            )
-                        ],
+                      MyText(
+                        templateWorkoutMove.move.name,
+                        size: FONTSIZE.two,
                       ),
                       if (templateWorkoutMove.equipment != null)
                         MyText(
                           templateWorkoutMove.equipment!.name,
                           color: Styles.primaryAccent,
                           lineHeight: 1.2,
+                          size: FONTSIZE.one,
                         ),
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 12, bottom: 8),
+                    padding: const EdgeInsets.only(top: 8, bottom: 4),
                     child: Wrap(
                       spacing: 20,
                       runSpacing: 10,
@@ -111,7 +103,7 @@ class _WorkoutMoveInSingleMoveSet extends StatelessWidget {
         const SizedBox(width: 3),
         MyText(
           workoutMove.repDisplay,
-          size: FONTSIZE.three,
+          size: FONTSIZE.two,
         ),
       ],
     );
@@ -128,7 +120,7 @@ class _WorkoutMoveInSingleMoveSet extends StatelessWidget {
         const SizedBox(width: 3),
         MyText(
           workoutMove.loadUnit.display,
-          size: FONTSIZE.three,
+          size: FONTSIZE.two,
         ),
       ],
     );
@@ -159,8 +151,8 @@ class _WorkoutMoveInSingleMoveSet extends StatelessWidget {
             subtext: true,
           ),
         ),
-        ContentBox(
-          backgroundColor: context.theme.background.withOpacity(0.6),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, right: 16, top: 4, bottom: 4),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -169,7 +161,6 @@ class _WorkoutMoveInSingleMoveSet extends StatelessWidget {
                 const MyText(
                   ' @ ',
                   size: FONTSIZE.two,
-                  subtext: true,
                 ),
               if (showLoad) _buildLoadDisplay(),
             ],

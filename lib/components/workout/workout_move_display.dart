@@ -59,13 +59,7 @@ class WorkoutMoveDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showLoad = Utils.hasLoad(workoutMove.loadAmount) &&
-        (workoutMove.equipment != null &&
-                workoutMove.equipment!.loadAdjustable ||
-            workoutMove.move.requiredEquipments.isNotEmpty &&
-                workoutMove.move.requiredEquipments
-                    .any((e) => e.loadAdjustable));
-
+    final showLoad = workoutMove.loadAdjustable;
     final hasRepsOrLoad = showReps || showLoad;
 
     return SizedBox(

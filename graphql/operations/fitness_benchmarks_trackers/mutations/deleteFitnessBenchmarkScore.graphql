@@ -1,0 +1,11 @@
+mutation deleteFitnessBenchmarkScore($id: ID!) {
+  deleteFitnessBenchmarkScore(id: $id) {
+    ...FitnessBenchmark
+    FitnessBenchmarkCategory {
+      ...FitnessBenchmarkCategory
+    }
+    FitnessBenchmarkScores {
+      ...FitnessBenchmarkScore
+    }
+  }
+}

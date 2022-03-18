@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_input.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -58,7 +59,6 @@ class _NumberInputModalIntState extends State<NumberInputModalInt> {
   @override
   Widget build(BuildContext context) {
     return ModalPageScaffold(
-      resizeToAvoidBottomInset: true,
       cancel: context.pop,
       save: _saveValue,
       validToSave:
@@ -68,7 +68,7 @@ class _NumberInputModalIntState extends State<NumberInputModalInt> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
             child: MyNumberInput(
               _controller,
               autoFocus: true,
@@ -85,12 +85,14 @@ class NumberInputModalDouble extends StatefulWidget {
   final double? value;
   final void Function(double value) saveValue;
   final bool allowNegative;
+  final String? unitDisplay;
   const NumberInputModalDouble(
       {Key? key,
       required this.value,
       required this.saveValue,
       this.title = 'Enter...',
-      this.allowNegative = false})
+      this.allowNegative = false,
+      this.unitDisplay})
       : super(key: key);
   @override
   _NumberInputModalDoubleState createState() => _NumberInputModalDoubleState();
@@ -133,7 +135,6 @@ class _NumberInputModalDoubleState extends State<NumberInputModalDouble> {
   @override
   Widget build(BuildContext context) {
     return ModalPageScaffold(
-      resizeToAvoidBottomInset: true,
       cancel: context.pop,
       save: _saveValue,
       validToSave:
@@ -143,7 +144,7 @@ class _NumberInputModalDoubleState extends State<NumberInputModalDouble> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
             child: Row(
               children: [
                 if (widget.allowNegative)
@@ -183,6 +184,11 @@ class _NumberInputModalDoubleState extends State<NumberInputModalDouble> {
               ],
             ),
           ),
+          if (widget.unitDisplay != null)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MyText(widget.unitDisplay!),
+            ),
         ],
       ),
     );

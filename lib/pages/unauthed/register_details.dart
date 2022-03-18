@@ -70,7 +70,7 @@ class _RegisterDetailsState extends State<RegisterDetails> {
               validator: () => widget.nameIsValid,
               autofocus: true,
               autofillHints: const <String>[AutofillHints.name],
-              backgroundColor: context.theme.background,
+              backgroundColor: context.theme.cardBackground,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
@@ -134,14 +134,14 @@ class _RegisterDetailsState extends State<RegisterDetails> {
               controller: widget.emailController,
               validator: widget.validateEmail,
               autofillHints: const <String>[AutofillHints.email],
-              backgroundColor: context.theme.background,
+              backgroundColor: context.theme.cardBackground,
             ),
             const SizedBox(height: 10),
             MyPasswordFieldRow(
               controller: widget.passwordController,
               validator: widget.validatePassword,
               autofillHints: const <String>[AutofillHints.newPassword],
-              backgroundColor: context.theme.background,
+              backgroundColor: context.theme.cardBackground,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),

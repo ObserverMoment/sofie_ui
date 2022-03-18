@@ -199,6 +199,8 @@ class _Stats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loadUnitString =
+        activeBodyTrackingEntry?.bodyweightUnit?.display ?? 'kg';
     return ListView(
       shrinkWrap: true,
       children: [
@@ -212,8 +214,9 @@ class _Stats extends StatelessWidget {
         UserInputContainer(
             child: DoublePickerRowTapToEdit(
           title: 'Body Weight',
-          suffix: activeBodyTrackingEntry?.bodyweightUnit?.display ?? 'kg',
+          suffix: loadUnitString,
           value: activeBodyTrackingEntry?.bodyweight,
+          inputUnitDisplay: loadUnitString,
           saveValue: (bodyweight) => update({'bodyweight': bodyweight}),
         )),
         SizedBox(

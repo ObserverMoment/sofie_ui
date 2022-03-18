@@ -75,12 +75,21 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     /// Core app data such as equipment, moves, body areas and other non user generated content.
     await CoreDataRepo.initCoreData(context);
 
-    /// Get the users log history here as well.
-    /// All [QueryObservers] watching this query in the app should be set with
-    /// [fetchPolicy: QueryFetchPolicy.storeFirst] - as the data should already be there and should never be updated independently by anyone else than the user.
-    /// final query =
-    final query = UserLoggedWorkoutsQuery();
-    await context.graphQLStore.query(query: query);
+    final userLoggedWorkoutsQuery = UserLoggedWorkoutsQuery();
+    final announcementUpdatesQuery = AnnouncementUpdatesQuery();
+    final welcomeTodoItemsQuery = WelcomeTodoItemsQuery();
+    final userScheduledWorkoutsQuery = UserScheduledWorkoutsQuery();
+
+    Future.wait([
+      /// Get all the user logs - then we can always use [storeFirst] for these queries in the app. Removing this and not changing in app queries to [storeAndNetwork] will result in a query list of a single log in the case that the user logs a workout BEFORE downloading their full list of logs.
+      context.graphQLStore.query(query: userLoggedWorkoutsQuery),
+
+      /// Get data required to display the Feed page that the user lands on.
+      context.graphQLStore.query(query: announcementUpdatesQuery),
+      context.graphQLStore.query(query: welcomeTodoItemsQuery),
+      context.graphQLStore.query(query: userScheduledWorkoutsQuery),
+    ]);
+
     _coreAppDataInitialized = true;
   }
 

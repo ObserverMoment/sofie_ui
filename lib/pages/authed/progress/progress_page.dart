@@ -16,25 +16,25 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/progress/active_widgets_selector.dart';
-import 'package:sofie_ui/pages/authed/progress/components/sub_section_link_tile.dart';
-import 'package:sofie_ui/pages/authed/progress/components/widget_header.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/eat_well_logs_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_meditations_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_moods_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_sessions_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/sleep_well_logs_full_screen.dart';
-import 'package:sofie_ui/pages/authed/progress/widget_containers/eat_well_logs_container.dart';
-import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_meditations_container.dart';
-import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_moods_container.dart';
-import 'package:sofie_ui/pages/authed/progress/widget_containers/logged_sessions_container.dart';
-import 'package:sofie_ui/pages/authed/progress/widget_containers/sleep_well_logs_container.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/all_time_stats_summary.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/eat_well_logs.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/logged_meditations.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/logged_moods.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/logged_sessions.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/sleep_well_logs.dart';
-import 'package:sofie_ui/pages/authed/progress/widgets/streak_summary.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_page_components/sub_section_link_tile.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_page_components/widget_header.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/eat_well_logs_container.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/logged_meditations_container.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/logged_moods_container.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/logged_sessions_container.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/sleep_well_logs_container.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/all_time_stats_summary.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/eat_well_logs.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/logged_meditations.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/logged_moods.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/logged_sessions.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/sleep_well_logs.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_widgets/streak_summary.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -55,7 +55,10 @@ class ProgressPage extends StatelessWidget {
   const ProgressPage({Key? key}) : super(key: key);
 
   double get _widgetHeight => 220.0;
-  Widget get _widgetLoadingShimmer => ShimmerCard(height: _widgetHeight);
+  Widget get _widgetLoadingShimmer => const Center(
+          child: CupertinoActivityIndicator(
+        radius: 16,
+      ));
   Widget get _fullScreenLoadingShimmer => const ShimmerCardList(
         cardHeight: 300,
         itemCount: 6,
@@ -334,10 +337,10 @@ class ProgressPage extends StatelessWidget {
                   crossAxisCount: 4,
                   children: [
                     SubSectionLinkTile(
-                      label: 'Personal Bests',
-                      assetImagePath: 'personal_bests.svg',
+                      label: 'Personal Scorebook',
+                      assetImagePath: 'logs.svg',
                       onTap: () =>
-                          context.navigateTo(const PersonalBestsRoute()),
+                          context.navigateTo(const PersonalScoresRoute()),
                     ),
                     SubSectionLinkTile(
                       label: 'Goal Tracking',

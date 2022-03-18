@@ -1,12 +1,15 @@
 import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:collection/collection.dart';
 
 class DataUtils {
+  /// https://www.unitconverters.net/weight-and-mass/kg-to-lbs.htm
+  static double convertKgToLb(double kg) => kg * 2.2046226218;
+  static double convertLbToKg(double lb) => lb * 0.45359237;
+
   static List<WaffleChartInput> waffleChartInputsFromGoals(
       List<WorkoutGoal> goals) {
     final data = goals.fold<Map<WorkoutGoal, int>>({}, (acum, next) {
@@ -177,22 +180,6 @@ class DataUtils {
 
       return map;
     });
-  }
-
-  static String buildBenchmarkEntryScoreText(BenchmarkType benchmarkType,
-      LoadUnit loadUnit, UserBenchmarkEntry entry) {
-    switch (benchmarkType) {
-      case BenchmarkType.maxload:
-        return '${entry.score.stringMyDouble()}${loadUnit.display}';
-      case BenchmarkType.fastesttime:
-      case BenchmarkType.unbrokentime:
-        return Duration(seconds: entry.score.round()).compactDisplay;
-      case BenchmarkType.amrap:
-      case BenchmarkType.unbrokenreps:
-        return '${entry.score.stringMyDouble()} reps';
-      default:
-        return entry.score.stringMyDouble();
-    }
   }
 
   /// 0 = true / yes

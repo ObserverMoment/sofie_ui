@@ -76,6 +76,9 @@ extension DateTimeExtension on DateTime {
         tomorrow.year == year;
   }
 
+  /// Truncates hours, mins, secs etc.
+  DateTime get roundedToDay => DateTime(year, month, day);
+
   bool isSameDate(DateTime other) {
     return year == other.year && month == other.month && day == other.day;
   }
@@ -126,6 +129,17 @@ extension DateTimeExtension on DateTime {
     int dayOfDec28 = int.parse(DateFormat("D").format(dec28));
     return ((dayOfDec28 - dec28.weekday + 10) / 7).floor();
   }
+
+  /// Adding and subtracting. Pass negative
+  DateTime daysBefore(int days) => DateTime(year, month, day - days);
+  DateTime daysAfter(int days) => DateTime(year, month, day + days);
+
+  /// Checking date falling within a range.
+  bool isBeforeOrSame(DateTime to) => isAtSameMomentAs(to) || isBefore(to);
+  bool isAfterOrSame(DateTime from) => isAtSameMomentAs(from) || isAfter(from);
+  bool isBetweenDates(DateTime? from, DateTime? to) =>
+      (from == null || isAfterOrSame(from)) &&
+      (to == null || isBeforeOrSame(to));
 }
 
 extension DoubleExtension on double {
@@ -247,6 +261,34 @@ extension DurationExtension on Duration {
     final String _seconds = inSeconds.remainder(60).toString().padLeft(2, '0');
 
     return '$_hours$_minutes$_seconds';
+  }
+
+  /// https://vnapppro.com/question/flutter-dart-format-duration-to-show-just-minutes-seconds-and-milliseconds/
+  String get prettyDuration {
+    final components = <String>[];
+    final days = inDays;
+    if (days != 0) {
+      components.add('${days}d ');
+    }
+    final hours = inHours % 24;
+    if (hours != 0) {
+      components.add('${hours}h ');
+    }
+    final minutes = inMinutes % 60;
+    if (minutes != 0) {
+      components.add('${minutes}m ');
+    }
+    final seconds = inSeconds % 60;
+    final deciseconds = (inMilliseconds % 1000) ~/ 100;
+    if (components.isEmpty || seconds != 0 || deciseconds != 0) {
+      components.add('$seconds');
+      if (deciseconds != 0) {
+        components.add('.');
+        components.add(deciseconds.toString().padLeft(1, '0'));
+      }
+      components.add('s ');
+    }
+    return components.join();
   }
 }
 

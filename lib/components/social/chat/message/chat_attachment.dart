@@ -92,7 +92,7 @@ class ChatAttachmentImage extends StatelessWidget {
         : Align(
             alignment: alignment,
             child: OpenContainer(
-                closedColor: context.theme.modalBackground,
+                closedColor: context.theme.cardBackground,
                 openColor: context.theme.background,
                 closedShape:
                     RoundedRectangleBorder(borderRadius: _borderRadius),

@@ -770,8 +770,8 @@ class GraphQLStore {
   }
 }
 
-/// A single stream of data relating toa single executable [GraphQLQuery].
-/// Allows a widget to watch this stream and re-build when new data is broadcast to it.
+/// A single stream of data relating to a single executable [GraphQLQuery].
+/// Allows a widget / component to watch this stream and re-build when new data is broadcast to it.
 class ObservableQuery<TData, TVars extends json.JsonSerializable> {
   final BehaviorSubject<GraphQLResponse> subject;
   late GraphQLQuery<TData, TVars> query;

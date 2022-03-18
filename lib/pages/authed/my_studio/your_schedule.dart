@@ -76,7 +76,6 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
                 text: 'Your Workouts',
                 onPressed: () => context.navigateTo(YourWorkoutsRoute(
                     selectWorkout: (w) => _openScheduleWorkout(w),
-                    showCreateButton: true,
                     pageTitle: 'Select Workout'))),
             BottomSheetMenuItem(
                 text: 'Public Workouts',

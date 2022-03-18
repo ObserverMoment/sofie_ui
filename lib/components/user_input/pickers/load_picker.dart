@@ -13,29 +13,26 @@ class LoadPickerDisplay extends StatelessWidget {
   final double loadAmount;
   final LoadUnit loadUnit;
   final void Function(double loadAmount, LoadUnit loadUnit) updateLoad;
-  final bool expandPopup;
   final FONTSIZE valueFontSize;
   final FONTSIZE suffixFontSize;
-  const LoadPickerDisplay(
-      {Key? key,
-      required this.loadAmount,
-      required this.updateLoad,
-      required this.loadUnit,
-      this.valueFontSize = FONTSIZE.nine,
-      this.suffixFontSize = FONTSIZE.three,
-      this.expandPopup = false})
-      : super(key: key);
+  const LoadPickerDisplay({
+    Key? key,
+    required this.loadAmount,
+    required this.updateLoad,
+    required this.loadUnit,
+    this.valueFontSize = FONTSIZE.nine,
+    this.suffixFontSize = FONTSIZE.three,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => context.showBottomSheet(
-          expand: expandPopup,
           child: LoadPickerModal(
-            loadAmount: loadAmount,
-            updateLoad: updateLoad,
-            loadUnit: loadUnit,
-          )),
+        loadAmount: loadAmount,
+        updateLoad: updateLoad,
+        loadUnit: loadUnit,
+      )),
       child: ContentBox(
         child: Row(
           mainAxisSize: MainAxisSize.min,

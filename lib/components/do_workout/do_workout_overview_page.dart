@@ -76,30 +76,46 @@ class DoWorkoutOverview extends StatelessWidget {
               _TopNavBar(
                   handleExitRequest: handleExitRequest,
                   generateLog: generateLog),
-              Expanded(
-                child: ListView(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                  shrinkWrap: true,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: _WorkoutIntroSummaryCard(
-                          workout: workout, generateLog: generateLog),
-                    ),
-                    ...List.generate(
-                        numWorkoutSections,
-                        (index) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 6.0),
-                              child: _WorkoutSectionSummary(
-                                  sectionIndex: index,
-                                  navigateToSectionPage: () =>
-                                      navigateToSectionPage(index)),
-                            )),
-                  ],
-                ),
-              )
+              numWorkoutSections == 0
+                  ? Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: ContentBox(
+                        child: Column(
+                          children: const [
+                            Icon(CupertinoIcons.exclamationmark_circle_fill,
+                                color: Styles.errorRed),
+                            SizedBox(height: 4),
+                            MyText('Oops...', lineHeight: 1.5),
+                            MyText('This workout has no defined sections!',
+                                lineHeight: 1.5),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 6),
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: _WorkoutIntroSummaryCard(
+                                workout: workout, generateLog: generateLog),
+                          ),
+                          ...List.generate(
+                              numWorkoutSections,
+                              (index) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 6.0),
+                                    child: _WorkoutSectionSummary(
+                                        sectionIndex: index,
+                                        navigateToSectionPage: () =>
+                                            navigateToSectionPage(index)),
+                                  )),
+                        ],
+                      ),
+                    )
             ],
           ),
         ],
@@ -380,7 +396,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
         (b) => b.getControllerForSection(sectionIndex));
 
     /// TODO: May be unreliable as this state object is usually broadcast via a stream.
-    /// We seemto be getting correct values from this at the correct time because of some other change (play / pause of section?) triggering the listener.
+    /// We seem to be getting correct values from this at the correct time because of some other change (play / pause of section?) triggering the listener.
     final percentComplete = context.select<DoWorkoutBloc, double>(
         (b) => b.getControllerForSection(sectionIndex).state.percentComplete);
 
@@ -526,7 +542,7 @@ class _WorkoutSectionSummary extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
                       MyText(
-                        'This section has no sets in it...',
+                        'This section has no sets in it!',
                         textAlign: TextAlign.center,
                       ),
                     ],

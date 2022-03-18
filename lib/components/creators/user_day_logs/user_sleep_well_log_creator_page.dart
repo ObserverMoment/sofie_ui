@@ -61,7 +61,7 @@ class _UserSleepWellLogCreatorPageState
 
     _minutesSlept = widget.userSleepWellLog?.minutesSlept;
     _hoursController.text =
-        _minutesSlept != null ? (_minutesSlept! / 60).round().toString() : '';
+        _minutesSlept != null ? (_minutesSlept! / 60).stringMyDouble() : '';
 
     _note = widget.userSleepWellLog?.note;
 
@@ -201,7 +201,7 @@ class _UserSleepWellLogCreatorPageState
                 const MyHeaderText('Hours?'),
                 const SizedBox(width: 16),
                 SizedBox(
-                  width: 120,
+                  width: 140,
                   child: MyNumberInput(
                     _hoursController,
                     allowDouble: true,

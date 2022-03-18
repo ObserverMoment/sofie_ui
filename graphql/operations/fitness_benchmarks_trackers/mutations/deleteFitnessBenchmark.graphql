@@ -1,0 +1,3 @@
+mutation deleteFitnessBenchmark($id: ID!) {
+  deleteFitnessBenchmark(id: $id)
+}

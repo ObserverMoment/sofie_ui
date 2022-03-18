@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
+import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Display for either the front or back of the body, with targeted areas highlighted.
@@ -17,7 +18,6 @@ class TargetedBodyAreasScoreIndicator extends StatelessWidget {
   final BodyAreaFrontBack frontBack;
   final List<BodyAreaMoveScore> bodyAreaMoveScores;
   final double height;
-  final List<BodyArea> allBodyAreas;
 
   /// Percentages do not really work very well for any object more complicated than a move.
   /// As it is very hard to take into consideration how difficult each move is in relation to the other.
@@ -31,7 +31,6 @@ class TargetedBodyAreasScoreIndicator extends StatelessWidget {
       this.basisOpacity = 0.09,
       required this.bodyAreaMoveScores,
       required this.frontBack,
-      required this.allBodyAreas,
       required this.height,
       this.indicatePercentWithColor = false})
       : super(key: key);
@@ -60,7 +59,7 @@ class TargetedBodyAreasScoreIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final nonActiveColor = Styles.greyOne.withOpacity(0.05);
 
-    final List<BodyArea> bodyAreasToDisplay = allBodyAreas
+    final List<BodyArea> bodyAreasToDisplay = CoreDataRepo.bodyAreas
         .where((ba) =>
             ba.frontBack == frontBack || ba.frontBack == BodyAreaFrontBack.both)
         .toList();

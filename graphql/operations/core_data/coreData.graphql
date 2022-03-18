@@ -37,8 +37,8 @@ query coreData {
     progressWidgets {
       ...ProgressWidget
     }
-    logDataWidgets {
-      ...LogDataWidget
+    fitnessBenchmarkCategories {
+      ...FitnessBenchmarkCategory
     }
   }
 }

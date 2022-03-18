@@ -111,12 +111,13 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
                     CupertinoActivityIndicator(
-                      radius: 20,
+                      radius: 14,
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 16),
                     MyText(
                       'ONE MOMENT...',
                       subtext: true,
+                      size: FONTSIZE.two,
                     ),
                   ],
                 )));

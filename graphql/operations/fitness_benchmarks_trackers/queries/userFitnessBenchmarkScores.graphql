@@ -1,0 +1,11 @@
+query userFitnessBenchmarks {
+  userFitnessBenchmarks {
+    ...FitnessBenchmark
+    FitnessBenchmarkCategory {
+      ...FitnessBenchmarkCategory
+    }
+    FitnessBenchmarkScores {
+      ...FitnessBenchmarkScore
+    }
+  }
+}

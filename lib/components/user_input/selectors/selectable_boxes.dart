@@ -127,3 +127,57 @@ class SelectableBoxExpanded extends StatelessWidget {
     );
   }
 }
+
+class SelectableBoxTextOnly extends StatelessWidget {
+  final bool isSelected;
+  final void Function() onPressed;
+  final String text;
+  final Color selectedColor;
+  final FONTSIZE fontSize;
+  final EdgeInsets padding;
+  const SelectableBoxTextOnly(
+      {Key? key,
+      required this.isSelected,
+      required this.onPressed,
+      required this.text,
+      this.fontSize = FONTSIZE.four,
+      this.selectedColor = Styles.primaryAccent,
+      this.padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10)})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onPressed,
+      child: Padding(
+        padding: padding,
+        child: AnimatedOpacity(
+            duration: kStandardAnimationDuration,
+            opacity: isSelected ? 1.0 : 0.6,
+            child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  MyText(
+                    text,
+                    size: fontSize,
+                    lineHeight: 1,
+                    weight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  ),
+                  if (isSelected)
+                    const Positioned(
+                      top: -12,
+                      right: -12,
+                      child: FadeIn(
+                          child: Icon(
+                        CupertinoIcons.checkmark_alt,
+                        color: Styles.primaryAccent,
+                        size: 18,
+                      )),
+                    )
+                ])),
+      ),
+    );
+  }
+}

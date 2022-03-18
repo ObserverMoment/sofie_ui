@@ -90,16 +90,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 8),
                       child: MyTextFormFieldRow(
-                        placeholder: 'Email',
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailController,
-                        validator: _validateEmail,
-                        autofocus: true,
-                        autofillHints: const <String>[AutofillHints.email],
-                        backgroundColor: context.theme.background,
-                      ),
+                          placeholder: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          controller: _emailController,
+                          validator: _validateEmail,
+                          autofocus: true,
+                          autofillHints: const <String>[AutofillHints.email],
+                          backgroundColor: context.theme.cardBackground),
                     ),
                     const SizedBox(height: 16),
                     PrimaryButton(
@@ -107,6 +107,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         text: 'Send Reset Instructions',
                         loading: _requestingReset,
                         disabled: !_validateEmail()),
+                    const SizedBox(height: 16),
                   ],
                 ),
         ));

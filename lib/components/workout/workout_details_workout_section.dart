@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_page_view.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
@@ -48,19 +47,32 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 10),
+        if (Utils.textNotNull(workoutSection.name))
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: headerSpacerPadding,
+                child: MyHeaderText(
+                  workoutSection.name!,
+                  size: FONTSIZE.three,
+                  subtext: true,
+                ),
+              ),
+            ],
+          ),
         Padding(
           padding: headerSpacerPadding,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               WorkoutSectionTypeTag(
                 workoutSection: workoutSection,
-                fontSize: FONTSIZE.four,
                 withBackground: false,
                 elevation: 0,
                 uppercase: true,
                 showMediaIcons: false,
+                fontSize: FONTSIZE.three,
               ),
               if (workoutSection.rounds > 1)
                 NumberRoundsIcon(
@@ -73,15 +85,6 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
             ],
           ),
         ),
-        if (Utils.textNotNull(workoutSection.name))
-          Padding(
-            padding: headerSpacerPadding,
-            child: MyHeaderText(
-              workoutSection.name!,
-              size: FONTSIZE.two,
-              subtext: true,
-            ),
-          ),
         if (Utils.textNotNull(workoutSection.note))
           Padding(
             padding: headerSpacerPadding,
@@ -98,7 +101,7 @@ class WorkoutDetailsWorkoutSection extends StatelessWidget {
             children: [
               _ActionIconButton(
                 icon: SvgPicture.asset(
-                  'assets/body_areas/body_button.svg',
+                  'assets/category_icons/filter_body_icon.svg',
                   width: 30,
                   alignment: Alignment.topCenter,
                   color: context.theme.primary.withOpacity(0.7),

@@ -48,7 +48,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
   /// While user is typing a list of workoutPlan titles (only) will display.
   void _handleSearchStringUpdate(String text) {
     setState(() => _searchString = text.toLowerCase());
-    if (_searchString.length > 2) {
+    if (_searchString.length > 1) {
       // Clear the previous WorkoutPlan list search results. We revert now to text list while user is inputting text.
       _workoutPlansTextSearchBloc.clear(gotoState: TextSearchState.loading);
 
@@ -89,7 +89,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
           ),
           trailing: NavBarTextButton(context.pop, 'Close'),
         ),
-        child: (_searchString.length > 2
+        child: (_searchString.length > 1
             ? StreamBuilder<TextSearchState>(
                 initialData: TextSearchState.empty,
                 stream: StreamGroup.merge([
@@ -121,7 +121,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                                 // Or show placeholder message.
                                 return const Center(
                                     child: MyText(
-                                  'Enter at least 3 characters',
+                                  'Enter at least 2 characters',
                                   subtext: true,
                                 ));
                               } else {
@@ -157,7 +157,7 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                 })
             : const Center(
                 child: MyText(
-                'Enter at least 3 characters',
+                'Enter at least 2 characters',
                 subtext: true,
               ))));
   }

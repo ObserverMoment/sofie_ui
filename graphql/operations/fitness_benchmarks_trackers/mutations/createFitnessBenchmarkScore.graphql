@@ -1,0 +1,11 @@
+mutation createFitnessBenchmarkScore($data: CreateFitnessBenchmarkScoreInput!) {
+  createFitnessBenchmarkScore(data: $data) {
+    ...FitnessBenchmark
+    FitnessBenchmarkCategory {
+      ...FitnessBenchmarkCategory
+    }
+    FitnessBenchmarkScores {
+      ...FitnessBenchmarkScore
+    }
+  }
+}

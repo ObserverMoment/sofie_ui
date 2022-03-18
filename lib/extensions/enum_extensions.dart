@@ -16,45 +16,6 @@ extension EnumParser on String {
   }
 }
 
-//// Enum type extensions ////
-extension BenchmarkTypeExtension on BenchmarkType {
-  String get apiValue => describeEnum(this).toUpperCase();
-
-  String get display {
-    switch (this) {
-      case BenchmarkType.amrap:
-        return 'AMRAP';
-      case BenchmarkType.maxload:
-        return 'Max Load';
-      case BenchmarkType.unbrokenreps:
-        return 'Reps Unbroken';
-      case BenchmarkType.unbrokentime:
-        return 'Time Unbroken';
-      case BenchmarkType.fastesttime:
-        return 'Fastest Time';
-      default:
-        throw Exception('This is not a valid BenchmarkType enum: $this');
-    }
-  }
-
-  String get description {
-    switch (this) {
-      case BenchmarkType.amrap:
-        return 'Complete as many reps as possible of a move or set of moves within a fixed amount of time. Score the numbetr of reps.';
-      case BenchmarkType.maxload:
-        return 'Properly complete a fixed number of reps or sets with the maximum load possible. Score the load.';
-      case BenchmarkType.unbrokenreps:
-        return 'Go unbroken for a long as possible whilst properly completing reps of a specified movement. Score the reps.';
-      case BenchmarkType.unbrokentime:
-        return 'Go unbroken for a long as possible whilst properly completing reps of a specified movement. Score the time.';
-      case BenchmarkType.fastesttime:
-        return 'Finish fixed reps or sets as fast as possible while still maintaining proper form. Score the time.';
-      default:
-        throw Exception('This is not a valid BenchmarkType enum: $this');
-    }
-  }
-}
-
 extension BodyweightUnitExtension on BodyweightUnit {
   String get apiValue => describeEnum(this).toUpperCase();
   String get display => describeEnum(this);
@@ -148,6 +109,73 @@ extension FeedPostTypeExtension on FeedPostType {
         FeedPostType.workoutPlan,
         FeedPostType.loggedWorkout,
       ].contains(this);
+}
+
+extension FitnessBenchmarkScoreTypeExtension on FitnessBenchmarkScoreType {
+  String get display {
+    switch (this) {
+      case FitnessBenchmarkScoreType.fastesttimedistance:
+      case FitnessBenchmarkScoreType.fastesttimereps:
+        return 'Fastest Time';
+      case FitnessBenchmarkScoreType.longestdistance:
+        return 'Longest Distance';
+      case FitnessBenchmarkScoreType.maxload:
+        return 'Max Load';
+      case FitnessBenchmarkScoreType.timedmaxreps:
+        return 'Max Reps';
+      case FitnessBenchmarkScoreType.unbrokenmaxreps:
+        return 'Unbroken Reps';
+      case FitnessBenchmarkScoreType.unbrokenmaxtime:
+        return 'Hold For Time';
+
+      default:
+        throw Exception(
+            'This is not a valid FitnessBenchmarkScoreType enum: $this');
+    }
+  }
+
+  String get typeHeading {
+    switch (this) {
+      case FitnessBenchmarkScoreType.fastesttimedistance:
+      case FitnessBenchmarkScoreType.fastesttimereps:
+        return 'Time Taken';
+      case FitnessBenchmarkScoreType.longestdistance:
+        return 'Distance';
+      case FitnessBenchmarkScoreType.maxload:
+        return 'Load';
+      case FitnessBenchmarkScoreType.timedmaxreps:
+        return 'Reps Completed';
+      case FitnessBenchmarkScoreType.unbrokenmaxreps:
+        return 'Unbroken Reps';
+      case FitnessBenchmarkScoreType.unbrokenmaxtime:
+        return 'Time Held';
+
+      default:
+        throw Exception(
+            'This is not a valid FitnessBenchmarkScoreType enum: $this');
+    }
+  }
+
+  String? get scoreUnit {
+    switch (this) {
+      case FitnessBenchmarkScoreType.fastesttimedistance:
+      case FitnessBenchmarkScoreType.fastesttimereps:
+      case FitnessBenchmarkScoreType.unbrokenmaxtime:
+        return null; // Will display as time string
+      case FitnessBenchmarkScoreType.longestdistance:
+        return 'Metres';
+      case FitnessBenchmarkScoreType.maxload:
+        return 'KGs';
+      case FitnessBenchmarkScoreType.timedmaxreps:
+        return 'Reps';
+      case FitnessBenchmarkScoreType.unbrokenmaxreps:
+        return 'Reps';
+
+      default:
+        throw Exception(
+            'This is not a valid FitnessBenchmarkScoreType enum: $this');
+    }
+  }
 }
 
 extension GenderExtension on Gender {

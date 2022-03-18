@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -215,6 +216,45 @@ class CreateEditPageNavBar extends CupertinoNavigationBar {
         );
 }
 
+class CreateEditNavBarSimple extends CupertinoNavigationBar {
+  final String title;
+  final bool validToSave;
+  final bool loading;
+  final VoidCallback onSave;
+  final VoidCallback onCancel;
+  CreateEditNavBarSimple(
+      {Key? key,
+      required this.title,
+      required this.onSave,
+      required this.onCancel,
+      required this.validToSave,
+      required this.loading})
+      : super(
+          key: key,
+          border: null,
+          automaticallyImplyLeading: false,
+          middle: Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  NavBarTitle(title),
+                ],
+              )),
+          trailing: loading
+              ? const NavBarActivityIndicator()
+              : NavBarTrailingRow(children: [
+                  if (validToSave)
+                    FadeInUp(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: NavBarTertiarySaveButton(onSave),
+                      ),
+                    ),
+                  NavBarCancelButton(onCancel),
+                ]),
+        );
+}
+
 class MyPageScaffold extends StatelessWidget {
   final CupertinoNavigationBar? navigationBar;
   final Widget child;
@@ -362,44 +402,37 @@ class ModalPageScaffold extends StatelessWidget {
   final void Function()? save;
   final bool validToSave;
   final bool loading;
-  final bool resizeToAvoidBottomInset;
-  const ModalPageScaffold(
-      {Key? key,
-      required this.child,
-      required this.title,
-      this.cancel,
-      this.save,
-      this.loading = false,
-      this.validToSave = false,
-      this.resizeToAvoidBottomInset = false})
-      : super(key: key);
+
+  const ModalPageScaffold({
+    Key? key,
+    required this.child,
+    required this.title,
+    this.cancel,
+    this.save,
+    this.loading = false,
+    this.validToSave = false,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: CupertinoPageScaffold(
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        backgroundColor: context.theme.modalBackground,
-        navigationBar: MyNavBar(
-          customLeading: cancel != null ? NavBarCancelButton(cancel!) : null,
-          backgroundColor: context.theme.modalBackground,
-          middle: NavBarTitle(title),
-          trailing: loading
-              ? const FadeIn(
-                  child: NavBarTrailingRow(
-                    children: [
-                      NavBarLoadingIndicator(),
-                    ],
-                  ),
-                )
-              : save != null && validToSave
-                  ? FadeIn(child: NavBarTertiarySaveButton(save!))
-                  : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 4.0, bottom: 12),
-          child: child,
-        ),
+    return MyPageScaffold(
+      navigationBar: MyNavBar(
+        customLeading: cancel != null ? NavBarCancelButton(cancel!) : null,
+        middle: NavBarTitle(title),
+        trailing: loading
+            ? const FadeIn(
+                child: NavBarTrailingRow(
+                  children: [
+                    NavBarLoadingIndicator(),
+                  ],
+                ),
+              )
+            : save != null && validToSave
+                ? FadeIn(child: NavBarTertiarySaveButton(save!))
+                : null,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 4.0, bottom: 12),
+        child: child,
       ),
     );
   }
@@ -419,7 +452,6 @@ class DialogContainer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ContentBox(
-            backgroundColor: context.theme.modalBackground,
             child: child,
           ),
         ],

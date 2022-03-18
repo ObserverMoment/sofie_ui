@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/category_link_tile.dart';
@@ -20,9 +19,9 @@ class MyStudioPage extends StatelessWidget {
           children: [
             GridView.count(
               padding: const EdgeInsets.only(bottom: 10.0, left: 10, right: 10),
-              crossAxisSpacing: 12,
+              crossAxisSpacing: 8,
               physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
+              mainAxisSpacing: 8,
               shrinkWrap: true,
               crossAxisCount: 3,
               children: [
@@ -34,8 +33,8 @@ class MyStudioPage extends StatelessWidget {
                 CategoryLinkTile(
                   label: 'Workouts',
                   assetImagePath: 'workouts.svg',
-                  onTap: () => context.navigateTo(YourWorkoutsRoute(
-                      showCreateButton: true, showDiscoverButton: true)),
+                  onTap: () => context
+                      .navigateTo(YourWorkoutsRoute(showDiscoverButton: true)),
                 ),
                 CategoryLinkTile(
                   label: 'Plans',

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
@@ -51,7 +52,7 @@ class ReadMoreTextBlock extends StatelessWidget {
   final String delimiter = '\u2026';
 
   void _onTapLink(BuildContext context) {
-    context.showBottomSheet(child: TextViewer(text, title));
+    context.push(child: TextViewer(text, title));
   }
 
   @override
@@ -193,32 +194,19 @@ class TextViewer extends StatelessWidget {
   const TextViewer(this.text, this.title, {Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return MyPageScaffold(
+      navigationBar: MyNavBar(
+        middle: NavBarLargeTitle(title),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    child: const Padding(
-                      padding: EdgeInsets.only(bottom: 16.0, top: 8),
-                      child: Icon(CupertinoIcons.chevron_down),
-                    ),
-                    onTap: context.pop)
-              ],
-            ),
-            H2(title),
-            const SizedBox(height: 16),
-            MyText(
-              text,
-              maxLines: 999,
-              lineHeight: 1.4,
-              size: FONTSIZE.four,
-            ),
-          ],
+        padding: const EdgeInsets.all(12.0),
+        child: SingleChildScrollView(
+          child: MyText(
+            text,
+            maxLines: 999,
+            lineHeight: 1.4,
+            size: FONTSIZE.four,
+          ),
         ),
       ),
     );

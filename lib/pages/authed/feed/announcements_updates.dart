@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/announcement_update_card.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:collection/collection.dart';
@@ -19,18 +19,20 @@ class AnnouncementsUpdates extends StatelessWidget {
     return QueryObserver<AnnouncementUpdates$Query, json.JsonSerializable>(
         key: Key('AnnouncementsUpdates- ${query.operationName}'),
         query: query,
+        // Should already have queried for this data when booting app.
+        fetchPolicy: QueryFetchPolicy.storeFirst,
         loadingIndicator: Container(),
         builder: (data) {
-          return GrowInOut(
-              show: data.announcementUpdates.isNotEmpty,
-              child: Container(
-                padding: const EdgeInsets.only(top: 16, bottom: 8),
-                height: 200,
-                child: AnnouncementUpdatesList(
-                  announcements: data.announcementUpdates
-                      .sortedBy<DateTime>((a) => a.createdAt),
-                ),
-              ));
+          return data.announcementUpdates.isNotEmpty
+              ? Container(
+                  padding: const EdgeInsets.only(top: 16, bottom: 8),
+                  height: 200,
+                  child: AnnouncementUpdatesList(
+                    announcements: data.announcementUpdates
+                        .sortedBy<DateTime>((a) => a.createdAt),
+                  ),
+                )
+              : Container();
         });
   }
 }

@@ -26,24 +26,20 @@ class CompactTimerIcon extends StatelessWidget {
   final bool compactDisplay;
   final double iconSize;
   final FONTSIZE fontSize;
+  final Color? color;
   const CompactTimerIcon(
       {Key? key,
       required this.duration,
       this.compactDisplay = false,
       this.iconSize = 16,
-      this.fontSize = FONTSIZE.four})
+      this.fontSize = FONTSIZE.four,
+      this.color})
       : super(key: key);
 
   List<Widget> _buildChildren(String display) => [
-        Icon(
-          CupertinoIcons.timer,
-          size: iconSize,
-        ),
+        Icon(CupertinoIcons.timer, size: iconSize, color: color),
         const SizedBox(width: 4),
-        MyText(
-          duration?.compactDisplay ?? '---',
-          size: fontSize,
-        )
+        MyText(duration?.compactDisplay ?? '---', size: fontSize, color: color)
       ];
 
   @override

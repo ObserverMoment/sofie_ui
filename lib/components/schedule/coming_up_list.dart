@@ -3,12 +3,12 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 
@@ -21,10 +21,12 @@ class ComingUpList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final query = UserScheduledWorkoutsQuery();
     return QueryObserver<UserScheduledWorkouts$Query, json.JsonSerializable>(
-        key:
-            Key('ComingUpList - ${UserScheduledWorkoutsQuery().operationName}'),
-        query: UserScheduledWorkoutsQuery(),
+        key: Key('ComingUpList - ${query.operationName}'),
+        query: query,
+        // Should already have queried for this data when booting app.
+        fetchPolicy: QueryFetchPolicy.storeFirst,
         loadingIndicator: Container(),
         builder: (data) {
           final comingUp = data.userScheduledWorkouts
@@ -39,33 +41,31 @@ class ComingUpList extends StatelessWidget {
 
           if (comingUp.isEmpty) return Container();
 
-          return GrowIn(
-            child: SizedBox(
-              height: _cardHeight + 8,
-              child: ListView.builder(
-                  padding: const EdgeInsets.only(top: 10, bottom: 10, left: 8),
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemCount: comingUp.length,
-                  itemBuilder: (c, i) {
-                    return GestureDetector(
-                      onTap: () => context.navigateTo(WorkoutDetailsRoute(
-                          id: comingUp[i].workout!.id,
-                          scheduledWorkout: comingUp[i],
-                          workoutPlanDayWorkoutId:
-                              comingUp[i].workoutPlanDayWorkoutId,
-                          workoutPlanEnrolmentId:
-                              comingUp[i].workoutPlanEnrolmentId)),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: _ScheduledWorkoutReminderCard(
-                          scheduledWorkout: comingUp[i],
-                          cardHeight: _cardHeight,
-                        ),
+          return SizedBox(
+            height: _cardHeight + 8,
+            child: ListView.builder(
+                padding: const EdgeInsets.only(top: 10, bottom: 10, left: 8),
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: comingUp.length,
+                itemBuilder: (c, i) {
+                  return GestureDetector(
+                    onTap: () => context.navigateTo(WorkoutDetailsRoute(
+                        id: comingUp[i].workout!.id,
+                        scheduledWorkout: comingUp[i],
+                        workoutPlanDayWorkoutId:
+                            comingUp[i].workoutPlanDayWorkoutId,
+                        workoutPlanEnrolmentId:
+                            comingUp[i].workoutPlanEnrolmentId)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 4.0),
+                      child: _ScheduledWorkoutReminderCard(
+                        scheduledWorkout: comingUp[i],
+                        cardHeight: _cardHeight,
                       ),
-                    );
-                  }),
-            ),
+                    ),
+                  );
+                }),
           );
         });
   }

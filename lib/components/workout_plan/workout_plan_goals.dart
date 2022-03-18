@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/data_vis/percentage_bar_chart.dart';
+import 'package:sofie_ui/components/data_vis/percentage_bar_chart_single.dart';
 import 'package:sofie_ui/components/data_vis/waffle_chart.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';

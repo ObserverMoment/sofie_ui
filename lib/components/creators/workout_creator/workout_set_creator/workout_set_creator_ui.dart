@@ -139,8 +139,7 @@ class WorkoutSetCreatorUI extends StatelessWidget {
                   if (workoutSectionType.isTimed || workoutSet.isRestSet)
                     CupertinoButton(
                         padding: const EdgeInsets.all(4),
-                        onPressed: () => context.showBottomSheet(
-                            expand: false,
+                        onPressed: () => context.showActionSheetPopup(
                             child: WorkoutSetDurationPicker(
                                 switchTitle: workoutSet.isRestSet
                                     ? 'Copy new time to all rest sets'
