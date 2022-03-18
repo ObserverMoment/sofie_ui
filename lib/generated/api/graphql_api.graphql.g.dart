@@ -4478,9 +4478,10 @@ UpdateUserProfileResult _$UpdateUserProfileResultFromJson(
           (json['activeProgressWidgets'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList()
-      ..activeLogDataWidgets = (json['activeLogDataWidgets'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList();
+      ..activeFitnessBenchmarks =
+          (json['activeFitnessBenchmarks'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList();
 
 Map<String, dynamic> _$UpdateUserProfileResultToJson(
         UpdateUserProfileResult instance) =>
@@ -4508,7 +4509,7 @@ Map<String, dynamic> _$UpdateUserProfileResultToJson(
       'lastname': instance.lastname,
       'workoutsPerWeekTarget': instance.workoutsPerWeekTarget,
       'activeProgressWidgets': instance.activeProgressWidgets,
-      'activeLogDataWidgets': instance.activeLogDataWidgets,
+      'activeFitnessBenchmarks': instance.activeFitnessBenchmarks,
     };
 
 const _$GenderEnumMap = {
@@ -4534,9 +4535,10 @@ Map<String, dynamic> _$UpdateUserProfile$MutationToJson(
 UpdateUserProfileInput _$UpdateUserProfileInputFromJson(
         Map<String, dynamic> json) =>
     UpdateUserProfileInput(
-      activeLogDataWidgets: (json['activeLogDataWidgets'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      activeFitnessBenchmarks:
+          (json['activeFitnessBenchmarks'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
       activeProgressWidgets: (json['activeProgressWidgets'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -4568,7 +4570,7 @@ UpdateUserProfileInput _$UpdateUserProfileInputFromJson(
 Map<String, dynamic> _$UpdateUserProfileInputToJson(
         UpdateUserProfileInput instance) =>
     <String, dynamic>{
-      'activeLogDataWidgets': instance.activeLogDataWidgets,
+      'activeFitnessBenchmarks': instance.activeFitnessBenchmarks,
       'activeProgressWidgets': instance.activeProgressWidgets,
       'avatarUri': instance.avatarUri,
       'bio': instance.bio,
@@ -4646,9 +4648,10 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile()
   ..activeProgressWidgets = (json['activeProgressWidgets'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList()
-  ..activeLogDataWidgets = (json['activeLogDataWidgets'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList()
+  ..activeFitnessBenchmarks =
+      (json['activeFitnessBenchmarks'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList()
   ..clubs = (json['Clubs'] as List<dynamic>)
       .map((e) => ClubSummary.fromJson(e as Map<String, dynamic>))
       .toList()
@@ -4685,7 +4688,7 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'planCount': instance.planCount,
       'workoutsPerWeekTarget': instance.workoutsPerWeekTarget,
       'activeProgressWidgets': instance.activeProgressWidgets,
-      'activeLogDataWidgets': instance.activeLogDataWidgets,
+      'activeFitnessBenchmarks': instance.activeFitnessBenchmarks,
       'Clubs': instance.clubs.map((e) => e.toJson()).toList(),
       'LifetimeLogStatsSummary': instance.lifetimeLogStatsSummary?.toJson(),
       'Skills': instance.skills.map((e) => e.toJson()).toList(),

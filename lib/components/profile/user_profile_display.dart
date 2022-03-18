@@ -15,7 +15,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/country.dart';
-import 'package:sofie_ui/pages/authed/progress/components/summary_stat_display.dart';
+import 'package:sofie_ui/pages/authed/progress/progress_page_components/summary_stat_display.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';

@@ -84,8 +84,11 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(32.0),
                 child: MyText(
-                  'No scores logged yet',
+                  'No scores logged yet. When you log this move during a workout your history will show here.',
                   subtext: true,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  lineHeight: 1.4,
                 ),
               ),
             ),

@@ -19,7 +19,7 @@ class MaxLoadExerciseDisplayWidget extends StatelessWidget {
 
   Widget _buildInfoHeader(String text) => MyHeaderText(
         text,
-        size: FONTSIZE.two,
+        size: FONTSIZE.one,
         lineHeight: 1.3,
         weight: FontWeight.normal,
         maxLines: 2,
@@ -50,6 +50,7 @@ class MaxLoadExerciseDisplayWidget extends StatelessWidget {
         ),
       )),
       child: Card(
+        padding: const EdgeInsets.all(6),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -69,16 +70,16 @@ class MaxLoadExerciseDisplayWidget extends StatelessWidget {
                 children: [
                   ContentBox(
                     borderRadius: 30,
-                    backgroundColor: context.theme.background.withOpacity(0.2),
+                    backgroundColor: context.theme.background.withOpacity(0.4),
                     padding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                        const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         MyText(
                           topScoreString,
                           color: Styles.primaryAccent,
-                          size: FONTSIZE.eight,
+                          size: FONTSIZE.five,
                         ),
                         const SizedBox(width: 2),
                         MyText(

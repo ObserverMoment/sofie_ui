@@ -656,7 +656,7 @@ mixin UserProfileResultMixin {
   String? lastname;
   int? workoutsPerWeekTarget;
   List<String>? activeProgressWidgets;
-  List<String>? activeLogDataWidgets;
+  List<String>? activeFitnessBenchmarks;
 }
 mixin SkillMixin {
   @JsonKey(name: '__typename')
@@ -706,7 +706,7 @@ mixin UserProfileMixin {
   int? planCount;
   int? workoutsPerWeekTarget;
   List<String>? activeProgressWidgets;
-  List<String>? activeLogDataWidgets;
+  List<String>? activeFitnessBenchmarks;
 }
 mixin ProgressWidgetMixin {
   @JsonKey(name: '__typename')
@@ -5801,7 +5801,7 @@ class UpdateUserProfileResult extends JsonSerializable
         lastname,
         workoutsPerWeekTarget,
         activeProgressWidgets,
-        activeLogDataWidgets
+        activeFitnessBenchmarks
       ];
   @override
   Map<String, dynamic> toJson() => _$UpdateUserProfileResultToJson(this);
@@ -5825,7 +5825,7 @@ class UpdateUserProfile$Mutation extends JsonSerializable with EquatableMixin {
 @JsonSerializable(explicitToJson: true)
 class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
   UpdateUserProfileInput(
-      {this.activeLogDataWidgets,
+      {this.activeFitnessBenchmarks,
       this.activeProgressWidgets,
       this.avatarUri,
       this.bio,
@@ -5850,7 +5850,7 @@ class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
   factory UpdateUserProfileInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateUserProfileInputFromJson(json);
 
-  List<String>? activeLogDataWidgets;
+  List<String>? activeFitnessBenchmarks;
 
   List<String>? activeProgressWidgets;
 
@@ -5899,7 +5899,7 @@ class UpdateUserProfileInput extends JsonSerializable with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        activeLogDataWidgets,
+        activeFitnessBenchmarks,
         activeProgressWidgets,
         avatarUri,
         bio,
@@ -5989,7 +5989,7 @@ class UserProfile extends JsonSerializable
         planCount,
         workoutsPerWeekTarget,
         activeProgressWidgets,
-        activeLogDataWidgets,
+        activeFitnessBenchmarks,
         clubs,
         lifetimeLogStatsSummary,
         skills
@@ -40395,7 +40395,7 @@ final UPDATE_USER_PROFILE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'activeLogDataWidgets'),
+            name: NameNode(value: 'activeFitnessBenchmarks'),
             alias: null,
             arguments: [],
             directives: [],
@@ -40872,7 +40872,7 @@ final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'activeLogDataWidgets'),
+            name: NameNode(value: 'activeFitnessBenchmarks'),
             alias: null,
             arguments: [],
             directives: [],

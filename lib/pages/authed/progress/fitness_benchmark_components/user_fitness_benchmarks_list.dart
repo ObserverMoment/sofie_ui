@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/cards/fitness_benchmark_card.dart';
+import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/active_settings_and_benchmarks_container.dart';
+import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/fitness_benchmark_card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/drop_down_menu.dart';
@@ -8,10 +9,8 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/user_fitness_benchmark_details.dart';
+import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/utils.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:collection/collection.dart';
 
 /// A list of all standard (in app) and custom (user generated) fitness benchmarks, broken down into categories.
 /// User can browse and then 'activate' benchmarks.
@@ -30,8 +29,6 @@ class _UserFitnessBenchmarksListState extends State<UserFitnessBenchmarksList> {
 
   @override
   Widget build(BuildContext context) {
-    final userFitnessBenchmarksQuery = UserFitnessBenchmarksQuery();
-
     final categories = CoreDataRepo.fitnessBenchmarkCategories;
 
     final filteredBenchmarkCategories = _activeCategory == null
@@ -86,35 +83,30 @@ class _UserFitnessBenchmarksListState extends State<UserFitnessBenchmarksList> {
             ],
           ),
           const SizedBox(height: 16),
-          QueryObserver<UserFitnessBenchmarks$Query, json.JsonSerializable>(
-              key: Key(
-                  'UserFitnessBenchmarksList - ${userFitnessBenchmarksQuery.operationName}'),
-              query: userFitnessBenchmarksQuery,
-              builder: (data) {
-                final benchmarks =
-                    data.userFitnessBenchmarks.sortedBy<String>((b) => b.name);
-
-                return Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: filteredBenchmarkCategories
-                        .map((category) => Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: _FitnessBenchmarkCategoryUI(
-                                fitnessBenchmarkCategory: category,
-                                fitnessBenchmarks: benchmarks
-                                    .where((b) =>
-                                        b.fitnessBenchmarkCategory ==
-                                            category &&
-                                        (_activeScope == null ||
-                                            b.scope == _activeScope))
-                                    .toList(),
-                              ),
-                            ))
-                        .toList(),
-                  ),
-                );
-              }),
+          ActiveSettingsAndBenchmarksContainer(
+            builder: (activeBenchmarkIds, benchmarks) {
+              return Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: filteredBenchmarkCategories
+                      .map((category) => Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: _FitnessBenchmarkCategoryUI(
+                              fitnessBenchmarkCategory: category,
+                              fitnessBenchmarks: benchmarks
+                                  .where((b) =>
+                                      b.fitnessBenchmarkCategory == category &&
+                                      (_activeScope == null ||
+                                          b.scope == _activeScope))
+                                  .toList(),
+                              activeBenchmarkIds: activeBenchmarkIds,
+                            ),
+                          ))
+                      .toList(),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
@@ -124,10 +116,12 @@ class _UserFitnessBenchmarksListState extends State<UserFitnessBenchmarksList> {
 class _FitnessBenchmarkCategoryUI extends StatelessWidget {
   final FitnessBenchmarkCategory fitnessBenchmarkCategory;
   final List<FitnessBenchmark> fitnessBenchmarks;
+  final List<String> activeBenchmarkIds;
   const _FitnessBenchmarkCategoryUI(
       {Key? key,
       required this.fitnessBenchmarkCategory,
-      required this.fitnessBenchmarks})
+      required this.fitnessBenchmarks,
+      required this.activeBenchmarkIds})
       : super(key: key);
 
   @override
@@ -150,14 +144,24 @@ class _FitnessBenchmarkCategoryUI extends StatelessWidget {
                   itemCount: fitnessBenchmarks.length,
                   shrinkWrap: true,
                   separatorBuilder: (_, __) => const HorizontalLine(),
-                  itemBuilder: (c, i) => GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => context.push(
-                        child: UserFitnessBenchmarkDetails(
-                            id: fitnessBenchmarks[i].id)),
-                    child: FitnessBenchmarkCard(
-                        fitnessBenchmark: fitnessBenchmarks[i]),
-                  ),
+                  itemBuilder: (c, i) {
+                    final benchmark = fitnessBenchmarks[i];
+
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => context.push(
+                          child: UserFitnessBenchmarkDetails(id: benchmark.id)),
+                      child: FitnessBenchmarkCard(
+                        benchmark: benchmark,
+                        isActive: activeBenchmarkIds
+                            .contains(fitnessBenchmarks[i].id),
+                        deleteCustomBenchmark: () => print('TODO'),
+                        toggleActiveBenchmark: () =>
+                            FitnessBenchmarkUtils.toggleActivateBenchmark(
+                                context, activeBenchmarkIds, benchmark.id),
+                      ),
+                    );
+                  },
                 )
         ],
       ),

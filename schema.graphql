@@ -1461,7 +1461,7 @@ input UpdateUserMeditationLogInput {
 }
 
 input UpdateUserProfileInput {
-  activeLogDataWidgets: [String!]
+  activeFitnessBenchmarks: [String!]
   activeProgressWidgets: [String!]
   avatarUri: String
   bio: String
@@ -1485,7 +1485,7 @@ input UpdateUserProfileInput {
 }
 
 type UpdateUserProfileResult {
-  activeLogDataWidgets: [String!]
+  activeFitnessBenchmarks: [String!]
   activeProgressWidgets: [String!]
   avatarUri: String
   bio: String
@@ -1685,7 +1685,7 @@ type UserProfile {
   Clubs: [ClubSummary!]!
   LifetimeLogStatsSummary: LifetimeLogStatsSummary
   Skills: [Skill!]!
-  activeLogDataWidgets: [String!]
+  activeFitnessBenchmarks: [String!]
   activeProgressWidgets: [String!]
   avatarUri: String
   bio: String

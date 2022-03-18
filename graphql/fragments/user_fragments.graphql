@@ -28,7 +28,7 @@ fragment UserProfile on UserProfile {
   planCount
   workoutsPerWeekTarget
   activeProgressWidgets
-  activeLogDataWidgets
+  activeFitnessBenchmarks
 }
 
 fragment UserProfileResult on UpdateUserProfileResult {
@@ -54,7 +54,7 @@ fragment UserProfileResult on UpdateUserProfileResult {
   lastname
   workoutsPerWeekTarget
   activeProgressWidgets
-  activeLogDataWidgets
+  activeFitnessBenchmarks
 }
 
 fragment UserProfileSummary on UserProfileSummary {

@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/fitness_benchmarks/fitness_benchmark_score_creator.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -10,8 +11,10 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/main.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/utils.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 /// Details for a benchmark for the logged in User.
@@ -87,11 +90,39 @@ class _BenchmarkProgressGraph extends StatelessWidget {
     required this.benchmark,
   }) : super(key: key);
 
+  final kMillisecondsPerMinute = 60000;
+  final kMillisecondsPerHOur = 60000 * 60;
+
+  double _mapRawScoreToYAxisValue(
+      double raw, FitnessBenchmarkScore largestScore) {
+    switch (benchmark.type) {
+      case FitnessBenchmarkScoreType.fastesttimedistance:
+      case FitnessBenchmarkScoreType.fastesttimereps:
+      case FitnessBenchmarkScoreType.unbrokenmaxtime:
+        // Raw = ms. Depending on the range (largestScore) we can adjust the Y axis scale to something appropriate.
+        return largestScore.score <= kMillisecondsPerMinute * 5
+            ? raw / 1000 // Display as seconds for x minutes or less.
+            : raw / kMillisecondsPerMinute; // Otherwise display as minutes.
+
+      case FitnessBenchmarkScoreType.longestdistance:
+      case FitnessBenchmarkScoreType.maxload:
+      case FitnessBenchmarkScoreType.timedmaxreps:
+      case FitnessBenchmarkScoreType.unbrokenmaxreps:
+        return raw;
+
+      default:
+        throw Exception(
+            '_BenchmarkProgressGraph._mapRawScoreToYAxisValue: No branch defined for ${benchmark.type}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final gridlineColor = context.theme.primary.withOpacity(0.07);
     final labelStyle = TextStyle(color: context.theme.primary, fontSize: 10);
     final scores = benchmark.fitnessBenchmarkScores ?? [];
+
+    final largestScore = scores.sortedBy<num>((score) => score.score).last;
 
     return Container(
       padding: const EdgeInsets.only(right: 10.0),
@@ -117,7 +148,8 @@ class _BenchmarkProgressGraph extends StatelessWidget {
             LineSeries<FitnessBenchmarkScore, DateTime>(
               dataSource: scores.sortedBy<DateTime>((s) => s.completedOn),
               xValueMapper: (score, _) => score.completedOn,
-              yValueMapper: (score, _) => score.score,
+              yValueMapper: (score, _) =>
+                  _mapRawScoreToYAxisValue(score.score, largestScore),
               color: Styles.primaryAccent,
             )
           ]),
@@ -129,6 +161,16 @@ class _TopTenScoresList extends StatelessWidget {
   final FitnessBenchmark benchmark;
   const _TopTenScoresList({Key? key, required this.benchmark})
       : super(key: key);
+
+  Future<void> _deleteFitnessBenchmarkScore(
+      BuildContext context, FitnessBenchmarkScore score) async {
+    final result = await context.graphQLStore.mutate(
+        mutation: DeleteFitnessBenchmarkScoreMutation(
+            variables: DeleteFitnessBenchmarkScoreArguments(id: score.id)),
+        broadcastQueryIds: [GQLOpNames.userFitnessBenchmarks]);
+
+    checkOperationResult(context, result);
+  }
 
   List<FitnessBenchmarkScore> _topTenScores() {
     if (benchmark.fitnessBenchmarkScores == null ||
@@ -165,14 +207,24 @@ class _TopTenScoresList extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
       child: Column(
         children: topTenScores
-            .map((s) => GestureDetector(
+            .mapIndexed((i, score) => GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onTap: () => context.push(
                         child: FitnessBenchmarkScoreCreator(
                       fitnessBenchmark: benchmark,
-                      fitnessBenchmarkScore: s,
+                      fitnessBenchmarkScore: score,
                     )),
-                child: _SingleEntryDisplay(benchmark: benchmark, score: s)))
+                child: AnimatedSlidable(
+                    key: Key(score.id),
+                    index: i,
+                    itemType: 'Benchmark Score',
+                    confirmMessage:
+                        'This will also delete any video that you have uploaded against this score.',
+                    removeItem: (_) =>
+                        _deleteFitnessBenchmarkScore(context, score),
+                    secondaryActions: const [],
+                    child: _SingleEntryDisplay(
+                        benchmark: benchmark, score: score))))
             .toList(),
       ),
     );
@@ -188,6 +240,10 @@ class _SingleEntryDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scoreDisplay =
+        FitnessBenchmarkUtils.scoreDisplayText(benchmark.type, score.score);
+    final scoreDisplayText = '${scoreDisplay.score}${scoreDisplay.suffix}';
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
       child: ContentBox(
@@ -201,8 +257,7 @@ class _SingleEntryDisplay extends StatelessWidget {
                 backgroundColor: context.theme.background.withOpacity(0.2),
                 padding:
                     const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                child: MyText(FitnessBenchmarkUtils.scoreDisplayText(
-                    benchmark.type, score.score)),
+                child: MyText(scoreDisplayText),
               ),
             ],
           ),
