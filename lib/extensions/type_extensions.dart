@@ -262,6 +262,34 @@ extension DurationExtension on Duration {
 
     return '$_hours$_minutes$_seconds';
   }
+
+  /// https://vnapppro.com/question/flutter-dart-format-duration-to-show-just-minutes-seconds-and-milliseconds/
+  String get prettyDuration {
+    final components = <String>[];
+    final days = inDays;
+    if (days != 0) {
+      components.add('${days}d ');
+    }
+    final hours = inHours % 24;
+    if (hours != 0) {
+      components.add('${hours}h ');
+    }
+    final minutes = inMinutes % 60;
+    if (minutes != 0) {
+      components.add('${minutes}m ');
+    }
+    final seconds = inSeconds % 60;
+    final deciseconds = (inMilliseconds % 1000) ~/ 100;
+    if (components.isEmpty || seconds != 0 || deciseconds != 0) {
+      components.add('$seconds');
+      if (deciseconds != 0) {
+        components.add('.');
+        components.add(deciseconds.toString().padLeft(1, '0'));
+      }
+      components.add('s ');
+    }
+    return components.join();
+  }
 }
 
 extension IntExtension on int {

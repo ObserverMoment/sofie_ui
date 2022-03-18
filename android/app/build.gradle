@@ -45,7 +45,7 @@ android {
     defaultConfig {
         applicationId "com.quarksoup.sofie"
         // https://firebase.flutter.dev/docs/installation/android#enabling-multidex
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

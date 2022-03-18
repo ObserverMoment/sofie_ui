@@ -105,7 +105,7 @@ abstract class ThemeData {
       greyFour: Styles.greyFour,
       // cardBackground: const Color(0xff1a1a1c),
       // cardBackground: Color.fromARGB(255, 20, 20, 20),
-      cardBackground: const Color.fromARGB(255, 33, 35, 41),
+      cardBackground: const Color.fromARGB(255, 24, 24, 24),
       bottomNavigationBackground: const Color(0xff434343),
       navbarBottomBorder: Styles.white.withOpacity(0.1));
 
@@ -122,10 +122,10 @@ abstract class ThemeData {
       brightness: Brightness.dark,
       // barBackgroundColor: const Color(0xff050505),
       // barBackgroundColor: Color.fromARGB(255, 27, 29, 28),
-      barBackgroundColor: const Color.fromARGB(255, 21, 21, 29),
+      barBackgroundColor: const Color.fromARGB(255, 9, 9, 10),
       // scaffoldBackgroundColor: const Color(0xff050505),
       // scaffoldBackgroundColor: Color.fromARGB(255, 29, 32, 32),
-      scaffoldBackgroundColor: const Color.fromARGB(255, 21, 21, 29),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),
       primaryColor: CupertinoColors.white,
       primaryContrastingColor: Styles.primaryAccent,
       textTheme: CupertinoTextThemeData(
@@ -140,7 +140,7 @@ abstract class ThemeData {
       barBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
       // barBackgroundColor: const Color(0xffe2e9ef),
       // scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
-      scaffoldBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
+      scaffoldBackgroundColor: Color.fromARGB(255, 234, 234, 240),
       // scaffoldBackgroundColor: const Color(0xffe2e9ef),
       primaryColor: CupertinoColors.black,
       primaryContrastingColor: Styles.primaryAccent,
@@ -183,6 +183,7 @@ abstract class Styles {
 
   // Design / Accent colors.
   // static const Color primaryAccent = Color(0xff2c8a8a);
+  // static const Color primaryAccent = Color.fromARGB(255, 65, 137, 146);
   static const Color primaryAccent = Color.fromARGB(255, 6, 155, 142);
   // static const Color primaryAccent = Color(0xfff24c2b);
   // static const Color primaryAccent = Color(0xfffe7743);

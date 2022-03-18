@@ -12,10 +12,12 @@ import 'package:sofie_ui/services/utils.dart';
 /// Select / record a local video and tne return the local path.
 class LocalVideoSelector extends StatelessWidget {
   final String? title;
+  final String addVideoText;
   final String? pickedFilePath;
   final void Function(String? filePath) savePickedFilePath;
   const LocalVideoSelector(
       {Key? key,
+      this.addVideoText = 'Add a Video',
       required this.pickedFilePath,
       required this.savePickedFilePath,
       this.title})
@@ -78,7 +80,7 @@ class LocalVideoSelector extends StatelessWidget {
                         ],
                       )
                     : TertiaryButton(
-                        text: 'Select a Video',
+                        text: addVideoText,
                         prefixIconData: CupertinoIcons.tv,
                         backgroundColor: buttonColor,
                         onPressed: () => openBottomSheetMenu(

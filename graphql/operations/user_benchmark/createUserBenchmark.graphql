@@ -1,8 +1,0 @@
-mutation createUserBenchmark($data: CreateUserBenchmarkInput!) {
-  createUserBenchmark(data: $data) {
-    ...UserBenchmark
-    UserBenchmarkEntries {
-      ...UserBenchmarkEntry
-    }
-  }
-}

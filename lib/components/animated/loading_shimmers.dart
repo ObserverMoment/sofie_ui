@@ -159,6 +159,27 @@ class ShimmerCardGrid extends StatelessWidget {
   }
 }
 
+class ShimmerCardGridCount extends StatelessWidget {
+  final int crossAxisCount;
+  final int itemCount;
+
+  const ShimmerCardGridCount({
+    Key? key,
+    required this.crossAxisCount,
+    required this.itemCount,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 12.0, left: 12, right: 12),
+        child: GridView.count(
+          shrinkWrap: true,
+          crossAxisCount: crossAxisCount,
+          children: List.generate(itemCount, (_) => const ShimmerCard()),
+        ));
+  }
+}
+
 class ShimmerCirclesGrid extends StatelessWidget {
   final int itemCount;
   final double maxDiameter;

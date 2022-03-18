@@ -65,7 +65,6 @@ class _WorkoutPlanCreatorStructureWeekState
   void _createWorkoutPlanDay(int dayIndex) {
     context.navigateTo(YourWorkoutsRoute(
         pageTitle: 'Select Workout',
-        showCreateButton: true,
         selectWorkout: (w) => bloc.createWorkoutPlanDayWithWorkout(
             dayNumberFromDayIndex(dayIndex), w)));
   }
@@ -77,7 +76,6 @@ class _WorkoutPlanCreatorStructureWeekState
   void _addWorkoutToPlanDay(int dayIndex) {
     context.navigateTo(YourWorkoutsRoute(
         pageTitle: 'Select Workout',
-        showCreateButton: true,
         selectWorkout: (w) => bloc.createWorkoutPlanDayWorkout(
             dayNumberFromDayIndex(dayIndex), w)));
   }

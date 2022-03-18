@@ -7,18 +7,13 @@ import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/utils
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 
-/// Bloc that manages all the data needed to display the three types of exercise trackers, plus the log history data that they need.
-/// [userMaxLoadExerciseTrackers] search log history for heaviest lifts + accept manual input.
-/// [userFastestTimeExerciseTrackers] and [userMaxUnbrokenExerciseTrackers] currently (March 2022) only accept manual input.
+/// Bloc that manages all the data needed to display exercise trackers, plus the log history data that they need.
+/// [userExerciseLoadTrackers] search log history for heaviest lifts for a given move + reps + equipment combination.
 class ExerciseTrackersBloc extends ChangeNotifier {
   List<LoggedWorkout> loggedWorkouts = [];
 
-  List<UserMaxLoadExerciseTracker> userMaxLoadExerciseTrackers = [];
-  List<MaxLoadScoreWithCompletedOnDate> userMaxLoadScoresFromLogHistory = [];
-
-  List<UserFastestTimeExerciseTracker> userFastestTimeExerciseTrackers = [];
-
-  List<UserMaxUnbrokenExerciseTracker> userMaxUnbrokenExerciseTrackers = [];
+  List<UserExerciseLoadTracker> userExerciseLoadTrackers = [];
+  List<ExerciseLoadScoreWithCompletedOnDate> userLoadScoresFromLogHistory = [];
 
   bool initialized = false;
 
@@ -28,17 +23,9 @@ class ExerciseTrackersBloc extends ChangeNotifier {
       _userLoggedWorkoutsQuery;
   late StreamSubscription _userLoggedWorkoutsQueryListener;
 
-  late ObservableQuery<UserMaxLoadExerciseTrackers$Query, json.JsonSerializable>
-      _userMaxLoadExerciseTrackersQuery;
-  late StreamSubscription _userMaxLoadExerciseTrackersQueryListener;
-
-  late ObservableQuery<UserFastestTimeExerciseTrackers$Query,
-      json.JsonSerializable> _userFastestTimeExerciseTrackersQuery;
-  late StreamSubscription _userFastestTimeExerciseTrackersQueryListener;
-
-  late ObservableQuery<UserMaxUnbrokenExerciseTrackers$Query,
-      json.JsonSerializable> _userMaxUnbrokenExerciseTrackersQuery;
-  late StreamSubscription _userMaxUnbrokenExerciseTrackersQueryListener;
+  late ObservableQuery<UserExerciseLoadTrackers$Query, json.JsonSerializable>
+      _userExerciseLoadTrackersQuery;
+  late StreamSubscription _userExerciseLoadTrackersQueryListener;
 
   ExerciseTrackersBloc(BuildContext context) {
     _init(context);
@@ -48,9 +35,7 @@ class ExerciseTrackersBloc extends ChangeNotifier {
     _graphQlStore = context.read<GraphQLStore>();
     await Future.wait([
       _setupLoggedWorkoutsQuery(),
-      _setupMaxLoadExerciseTrackersQuery(),
-      _setupFastestTimeExerciseTrackersQuery(),
-      _setupMaxUnbrokenExerciseTrackersQuery(),
+      _setupExerciseLoadTrackersQuery(),
     ]);
 
     initialized = true;
@@ -68,89 +53,43 @@ class ExerciseTrackersBloc extends ChangeNotifier {
         fetchPolicy: QueryFetchPolicy.storeFirst,
         garbageCollectAfterFetch: false);
 
-    _convertAllMaxLoadScoresFromLogHistory();
+    _convertAllLoadScoresFromLogHistory();
 
     _userLoggedWorkoutsQueryListener =
         _userLoggedWorkoutsQuery.subject.listen((value) {
       if (!value.hasErrors && value.data != null) {
         loggedWorkouts = [...value.data!.userLoggedWorkouts];
 
-        _convertAllMaxLoadScoresFromLogHistory();
+        _convertAllLoadScoresFromLogHistory();
 
         notifyListeners();
       }
     });
   }
 
-  Future<void> _setupMaxLoadExerciseTrackersQuery() async {
-    _userMaxLoadExerciseTrackersQuery = _graphQlStore.registerObserver<
-            UserMaxLoadExerciseTrackers$Query,
-            json.JsonSerializable>(UserMaxLoadExerciseTrackersQuery(),
+  Future<void> _setupExerciseLoadTrackersQuery() async {
+    _userExerciseLoadTrackersQuery = _graphQlStore.registerObserver<
+            UserExerciseLoadTrackers$Query,
+            json.JsonSerializable>(UserExerciseLoadTrackersQuery(),
         parameterizeQuery: false);
 
     await _graphQlStore.fetchInitialQuery(
-        id: _userMaxLoadExerciseTrackersQuery.id,
+        id: _userExerciseLoadTrackersQuery.id,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         garbageCollectAfterFetch: false);
 
-    _userMaxLoadExerciseTrackersQueryListener =
-        _userMaxLoadExerciseTrackersQuery.subject.listen((value) {
+    _userExerciseLoadTrackersQueryListener =
+        _userExerciseLoadTrackersQuery.subject.listen((value) {
       if (!value.hasErrors && value.data != null) {
-        userMaxLoadExerciseTrackers = [
-          ...value.data!.userMaxLoadExerciseTrackers
-        ];
+        userExerciseLoadTrackers = [...value.data!.userExerciseLoadTrackers];
         notifyListeners();
       }
     });
   }
 
-  Future<void> _setupFastestTimeExerciseTrackersQuery() async {
-    _userFastestTimeExerciseTrackersQuery = _graphQlStore.registerObserver<
-            UserFastestTimeExerciseTrackers$Query,
-            json.JsonSerializable>(UserFastestTimeExerciseTrackersQuery(),
-        parameterizeQuery: false);
-
-    await _graphQlStore.fetchInitialQuery(
-        id: _userFastestTimeExerciseTrackersQuery.id,
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        garbageCollectAfterFetch: false);
-
-    _userFastestTimeExerciseTrackersQueryListener =
-        _userFastestTimeExerciseTrackersQuery.subject.listen((value) {
-      if (!value.hasErrors && value.data != null) {
-        userFastestTimeExerciseTrackers = [
-          ...value.data!.userFastestTimeExerciseTrackers
-        ];
-        notifyListeners();
-      }
-    });
-  }
-
-  Future<void> _setupMaxUnbrokenExerciseTrackersQuery() async {
-    _userMaxUnbrokenExerciseTrackersQuery = _graphQlStore.registerObserver<
-            UserMaxUnbrokenExerciseTrackers$Query,
-            json.JsonSerializable>(UserMaxUnbrokenExerciseTrackersQuery(),
-        parameterizeQuery: false);
-
-    await _graphQlStore.fetchInitialQuery(
-        id: _userMaxUnbrokenExerciseTrackersQuery.id,
-        fetchPolicy: QueryFetchPolicy.storeFirst,
-        garbageCollectAfterFetch: false);
-
-    _userMaxUnbrokenExerciseTrackersQueryListener =
-        _userMaxUnbrokenExerciseTrackersQuery.subject.listen((value) {
-      if (!value.hasErrors && value.data != null) {
-        userMaxUnbrokenExerciseTrackers = [
-          ...value.data!.userMaxUnbrokenExerciseTrackers
-        ];
-        notifyListeners();
-      }
-    });
-  }
-
-  /// Convert all relevant log history to a list of [MaxLoadScoreWithCompletedOnDate] and save them to local state. Run this on init and whenever [userLoggedWorkoutQuery] is updated.
-  void _convertAllMaxLoadScoresFromLogHistory() {
-    final List<MaxLoadScoreWithCompletedOnDate> allScores = [];
+  /// Convert all relevant log history to a list of [ExerciseLoadScoreWithCompletedOnDate] and save them to local state. Run this on init and whenever [userLoggedWorkoutQuery] is updated.
+  void _convertAllLoadScoresFromLogHistory() {
+    final List<ExerciseLoadScoreWithCompletedOnDate> allScores = [];
 
     for (final log in loggedWorkouts) {
       for (final lwSection in log.loggedWorkoutSections) {
@@ -159,7 +98,7 @@ class ExerciseTrackersBloc extends ChangeNotifier {
           allScores.addAll(lwSet.loggedWorkoutMoves
               .where((lwm) =>
                   lwm.loadUnit == LoadUnit.kg || lwm.loadUnit == LoadUnit.lb)
-              .map((lwm) => MaxLoadScoreWithCompletedOnDate(
+              .map((lwm) => ExerciseLoadScoreWithCompletedOnDate(
                     completedOn: log.completedOn,
                     loadAmount: lwm.loadAmount,
                     loadUnit: lwm.loadUnit,
@@ -172,19 +111,19 @@ class ExerciseTrackersBloc extends ChangeNotifier {
       }
     }
 
-    userMaxLoadScoresFromLogHistory = allScores;
+    userLoadScoresFromLogHistory = allScores;
   }
 
-  /// Get all the workout moves from log history, plus [tracker.manualEntries] and convert them all into [MaxLoadScoreWithCompletedOnDate] for display in a UI widget.
-  List<MaxLoadScoreWithCompletedOnDate> retrieveMaxLoadTrackerRelevantScores(
-      UserMaxLoadExerciseTracker tracker) {
+  /// Get all the workout moves from log history, plus [tracker.manualEntries] and convert them all into [ExerciseLoadScoreWithCompletedOnDate] for display in a UI widget.
+  List<ExerciseLoadScoreWithCompletedOnDate>
+      retrieveMaxLoadTrackerRelevantScores(UserExerciseLoadTracker tracker) {
     /// Get the matching scores - i.e. where move, equipment and reps match.
-    /// Format all as [MaxLoadScoreWithCompletedOnDate]
+    /// Format all as [ExerciseLoadScoreWithCompletedOnDate]
     final trackerRelevantScoresFromHistory =
-        userMaxLoadScoresFromLogHistory.where((score) {
+        userLoadScoresFromLogHistory.where((score) {
       return tracker.move == score.move &&
           tracker.equipment == score.equipment &&
-          tracker.reps <= score.reps;
+          tracker.reps == score.reps;
     }).toList();
 
     /// Ensure all logs from history have been converted to the correct unit system.
@@ -196,69 +135,47 @@ class ExerciseTrackersBloc extends ChangeNotifier {
       score.loadUnit = tracker.loadUnit;
     }
 
-    final scoresFromManualEntries = tracker.manualEntries
-        .map((entry) => MaxLoadScoreWithCompletedOnDate(
-              completedOn: entry.completedOn,
-              equipment: tracker.equipment,
-              loadAmount: entry.loadAmount,
-              loadUnit: tracker.loadUnit,
-              move: tracker.move,
-              reps: tracker.reps,
-              videoUri: entry.videoUri,
-              manualEntryId: entry.id,
-            ))
-        .toList();
-
-    return [...trackerRelevantScoresFromHistory, ...scoresFromManualEntries];
+    return trackerRelevantScoresFromHistory;
   }
 
   @override
   void dispose() {
     /// Cancel listeners.
     _userLoggedWorkoutsQueryListener.cancel();
-    _userMaxLoadExerciseTrackersQueryListener.cancel();
-    _userFastestTimeExerciseTrackersQueryListener.cancel();
-    _userMaxUnbrokenExerciseTrackersQueryListener.cancel();
+    _userExerciseLoadTrackersQueryListener.cancel();
 
     /// Unregister query observers to close streams if necessary.
     _graphQlStore.unregisterObserver(_userLoggedWorkoutsQuery.id);
-    _graphQlStore.unregisterObserver(_userMaxLoadExerciseTrackersQuery.id);
-    _graphQlStore.unregisterObserver(_userFastestTimeExerciseTrackersQuery.id);
-    _graphQlStore.unregisterObserver(_userMaxUnbrokenExerciseTrackersQuery.id);
+    _graphQlStore.unregisterObserver(_userExerciseLoadTrackersQuery.id);
     super.dispose();
   }
 }
 
-class MaxLoadScoreWithCompletedOnDate
-    implements Comparable<MaxLoadScoreWithCompletedOnDate> {
+class ExerciseLoadScoreWithCompletedOnDate
+    implements Comparable<ExerciseLoadScoreWithCompletedOnDate> {
   DateTime completedOn;
   double loadAmount;
   LoadUnit loadUnit;
   Move move;
   Equipment? equipment;
   int reps;
-  String? videoUri;
-  String? videoThumbUri;
 
-  /// [loggedWorkoutId] XOR [manualEntryId]
+  /// [loggedWorkoutId]
   String? loggedWorkoutId;
-  String? manualEntryId;
 
-  MaxLoadScoreWithCompletedOnDate({
+  ExerciseLoadScoreWithCompletedOnDate({
     required this.move,
     required this.equipment,
     required this.loadAmount,
     required this.completedOn,
     required this.loadUnit,
     required this.reps,
-    this.manualEntryId,
     this.loggedWorkoutId,
-    this.videoUri,
   });
 
   /// Sorts by highest loadAmount and then by date.
   @override
-  int compareTo(MaxLoadScoreWithCompletedOnDate other) {
+  int compareTo(ExerciseLoadScoreWithCompletedOnDate other) {
     if (loadAmount != other.loadAmount) {
       return loadAmount.compareTo(other.loadAmount);
     } else {

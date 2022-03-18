@@ -1,0 +1,72 @@
+fragment FitnessBenchmarkCategory on FitnessBenchmarkCategory {
+  __typename
+  id
+  createdAt
+  name
+  description
+}
+
+fragment FitnessBenchmark on FitnessBenchmark {
+  __typename
+  id
+  createdAt
+  scope
+  type
+  name
+  description
+  instructions
+  instructionalVideoUri
+  instructionalVideoThumbUri
+}
+
+fragment FitnessBenchmarkScore on FitnessBenchmarkScore {
+  __typename
+  id
+  createdAt
+  completedOn
+  # Units that this represents depends on FitnessBenchmarkScoreType.
+  score
+  note
+  videoUri
+  videoThumbUri
+}
+
+fragment FitnessBenchmarkWorkout on FitnessBenchmarkWorkout {
+  __typename
+  id
+  createdAt
+  scope
+  type
+  name
+  description
+  instructions
+  instructionalVideoUri
+  instructionalVideoThumbUri
+  # Must be 1 for AMRAPS. Can be > 1 for FORTIME.
+  rounds
+  # E.g. [10 calories air bike, 20m forward lunge, 10 muscle snatch, 10 air squats]
+  # Must be same length as pointsForMoveCompleted[]
+  moveDescriptions
+  # E.g. [10, 5, 10, 10]
+  # Must be same length as moveDescriptions[]
+  pointsForMoveCompleted
+}
+
+fragment FitnessBenchmarkWorkoutScore on FitnessBenchmarkWorkoutScore {
+  __typename
+  id
+  createdAt
+  completedOn
+  # If AMRAP, this is REPS. If FORTIME, this is ms.
+  score
+  note
+}
+
+#### Automatic Load Tracker / Data Vis ####
+fragment UserExerciseLoadTracker on UserExerciseLoadTracker {
+  __typename
+  id
+  createdAt
+  reps
+  loadUnit
+}

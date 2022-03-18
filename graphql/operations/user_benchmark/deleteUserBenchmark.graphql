@@ -1,3 +1,0 @@
-mutation deleteUserBenchmark($id: ID!) {
-  deleteUserBenchmark(id: $id)
-}
