@@ -8,6 +8,7 @@ import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/profile/club_summaries_list.dart';
+import 'package:sofie_ui/components/profile/fitness_benchmark_scores_list.dart';
 import 'package:sofie_ui/components/profile/skills_list.dart';
 import 'package:sofie_ui/components/profile/social_media_links.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
@@ -200,6 +201,13 @@ class UserProfileDisplay extends StatelessWidget {
                   header: 'Skills',
                   icon: MyCustomIcons.certificateIcon,
                   content: SkillsList(skills: profile.skills)),
+            if (profile.bestBenchmarkScores != null &&
+                profile.bestBenchmarkScores!.isNotEmpty)
+              _InfoSection(
+                  header: 'Fitness Benchmarks',
+                  icon: CupertinoIcons.chart_bar_alt_fill,
+                  content: UserFitnessBenchmarkScoresList(
+                      bestBenchmarkScores: profile.bestBenchmarkScores!)),
           ]);
   }
 }

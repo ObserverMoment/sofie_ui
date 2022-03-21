@@ -328,7 +328,7 @@ class _FitnessBenchmarkScoreCreatorState
               child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              if (_localVideoFilePath == null)
+              if (_localVideoFilePath == null && _videoUri != null)
                 VideoThumbnailPlayer(
                   videoUri: _videoUri,
                   videoThumbUri: _videoThumbUri,
@@ -342,8 +342,9 @@ class _FitnessBenchmarkScoreCreatorState
                     savePickedFilePath: (p) =>
                         _setStateWrapper(() => _localVideoFilePath = p),
                   ),
-                  TextButton(
-                      text: 'Delete Video', onPressed: _confirmDeleteVideo)
+                  if (_localVideoFilePath != null || _videoUri != null)
+                    TextButton(
+                        text: 'Delete Video', onPressed: _confirmDeleteVideo)
                 ],
               ),
             ],

@@ -3495,7 +3495,7 @@ FitnessBenchmark _$FitnessBenchmarkFromJson(Map<String, dynamic> json) =>
       ..type = $enumDecode(_$FitnessBenchmarkScoreTypeEnumMap, json['type'],
           unknownValue: FitnessBenchmarkScoreType.artemisUnknown)
       ..name = json['name'] as String
-      ..description = json['description'] as String
+      ..description = json['description'] as String?
       ..instructions = json['instructions'] as String?
       ..instructionalVideoUri = json['instructionalVideoUri'] as String?
       ..instructionalVideoThumbUri =
@@ -4619,6 +4619,26 @@ Map<String, dynamic> _$SkillToJson(Skill instance) => <String, dynamic>{
       'documentUri': instance.documentUri,
     };
 
+BestBenchmarkScoreSummary _$BestBenchmarkScoreSummaryFromJson(
+        Map<String, dynamic> json) =>
+    BestBenchmarkScoreSummary()
+      ..benchmarkName = json['benchmarkName'] as String
+      ..benchmarkType = $enumDecode(
+          _$FitnessBenchmarkScoreTypeEnumMap, json['benchmarkType'],
+          unknownValue: FitnessBenchmarkScoreType.artemisUnknown)
+      ..bestScore = (json['bestScore'] as num).toDouble()
+      ..videoUri = json['videoUri'] as String?;
+
+Map<String, dynamic> _$BestBenchmarkScoreSummaryToJson(
+        BestBenchmarkScoreSummary instance) =>
+    <String, dynamic>{
+      'benchmarkName': instance.benchmarkName,
+      'benchmarkType':
+          _$FitnessBenchmarkScoreTypeEnumMap[instance.benchmarkType],
+      'bestScore': instance.bestScore,
+      'videoUri': instance.videoUri,
+    };
+
 UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile()
   ..$$typename = json['__typename'] as String?
   ..id = json['id'] as String
@@ -4661,6 +4681,10 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile()
           json['LifetimeLogStatsSummary'] as Map<String, dynamic>)
   ..skills = (json['Skills'] as List<dynamic>)
       .map((e) => Skill.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..bestBenchmarkScores = (json['bestBenchmarkScores'] as List<dynamic>?)
+      ?.map(
+          (e) => BestBenchmarkScoreSummary.fromJson(e as Map<String, dynamic>))
       .toList();
 
 Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
@@ -4692,6 +4716,8 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'Clubs': instance.clubs.map((e) => e.toJson()).toList(),
       'LifetimeLogStatsSummary': instance.lifetimeLogStatsSummary?.toJson(),
       'Skills': instance.skills.map((e) => e.toJson()).toList(),
+      'bestBenchmarkScores':
+          instance.bestBenchmarkScores?.map((e) => e.toJson()).toList(),
     };
 
 UserProfile$Query _$UserProfile$QueryFromJson(Map<String, dynamic> json) =>
@@ -6695,7 +6721,7 @@ CreateFitnessBenchmarkInput _$CreateFitnessBenchmarkInputFromJson(
     CreateFitnessBenchmarkInput(
       fitnessBenchmarkCategory: ConnectRelationInput.fromJson(
           json['FitnessBenchmarkCategory'] as Map<String, dynamic>),
-      description: json['description'] as String,
+      description: json['description'] as String?,
       instructionalVideoThumbUri: json['instructionalVideoThumbUri'] as String?,
       instructionalVideoUri: json['instructionalVideoUri'] as String?,
       instructions: json['instructions'] as String?,

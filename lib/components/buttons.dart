@@ -221,7 +221,7 @@ class TertiaryButton extends StatelessWidget {
       this.suffixIconData,
       required this.onPressed,
       this.disabled = false,
-      this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       this.textColor,
       this.backgroundColor,
       this.fontSize = FONTSIZE.two,
@@ -253,7 +253,7 @@ class TertiaryButton extends StatelessWidget {
             children: [
               if (prefixIconData != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 2.0, right: 4),
+                  padding: const EdgeInsets.only(left: 2.0, right: 2),
                   child: Icon(
                     prefixIconData,
                     color: textColor,
@@ -261,7 +261,7 @@ class TertiaryButton extends StatelessWidget {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: MyText(
                   text.toUpperCase(),
                   color: textColor,
@@ -272,7 +272,7 @@ class TertiaryButton extends StatelessWidget {
               ),
               if (suffixIconData != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 2),
+                  padding: const EdgeInsets.only(left: 2, right: 2),
                   child: Icon(
                     suffixIconData,
                     color: textColor,

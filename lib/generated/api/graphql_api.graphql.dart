@@ -550,7 +550,7 @@ mixin FitnessBenchmarkMixin {
   @JsonKey(unknownEnumValue: FitnessBenchmarkScoreType.artemisUnknown)
   late FitnessBenchmarkScoreType type;
   late String name;
-  late String description;
+  String? description;
   String? instructions;
   String? instructionalVideoUri;
   String? instructionalVideoThumbUri;
@@ -5949,6 +5949,29 @@ class Skill extends JsonSerializable with EquatableMixin, SkillMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
+class BestBenchmarkScoreSummary extends JsonSerializable with EquatableMixin {
+  BestBenchmarkScoreSummary();
+
+  factory BestBenchmarkScoreSummary.fromJson(Map<String, dynamic> json) =>
+      _$BestBenchmarkScoreSummaryFromJson(json);
+
+  late String benchmarkName;
+
+  @JsonKey(unknownEnumValue: FitnessBenchmarkScoreType.artemisUnknown)
+  late FitnessBenchmarkScoreType benchmarkType;
+
+  late double bestScore;
+
+  String? videoUri;
+
+  @override
+  List<Object?> get props =>
+      [benchmarkName, benchmarkType, bestScore, videoUri];
+  @override
+  Map<String, dynamic> toJson() => _$BestBenchmarkScoreSummaryToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class UserProfile extends JsonSerializable
     with EquatableMixin, UserProfileMixin {
   UserProfile();
@@ -5964,6 +5987,8 @@ class UserProfile extends JsonSerializable
 
   @JsonKey(name: 'Skills')
   late List<Skill> skills;
+
+  List<BestBenchmarkScoreSummary>? bestBenchmarkScores;
 
   @override
   List<Object?> get props => [
@@ -5992,7 +6017,8 @@ class UserProfile extends JsonSerializable
         activeFitnessBenchmarks,
         clubs,
         lifetimeLogStatsSummary,
-        skills
+        skills,
+        bestBenchmarkScores
       ];
   @override
   Map<String, dynamic> toJson() => _$UserProfileToJson(this);
@@ -8438,7 +8464,7 @@ class CreateFitnessBenchmark$Mutation extends JsonSerializable
 class CreateFitnessBenchmarkInput extends JsonSerializable with EquatableMixin {
   CreateFitnessBenchmarkInput(
       {required this.fitnessBenchmarkCategory,
-      required this.description,
+      this.description,
       this.instructionalVideoThumbUri,
       this.instructionalVideoUri,
       this.instructions,
@@ -8452,7 +8478,7 @@ class CreateFitnessBenchmarkInput extends JsonSerializable with EquatableMixin {
   @JsonKey(name: 'FitnessBenchmarkCategory')
   late ConnectRelationInput fitnessBenchmarkCategory;
 
-  late String description;
+  String? description;
 
   String? instructionalVideoThumbUri;
 
@@ -40511,6 +40537,37 @@ final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
                         name: NameNode(value: 'Skill'), directives: [])
+                  ])),
+              FieldNode(
+                  name: NameNode(value: 'bestBenchmarkScores'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FieldNode(
+                        name: NameNode(value: 'benchmarkName'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null),
+                    FieldNode(
+                        name: NameNode(value: 'benchmarkType'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null),
+                    FieldNode(
+                        name: NameNode(value: 'bestScore'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null),
+                    FieldNode(
+                        name: NameNode(value: 'videoUri'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: null)
                   ]))
             ]))
       ])),

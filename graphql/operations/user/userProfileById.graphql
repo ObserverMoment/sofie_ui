@@ -16,5 +16,11 @@ query userProfile($userId: ID!) {
     Skills {
       ...Skill
     }
+    bestBenchmarkScores {
+      benchmarkName
+      benchmarkType
+      bestScore
+      videoUri
+    }
   }
 }

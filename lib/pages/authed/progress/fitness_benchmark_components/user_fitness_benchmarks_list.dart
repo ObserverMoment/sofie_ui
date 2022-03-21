@@ -1,4 +1,7 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/creators/fitness_benchmarks/fitness_benchmark_creator.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/active_settings_and_benchmarks_container.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/fitness_benchmark_card.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -9,7 +12,6 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/user_fitness_benchmark_details.dart';
-import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/utils.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 
 /// A list of all standard (in app) and custom (user generated) fitness benchmarks, broken down into categories.
@@ -36,8 +38,13 @@ class _UserFitnessBenchmarksListState extends State<UserFitnessBenchmarksList> {
         : categories.where((c) => c == _activeCategory);
 
     return MyPageScaffold(
-      navigationBar: const MyNavBar(
-        middle: NavBarTitle('Fitness Benchmarks'),
+      navigationBar: MyNavBar(
+        middle: const NavBarTitle('Fitness Benchmarks'),
+        trailing: TertiaryButton(
+            text: 'New',
+            prefixIconData: CupertinoIcons.plus,
+            onPressed: () =>
+                context.push(child: const FitnessBenchmarkCreator())),
       ),
       child: Column(
         children: [
@@ -126,6 +133,18 @@ class _FitnessBenchmarkCategoryUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sortedBenchmarks = fitnessBenchmarks.sorted((a, b) {
+      final aIsActive = activeBenchmarkIds.contains(a.id);
+      final bIsActive = activeBenchmarkIds.contains(b.id);
+      if (aIsActive && !bIsActive) {
+        return -1;
+      } else if (bIsActive && !aIsActive) {
+        return 1;
+      } else {
+        return a.name.compareTo(b.name);
+      }
+    });
+
     return ContentBox(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
       child: Column(
@@ -138,14 +157,17 @@ class _FitnessBenchmarkCategoryUI extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           fitnessBenchmarks.isEmpty
-              ? const MyText('No benchmarks...')
+              ? const MyText(
+                  'No benchmarks...',
+                  subtext: true,
+                )
               : ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: fitnessBenchmarks.length,
                   shrinkWrap: true,
                   separatorBuilder: (_, __) => const HorizontalLine(),
                   itemBuilder: (c, i) {
-                    final benchmark = fitnessBenchmarks[i];
+                    final benchmark = sortedBenchmarks[i];
 
                     return GestureDetector(
                       behavior: HitTestBehavior.opaque,
@@ -153,12 +175,7 @@ class _FitnessBenchmarkCategoryUI extends StatelessWidget {
                           child: UserFitnessBenchmarkDetails(id: benchmark.id)),
                       child: FitnessBenchmarkCard(
                         benchmark: benchmark,
-                        isActive: activeBenchmarkIds
-                            .contains(fitnessBenchmarks[i].id),
-                        deleteCustomBenchmark: () => print('TODO'),
-                        toggleActiveBenchmark: () =>
-                            FitnessBenchmarkUtils.toggleActivateBenchmark(
-                                context, activeBenchmarkIds, benchmark.id),
+                        activeBenchmarkIds: activeBenchmarkIds,
                       ),
                     );
                   },
