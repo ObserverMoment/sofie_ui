@@ -13,6 +13,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -85,6 +86,12 @@ class _SettingsPageState extends State<SettingsPage> {
                               .switchToTheme(themeName)),
                     ],
                   ),
+                ),
+                _spacer(),
+                PageLink(
+                  linkText: 'Send Us Feedback',
+                  onPress: () => Utils.openUserFeedbackPage(context),
+                  icon: Icons.feedback_outlined,
                 ),
                 _spacer(),
                 ContentBox(

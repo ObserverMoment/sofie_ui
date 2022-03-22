@@ -22,6 +22,7 @@ dependencies:
   dotted_line: ^3.1.0
   email_validator: ^2.0.1
   equatable: ^2.0.0
+  feedback: ^2.4.1
   file_picker: ^4.5.1
   firebase_auth: ^3.3.11
   firebase_core: ^1.13.1
@@ -67,6 +68,7 @@ dependencies:
   record: ^3.0.3
   rxdart: ^0.27.2
   scroll_to_index: ^2.1.1
+  sentry_flutter: ^6.4.0
   share_plus: ^4.0.1
   shimmer: ^2.0.0
   simple_animations: ^4.0.1
@@ -88,6 +90,14 @@ dependencies:
   video_thumbnail: ^0.4.6
   wakelock: ^0.6.1+2
   xml: ^5.3.0
+
+# https://stackoverflow.com/questions/70404718/error-with-photoview-looking-up-a-deactivated-widgets-ancestor-is-unsafe/71010204#71010204
+# https://github.com/bluefireteam/photo_view/issues/502
+dependency_overrides:
+  photo_view:
+    git:
+      url: https://github.com/bluefireteam/photo_view
+      ref: master
 
 dev_dependencies:
   auto_route_generator: ^3.2.3

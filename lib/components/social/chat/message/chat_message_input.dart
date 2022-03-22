@@ -178,7 +178,7 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
   }
 
   Future<void> _pickLoggedWorkout() async {
-    context.navigateTo(LoggedWorkoutsRoute(
+    context.navigateTo(LoggedWorkoutsHistoryRoute(
         pageTitle: 'Select Log',
         selectLoggedWorkout: (log) async {
           await _sendMessage(Message(

@@ -13,7 +13,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/body_areas_targeted_widget.dart';
-import 'package:sofie_ui/pages/authed/progress/logged_workouts/filterable_logged_workouts_list.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/logged_workouts_history_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/log_analysis_averages_widget.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/most_logged_moves.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/most_logged_workouts.dart';
@@ -23,18 +23,19 @@ import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
-class LoggedWorkoutsPage extends StatefulWidget {
-  final void Function(LoggedWorkout loggedWorkout)? selectLoggedWorkout;
+class LoggedWorkoutsAnalysisPage extends StatefulWidget {
   final String pageTitle;
-  const LoggedWorkoutsPage(
-      {Key? key, this.selectLoggedWorkout, this.pageTitle = 'Logs & Analysis'})
+  const LoggedWorkoutsAnalysisPage(
+      {Key? key, this.pageTitle = 'Logs & Analysis'})
       : super(key: key);
 
   @override
-  State<LoggedWorkoutsPage> createState() => _LoggedWorkoutsPageState();
+  State<LoggedWorkoutsAnalysisPage> createState() =>
+      _LoggedWorkoutsAnalysisPageState();
 }
 
-class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
+class _LoggedWorkoutsAnalysisPageState
+    extends State<LoggedWorkoutsAnalysisPage> {
   DateTime? _from;
   DateTime? _to;
 
@@ -49,7 +50,7 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
   Widget build(BuildContext context) {
     final query = UserLoggedWorkoutsQuery();
     return QueryObserver<UserLoggedWorkouts$Query, json.JsonSerializable>(
-        key: Key('LoggedWorkoutsPage - ${query.operationName}'),
+        key: Key('LoggedWorkoutsAnalysisPage - ${query.operationName}'),
         query: query,
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (data) {
@@ -72,10 +73,7 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                         IconButton(
                             iconData: CupertinoIcons.list_bullet,
                             onPressed: () => context.push(
-                                    child: FilterableLoggedWorkoutsList(
-                                  selectLoggedWorkout:
-                                      widget.selectLoggedWorkout,
-                                ))),
+                                child: const LoggedWorkoutsHistoryPage())),
                       ]),
               ),
               child: Column(
@@ -129,7 +127,7 @@ class _LoggedWorkoutsPageState extends State<LoggedWorkoutsPage> {
                                     );
                                   default:
                                     throw Exception(
-                                        'LoggedWorkoutsPage: Widget builder - no widget defined at this index - Index:$i');
+                                        'LoggedWorkoutsAnalysisPage: Widget builder - no widget defined at this index - Index:$i');
                                 }
                               }),
                         ),

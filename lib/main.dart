@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:feedback/feedback.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
@@ -8,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/move_filters_bloc.dart';
@@ -15,6 +17,7 @@ import 'package:sofie_ui/components/user_input/filters/blocs/workout_filters_blo
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_plan_filters_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/pages/feedback_collection.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
@@ -41,8 +44,15 @@ Future<void> main() async {
   GetIt.I.registerSingleton<UploadcareService>(UploadcareService());
   GetIt.I.registerSingleton<Logger>(Logger());
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) => runApp(const AuthRouter()));
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  await SentryFlutter.init((options) {
+    options.dsn =
+        'https://309443f21dc04dfabd2dac1f76b7f142@o1174697.ingest.sentry.io/6270868';
+    // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+    // We recommend adjusting this value in production.
+    options.tracesSampleRate = 1.0;
+  }, appRunner: () => runApp(const AuthRouter()));
 }
 
 class AuthRouter extends StatefulWidget {
@@ -96,35 +106,46 @@ class _AuthRouterState extends State<AuthRouter> {
         return material.Theme(
           data: material.ThemeData(
               scaffoldBackgroundColor: context.theme.background),
-          child: _Unfocus(
-              child: CupertinoApp.router(
-            routeInformationParser:
-                _appRouter.defaultRouteParser(includePrefixMatches: true),
-            routerDelegate: AutoRouterDelegate.declarative(
-              _appRouter,
-              routes: (_) => [
-                if (authState == AuthState.authed && authedUser != null)
-                  const AuthedRouter()
-                else if (authState == AuthState.loading)
-                  const GlobalLoadingRoute()
-                else
-                  const UnauthedLandingRoute(),
-              ],
+          child: BetterFeedback(
+            feedbackBuilder: (context, onSubmit, scrollController) =>
+                FeedbackCollectionPage(
+              onSubmit: onSubmit,
             ),
-            debugShowCheckedModeBanner: false,
-            theme: context.theme.cupertinoThemeData,
-            localizationsDelegates: const [
-              material.DefaultMaterialLocalizations.delegate,
-              DefaultCupertinoLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en', 'US'),
-              Locale('en', 'GB'),
-            ],
-          )),
+            theme: FeedbackThemeData(
+                feedbackSheetColor: context.theme.cardBackground,
+                bottomSheetDescriptionStyle:
+                    TextStyle(color: context.theme.primary),
+                activeFeedbackModeColor: Styles.primaryAccent),
+            child: _Unfocus(
+                child: CupertinoApp.router(
+              routeInformationParser:
+                  _appRouter.defaultRouteParser(includePrefixMatches: true),
+              routerDelegate: AutoRouterDelegate.declarative(
+                _appRouter,
+                routes: (_) => [
+                  if (authState == AuthState.authed && authedUser != null)
+                    const AuthedRouter()
+                  else if (authState == AuthState.loading)
+                    const GlobalLoadingRoute()
+                  else
+                    const UnauthedLandingRoute(),
+                ],
+              ),
+              debugShowCheckedModeBanner: false,
+              theme: context.theme.cupertinoThemeData,
+              localizationsDelegates: const [
+                material.DefaultMaterialLocalizations.delegate,
+                DefaultCupertinoLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en', 'US'),
+                Locale('en', 'GB'),
+              ],
+            )),
+          ),
         );
       },
     );

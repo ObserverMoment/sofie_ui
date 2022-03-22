@@ -22,6 +22,7 @@ import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts/logged_workouts_history_page.dart';
 import 'package:sofie_ui/pages/authed/progress/user_goals_page.dart';
 import 'package:sofie_ui/components/workout/workout_finders/public/public_workout_finder_page.dart';
 import 'package:sofie_ui/components/workout_plan/workout_plan_finder/public/public_workout_plan_finder_page.dart';
@@ -56,7 +57,7 @@ import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/profile_page.dart';
 import 'package:sofie_ui/pages/authed/profile/settings.dart';
 import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
-import 'package:sofie_ui/pages/authed/progress/logged_workouts_page.dart';
+import 'package:sofie_ui/pages/authed/progress/logged_workouts_analysis_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_scorebook_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_people_page.dart';
@@ -125,7 +126,10 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: 'personal-scores', page: PersonalScoresPage),
           AutoRoute(path: 'goals', page: UserGoalsPage),
           AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
-          AutoRoute(path: 'workout-logs', page: LoggedWorkoutsPage),
+          AutoRoute(
+              path: 'workout-logs/analysis', page: LoggedWorkoutsAnalysisPage),
+          AutoRoute(
+              path: 'workout-logs/history', page: LoggedWorkoutsHistoryPage),
 
           /// Other users public content.
           AutoRoute(

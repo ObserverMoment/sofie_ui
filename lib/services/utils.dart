@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:feedback/feedback.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 void printLog(String message) {
@@ -11,6 +14,37 @@ void printLog(String message) {
 }
 
 abstract class Utils {
+  static void openUserFeedbackPage(BuildContext context) {
+    BetterFeedback.of(context)
+        .show((feedback) => submitUserFeedbackToSentry(context, feedback));
+  }
+
+  static Future<void> submitUserFeedbackToSentry(
+      BuildContext context, UserFeedback feedback) async {
+    final userId = GetIt.I<AuthBloc>().authedUser!.id;
+    final attachment = SentryAttachment.fromUint8List(
+        feedback.screenshot, 'screenshot.png',
+        contentType: 'image/png');
+
+    SentryId sentryId = await Sentry.captureMessage(
+      "User Feedback",
+      withScope: (scope) {
+        scope.addAttachment(attachment);
+        scope.level = SentryLevel.info;
+      },
+    );
+
+    final sentryFeedback = SentryUserFeedback(
+      eventId: sentryId,
+      comments: feedback.text,
+      name: userId,
+    );
+
+    await Sentry.captureUserFeedback(sentryFeedback);
+
+    context.showToast(message: 'Feedback received, thanks!');
+  }
+
   static void unfocusAny() => FocusManager.instance.primaryFocus?.unfocus();
   // https://stackoverflow.com/questions/47776045/is-there-a-good-way-to-write-wait-for-variables-to-change-in-darts-async-meth
   /// Completes the future when async test() return true
