@@ -90,7 +90,7 @@ class _RegisterBetaTestingState extends State<RegisterBetaTesting> {
     return MyPageScaffold(
       navigationBar: const MyNavBar(
         middle: NavBarTitle(
-          'Welcome to Sofie Beta!',
+          'Welcome to Sofie Early Release!',
         ),
       ),
       child: Padding(

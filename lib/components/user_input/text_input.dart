@@ -177,6 +177,8 @@ class MyTextAreaFormFieldRow extends StatelessWidget {
   final bool Function()? validator;
   final Color? backgroundColor;
   final List<TextInputFormatter>? inputFormatters;
+  final int? maxLines;
+  final bool expands;
 
   const MyTextAreaFormFieldRow(
       {Key? key,
@@ -189,7 +191,9 @@ class MyTextAreaFormFieldRow extends StatelessWidget {
       this.obscureText = false,
       this.validator,
       this.backgroundColor,
-      this.inputFormatters})
+      this.inputFormatters,
+      this.maxLines,
+      this.expands = true})
       : super(key: key);
 
   @override
@@ -206,14 +210,14 @@ class MyTextAreaFormFieldRow extends StatelessWidget {
           child: CupertinoTextFormFieldRow(
               keyboardAppearance: context.theme.cupertinoThemeData.brightness,
               controller: controller,
-              expands: true,
-              maxLines: null,
+              expands: expands,
+              maxLines: maxLines,
               prefix: prefix,
               autofocus: autofocus,
               placeholder: placeholder,
               inputFormatters: inputFormatters,
               keyboardType: keyboardType,
-              style: const TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, color: context.theme.primary),
               placeholderStyle: TextStyle(
                   fontSize: 18, color: context.theme.primary.withOpacity(0.6)),
               autofillHints: autofillHints,

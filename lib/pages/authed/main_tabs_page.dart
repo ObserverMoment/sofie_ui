@@ -2,10 +2,12 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 /// Scaffold for the main top level tabs view.
 class MainTabsPage extends StatelessWidget {
@@ -19,7 +21,7 @@ class MainTabsPage extends StatelessWidget {
     required IconData inactiveIconData,
     required IconData activeIconData,
   }) {
-    return TabIcon(
+    return _TabIcon(
         inactiveIcon: Icon(
           inactiveIconData,
         ),
@@ -90,6 +92,7 @@ class MainTabsPage extends StatelessWidget {
                       label: 'Profile',
                       inactiveIconData: CupertinoIcons.profile_circled,
                       activeIconData: CupertinoIcons.profile_circled),
+                  const _FeedbackIcon()
                 ],
               )),
         ),
@@ -99,13 +102,13 @@ class MainTabsPage extends StatelessWidget {
   }
 }
 
-class TabIcon extends StatelessWidget {
+class _TabIcon extends StatelessWidget {
   final Widget activeIcon;
   final Widget inactiveIcon;
   final String label;
   final bool isActive;
   final void Function() onTap;
-  const TabIcon(
+  const _TabIcon(
       {Key? key,
       required this.activeIcon,
       required this.inactiveIcon,
@@ -148,5 +151,36 @@ class TabIcon extends StatelessWidget {
                   )),
       ),
     );
+  }
+}
+
+class _FeedbackIcon extends StatelessWidget {
+  const _FeedbackIcon({
+    Key? key,
+  }) : super(key: key);
+
+  double get kLabelSpacerHeight => 3.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+        padding: const EdgeInsets.symmetric(vertical: 11.0),
+        pressedOpacity: 0.9,
+        onPressed: () => Utils.openUserFeedbackPage(context),
+        child: Column(
+          children: [
+            const Icon(
+              CupertinoIcons.quote_bubble,
+              size: 23,
+              color: Styles.infoBlue,
+            ),
+            SizedBox(height: kLabelSpacerHeight),
+            const MyText(
+              'Feedback',
+              size: FONTSIZE.one,
+              color: Styles.infoBlue,
+            )
+          ],
+        ));
   }
 }

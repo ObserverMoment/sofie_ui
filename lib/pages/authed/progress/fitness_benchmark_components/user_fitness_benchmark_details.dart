@@ -2,18 +2,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/fitness_benchmarks/fitness_benchmark_score_creator.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/main.dart';
+import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/active_settings_and_benchmarks_container.dart';
+import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/fitness_benchmark_actions_menu.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/utils.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
-import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -25,61 +23,60 @@ class UserFitnessBenchmarkDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userFitnessBenchmarksQuery = UserFitnessBenchmarksQuery();
+    return ActiveSettingsAndBenchmarksContainer(
+        builder: (activeBenchmarkIds, benchmarks) {
+      final benchmark = benchmarks.firstWhereOrNull((b) => b.id == id);
 
-    return QueryObserver<UserFitnessBenchmarks$Query, json.JsonSerializable>(
-        key: Key(
-            'UserFitnessBenchmarksList - ${userFitnessBenchmarksQuery.operationName}'),
-        query: userFitnessBenchmarksQuery,
-        loadingIndicator: const GlobalLoadingPage(),
-        builder: (data) {
-          final benchmark =
-              data.userFitnessBenchmarks.firstWhere((b) => b.id == id);
-          final scores = benchmark.fitnessBenchmarkScores ?? [];
+      if (benchmark == null) {
+        /// It has probably just been deleted via [FitnessBenchmarkActionsMenu].
+        return Container();
+      } else {
+        final scores = benchmark.fitnessBenchmarkScores ?? [];
 
-          return CupertinoPageScaffold(
-            navigationBar: MyNavBar(
-              middle: NavBarTitle(benchmark.name),
-              trailing: IconButton(
-                iconData: CupertinoIcons.plus,
-                onPressed: () => context.push(
-                    child: FitnessBenchmarkScoreCreator(
-                  fitnessBenchmark: benchmark,
-                )),
-              ),
+        return CupertinoPageScaffold(
+          navigationBar: MyNavBar(
+            middle: NavBarTitle(benchmark.name),
+            trailing: FitnessBenchmarkActionsMenu(
+              benchmark: benchmark,
+              activeBenchmarkIds: activeBenchmarkIds,
+              showViewHistoryAction: false,
+              child: const Icon(CupertinoIcons.ellipsis),
+              onBenchmarkDelete: context.pop,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 14),
-                if (scores.isEmpty)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: MyText(
-                        'No scores logged yet',
-                        subtext: true,
-                      ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 14),
+              if (scores.isEmpty)
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(32.0),
+                    child: MyText(
+                      'No scores logged yet',
+                      subtext: true,
                     ),
                   ),
-                if (scores.isNotEmpty)
-                  Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        _BenchmarkProgressGraph(
-                          benchmark: benchmark,
-                        ),
-                        _TopTenScoresList(
-                          benchmark: benchmark,
-                        ),
-                      ],
-                    ),
-                  )
-              ],
-            ),
-          );
-        });
+                ),
+              if (scores.isNotEmpty)
+                Expanded(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      _BenchmarkProgressGraph(
+                        benchmark: benchmark,
+                      ),
+                      _TopTenScoresList(
+                        benchmark: benchmark,
+                      ),
+                    ],
+                  ),
+                )
+            ],
+          ),
+        );
+      }
+    });
   }
 }
 

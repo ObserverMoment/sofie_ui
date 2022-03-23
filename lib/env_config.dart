@@ -1,7 +1,6 @@
 import 'dart:io';
 
 /// If [SOFIE_API_HOST] is undefined then default to local.
-/// TODO: Not secure to be including private keys in dart defines?
 class EnvironmentConfig {
   // dev:
   // http://localhost:4000/graphql ios and web
@@ -41,6 +40,7 @@ class EnvironmentConfig {
             queryParameters: params);
   }
 
+  /// TODO: Not secure to be including private keys in dart defines?
   static String get uploadCarePublicKey =>
       const String.fromEnvironment('UPLOADCARE_PUBLIC_KEY');
 

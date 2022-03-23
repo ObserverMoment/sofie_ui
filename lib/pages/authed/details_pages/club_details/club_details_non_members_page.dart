@@ -77,11 +77,13 @@ class ClubDetailsNonMembersPage extends StatelessWidget {
                             text: 'Join the Club!',
                             prefixIconData: CupertinoIcons.checkmark_alt,
                             onPressed: joinClub)
-                        : const Tag(
-                            tag: 'This Club is Private',
-                            fontSize: FONTSIZE.five,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 20),
+                        : BorderBox(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 20),
+                            borderRadius: BorderRadius.circular(30),
+                            child: const MyText(
+                              'This Club is Private',
+                            ),
                           ),
                   ),
                 ],

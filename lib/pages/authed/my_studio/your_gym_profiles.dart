@@ -37,7 +37,7 @@ class YourGymProfilesPage extends StatelessWidget {
                                   buttonText: 'Create Gym Profile'),
                             ])
                       : FABPage(
-                          columnButtons: [
+                          rowButtons: [
                             FloatingButton(
                                 icon: CupertinoIcons.add,
                                 text: 'Create Gym Profile',

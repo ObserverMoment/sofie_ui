@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -14,34 +13,12 @@ import 'package:sofie_ui/services/utils.dart';
 
 class BodyTrackingEntryCard extends StatelessWidget {
   final BodyTrackingEntry bodyTrackingEntry;
-  const BodyTrackingEntryCard({Key? key, required this.bodyTrackingEntry})
+  final VoidCallback openEntryPhotosViewer;
+  const BodyTrackingEntryCard(
+      {Key? key,
+      required this.bodyTrackingEntry,
+      required this.openEntryPhotosViewer})
       : super(key: key);
-
-  /// Just photos from the entry in which the user clicked.
-  void _openEntryPhotosViewer(BuildContext context, List<String> photoUris) {
-    context.push(
-        child: Stack(
-          children: [
-            FullScreenImageGallery(
-              photoUris,
-              withTopNavBar: false,
-            ),
-            SafeArea(
-              child: CupertinoButton(
-                child: CircularBox(
-                    padding: const EdgeInsets.all(10),
-                    color: context.readTheme.background.withOpacity(0.5),
-                    child: Icon(
-                      CupertinoIcons.clear_thick,
-                      color: context.readTheme.primary.withOpacity(0.8),
-                    )),
-                onPressed: () => context.pop(rootNavigator: true),
-              ),
-            )
-          ],
-        ),
-        rootNavigator: true);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +110,7 @@ class BodyTrackingEntryCard extends StatelessWidget {
               ),
               if (bodyTrackingEntry.photoUris.isNotEmpty)
                 GestureDetector(
-                  onTap: () => _openEntryPhotosViewer(
-                      context, bodyTrackingEntry.photoUris),
+                  onTap: openEntryPhotosViewer,
                   child: SizedBox(
                       width: 80,
                       child: Stack(

@@ -130,10 +130,10 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
                               // Always show names list if it is not empty
                               if (workoutNamesSnapshot.data!.isNotEmpty) {
                                 return FadeIn(
-                                  child: WorkoutFinderTextResultsNames(
+                                  child: FinderTextResultsNames(
                                     results: workoutNamesSnapshot.data!,
                                     searchString: _searchString,
-                                    searchWorkoutName: _handleSearchSubmit,
+                                    fullObjectSearch: _handleSearchSubmit,
                                   ),
                                 );
                               } else if (workoutsSnapshot.data!.isNotEmpty) {
@@ -164,15 +164,15 @@ class _PublicWorkoutTextSearchState extends State<PublicWorkoutTextSearch> {
 
 /// Text only list of names being returned from the api based on the user input.
 /// On press of the text result we set the search string to the exact name of the search string and then run a text search returning full workout objects.
-class WorkoutFinderTextResultsNames extends StatelessWidget {
+class FinderTextResultsNames extends StatelessWidget {
   final List<TextSearchResult> results;
   final String searchString;
-  final void Function(String name) searchWorkoutName;
-  const WorkoutFinderTextResultsNames(
+  final void Function(String name) fullObjectSearch;
+  const FinderTextResultsNames(
       {Key? key,
       required this.results,
       required this.searchString,
-      required this.searchWorkoutName})
+      required this.fullObjectSearch})
       : super(key: key);
 
   @override
@@ -181,9 +181,9 @@ class WorkoutFinderTextResultsNames extends StatelessWidget {
         shrinkWrap: true,
         itemCount: results.length,
         itemBuilder: (c, i) => GestureDetector(
-              onTap: () => searchWorkoutName(results[i].name),
+              onTap: () => fullObjectSearch(results[i].name),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border(
@@ -199,16 +199,18 @@ class WorkoutFinderTextResultsNames extends StatelessWidget {
                         size: 20,
                       ),
                       const SizedBox(width: 10),
-                      SubstringHighlight(
-                          textStyle: TextStyle(
-                              fontSize: 16,
-                              color: context.theme.primary.withOpacity(0.7)),
-                          textStyleHighlight: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Styles.primaryAccent),
-                          text: results[i].name,
-                          term: searchString),
+                      Flexible(
+                        child: SubstringHighlight(
+                            textStyle: TextStyle(
+                                fontSize: 16,
+                                color: context.theme.primary.withOpacity(0.7)),
+                            textStyleHighlight: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Styles.primaryAccent),
+                            text: results[i].name,
+                            term: searchString),
+                      ),
                     ],
                   ),
                 ),

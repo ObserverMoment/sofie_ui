@@ -2,29 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/creators/fitness_benchmarks/fitness_benchmark_score_creator.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
+import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/fitness_benchmark_actions_menu.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/utils.dart';
 
 class FitnessBenchmarkCard extends StatelessWidget {
   final FitnessBenchmark benchmark;
+  final List<String> activeBenchmarkIds;
 
-  /// Is the benchmark being displayed on the user's dashboard.
-  final bool isActive;
-  final VoidCallback toggleActiveBenchmark;
-  final VoidCallback deleteCustomBenchmark;
-  const FitnessBenchmarkCard(
-      {Key? key,
-      required this.benchmark,
-      required this.isActive,
-      required this.toggleActiveBenchmark,
-      required this.deleteCustomBenchmark})
-      : super(key: key);
+  const FitnessBenchmarkCard({
+    Key? key,
+    required this.benchmark,
+    required this.activeBenchmarkIds,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +39,10 @@ class FitnessBenchmarkCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  MyText(benchmark.name),
-                  if (isActive)
+                  MyText(
+                    benchmark.name,
+                  ),
+                  if (activeBenchmarkIds.contains(benchmark.id))
                     const FadeInUp(
                         child: Padding(
                       padding: EdgeInsets.only(left: 8.0),
@@ -60,7 +54,7 @@ class FitnessBenchmarkCard extends StatelessWidget {
                     ))
                 ],
               ),
-              const SizedBox(height: 3),
+              const SizedBox(height: 4),
               MyText(
                 benchmark.type.display,
                 size: FONTSIZE.one,
@@ -76,44 +70,11 @@ class FitnessBenchmarkCard extends StatelessWidget {
                       size: FONTSIZE.five),
             ],
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                  iconData: CupertinoIcons.ellipsis,
-                  onPressed: () => openBottomSheetMenu(
-                      context: context,
-                      child: BottomSheetMenu(
-                          header: BottomSheetMenuHeader(
-                            name: benchmark.name,
-                            subtitle: benchmark.type.display,
-                          ),
-                          items: [
-                            BottomSheetMenuItem(
-                                icon: material.Icons.score,
-                                text: 'Submit a Score',
-                                onPressed: () => context.push(
-                                        child: FitnessBenchmarkScoreCreator(
-                                      fitnessBenchmark: benchmark,
-                                    ))),
-                            isActive
-                                ? BottomSheetMenuItem(
-                                    icon: material.Icons.dashboard,
-                                    text: 'Remove from Dashboard',
-                                    onPressed: toggleActiveBenchmark)
-                                : BottomSheetMenuItem(
-                                    icon: material.Icons.dashboard,
-                                    text: 'Add to Dashboard',
-                                    onPressed: toggleActiveBenchmark),
-                            if (benchmark.scope == FitnessBenchmarkScope.custom)
-                              BottomSheetMenuItem(
-                                  icon: CupertinoIcons.delete,
-                                  isDestructive: true,
-                                  text: 'Delete Custom Benchmark',
-                                  onPressed: deleteCustomBenchmark)
-                          ]))),
-            ],
+          FitnessBenchmarkActionsMenu(
+            benchmark: benchmark,
+            activeBenchmarkIds: activeBenchmarkIds,
+            showViewHistoryAction: true,
+            child: const Icon(CupertinoIcons.ellipsis),
           )
         ],
       ),

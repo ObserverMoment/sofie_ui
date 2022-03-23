@@ -4,6 +4,7 @@ import 'package:artemis/artemis.dart';
 import 'package:flutter/material.dart';
 import 'package:gql/ast.dart';
 import 'package:hive/hive.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -14,8 +15,11 @@ const kStoreReferenceKey = '\$ref';
 bool checkOperationResult<T>(BuildContext context, OperationResult<T> result,
     {VoidCallback? onSuccess, VoidCallback? onFail}) {
   if (result.hasErrors || result.data == null) {
-    result.errors?.forEach((e) {
+    result.errors?.forEach((e) async {
       printLog(e.toString());
+      await Sentry.captureException(
+        e,
+      );
     });
     if (onFail != null) {
       onFail();

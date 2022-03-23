@@ -356,7 +356,8 @@ class ProgressPage extends StatelessWidget {
                     SubSectionLinkTile(
                       label: 'Logs & Analysis',
                       assetImagePath: 'logs_analysis.svg',
-                      onTap: () => context.navigateTo(LoggedWorkoutsRoute()),
+                      onTap: () =>
+                          context.navigateTo(LoggedWorkoutsAnalysisRoute()),
                     ),
                   ],
                 ),
