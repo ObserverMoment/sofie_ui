@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart' as material;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/env_config.dart';
@@ -160,26 +159,26 @@ class _FeedbackIcon extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  Duration get kAnimationDuration => const Duration(milliseconds: 400);
   double get kLabelSpacerHeight => 3.0;
 
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 11.0),
         pressedOpacity: 0.9,
         onPressed: () => Utils.openUserFeedbackPage(context),
         child: Column(
           children: [
             const Icon(
-              material.Icons.feedback_outlined,
-              color: Styles.primaryAccent,
+              CupertinoIcons.quote_bubble,
+              size: 23,
+              color: Styles.infoBlue,
             ),
             SizedBox(height: kLabelSpacerHeight),
             const MyText(
               'Feedback',
               size: FONTSIZE.one,
-              color: Styles.primaryAccent,
+              color: Styles.infoBlue,
             )
           ],
         ));

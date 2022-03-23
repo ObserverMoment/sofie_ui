@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:feedback/feedback.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -46,13 +47,15 @@ Future<void> main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  await SentryFlutter.init((options) {
-    options.dsn =
-        'https://309443f21dc04dfabd2dac1f76b7f142@o1174697.ingest.sentry.io/6270868';
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-    // We recommend adjusting this value in production.
-    options.tracesSampleRate = 1.0;
-  }, appRunner: () => runApp(const AuthRouter()));
+  /// Feedback functionality will throw errors in non release mode.
+  if (kReleaseMode) {
+    await SentryFlutter.init((options) {
+      options.dsn =
+          'https://309443f21dc04dfabd2dac1f76b7f142@o1174697.ingest.sentry.io/6270868';
+    }, appRunner: () => runApp(const AuthRouter()));
+  } else {
+    runApp(const AuthRouter());
+  }
 }
 
 class AuthRouter extends StatefulWidget {

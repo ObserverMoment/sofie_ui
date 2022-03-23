@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/pages/unauthed/register_beta_testing/register_beta_testing.dart';
 import 'package:sofie_ui/pages/unauthed/sign_in.dart';
@@ -33,9 +34,9 @@ class UnauthedLandingPage extends StatelessWidget {
                     0.75
                   ],
                   colors: [
-                    Styles.black.withOpacity(0.6),
-                    Styles.black.withOpacity(0.1),
-                    Styles.black.withOpacity(0.7),
+                    Styles.black.withOpacity(0.3),
+                    Styles.black.withOpacity(0.0),
+                    Styles.black.withOpacity(0.5),
                     Styles.black.withOpacity(0.9),
                   ])),
         ),
@@ -44,15 +45,29 @@ class UnauthedLandingPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset('assets/logos/sofie_logo.svg',
-                  width: 50, color: Styles.white),
+                  width: 60, color: Styles.white),
               Text('Sofie',
                   style: GoogleFonts.voces(
-                    fontSize: 40,
+                    fontSize: 44,
+                    fontWeight: FontWeight.bold,
                     color: Styles.white,
                   )),
+              const SizedBox(height: 2),
+              Card(
+                borderRadius: BorderRadius.circular(30),
+                margin: EdgeInsets.zero,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                backgroundColor: Styles.infoBlue,
+                child: const MyText(
+                  'EARLY RELEASE',
+                ),
+              ),
+              const SizedBox(height: 12),
               const MyText(
                 'Social Fitness Elevated',
                 color: Styles.white,
+                weight: FontWeight.bold,
               ),
             ]),
         Positioned(
@@ -70,14 +85,20 @@ class UnauthedLandingPage extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const MyText(
-                'New to Sofie? Sign up',
+                'New to Sofie? ',
                 color: Styles.white,
               ),
               const SizedBox(height: 12),
               SecondaryButton(
-                text: 'Sign Up to Beta Testing',
+                text: 'Join Us',
                 onPressed: () =>
                     context.push(child: const RegisterBetaTesting()),
+              ),
+              const SizedBox(height: 16),
+              const MyText(
+                'Full Access is Free during Early Release!',
+                color: Styles.white,
+                weight: FontWeight.bold,
               ),
             ],
           ),

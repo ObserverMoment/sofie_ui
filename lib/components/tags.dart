@@ -11,6 +11,8 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/material_elevation.dart';
 import 'package:sofie_ui/services/utils.dart';
 
+/// Filled background tag.
+/// Border border only tag user [BorderTag]
 class Tag extends StatelessWidget {
   final Color? color;
   final Color? textColor;
@@ -46,6 +48,41 @@ class Tag extends StatelessWidget {
         size: fontSize,
         weight: fontWeight,
         color: text,
+      ),
+    );
+  }
+}
+
+class BorderTag extends StatelessWidget {
+  final Color? borderColor;
+  final Color? textColor;
+  final String tag;
+  final FONTSIZE fontSize;
+  final FontWeight fontWeight;
+  final EdgeInsets padding;
+
+  const BorderTag(
+      {Key? key,
+      this.textColor,
+      required this.tag,
+      this.padding = kDefaultTagPadding,
+      this.fontWeight = FontWeight.normal,
+      this.fontSize = FONTSIZE.two,
+      this.borderColor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: borderColor ?? context.theme.primary)),
+      child: MyText(
+        tag,
+        size: fontSize,
+        weight: fontWeight,
+        color: textColor ?? context.theme.primary,
       ),
     );
   }

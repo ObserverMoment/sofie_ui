@@ -183,7 +183,7 @@ class WorkoutStructureWorkoutSectionCard extends StatelessWidget {
               spacing: 6,
               runSpacing: 6,
               children: data.moves
-                  .map((m) => Tag(
+                  .map((m) => BorderTag(
                         tag: m,
                       ))
                   .toList(),
@@ -203,12 +203,12 @@ class WorkoutStructureWorkoutSectionCard extends StatelessWidget {
                 children: [
                   ...data.equipments
                       .map((e) => Container(
-                          padding: const EdgeInsets.all(7),
+                          padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
                               color: context.theme.background,
                               borderRadius: BorderRadius.circular(30)),
-                          width: 40,
-                          height: 40,
+                          width: 34,
+                          height: 34,
                           child: Utils.getEquipmentIcon(context, e,
                               color: context.theme.primary)))
                       .toList(),

@@ -8,6 +8,7 @@ import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
+import 'package:sofie_ui/components/workout/workout_finders/public/public_workout_text_search.dart';
 import 'package:sofie_ui/components/workout_plan/vertical_workout_plans_list.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -129,11 +130,10 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                                 // Always show names list if it is not empty
                                 if (workoutPlanNamesSnapshot.data!.isNotEmpty) {
                                   return FadeIn(
-                                    child: WorkoutFinderTextResultsNames(
+                                    child: FinderTextResultsNames(
                                       results: workoutPlanNamesSnapshot.data!,
                                       searchString: _searchString,
-                                      searchWorkoutPlanName:
-                                          _handleSearchSubmit,
+                                      fullObjectSearch: _handleSearchSubmit,
                                     ),
                                   );
                                 } else if (workoutPlansSnapshot
@@ -160,61 +160,5 @@ class _PublicPlansTextSearchState extends State<PublicPlansTextSearch> {
                 'Enter at least 2 characters',
                 subtext: true,
               ))));
-  }
-}
-
-/// Text only list of names being returned from the api based on the user input.
-/// On press of the text result we set the search string to the exact name of the search string and then run a text search returning full workout objects.
-/// Same functionality as [PublicWorkoutTextSearch]
-class WorkoutFinderTextResultsNames extends StatelessWidget {
-  final List<TextSearchResult> results;
-  final String searchString;
-  final void Function(String name) searchWorkoutPlanName;
-  const WorkoutFinderTextResultsNames(
-      {Key? key,
-      required this.results,
-      required this.searchString,
-      required this.searchWorkoutPlanName})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        itemCount: results.length,
-        itemBuilder: (c, i) => GestureDetector(
-              onTap: () => searchWorkoutPlanName(results[i].name),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(
-                    color: context.theme.primary.withOpacity(0.15),
-                  ))),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 12),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        CupertinoIcons.search,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 10),
-                      SubstringHighlight(
-                          textStyle: TextStyle(
-                              fontSize: 16,
-                              color: context.theme.primary.withOpacity(0.7)),
-                          textStyleHighlight: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Styles.primaryAccent),
-                          text: results[i].name,
-                          term: searchString),
-                    ],
-                  ),
-                ),
-              ),
-            ));
   }
 }

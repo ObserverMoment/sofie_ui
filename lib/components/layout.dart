@@ -63,6 +63,35 @@ class RoundedBox extends StatelessWidget {
   }
 }
 
+class BorderBox extends StatelessWidget {
+  final Widget child;
+  final Color? borderColor;
+  final EdgeInsets margin;
+  final EdgeInsets padding;
+  final BorderRadius? borderRadius;
+  const BorderBox(
+      {Key? key,
+      required this.child,
+      this.borderColor,
+      this.padding = const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      this.margin = EdgeInsets.zero,
+      this.borderRadius})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      padding: padding,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          border: Border.all(color: borderColor ?? context.theme.primary)),
+      child: child,
+    );
+  }
+}
+
 /// Box with rounded corners. No elevation.
 class CircularBox extends StatelessWidget {
   final Widget child;
