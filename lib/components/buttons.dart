@@ -66,7 +66,7 @@ class MyButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
           decoration: BoxDecoration(
               gradient: backgroundGradient,
-              border: border ? Border.all(color: contentColor) : null,
+              border: border ? Border.all(color: contentColor, width: 2) : null,
               color: backgroundColor,
               borderRadius: BorderRadius.circular(kStandardButtonBorderRadius)),
           child: AnimatedSwitcher(
@@ -102,8 +102,6 @@ class MyButton extends StatelessWidget {
   }
 }
 
-/// Dark theme == white BG and black content
-/// Light theme == black BG and white content
 class PrimaryButton extends StatelessWidget {
   final IconData? prefixIconData;
   final String text;
@@ -148,7 +146,6 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-/// Primary color border - primary color text.
 class SecondaryButton extends StatelessWidget {
   final IconData? prefixIconData;
   final String text;
@@ -156,7 +153,6 @@ class SecondaryButton extends StatelessWidget {
   final void Function() onPressed;
   final bool loading;
   final bool withMinWidth;
-  final bool withBorder;
   final bool disabled;
   final EdgeInsets? padding;
 
@@ -167,7 +163,6 @@ class SecondaryButton extends StatelessWidget {
       this.suffixIconData,
       required this.onPressed,
       this.withMinWidth = true,
-      this.withBorder = false,
       this.loading = false,
       this.disabled = false,
       this.padding})
@@ -189,10 +184,10 @@ class SecondaryButton extends StatelessWidget {
       text: text,
       disabled: disabled,
       onPressed: onPressed,
-      backgroundGradient: Styles.secondaryButtonGradient,
+      // backgroundGradient: Styles.secondaryButtonGradient,
       contentColor: Styles.white,
       withMinWidth: withMinWidth,
-      border: withBorder,
+      border: true,
     );
   }
 }
@@ -221,7 +216,7 @@ class TertiaryButton extends StatelessWidget {
       this.suffixIconData,
       required this.onPressed,
       this.disabled = false,
-      this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
       this.textColor,
       this.backgroundColor,
       this.fontSize = FONTSIZE.two,
@@ -253,7 +248,7 @@ class TertiaryButton extends StatelessWidget {
             children: [
               if (prefixIconData != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 2.0, right: 4),
+                  padding: const EdgeInsets.only(left: 2.0, right: 2),
                   child: Icon(
                     prefixIconData,
                     color: textColor,
@@ -261,7 +256,7 @@ class TertiaryButton extends StatelessWidget {
                   ),
                 ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(horizontal: 2.0),
                 child: MyText(
                   text.toUpperCase(),
                   color: textColor,
@@ -272,7 +267,7 @@ class TertiaryButton extends StatelessWidget {
               ),
               if (suffixIconData != null)
                 Padding(
-                  padding: const EdgeInsets.only(left: 4.0, right: 2),
+                  padding: const EdgeInsets.only(left: 2, right: 2),
                   child: Icon(
                     suffixIconData,
                     color: textColor,

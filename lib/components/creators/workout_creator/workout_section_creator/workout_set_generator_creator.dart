@@ -804,7 +804,7 @@ class _GeneratedSetPreview extends StatelessWidget {
       : super(key: key);
 
   WorkoutSet _genWorkoutSet() => WorkoutSet()
-    ..id = const Uuid().v1()
+    ..id = 'tempId-${const Uuid().v1()}'
     ..sortPosition = newSetSortPosition
     ..duration = 0
     ..workoutMoves = List.generate(

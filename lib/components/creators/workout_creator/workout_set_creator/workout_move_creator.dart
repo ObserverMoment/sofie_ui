@@ -16,6 +16,7 @@ import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:uuid/uuid.dart';
 
 /// UI will be fixed to these values and will not allow user to adjust them.
 class FixedTimeReps {
@@ -98,7 +99,7 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
     } else {
       // Initial selection.
       _activeWorkoutMove = WorkoutMove()
-        ..id = 'tempId'
+        ..id = 'tempId-${const Uuid().v1()}'
         ..sortPosition = widget.sortPosition
         ..equipment = null
         ..reps = widget.fixedTimeReps != null
@@ -182,7 +183,8 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
       /// If user has selected bodyweight, do not show.
       /// Else Check for any selected or required equipment being true for [loadAdjustable].
       return _activeWorkoutMove!.equipment!.id != kBodyweightEquipmentId &&
-          _activeWorkoutMove!.move.isLoadAdjustable;
+          _activeWorkoutMove!.move.isLoadAdjustable &&
+          _activeWorkoutMove!.equipment!.loadAdjustable;
     } else {
       /// Equipment not yet selected.
       /// Check for any possible equipment being true for [loadAdjustable]..

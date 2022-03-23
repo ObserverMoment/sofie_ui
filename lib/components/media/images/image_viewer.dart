@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
@@ -40,9 +41,7 @@ Future<void> openFullScreenImageViewer(
   String? title,
 }) async {
   await context.push(
-    rootNavigator: true,
     child: FullScreenImageViewer(uri: uri, title: title),
-    fullscreenDialog: true,
   );
 }
 

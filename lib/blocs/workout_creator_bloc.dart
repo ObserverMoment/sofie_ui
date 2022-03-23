@@ -34,7 +34,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   bool creatingSet = false;
   bool creatingMove = false;
 
-  /// Send all new data to the graphql store and broadcast new data to streams.
+  /// Send all new data to the graphql store which will broadcast new data to streams.
   /// The api has been updating incrementally so does not need further update here.
   /// When updating data in this bloc we write to the bloc data and to the network only.
   /// Not to the client store. This is for two reasons.

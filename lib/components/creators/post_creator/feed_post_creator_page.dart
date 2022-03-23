@@ -294,7 +294,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                           assetImageUri:
                               'assets/placeholder_images/workout-log.jpg',
                           onPressed: () => context.navigateTo(
-                                LoggedWorkoutsRoute(
+                                LoggedWorkoutsHistoryRoute(
                                   selectLoggedWorkout: _selectWorkoutLog,
                                   pageTitle: 'Select Log',
                                 ),

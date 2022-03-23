@@ -497,7 +497,7 @@ class _ClubFeedPostCreatorPageState extends State<ClubFeedPostCreatorPage> {
                           assetImageUri:
                               'assets/placeholder_images/workout-log.jpg',
                           onPressed: () => context.navigateTo(
-                                LoggedWorkoutsRoute(
+                                LoggedWorkoutsHistoryRoute(
                                   selectLoggedWorkout: _selectWorkoutLog,
                                   pageTitle: 'Select Log',
                                 ),

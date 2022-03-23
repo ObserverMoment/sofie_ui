@@ -15,18 +15,19 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
-class FilterableLoggedWorkoutsList extends StatefulWidget {
+class LoggedWorkoutsHistoryPage extends StatefulWidget {
+  final String pageTitle;
   final void Function(LoggedWorkout loggedWorkout)? selectLoggedWorkout;
-  const FilterableLoggedWorkoutsList({Key? key, this.selectLoggedWorkout})
+  const LoggedWorkoutsHistoryPage(
+      {Key? key, this.selectLoggedWorkout, this.pageTitle = 'Workout Logs'})
       : super(key: key);
 
   @override
-  _FilterableLoggedWorkoutsListState createState() =>
-      _FilterableLoggedWorkoutsListState();
+  _LoggedWorkoutsHistoryPageState createState() =>
+      _LoggedWorkoutsHistoryPageState();
 }
 
-class _FilterableLoggedWorkoutsListState
-    extends State<FilterableLoggedWorkoutsList> {
+class _LoggedWorkoutsHistoryPageState extends State<LoggedWorkoutsHistoryPage> {
   String _searchString = '';
   void Function(LoggedWorkout)? _selectLoggedWorkout;
 
@@ -34,7 +35,7 @@ class _FilterableLoggedWorkoutsListState
   /// Then passes the selected loggedWorkout to the parent.
   void _handleLoggedWorkoutSelect(LoggedWorkout loggedWorkout) {
     /// If the text search is open then we pop back to the main widget.
-    context.router.popUntilRouteWithName(LoggedWorkoutsRoute.name);
+    context.router.popUntilRouteWithName(LoggedWorkoutsHistoryRoute.name);
     context.pop();
     widget.selectLoggedWorkout?.call(loggedWorkout);
   }
@@ -121,8 +122,8 @@ class _FilterableLoggedWorkoutsListState
           return MyPageScaffold(
               child: NestedScrollView(
                   headerSliverBuilder: (c, i) => [
-                        const MySliverNavbar(
-                          title: 'Workout Logs',
+                        MySliverNavbar(
+                          title: widget.pageTitle,
                         )
                       ],
                   body: Padding(

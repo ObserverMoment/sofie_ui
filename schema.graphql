@@ -49,6 +49,13 @@ type AnnouncementUpdateAction {
   text: String!
 }
 
+type BestBenchmarkScoreSummary {
+  benchmarkName: String!
+  benchmarkType: FitnessBenchmarkScoreType!
+  bestScore: Float!
+  videoUri: String
+}
+
 type BodyArea {
   altNames: String
   frontBack: BodyAreaFrontBack!
@@ -311,7 +318,7 @@ input CreateEquipmentInput {
 
 input CreateFitnessBenchmarkInput {
   FitnessBenchmarkCategory: ConnectRelationInput!
-  description: String!
+  description: String
   instructionalVideoThumbUri: String
   instructionalVideoUri: String
   instructions: String
@@ -610,7 +617,7 @@ type FitnessBenchmark {
   FitnessBenchmarkCategory: FitnessBenchmarkCategory!
   FitnessBenchmarkScores: [FitnessBenchmarkScore!]
   createdAt: DateTime!
-  description: String!
+  description: String
   id: ID!
   instructionalVideoThumbUri: String
   instructionalVideoUri: String
@@ -1688,6 +1695,7 @@ type UserProfile {
   activeFitnessBenchmarks: [String!]
   activeProgressWidgets: [String!]
   avatarUri: String
+  bestBenchmarkScores: [BestBenchmarkScoreSummary!]
   bio: String
   birthdate: DateTime
   countryCode: String

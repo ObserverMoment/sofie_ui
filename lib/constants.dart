@@ -50,6 +50,11 @@ const kClubTypeName = 'Club';
 const kClubSummaryTypeName = 'ClubSummary';
 const kClubInviteTokenTypeName = 'ClubInviteToken';
 
+const kFitnessBenchmarkTypename = 'FitnessBenchmark';
+const kFitnessBenchmarkScoreTypename = 'FitnessBenchmarkScore';
+const kFitnessBenchmarkWorkoutTypename = 'FitnessBenchmarkWorkout';
+const kFitnessBenchmarkWorkoutScoreTypename = 'FitnessBenchmarkWorkoutScore';
+
 const kBodyTransformationPhotoTypename = 'BodyTransformationPhoto';
 const kGymProfileTypename = 'GymProfile';
 const kMoveTypename = 'Move';

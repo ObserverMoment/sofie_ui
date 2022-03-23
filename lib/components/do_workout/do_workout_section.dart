@@ -281,6 +281,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                           }),
                                       // Don't show reset button for a FreeSession
                                       if (!workoutSection.isCustomSession &&
+                                          !workoutSection.isLifting &&
                                           hasStarted)
                                         NavItem(
                                             activeIconData:
@@ -300,9 +301,7 @@ class _DoWorkoutSectionState extends State<DoWorkoutSection> {
                                   const EdgeInsets.symmetric(horizontal: 4.0),
                               child: TertiaryButton(
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 12),
-                                backgroundColor: context.theme.primary,
-                                textColor: context.theme.background,
+                                    vertical: 8, horizontal: 12),
                                 fontSize: FONTSIZE.three,
                                 text: 'Finish',
                                 onPressed: () {

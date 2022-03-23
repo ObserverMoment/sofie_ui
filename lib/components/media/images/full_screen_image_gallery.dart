@@ -114,7 +114,7 @@ class _FullScreenImageGalleryState extends State<FullScreenImageGallery> {
                     child: BasicProgressDots(
                       numDots: widget.fileIds.length,
                       currentIndex: _activeIndex,
-                      dotSize: 16,
+                      dotSize: 10,
                     ),
                   )
               ],
@@ -129,17 +129,10 @@ class _FullScreenImageGalleryState extends State<FullScreenImageGallery> {
                         children: [
                           MyText(
                             widget.scrollDirection == Axis.horizontal
-                                ? 'SWIPE RIGHT'
-                                : 'SWIPE DOWN',
+                                ? 'SWIPE LEFT'
+                                : 'SWIPE UP',
                             color: Styles.white,
                           ),
-                          const SizedBox(width: 6, height: 6),
-                          Icon(
-                            widget.scrollDirection == Axis.horizontal
-                                ? CupertinoIcons.arrow_right
-                                : CupertinoIcons.arrow_down,
-                            color: Styles.white,
-                          )
                         ],
                       )))
           ],

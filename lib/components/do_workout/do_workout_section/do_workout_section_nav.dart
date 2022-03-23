@@ -73,37 +73,28 @@ class NavItem extends StatelessWidget {
       required this.onTap})
       : super(key: key);
 
-  double get iconSize => 23.0;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: ClipOval(
-        child: Container(
-          color: context.theme.primary,
-          child: CupertinoButton(
-            padding: EdgeInsets.zero,
-            pressedOpacity: 0.9,
-            onPressed: onTap,
-            child: AnimatedOpacity(
+      child: CupertinoButton(
+        padding: EdgeInsets.zero,
+        pressedOpacity: 0.9,
+        onPressed: onTap,
+        child: AnimatedOpacity(
+          duration: kStandardAnimationDuration,
+          opacity: isActive ? 1 : 0.6,
+          child: AnimatedSwitcher(
               duration: kStandardAnimationDuration,
-              opacity: isActive ? 1 : 0.6,
-              child: AnimatedSwitcher(
-                  duration: kStandardAnimationDuration,
-                  child: isActive
-                      ? Icon(
-                          activeIconData,
-                          size: iconSize,
-                          color: context.theme.background,
-                        )
-                      : Icon(
-                          inactiveIconData,
-                          size: iconSize,
-                          color: context.theme.background.withOpacity(0.8),
-                        )),
-            ),
-          ),
+              child: isActive
+                  ? Icon(
+                      activeIconData,
+                      color: context.theme.primary,
+                    )
+                  : Icon(
+                      inactiveIconData,
+                      color: context.theme.primary.withOpacity(0.8),
+                    )),
         ),
       ),
     );

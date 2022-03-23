@@ -140,7 +140,7 @@ abstract class ThemeData {
       barBackgroundColor: const Color.fromARGB(255, 225, 225, 233),
       // barBackgroundColor: const Color(0xffe2e9ef),
       // scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
-      scaffoldBackgroundColor: Color.fromARGB(255, 234, 234, 240),
+      scaffoldBackgroundColor: const Color.fromARGB(255, 234, 234, 240),
       // scaffoldBackgroundColor: const Color(0xffe2e9ef),
       primaryColor: CupertinoColors.black,
       primaryContrastingColor: Styles.primaryAccent,

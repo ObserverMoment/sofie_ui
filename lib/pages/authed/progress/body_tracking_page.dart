@@ -44,6 +44,7 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
               photoUris,
               withTopNavBar: false,
               scrollDirection: Axis.horizontal,
+              showProgressDots: true,
             ),
             SafeArea(
               child: CupertinoButton(
@@ -123,6 +124,7 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
                                 children: [
                                   _Entries(
                                     entries: entries,
+                                    openPhotoViewer: _openEntryPhotosViewer,
                                   ),
                                   _Photos(
                                       photoUris: allPhotoUris,
@@ -142,7 +144,10 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
 
 class _Entries extends StatelessWidget {
   final List<BodyTrackingEntry> entries;
-  const _Entries({Key? key, required this.entries}) : super(key: key);
+  final void Function(List<String> photosUris) openPhotoViewer;
+  const _Entries(
+      {Key? key, required this.entries, required this.openPhotoViewer})
+      : super(key: key);
 
   Future<void> _deleteEntry(BuildContext context, String entryId) async {
     final mutation = DeleteBodyTrackingEntryByIdMutation(
@@ -190,6 +195,9 @@ class _Entries extends StatelessWidget {
                         secondaryActions: const [],
                         child: BodyTrackingEntryCard(
                           bodyTrackingEntry: entry,
+                          openEntryPhotosViewer: entry.photoUris.isEmpty
+                              ? () {}
+                              : () => openPhotoViewer(entry.photoUris),
                         ),
                       ),
                     ),
