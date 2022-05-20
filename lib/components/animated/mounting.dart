@@ -177,7 +177,7 @@ class GrowInOut extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _GrowInOutState createState() => _GrowInOutState();
+  State<GrowInOut> createState() => _GrowInOutState();
 }
 
 class _GrowInOutState extends State<GrowInOut>

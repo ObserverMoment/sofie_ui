@@ -18,7 +18,7 @@ class BodyAreaSelectorFrontBackPaged extends StatefulWidget {
       : super(key: key);
 
   @override
-  _BodyAreaSelectorFrontBackPagedState createState() =>
+  State<BodyAreaSelectorFrontBackPaged> createState() =>
       _BodyAreaSelectorFrontBackPagedState();
 }
 

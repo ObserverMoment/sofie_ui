@@ -41,18 +41,18 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
 
   Future<void> _pickVideo(ImageSource source) async {
     try {
-      final XFile? _pickedFile = await ImagePicker().pickVideo(source: source);
-      if (_pickedFile != null) {
-        final _file = File(_pickedFile.path);
+      final XFile? pickedFile = await ImagePicker().pickVideo(source: source);
+      if (pickedFile != null) {
+        final file = File(pickedFile.path);
 
-        final String _fileSize =
-            '${(_file.lengthSync() / 1000000).toStringAsFixed(2)} MB';
+        final String fileSize =
+            '${(file.lengthSync() / 1000000).toStringAsFixed(2)} MB';
 
         await context.showConfirmDialog(
           title: 'Upload video',
-          message: 'This file is $_fileSize in size.',
+          message: 'This file is $fileSize in size.',
           verb: 'Upload',
-          onConfirm: () => _uploadFile(_file),
+          onConfirm: () => _uploadFile(file),
         );
       }
     } on PlatformException catch (e) {
@@ -66,11 +66,11 @@ class _UserIntroVideoUploaderState extends State<UserIntroVideoUploader> {
     }
   }
 
-  Future<void> _uploadFile(File _file) async {
+  Future<void> _uploadFile(File file) async {
     try {
       setState(() => _uploading = true);
       await GetIt.I<UploadcareService>().uploadVideo(
-          file: SharedFile(_file),
+          file: SharedFile(file),
           onProgress: (progress) =>
               setState(() => _uploadProgress = progress.value),
           onUploaded: () => setState(() {

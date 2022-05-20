@@ -29,7 +29,7 @@ class FitnessBenchmarkCreator extends StatefulWidget {
     this.fitnessBenchmark,
   }) : super(key: key);
   @override
-  _FitnessBenchmarkCreatorState createState() =>
+  State<FitnessBenchmarkCreator> createState() =>
       _FitnessBenchmarkCreatorState();
 }
 

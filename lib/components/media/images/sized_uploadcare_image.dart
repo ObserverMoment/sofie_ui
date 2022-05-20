@@ -18,16 +18,15 @@ class SizedUploadcareImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Making the raw requested image larger than the display space - otherwise it seems to appear blurred. More investigation required.
-    final Size _displaySize = displaySize ?? MediaQuery.of(context).size;
-    final Dimensions _dimensions = Dimensions(
-        (_displaySize.width * 1.5).toInt(),
-        (_displaySize.height * 1.5).toInt());
+    final Size size = displaySize ?? MediaQuery.of(context).size;
+    final Dimensions dimensions =
+        Dimensions((size.width * 1.5).toInt(), (size.height * 1.5).toInt());
     return Image(
         fit: fit,
         alignment: alignment,
-        width: _displaySize.width,
-        height: _displaySize.height,
+        width: size.width,
+        height: size.height,
         image: UploadcareImageProvider(imageUri,
-            transformations: [PreviewTransformation(_dimensions)]));
+            transformations: [PreviewTransformation(dimensions)]));
   }
 }

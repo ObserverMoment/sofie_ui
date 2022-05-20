@@ -40,8 +40,8 @@ class UserFitnessBenchmarkDetails extends StatelessWidget {
               benchmark: benchmark,
               activeBenchmarkIds: activeBenchmarkIds,
               showViewHistoryAction: false,
-              child: const Icon(CupertinoIcons.ellipsis),
               onBenchmarkDelete: context.pop,
+              child: const Icon(CupertinoIcons.ellipsis),
             ),
           ),
           child: Column(

@@ -119,7 +119,7 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
                       WorkoutStructureModificationsBloc,
                       List<WorkoutSectionInput>>((b) => b.sectionInputs);
 
-                  final _savingLogToDB =
+                  final savingLogToDB =
                       context.select<WorkoutStructureModificationsBloc, bool>(
                           (b) => b.savingLogToDB);
 
@@ -148,7 +148,7 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
                                         workout: bloc.workout);
                                   },
                                   text: 'Done',
-                                  loading: _savingLogToDB,
+                                  loading: savingLogToDB,
                                 ),
                               )
                             : null,

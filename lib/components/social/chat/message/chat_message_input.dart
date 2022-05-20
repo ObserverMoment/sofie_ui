@@ -35,10 +35,10 @@ class ChatMessageInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ChatMessageInputState createState() => _ChatMessageInputState();
+  ChatMessageInputState createState() => ChatMessageInputState();
 }
 
-class _ChatMessageInputState extends State<ChatMessageInput> {
+class ChatMessageInputState extends State<ChatMessageInput> {
   late StreamChannelState _streamChannel;
   final _textController = TextEditingController();
   final _picker = ImagePicker();
@@ -74,36 +74,38 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
     }
     final file = File(pickedFile.path);
 
-    Navigator.of(context).push(BottomSheetAnimateInPageRoute(
-        page: AttachmentCaptionInputPage(
-      attachmentType: ChatAttachmentType.image,
-      captionController: _textController,
-      file: file,
-      sendMessage: () async {
-        _setUploading(true);
+    if (mounted) {
+      Navigator.of(context).push(BottomSheetAnimateInPageRoute(
+          page: AttachmentCaptionInputPage(
+        attachmentType: ChatAttachmentType.image,
+        captionController: _textController,
+        file: file,
+        sendMessage: () async {
+          _setUploading(true);
 
-        final bytes = await file.readAsBytes();
+          final bytes = await file.readAsBytes();
 
-        final sendImageResponse = await _streamChannel.channel.sendImage(
-            AttachmentFile(
-              bytes: bytes,
-              path: pickedFile.path,
-              size: bytes.length,
-            ),
-            onSendProgress: _updateProgress,
-            cancelToken: _mediaUploadCancelToken);
+          final sendImageResponse = await _streamChannel.channel.sendImage(
+              AttachmentFile(
+                bytes: bytes,
+                path: pickedFile.path,
+                size: bytes.length,
+              ),
+              onSendProgress: _updateProgress,
+              cancelToken: _mediaUploadCancelToken);
 
-        _setUploading(false);
+          _setUploading(false);
 
-        final attachment = Attachment(
-          type: chatAttachmentTypeToStreamLabel[ChatAttachmentType.image],
-          uploadState: const UploadState.success(),
-          assetUrl: sendImageResponse.file,
-        );
+          final attachment = Attachment(
+            type: chatAttachmentTypeToStreamLabel[ChatAttachmentType.image],
+            uploadState: const UploadState.success(),
+            assetUrl: sendImageResponse.file,
+          );
 
-        await _sendMessage(Message(attachments: [attachment]));
-      },
-    )));
+          await _sendMessage(Message(attachments: [attachment]));
+        },
+      )));
+    }
   }
 
   Future<void> _pickVideo() async {
@@ -113,36 +115,38 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
     }
     final file = File(pickedFile.path);
 
-    Navigator.of(context).push(BottomSheetAnimateInPageRoute(
-        page: AttachmentCaptionInputPage(
-      attachmentType: ChatAttachmentType.video,
-      captionController: _textController,
-      file: file,
-      sendMessage: () async {
-        _setUploading(true);
+    if (mounted) {
+      Navigator.of(context).push(BottomSheetAnimateInPageRoute(
+          page: AttachmentCaptionInputPage(
+        attachmentType: ChatAttachmentType.video,
+        captionController: _textController,
+        file: file,
+        sendMessage: () async {
+          _setUploading(true);
 
-        final bytes = await file.readAsBytes();
+          final bytes = await file.readAsBytes();
 
-        final sendFileResponse = await _streamChannel.channel.sendFile(
-            AttachmentFile(
-              bytes: bytes,
-              path: pickedFile.path,
-              size: bytes.length,
-            ),
-            onSendProgress: _updateProgress,
-            cancelToken: _mediaUploadCancelToken);
+          final sendFileResponse = await _streamChannel.channel.sendFile(
+              AttachmentFile(
+                bytes: bytes,
+                path: pickedFile.path,
+                size: bytes.length,
+              ),
+              onSendProgress: _updateProgress,
+              cancelToken: _mediaUploadCancelToken);
 
-        _setUploading(false);
+          _setUploading(false);
 
-        final attachment = Attachment(
-          type: chatAttachmentTypeToStreamLabel[ChatAttachmentType.video],
-          uploadState: const UploadState.success(),
-          assetUrl: sendFileResponse.file,
-        );
+          final attachment = Attachment(
+            type: chatAttachmentTypeToStreamLabel[ChatAttachmentType.video],
+            uploadState: const UploadState.success(),
+            assetUrl: sendFileResponse.file,
+          );
 
-        await _sendMessage(Message(attachments: [attachment]));
-      },
-    )));
+          await _sendMessage(Message(attachments: [attachment]));
+        },
+      )));
+    }
   }
 
   /// When sharing internal content to the chat we fill these fields in [Message.extraData] so that we can easily link to it from the messages list.
@@ -194,12 +198,12 @@ class _ChatMessageInputState extends State<ChatMessageInput> {
   }
 
   Future<void> _sendMessage(Message message) async {
-    final _message = message.copyWith(
+    final msg = message.copyWith(
         text: _textController.text.trim(),
         quotedMessageId:
             widget.quotedMessage != null ? widget.quotedMessage!.id : null);
 
-    await _streamChannel.channel.sendMessage(_message);
+    await _streamChannel.channel.sendMessage(msg);
 
     widget.onNewMessageSent();
 

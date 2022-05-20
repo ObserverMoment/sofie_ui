@@ -142,7 +142,7 @@ class AnnouncementUpdateCard extends StatelessWidget {
   }
 }
 
-class UpdateAnnouncementArticleLink extends StatelessWidget {
+class UpdateAnnouncementArticleLink extends StatefulWidget {
   final String text;
   final String url;
   const UpdateAnnouncementArticleLink({
@@ -151,9 +151,16 @@ class UpdateAnnouncementArticleLink extends StatelessWidget {
     required this.url,
   }) : super(key: key);
 
-  void _openLink(BuildContext context) async {
-    final success = await launch(url);
-    if (!success) {
+  @override
+  State<UpdateAnnouncementArticleLink> createState() =>
+      _UpdateAnnouncementArticleLinkState();
+}
+
+class _UpdateAnnouncementArticleLinkState
+    extends State<UpdateAnnouncementArticleLink> {
+  void _openLink() async {
+    final success = await launchUrl(Uri(path: widget.url));
+    if (!success && mounted) {
       context.showToast(
           message: "Sorry, we can't open this link",
           toastType: ToastType.destructive);
@@ -163,7 +170,7 @@ class UpdateAnnouncementArticleLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => _openLink(context),
+      onTap: _openLink,
       child: ContentBox(
         backgroundColor: context.theme.cardBackground,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
@@ -171,7 +178,7 @@ class UpdateAnnouncementArticleLink extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            MyText(text),
+            MyText(widget.text),
             const SizedBox(width: 6),
             const Icon(
               CupertinoIcons.chevron_right,

@@ -46,7 +46,7 @@ class MyTextField extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MyTextFieldState createState() => _MyTextFieldState();
+  State<MyTextField> createState() => _MyTextFieldState();
 }
 
 class _MyTextFieldState extends State<MyTextField> {

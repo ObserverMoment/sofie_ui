@@ -7,7 +7,6 @@ import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/widget_header.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
-import 'package:supercharged/supercharged.dart';
 
 class SessionTypeAndMoveTypeWidgets extends StatelessWidget {
   final List<LoggedWorkout> loggedWorkouts;
@@ -84,7 +83,7 @@ class _WorkoutSectionTypes extends StatelessWidget {
         .reversed
         .toList();
 
-    final highestCount = chartData.map((d) => d.count).max() ?? 0;
+    final highestCount = chartData.map((d) => d.count).max;
     final highestFraction = highestCount / totalSections;
 
     return PercentageBarChart(
@@ -133,7 +132,7 @@ class _MoveTypes extends StatelessWidget {
         .reversed
         .toList();
 
-    final highestCount = chartData.map((d) => d.count).max() ?? 0;
+    final highestCount = chartData.map((d) => d.count).max;
     final highestFraction = highestCount / allMoveTypes.length;
 
     return PercentageBarChart(

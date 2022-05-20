@@ -15,6 +15,7 @@ enum InternalAuthState {
   error,
   unknown
 }
+
 enum AuthState { unauthed, authed, loading }
 
 class AuthedUser {

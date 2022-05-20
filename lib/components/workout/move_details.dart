@@ -92,7 +92,7 @@ class MoveDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool _bodyWeightOnly =
+    final bool bodyWeightOnly =
         move.requiredEquipments.isEmpty && move.selectableEquipments.isEmpty;
 
     return CupertinoPageScaffold(
@@ -157,7 +157,7 @@ class MoveDetails extends StatelessWidget {
                 ),
               ),
               const HorizontalLine(),
-              if (_bodyWeightOnly)
+              if (bodyWeightOnly)
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

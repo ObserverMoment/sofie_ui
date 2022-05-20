@@ -45,7 +45,7 @@ class _FullScreenImageGalleryState extends State<FullScreenImageGallery> {
     _pageController = PageController(initialPage: widget.initialPageIndex);
     _activeIndex = widget.initialPageIndex;
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() => _showSwipeIndicator = true);
       Future.delayed(const Duration(milliseconds: 1500),
           () => setState(() => _showSwipeIndicator = false));

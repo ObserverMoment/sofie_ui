@@ -21,7 +21,7 @@ class AddWorkoutSection extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AddWorkoutSectionState createState() => _AddWorkoutSectionState();
+  State<AddWorkoutSection> createState() => _AddWorkoutSectionState();
 }
 
 class _AddWorkoutSectionState extends State<AddWorkoutSection> {
@@ -122,7 +122,6 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
                 child: Padding(
               padding: const EdgeInsets.only(bottom: 12.0, top: 12),
               child: MyTextFormFieldRow(
-                backgroundColor: context.theme.cardBackground,
                 controller: _nameController,
                 placeholder: 'Name (optional). E.g. Warm Up, Core',
                 keyboardType: TextInputType.text,

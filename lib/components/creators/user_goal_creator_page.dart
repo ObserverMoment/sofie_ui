@@ -134,7 +134,6 @@ class _CreateGoalState extends State<_CreateGoal> {
             child: MyTextFormFieldRow(
                 controller: _nameController,
                 placeholder: 'The Goal',
-                backgroundColor: context.theme.cardBackground,
                 keyboardType: TextInputType.text),
           ),
           Padding(

@@ -6,14 +6,13 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/text_input.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({Key? key}) : super(key: key);
 
   @override
-  _ResetPasswordState createState() => _ResetPasswordState();
+  State<ResetPassword> createState() => _ResetPasswordState();
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
@@ -93,13 +92,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8.0, vertical: 8),
                       child: MyTextFormFieldRow(
-                          placeholder: 'Email',
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _emailController,
-                          validator: _validateEmail,
-                          autofocus: true,
-                          autofillHints: const <String>[AutofillHints.email],
-                          backgroundColor: context.theme.cardBackground),
+                        placeholder: 'Email',
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailController,
+                        validator: _validateEmail,
+                        autofocus: true,
+                        autofillHints: const <String>[AutofillHints.email],
+                      ),
                     ),
                     const SizedBox(height: 16),
                     PrimaryButton(

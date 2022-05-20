@@ -16,7 +16,7 @@ class WorkoutCreatorMedia extends StatefulWidget {
   const WorkoutCreatorMedia({Key? key}) : super(key: key);
 
   @override
-  _WorkoutCreatorMediaState createState() => _WorkoutCreatorMediaState();
+  State<WorkoutCreatorMedia> createState() => _WorkoutCreatorMediaState();
 }
 
 class _WorkoutCreatorMediaState extends State<WorkoutCreatorMedia> {

@@ -36,7 +36,7 @@ class TargetedBodyAreasScoreIndicator extends StatelessWidget {
       : super(key: key);
 
   Color calculateColorBasedOnScore(BuildContext context, BodyArea bodyArea) {
-    final _activeColor = activeColor ?? context.watch<ThemeBloc>().primary;
+    final color = activeColor ?? context.watch<ThemeBloc>().primary;
 
     final BodyAreaMoveScore bams =
         bodyAreaMoveScores.firstWhere((bams) => bams.bodyArea == bodyArea,
@@ -47,11 +47,11 @@ class TargetedBodyAreasScoreIndicator extends StatelessWidget {
     if (indicatePercentWithColor) {
       final opacity =
           bams.score == 0 ? basisOpacity : min(1.0, (bams.score / 100) + 0.4);
-      return _activeColor.withOpacity(opacity);
+      return color.withOpacity(opacity);
     } else {
       return bams.score == 0
-          ? _activeColor.withOpacity(basisOpacity)
-          : _activeColor.withOpacity(0.8);
+          ? color.withOpacity(basisOpacity)
+          : color.withOpacity(0.8);
     }
   }
 
@@ -113,9 +113,8 @@ class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _inactiveColor =
-        inactiveColor ?? context.theme.primary.withOpacity(0.2);
-    final _activeColor = activeColor ?? context.watch<ThemeBloc>().primary;
+    final inactive = inactiveColor ?? context.theme.primary.withOpacity(0.2);
+    final active = activeColor ?? context.theme.primary;
 
     final List<BodyArea> bodyAreasToDisplay = allBodyAreas
         .where((ba) =>
@@ -133,15 +132,15 @@ class TargetedBodyAreasSelectedIndicator extends StatelessWidget {
                   ? 'assets/body_areas/front/background_front.svg'
                   : 'assets/body_areas/back/background_back.svg',
               height: height,
-              color: _inactiveColor),
+              color: inactive),
           ...bodyAreasToDisplay
               .map(
                 (bodyArea) => SvgPicture.asset(
                     'assets/body_areas/${isFront ? "front" : "back"}/${Utils.getSvgAssetUriFromBodyAreaName(bodyArea.name)}.svg',
                     height: height,
                     color: selectedBodyAreas.contains(bodyArea)
-                        ? _activeColor
-                        : _inactiveColor),
+                        ? active
+                        : inactive),
               )
               .toList()
         ],

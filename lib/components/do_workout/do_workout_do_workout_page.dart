@@ -36,7 +36,7 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
   @override
   initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -59,13 +59,13 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
 
   /// Navigating to a section is equivalent to making it "active"
   void _navigateToSection(int sectionIndex, int numWorkoutSections) async {
-    final _bloc = context.read<DoWorkoutBloc>();
+    final bloc = context.read<DoWorkoutBloc>();
     _activeSectionIndex = sectionIndex;
     await Navigator.push(
       context,
       CupertinoPageRoute(
         builder: (context) => ChangeNotifierProvider<DoWorkoutBloc>.value(
-          value: _bloc,
+          value: bloc,
           builder: (context, child) => DoWorkoutSection(
             key: Key(sectionIndex.toString()),
             sectionIndex: sectionIndex,
@@ -137,7 +137,7 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

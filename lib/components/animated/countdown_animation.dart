@@ -17,7 +17,7 @@ class CountdownAnimation extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CountdownAnimationState createState() => _CountdownAnimationState();
+  State<CountdownAnimation> createState() => _CountdownAnimationState();
 }
 
 class _CountdownAnimationState extends State<CountdownAnimation> {

@@ -97,7 +97,7 @@ class WorkoutFiltersInfo extends StatelessWidget {
     final workoutGoals = context.select<WorkoutFiltersBloc, List<WorkoutGoal>>(
         (b) => b.filters.workoutGoals);
 
-    final _updateFilters = context.read<WorkoutFiltersBloc>().updateFilters;
+    final updateFilters = context.read<WorkoutFiltersBloc>().updateFilters;
 
     return ListView(
       padding: const EdgeInsets.all(4),
@@ -124,7 +124,7 @@ class WorkoutFiltersInfo extends StatelessWidget {
                   'Over 60'
                 ],
                 select: (v) =>
-                    _updateFilters(_intToMinLengthMaxLength(int.parse(v))),
+                    updateFilters(_intToMinLengthMaxLength(int.parse(v))),
                 selectedIds: [_minLengthToInt(minLength).toString()],
               ),
             ],
@@ -134,17 +134,17 @@ class WorkoutFiltersInfo extends StatelessWidget {
           difficultyLevel: difficultyLevel,
           unselectedLabel: 'Any',
           updateDifficultyLevel: (difficultyLevel) =>
-              _updateFilters({'difficultyLevel': difficultyLevel?.apiValue}),
+              updateFilters({'difficultyLevel': difficultyLevel?.apiValue}),
         ),
         WorkoutGoalsSelectorRow(
             selectedWorkoutGoals: workoutGoals,
-            updateSelectedWorkoutGoals: (goals) => _updateFilters(
+            updateSelectedWorkoutGoals: (goals) => updateFilters(
                 {'workoutGoals': goals.map((t) => t.toJson()).toList()})),
         UserInputContainer(
           child: WorkoutSectionTypeMultiSelector(
             direction: Axis.horizontal,
             selectedTypes: workoutSectionTypes,
-            updateSelectedTypes: (types) => _updateFilters(
+            updateSelectedTypes: (types) => updateFilters(
                 {'workoutSectionTypes': types.map((t) => t.toJson()).toList()}),
           ),
         ),
@@ -166,7 +166,7 @@ class WorkoutFiltersInfo extends StatelessWidget {
                   'No Video',
                   "Don't Mind",
                 ],
-                select: (v) => _updateFilters({
+                select: (v) => updateFilters({
                   'hasClassVideo': DataUtils.intToNullableBool(int.parse(v))
                 }),
                 selectedIds: [
@@ -194,7 +194,7 @@ class WorkoutFiltersInfo extends StatelessWidget {
                   'No Audio',
                   "Don't Mind",
                 ],
-                select: (v) => _updateFilters({
+                select: (v) => updateFilters({
                   'hasClassAudio': DataUtils.intToNullableBool(int.parse(v))
                 }),
                 selectedIds: [

@@ -61,10 +61,10 @@ Future<void> main() async {
 class AuthRouter extends StatefulWidget {
   const AuthRouter({Key? key}) : super(key: key);
   @override
-  _AuthRouterState createState() => _AuthRouterState();
+  AuthRouterState createState() => AuthRouterState();
 }
 
-class _AuthRouterState extends State<AuthRouter> {
+class AuthRouterState extends State<AuthRouter> {
   final _authBloc = AuthBloc();
   final _appRouter = AppRouter();
 
@@ -106,6 +106,7 @@ class _AuthRouterState extends State<AuthRouter> {
         final authState = authBloc.authState;
         final authedUser = authBloc.authedUser;
 
+        /// Material Theme required to ensure auto_route background color is correct.
         return material.Theme(
           data: material.ThemeData(
               scaffoldBackgroundColor: context.theme.background),

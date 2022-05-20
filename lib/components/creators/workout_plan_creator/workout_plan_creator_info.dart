@@ -15,7 +15,7 @@ class WorkoutPlanCreatorInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _updateWorkoutPlanInfo =
+    final updateWorkoutPlanInfo =
         context.read<WorkoutPlanCreatorBloc>().updateWorkoutPlanInfo;
 
     final workoutPlanData = context
@@ -41,7 +41,7 @@ class WorkoutPlanCreatorInfo extends StatelessWidget {
                           .read<WorkoutPlanCreatorBloc>()
                           .reduceWorkoutPlanlength(lengthWeeks));
                 } else {
-                  _updateWorkoutPlanInfo({'lengthWeeks': lengthWeeks});
+                  updateWorkoutPlanInfo({'lengthWeeks': lengthWeeks});
                 }
               },
               title: 'Plan Length',
@@ -53,7 +53,7 @@ class WorkoutPlanCreatorInfo extends StatelessWidget {
               min: 1,
               max: 7,
               saveValue: (daysPerWeek) =>
-                  _updateWorkoutPlanInfo({'daysPerWeek': daysPerWeek}),
+                  updateWorkoutPlanInfo({'daysPerWeek': daysPerWeek}),
               title: 'Days Per Week',
               suffix: 'days / week',
             )),
@@ -61,7 +61,7 @@ class WorkoutPlanCreatorInfo extends StatelessWidget {
               child: EditableTextFieldRow(
                 title: 'Name',
                 text: workoutPlanData.name,
-                onSave: (text) => _updateWorkoutPlanInfo({'name': text}),
+                onSave: (text) => updateWorkoutPlanInfo({'name': text}),
                 inputValidation: (t) => t.length > 2 && t.length <= 50,
                 maxChars: 50,
                 validationMessage: 'Required. Min 3 chars. max 50',
@@ -72,19 +72,19 @@ class WorkoutPlanCreatorInfo extends StatelessWidget {
                 title: 'Description',
                 text: workoutPlanData.description ?? '',
                 placeholder: 'Add',
-                onSave: (text) => _updateWorkoutPlanInfo({'description': text}),
+                onSave: (text) => updateWorkoutPlanInfo({'description': text}),
                 inputValidation: (t) => true,
                 maxDisplayLines: 2,
               ),
             ),
             WorkoutTagsSelectorRow(
               selectedWorkoutTags: workoutPlanData.workoutTags,
-              updateSelectedWorkoutTags: (tags) => _updateWorkoutPlanInfo(
+              updateSelectedWorkoutTags: (tags) => updateWorkoutPlanInfo(
                   {'WorkoutTags': tags.map((t) => t.toJson()).toList()}),
             ),
             ContentAccessScopeSelector(
                 contentAccessScope: workoutPlanData.contentAccessScope,
-                updateContentAccessScope: (scope) => _updateWorkoutPlanInfo(
+                updateContentAccessScope: (scope) => updateWorkoutPlanInfo(
                     {'contentAccessScope': scope.apiValue}))
           ],
         ),

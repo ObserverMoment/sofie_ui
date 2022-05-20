@@ -20,7 +20,7 @@ class FilterableCollectionWorkouts extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FilterableCollectionWorkoutsState createState() =>
+  State<FilterableCollectionWorkouts> createState() =>
       _FilterableCollectionWorkoutsState();
 }
 

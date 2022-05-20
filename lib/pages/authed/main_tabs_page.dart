@@ -45,7 +45,7 @@ class MainTabsPage extends StatelessWidget {
         ProgressRoute(),
         ProfileRoute(),
       ],
-      bottomNavigationBuilder: (context, _tabsRouter) => ClipRect(
+      bottomNavigationBuilder: (context, tabsRouter) => ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
           child: Container(
@@ -58,36 +58,36 @@ class MainTabsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildTabItem(
-                      tabsRouter: _tabsRouter,
-                      activeIndex: _tabsRouter.activeIndex,
+                      tabsRouter: tabsRouter,
+                      activeIndex: tabsRouter.activeIndex,
                       tabIndex: 0,
                       label: 'Feed',
                       inactiveIconData: CupertinoIcons.news,
                       activeIconData: CupertinoIcons.news_solid),
                   _buildTabItem(
-                      tabsRouter: _tabsRouter,
-                      activeIndex: _tabsRouter.activeIndex,
+                      tabsRouter: tabsRouter,
+                      activeIndex: tabsRouter.activeIndex,
                       tabIndex: 1,
                       label: 'Discover',
                       inactiveIconData: CupertinoIcons.compass,
                       activeIconData: CupertinoIcons.compass_fill),
                   _buildTabItem(
-                      tabsRouter: _tabsRouter,
-                      activeIndex: _tabsRouter.activeIndex,
+                      tabsRouter: tabsRouter,
+                      activeIndex: tabsRouter.activeIndex,
                       tabIndex: 2,
                       label: 'My Studio',
                       inactiveIconData: CupertinoIcons.square_grid_2x2,
                       activeIconData: CupertinoIcons.square_grid_2x2_fill),
                   _buildTabItem(
-                      tabsRouter: _tabsRouter,
-                      activeIndex: _tabsRouter.activeIndex,
+                      tabsRouter: tabsRouter,
+                      activeIndex: tabsRouter.activeIndex,
                       tabIndex: 3,
                       label: 'Progress',
                       inactiveIconData: CupertinoIcons.graph_square,
                       activeIconData: CupertinoIcons.graph_square_fill),
                   _buildTabItem(
-                      tabsRouter: _tabsRouter,
-                      activeIndex: _tabsRouter.activeIndex,
+                      tabsRouter: tabsRouter,
+                      activeIndex: tabsRouter.activeIndex,
                       tabIndex: 4,
                       label: 'Profile',
                       inactiveIconData: CupertinoIcons.profile_circled,

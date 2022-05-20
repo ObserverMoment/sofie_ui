@@ -39,7 +39,7 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
         context.select<WorkoutPlanFiltersBloc, List<WorkoutGoal>>(
             (b) => b.filters.workoutGoals);
 
-    final _updateFilters = context.read<WorkoutPlanFiltersBloc>().updateFilters;
+    final updateFilters = context.read<WorkoutPlanFiltersBloc>().updateFilters;
 
     return CupertinoPageScaffold(
       child: SafeArea(
@@ -59,7 +59,7 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
                               min: 1,
                               max: 52,
                               saveValue: (lengthWeeks) =>
-                                  _updateFilters({'lengthWeeks': lengthWeeks}),
+                                  updateFilters({'lengthWeeks': lengthWeeks}),
                               title: 'Weeks',
                             )),
                         display: Row(
@@ -90,7 +90,7 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
                               min: 1,
                               max: 52,
                               saveValue: (daysPerWeek) =>
-                                  _updateFilters({'daysPerWeek': daysPerWeek}),
+                                  updateFilters({'daysPerWeek': daysPerWeek}),
                               title: 'Days',
                             )),
                         display: Row(
@@ -115,14 +115,14 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
                   ),
                   WorkoutGoalsSelectorRow(
                       selectedWorkoutGoals: workoutGoals,
-                      updateSelectedWorkoutGoals: (goals) => _updateFilters({
+                      updateSelectedWorkoutGoals: (goals) => updateFilters({
                             'workoutGoals':
                                 goals.map((t) => t.toJson()).toList()
                           })),
                   DifficultyLevelSelectorRow(
                     difficultyLevel: difficultyLevel,
                     unselectedLabel: 'Any',
-                    updateDifficultyLevel: (difficultyLevel) => _updateFilters(
+                    updateDifficultyLevel: (difficultyLevel) => updateFilters(
                         {'difficultyLevel': difficultyLevel?.apiValue}),
                   ),
                   UserInputContainer(
@@ -150,7 +150,7 @@ class WorkoutPlanFiltersScreen extends StatelessWidget {
                             'No',
                             "Don't Mind",
                           ],
-                          select: (v) => _updateFilters({
+                          select: (v) => updateFilters({
                             'bodyweightOnly':
                                 DataUtils.intToNullableBool(int.parse(v))
                           }),

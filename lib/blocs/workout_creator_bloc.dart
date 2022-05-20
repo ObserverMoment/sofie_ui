@@ -506,9 +506,8 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     final dupes = List.generate(repSequence.length - 1, (i) => i);
 
     /// Run these in series to ensure correct set is always being duplicated.
-    for (final _ in dupes) {
-      await duplicateWorkoutSet(sectionIndex, originalsetIndex);
-    }
+    await Future.forEach(
+        dupes, (_) => duplicateWorkoutSet(sectionIndex, originalsetIndex));
 
     /// 2. New sets are from originalSetIndex to originalSetIndex + repSequence.length - 1. For each
     final workoutSection = workout.workoutSections[sectionIndex];

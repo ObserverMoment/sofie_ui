@@ -32,7 +32,7 @@ class ScheduledWorkoutCreatorPage extends StatefulWidget {
         super(key: key);
 
   @override
-  _ScheduledWorkoutCreatorPageState createState() =>
+  State<ScheduledWorkoutCreatorPage> createState() =>
       _ScheduledWorkoutCreatorPageState();
 }
 

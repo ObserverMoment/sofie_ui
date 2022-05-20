@@ -28,10 +28,10 @@ class ClubDetailsTimeline extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ClubDetailsTimelineState createState() => _ClubDetailsTimelineState();
+  State<ClubDetailsTimeline> createState() => ClubDetailsTimelineState();
 }
 
-class _ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
+class ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   late StreamFeedClient _streamFeedClient;
   late PagingController<int, StreamEnrichedActivity> _pagingController;
   late Timer _pollingTimer;

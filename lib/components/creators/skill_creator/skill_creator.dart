@@ -19,7 +19,7 @@ class SkillCreator extends StatefulWidget {
   const SkillCreator({Key? key, this.skill}) : super(key: key);
 
   @override
-  _SkillCreatorState createState() => _SkillCreatorState();
+  State<SkillCreator> createState() => _SkillCreatorState();
 }
 
 class _SkillCreatorState extends State<SkillCreator> {
@@ -304,7 +304,6 @@ class _PreCreateInputUI extends StatelessWidget {
           UserInputContainer(
             child: MyTextFormFieldRow(
               autofocus: true,
-              backgroundColor: context.theme.cardBackground,
               controller: nameController,
               placeholder: 'Name (required)',
               keyboardType: TextInputType.text,

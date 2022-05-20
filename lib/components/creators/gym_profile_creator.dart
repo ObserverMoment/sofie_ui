@@ -18,7 +18,7 @@ class GymProfileCreatorPage extends StatefulWidget {
   const GymProfileCreatorPage({Key? key, this.gymProfile}) : super(key: key);
 
   @override
-  _GymProfileCreatorPageState createState() => _GymProfileCreatorPageState();
+  State<GymProfileCreatorPage> createState() => _GymProfileCreatorPageState();
 }
 
 class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
@@ -64,7 +64,7 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
   }
 
   GymProfile _initGymProfile() {
-    final _initGymProfile = _backupJson != null
+    final initGymProfile = _backupJson != null
         ? GymProfile.fromJson(_backupJson!)
         : GymProfile.fromJson({
             '__typename': 'GymProfile',
@@ -73,11 +73,11 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
             'description': '',
             'Equipments': <Equipment>[]
           });
-    _nameController.text = _initGymProfile.name;
-    _descriptionController.text = _initGymProfile.description ?? '';
+    _nameController.text = initGymProfile.name;
+    _descriptionController.text = initGymProfile.description ?? '';
     _formIsDirty = false;
     setState(() {});
-    return _initGymProfile;
+    return initGymProfile;
   }
 
   void _handleUndo() {
@@ -246,7 +246,6 @@ class _GymProfileCreatorPageDetails extends StatelessWidget {
                 placeholder: 'Name (Required - min 2 chars)',
                 keyboardType: TextInputType.text,
                 controller: nameController,
-                backgroundColor: context.theme.cardBackground,
               ),
             ),
             const SizedBox(height: 12),

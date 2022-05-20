@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 /// Used for standard on screen text inputs where focusing the field brings up a keyboard.
@@ -14,7 +15,6 @@ class MyTextFormFieldRow extends StatefulWidget {
   final bool autofocus;
   final String? validationMessage;
   final bool Function()? validator;
-  final Color? backgroundColor;
   final TextAlign textAlign;
 
   /// Pass a controller OR an initial value with and onChange function.
@@ -33,7 +33,6 @@ class MyTextFormFieldRow extends StatefulWidget {
       this.autofillHints,
       this.autofocus = false,
       this.obscureText = false,
-      this.backgroundColor,
       this.inputFormatters,
       this.validationMessage,
       this.validator,
@@ -43,17 +42,27 @@ class MyTextFormFieldRow extends StatefulWidget {
         super(key: key);
 
   @override
-  _MyTextFormFieldRowState createState() => _MyTextFormFieldRowState();
+  State<MyTextFormFieldRow> createState() => _MyTextFormFieldRowState();
 }
 
 class _MyTextFormFieldRowState extends State<MyTextFormFieldRow> {
   late TextEditingController _controller;
+  late FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ??
         TextEditingController(text: widget.initialValue ?? '');
+    _focusNode = FocusNode();
+
+    if (widget.autofocus) {
+      _focusNode.requestFocus();
+    }
+
+    _focusNode.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -64,24 +73,27 @@ class _MyTextFormFieldRowState extends State<MyTextFormFieldRow> {
         Stack(
           alignment: Alignment.center,
           children: [
-            Container(
+            AnimatedContainer(
+              duration: kStandardAnimationDuration,
               padding: const EdgeInsets.only(top: 10, bottom: 6, right: 8),
-              decoration: widget.backgroundColor != null
-                  ? BoxDecoration(
-                      color: widget.backgroundColor,
-                      borderRadius: BorderRadius.circular(16))
-                  : null,
+              decoration: BoxDecoration(
+                  color: context.theme.cardBackground,
+                  border: Border.all(
+                      color: _focusNode.hasFocus
+                          ? context.theme.primary
+                          : context.theme.cardBackground),
+                  borderRadius: BorderRadius.circular(6)),
               child: CupertinoTextFormFieldRow(
                   controller: _controller,
                   initialValue: widget.initialValue,
                   onChanged: widget.onChanged,
                   textAlign: widget.textAlign,
-                  autofocus: widget.autofocus,
+                  focusNode: _focusNode,
                   inputFormatters: widget.inputFormatters,
                   placeholder: widget.placeholder,
                   placeholderStyle: TextStyle(
                       fontSize: 18,
-                      color: context.theme.primary.withOpacity(0.6)),
+                      color: context.theme.primary.withOpacity(0.75)),
                   keyboardType: widget.keyboardType,
                   style: const TextStyle(fontSize: 18),
                   autofillHints: widget.autofillHints,
@@ -117,21 +129,19 @@ class MyPasswordFieldRow extends StatefulWidget {
   final TextEditingController controller;
   final bool Function()? validator;
   final List<String>? autofillHints;
-  final Color? backgroundColor;
 
-  const MyPasswordFieldRow(
-      {Key? key,
-      this.prefix,
-      required this.controller,
-      this.autofillHints,
-      this.autofocus = false,
-      this.obscureText = false,
-      this.validator,
-      this.backgroundColor})
-      : super(key: key);
+  const MyPasswordFieldRow({
+    Key? key,
+    this.prefix,
+    required this.controller,
+    this.autofillHints,
+    this.autofocus = false,
+    this.obscureText = false,
+    this.validator,
+  }) : super(key: key);
 
   @override
-  _MyPasswordFieldRowState createState() => _MyPasswordFieldRowState();
+  State<MyPasswordFieldRow> createState() => _MyPasswordFieldRowState();
 }
 
 class _MyPasswordFieldRowState extends State<MyPasswordFieldRow> {
@@ -150,7 +160,6 @@ class _MyPasswordFieldRowState extends State<MyPasswordFieldRow> {
             controller: widget.controller,
             validator: widget.validator,
             autofillHints: widget.autofillHints,
-            backgroundColor: widget.backgroundColor,
           ),
         ),
         CupertinoButton(

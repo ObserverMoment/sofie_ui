@@ -8,13 +8,13 @@ class DisplayUtils {
       {required BuildContext context,
       required double targetWidth,
       double idealOverhang = 20}) {
-    final double _screenWidthExOverhang =
+    final double screenWidthExOverhang =
         MediaQuery.of(context).size.width - idealOverhang;
     // Get the number of items at the target width that will closest fit on the screen.
     // Rounding up here will decrease returned item width, rounding down will increase it.
-    final int _fullItemsOnScreenAtTargetWidth =
-        (_screenWidthExOverhang / targetWidth).round();
+    final int fullItemsOnScreenAtTargetWidth =
+        (screenWidthExOverhang / targetWidth).round();
 
-    return _screenWidthExOverhang / _fullItemsOnScreenAtTargetWidth;
+    return screenWidthExOverhang / fullItemsOnScreenAtTargetWidth;
   }
 }

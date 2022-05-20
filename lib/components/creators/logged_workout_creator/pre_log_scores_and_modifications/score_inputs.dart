@@ -13,7 +13,7 @@ class RepScoreInput extends StatefulWidget {
       : super(key: key);
 
   @override
-  _RepScoreInputState createState() => _RepScoreInputState();
+  State<RepScoreInput> createState() => _RepScoreInputState();
 }
 
 class _RepScoreInputState extends State<RepScoreInput> {
@@ -91,7 +91,7 @@ class TimeTakenInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TimeTakenInputState createState() => _TimeTakenInputState();
+  State<TimeTakenInput> createState() => _TimeTakenInputState();
 }
 
 class _TimeTakenInputState extends State<TimeTakenInput> {

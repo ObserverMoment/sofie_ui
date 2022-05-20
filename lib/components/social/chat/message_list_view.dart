@@ -252,11 +252,11 @@ class _MessagesListState extends State<MessagesList> {
                   padding: const EdgeInsets.all(4),
                   child: CupertinoButton(
                       padding: EdgeInsets.zero,
+                      onPressed: _scrollToEndOfMessages,
                       child: const Icon(
                         CupertinoIcons.chevron_down_circle,
                         size: 30,
-                      ),
-                      onPressed: _scrollToEndOfMessages),
+                      )),
                 ),
               )),
       ],

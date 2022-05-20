@@ -21,7 +21,7 @@ class FilterableCollectionWorkoutPlans extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FilterableCollectionWorkoutPlansState createState() =>
+  State<FilterableCollectionWorkoutPlans> createState() =>
       _FilterableCollectionWorkoutPlansState();
 }
 

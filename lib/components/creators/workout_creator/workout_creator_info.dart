@@ -15,7 +15,7 @@ class WorkoutCreatorInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _updateWorkoutMeta =
+    final updateWorkoutMeta =
         context.read<WorkoutCreatorBloc>().updateWorkoutInfo;
 
     final workoutData =
@@ -28,7 +28,7 @@ class WorkoutCreatorInfo extends StatelessWidget {
           child: EditableTextFieldRow(
             title: 'Name',
             text: workoutData.name,
-            onSave: (text) => _updateWorkoutMeta({'name': text}),
+            onSave: (text) => updateWorkoutMeta({'name': text}),
             inputValidation: (t) => t.length > 2 && t.length <= 50,
             maxChars: 50,
             validationMessage: 'Required. Min 3 chars. max 50',
@@ -38,7 +38,7 @@ class WorkoutCreatorInfo extends StatelessWidget {
           child: EditableTextAreaRow(
             title: 'Description',
             text: workoutData.description ?? '',
-            onSave: (text) => _updateWorkoutMeta({'description': text}),
+            onSave: (text) => updateWorkoutMeta({'description': text}),
             inputValidation: (t) => true,
           ),
         ),
@@ -47,22 +47,22 @@ class WorkoutCreatorInfo extends StatelessWidget {
               ? Duration(minutes: workoutData.lengthMinutes!)
               : null,
           updateDuration: (d) =>
-              _updateWorkoutMeta({'lengthMinutes': d.inMinutes}),
+              updateWorkoutMeta({'lengthMinutes': d.inMinutes}),
         ),
         WorkoutGoalsSelectorRow(
             selectedWorkoutGoals: workoutData.workoutGoals,
             max: 2,
-            updateSelectedWorkoutGoals: (goals) => _updateWorkoutMeta(
+            updateSelectedWorkoutGoals: (goals) => updateWorkoutMeta(
                 {'WorkoutGoals': goals.map((g) => g.toJson()).toList()})),
         WorkoutTagsSelectorRow(
           selectedWorkoutTags: workoutData.workoutTags,
-          updateSelectedWorkoutTags: (tags) => _updateWorkoutMeta(
+          updateSelectedWorkoutTags: (tags) => updateWorkoutMeta(
               {'WorkoutTags': tags.map((t) => t.toJson()).toList()}),
         ),
         ContentAccessScopeSelector(
             contentAccessScope: workoutData.contentAccessScope,
             updateContentAccessScope: (scope) =>
-                _updateWorkoutMeta({'contentAccessScope': scope.apiValue}))
+                updateWorkoutMeta({'contentAccessScope': scope.apiValue}))
       ],
     );
   }

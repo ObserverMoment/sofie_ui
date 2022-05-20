@@ -32,7 +32,7 @@ class FeedPostCreatorPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FeedPostCreatorPageState createState() => _FeedPostCreatorPageState();
+  State<FeedPostCreatorPage> createState() => _FeedPostCreatorPageState();
 }
 
 class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
@@ -372,7 +372,6 @@ class FeedPostTagsInput extends StatelessWidget {
           children: [
             Expanded(
               child: MyTextFormFieldRow(
-                  backgroundColor: context.theme.cardBackground,
                   controller: tagInputController,
                   // Don't allow any spaces or special chracters.
                   inputFormatters: <TextInputFormatter>[

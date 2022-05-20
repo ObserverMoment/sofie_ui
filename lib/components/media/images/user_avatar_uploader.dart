@@ -28,23 +28,23 @@ class UserAvatarUploader extends StatefulWidget {
       : super(key: key);
 
   @override
-  _UserAvatarUploaderState createState() => _UserAvatarUploaderState();
+  UserAvatarUploaderState createState() => UserAvatarUploaderState();
 }
 
-class _UserAvatarUploaderState extends State<UserAvatarUploader> {
+class UserAvatarUploaderState extends State<UserAvatarUploader> {
   bool _uploading = false;
 
   Future<void> _pickImage(ImageSource source) async {
     try {
       final XFile? pickedFile = await ImagePicker().pickImage(source: source);
       if (pickedFile != null) {
-        final File? croppedFile = await ImageCropper().cropImage(
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
           cropStyle: CropStyle.circle,
           sourcePath: pickedFile.path,
         );
         if (croppedFile != null) {
           setState(() => _uploading = true);
-          await _uploadFile(croppedFile);
+          await _uploadFile(File(croppedFile.path));
           setState(() => _uploading = false);
         }
       }

@@ -185,19 +185,20 @@ Map<String, dynamic>? recursivelyAddAll(
   Map<String, dynamic>? target,
   Map<String, dynamic>? source,
 ) {
-  final _target = Map<String, dynamic>.from(target ?? {});
+  final tgt = Map<String, dynamic>.from(target ?? {});
+
   source!.forEach((String key, dynamic value) {
-    if (_target.containsKey(key) &&
-        _target[key] is Map<String, dynamic> &&
+    if (tgt.containsKey(key) &&
+        tgt[key] is Map<String, dynamic> &&
         value != null &&
         value is Map<String, dynamic>) {
-      _target[key] = recursivelyAddAll(
-        _target[key] as Map<String, dynamic>,
+      tgt[key] = recursivelyAddAll(
+        tgt[key] as Map<String, dynamic>,
         value,
       );
     } else {
       // Lists and nulls overwrite target as if they were normal scalars
-      _target[key] = value;
+      tgt[key] = value;
     }
   });
   return target;

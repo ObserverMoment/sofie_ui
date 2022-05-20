@@ -15,7 +15,7 @@ class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
 
   @override
-  _SignInState createState() => _SignInState();
+  State<SignIn> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
@@ -93,7 +93,6 @@ class _SignInState extends State<SignIn> {
                 validator: _validateEmail,
                 autofocus: true,
                 autofillHints: const <String>[AutofillHints.email],
-                backgroundColor: context.theme.cardBackground,
               ),
             ),
             const SizedBox(height: 8),
@@ -103,7 +102,6 @@ class _SignInState extends State<SignIn> {
                 controller: _passwordController,
                 validator: _validatePassword,
                 autofillHints: const <String>[AutofillHints.password],
-                backgroundColor: context.theme.cardBackground,
               ),
             ),
             const SizedBox(height: 24),

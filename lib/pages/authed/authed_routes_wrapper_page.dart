@@ -28,11 +28,10 @@ class AuthedRoutesWrapperPage extends StatefulWidget {
   const AuthedRoutesWrapperPage({Key? key}) : super(key: key);
 
   @override
-  _AuthedRoutesWrapperPageState createState() =>
-      _AuthedRoutesWrapperPageState();
+  AuthedRoutesWrapperPageState createState() => AuthedRoutesWrapperPageState();
 }
 
-class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
+class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   late AuthedUser _authedUser;
 
   bool _coreAppDataInitialized = false;
@@ -66,7 +65,7 @@ class _AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     setState(() {});
 
     /// Wait until after the [AutoRoute] component has built before checking for an initialUri
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleInitialUri();
     });
   }

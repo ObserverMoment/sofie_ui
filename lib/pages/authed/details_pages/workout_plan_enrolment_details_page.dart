@@ -242,7 +242,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
           final enrolment = enrolmentWithPlan.workoutPlanEnrolment;
           final workoutPlan = enrolmentWithPlan.workoutPlan;
 
-          final String? authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+          final String authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
           final WorkoutPlanReview? authedUserReview = enrolmentWithPlan
               .workoutPlan.workoutPlanReviews
               .firstWhereOrNull((r) => r.user.id == authedUserId);

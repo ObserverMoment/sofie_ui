@@ -15,7 +15,7 @@ class LoggedWorkoutCreatorSectionDetails extends StatefulWidget {
       : super(key: key);
 
   @override
-  _LoggedWorkoutCreatorSectionDetailsState createState() =>
+  State<LoggedWorkoutCreatorSectionDetails> createState() =>
       _LoggedWorkoutCreatorSectionDetailsState();
 }
 

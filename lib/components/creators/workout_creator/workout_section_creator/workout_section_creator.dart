@@ -33,7 +33,7 @@ class WorkoutSectionCreator extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutSectionCreatorState createState() => _WorkoutSectionCreatorState();
+  State<WorkoutSectionCreator> createState() => _WorkoutSectionCreatorState();
 }
 
 class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {

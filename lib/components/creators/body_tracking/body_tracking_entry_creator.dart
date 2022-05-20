@@ -22,7 +22,7 @@ class BodyTrackingEntryCreatorPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _BodyTrackingEntryCreatorPageState createState() =>
+  State<BodyTrackingEntryCreatorPage> createState() =>
       _BodyTrackingEntryCreatorPageState();
 }
 

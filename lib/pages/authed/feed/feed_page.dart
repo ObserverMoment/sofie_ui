@@ -431,11 +431,11 @@ class _FeedPageState extends State<FeedPage> {
                     padding: const EdgeInsets.all(4),
                     child: CupertinoButton(
                         padding: EdgeInsets.zero,
+                        onPressed: _scrollToTopOfScreen,
                         child: const Icon(
                           CupertinoIcons.chevron_up_circle,
                           size: 30,
-                        ),
-                        onPressed: _scrollToTopOfScreen),
+                        )),
                   ),
                 )),
         ],

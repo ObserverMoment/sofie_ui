@@ -24,10 +24,10 @@ class PageTransitions {
       Animation<double> secondaryAnimation,
       Widget child) {
     return SharedAxisTransition(
-      child: child,
       animation: animation,
       secondaryAnimation: secondaryAnimation,
       transitionType: SharedAxisTransitionType.horizontal,
+      child: child,
     );
   }
 

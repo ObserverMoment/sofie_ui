@@ -22,7 +22,7 @@ class BodyAreaScoreAdjuster extends StatefulWidget {
       required this.updateBodyAreaMoveScores})
       : super(key: key);
   @override
-  _BodyAreaScoreAdjusterState createState() => _BodyAreaScoreAdjusterState();
+  State<BodyAreaScoreAdjuster> createState() => _BodyAreaScoreAdjusterState();
 }
 
 class _BodyAreaScoreAdjusterState extends State<BodyAreaScoreAdjuster> {

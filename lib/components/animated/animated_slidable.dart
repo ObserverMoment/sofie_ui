@@ -17,8 +17,8 @@ class AnimatedSlidable extends StatefulWidget {
   final int index;
   final Widget child;
 
-  /// Remove is added by default - just provide a removeItem callback
-  final List<IconSlideAction> secondaryActions;
+  /// [Remove] action is added by default - just provide a removeItem callback
+  final List<SlidableAction> secondaryActions;
   // final List<SlidableAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;
@@ -48,11 +48,11 @@ class AnimatedSlidable extends StatefulWidget {
     this.iconData = CupertinoIcons.delete,
   }) : super(key: key);
   @override
-  _AnimatedSlidableState createState() => _AnimatedSlidableState();
+  AnimatedSlidableState createState() => AnimatedSlidableState();
 }
 
 // https://github.com/felixblaschke/simple_animations/blob/master/example/lib/examples/switchlike_checkbox.dart
-class _AnimatedSlidableState extends State<AnimatedSlidable>
+class AnimatedSlidableState extends State<AnimatedSlidable>
     with TickerProviderStateMixin {
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
@@ -141,54 +141,25 @@ class _AnimatedSlidableState extends State<AnimatedSlidable>
           data: IconThemeData(color: Styles.white, size: _iconSize),
           child: Slidable(
             key: widget.key,
-            actionPane: const SlidableDrawerActionPane(),
+            startActionPane: ActionPane(
+                extentRatio: 0.20,
+                motion: const DrawerMotion(),
+                children: <SlidableAction>[
+                  ...widget.secondaryActions,
+                  SlidableAction(
+                    label: widget.verb,
+                    backgroundColor: Styles.errorRed,
+                    foregroundColor: Styles.white,
+                    icon: widget.iconData,
+                    onPressed: (_) => _confirmRemoveItem(),
+                  ),
+                ]),
             enabled: widget.enabled,
-            actionExtentRatio: 0.20,
-            secondaryActions: <IconSlideAction>[
-              ...widget.secondaryActions,
-              IconSlideAction(
-                caption: widget.verb,
-                color: Styles.errorRed,
-                foregroundColor: Styles.white,
-                iconWidget: Icon(
-                  widget.iconData,
-                  size: _iconSize,
-                ),
-                onTap: _confirmRemoveItem,
-              ),
-            ],
             child: widget.child,
           ),
         ),
       ),
     );
-    // return SizeTransition(
-    //   sizeFactor: _scaleAnimation,
-    //   child: SlideTransition(
-    //     position: _slideAnimation,
-    //     child: IconTheme(
-    //       data: IconThemeData(color: Styles.white, size: _iconSize),
-    //       child: Slidable(
-    //         key: widget.key,
-    //         startActionPane: ActionPane(
-    //             extentRatio: 0.20,
-    //             motion: const DrawerMotion(),
-    //             children: <SlidableAction>[
-    //               ...widget.secondaryActions,
-    //               SlidableAction(
-    //                 label: widget.verb,
-    //                 backgroundColor: Styles.errorRed,
-    //                 foregroundColor: Styles.white,
-    //                 icon: widget.iconData,
-    //                 onPressed: (_) => _confirmRemoveItem(),
-    //               ),
-    //             ]),
-    //         enabled: widget.enabled,
-    //         child: widget.child,
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
 
@@ -198,9 +169,9 @@ class MySlidable extends StatelessWidget {
   final int index;
   final Widget child;
 
-  /// Remove is added by default - just provide a removeItem callback
+  /// [Remove] action is added by default - just provide a removeItem callback
   // final List<SlidableAction> secondaryActions;
-  final List<IconSlideAction> secondaryActions;
+  final List<SlidableAction> secondaryActions;
   final Function(int index) removeItem;
   final bool enabled;
   final String itemType;
@@ -244,22 +215,19 @@ class MySlidable extends StatelessWidget {
       data: const IconThemeData(color: Styles.white),
       child: Slidable(
         key: key,
-        actionPane: const SlidableDrawerActionPane(),
-        enabled: enabled,
-        actionExtentRatio: 0.20,
-        secondaryActions: <IconSlideAction>[
-          ...secondaryActions,
-          IconSlideAction(
-            caption: verb,
-            color: Styles.errorRed,
-            foregroundColor: Styles.white,
-            iconWidget: Icon(
-              iconData,
-              size: 20,
+        startActionPane: ActionPane(
+          motion: const DrawerMotion(),
+          extentRatio: 0.25,
+          children: [
+            SlidableAction(
+              label: verb,
+              backgroundColor: Styles.errorRed,
+              foregroundColor: Styles.white,
+              icon: iconData,
+              onPressed: (_) => _confirmRemoveItem,
             ),
-            onTap: () => _confirmRemoveItem(context),
-          ),
-        ],
+          ],
+        ),
         child: child,
       ),
     );

@@ -26,9 +26,9 @@ class WorkoutPlanCreatorMedia extends StatelessWidget {
     final introAudioUri = context.select<WorkoutPlanCreatorBloc, String?>(
         (b) => b.workoutPlan.introAudioUri);
 
-    final _updateWorkoutPlanMeta =
+    final updateWorkoutPlanMeta =
         context.read<WorkoutPlanCreatorBloc>().updateWorkoutPlanInfo;
-    final _setUploadingMedia =
+    final setUploadingMedia =
         context.read<WorkoutPlanCreatorBloc>().setUploadingMedia;
 
     return Container(
@@ -55,9 +55,9 @@ class WorkoutPlanCreatorMedia extends StatelessWidget {
                       displaySize: _thumbSize,
                       imageUri: coverImageUri,
                       onUploadSuccess: (uri) =>
-                          _updateWorkoutPlanMeta({'coverImageUri': uri}),
+                          updateWorkoutPlanMeta({'coverImageUri': uri}),
                       removeImage: (_) =>
-                          _updateWorkoutPlanMeta({'coverImageUri': null}),
+                          updateWorkoutPlanMeta({'coverImageUri': null}),
                     ),
                     const SizedBox(height: 6),
                     const MyText(
@@ -72,16 +72,16 @@ class WorkoutPlanCreatorMedia extends StatelessWidget {
                       displaySize: _thumbSize,
                       videoUri: introVideoUri,
                       videoThumbUri: introVideoThumbUri,
-                      onUploadStart: () => _setUploadingMedia(uploading: true),
+                      onUploadStart: () => setUploadingMedia(uploading: true),
                       onUploadSuccess: (video, thumb) {
-                        _updateWorkoutPlanMeta({
+                        updateWorkoutPlanMeta({
                           'introVideoUri': video,
                           'introVideoThumbUri': thumb
                         });
-                        _setUploadingMedia(uploading: false);
+                        setUploadingMedia(uploading: false);
                       },
-                      onUploadFail: () => _setUploadingMedia(uploading: false),
-                      removeVideo: () => _updateWorkoutPlanMeta(
+                      onUploadFail: () => setUploadingMedia(uploading: false),
+                      removeVideo: () => updateWorkoutPlanMeta(
                           {'introVideoUri': null, 'introVideoThumbUri': null}),
                     ),
                     const SizedBox(height: 6),
@@ -96,15 +96,15 @@ class WorkoutPlanCreatorMedia extends StatelessWidget {
                     AudioUploader(
                       displaySize: _thumbSize,
                       audioUri: introAudioUri,
-                      onUploadStart: () => _setUploadingMedia(uploading: true),
+                      onUploadStart: () => setUploadingMedia(uploading: true),
                       onUploadSuccess: (uri) {
-                        _updateWorkoutPlanMeta({
+                        updateWorkoutPlanMeta({
                           'introAudioUri': uri,
                         });
-                        _setUploadingMedia(uploading: false);
+                        setUploadingMedia(uploading: false);
                       },
-                      onUploadFail: () => _setUploadingMedia(uploading: false),
-                      removeAudio: () => _updateWorkoutPlanMeta({
+                      onUploadFail: () => setUploadingMedia(uploading: false),
+                      removeAudio: () => updateWorkoutPlanMeta({
                         'introAudioUri': null,
                       }),
                     ),

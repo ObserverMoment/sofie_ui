@@ -108,7 +108,7 @@ class _CircleTimerDisplay extends StatelessWidget {
 /// A semi opaque background so that text etc can be seen against a video background.
 class _VideoOverlayContainer extends StatelessWidget {
   final Widget child;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   const _VideoOverlayContainer(
       {Key? key, required this.child, this.padding = kDefaultTagPadding})
       : super(key: key);

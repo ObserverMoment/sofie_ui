@@ -16,7 +16,7 @@ class MyAnimatedRotation extends StatefulWidget {
     this.turns = 0.5,
   }) : super(key: key);
   @override
-  _MyAnimatedRotationState createState() => _MyAnimatedRotationState();
+  State<MyAnimatedRotation> createState() => _MyAnimatedRotationState();
 }
 
 class _MyAnimatedRotationState extends State<MyAnimatedRotation>

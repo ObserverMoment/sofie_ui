@@ -66,7 +66,7 @@ class WorkoutSetGeneratorCreator extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutSetGeneratorCreatorState createState() =>
+  State<WorkoutSetGeneratorCreator> createState() =>
       _WorkoutSetGeneratorCreatorState();
 }
 

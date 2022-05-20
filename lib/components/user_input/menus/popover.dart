@@ -22,13 +22,13 @@ class PopoverMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: button,
       behavior: HitTestBehavior.opaque,
       onTap: () => showPopoverMenu(
           context: context,
           items: items,
           backgroundColor: backgroundColor,
           popoverDirection: popoverDirection),
+      child: button,
     );
   }
 }

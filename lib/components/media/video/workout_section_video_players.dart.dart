@@ -125,11 +125,11 @@ class _WorkoutSectionVideoPlayerLandscapeState
   }
 
   void _enterFullScreen() {
-    final _bloc = context.read<DoWorkoutBloc>();
+    final bloc = context.read<DoWorkoutBloc>();
 
     Navigator.of(context).push(LandscapeVideoRotatingPageRoute(
         page: ChangeNotifierProvider.value(
-      value: _bloc,
+      value: bloc,
       builder: (context, child) => FullScreenLandscapeVideo(
           controller: widget.controller,
           sectionIndex: widget.workoutSection.sortPosition,
@@ -180,8 +180,8 @@ class _WorkoutSectionVideoPlayerLandscapeState
                           top: 0,
                           right: 0,
                           child: CupertinoButton(
-                              child: const Icon(CupertinoIcons.fullscreen),
-                              onPressed: _enterFullScreen))
+                              onPressed: _enterFullScreen,
+                              child: const Icon(CupertinoIcons.fullscreen)))
                   ],
                 ),
                 if (!widget.workoutSection.isCustomSession)
@@ -264,8 +264,8 @@ class FullScreenLandscapeVideo extends StatelessWidget {
                   child: isRunning
                       ? Container()
                       : CupertinoButton(
-                          child: const Icon(CupertinoIcons.fullscreen_exit),
-                          onPressed: exitFullScreen),
+                          onPressed: exitFullScreen,
+                          child: const Icon(CupertinoIcons.fullscreen_exit)),
                 ),
               ),
               AnimatedSwitcher(

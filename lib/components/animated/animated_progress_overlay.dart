@@ -26,7 +26,7 @@ class _AnimatedProgressOverlayState extends State<AnimatedProgressOverlay> {
   void initState() {
     super.initState();
     _percent = widget.percent;
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         setState(() {
           _containerWidth = _containerKey.currentContext?.size?.width ?? 0.0;

@@ -65,14 +65,14 @@ class ReadMoreTextBlock extends StatelessWidget {
     final textScaleFactor = MediaQuery.textScaleFactorOf(context);
     final selectedLocale = locale ?? Localizations.maybeLocaleOf(context);
 
-    final _defaultDelimiterStyle = delimiterStyle ?? effectiveTextStyle;
+    final defaultDelimiterStyle = delimiterStyle ?? effectiveTextStyle;
 
     TextSpan link = const TextSpan(
         text: 'MORE', style: TextStyle(color: Styles.primaryAccent));
 
-    TextSpan _delimiter = TextSpan(
+    TextSpan textDelimiter = TextSpan(
       text: delimiter,
-      style: _defaultDelimiterStyle,
+      style: defaultDelimiterStyle,
     );
 
     Widget result = LayoutBuilder(
@@ -99,7 +99,7 @@ class ReadMoreTextBlock extends StatelessWidget {
         final linkSize = textPainter.size;
 
         // Layout and measure delimiter
-        textPainter.text = _delimiter;
+        textPainter.text = textDelimiter;
         textPainter.layout(minWidth: 0, maxWidth: maxWidth);
         final delimiterSize = textPainter.size;
 
@@ -136,7 +136,7 @@ class ReadMoreTextBlock extends StatelessWidget {
               textSpan = TextSpan(
                 style: effectiveTextStyle,
                 text: text.substring(0, trimLength),
-                children: <TextSpan>[_delimiter, link],
+                children: <TextSpan>[textDelimiter, link],
               );
             } else {
               textSpan = TextSpan(
@@ -151,7 +151,7 @@ class ReadMoreTextBlock extends StatelessWidget {
                 style: effectiveTextStyle,
                 text: text.substring(0, endIndex) +
                     (linkLongerThanline ? _klineSeparator : ''),
-                children: <TextSpan>[_delimiter, link],
+                children: <TextSpan>[textDelimiter, link],
               );
             } else {
               textSpan = TextSpan(

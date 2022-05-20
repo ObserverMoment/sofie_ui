@@ -18,7 +18,7 @@ class CollectionCreatorPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CollectionCreatorPageState createState() => _CollectionCreatorPageState();
+  State<CollectionCreatorPage> createState() => _CollectionCreatorPageState();
 }
 
 class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
@@ -149,7 +149,6 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
           children: [
             MyTextFormFieldRow(
               autofocus: true,
-              backgroundColor: context.theme.cardBackground,
               controller: _nameController,
               placeholder: 'Name',
               keyboardType: TextInputType.text,

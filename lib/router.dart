@@ -63,7 +63,7 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/pages/authed/discover/discover_people_page.dart';
 import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
-@CupertinoAutoRouter(
+@AdaptiveAutoRouter(
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
     AutoRoute(path: '/auth', page: UnauthedLandingPage, fullscreenDialog: true),

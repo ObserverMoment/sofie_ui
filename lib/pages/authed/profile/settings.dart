@@ -57,7 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Color _headingColor =
+    final Color headingColor =
         CupertinoTheme.of(context).primaryColor.withOpacity(0.70);
 
     return CupertinoPageScaffold(
@@ -100,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     MyHeaderText(
                       'DATA',
-                      color: _headingColor,
+                      color: headingColor,
                     ),
                     _spacer(),
                     PageLink(

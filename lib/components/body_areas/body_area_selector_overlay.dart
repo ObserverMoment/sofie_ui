@@ -28,9 +28,9 @@ class BodyAreaSelectorOverlay extends StatelessWidget {
   }
 
   Future<XmlDocument> readSvg(String filePath) async {
-    final String _fileContent = await readFile(filePath);
-    final XmlDocument _xmlRoot = XmlDocument.parse(_fileContent);
-    return _xmlRoot;
+    final String fileContent = await readFile(filePath);
+    final XmlDocument xmlRoot = XmlDocument.parse(fileContent);
+    return xmlRoot;
   }
 
   List<XmlElement> _getXmlElementPoints(XmlDocument root) {
@@ -47,12 +47,12 @@ class BodyAreaSelectorOverlay extends StatelessWidget {
 
   Future<List<PathBodyAreaMap>> _parsePathsFromSvgAsset(
       BodyArea bodyArea, String assetUrl) async {
-    final XmlDocument _xmlDocument = await readSvg(assetUrl);
-    final List<XmlElement> _xmlElements = _getXmlElementPoints(_xmlDocument);
-    final List<String?> _pathStrings =
-        _xmlElements.map((e) => _getPathStringFromPoints(e, true)).toList();
+    final XmlDocument xmlDocument = await readSvg(assetUrl);
+    final List<XmlElement> xmlElements = _getXmlElementPoints(xmlDocument);
+    final List<String?> pathStrings =
+        xmlElements.map((e) => _getPathStringFromPoints(e, true)).toList();
 
-    return _pathStrings
+    return pathStrings
         .map((s) => PathBodyAreaMap(bodyArea, parseSvgPathData(s ?? '')))
         .toList();
   }
@@ -61,11 +61,11 @@ class BodyAreaSelectorOverlay extends StatelessWidget {
       List<BodyArea> bodyAreas) async {
     // Each SVG will return a list of paths - one for each clickable section.
     // For example, there will be two bicep paths (right and left)
-    final List<List<PathBodyAreaMap>> _pathsNested = await Future.wait(
+    final List<List<PathBodyAreaMap>> pathsNested = await Future.wait(
         bodyAreas.map((bodyArea) => _parsePathsFromSvgAsset(bodyArea,
             'assets/body_areas/${frontBack == BodyAreaFrontBack.front ? "front" : "back"}/selection/select_${Utils.getSvgAssetUriFromBodyAreaName(bodyArea.name)}.svg')));
 
-    return _pathsNested.expand((x) => x).toList();
+    return pathsNested.expand((x) => x).toList();
   }
 
   @override
@@ -117,10 +117,10 @@ class PathClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    final Matrix4 _matrix4 = Matrix4.identity();
-    _matrix4.scale(size.width / kBodyAreaSelectorSvgWidth,
+    final Matrix4 matrix4 = Matrix4.identity();
+    matrix4.scale(size.width / kBodyAreaSelectorSvgWidth,
         size.height / kBodyAreaSelectorSvgHeight);
-    return path.transform(_matrix4.storage);
+    return path.transform(matrix4.storage);
   }
 
   @override

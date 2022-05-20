@@ -72,12 +72,12 @@ class _VideoUploaderState extends State<VideoUploader> {
     }
   }
 
-  Future<void> _uploadFile(File _file) async {
+  Future<void> _uploadFile(File file) async {
     setState(() => _uploading = true);
     widget.onUploadStart?.call();
     try {
       await GetIt.I<UploadcareService>().uploadVideo(
-          file: SharedFile(_file),
+          file: SharedFile(file),
           onProgress: (progress) =>
               setState(() => _uploadProgress = progress.value),
           onUploaded: () {

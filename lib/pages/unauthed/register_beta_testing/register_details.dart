@@ -4,7 +4,6 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/text_input.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class RegisterDetails extends StatefulWidget {
@@ -66,8 +65,7 @@ class _RegisterDetailsState extends State<RegisterDetails> {
           padding: const EdgeInsets.only(bottom: 16.0),
           child: MyText(
             'Step $pageDisplayText of 2',
-            size: FONTSIZE.seven,
-            subtext: true,
+            size: FONTSIZE.four,
           ),
         ),
         Expanded(
@@ -80,9 +78,10 @@ class _RegisterDetailsState extends State<RegisterDetails> {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: MyText(
-                      'Want to get involved? Just choose a display name and a password to get started.',
+                      'Just choose a display name and password to get started.',
                       maxLines: 3,
                       textAlign: TextAlign.center,
+                      lineHeight: 1.3,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -93,7 +92,6 @@ class _RegisterDetailsState extends State<RegisterDetails> {
                     validator: () => widget.nameIsValid,
                     autofocus: true,
                     autofillHints: const <String>[AutofillHints.name],
-                    backgroundColor: context.theme.cardBackground,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
@@ -157,14 +155,12 @@ class _RegisterDetailsState extends State<RegisterDetails> {
                     controller: widget.emailController,
                     validator: widget.validateEmail,
                     autofillHints: const <String>[AutofillHints.email],
-                    backgroundColor: context.theme.cardBackground,
                   ),
                   const SizedBox(height: 10),
                   MyPasswordFieldRow(
                     controller: widget.passwordController,
                     validator: widget.validatePassword,
                     autofillHints: const <String>[AutofillHints.newPassword],
-                    backgroundColor: context.theme.cardBackground,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 8, top: 8, bottom: 8),

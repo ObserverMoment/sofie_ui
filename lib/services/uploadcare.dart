@@ -178,11 +178,11 @@ class UploadcareService {
       throw Exception(
           'There was a problem uploading your video, ${convertedFile.problems.toString()}');
     } else {
-      final GroupInfoEntity _thumbsGroup =
+      final GroupInfoEntity thumbsGroup =
           await client.groups.group(convertedFile.results[0].thumbnailsGroupId);
 
       return ProcessedVideoResult(
-          convertedFile.results[0].processedFileId, _thumbsGroup.files[0].id);
+          convertedFile.results[0].processedFileId, thumbsGroup.files[0].id);
     }
   }
 

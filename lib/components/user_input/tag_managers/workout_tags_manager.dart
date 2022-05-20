@@ -185,7 +185,6 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
                   padding: const EdgeInsets.all(8.0),
                   child: MyTextFormFieldRow(
                     autofocus: widget.allowCreateTagOnly,
-                    backgroundColor: context.theme.cardBackground,
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.text,
                     placeholder: 'Enter new tag',

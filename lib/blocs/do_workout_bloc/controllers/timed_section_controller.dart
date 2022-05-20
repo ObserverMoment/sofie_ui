@@ -51,13 +51,13 @@ class TimedSectionController extends WorkoutSectionController {
     state = WorkoutSectionProgressState(section);
     _totalRounds = section.rounds;
 
-    int _acumTime = 0;
+    int acumTime = 0;
     _setChangeTimes = List.generate(
         section.rounds,
         (index) => section.workoutSets
                 // wSet.duration is in seconds in the DB.
                 .map((wSet) {
-              return _acumTime += wSet.duration;
+              return acumTime += wSet.duration;
             }).toList());
 
     totalDurationSeconds = _setChangeTimes.last.last;

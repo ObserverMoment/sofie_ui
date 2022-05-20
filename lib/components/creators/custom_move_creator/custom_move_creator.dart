@@ -22,7 +22,7 @@ class CustomMoveCreatorPage extends StatefulWidget {
   final Move? move;
   const CustomMoveCreatorPage({Key? key, this.move}) : super(key: key);
   @override
-  _CustomMoveCreatorPageState createState() => _CustomMoveCreatorPageState();
+  State<CustomMoveCreatorPage> createState() => _CustomMoveCreatorPageState();
 }
 
 class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {

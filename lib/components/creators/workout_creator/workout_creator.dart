@@ -25,7 +25,7 @@ class WorkoutCreatorPage extends StatefulWidget {
   const WorkoutCreatorPage({Key? key, this.workout}) : super(key: key);
 
   @override
-  _WorkoutCreatorPageState createState() => _WorkoutCreatorPageState();
+  State<WorkoutCreatorPage> createState() => _WorkoutCreatorPageState();
 }
 
 class _WorkoutCreatorPageState extends State<WorkoutCreatorPage> {

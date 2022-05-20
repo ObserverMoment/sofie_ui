@@ -170,7 +170,6 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: MyTextFormFieldRow(
               autofocus: _isCreate,
-              backgroundColor: context.theme.cardBackground,
               controller: _nameController,
               placeholder: 'Label (required)',
               keyboardType: TextInputType.text,

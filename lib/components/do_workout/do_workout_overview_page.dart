@@ -220,11 +220,11 @@ class _TopNavBar extends StatelessWidget {
                 iconData: CupertinoIcons.settings,
                 label: 'Settings',
                 onPressed: () {
-                  final _bloc = context.read<DoWorkoutBloc>();
+                  final bloc = context.read<DoWorkoutBloc>();
                   context.push(
                       fullscreenDialog: true,
                       child: ChangeNotifierProvider<DoWorkoutBloc>.value(
-                        value: _bloc,
+                        value: bloc,
                         child: const DoWorkoutSettings(),
                       ));
                 }),

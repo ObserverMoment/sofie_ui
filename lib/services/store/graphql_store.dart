@@ -321,7 +321,7 @@ class GraphQLStore {
         addRefToQueryData(data: data, queryIds: addRefToQueries);
       }
 
-      processResult?.call(result.data!);
+      processResult?.call(result.data as TData);
     }
 
     return result;
@@ -438,7 +438,7 @@ class GraphQLStore {
         }
       }
 
-      processResult?.call(result.data!);
+      processResult?.call(result.data as TData);
 
       /// Handled the same way whether return value is a list or not - it just deletes the data at the specified keys.
       /// Use this to handle side effects where deleting data is necessary. E.g when a user leaves a club we need to delete all data relating to the club from the store.
@@ -504,7 +504,7 @@ class GraphQLStore {
         _clearQueryDataAtKeys(clearQueryDataAtKeys);
       }
 
-      processResult?.call(result.data!);
+      processResult?.call(result.data as TData);
 
       broadcastQueriesByIds(broadcastQueryIds);
     }
@@ -563,7 +563,7 @@ class GraphQLStore {
         _clearQueryDataAtKeys(clearQueryDataAtKeys);
       }
 
-      processResult?.call(result.data!);
+      processResult?.call(result.data as TData);
 
       broadcastQueriesByIds(broadcastQueryIds);
     }

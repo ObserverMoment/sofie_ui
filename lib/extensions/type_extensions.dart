@@ -254,13 +254,13 @@ extension DurationExtension on Duration {
   }
 
   String get compactDisplay {
-    final String _hours =
+    final String hours =
         inHours != 0 ? '${inHours.toString().padLeft(2, '0')}:' : '';
-    final String _minutes =
+    final String minutes =
         '${inMinutes.remainder(60).toString().padLeft(2, '0')}:';
-    final String _seconds = inSeconds.remainder(60).toString().padLeft(2, '0');
+    final String seconds = inSeconds.remainder(60).toString().padLeft(2, '0');
 
-    return '$_hours$_minutes$_seconds';
+    return '$hours$minutes$seconds';
   }
 
   /// https://vnapppro.com/question/flutter-dart-format-duration-to-show-just-minutes-seconds-and-milliseconds/

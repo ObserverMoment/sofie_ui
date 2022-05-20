@@ -57,12 +57,12 @@ class WorkoutSetCreatorUI extends StatelessWidget {
 
   Widget _minimizeExpandButton(bool isMinimized) => CupertinoButton(
       padding: isMinimized ? EdgeInsets.zero : const EdgeInsets.only(right: 16),
+      onPressed: toggleMinimizeSetInfo,
       child: Icon(
           isMinimized
               ? CupertinoIcons.fullscreen
               : CupertinoIcons.fullscreen_exit,
-          size: 20),
-      onPressed: toggleMinimizeSetInfo);
+          size: 20));
 
   Widget get _buildEllipsisMenu => NavBarEllipsisMenu(items: [
         if (moveWorkoutSetUpOne != null)

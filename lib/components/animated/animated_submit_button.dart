@@ -191,7 +191,7 @@ class AnimatedSubmitButtonState extends State<AnimatedSubmitButton>
       duration: widget.animationDuration,
     );
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final containerBox =
           _containerKey.currentContext!.findRenderObject() as RenderBox?;
       if (containerBox != null) {

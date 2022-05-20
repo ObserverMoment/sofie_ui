@@ -6,7 +6,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/pages/unauthed/register_details.dart';
+import 'package:sofie_ui/pages/unauthed/register_beta_testing/register_details.dart';
 import 'package:sofie_ui/services/debounce.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -14,7 +14,7 @@ class RegisterBetaTesting extends StatefulWidget {
   const RegisterBetaTesting({Key? key}) : super(key: key);
 
   @override
-  _RegisterBetaTestingState createState() => _RegisterBetaTestingState();
+  State<RegisterBetaTesting> createState() => _RegisterBetaTestingState();
 }
 
 class _RegisterBetaTestingState extends State<RegisterBetaTesting> {
@@ -90,7 +90,7 @@ class _RegisterBetaTestingState extends State<RegisterBetaTesting> {
     return MyPageScaffold(
       navigationBar: const MyNavBar(
         middle: NavBarTitle(
-          'Welcome to Sofie Early Release!',
+          'Welcome to Circles!',
         ),
       ),
       child: Padding(

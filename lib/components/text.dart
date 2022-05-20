@@ -46,6 +46,7 @@ class MyText extends StatelessWidget {
   final TextDecoration? decoration;
   final double? lineHeight;
   final bool subtext;
+  final double? letterSpacing;
 
   const MyText(this.text,
       {Key? key,
@@ -57,7 +58,8 @@ class MyText extends StatelessWidget {
       this.color,
       this.decoration,
       this.lineHeight = 1.1,
-      this.subtext = false})
+      this.subtext = false,
+      this.letterSpacing = 1.3})
       : super(key: key);
 
   @override
@@ -71,6 +73,7 @@ class MyText extends StatelessWidget {
             decoration: decoration,
             height: lineHeight,
             fontSize: _fontSizeMap[size],
+            letterSpacing: letterSpacing,
             color: subtext
                 ? context.theme.primary.withOpacity(0.75)
                 : color ?? context.theme.primary));
@@ -98,7 +101,8 @@ class MyRichText extends StatelessWidget {
               color: context.theme.primary,
               fontWeight: weight,
               fontSize: _fontSizeMap[size],
-              height: lineHeight),
+              height: lineHeight,
+              letterSpacing: 1.3),
         ));
   }
 }
@@ -127,7 +131,7 @@ class MyHeaderText extends StatelessWidget {
       this.decoration,
       this.lineHeight = 1.1,
       this.subtext = false,
-      this.letterSpacing})
+      this.letterSpacing = 2})
       : super(key: key);
 
   @override

@@ -13,13 +13,13 @@ class ImageUtils {
         throw Exception('No file selected.');
       }
 
-      final File? croppedFile = await ImageCropper().cropImage(
+      final CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: pickedFile.path,
       );
       if (croppedFile == null) {
         throw Exception('Cropping did not work.');
       }
-      return croppedFile;
+      return File(croppedFile.path);
     } on PlatformException catch (e) {
       printLog(e.toString());
       rethrow;

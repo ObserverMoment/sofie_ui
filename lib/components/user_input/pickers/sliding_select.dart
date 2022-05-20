@@ -294,13 +294,13 @@ class _SegmentedControlState<T> extends State<MySlidingSegmentedControl<T>>
     if (isThumbDragging) {
       _playThumbScaleAnimation(isExpanding: true);
       if (highlighted != widget.value && highlighted != null) {
-        widget.updateValue(highlighted!);
+        widget.updateValue(highlighted as T);
       }
     } else if (pressed != null) {
       onHighlightChangedByGesture(pressed);
       assert(pressed == highlighted);
       if (highlighted != widget.value && highlighted != null) {
-        widget.updateValue(highlighted!);
+        widget.updateValue(highlighted as T);
       }
     }
 

@@ -14,7 +14,7 @@ class AnimatedLikeHeart extends StatefulWidget {
     this.size = 24,
   }) : super(key: key);
   @override
-  _AnimatedLikeHeartState createState() => _AnimatedLikeHeartState();
+  State<AnimatedLikeHeart> createState() => _AnimatedLikeHeartState();
 }
 
 class _AnimatedLikeHeartState extends State<AnimatedLikeHeart>
@@ -145,22 +145,22 @@ class _PulsingCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int _subAnimDuration = animDuration - delay;
+    final int subAnimDuration = animDuration - delay;
 
     final tween = MultiTween<_PulsingCircleAnimProps>()
       ..add(_PulsingCircleAnimProps.opacity, 0.1.tweenTo(0.15),
-          (_subAnimDuration * 0.95).round().milliseconds)
+          (subAnimDuration * 0.95).round().milliseconds)
       ..add(_PulsingCircleAnimProps.opacity, 0.4.tweenTo(0.0),
-          (_subAnimDuration * 0.05).round().milliseconds)
+          (subAnimDuration * 0.05).round().milliseconds)
       ..add(
         _PulsingCircleAnimProps.scale,
         0.4.tweenTo(1.1),
-        _subAnimDuration.milliseconds,
+        subAnimDuration.milliseconds,
       );
 
     return PlayAnimation<MultiTweenValues<_PulsingCircleAnimProps>>(
       delay: delay.milliseconds,
-      duration: _subAnimDuration.milliseconds,
+      duration: subAnimDuration.milliseconds,
       tween: tween,
       child: Container(
         height: size,

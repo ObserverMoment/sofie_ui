@@ -27,7 +27,7 @@ class ClubCreatorPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ClubCreatorPageState createState() => _ClubCreatorPageState();
+  State<ClubCreatorPage> createState() => _ClubCreatorPageState();
 }
 
 class _ClubCreatorPageState extends State<ClubCreatorPage> {
@@ -87,14 +87,14 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
   }
 
   Future<void> _checkNameAvailable() async {
-    final _text = _nameController.text;
-    _nameIsValid = _text.length > 2 && _text.length < 21;
+    final text = _nameController.text;
+    _nameIsValid = text.length > 2 && text.length < 21;
 
     if (_nameIsValid) {
       _debouncer.run(() async {
         final isAvailable = await context.graphQLStore.networkOnlyOperation(
             operation: CheckUniqueClubNameQuery(
-                variables: CheckUniqueClubNameArguments(name: _text)));
+                variables: CheckUniqueClubNameArguments(name: text)));
         setState(() => _nameIsAvailable =
             isAvailable.data != null && isAvailable.data!.checkUniqueClubName);
       });
@@ -364,7 +364,6 @@ class _PreCreateInputUI extends StatelessWidget {
         UserInputContainer(
           child: MyTextFormFieldRow(
             autofocus: true,
-            backgroundColor: context.theme.cardBackground,
             controller: nameController,
             placeholder: 'Name (required)',
             keyboardType: TextInputType.text,

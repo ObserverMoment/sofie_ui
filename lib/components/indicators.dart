@@ -53,8 +53,8 @@ class StageProgressIndicator extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(numStages, (index) {
-        final _isComplete = currentStage > index;
-        final _isActive = currentStage == index;
+        final isComplete = currentStage > index;
+        final isActive = currentStage == index;
 
         return SizedBox(
           height: titles == null ? 64 : 100,
@@ -66,20 +66,20 @@ class StageProgressIndicator extends StatelessWidget {
             endChild: titles != null
                 ? AnimatedOpacity(
                     duration: animationDuration,
-                    opacity: _isComplete || _isActive ? 1 : 0.6,
+                    opacity: isComplete || isActive ? 1 : 0.6,
                     child: MyText(
                       titles![index],
-                      weight: _isActive ? FontWeight.bold : FontWeight.w300,
+                      weight: isActive ? FontWeight.bold : FontWeight.w300,
                     ))
                 : null,
             beforeLineStyle: LineStyle(
                 thickness: 2,
-                color: _isComplete || _isActive
+                color: isComplete || isActive
                     ? Styles.primaryAccent
                     : CupertinoColors.inactiveGray),
             afterLineStyle: LineStyle(
                 thickness: 2,
-                color: _isComplete
+                color: isComplete
                     ? Styles.primaryAccent
                     : CupertinoColors.inactiveGray),
             indicatorStyle: IndicatorStyle(
@@ -90,8 +90,8 @@ class StageProgressIndicator extends StatelessWidget {
                 indicator: _buildDot(
                     context: context,
                     index: index,
-                    isComplete: _isComplete,
-                    isActive: _isActive)),
+                    isComplete: isComplete,
+                    isActive: isActive)),
           ),
         );
       }),

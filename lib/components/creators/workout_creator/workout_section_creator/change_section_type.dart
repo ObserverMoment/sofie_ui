@@ -21,7 +21,7 @@ class ChangeSectionType extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ChangeSectionTypeState createState() => _ChangeSectionTypeState();
+  State<ChangeSectionType> createState() => _ChangeSectionTypeState();
 }
 
 class _ChangeSectionTypeState extends State<ChangeSectionType> {

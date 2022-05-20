@@ -12,7 +12,6 @@ import 'package:sofie_ui/components/workout/workout_finders/public/public_workou
 import 'package:sofie_ui/components/workout_plan/vertical_workout_plans_list.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:substring_highlight/substring_highlight.dart';
 
 class PublicPlansTextSearch extends StatefulWidget {
   final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;

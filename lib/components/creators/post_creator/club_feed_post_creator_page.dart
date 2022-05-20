@@ -34,7 +34,7 @@ class ClubFeedPostCreatorPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ClubFeedPostCreatorPageState createState() =>
+  State<ClubFeedPostCreatorPage> createState() =>
       _ClubFeedPostCreatorPageState();
 }
 
@@ -575,7 +575,6 @@ class FeedPostTagsInput extends StatelessWidget {
           children: [
             Expanded(
               child: MyTextFormFieldRow(
-                  backgroundColor: context.theme.cardBackground,
                   controller: tagInputController,
                   // Don't allow any spaces or special chracters.
                   inputFormatters: <TextInputFormatter>[

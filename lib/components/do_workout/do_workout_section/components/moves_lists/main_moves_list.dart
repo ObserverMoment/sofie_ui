@@ -194,11 +194,11 @@ class _WorkoutSetInMovesList extends StatelessWidget {
                 workoutSectionType.isTimed &&
                 isCurrentSet
             ? AnimatedProgressOverlay(
+                percent: 1 -
+                    (state.secondsToNextCheckpoint! / (workoutSet.duration)),
                 child: WorkoutSetDisplay(
                     workoutSet: workoutSet,
                     workoutSectionType: workoutSectionType),
-                percent: 1 -
-                    (state.secondsToNextCheckpoint! / (workoutSet.duration)),
               )
             : WorkoutSetDisplay(
                 workoutSet: workoutSet, workoutSectionType: workoutSectionType),

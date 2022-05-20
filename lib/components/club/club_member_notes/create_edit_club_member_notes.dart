@@ -212,7 +212,6 @@ class ClubMemberNoteTags extends StatelessWidget {
           children: [
             Expanded(
               child: MyTextFormFieldRow(
-                  backgroundColor: context.theme.cardBackground,
                   controller: tagInputController,
                   // Don't allow any spaces or special chracters.
                   inputFormatters: <TextInputFormatter>[

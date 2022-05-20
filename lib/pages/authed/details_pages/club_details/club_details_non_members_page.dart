@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/images/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_player.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page_components/summary_stat_display.dart';

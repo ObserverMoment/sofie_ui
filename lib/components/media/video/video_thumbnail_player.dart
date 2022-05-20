@@ -23,8 +23,8 @@ class VideoThumbnailPlayer extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final Color _primary = context.theme.primary;
-    final Color _background = context.theme.background;
+    final Color primary = context.theme.primary;
+    final Color background = context.theme.background;
     final bool hasVideo = Utils.textNotNull(videoUri);
 
     return GestureDetector(
@@ -47,7 +47,7 @@ class VideoThumbnailPlayer extends StatelessWidget {
             height: displaySize.height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: _primary.withOpacity(0.4),
+              color: primary.withOpacity(0.4),
               boxShadow: kElevation[3],
             ),
             clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -66,7 +66,7 @@ class VideoThumbnailPlayer extends StatelessWidget {
                 : Icon(
                     CupertinoIcons.tv,
                     size: displaySize.width / 2.5,
-                    color: _background.withOpacity(0.4),
+                    color: background.withOpacity(0.4),
                   ),
           ),
           if (tag != null)

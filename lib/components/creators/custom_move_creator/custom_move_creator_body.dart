@@ -16,7 +16,7 @@ class CustomMoveCreatorBody extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CustomMoveCreatorBodyState createState() => _CustomMoveCreatorBodyState();
+  State<CustomMoveCreatorBody> createState() => _CustomMoveCreatorBodyState();
 }
 
 class _CustomMoveCreatorBodyState extends State<CustomMoveCreatorBody> {
