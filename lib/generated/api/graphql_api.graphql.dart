@@ -583,7 +583,7 @@ mixin FitnessBenchmarkWorkoutMixin {
   @JsonKey(unknownEnumValue: FitnessBenchmarkWorkoutScoreType.artemisUnknown)
   late FitnessBenchmarkWorkoutScoreType type;
   late String name;
-  late String description;
+  String? description;
   String? instructions;
   String? instructionalVideoUri;
   String? instructionalVideoThumbUri;
@@ -8735,6 +8735,7 @@ enum ContentAccessScope {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum BodyweightUnit {
   @JsonValue('KG')
   kg,
@@ -8743,6 +8744,7 @@ enum BodyweightUnit {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum UserDayLogRating {
   @JsonValue('AVERAGE')
   average,
@@ -8753,6 +8755,7 @@ enum UserDayLogRating {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum WorkoutMoveRepType {
   @JsonValue('CALORIES')
   calories,
@@ -8765,6 +8768,7 @@ enum WorkoutMoveRepType {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum DistanceUnit {
   @JsonValue('KILOMETRES')
   kilometres,
@@ -8777,6 +8781,7 @@ enum DistanceUnit {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum LoadUnit {
   @JsonValue('BODYWEIGHTPERCENT')
   bodyweightpercent,
@@ -8789,6 +8794,7 @@ enum LoadUnit {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum TimeUnit {
   @JsonValue('HOURS')
   hours,
@@ -8799,6 +8805,7 @@ enum TimeUnit {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum MoveScope {
   @JsonValue('CUSTOM')
   custom,
@@ -8807,6 +8814,7 @@ enum MoveScope {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum BodyAreaFrontBack {
   @JsonValue('BACK')
   back,
@@ -8817,6 +8825,7 @@ enum BodyAreaFrontBack {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum BodyAreaUpperLower {
   @JsonValue('CORE')
   core,
@@ -8827,6 +8836,7 @@ enum BodyAreaUpperLower {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum DifficultyLevel {
   @JsonValue('ADVANCED')
   advanced,
@@ -8841,6 +8851,7 @@ enum DifficultyLevel {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum FitnessBenchmarkScope {
   @JsonValue('CUSTOM')
   custom,
@@ -8849,6 +8860,7 @@ enum FitnessBenchmarkScope {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum FitnessBenchmarkScoreType {
   @JsonValue('FASTESTTIMEDISTANCE')
   fastesttimedistance,
@@ -8867,6 +8879,7 @@ enum FitnessBenchmarkScoreType {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum FitnessBenchmarkWorkoutScoreType {
   @JsonValue('AMRAP')
   amrap,
@@ -8875,6 +8888,7 @@ enum FitnessBenchmarkWorkoutScoreType {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum UserProfileScope {
   @JsonValue('PRIVATE')
   private,
@@ -8883,6 +8897,7 @@ enum UserProfileScope {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum Gender {
   @JsonValue('FEMALE')
   female,
@@ -8895,6 +8910,7 @@ enum Gender {
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
+
 enum UserClubMemberStatus {
   @JsonValue('ADMIN')
   admin,
@@ -8924,6 +8940,7 @@ class ClubChatSummaryArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubChatSummaryArgumentsToJson(this);
 }
 
+final CLUB_CHAT_SUMMARY_QUERY_DOCUMENT_OPERATION_NAME = 'clubChatSummary';
 final CLUB_CHAT_SUMMARY_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -9046,7 +9063,7 @@ class ClubChatSummaryQuery
   final DocumentNode document = CLUB_CHAT_SUMMARY_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubChatSummary';
+  final String operationName = CLUB_CHAT_SUMMARY_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubChatSummaryArguments variables;
@@ -9074,6 +9091,7 @@ class DeleteClubArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$DeleteClubArgumentsToJson(this);
 }
 
+final DELETE_CLUB_MUTATION_DOCUMENT_OPERATION_NAME = 'deleteClub';
 final DELETE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -9108,7 +9126,7 @@ class DeleteClubMutation
   final DocumentNode document = DELETE_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteClub';
+  final String operationName = DELETE_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteClubArguments variables;
@@ -9136,6 +9154,7 @@ class ClubSummaryArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubSummaryArgumentsToJson(this);
 }
 
+final CLUB_SUMMARY_QUERY_DOCUMENT_OPERATION_NAME = 'clubSummary';
 final CLUB_SUMMARY_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -9315,7 +9334,7 @@ class ClubSummaryQuery
   final DocumentNode document = CLUB_SUMMARY_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubSummary';
+  final String operationName = CLUB_SUMMARY_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubSummaryArguments variables;
@@ -9343,6 +9362,7 @@ class CreateClubArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateClubArgumentsToJson(this);
 }
 
+final CREATE_CLUB_MUTATION_DOCUMENT_OPERATION_NAME = 'createClub';
 final CREATE_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -9523,7 +9543,7 @@ class CreateClubMutation
   final DocumentNode document = CREATE_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createClub';
+  final String operationName = CREATE_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateClubArguments variables;
@@ -9535,6 +9555,7 @@ class CreateClubMutation
       CreateClub$Mutation.fromJson(json);
 }
 
+final PUBLIC_CLUBS_QUERY_DOCUMENT_OPERATION_NAME = 'publicClubs';
 final PUBLIC_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -9704,7 +9725,7 @@ class PublicClubsQuery
   final DocumentNode document = PUBLIC_CLUBS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'publicClubs';
+  final String operationName = PUBLIC_CLUBS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -9729,6 +9750,8 @@ class UpdateClubSummaryArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateClubSummaryArgumentsToJson(this);
 }
 
+final UPDATE_CLUB_SUMMARY_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateClubSummary';
 final UPDATE_CLUB_SUMMARY_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -9910,7 +9933,8 @@ class UpdateClubSummaryMutation extends GraphQLQuery<UpdateClubSummary$Mutation,
   final DocumentNode document = UPDATE_CLUB_SUMMARY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateClubSummary';
+  final String operationName =
+      UPDATE_CLUB_SUMMARY_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateClubSummaryArguments variables;
@@ -9939,6 +9963,8 @@ class CheckUniqueClubNameArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CheckUniqueClubNameArgumentsToJson(this);
 }
 
+final CHECK_UNIQUE_CLUB_NAME_QUERY_DOCUMENT_OPERATION_NAME =
+    'checkUniqueClubName';
 final CHECK_UNIQUE_CLUB_NAME_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -9974,7 +10000,8 @@ class CheckUniqueClubNameQuery extends GraphQLQuery<CheckUniqueClubName$Query,
   final DocumentNode document = CHECK_UNIQUE_CLUB_NAME_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'checkUniqueClubName';
+  final String operationName =
+      CHECK_UNIQUE_CLUB_NAME_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final CheckUniqueClubNameArguments variables;
@@ -9986,6 +10013,7 @@ class CheckUniqueClubNameQuery extends GraphQLQuery<CheckUniqueClubName$Query,
       CheckUniqueClubName$Query.fromJson(json);
 }
 
+final USER_CLUBS_QUERY_DOCUMENT_OPERATION_NAME = 'userClubs';
 final USER_CLUBS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -10154,7 +10182,7 @@ class UserClubsQuery extends GraphQLQuery<UserClubs$Query, JsonSerializable> {
   final DocumentNode document = USER_CLUBS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userClubs';
+  final String operationName = USER_CLUBS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -10179,6 +10207,7 @@ class ClubSummariesArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubSummariesArgumentsToJson(this);
 }
 
+final CLUB_SUMMARIES_QUERY_DOCUMENT_OPERATION_NAME = 'clubSummaries';
 final CLUB_SUMMARIES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -10361,7 +10390,7 @@ class ClubSummariesQuery
   final DocumentNode document = CLUB_SUMMARIES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubSummaries';
+  final String operationName = CLUB_SUMMARIES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubSummariesArguments variables;
@@ -10392,6 +10421,8 @@ class CreateBodyTrackingEntryArguments extends JsonSerializable
       _$CreateBodyTrackingEntryArgumentsToJson(this);
 }
 
+final CREATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createBodyTrackingEntry';
 final CREATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -10487,7 +10518,8 @@ class CreateBodyTrackingEntryMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createBodyTrackingEntry';
+  final String operationName =
+      CREATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateBodyTrackingEntryArguments variables;
@@ -10518,6 +10550,8 @@ class UpdateBodyTrackingEntryArguments extends JsonSerializable
       _$UpdateBodyTrackingEntryArgumentsToJson(this);
 }
 
+final UPDATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateBodyTrackingEntry';
 final UPDATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -10613,7 +10647,8 @@ class UpdateBodyTrackingEntryMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateBodyTrackingEntry';
+  final String operationName =
+      UPDATE_BODY_TRACKING_ENTRY_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateBodyTrackingEntryArguments variables;
@@ -10644,6 +10679,8 @@ class DeleteBodyTrackingEntryByIdArguments extends JsonSerializable
       _$DeleteBodyTrackingEntryByIdArgumentsToJson(this);
 }
 
+final DELETE_BODY_TRACKING_ENTRY_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteBodyTrackingEntryById';
 final DELETE_BODY_TRACKING_ENTRY_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -10681,7 +10718,8 @@ class DeleteBodyTrackingEntryByIdMutation extends GraphQLQuery<
       DELETE_BODY_TRACKING_ENTRY_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteBodyTrackingEntryById';
+  final String operationName =
+      DELETE_BODY_TRACKING_ENTRY_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteBodyTrackingEntryByIdArguments variables;
@@ -10693,6 +10731,8 @@ class DeleteBodyTrackingEntryByIdMutation extends GraphQLQuery<
       DeleteBodyTrackingEntryById$Mutation.fromJson(json);
 }
 
+final BODY_TRACKING_ENTRIES_QUERY_DOCUMENT_OPERATION_NAME =
+    'bodyTrackingEntries';
 final BODY_TRACKING_ENTRIES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -10776,7 +10816,8 @@ class BodyTrackingEntriesQuery
   final DocumentNode document = BODY_TRACKING_ENTRIES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'bodyTrackingEntries';
+  final String operationName =
+      BODY_TRACKING_ENTRIES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -10801,6 +10842,7 @@ class CreateUserGoalArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateUserGoalArgumentsToJson(this);
 }
 
+final CREATE_USER_GOAL_MUTATION_DOCUMENT_OPERATION_NAME = 'createUserGoal';
 final CREATE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -10895,7 +10937,8 @@ class CreateUserGoalMutation
   final DocumentNode document = CREATE_USER_GOAL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createUserGoal';
+  final String operationName =
+      CREATE_USER_GOAL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateUserGoalArguments variables;
@@ -10923,6 +10966,7 @@ class DeleteUserGoalArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$DeleteUserGoalArgumentsToJson(this);
 }
 
+final DELETE_USER_GOAL_MUTATION_DOCUMENT_OPERATION_NAME = 'deleteUserGoal';
 final DELETE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -10957,7 +11001,8 @@ class DeleteUserGoalMutation
   final DocumentNode document = DELETE_USER_GOAL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteUserGoal';
+  final String operationName =
+      DELETE_USER_GOAL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteUserGoalArguments variables;
@@ -10987,6 +11032,8 @@ class CreateUserSleepWellLogArguments extends JsonSerializable
       _$CreateUserSleepWellLogArgumentsToJson(this);
 }
 
+final CREATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createUserSleepWellLog';
 final CREATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11082,7 +11129,8 @@ class CreateUserSleepWellLogMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createUserSleepWellLog';
+  final String operationName =
+      CREATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateUserSleepWellLogArguments variables;
@@ -11112,6 +11160,8 @@ class UpdateUserSleepWellLogArguments extends JsonSerializable
       _$UpdateUserSleepWellLogArgumentsToJson(this);
 }
 
+final UPDATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateUserSleepWellLog';
 final UPDATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11207,7 +11257,8 @@ class UpdateUserSleepWellLogMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateUserSleepWellLog';
+  final String operationName =
+      UPDATE_USER_SLEEP_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateUserSleepWellLogArguments variables;
@@ -11235,6 +11286,7 @@ class UpdateUserGoalArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateUserGoalArgumentsToJson(this);
 }
 
+final UPDATE_USER_GOAL_MUTATION_DOCUMENT_OPERATION_NAME = 'updateUserGoal';
 final UPDATE_USER_GOAL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11329,7 +11381,8 @@ class UpdateUserGoalMutation
   final DocumentNode document = UPDATE_USER_GOAL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateUserGoal';
+  final String operationName =
+      UPDATE_USER_GOAL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateUserGoalArguments variables;
@@ -11360,6 +11413,8 @@ class CreateUserMeditationLogArguments extends JsonSerializable
       _$CreateUserMeditationLogArgumentsToJson(this);
 }
 
+final CREATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createUserMeditationLog';
 final CREATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11449,7 +11504,8 @@ class CreateUserMeditationLogMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createUserMeditationLog';
+  final String operationName =
+      CREATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateUserMeditationLogArguments variables;
@@ -11478,6 +11534,8 @@ class DeleteUserDayLogMoodArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteUserDayLogMoodArgumentsToJson(this);
 }
 
+final DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteUserDayLogMood';
 final DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11512,7 +11570,8 @@ class DeleteUserDayLogMoodMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteUserDayLogMood';
+  final String operationName =
+      DELETE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteUserDayLogMoodArguments variables;
@@ -11541,6 +11600,8 @@ class CreateUserEatWellLogArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CreateUserEatWellLogArgumentsToJson(this);
 }
 
+final CREATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createUserEatWellLog';
 final CREATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11630,7 +11691,8 @@ class CreateUserEatWellLogMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createUserEatWellLog';
+  final String operationName =
+      CREATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateUserEatWellLogArguments variables;
@@ -11661,6 +11723,8 @@ class UpdateUserMeditationLogArguments extends JsonSerializable
       _$UpdateUserMeditationLogArgumentsToJson(this);
 }
 
+final UPDATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateUserMeditationLog';
 final UPDATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11750,7 +11814,8 @@ class UpdateUserMeditationLogMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateUserMeditationLog';
+  final String operationName =
+      UPDATE_USER_MEDITATION_LOG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateUserMeditationLogArguments variables;
@@ -11779,6 +11844,8 @@ class CreateUserDayLogMoodArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CreateUserDayLogMoodArgumentsToJson(this);
 }
 
+final CREATE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createUserDayLogMood';
 final CREATE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11868,7 +11935,8 @@ class CreateUserDayLogMoodMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createUserDayLogMood';
+  final String operationName =
+      CREATE_USER_DAY_LOG_MOOD_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateUserDayLogMoodArguments variables;
@@ -11897,6 +11965,8 @@ class UpdateUserEatWellLogArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UpdateUserEatWellLogArgumentsToJson(this);
 }
 
+final UPDATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateUserEatWellLog';
 final UPDATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -11986,7 +12056,8 @@ class UpdateUserEatWellLogMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateUserEatWellLog';
+  final String operationName =
+      UPDATE_USER_EAT_WELL_LOG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateUserEatWellLogArguments variables;
@@ -11998,6 +12069,7 @@ class UpdateUserEatWellLogMutation extends GraphQLQuery<
       UpdateUserEatWellLog$Mutation.fromJson(json);
 }
 
+final USER_MEDITATION_LOGS_QUERY_DOCUMENT_OPERATION_NAME = 'userMeditationLogs';
 final USER_MEDITATION_LOGS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -12075,7 +12147,8 @@ class UserMeditationLogsQuery
   final DocumentNode document = USER_MEDITATION_LOGS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userMeditationLogs';
+  final String operationName =
+      USER_MEDITATION_LOGS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -12084,6 +12157,7 @@ class UserMeditationLogsQuery
       UserMeditationLogs$Query.fromJson(json);
 }
 
+final USER_EAT_WELL_LOGS_QUERY_DOCUMENT_OPERATION_NAME = 'userEatWellLogs';
 final USER_EAT_WELL_LOGS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -12161,7 +12235,7 @@ class UserEatWellLogsQuery
   final DocumentNode document = USER_EAT_WELL_LOGS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userEatWellLogs';
+  final String operationName = USER_EAT_WELL_LOGS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -12170,6 +12244,7 @@ class UserEatWellLogsQuery
       UserEatWellLogs$Query.fromJson(json);
 }
 
+final USER_SLEEP_WELL_LOGS_QUERY_DOCUMENT_OPERATION_NAME = 'userSleepWellLogs';
 final USER_SLEEP_WELL_LOGS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -12253,7 +12328,8 @@ class UserSleepWellLogsQuery
   final DocumentNode document = USER_SLEEP_WELL_LOGS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userSleepWellLogs';
+  final String operationName =
+      USER_SLEEP_WELL_LOGS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -12262,6 +12338,7 @@ class UserSleepWellLogsQuery
       UserSleepWellLogs$Query.fromJson(json);
 }
 
+final USER_GOALS_QUERY_DOCUMENT_OPERATION_NAME = 'userGoals';
 final USER_GOALS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -12344,7 +12421,7 @@ class UserGoalsQuery extends GraphQLQuery<UserGoals$Query, JsonSerializable> {
   final DocumentNode document = USER_GOALS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userGoals';
+  final String operationName = USER_GOALS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -12353,6 +12430,7 @@ class UserGoalsQuery extends GraphQLQuery<UserGoals$Query, JsonSerializable> {
       UserGoals$Query.fromJson(json);
 }
 
+final USER_DAY_LOG_MOODS_QUERY_DOCUMENT_OPERATION_NAME = 'userDayLogMoods';
 final USER_DAY_LOG_MOODS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -12430,7 +12508,7 @@ class UserDayLogMoodsQuery
   final DocumentNode document = USER_DAY_LOG_MOODS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userDayLogMoods';
+  final String operationName = USER_DAY_LOG_MOODS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -12455,6 +12533,8 @@ class CreateWorkoutMoveArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateWorkoutMoveArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutMove';
 final CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -12795,7 +12875,8 @@ class CreateWorkoutMoveMutation extends GraphQLQuery<CreateWorkoutMove$Mutation,
   final DocumentNode document = CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutMove';
+  final String operationName =
+      CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutMoveArguments variables;
@@ -12823,6 +12904,8 @@ class UpdateWorkoutMovesArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateWorkoutMovesArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutMoves';
 final UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -13165,7 +13248,8 @@ class UpdateWorkoutMovesMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutMoves';
+  final String operationName =
+      UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutMovesArguments variables;
@@ -13196,6 +13280,8 @@ class DuplicateWorkoutMoveByIdArguments extends JsonSerializable
       _$DuplicateWorkoutMoveByIdArgumentsToJson(this);
 }
 
+final DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'duplicateWorkoutMoveById';
 final DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -13535,7 +13621,8 @@ class DuplicateWorkoutMoveByIdMutation extends GraphQLQuery<
   final DocumentNode document = DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'duplicateWorkoutMoveById';
+  final String operationName =
+      DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DuplicateWorkoutMoveByIdArguments variables;
@@ -13564,6 +13651,8 @@ class DeleteWorkoutMoveByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteWorkoutMoveByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutMoveById';
 final DELETE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -13598,7 +13687,8 @@ class DeleteWorkoutMoveByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutMoveById';
+  final String operationName =
+      DELETE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutMoveByIdArguments variables;
@@ -13627,6 +13717,8 @@ class ReorderWorkoutMovesArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$ReorderWorkoutMovesArgumentsToJson(this);
 }
 
+final REORDER_WORKOUT_MOVES_MUTATION_DOCUMENT_OPERATION_NAME =
+    'reorderWorkoutMoves';
 final REORDER_WORKOUT_MOVES_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -13678,7 +13770,8 @@ class ReorderWorkoutMovesMutation extends GraphQLQuery<
   final DocumentNode document = REORDER_WORKOUT_MOVES_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'reorderWorkoutMoves';
+  final String operationName =
+      REORDER_WORKOUT_MOVES_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ReorderWorkoutMovesArguments variables;
@@ -13706,6 +13799,8 @@ class UpdateWorkoutMoveArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateWorkoutMoveArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutMove';
 final UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -14046,7 +14141,8 @@ class UpdateWorkoutMoveMutation extends GraphQLQuery<UpdateWorkoutMove$Mutation,
   final DocumentNode document = UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutMove';
+  final String operationName =
+      UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutMoveArguments variables;
@@ -14075,6 +14171,8 @@ class DeleteCollectionByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteCollectionByIdArgumentsToJson(this);
 }
 
+final DELETE_COLLECTION_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteCollectionById';
 final DELETE_COLLECTION_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -14109,7 +14207,8 @@ class DeleteCollectionByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_COLLECTION_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteCollectionById';
+  final String operationName =
+      DELETE_COLLECTION_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteCollectionByIdArguments variables;
@@ -14140,6 +14239,8 @@ class AddWorkoutPlanToCollectionArguments extends JsonSerializable
       _$AddWorkoutPlanToCollectionArgumentsToJson(this);
 }
 
+final ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'addWorkoutPlanToCollection';
 final ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -14549,7 +14650,8 @@ class AddWorkoutPlanToCollectionMutation extends GraphQLQuery<
       ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'addWorkoutPlanToCollection';
+  final String operationName =
+      ADD_WORKOUT_PLAN_TO_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final AddWorkoutPlanToCollectionArguments variables;
@@ -14577,6 +14679,7 @@ class CreateCollectionArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateCollectionArgumentsToJson(this);
 }
 
+final CREATE_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME = 'createCollection';
 final CREATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -14984,7 +15087,8 @@ class CreateCollectionMutation
   final DocumentNode document = CREATE_COLLECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createCollection';
+  final String operationName =
+      CREATE_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateCollectionArguments variables;
@@ -15012,6 +15116,8 @@ class UserCollectionByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserCollectionByIdArgumentsToJson(this);
 }
 
+final USER_COLLECTION_BY_ID_QUERY_DOCUMENT_OPERATION_NAME =
+    'userCollectionById';
 final USER_COLLECTION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -15417,7 +15523,8 @@ class UserCollectionByIdQuery extends GraphQLQuery<UserCollectionById$Query,
   final DocumentNode document = USER_COLLECTION_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userCollectionById';
+  final String operationName =
+      USER_COLLECTION_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserCollectionByIdArguments variables;
@@ -15447,6 +15554,8 @@ class AddWorkoutToCollectionArguments extends JsonSerializable
       _$AddWorkoutToCollectionArgumentsToJson(this);
 }
 
+final ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'addWorkoutToCollection';
 final ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -15854,7 +15963,8 @@ class AddWorkoutToCollectionMutation extends GraphQLQuery<
   final DocumentNode document = ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'addWorkoutToCollection';
+  final String operationName =
+      ADD_WORKOUT_TO_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final AddWorkoutToCollectionArguments variables;
@@ -15866,6 +15976,7 @@ class AddWorkoutToCollectionMutation extends GraphQLQuery<
       AddWorkoutToCollection$Mutation.fromJson(json);
 }
 
+final USER_COLLECTIONS_QUERY_DOCUMENT_OPERATION_NAME = 'userCollections';
 final USER_COLLECTIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -16261,7 +16372,7 @@ class UserCollectionsQuery
   final DocumentNode document = USER_COLLECTIONS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userCollections';
+  final String operationName = USER_COLLECTIONS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -16286,6 +16397,7 @@ class UpdateCollectionArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateCollectionArgumentsToJson(this);
 }
 
+final UPDATE_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME = 'updateCollection';
 final UPDATE_COLLECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -16693,7 +16805,8 @@ class UpdateCollectionMutation
   final DocumentNode document = UPDATE_COLLECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateCollection';
+  final String operationName =
+      UPDATE_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateCollectionArguments variables;
@@ -16724,6 +16837,8 @@ class RemoveWorkoutPlanFromCollectionArguments extends JsonSerializable
       _$RemoveWorkoutPlanFromCollectionArgumentsToJson(this);
 }
 
+final REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeWorkoutPlanFromCollection';
 final REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -17134,7 +17249,8 @@ class RemoveWorkoutPlanFromCollectionMutation extends GraphQLQuery<
       REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeWorkoutPlanFromCollection';
+  final String operationName =
+      REMOVE_WORKOUT_PLAN_FROM_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveWorkoutPlanFromCollectionArguments variables;
@@ -17165,6 +17281,8 @@ class RemoveWorkoutFromCollectionArguments extends JsonSerializable
       _$RemoveWorkoutFromCollectionArgumentsToJson(this);
 }
 
+final REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeWorkoutFromCollection';
 final REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -17575,7 +17693,8 @@ class RemoveWorkoutFromCollectionMutation extends GraphQLQuery<
       REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeWorkoutFromCollection';
+  final String operationName =
+      REMOVE_WORKOUT_FROM_COLLECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveWorkoutFromCollectionArguments variables;
@@ -17606,6 +17725,8 @@ class MarkWelcomeTodoItemAsSeenArguments extends JsonSerializable
       _$MarkWelcomeTodoItemAsSeenArgumentsToJson(this);
 }
 
+final MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'markWelcomeTodoItemAsSeen';
 final MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -17644,7 +17765,8 @@ class MarkWelcomeTodoItemAsSeenMutation extends GraphQLQuery<
       MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'markWelcomeTodoItemAsSeen';
+  final String operationName =
+      MARK_WELCOME_TODO_ITEM_AS_SEEN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final MarkWelcomeTodoItemAsSeenArguments variables;
@@ -17656,6 +17778,7 @@ class MarkWelcomeTodoItemAsSeenMutation extends GraphQLQuery<
       MarkWelcomeTodoItemAsSeen$Mutation.fromJson(json);
 }
 
+final WELCOME_TODO_ITEMS_QUERY_DOCUMENT_OPERATION_NAME = 'welcomeTodoItems';
 final WELCOME_TODO_ITEMS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -17727,7 +17850,7 @@ class WelcomeTodoItemsQuery
   final DocumentNode document = WELCOME_TODO_ITEMS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'welcomeTodoItems';
+  final String operationName = WELCOME_TODO_ITEMS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -17755,6 +17878,8 @@ class ReorderWorkoutPlanDayWorkoutsArguments extends JsonSerializable
       _$ReorderWorkoutPlanDayWorkoutsArgumentsToJson(this);
 }
 
+final REORDER_WORKOUT_PLAN_DAY_WORKOUTS_MUTATION_DOCUMENT_OPERATION_NAME =
+    'reorderWorkoutPlanDayWorkouts';
 final REORDER_WORKOUT_PLAN_DAY_WORKOUTS_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -17809,7 +17934,8 @@ class ReorderWorkoutPlanDayWorkoutsMutation extends GraphQLQuery<
       REORDER_WORKOUT_PLAN_DAY_WORKOUTS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'reorderWorkoutPlanDayWorkouts';
+  final String operationName =
+      REORDER_WORKOUT_PLAN_DAY_WORKOUTS_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ReorderWorkoutPlanDayWorkoutsArguments variables;
@@ -17840,6 +17966,8 @@ class CreateWorkoutPlanDayWorkoutArguments extends JsonSerializable
       _$CreateWorkoutPlanDayWorkoutArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutPlanDayWorkout';
 final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -18635,7 +18763,8 @@ class CreateWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
       CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutPlanDayWorkout';
+  final String operationName =
+      CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutPlanDayWorkoutArguments variables;
@@ -18666,6 +18795,8 @@ class UpdateWorkoutPlanDayWorkoutArguments extends JsonSerializable
       _$UpdateWorkoutPlanDayWorkoutArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutPlanDayWorkout';
 final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -19461,7 +19592,8 @@ class UpdateWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
       UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutPlanDayWorkout';
+  final String operationName =
+      UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutPlanDayWorkoutArguments variables;
@@ -19492,6 +19624,8 @@ class DeleteWorkoutPlanDayWorkoutByIdArguments extends JsonSerializable
       _$DeleteWorkoutPlanDayWorkoutByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_PLAN_DAY_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutPlanDayWorkoutById';
 final DELETE_WORKOUT_PLAN_DAY_WORKOUT_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -19529,7 +19663,8 @@ class DeleteWorkoutPlanDayWorkoutByIdMutation extends GraphQLQuery<
       DELETE_WORKOUT_PLAN_DAY_WORKOUT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutPlanDayWorkoutById';
+  final String operationName =
+      DELETE_WORKOUT_PLAN_DAY_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutPlanDayWorkoutByIdArguments variables;
@@ -19560,6 +19695,8 @@ class DeleteWorkoutPlanEnrolmentByIdArguments extends JsonSerializable
       _$DeleteWorkoutPlanEnrolmentByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_PLAN_ENROLMENT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutPlanEnrolmentById';
 final DELETE_WORKOUT_PLAN_ENROLMENT_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -19597,7 +19734,8 @@ class DeleteWorkoutPlanEnrolmentByIdMutation extends GraphQLQuery<
       DELETE_WORKOUT_PLAN_ENROLMENT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutPlanEnrolmentById';
+  final String operationName =
+      DELETE_WORKOUT_PLAN_ENROLMENT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutPlanEnrolmentByIdArguments variables;
@@ -19609,6 +19747,8 @@ class DeleteWorkoutPlanEnrolmentByIdMutation extends GraphQLQuery<
       DeleteWorkoutPlanEnrolmentById$Mutation.fromJson(json);
 }
 
+final WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT_OPERATION_NAME =
+    'workoutPlanEnrolments';
 final WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -19865,7 +20005,8 @@ class WorkoutPlanEnrolmentsQuery
   final DocumentNode document = WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'workoutPlanEnrolments';
+  final String operationName =
+      WORKOUT_PLAN_ENROLMENTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -19893,6 +20034,8 @@ class WorkoutPlanEnrolmentByIdArguments extends JsonSerializable
       _$WorkoutPlanEnrolmentByIdArgumentsToJson(this);
 }
 
+final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT_OPERATION_NAME =
+    'workoutPlanEnrolmentById';
 final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -21034,7 +21177,8 @@ class WorkoutPlanEnrolmentByIdQuery extends GraphQLQuery<
   final DocumentNode document = WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'workoutPlanEnrolmentById';
+  final String operationName =
+      WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final WorkoutPlanEnrolmentByIdArguments variables;
@@ -21065,6 +21209,8 @@ class ClearScheduleForPlanEnrolmentArguments extends JsonSerializable
       _$ClearScheduleForPlanEnrolmentArgumentsToJson(this);
 }
 
+final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'clearScheduleForPlanEnrolment';
 final CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -21216,7 +21362,8 @@ class ClearScheduleForPlanEnrolmentMutation extends GraphQLQuery<
       CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'clearScheduleForPlanEnrolment';
+  final String operationName =
+      CLEAR_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClearScheduleForPlanEnrolmentArguments variables;
@@ -21247,6 +21394,8 @@ class CreateWorkoutPlanEnrolmentArguments extends JsonSerializable
       _$CreateWorkoutPlanEnrolmentArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutPlanEnrolment';
 final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -22389,7 +22538,8 @@ class CreateWorkoutPlanEnrolmentMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutPlanEnrolment';
+  final String operationName =
+      CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutPlanEnrolmentArguments variables;
@@ -22420,6 +22570,8 @@ class DeleteCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
       _$DeleteCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
 }
 
+final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteCompletedWorkoutPlanDayWorkout';
 final DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -22574,7 +22726,8 @@ class DeleteCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
       DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteCompletedWorkoutPlanDayWorkout';
+  final String operationName =
+      DELETE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteCompletedWorkoutPlanDayWorkoutArguments variables;
@@ -22606,6 +22759,8 @@ class ClearWorkoutPlanEnrolmentProgressArguments extends JsonSerializable
       _$ClearWorkoutPlanEnrolmentProgressArgumentsToJson(this);
 }
 
+final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT_OPERATION_NAME =
+    'clearWorkoutPlanEnrolmentProgress';
 final CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -22757,7 +22912,8 @@ class ClearWorkoutPlanEnrolmentProgressMutation extends GraphQLQuery<
       CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'clearWorkoutPlanEnrolmentProgress';
+  final String operationName =
+      CLEAR_WORKOUT_PLAN_ENROLMENT_PROGRESS_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClearWorkoutPlanEnrolmentProgressArguments variables;
@@ -22788,6 +22944,8 @@ class CreateScheduleForPlanEnrolmentArguments extends JsonSerializable
       _$CreateScheduleForPlanEnrolmentArgumentsToJson(this);
 }
 
+final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createScheduleForPlanEnrolment';
 final CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -22941,7 +23099,8 @@ class CreateScheduleForPlanEnrolmentMutation extends GraphQLQuery<
       CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createScheduleForPlanEnrolment';
+  final String operationName =
+      CREATE_SCHEDULE_FOR_PLAN_ENROLMENT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateScheduleForPlanEnrolmentArguments variables;
@@ -22972,6 +23131,8 @@ class CreateCompletedWorkoutPlanDayWorkoutArguments extends JsonSerializable
       _$CreateCompletedWorkoutPlanDayWorkoutArgumentsToJson(this);
 }
 
+final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createCompletedWorkoutPlanDayWorkout';
 final CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -23126,7 +23287,8 @@ class CreateCompletedWorkoutPlanDayWorkoutMutation extends GraphQLQuery<
       CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createCompletedWorkoutPlanDayWorkout';
+  final String operationName =
+      CREATE_COMPLETED_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateCompletedWorkoutPlanDayWorkoutArguments variables;
@@ -23158,6 +23320,8 @@ class MoveWorkoutPlanDayToAnotherDayArguments extends JsonSerializable
       _$MoveWorkoutPlanDayToAnotherDayArgumentsToJson(this);
 }
 
+final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT_OPERATION_NAME =
+    'moveWorkoutPlanDayToAnotherDay';
 final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -23995,7 +24159,8 @@ class MoveWorkoutPlanDayToAnotherDayMutation extends GraphQLQuery<
       MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'moveWorkoutPlanDayToAnotherDay';
+  final String operationName =
+      MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final MoveWorkoutPlanDayToAnotherDayArguments variables;
@@ -24026,6 +24191,8 @@ class DeleteWorkoutPlanDaysByIdArguments extends JsonSerializable
       _$DeleteWorkoutPlanDaysByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_PLAN_DAYS_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutPlanDaysById';
 final DELETE_WORKOUT_PLAN_DAYS_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -24065,7 +24232,8 @@ class DeleteWorkoutPlanDaysByIdMutation extends GraphQLQuery<
       DELETE_WORKOUT_PLAN_DAYS_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutPlanDaysById';
+  final String operationName =
+      DELETE_WORKOUT_PLAN_DAYS_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutPlanDaysByIdArguments variables;
@@ -24094,6 +24262,8 @@ class UpdateWorkoutPlanDayArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UpdateWorkoutPlanDayArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutPlanDay';
 final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -24928,7 +25098,8 @@ class UpdateWorkoutPlanDayMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutPlanDay';
+  final String operationName =
+      UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutPlanDayArguments variables;
@@ -24959,6 +25130,8 @@ class CreateWorkoutPlanDayWithWorkoutArguments extends JsonSerializable
       _$CreateWorkoutPlanDayWithWorkoutArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutPlanDayWithWorkout';
 final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -25796,7 +25969,8 @@ class CreateWorkoutPlanDayWithWorkoutMutation extends GraphQLQuery<
       CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutPlanDayWithWorkout';
+  final String operationName =
+      CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutPlanDayWithWorkoutArguments variables;
@@ -25827,6 +26001,8 @@ class CopyWorkoutPlanDayToAnotherDayArguments extends JsonSerializable
       _$CopyWorkoutPlanDayToAnotherDayArgumentsToJson(this);
 }
 
+final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT_OPERATION_NAME =
+    'copyWorkoutPlanDayToAnotherDay';
 final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -26664,7 +26840,8 @@ class CopyWorkoutPlanDayToAnotherDayMutation extends GraphQLQuery<
       COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'copyWorkoutPlanDayToAnotherDay';
+  final String operationName =
+      COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CopyWorkoutPlanDayToAnotherDayArguments variables;
@@ -26692,6 +26869,7 @@ class LoggedWorkoutByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$LoggedWorkoutByIdArgumentsToJson(this);
 }
 
+final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'loggedWorkoutById';
 final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -27384,7 +27562,8 @@ class LoggedWorkoutByIdQuery
   final DocumentNode document = LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'loggedWorkoutById';
+  final String operationName =
+      LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final LoggedWorkoutByIdArguments variables;
@@ -27415,6 +27594,8 @@ class DeleteLoggedWorkoutByIdArguments extends JsonSerializable
       _$DeleteLoggedWorkoutByIdArgumentsToJson(this);
 }
 
+final DELETE_LOGGED_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteLoggedWorkoutById';
 final DELETE_LOGGED_WORKOUT_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -27450,7 +27631,8 @@ class DeleteLoggedWorkoutByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_LOGGED_WORKOUT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteLoggedWorkoutById';
+  final String operationName =
+      DELETE_LOGGED_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteLoggedWorkoutByIdArguments variables;
@@ -27481,6 +27663,8 @@ class LifetimeLogStatsSummaryArguments extends JsonSerializable
       _$LifetimeLogStatsSummaryArgumentsToJson(this);
 }
 
+final LIFETIME_LOG_STATS_SUMMARY_QUERY_DOCUMENT_OPERATION_NAME =
+    'lifetimeLogStatsSummary';
 final LIFETIME_LOG_STATS_SUMMARY_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -27546,7 +27730,8 @@ class LifetimeLogStatsSummaryQuery extends GraphQLQuery<
   final DocumentNode document = LIFETIME_LOG_STATS_SUMMARY_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'lifetimeLogStatsSummary';
+  final String operationName =
+      LIFETIME_LOG_STATS_SUMMARY_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final LifetimeLogStatsSummaryArguments variables;
@@ -27558,6 +27743,7 @@ class LifetimeLogStatsSummaryQuery extends GraphQLQuery<
       LifetimeLogStatsSummary$Query.fromJson(json);
 }
 
+final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME = 'userLoggedWorkouts';
 final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -28240,7 +28426,8 @@ class UserLoggedWorkoutsQuery
   final DocumentNode document = USER_LOGGED_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userLoggedWorkouts';
+  final String operationName =
+      USER_LOGGED_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -28266,6 +28453,8 @@ class UpdateLoggedWorkoutArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UpdateLoggedWorkoutArgumentsToJson(this);
 }
 
+final UPDATE_LOGGED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateLoggedWorkout';
 final UPDATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -28349,7 +28538,8 @@ class UpdateLoggedWorkoutMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_LOGGED_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateLoggedWorkout';
+  final String operationName =
+      UPDATE_LOGGED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateLoggedWorkoutArguments variables;
@@ -28378,6 +28568,8 @@ class CreateLoggedWorkoutArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CreateLoggedWorkoutArgumentsToJson(this);
 }
 
+final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createLoggedWorkout';
 final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -29072,7 +29264,8 @@ class CreateLoggedWorkoutMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createLoggedWorkout';
+  final String operationName =
+      CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateLoggedWorkoutArguments variables;
@@ -29103,6 +29296,8 @@ class DeleteLoggedWorkoutMoveArguments extends JsonSerializable
       _$DeleteLoggedWorkoutMoveArgumentsToJson(this);
 }
 
+final DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteLoggedWorkoutMove';
 final DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -29137,7 +29332,8 @@ class DeleteLoggedWorkoutMoveMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteLoggedWorkoutMove';
+  final String operationName =
+      DELETE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteLoggedWorkoutMoveArguments variables;
@@ -29168,6 +29364,8 @@ class UpdateLoggedWorkoutMoveArguments extends JsonSerializable
       _$UpdateLoggedWorkoutMoveArgumentsToJson(this);
 }
 
+final UPDATE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateLoggedWorkoutMove';
 final UPDATE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -29269,7 +29467,8 @@ class UpdateLoggedWorkoutMoveMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateLoggedWorkoutMove';
+  final String operationName =
+      UPDATE_LOGGED_WORKOUT_MOVE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateLoggedWorkoutMoveArguments variables;
@@ -29300,6 +29499,8 @@ class UpdateLoggedWorkoutSectionArguments extends JsonSerializable
       _$UpdateLoggedWorkoutSectionArgumentsToJson(this);
 }
 
+final UPDATE_LOGGED_WORKOUT_SECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateLoggedWorkoutSection';
 final UPDATE_LOGGED_WORKOUT_SECTION_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -29384,7 +29585,8 @@ class UpdateLoggedWorkoutSectionMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_LOGGED_WORKOUT_SECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateLoggedWorkoutSection';
+  final String operationName =
+      UPDATE_LOGGED_WORKOUT_SECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateLoggedWorkoutSectionArguments variables;
@@ -29414,6 +29616,8 @@ class UpdateLoggedWorkoutSetArguments extends JsonSerializable
       _$UpdateLoggedWorkoutSetArgumentsToJson(this);
 }
 
+final UPDATE_LOGGED_WORKOUT_SET_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateLoggedWorkoutSet';
 final UPDATE_LOGGED_WORKOUT_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -29491,7 +29695,8 @@ class UpdateLoggedWorkoutSetMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_LOGGED_WORKOUT_SET_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateLoggedWorkoutSet';
+  final String operationName =
+      UPDATE_LOGGED_WORKOUT_SET_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateLoggedWorkoutSetArguments variables;
@@ -29519,6 +29724,7 @@ class LogCountByWorkoutArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$LogCountByWorkoutArgumentsToJson(this);
 }
 
+final LOG_COUNT_BY_WORKOUT_QUERY_DOCUMENT_OPERATION_NAME = 'logCountByWorkout';
 final LOG_COUNT_BY_WORKOUT_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -29553,7 +29759,8 @@ class LogCountByWorkoutQuery
   final DocumentNode document = LOG_COUNT_BY_WORKOUT_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'logCountByWorkout';
+  final String operationName =
+      LOG_COUNT_BY_WORKOUT_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final LogCountByWorkoutArguments variables;
@@ -29584,6 +29791,8 @@ class DeleteWorkoutPlanReviewByIdArguments extends JsonSerializable
       _$DeleteWorkoutPlanReviewByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_PLAN_REVIEW_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutPlanReviewById';
 final DELETE_WORKOUT_PLAN_REVIEW_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -29621,7 +29830,8 @@ class DeleteWorkoutPlanReviewByIdMutation extends GraphQLQuery<
       DELETE_WORKOUT_PLAN_REVIEW_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutPlanReviewById';
+  final String operationName =
+      DELETE_WORKOUT_PLAN_REVIEW_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutPlanReviewByIdArguments variables;
@@ -29652,6 +29862,8 @@ class UpdateWorkoutPlanReviewArguments extends JsonSerializable
       _$UpdateWorkoutPlanReviewArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutPlanReview';
 final UPDATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -29770,7 +29982,8 @@ class UpdateWorkoutPlanReviewMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutPlanReview';
+  final String operationName =
+      UPDATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutPlanReviewArguments variables;
@@ -29801,6 +30014,8 @@ class CreateWorkoutPlanReviewArguments extends JsonSerializable
       _$CreateWorkoutPlanReviewArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutPlanReview';
 final CREATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -29919,7 +30134,8 @@ class CreateWorkoutPlanReviewMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutPlanReview';
+  final String operationName =
+      CREATE_WORKOUT_PLAN_REVIEW_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutPlanReviewArguments variables;
@@ -29950,6 +30166,8 @@ class CreateUserExerciseLoadTrackerArguments extends JsonSerializable
       _$CreateUserExerciseLoadTrackerArgumentsToJson(this);
 }
 
+final CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createUserExerciseLoadTracker';
 final CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -30271,7 +30489,8 @@ class CreateUserExerciseLoadTrackerMutation extends GraphQLQuery<
       CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createUserExerciseLoadTracker';
+  final String operationName =
+      CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateUserExerciseLoadTrackerArguments variables;
@@ -30301,6 +30520,8 @@ class CreateFitnessBenchmarkArguments extends JsonSerializable
       _$CreateFitnessBenchmarkArgumentsToJson(this);
 }
 
+final CREATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createFitnessBenchmark';
 final CREATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -30524,7 +30745,8 @@ class CreateFitnessBenchmarkMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createFitnessBenchmark';
+  final String operationName =
+      CREATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateFitnessBenchmarkArguments variables;
@@ -30555,6 +30777,8 @@ class CreateFitnessBenchmarkScoreArguments extends JsonSerializable
       _$CreateFitnessBenchmarkScoreArgumentsToJson(this);
 }
 
+final CREATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createFitnessBenchmarkScore';
 final CREATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -30781,7 +31005,8 @@ class CreateFitnessBenchmarkScoreMutation extends GraphQLQuery<
       CREATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createFitnessBenchmarkScore';
+  final String operationName =
+      CREATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateFitnessBenchmarkScoreArguments variables;
@@ -30812,6 +31037,8 @@ class DeleteUserExerciseLoadTrackerArguments extends JsonSerializable
       _$DeleteUserExerciseLoadTrackerArgumentsToJson(this);
 }
 
+final DELETE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteUserExerciseLoadTracker';
 final DELETE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -30849,7 +31076,8 @@ class DeleteUserExerciseLoadTrackerMutation extends GraphQLQuery<
       DELETE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteUserExerciseLoadTracker';
+  final String operationName =
+      DELETE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteUserExerciseLoadTrackerArguments variables;
@@ -30879,6 +31107,8 @@ class UpdateFitnessBenchmarkArguments extends JsonSerializable
       _$UpdateFitnessBenchmarkArgumentsToJson(this);
 }
 
+final UPDATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateFitnessBenchmark';
 final UPDATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -31102,7 +31332,8 @@ class UpdateFitnessBenchmarkMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateFitnessBenchmark';
+  final String operationName =
+      UPDATE_FITNESS_BENCHMARK_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateFitnessBenchmarkArguments variables;
@@ -31132,6 +31363,8 @@ class DeleteFitnessBenchmarkArguments extends JsonSerializable
       _$DeleteFitnessBenchmarkArgumentsToJson(this);
 }
 
+final DELETE_FITNESS_BENCHMARK_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteFitnessBenchmark';
 final DELETE_FITNESS_BENCHMARK_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -31166,7 +31399,8 @@ class DeleteFitnessBenchmarkMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_FITNESS_BENCHMARK_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteFitnessBenchmark';
+  final String operationName =
+      DELETE_FITNESS_BENCHMARK_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteFitnessBenchmarkArguments variables;
@@ -31197,6 +31431,8 @@ class DeleteFitnessBenchmarkScoreArguments extends JsonSerializable
       _$DeleteFitnessBenchmarkScoreArgumentsToJson(this);
 }
 
+final DELETE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteFitnessBenchmarkScore';
 final DELETE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -31421,7 +31657,8 @@ class DeleteFitnessBenchmarkScoreMutation extends GraphQLQuery<
       DELETE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteFitnessBenchmarkScore';
+  final String operationName =
+      DELETE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteFitnessBenchmarkScoreArguments variables;
@@ -31452,6 +31689,8 @@ class UpdateFitnessBenchmarkScoreArguments extends JsonSerializable
       _$UpdateFitnessBenchmarkScoreArgumentsToJson(this);
 }
 
+final UPDATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateFitnessBenchmarkScore';
 final UPDATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -31678,7 +31917,8 @@ class UpdateFitnessBenchmarkScoreMutation extends GraphQLQuery<
       UPDATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateFitnessBenchmarkScore';
+  final String operationName =
+      UPDATE_FITNESS_BENCHMARK_SCORE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateFitnessBenchmarkScoreArguments variables;
@@ -31690,6 +31930,8 @@ class UpdateFitnessBenchmarkScoreMutation extends GraphQLQuery<
       UpdateFitnessBenchmarkScore$Mutation.fromJson(json);
 }
 
+final USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userExerciseLoadTrackers';
 final USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -31996,7 +32238,8 @@ class UserExerciseLoadTrackersQuery
   final DocumentNode document = USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userExerciseLoadTrackers';
+  final String operationName =
+      USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -32005,6 +32248,8 @@ class UserExerciseLoadTrackersQuery
       UserExerciseLoadTrackers$Query.fromJson(json);
 }
 
+final USER_FITNESS_BENCHMARKS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userFitnessBenchmarks';
 final USER_FITNESS_BENCHMARKS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -32216,7 +32461,8 @@ class UserFitnessBenchmarksQuery
   final DocumentNode document = USER_FITNESS_BENCHMARKS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userFitnessBenchmarks';
+  final String operationName =
+      USER_FITNESS_BENCHMARKS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -32225,6 +32471,8 @@ class UserFitnessBenchmarksQuery
       UserFitnessBenchmarks$Query.fromJson(json);
 }
 
+final USER_BENCHMARK_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userBenchmarkWorkouts';
 final USER_BENCHMARK_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -32395,7 +32643,8 @@ class UserBenchmarkWorkoutsQuery
   final DocumentNode document = USER_BENCHMARK_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userBenchmarkWorkouts';
+  final String operationName =
+      USER_BENCHMARK_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -32424,6 +32673,8 @@ class RemoveWorkoutFromClubArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$RemoveWorkoutFromClubArgumentsToJson(this);
 }
 
+final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeWorkoutFromClub';
 final REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -32655,7 +32906,8 @@ class RemoveWorkoutFromClubMutation extends GraphQLQuery<
   final DocumentNode document = REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeWorkoutFromClub';
+  final String operationName =
+      REMOVE_WORKOUT_FROM_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveWorkoutFromClubArguments variables;
@@ -32689,6 +32941,8 @@ class RemoveWorkoutPlanFromClubArguments extends JsonSerializable
       _$RemoveWorkoutPlanFromClubArgumentsToJson(this);
 }
 
+final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeWorkoutPlanFromClub';
 final REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -32950,7 +33204,8 @@ class RemoveWorkoutPlanFromClubMutation extends GraphQLQuery<
   final DocumentNode document = REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeWorkoutPlanFromClub';
+  final String operationName =
+      REMOVE_WORKOUT_PLAN_FROM_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveWorkoutPlanFromClubArguments variables;
@@ -32980,6 +33235,7 @@ class AddWorkoutToClubArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$AddWorkoutToClubArgumentsToJson(this);
 }
 
+final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT_OPERATION_NAME = 'addWorkoutToClub';
 final ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -33211,7 +33467,8 @@ class AddWorkoutToClubMutation
   final DocumentNode document = ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'addWorkoutToClub';
+  final String operationName =
+      ADD_WORKOUT_TO_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final AddWorkoutToClubArguments variables;
@@ -33243,6 +33500,8 @@ class AddWorkoutPlanToClubArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$AddWorkoutPlanToClubArgumentsToJson(this);
 }
 
+final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT_OPERATION_NAME =
+    'addWorkoutPlanToClub';
 final ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -33503,7 +33762,8 @@ class AddWorkoutPlanToClubMutation extends GraphQLQuery<
   final DocumentNode document = ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'addWorkoutPlanToClub';
+  final String operationName =
+      ADD_WORKOUT_PLAN_TO_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final AddWorkoutPlanToClubArguments variables;
@@ -33531,6 +33791,7 @@ class ClubWorkoutsArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubWorkoutsArgumentsToJson(this);
 }
 
+final CLUB_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME = 'clubWorkouts';
 final CLUB_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -33754,7 +34015,7 @@ class ClubWorkoutsQuery
   final DocumentNode document = CLUB_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubWorkouts';
+  final String operationName = CLUB_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubWorkoutsArguments variables;
@@ -33782,6 +34043,7 @@ class ClubWorkoutPlansArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubWorkoutPlansArgumentsToJson(this);
 }
 
+final CLUB_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME = 'clubWorkoutPlans';
 final CLUB_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -34034,7 +34296,7 @@ class ClubWorkoutPlansQuery
   final DocumentNode document = CLUB_WORKOUT_PLANS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubWorkoutPlans';
+  final String operationName = CLUB_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubWorkoutPlansArguments variables;
@@ -34046,6 +34308,7 @@ class ClubWorkoutPlansQuery
       ClubWorkoutPlans$Query.fromJson(json);
 }
 
+final USER_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME = 'userWorkoutPlans';
 final USER_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -34259,7 +34522,7 @@ class UserWorkoutPlansQuery
   final DocumentNode document = USER_WORKOUT_PLANS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userWorkoutPlans';
+  final String operationName = USER_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -34288,6 +34551,7 @@ class PublicWorkoutPlansArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$PublicWorkoutPlansArgumentsToJson(this);
 }
 
+final PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME = 'publicWorkoutPlans';
 final PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -34529,7 +34793,8 @@ class PublicWorkoutPlansQuery extends GraphQLQuery<PublicWorkoutPlans$Query,
   final DocumentNode document = PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'publicWorkoutPlans';
+  final String operationName =
+      PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final PublicWorkoutPlansArguments variables;
@@ -34557,6 +34822,7 @@ class WorkoutPlanByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$WorkoutPlanByIdArgumentsToJson(this);
 }
 
+final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'workoutPlanById';
 final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -35652,7 +35918,7 @@ class WorkoutPlanByIdQuery
   final DocumentNode document = WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'workoutPlanById';
+  final String operationName = WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final WorkoutPlanByIdArguments variables;
@@ -35680,6 +35946,8 @@ class UpdateWorkoutPlanArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateWorkoutPlanArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_PLAN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutPlan';
 final UPDATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -35846,7 +36114,8 @@ class UpdateWorkoutPlanMutation extends GraphQLQuery<UpdateWorkoutPlan$Mutation,
   final DocumentNode document = UPDATE_WORKOUT_PLAN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutPlan';
+  final String operationName =
+      UPDATE_WORKOUT_PLAN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutPlanArguments variables;
@@ -35876,6 +36145,8 @@ class UserPublicWorkoutPlansArguments extends JsonSerializable
       _$UserPublicWorkoutPlansArgumentsToJson(this);
 }
 
+final USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userPublicWorkoutPlans';
 final USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -36099,7 +36370,8 @@ class UserPublicWorkoutPlansQuery extends GraphQLQuery<
   final DocumentNode document = USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userPublicWorkoutPlans';
+  final String operationName =
+      USER_PUBLIC_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserPublicWorkoutPlansArguments variables;
@@ -36127,6 +36399,8 @@ class CreateWorkoutPlanArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateWorkoutPlanArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutPlan';
 final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -37224,7 +37498,8 @@ class CreateWorkoutPlanMutation extends GraphQLQuery<CreateWorkoutPlan$Mutation,
   final DocumentNode document = CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutPlan';
+  final String operationName =
+      CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutPlanArguments variables;
@@ -37252,6 +37527,7 @@ class UserAvatarByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserAvatarByIdArgumentsToJson(this);
 }
 
+final USER_AVATAR_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'userAvatarById';
 final USER_AVATAR_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -37321,7 +37597,7 @@ class UserAvatarByIdQuery
   final DocumentNode document = USER_AVATAR_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userAvatarById';
+  final String operationName = USER_AVATAR_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserAvatarByIdArguments variables;
@@ -37351,6 +37627,7 @@ class UserProfilesArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserProfilesArgumentsToJson(this);
 }
 
+final USER_PROFILES_QUERY_DOCUMENT_OPERATION_NAME = 'userProfiles';
 final USER_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -37623,7 +37900,7 @@ class UserProfilesQuery
   final DocumentNode document = USER_PROFILES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userProfiles';
+  final String operationName = USER_PROFILES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserProfilesArguments variables;
@@ -37654,6 +37931,8 @@ class UnarchiveWorkoutPlanByIdArguments extends JsonSerializable
       _$UnarchiveWorkoutPlanByIdArgumentsToJson(this);
 }
 
+final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'unarchiveWorkoutPlanById';
 final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -38750,7 +39029,8 @@ class UnarchiveWorkoutPlanByIdMutation extends GraphQLQuery<
   final DocumentNode document = UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'unarchiveWorkoutPlanById';
+  final String operationName =
+      UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UnarchiveWorkoutPlanByIdArguments variables;
@@ -38762,6 +39042,8 @@ class UnarchiveWorkoutPlanByIdMutation extends GraphQLQuery<
       UnarchiveWorkoutPlanById$Mutation.fromJson(json);
 }
 
+final USER_ARCHIVED_CUSTOM_MOVES_QUERY_DOCUMENT_OPERATION_NAME =
+    'userArchivedCustomMoves';
 final USER_ARCHIVED_CUSTOM_MOVES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -38820,7 +39102,8 @@ class UserArchivedCustomMovesQuery
   final DocumentNode document = USER_ARCHIVED_CUSTOM_MOVES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userArchivedCustomMoves';
+  final String operationName =
+      USER_ARCHIVED_CUSTOM_MOVES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -38848,6 +39131,8 @@ class UnarchiveCustomMoveByIdArguments extends JsonSerializable
       _$UnarchiveCustomMoveByIdArgumentsToJson(this);
 }
 
+final UNARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'unarchiveCustomMoveById';
 final UNARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -39103,7 +39388,8 @@ class UnarchiveCustomMoveByIdMutation extends GraphQLQuery<
   final DocumentNode document = UNARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'unarchiveCustomMoveById';
+  final String operationName =
+      UNARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UnarchiveCustomMoveByIdArguments variables;
@@ -39133,6 +39419,8 @@ class ArchiveWorkoutPlanByIdArguments extends JsonSerializable
       _$ArchiveWorkoutPlanByIdArgumentsToJson(this);
 }
 
+final ARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'archiveWorkoutPlanById';
 final ARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -39202,7 +39490,8 @@ class ArchiveWorkoutPlanByIdMutation extends GraphQLQuery<
   final DocumentNode document = ARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'archiveWorkoutPlanById';
+  final String operationName =
+      ARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ArchiveWorkoutPlanByIdArguments variables;
@@ -39231,6 +39520,8 @@ class UnarchiveWorkoutByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UnarchiveWorkoutByIdArgumentsToJson(this);
 }
 
+final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'unarchiveWorkoutById';
 final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -39978,7 +40269,8 @@ class UnarchiveWorkoutByIdMutation extends GraphQLQuery<
   final DocumentNode document = UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'unarchiveWorkoutById';
+  final String operationName =
+      UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UnarchiveWorkoutByIdArguments variables;
@@ -39990,6 +40282,8 @@ class UnarchiveWorkoutByIdMutation extends GraphQLQuery<
       UnarchiveWorkoutById$Mutation.fromJson(json);
 }
 
+final USER_ARCHIVED_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userArchivedWorkoutPlans';
 final USER_ARCHIVED_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -40049,7 +40343,8 @@ class UserArchivedWorkoutPlansQuery
   final DocumentNode document = USER_ARCHIVED_WORKOUT_PLANS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userArchivedWorkoutPlans';
+  final String operationName =
+      USER_ARCHIVED_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -40058,6 +40353,8 @@ class UserArchivedWorkoutPlansQuery
       UserArchivedWorkoutPlans$Query.fromJson(json);
 }
 
+final USER_ARCHIVED_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userArchivedWorkouts';
 final USER_ARCHIVED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -40117,7 +40414,8 @@ class UserArchivedWorkoutsQuery
   final DocumentNode document = USER_ARCHIVED_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userArchivedWorkouts';
+  final String operationName =
+      USER_ARCHIVED_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -40142,6 +40440,8 @@ class ArchiveWorkoutByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ArchiveWorkoutByIdArgumentsToJson(this);
 }
 
+final ARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'archiveWorkoutById';
 final ARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -40211,7 +40511,8 @@ class ArchiveWorkoutByIdMutation extends GraphQLQuery<
   final DocumentNode document = ARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'archiveWorkoutById';
+  final String operationName =
+      ARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ArchiveWorkoutByIdArguments variables;
@@ -40240,6 +40541,8 @@ class ArchiveCustomMoveByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$ArchiveCustomMoveByIdArgumentsToJson(this);
 }
 
+final ARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'archiveCustomMoveById';
 final ARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -40308,7 +40611,8 @@ class ArchiveCustomMoveByIdMutation extends GraphQLQuery<
   final DocumentNode document = ARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'archiveCustomMoveById';
+  final String operationName =
+      ARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ArchiveCustomMoveByIdArguments variables;
@@ -40336,6 +40640,7 @@ class UserAvatarsArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserAvatarsArgumentsToJson(this);
 }
 
+final USER_AVATARS_QUERY_DOCUMENT_OPERATION_NAME = 'userAvatars';
 final USER_AVATARS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -40408,7 +40713,7 @@ class UserAvatarsQuery
   final DocumentNode document = USER_AVATARS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userAvatars';
+  final String operationName = USER_AVATARS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserAvatarsArguments variables;
@@ -40420,6 +40725,7 @@ class UserAvatarsQuery
       UserAvatars$Query.fromJson(json);
 }
 
+final CUSTOM_MOVES_QUERY_DOCUMENT_OPERATION_NAME = 'customMoves';
 final CUSTOM_MOVES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -40664,7 +40970,7 @@ class CustomMovesQuery
   final DocumentNode document = CUSTOM_MOVES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'customMoves';
+  final String operationName = CUSTOM_MOVES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -40689,6 +40995,7 @@ class CreateMoveArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateMoveArgumentsToJson(this);
 }
 
+final CREATE_MOVE_MUTATION_DOCUMENT_OPERATION_NAME = 'createMove';
 final CREATE_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -40944,7 +41251,7 @@ class CreateMoveMutation
   final DocumentNode document = CREATE_MOVE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createMove';
+  final String operationName = CREATE_MOVE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateMoveArguments variables;
@@ -40972,6 +41279,7 @@ class UpdateMoveArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateMoveArgumentsToJson(this);
 }
 
+final UPDATE_MOVE_MUTATION_DOCUMENT_OPERATION_NAME = 'updateMove';
 final UPDATE_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -41227,7 +41535,7 @@ class UpdateMoveMutation
   final DocumentNode document = UPDATE_MOVE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateMove';
+  final String operationName = UPDATE_MOVE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateMoveArguments variables;
@@ -41255,6 +41563,7 @@ class DeleteMoveByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$DeleteMoveByIdArgumentsToJson(this);
 }
 
+final DELETE_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME = 'deleteMoveById';
 final DELETE_MOVE_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -41289,7 +41598,8 @@ class DeleteMoveByIdMutation
   final DocumentNode document = DELETE_MOVE_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteMoveById';
+  final String operationName =
+      DELETE_MOVE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteMoveByIdArguments variables;
@@ -41318,6 +41628,8 @@ class DeleteGymProfileByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteGymProfileByIdArgumentsToJson(this);
 }
 
+final DELETE_GYM_PROFILE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteGymProfileById';
 final DELETE_GYM_PROFILE_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -41352,7 +41664,8 @@ class DeleteGymProfileByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_GYM_PROFILE_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteGymProfileById';
+  final String operationName =
+      DELETE_GYM_PROFILE_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteGymProfileByIdArguments variables;
@@ -41380,6 +41693,7 @@ class CreateGymProfileArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateGymProfileArgumentsToJson(this);
 }
 
+final CREATE_GYM_PROFILE_MUTATION_DOCUMENT_OPERATION_NAME = 'createGymProfile';
 final CREATE_GYM_PROFILE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -41492,7 +41806,8 @@ class CreateGymProfileMutation
   final DocumentNode document = CREATE_GYM_PROFILE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createGymProfile';
+  final String operationName =
+      CREATE_GYM_PROFILE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateGymProfileArguments variables;
@@ -41504,6 +41819,7 @@ class CreateGymProfileMutation
       CreateGymProfile$Mutation.fromJson(json);
 }
 
+final GYM_PROFILES_QUERY_DOCUMENT_OPERATION_NAME = 'gymProfiles';
 final GYM_PROFILES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -41604,7 +41920,7 @@ class GymProfilesQuery
   final DocumentNode document = GYM_PROFILES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'gymProfiles';
+  final String operationName = GYM_PROFILES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -41629,6 +41945,7 @@ class UpdateGymProfileArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateGymProfileArgumentsToJson(this);
 }
 
+final UPDATE_GYM_PROFILE_MUTATION_DOCUMENT_OPERATION_NAME = 'updateGymProfile';
 final UPDATE_GYM_PROFILE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -41741,7 +42058,8 @@ class UpdateGymProfileMutation
   final DocumentNode document = UPDATE_GYM_PROFILE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateGymProfile';
+  final String operationName =
+      UPDATE_GYM_PROFILE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateGymProfileArguments variables;
@@ -41769,6 +42087,8 @@ class UpdateUserProfileArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateUserProfileArgumentsToJson(this);
 }
 
+final UPDATE_USER_PROFILE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateUserProfile';
 final UPDATE_USER_PROFILE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -41955,7 +42275,8 @@ class UpdateUserProfileMutation extends GraphQLQuery<UpdateUserProfile$Mutation,
   final DocumentNode document = UPDATE_USER_PROFILE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateUserProfile';
+  final String operationName =
+      UPDATE_USER_PROFILE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateUserProfileArguments variables;
@@ -41983,6 +42304,7 @@ class UserProfileArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserProfileArgumentsToJson(this);
 }
 
+final USER_PROFILE_QUERY_DOCUMENT_OPERATION_NAME = 'userProfile';
 final USER_PROFILE_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -42463,7 +42785,7 @@ class UserProfileQuery
   final DocumentNode document = USER_PROFILE_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userProfile';
+  final String operationName = USER_PROFILE_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserProfileArguments variables;
@@ -42492,6 +42814,8 @@ class DeleteWorkoutTagByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteWorkoutTagByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_TAG_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutTagById';
 final DELETE_WORKOUT_TAG_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -42526,7 +42850,8 @@ class DeleteWorkoutTagByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_WORKOUT_TAG_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutTagById';
+  final String operationName =
+      DELETE_WORKOUT_TAG_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutTagByIdArguments variables;
@@ -42554,6 +42879,7 @@ class UpdateWorkoutTagArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateWorkoutTagArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_TAG_MUTATION_DOCUMENT_OPERATION_NAME = 'updateWorkoutTag';
 final UPDATE_WORKOUT_TAG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -42619,7 +42945,8 @@ class UpdateWorkoutTagMutation
   final DocumentNode document = UPDATE_WORKOUT_TAG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutTag';
+  final String operationName =
+      UPDATE_WORKOUT_TAG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutTagArguments variables;
@@ -42631,6 +42958,7 @@ class UpdateWorkoutTagMutation
       UpdateWorkoutTag$Mutation.fromJson(json);
 }
 
+final USER_WORKOUT_TAGS_QUERY_DOCUMENT_OPERATION_NAME = 'userWorkoutTags';
 final USER_WORKOUT_TAGS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -42684,7 +43012,7 @@ class UserWorkoutTagsQuery
   final DocumentNode document = USER_WORKOUT_TAGS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userWorkoutTags';
+  final String operationName = USER_WORKOUT_TAGS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -42709,6 +43037,7 @@ class CreateWorkoutTagArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateWorkoutTagArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_TAG_MUTATION_DOCUMENT_OPERATION_NAME = 'createWorkoutTag';
 final CREATE_WORKOUT_TAG_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -42774,7 +43103,8 @@ class CreateWorkoutTagMutation
   final DocumentNode document = CREATE_WORKOUT_TAG_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutTag';
+  final String operationName =
+      CREATE_WORKOUT_TAG_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutTagArguments variables;
@@ -42786,6 +43116,8 @@ class CreateWorkoutTagMutation
       CreateWorkoutTag$Mutation.fromJson(json);
 }
 
+final USER_RECENTLY_VIEWED_OBJECTS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userRecentlyViewedObjects';
 final USER_RECENTLY_VIEWED_OBJECTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -43268,7 +43600,8 @@ class UserRecentlyViewedObjectsQuery
   final DocumentNode document = USER_RECENTLY_VIEWED_OBJECTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userRecentlyViewedObjects';
+  final String operationName =
+      USER_RECENTLY_VIEWED_OBJECTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -43293,6 +43626,7 @@ class UpdateWorkoutSetArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateWorkoutSetArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_SET_MUTATION_DOCUMENT_OPERATION_NAME = 'updateWorkoutSet';
 final UPDATE_WORKOUT_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -43364,7 +43698,8 @@ class UpdateWorkoutSetMutation
   final DocumentNode document = UPDATE_WORKOUT_SET_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutSet';
+  final String operationName =
+      UPDATE_WORKOUT_SET_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutSetArguments variables;
@@ -43395,6 +43730,8 @@ class CreateWorkoutSetWithWorkoutMovesArguments extends JsonSerializable
       _$CreateWorkoutSetWithWorkoutMovesArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutSetWithWorkoutMoves';
 final CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -43781,7 +44118,8 @@ class CreateWorkoutSetWithWorkoutMovesMutation extends GraphQLQuery<
       CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutSetWithWorkoutMoves';
+  final String operationName =
+      CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutSetWithWorkoutMovesArguments variables;
@@ -43812,6 +44150,8 @@ class DuplicateWorkoutSetByIdArguments extends JsonSerializable
       _$DuplicateWorkoutSetByIdArgumentsToJson(this);
 }
 
+final DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'duplicateWorkoutSetById';
 final DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -44194,7 +44534,8 @@ class DuplicateWorkoutSetByIdMutation extends GraphQLQuery<
   final DocumentNode document = DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'duplicateWorkoutSetById';
+  final String operationName =
+      DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DuplicateWorkoutSetByIdArguments variables;
@@ -44222,6 +44563,8 @@ class ReorderWorkoutSetsArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ReorderWorkoutSetsArgumentsToJson(this);
 }
 
+final REORDER_WORKOUT_SETS_MUTATION_DOCUMENT_OPERATION_NAME =
+    'reorderWorkoutSets';
 final REORDER_WORKOUT_SETS_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -44273,7 +44616,8 @@ class ReorderWorkoutSetsMutation extends GraphQLQuery<
   final DocumentNode document = REORDER_WORKOUT_SETS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'reorderWorkoutSets';
+  final String operationName =
+      REORDER_WORKOUT_SETS_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ReorderWorkoutSetsArguments variables;
@@ -44301,6 +44645,7 @@ class CreateWorkoutSetArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateWorkoutSetArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_SET_MUTATION_DOCUMENT_OPERATION_NAME = 'createWorkoutSet';
 final CREATE_WORKOUT_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -44372,7 +44717,8 @@ class CreateWorkoutSetMutation
   final DocumentNode document = CREATE_WORKOUT_SET_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutSet';
+  final String operationName =
+      CREATE_WORKOUT_SET_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutSetArguments variables;
@@ -44401,6 +44747,8 @@ class DeleteWorkoutSetByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteWorkoutSetByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutSetById';
 final DELETE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -44435,7 +44783,8 @@ class DeleteWorkoutSetByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutSetById';
+  final String operationName =
+      DELETE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutSetByIdArguments variables;
@@ -44447,6 +44796,7 @@ class DeleteWorkoutSetByIdMutation extends GraphQLQuery<
       DeleteWorkoutSetById$Mutation.fromJson(json);
 }
 
+final CORE_DATA_QUERY_DOCUMENT_OPERATION_NAME = 'coreData';
 final CORE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -44925,7 +45275,7 @@ class CoreDataQuery extends GraphQLQuery<CoreData$Query, JsonSerializable> {
   final DocumentNode document = CORE_DATA_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'coreData';
+  final String operationName = CORE_DATA_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -44952,6 +45302,8 @@ class CheckUniqueDisplayNameArguments extends JsonSerializable
       _$CheckUniqueDisplayNameArgumentsToJson(this);
 }
 
+final CHECK_UNIQUE_DISPLAY_NAME_QUERY_DOCUMENT_OPERATION_NAME =
+    'checkUniqueDisplayName';
 final CHECK_UNIQUE_DISPLAY_NAME_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -44987,7 +45339,8 @@ class CheckUniqueDisplayNameQuery extends GraphQLQuery<
   final DocumentNode document = CHECK_UNIQUE_DISPLAY_NAME_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'checkUniqueDisplayName';
+  final String operationName =
+      CHECK_UNIQUE_DISPLAY_NAME_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final CheckUniqueDisplayNameArguments variables;
@@ -45017,6 +45370,8 @@ class TextSearchWorkoutPlansArguments extends JsonSerializable
       _$TextSearchWorkoutPlansArgumentsToJson(this);
 }
 
+final TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME =
+    'textSearchWorkoutPlans';
 final TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -45241,7 +45596,8 @@ class TextSearchWorkoutPlansQuery extends GraphQLQuery<
   final DocumentNode document = TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'textSearchWorkoutPlans';
+  final String operationName =
+      TEXT_SEARCH_WORKOUT_PLANS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final TextSearchWorkoutPlansArguments variables;
@@ -45272,6 +45628,8 @@ class TextSearchWorkoutPlanNamesArguments extends JsonSerializable
       _$TextSearchWorkoutPlanNamesArgumentsToJson(this);
 }
 
+final TEXT_SEARCH_WORKOUT_PLAN_NAMES_QUERY_DOCUMENT_OPERATION_NAME =
+    'textSearchWorkoutPlanNames';
 final TEXT_SEARCH_WORKOUT_PLAN_NAMES_QUERY_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -45327,7 +45685,8 @@ class TextSearchWorkoutPlanNamesQuery extends GraphQLQuery<
   final DocumentNode document = TEXT_SEARCH_WORKOUT_PLAN_NAMES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'textSearchWorkoutPlanNames';
+  final String operationName =
+      TEXT_SEARCH_WORKOUT_PLAN_NAMES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final TextSearchWorkoutPlanNamesArguments variables;
@@ -45355,6 +45714,7 @@ class TextSearchWorkoutsArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$TextSearchWorkoutsArgumentsToJson(this);
 }
 
+final TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME = 'textSearchWorkouts';
 final TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -45550,7 +45910,8 @@ class TextSearchWorkoutsQuery extends GraphQLQuery<TextSearchWorkouts$Query,
   final DocumentNode document = TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'textSearchWorkouts';
+  final String operationName =
+      TEXT_SEARCH_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final TextSearchWorkoutsArguments variables;
@@ -45580,6 +45941,8 @@ class TextSearchWorkoutNamesArguments extends JsonSerializable
       _$TextSearchWorkoutNamesArgumentsToJson(this);
 }
 
+final TEXT_SEARCH_WORKOUT_NAMES_QUERY_DOCUMENT_OPERATION_NAME =
+    'textSearchWorkoutNames';
 final TEXT_SEARCH_WORKOUT_NAMES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -45634,7 +45997,8 @@ class TextSearchWorkoutNamesQuery extends GraphQLQuery<
   final DocumentNode document = TEXT_SEARCH_WORKOUT_NAMES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'textSearchWorkoutNames';
+  final String operationName =
+      TEXT_SEARCH_WORKOUT_NAMES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final TextSearchWorkoutNamesArguments variables;
@@ -45665,6 +46029,8 @@ class MarkAnnouncementUpdateAsSeenArguments extends JsonSerializable
       _$MarkAnnouncementUpdateAsSeenArgumentsToJson(this);
 }
 
+final MARK_ANNOUNCEMENT_UPDATE_AS_SEEN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'markAnnouncementUpdateAsSeen';
 final MARK_ANNOUNCEMENT_UPDATE_AS_SEEN_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -45704,7 +46070,8 @@ class MarkAnnouncementUpdateAsSeenMutation extends GraphQLQuery<
       MARK_ANNOUNCEMENT_UPDATE_AS_SEEN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'markAnnouncementUpdateAsSeen';
+  final String operationName =
+      MARK_ANNOUNCEMENT_UPDATE_AS_SEEN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final MarkAnnouncementUpdateAsSeenArguments variables;
@@ -45716,6 +46083,8 @@ class MarkAnnouncementUpdateAsSeenMutation extends GraphQLQuery<
       MarkAnnouncementUpdateAsSeen$Mutation.fromJson(json);
 }
 
+final ANNOUNCEMENT_UPDATES_QUERY_DOCUMENT_OPERATION_NAME =
+    'announcementUpdates';
 final ANNOUNCEMENT_UPDATES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -45866,7 +46235,8 @@ class AnnouncementUpdatesQuery
   final DocumentNode document = ANNOUNCEMENT_UPDATES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'announcementUpdates';
+  final String operationName =
+      ANNOUNCEMENT_UPDATES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -45892,6 +46262,8 @@ class UpdateWorkoutSectionArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UpdateWorkoutSectionArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_SECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateWorkoutSection';
 final UPDATE_WORKOUT_SECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -46059,7 +46431,8 @@ class UpdateWorkoutSectionMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_WORKOUT_SECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkoutSection';
+  final String operationName =
+      UPDATE_WORKOUT_SECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutSectionArguments variables;
@@ -46088,6 +46461,8 @@ class CreateWorkoutSectionArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CreateWorkoutSectionArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createWorkoutSection';
 final CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -46613,7 +46988,8 @@ class CreateWorkoutSectionMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkoutSection';
+  final String operationName =
+      CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutSectionArguments variables;
@@ -46643,6 +47019,8 @@ class ReorderWorkoutSectionsArguments extends JsonSerializable
       _$ReorderWorkoutSectionsArgumentsToJson(this);
 }
 
+final REORDER_WORKOUT_SECTIONS_MUTATION_DOCUMENT_OPERATION_NAME =
+    'reorderWorkoutSections';
 final REORDER_WORKOUT_SECTIONS_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -46694,7 +47072,8 @@ class ReorderWorkoutSectionsMutation extends GraphQLQuery<
   final DocumentNode document = REORDER_WORKOUT_SECTIONS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'reorderWorkoutSections';
+  final String operationName =
+      REORDER_WORKOUT_SECTIONS_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final ReorderWorkoutSectionsArguments variables;
@@ -46725,6 +47104,8 @@ class DeleteWorkoutSectionByIdArguments extends JsonSerializable
       _$DeleteWorkoutSectionByIdArgumentsToJson(this);
 }
 
+final DELETE_WORKOUT_SECTION_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteWorkoutSectionById';
 final DELETE_WORKOUT_SECTION_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -46760,7 +47141,8 @@ class DeleteWorkoutSectionByIdMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_WORKOUT_SECTION_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteWorkoutSectionById';
+  final String operationName =
+      DELETE_WORKOUT_SECTION_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteWorkoutSectionByIdArguments variables;
@@ -46790,6 +47172,8 @@ class UpdateScheduledWorkoutArguments extends JsonSerializable
       _$UpdateScheduledWorkoutArgumentsToJson(this);
 }
 
+final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateScheduledWorkout';
 final UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -47134,7 +47518,8 @@ class UpdateScheduledWorkoutMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateScheduledWorkout';
+  final String operationName =
+      UPDATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateScheduledWorkoutArguments variables;
@@ -47164,6 +47549,8 @@ class CreateScheduledWorkoutArguments extends JsonSerializable
       _$CreateScheduledWorkoutArgumentsToJson(this);
 }
 
+final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createScheduledWorkout';
 final CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -47508,7 +47895,8 @@ class CreateScheduledWorkoutMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createScheduledWorkout';
+  final String operationName =
+      CREATE_SCHEDULED_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateScheduledWorkoutArguments variables;
@@ -47520,6 +47908,8 @@ class CreateScheduledWorkoutMutation extends GraphQLQuery<
       CreateScheduledWorkout$Mutation.fromJson(json);
 }
 
+final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME =
+    'userScheduledWorkouts';
 final USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -47852,7 +48242,8 @@ class UserScheduledWorkoutsQuery
   final DocumentNode document = USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userScheduledWorkouts';
+  final String operationName =
+      USER_SCHEDULED_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -47880,6 +48271,8 @@ class DeleteScheduledWorkoutByIdArguments extends JsonSerializable
       _$DeleteScheduledWorkoutByIdArgumentsToJson(this);
 }
 
+final DELETE_SCHEDULED_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteScheduledWorkoutById';
 final DELETE_SCHEDULED_WORKOUT_BY_ID_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -47916,7 +48309,8 @@ class DeleteScheduledWorkoutByIdMutation extends GraphQLQuery<
       DELETE_SCHEDULED_WORKOUT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteScheduledWorkoutById';
+  final String operationName =
+      DELETE_SCHEDULED_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteScheduledWorkoutByIdArguments variables;
@@ -47950,6 +48344,8 @@ class CreateClubMembersFeedPostArguments extends JsonSerializable
       _$CreateClubMembersFeedPostArgumentsToJson(this);
 }
 
+final CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createClubMembersFeedPost';
 final CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -48232,7 +48628,8 @@ class CreateClubMembersFeedPostMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createClubMembersFeedPost';
+  final String operationName =
+      CREATE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateClubMembersFeedPostArguments variables;
@@ -48266,6 +48663,8 @@ class ClubMembersFeedPostsArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$ClubMembersFeedPostsArgumentsToJson(this);
 }
 
+final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT_OPERATION_NAME =
+    'clubMembersFeedPosts';
 final CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -48553,7 +48952,8 @@ class ClubMembersFeedPostsQuery extends GraphQLQuery<ClubMembersFeedPosts$Query,
   final DocumentNode document = CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubMembersFeedPosts';
+  final String operationName =
+      CLUB_MEMBERS_FEED_POSTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubMembersFeedPostsArguments variables;
@@ -48584,6 +48984,8 @@ class DeleteClubMembersFeedPostArguments extends JsonSerializable
       _$DeleteClubMembersFeedPostArgumentsToJson(this);
 }
 
+final DELETE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteClubMembersFeedPost';
 final DELETE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -48619,7 +49021,8 @@ class DeleteClubMembersFeedPostMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteClubMembersFeedPost';
+  final String operationName =
+      DELETE_CLUB_MEMBERS_FEED_POST_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteClubMembersFeedPostArguments variables;
@@ -48651,6 +49054,7 @@ class PublicWorkoutsArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$PublicWorkoutsArgumentsToJson(this);
 }
 
+final PUBLIC_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME = 'publicWorkouts';
 final PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -48862,7 +49266,7 @@ class PublicWorkoutsQuery
   final DocumentNode document = PUBLIC_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'publicWorkouts';
+  final String operationName = PUBLIC_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final PublicWorkoutsArguments variables;
@@ -48890,6 +49294,7 @@ class UpdateWorkoutArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateWorkoutArgumentsToJson(this);
 }
 
+final UPDATE_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME = 'updateWorkout';
 final UPDATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -49102,7 +49507,7 @@ class UpdateWorkoutMutation
   final DocumentNode document = UPDATE_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateWorkout';
+  final String operationName = UPDATE_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateWorkoutArguments variables;
@@ -49114,6 +49519,7 @@ class UpdateWorkoutMutation
       UpdateWorkout$Mutation.fromJson(json);
 }
 
+final USER_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME = 'userWorkouts';
 final USER_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -49298,7 +49704,7 @@ class UserWorkoutsQuery
   final DocumentNode document = USER_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userWorkouts';
+  final String operationName = USER_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   List<Object?> get props => [document, operationName];
@@ -49324,6 +49730,8 @@ class DuplicateWorkoutByIdArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DuplicateWorkoutByIdArgumentsToJson(this);
 }
 
+final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME =
+    'duplicateWorkoutById';
 final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -50071,7 +50479,8 @@ class DuplicateWorkoutByIdMutation extends GraphQLQuery<
   final DocumentNode document = DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'duplicateWorkoutById';
+  final String operationName =
+      DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DuplicateWorkoutByIdArguments variables;
@@ -50099,6 +50508,7 @@ class UserPublicWorkoutsArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserPublicWorkoutsArgumentsToJson(this);
 }
 
+final USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME = 'userPublicWorkouts';
 final USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -50293,7 +50703,8 @@ class UserPublicWorkoutsQuery extends GraphQLQuery<UserPublicWorkouts$Query,
   final DocumentNode document = USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'userPublicWorkouts';
+  final String operationName =
+      USER_PUBLIC_WORKOUTS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserPublicWorkoutsArguments variables;
@@ -50321,6 +50732,7 @@ class CreateWorkoutArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateWorkoutArgumentsToJson(this);
 }
 
+final CREATE_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME = 'createWorkout';
 final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -51069,7 +51481,7 @@ class CreateWorkoutMutation
   final DocumentNode document = CREATE_WORKOUT_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createWorkout';
+  final String operationName = CREATE_WORKOUT_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateWorkoutArguments variables;
@@ -51097,6 +51509,7 @@ class WorkoutByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$WorkoutByIdArgumentsToJson(this);
 }
 
+final WORKOUT_BY_ID_QUERY_DOCUMENT_OPERATION_NAME = 'workoutById';
 final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -51844,7 +52257,7 @@ class WorkoutByIdQuery
   final DocumentNode document = WORKOUT_BY_ID_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'workoutById';
+  final String operationName = WORKOUT_BY_ID_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final WorkoutByIdArguments variables;
@@ -51873,6 +52286,8 @@ class UpdateClubMemberNoteArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UpdateClubMemberNoteArgumentsToJson(this);
 }
 
+final UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateClubMemberNote';
 final UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -51997,7 +52412,8 @@ class UpdateClubMemberNoteMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateClubMemberNote';
+  final String operationName =
+      UPDATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateClubMemberNoteArguments variables;
@@ -52026,6 +52442,8 @@ class CreateClubMemberNoteArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CreateClubMemberNoteArgumentsToJson(this);
 }
 
+final CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createClubMemberNote';
 final CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -52150,7 +52568,8 @@ class CreateClubMemberNoteMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createClubMemberNote';
+  final String operationName =
+      CREATE_CLUB_MEMBER_NOTE_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateClubMemberNoteArguments variables;
@@ -52185,6 +52604,7 @@ class ClubMemberNotesArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubMemberNotesArgumentsToJson(this);
 }
 
+final CLUB_MEMBER_NOTES_QUERY_DOCUMENT_OPERATION_NAME = 'clubMemberNotes';
 final CLUB_MEMBER_NOTES_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -52331,7 +52751,7 @@ class ClubMemberNotesQuery
   final DocumentNode document = CLUB_MEMBER_NOTES_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubMemberNotes';
+  final String operationName = CLUB_MEMBER_NOTES_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubMemberNotesArguments variables;
@@ -52362,6 +52782,8 @@ class RemoveDocumentFromSkillArguments extends JsonSerializable
       _$RemoveDocumentFromSkillArgumentsToJson(this);
 }
 
+final REMOVE_DOCUMENT_FROM_SKILL_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeDocumentFromSkill';
 final REMOVE_DOCUMENT_FROM_SKILL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -52467,7 +52889,8 @@ class RemoveDocumentFromSkillMutation extends GraphQLQuery<
   final DocumentNode document = REMOVE_DOCUMENT_FROM_SKILL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeDocumentFromSkill';
+  final String operationName =
+      REMOVE_DOCUMENT_FROM_SKILL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveDocumentFromSkillArguments variables;
@@ -52495,6 +52918,7 @@ class DeleteSkillByIdArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$DeleteSkillByIdArgumentsToJson(this);
 }
 
+final DELETE_SKILL_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME = 'deleteSkillById';
 final DELETE_SKILL_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -52529,7 +52953,8 @@ class DeleteSkillByIdMutation
   final DocumentNode document = DELETE_SKILL_BY_ID_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteSkillById';
+  final String operationName =
+      DELETE_SKILL_BY_ID_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteSkillByIdArguments variables;
@@ -52557,6 +52982,8 @@ class AddDocumentToSkillArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$AddDocumentToSkillArgumentsToJson(this);
 }
 
+final ADD_DOCUMENT_TO_SKILL_MUTATION_DOCUMENT_OPERATION_NAME =
+    'addDocumentToSkill';
 final ADD_DOCUMENT_TO_SKILL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -52662,7 +53089,8 @@ class AddDocumentToSkillMutation extends GraphQLQuery<
   final DocumentNode document = ADD_DOCUMENT_TO_SKILL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'addDocumentToSkill';
+  final String operationName =
+      ADD_DOCUMENT_TO_SKILL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final AddDocumentToSkillArguments variables;
@@ -52690,6 +53118,7 @@ class CreateSkillArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$CreateSkillArgumentsToJson(this);
 }
 
+final CREATE_SKILL_MUTATION_DOCUMENT_OPERATION_NAME = 'createSkill';
 final CREATE_SKILL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -52794,7 +53223,7 @@ class CreateSkillMutation
   final DocumentNode document = CREATE_SKILL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createSkill';
+  final String operationName = CREATE_SKILL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateSkillArguments variables;
@@ -52822,6 +53251,7 @@ class UpdateSkillArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UpdateSkillArgumentsToJson(this);
 }
 
+final UPDATE_SKILL_MUTATION_DOCUMENT_OPERATION_NAME = 'updateSkill';
 final UPDATE_SKILL_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -52926,7 +53356,7 @@ class UpdateSkillMutation
   final DocumentNode document = UPDATE_SKILL_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateSkill';
+  final String operationName = UPDATE_SKILL_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateSkillArguments variables;
@@ -52960,6 +53390,8 @@ class RemoveMemberAdminStatusArguments extends JsonSerializable
       _$RemoveMemberAdminStatusArgumentsToJson(this);
 }
 
+final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeMemberAdminStatus';
 final REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -53101,7 +53533,8 @@ class RemoveMemberAdminStatusMutation extends GraphQLQuery<
   final DocumentNode document = REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeMemberAdminStatus';
+  final String operationName =
+      REMOVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveMemberAdminStatusArguments variables;
@@ -53135,6 +53568,8 @@ class AddUserToClubViaInviteTokenArguments extends JsonSerializable
       _$AddUserToClubViaInviteTokenArgumentsToJson(this);
 }
 
+final ADD_USER_TO_CLUB_VIA_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'addUserToClubViaInviteToken';
 final ADD_USER_TO_CLUB_VIA_INVITE_TOKEN_MUTATION_DOCUMENT =
     DocumentNode(definitions: [
   OperationDefinitionNode(
@@ -53181,7 +53616,8 @@ class AddUserToClubViaInviteTokenMutation extends GraphQLQuery<
       ADD_USER_TO_CLUB_VIA_INVITE_TOKEN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'addUserToClubViaInviteToken';
+  final String operationName =
+      ADD_USER_TO_CLUB_VIA_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final AddUserToClubViaInviteTokenArguments variables;
@@ -53209,6 +53645,8 @@ class UserJoinPublicClubArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$UserJoinPublicClubArgumentsToJson(this);
 }
 
+final USER_JOIN_PUBLIC_CLUB_MUTATION_DOCUMENT_OPERATION_NAME =
+    'userJoinPublicClub';
 final USER_JOIN_PUBLIC_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -53243,7 +53681,8 @@ class UserJoinPublicClubMutation extends GraphQLQuery<
   final DocumentNode document = USER_JOIN_PUBLIC_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'userJoinPublicClub';
+  final String operationName =
+      USER_JOIN_PUBLIC_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UserJoinPublicClubArguments variables;
@@ -53272,6 +53711,8 @@ class CheckClubInviteTokenArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CheckClubInviteTokenArgumentsToJson(this);
 }
 
+final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT_OPERATION_NAME =
+    'checkClubInviteToken';
 final CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -53547,7 +53988,8 @@ class CheckClubInviteTokenQuery extends GraphQLQuery<CheckClubInviteToken$Query,
   final DocumentNode document = CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'checkClubInviteToken';
+  final String operationName =
+      CHECK_CLUB_INVITE_TOKEN_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final CheckClubInviteTokenArguments variables;
@@ -53575,6 +54017,7 @@ class ClubInviteTokensArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubInviteTokensArgumentsToJson(this);
 }
 
+final CLUB_INVITE_TOKENS_QUERY_DOCUMENT_OPERATION_NAME = 'clubInviteTokens';
 final CLUB_INVITE_TOKENS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -53682,7 +54125,7 @@ class ClubInviteTokensQuery
   final DocumentNode document = CLUB_INVITE_TOKENS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubInviteTokens';
+  final String operationName = CLUB_INVITE_TOKENS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubInviteTokensArguments variables;
@@ -53713,6 +54156,8 @@ class RemoveUserFromClubArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$RemoveUserFromClubArgumentsToJson(this);
 }
 
+final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT_OPERATION_NAME =
+    'removeUserFromClub';
 final REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -53854,7 +54299,8 @@ class RemoveUserFromClubMutation extends GraphQLQuery<
   final DocumentNode document = REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'removeUserFromClub';
+  final String operationName =
+      REMOVE_USER_FROM_CLUB_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final RemoveUserFromClubArguments variables;
@@ -53885,6 +54331,8 @@ class CheckUserClubMemberStatusArguments extends JsonSerializable
       _$CheckUserClubMemberStatusArgumentsToJson(this);
 }
 
+final CHECK_USER_CLUB_MEMBER_STATUS_QUERY_DOCUMENT_OPERATION_NAME =
+    'checkUserClubMemberStatus';
 final CHECK_USER_CLUB_MEMBER_STATUS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -53919,7 +54367,8 @@ class CheckUserClubMemberStatusQuery extends GraphQLQuery<
   final DocumentNode document = CHECK_USER_CLUB_MEMBER_STATUS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'checkUserClubMemberStatus';
+  final String operationName =
+      CHECK_USER_CLUB_MEMBER_STATUS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final CheckUserClubMemberStatusArguments variables;
@@ -53947,6 +54396,7 @@ class ClubMembersArguments extends JsonSerializable with EquatableMixin {
   Map<String, dynamic> toJson() => _$ClubMembersArgumentsToJson(this);
 }
 
+final CLUB_MEMBERS_QUERY_DOCUMENT_OPERATION_NAME = 'clubMembers';
 final CLUB_MEMBERS_QUERY_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.query,
@@ -54080,7 +54530,7 @@ class ClubMembersQuery
   final DocumentNode document = CLUB_MEMBERS_QUERY_DOCUMENT;
 
   @override
-  final String operationName = 'clubMembers';
+  final String operationName = CLUB_MEMBERS_QUERY_DOCUMENT_OPERATION_NAME;
 
   @override
   final ClubMembersArguments variables;
@@ -54109,6 +54559,8 @@ class UpdateClubInviteTokenArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$UpdateClubInviteTokenArgumentsToJson(this);
 }
 
+final UPDATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateClubInviteToken';
 final UPDATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -54218,7 +54670,8 @@ class UpdateClubInviteTokenMutation extends GraphQLQuery<
   final DocumentNode document = UPDATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'updateClubInviteToken';
+  final String operationName =
+      UPDATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final UpdateClubInviteTokenArguments variables;
@@ -54247,6 +54700,8 @@ class DeleteClubInviteTokenArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$DeleteClubInviteTokenArgumentsToJson(this);
 }
 
+final DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteClubInviteToken';
 final DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -54356,7 +54811,8 @@ class DeleteClubInviteTokenMutation extends GraphQLQuery<
   final DocumentNode document = DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'deleteClubInviteToken';
+  final String operationName =
+      DELETE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final DeleteClubInviteTokenArguments variables;
@@ -54387,6 +54843,8 @@ class GiveMemberAdminStatusArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$GiveMemberAdminStatusArgumentsToJson(this);
 }
 
+final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT_OPERATION_NAME =
+    'giveMemberAdminStatus';
 final GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -54528,7 +54986,8 @@ class GiveMemberAdminStatusMutation extends GraphQLQuery<
   final DocumentNode document = GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'giveMemberAdminStatus';
+  final String operationName =
+      GIVE_MEMBER_ADMIN_STATUS_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final GiveMemberAdminStatusArguments variables;
@@ -54557,6 +55016,8 @@ class CreateClubInviteTokenArguments extends JsonSerializable
   Map<String, dynamic> toJson() => _$CreateClubInviteTokenArgumentsToJson(this);
 }
 
+final CREATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createClubInviteToken';
 final CREATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT = DocumentNode(definitions: [
   OperationDefinitionNode(
       type: OperationType.mutation,
@@ -54666,7 +55127,8 @@ class CreateClubInviteTokenMutation extends GraphQLQuery<
   final DocumentNode document = CREATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT;
 
   @override
-  final String operationName = 'createClubInviteToken';
+  final String operationName =
+      CREATE_CLUB_INVITE_TOKEN_MUTATION_DOCUMENT_OPERATION_NAME;
 
   @override
   final CreateClubInviteTokenArguments variables;

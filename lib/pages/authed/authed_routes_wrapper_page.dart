@@ -4,9 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/constants.dart';
@@ -233,18 +232,11 @@ class _LoadingPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            SvgPicture.asset('assets/logos/sofie_logo.svg',
-                width: 46, color: context.theme.primary),
+            const Text('CIRCLES',
+                style: TextStyle(fontFamily: 'Bauhaus', fontSize: 26)),
             const SizedBox(height: 8),
-            Text('Sofie',
-                style: GoogleFonts.voces(
-                  fontSize: 40,
-                  color: context.theme.primary,
-                )),
-            const SizedBox(height: 8),
-            const CupertinoActivityIndicator(
-              radius: 12,
-            ),
+            LoadingAnimationWidget.threeArchedCircle(
+                color: context.theme.primary, size: 30)
           ]),
     ));
   }

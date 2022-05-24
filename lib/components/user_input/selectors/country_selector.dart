@@ -33,7 +33,7 @@ class CountrySelector extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CountrySelectorState createState() => _CountrySelectorState();
+  State<CountrySelector> createState() => _CountrySelectorState();
 }
 
 class _CountrySelectorState extends State<CountrySelector> {

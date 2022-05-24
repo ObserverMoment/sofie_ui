@@ -28,6 +28,35 @@ input AddWorkoutToCollectionInput {
   collectionId: ID!
 }
 
+type AmrapMove {
+  Equipment: Equipment
+  Move: Move!
+  createdAt: DateTime!
+  id: ID!
+  note: String
+  updatedAt: DateTime!
+}
+
+type AmrapSection {
+  AmrapMoves: [AmrapMove!]!
+  createdAt: DateTime!
+  id: ID!
+  moveOrder: [String!]!
+  name: String
+  note: String
+  updatedAt: DateTime!
+}
+
+type AmrapSession {
+  AmrapSections: [AmrapSection!]!
+  createdAt: DateTime!
+  id: ID!
+  name: String
+  note: String
+  sectionOrder: [String!]!
+  updatedAt: DateTime!
+}
+
 type AnnouncementUpdate {
   actions: [AnnouncementUpdateAction!]!
   articleUrl: String
@@ -102,6 +131,37 @@ type BodyTrackingEntry {
 enum BodyweightUnit {
   KG
   LB
+}
+
+type CardioExercise {
+  Move: Move
+  cardioZone: CardioZone!
+  createdAt: DateTime!
+  distance: Float
+  distanceUnit: DistanceUnit!
+  id: ID!
+  note: String
+  time: Float
+  timeUnit: TimeUnit!
+  updatedAt: DateTime!
+}
+
+type CardioSession {
+  CardioExercises: [CardioExercise!]!
+  createdAt: DateTime!
+  exerciseOrder: [String!]!
+  id: ID!
+  name: String
+  note: String
+  updatedAt: DateTime!
+}
+
+enum CardioZone {
+  FIVE
+  FOUR
+  ONE
+  THREE
+  TWO
 }
 
 union CheckClubInviteTokenResult = ClubInviteTokenData | InviteTokenError
@@ -339,7 +399,7 @@ input CreateFitnessBenchmarkScoreInput {
 input CreateFitnessBenchmarkWorkoutInput {
   FitnessBenchmarkWorkout: ConnectRelationInput!
   completedOn: DateTime!
-  description: String!
+  description: String
   instructionalVideoThumbUri: String
   instructionalVideoUri: String
   instructions: String
@@ -640,6 +700,7 @@ enum FitnessBenchmarkScope {
 }
 
 type FitnessBenchmarkScore {
+  User: UserAvatarData
   completedOn: DateTime!
   createdAt: DateTime!
   id: ID!
@@ -662,7 +723,7 @@ enum FitnessBenchmarkScoreType {
 type FitnessBenchmarkWorkout {
   FitnessBenchmarkWorkoutScores: [FitnessBenchmarkWorkoutScore!]
   createdAt: DateTime!
-  description: String!
+  description: String
   id: ID!
   instructionalVideoThumbUri: String
   instructionalVideoUri: String
@@ -676,6 +737,7 @@ type FitnessBenchmarkWorkout {
 }
 
 type FitnessBenchmarkWorkoutScore {
+  User: UserAvatarData
   completedOn: DateTime!
   createdAt: DateTime!
   id: ID!
@@ -686,6 +748,37 @@ type FitnessBenchmarkWorkoutScore {
 enum FitnessBenchmarkWorkoutScoreType {
   AMRAP
   FORTIME
+}
+
+type ForTimeMove {
+  Equipment: Equipment
+  Move: Move!
+  createdAt: DateTime!
+  id: ID!
+  note: String
+  updatedAt: DateTime!
+}
+
+type ForTimeSection {
+  ForTimeMoves: [ForTimeMove!]!
+  createdAt: DateTime!
+  id: ID!
+  moveOrder: [String!]!
+  name: String
+  note: String
+  updatedAt: DateTime!
+}
+
+type ForTimeSession {
+  ForTimeSections: [ForTimeSection!]!
+  createdAt: DateTime!
+  id: ID!
+  name: String
+  note: String
+  repeats: Int!
+  sectionOrder: [String!]!
+  timecapSeconds: Int!
+  updatedAt: DateTime!
 }
 
 enum Gender {
@@ -700,6 +793,36 @@ type GymProfile {
   description: String
   id: ID!
   name: String!
+}
+
+type IntervalExercise {
+  IntervalSets: [IntervalSet!]!
+  createdAt: DateTime!
+  id: ID!
+  intervalSetOrder: [String!]!
+  note: String
+  updatedAt: DateTime!
+}
+
+type IntervalSession {
+  IntervalExercises: [IntervalExercise!]!
+  createdAt: DateTime!
+  id: ID!
+  intervalExerciseOrder: [String!]!
+  intervals: [Int!]!
+  name: String
+  note: String
+  repeats: Int!
+  updatedAt: DateTime!
+}
+
+type IntervalSet {
+  Equipment: Equipment
+  Move: Move!
+  createdAt: DateTime!
+  id: ID!
+  note: String
+  updatedAt: DateTime!
 }
 
 type InviteTokenError {
@@ -777,6 +900,37 @@ input MarkAnnouncementUpdateAsSeenInput {
 input MarkWelcomeTodoItemAsSeenInput {
   userId: ID!
   welcomeTodoItemId: ID!
+}
+
+type MobilityMove {
+  MobilityMoveType: MobilityMoveType!
+  archived: Boolean!
+  createdAt: DateTime!
+  demoVideoThumbUri: String
+  demoVideoUri: String
+  description: String
+  id: ID!
+  name: String!
+  scope: MoveScope!
+  searchTerms: String
+}
+
+type MobilityMoveType {
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  imageUri: String
+  name: String!
+}
+
+type MobilitySession {
+  MobilityMoves: [MobilityMove!]!
+  createdAt: DateTime!
+  id: ID!
+  moveOrder: [String!]!
+  name: String
+  note: String
+  updatedAt: DateTime!
 }
 
 type Move {
@@ -1086,6 +1240,8 @@ type Query {
   adminPublicWorkoutSummaries(
     status: PublicContentValidationStatus!
   ): [PublicWorkoutSummaryAdmin!]!
+  adminStandardFitnessBenchmarkWorkouts: [FitnessBenchmarkWorkout!]!
+  adminStandardFitnessBenchmarks: [FitnessBenchmark!]!
   announcementUpdates: [AnnouncementUpdate!]!
   bodyTrackingEntries: [BodyTrackingEntry!]!
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
@@ -1189,6 +1345,35 @@ input RemoveWorkoutPlanFromClubInput {
 input RemoveWorkoutPlanFromCollectionInput {
   WorkoutPlan: ConnectRelationInput!
   collectionId: ID!
+}
+
+type ResistanceExercise {
+  ResistanceSets: [ResistanceSet!]!
+  createdAt: DateTime!
+  id: ID!
+  note: String
+  setOrder: [String!]!
+  updatedAt: DateTime!
+}
+
+type ResistanceSession {
+  ResistanceExercises: [ResistanceExercise!]!
+  createdAt: DateTime!
+  id: ID!
+  name: String
+  note: String
+  setOrder: [String!]!
+  updatedAt: DateTime!
+}
+
+type ResistanceSet {
+  Equipment: Equipment
+  Move: Move!
+  createdAt: DateTime!
+  id: ID!
+  note: String
+  reps: Int
+  updatedAt: DateTime!
 }
 
 type ScheduledWorkout {
@@ -1959,6 +2144,27 @@ type WorkoutSectionType {
   name: String!
   subtitle: String!
   validRepTypes: [WorkoutMoveRepType!]!
+}
+
+type WorkoutSession {
+  AmrapSessions: [AmrapSession!]!
+  CardioSessions: [CardioSession!]!
+  ForTimeSessions: [ForTimeSession!]!
+  IntervalSessions: [IntervalSession!]!
+  MobilitySessions: [MobilitySession!]!
+  ResistanceSessions: [ResistanceSession!]!
+  User: UserAvatarData!
+  archived: Boolean!
+  coverImageUri: String
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  introAudioUri: String
+  introVideoThumbUri: String
+  introVideoUri: String
+  name: String!
+  sessionOrder: [String!]!
+  updatedAt: DateTime!
 }
 
 type WorkoutSet {

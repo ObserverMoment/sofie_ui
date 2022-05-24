@@ -22,6 +22,12 @@ import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
+import 'package:sofie_ui/pages/authed/circles/circles_page.dart';
+import 'package:sofie_ui/pages/authed/circles/discover_clubs_page.dart';
+import 'package:sofie_ui/pages/authed/circles/discover_people_page.dart';
+import 'package:sofie_ui/pages/authed/home/home_page.dart';
+import 'package:sofie_ui/pages/authed/home/notifications_page.dart';
+import 'package:sofie_ui/pages/authed/home/your_posts_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/logged_workouts_history_page.dart';
 import 'package:sofie_ui/pages/authed/progress/user_goals_page.dart';
 import 'package:sofie_ui/components/workout/workout_finders/public/public_workout_finder_page.dart';
@@ -35,11 +41,6 @@ import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_
 import 'package:sofie_ui/pages/authed/details_pages/workout_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_enrolment_details_page.dart';
-import 'package:sofie_ui/pages/authed/discover/discover_clubs_page.dart';
-import 'package:sofie_ui/pages/authed/discover/discover_page.dart';
-import 'package:sofie_ui/pages/authed/feed/feed_page.dart';
-import 'package:sofie_ui/pages/authed/feed/notifications_page.dart';
-import 'package:sofie_ui/pages/authed/feed/your_posts_page.dart';
 import 'package:sofie_ui/pages/authed/my_studio/my_studio_page.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_clubs.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_collections.dart';
@@ -60,7 +61,6 @@ import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts_analysis_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_scorebook_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
-import 'package:sofie_ui/pages/authed/discover/discover_people_page.dart';
 import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
 
 @AdaptiveAutoRouter(
@@ -79,18 +79,17 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(initial: true, path: '', page: MainTabsPage, children: [
             AutoRoute(
               path: '',
-              page: FeedPage,
+              page: HomePage,
             ),
             AutoRoute(
-              path: 'discover',
-              page: DiscoverPage,
+              path: 'circles',
+              page: CirclesPage,
             ),
             AutoRoute(path: 'studio', page: MyStudioPage),
             AutoRoute(
               path: 'progress',
               page: ProgressPage,
             ),
-            AutoRoute(path: 'profile', page: ProfilePage),
           ]),
           // These pages are 'stand-alone'. They push on top of the underlying main tabs UI / stacks and so go into full screen.
           // They can be pushed to from anywhere and are also pages that would want to be linkable. E.g. when sharing a workout details page with a group or another user.
@@ -103,6 +102,7 @@ import 'package:sofie_ui/pages/unauthed/unauthed_landing.dart';
           AutoRoute(path: "do-workout/:id", page: DoWorkoutWrapperPage),
 
           /// User related.
+          AutoRoute(path: 'profile', page: ProfilePage),
           AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'settings', page: SettingsPage),
           AutoRoute(path: 'notifications', page: NotificationsPage),

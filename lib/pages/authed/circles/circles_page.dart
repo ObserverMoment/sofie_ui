@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_clubs.dart';
-import 'package:sofie_ui/pages/authed/discover/components/discover_creators.dart';
+import 'package:sofie_ui/pages/authed/circles/components/discover_clubs.dart';
+import 'package:sofie_ui/pages/authed/circles/components/discover_creators.dart';
 import 'package:sofie_ui/router.gr.dart';
 
-class DiscoverPage extends StatelessWidget {
-  const DiscoverPage({Key? key}) : super(key: key);
+class CirclesPage extends StatelessWidget {
+  const CirclesPage({Key? key}) : super(key: key);
 
   Widget _verticalPadding({required Widget child}) =>
       Padding(padding: const EdgeInsets.symmetric(vertical: 4), child: child);

@@ -122,7 +122,7 @@ abstract class ThemeData {
       brightness: Brightness.dark,
       // barBackgroundColor: const Color(0xff050505),
       // barBackgroundColor: Color.fromARGB(255, 27, 29, 28),
-      barBackgroundColor: const Color.fromARGB(255, 9, 9, 10),
+      barBackgroundColor: const Color.fromARGB(255, 7, 7, 8),
       // scaffoldBackgroundColor: const Color(0xff050505),
       // scaffoldBackgroundColor: Color.fromARGB(255, 29, 32, 32),
       scaffoldBackgroundColor: const Color.fromARGB(255, 0, 0, 0),

@@ -18,32 +18,30 @@ class SubSectionLinkTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(1),
-        decoration: BoxDecoration(
-            color: context.theme.cardBackground.withOpacity(0.6),
-            borderRadius: BorderRadius.circular(20)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+                color: context.theme.cardBackground,
+                borderRadius: BorderRadius.circular(12)),
+            child: SvgPicture.asset(
               'assets/category_icons/$assetImagePath',
-              height: 30,
+              height: 44,
               fit: BoxFit.cover,
               color: context.theme.primary,
             ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 3, horizontal: 16.0),
-              child: MyText(
-                label,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                size: FONTSIZE.zero,
-              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: MyText(
+              label,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              size: FONTSIZE.one,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

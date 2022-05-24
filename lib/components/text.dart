@@ -59,7 +59,7 @@ class MyText extends StatelessWidget {
       this.decoration,
       this.lineHeight = 1.1,
       this.subtext = false,
-      this.letterSpacing = 1.3})
+      this.letterSpacing = 1.2})
       : super(key: key);
 
   @override
@@ -102,7 +102,7 @@ class MyRichText extends StatelessWidget {
               fontWeight: weight,
               fontSize: _fontSizeMap[size],
               height: lineHeight,
-              letterSpacing: 1.3),
+              letterSpacing: 1.2),
         ));
   }
 }
@@ -131,7 +131,7 @@ class MyHeaderText extends StatelessWidget {
       this.decoration,
       this.lineHeight = 1.1,
       this.subtext = false,
-      this.letterSpacing = 2})
+      this.letterSpacing = 1.6})
       : super(key: key);
 
   @override

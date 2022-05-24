@@ -18,18 +18,19 @@ class MyStudioPage extends StatelessWidget {
           shrinkWrap: true,
           children: [
             GridView.count(
-              padding: const EdgeInsets.only(bottom: 10.0, left: 10, right: 10),
+              padding: const EdgeInsets.only(bottom: 8.0, left: 8, right: 8),
               crossAxisSpacing: 8,
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 8,
               shrinkWrap: true,
               crossAxisCount: 3,
+              childAspectRatio: 0.88,
               children: [
-                CategoryLinkTile(
-                  label: 'Calendar',
-                  assetImagePath: 'calendar.svg',
-                  onTap: () => context.navigateTo(YourScheduleRoute()),
-                ),
+                // CategoryLinkTile(
+                //   label: 'Calendar',
+                //   assetImagePath: 'calendar.svg',
+                //   onTap: () => context.navigateTo(YourScheduleRoute()),
+                // ),
                 CategoryLinkTile(
                   label: 'Workouts',
                   assetImagePath: 'workouts.svg',
@@ -42,21 +43,21 @@ class MyStudioPage extends StatelessWidget {
                   onTap: () => context.navigateTo(YourPlansRoute(
                       showCreateButton: true, showDiscoverButton: true)),
                 ),
-                CategoryLinkTile(
-                  label: 'Clubs',
-                  assetImagePath: 'clubs.svg',
-                  onTap: () => context.navigateTo(const YourClubsRoute()),
-                ),
+                // CategoryLinkTile(
+                //   label: 'Clubs',
+                //   assetImagePath: 'clubs.svg',
+                //   onTap: () => context.navigateTo(const YourClubsRoute()),
+                // ),
                 CategoryLinkTile(
                   label: 'Collections',
                   assetImagePath: 'collections.svg',
                   onTap: () => context.navigateTo(const YourCollectionsRoute()),
                 ),
-                CategoryLinkTile(
-                  label: 'Throwdowns',
-                  assetImagePath: 'challenges.svg',
-                  onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
-                ),
+                // CategoryLinkTile(
+                //   label: 'Throwdowns',
+                //   assetImagePath: 'challenges.svg',
+                //   onTap: () => context.showAlertDialog(title: 'Coming Soon!'),
+                // ),
                 CategoryLinkTile(
                   label: 'Events',
                   assetImagePath: 'events.svg',
@@ -77,20 +78,13 @@ class MyStudioPage extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: context.theme.cardBackground.withOpacity(0.2)),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20),
-                child: Row(
-                  children: [
-                    SvgPicture.asset('assets/category_icons/recents.svg',
-                        width: 20, color: context.theme.primary),
-                    const SizedBox(width: 8),
-                    const MyHeaderText('Recently Viewed'),
-                  ],
-                ),
+              child: Row(
+                children: [
+                  SvgPicture.asset('assets/category_icons/recents.svg',
+                      width: 20, color: context.theme.primary),
+                  const SizedBox(width: 8),
+                  const MyHeaderText('Recently Viewed'),
+                ],
               ),
             ),
             const RecentlyViewedObjects(),

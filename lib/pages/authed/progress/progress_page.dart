@@ -328,13 +328,13 @@ class ProgressPage extends StatelessWidget {
                   child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 8.0, left: 4, right: 4),
+                padding: const EdgeInsets.only(bottom: 8.0, left: 8, right: 8),
                 child: GridView.count(
-                  crossAxisSpacing: 8,
+                  crossAxisSpacing: 16,
                   physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 8,
                   shrinkWrap: true,
                   crossAxisCount: 4,
+                  childAspectRatio: 0.75,
                   children: [
                     SubSectionLinkTile(
                       label: 'Personal Scorebook',

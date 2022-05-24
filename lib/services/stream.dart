@@ -13,7 +13,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/pages/authed/feed/notifications_page.dart';
+import 'package:sofie_ui/pages/authed/home/notifications_page.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
@@ -48,7 +48,7 @@ class NotificationsIconButton extends StatefulWidget {
   const NotificationsIconButton({Key? key}) : super(key: key);
 
   @override
-  _NotificationsIconButtonState createState() =>
+  State<NotificationsIconButton> createState() =>
       _NotificationsIconButtonState();
 }
 
@@ -111,17 +111,7 @@ class _NotificationsIconButtonState extends State<NotificationsIconButton> {
       onPressed: () => context.navigateTo(const NotificationsRoute()),
       child: Stack(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Icon(CupertinoIcons.bell),
-              SizedBox(height: 2),
-              MyText(
-                'Alerts',
-                size: FONTSIZE.one,
-              )
-            ],
-          ),
+          const Icon(CupertinoIcons.bell),
           if (_unseenCount > 0)
             Positioned(
               top: -2,

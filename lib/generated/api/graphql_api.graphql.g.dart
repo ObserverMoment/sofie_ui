@@ -3775,7 +3775,7 @@ FitnessBenchmarkWorkout _$FitnessBenchmarkWorkoutFromJson(
           _$FitnessBenchmarkWorkoutScoreTypeEnumMap, json['type'],
           unknownValue: FitnessBenchmarkWorkoutScoreType.artemisUnknown)
       ..name = json['name'] as String
-      ..description = json['description'] as String
+      ..description = json['description'] as String?
       ..instructions = json['instructions'] as String?
       ..instructionalVideoUri = json['instructionalVideoUri'] as String?
       ..instructionalVideoThumbUri =

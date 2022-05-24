@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/env_config.dart';
@@ -39,18 +40,17 @@ class MainTabsPage extends StatelessWidget {
       // https://github.com/Milad-Akarie/auto_route_library/issues/619#issuecomment-945187688
       backgroundColor: context.theme.background,
       routes: const [
-        FeedRoute(),
-        DiscoverRoute(),
+        HomeRoute(),
+        CirclesRoute(),
         MyStudioRoute(),
         ProgressRoute(),
-        ProfileRoute(),
       ],
       bottomNavigationBuilder: (context, tabsRouter) => ClipRect(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
           child: Container(
               decoration: BoxDecoration(
-                color: context.theme.cardBackground.withOpacity(0.84),
+                color: context.theme.cardBackground.withOpacity(0.6),
               ),
               height: EnvironmentConfig.bottomNavBarHeight,
               child: Row(
@@ -61,37 +61,32 @@ class MainTabsPage extends StatelessWidget {
                       tabsRouter: tabsRouter,
                       activeIndex: tabsRouter.activeIndex,
                       tabIndex: 0,
-                      label: 'Feed',
-                      inactiveIconData: CupertinoIcons.news,
-                      activeIconData: CupertinoIcons.news_solid),
+                      label: 'Home',
+                      inactiveIconData: CupertinoIcons.home,
+                      activeIconData: CupertinoIcons.home),
                   _buildTabItem(
                       tabsRouter: tabsRouter,
                       activeIndex: tabsRouter.activeIndex,
                       tabIndex: 1,
-                      label: 'Discover',
-                      inactiveIconData: CupertinoIcons.compass,
-                      activeIconData: CupertinoIcons.compass_fill),
+                      label: 'Circles',
+                      inactiveIconData: CupertinoIcons.circle,
+                      activeIconData: CupertinoIcons.circle_fill),
                   _buildTabItem(
                       tabsRouter: tabsRouter,
                       activeIndex: tabsRouter.activeIndex,
                       tabIndex: 2,
-                      label: 'My Studio',
-                      inactiveIconData: CupertinoIcons.square_grid_2x2,
-                      activeIconData: CupertinoIcons.square_grid_2x2_fill),
+                      label: 'Studio',
+                      inactiveIconData:
+                          CupertinoIcons.square_stack_3d_down_right,
+                      activeIconData:
+                          CupertinoIcons.square_stack_3d_down_right_fill),
                   _buildTabItem(
                       tabsRouter: tabsRouter,
                       activeIndex: tabsRouter.activeIndex,
                       tabIndex: 3,
                       label: 'Progress',
-                      inactiveIconData: CupertinoIcons.graph_square,
-                      activeIconData: CupertinoIcons.graph_square_fill),
-                  _buildTabItem(
-                      tabsRouter: tabsRouter,
-                      activeIndex: tabsRouter.activeIndex,
-                      tabIndex: 4,
-                      label: 'Profile',
-                      inactiveIconData: CupertinoIcons.profile_circled,
-                      activeIconData: CupertinoIcons.profile_circled),
+                      inactiveIconData: Icons.stacked_line_chart_outlined,
+                      activeIconData: Icons.stacked_line_chart_rounded),
                   const _FeedbackIcon()
                 ],
               )),

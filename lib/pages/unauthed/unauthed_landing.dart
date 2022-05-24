@@ -150,7 +150,7 @@ class UnauthedLandingPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               SecondaryButton(
-                text: 'Join Us',
+                text: 'Join Up',
                 onPressed: () =>
                     context.push(child: const RegisterBetaTesting()),
               ),

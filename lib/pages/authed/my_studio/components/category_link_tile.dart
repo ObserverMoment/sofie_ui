@@ -18,39 +18,32 @@ class CategoryLinkTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
-                color: context.theme.cardBackground.withOpacity(0.8),
+                color: context.theme.cardBackground,
                 borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/category_icons/$assetImagePath',
-                  height: 40,
-                  fit: BoxFit.cover,
-                  color: context.theme.primary,
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: MyText(
-                    label,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                    size: FONTSIZE.two,
-                  ),
-                ),
-              ],
+            child: SvgPicture.asset(
+              'assets/category_icons/$assetImagePath',
+              height: 60,
+              fit: BoxFit.cover,
+              color: context.theme.primary,
             ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: MyText(
+              label,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              size: FONTSIZE.two,
+            ),
+          ),
+        ],
       ),
     );
   }
