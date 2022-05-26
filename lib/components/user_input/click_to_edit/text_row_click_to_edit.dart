@@ -79,6 +79,7 @@ class EditableTextFieldRow extends StatelessWidget {
               child: MyText(
                 hasText ? text : placeholder,
                 textAlign: TextAlign.end,
+                subtext: !hasText,
               ),
             ),
           ),
@@ -180,7 +181,7 @@ class FullScreenTextEditing extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FullScreenTextEditingState createState() => _FullScreenTextEditingState();
+  State<FullScreenTextEditing> createState() => _FullScreenTextEditingState();
 }
 
 class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
@@ -242,7 +243,7 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
                   controller: _controller),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16),
+                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
                 child: Row(
                   children: [
                     if (widget.maxChars != null)

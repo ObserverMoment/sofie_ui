@@ -10,7 +10,8 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart' as avatar;
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart'
+    as avatar;
 
 class ClubMembersChatPage extends StatefulWidget {
   final String clubId;
@@ -36,12 +37,12 @@ class _ClubMembersChatPageState extends State<ClubMembersChatPage> {
   Future<void> _initGetStreamChat() async {
     try {
       /// Get club and club member data.
-      // final result = await context.graphQLStore.networkOnlyOperation<
+      // final result = await GraphQLStore.store.networkOnlyOperation<
       //         ClubChatSummary$Query, ClubChatSummaryArguments>(
       //     operation: ClubChatSummaryQuery(
       //         variables: ClubChatSummaryArguments(clubId: widget.clubId)));
 
-      // checkOperationResult(context, result, onFail: () {
+      // checkOperationResult(result, onFail: () {
       //   throw Exception('Could not retrieve Club data for this chat.');
       // }, onSuccess: () {
       //   _clubChatSummary = result.data!.clubChatSummary;

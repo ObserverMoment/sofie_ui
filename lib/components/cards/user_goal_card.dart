@@ -35,8 +35,7 @@ class UserGoalCard extends StatelessWidget {
       journalGoal: journalGoal,
       onUpdateComplete: (result) {
         context.pop();
-        checkOperationResult(context, result,
-            onFail: () => _showErrorToast(context));
+        checkOperationResult(result, onFail: () => _showErrorToast(context));
       },
     ));
   }
@@ -51,12 +50,11 @@ class UserGoalCard extends StatelessWidget {
           final variables = UpdateUserGoalArguments(
               data: UpdateUserGoalInput.fromJson(updated.toJson()));
 
-          final result = await context.graphQLStore.mutate(
+          final result = await GraphQLStore.store.mutate(
               mutation: UpdateUserGoalMutation(variables: variables),
               broadcastQueryIds: [GQLOpNames.userGoals]);
 
-          checkOperationResult(context, result,
-              onFail: () => _showErrorToast(context));
+          checkOperationResult(result, onFail: () => _showErrorToast(context));
         });
   }
 
@@ -190,7 +188,7 @@ class __MarkGoalCompletedBottomSheetState
 
     final variables = UpdateUserGoalArguments(data: input);
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
         mutation: UpdateUserGoalMutation(variables: variables),
         broadcastQueryIds: [GQLOpNames.userGoals]);
 

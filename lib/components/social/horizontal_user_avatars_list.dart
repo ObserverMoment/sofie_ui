@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 

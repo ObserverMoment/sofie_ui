@@ -10,7 +10,8 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/modules/profile/blocs/profile_bloc.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -50,8 +51,12 @@ class _ActiveWidgetsSelectorState extends State<ActiveWidgetsSelector> {
       updated = [...activeProgressWidgets, id];
     }
 
-    await EditProfilePage.updateUserFields(
-        context, authedUserId, {'activeProgressWidgets': updated});
+    await ProfileBloc.updateUserFields(
+        authedUserId,
+        {'activeProgressWidgets': updated},
+        () => context.showToast(
+            message: 'Sorry, there was a problem',
+            toastType: ToastType.destructive));
 
     setState(() {
       _processingId = null;

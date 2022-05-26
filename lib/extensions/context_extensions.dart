@@ -44,8 +44,6 @@ extension BuildContextExtension on BuildContext {
     return read<NotificationFeed>();
   }
 
-  GraphQLStore get graphQLStore => read<GraphQLStore>();
-
   ////////////////////////////////////
   //// Routes, Dialogs and Alerts ////
   ////////////////////////////////////

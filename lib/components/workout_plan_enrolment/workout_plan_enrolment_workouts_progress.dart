@@ -21,6 +21,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class WorkoutPlanEnrolmentProgress extends StatelessWidget {
   final WorkoutPlanEnrolmentWithPlan enrolmentWithPlan;
@@ -170,11 +171,21 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
         message:
             'Do this if you want to do the workout again. The original workout log will not be deleted but will no longer count towards progress in this plan.',
         onConfirm: () => _deleteCompletedWorkoutPlanDayWorkout(
-            context, completedPlanDayWorkout));
+            context: context,
+            completedPlanDayWorkout: completedPlanDayWorkout,
+            onSuccess: () => context.showToast(
+                  message: 'Workout progress has been reset.',
+                ),
+            onFail: () => context.showToast(
+                message: 'Sorry, there was a problem',
+                toastType: ToastType.destructive)));
   }
 
-  Future<void> _deleteCompletedWorkoutPlanDayWorkout(BuildContext context,
-      CompletedWorkoutPlanDayWorkout completedPlanDayWorkout) async {
+  Future<void> _deleteCompletedWorkoutPlanDayWorkout(
+      {required BuildContext context,
+      required CompletedWorkoutPlanDayWorkout completedPlanDayWorkout,
+      required VoidCallback onSuccess,
+      required VoidCallback onFail}) async {
     final enrolmentId = enrolmentWithPlan.workoutPlanEnrolment.id;
 
     final variables = DeleteCompletedWorkoutPlanDayWorkoutArguments(
@@ -182,7 +193,7 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
             workoutPlanDayWorkoutId: completedPlanDayWorkout.id,
             workoutPlanEnrolmentId: enrolmentId));
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
         mutation:
             DeleteCompletedWorkoutPlanDayWorkoutMutation(variables: variables),
         refetchQueryIds: [
@@ -193,14 +204,9 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
         ]);
 
     checkOperationResult(
-      context,
       result,
-      onFail: () => context.showToast(
-          message: 'Sorry, there was a problem',
-          toastType: ToastType.destructive),
-      onSuccess: () => context.showToast(
-        message: 'Workout progress has been reset.',
-      ),
+      onFail: onFail,
+      onSuccess: onSuccess,
     );
   }
 

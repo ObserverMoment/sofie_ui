@@ -5,7 +5,7 @@ import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_e
 import 'package:sofie_ui/components/user_input/selectors/content_access_scope_selector.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubCreatorInfo extends StatelessWidget {
   final ClubSummary club;
@@ -34,7 +34,7 @@ class ClubCreatorInfo extends StatelessWidget {
                 return true;
               } else {
                 // return true;
-                final isAvailable = await context.graphQLStore
+                final isAvailable = await GraphQLStore.store
                     .networkOnlyOperation(
                         operation: CheckUniqueClubNameQuery(
                             variables: CheckUniqueClubNameArguments(name: t)));

@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_thumbnail_player.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_player.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -17,6 +17,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubInviteLandingPage extends StatefulWidget {
   final String id;
@@ -24,7 +25,7 @@ class ClubInviteLandingPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ClubInviteLandingPageState createState() => _ClubInviteLandingPageState();
+  State<ClubInviteLandingPage> createState() => _ClubInviteLandingPageState();
 }
 
 class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
@@ -42,7 +43,7 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
 
   Future<CheckClubInviteTokenResult> _checkClubInviteToken() async {
     final variables = CheckClubInviteTokenArguments(id: widget.id);
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             CheckClubInviteToken$Query, CheckClubInviteTokenArguments>(
         operation: CheckClubInviteTokenQuery(variables: variables));
 
@@ -63,7 +64,7 @@ class _ClubInviteLandingPageState extends State<ClubInviteLandingPage> {
     final variables = AddUserToClubViaInviteTokenArguments(
         userId: authedUserId, clubInviteTokenId: widget.id);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             AddUserToClubViaInviteToken$Mutation,
             AddUserToClubViaInviteTokenArguments>(
         operation: AddUserToClubViaInviteTokenMutation(variables: variables));

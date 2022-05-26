@@ -8,12 +8,14 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/active_settings_and_benchmarks_container.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/fitness_benchmark_actions_menu.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/utils.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Details for a benchmark for the logged in User.
 class UserFitnessBenchmarkDetails extends StatelessWidget {
@@ -161,12 +163,15 @@ class _TopTenScoresList extends StatelessWidget {
 
   Future<void> _deleteFitnessBenchmarkScore(
       BuildContext context, FitnessBenchmarkScore score) async {
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
         mutation: DeleteFitnessBenchmarkScoreMutation(
             variables: DeleteFitnessBenchmarkScoreArguments(id: score.id)),
         broadcastQueryIds: [GQLOpNames.userFitnessBenchmarks]);
 
-    checkOperationResult(context, result);
+    checkOperationResult(result,
+        onFail: () => context.showToast(
+            message: 'Sorry, there was a problem',
+            toastType: ToastType.destructive));
   }
 
   List<FitnessBenchmarkScore> _topTenScores() {

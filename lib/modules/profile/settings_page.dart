@@ -10,6 +10,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -44,7 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
   /// Don't show toast when clearing cache before signing out - only when just clearing cache.
   Future<void> _clearCache(BuildContext context, bool showToast) async {
     setState(() => _loading = true);
-    await context.graphQLStore.clear();
+    await GraphQLStore.store.clear();
     setState(() => _loading = false);
     if (showToast) {
       context.showToast(message: 'Cache cleared.');

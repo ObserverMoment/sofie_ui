@@ -13,6 +13,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:provider/provider.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class PublicWorkoutFinderPage extends StatefulWidget {
   final void Function(WorkoutSummary workout)? selectWorkout;
@@ -78,7 +79,7 @@ class _PublicWorkoutFinderPageState extends State<PublicWorkoutFinderPage> {
         filters: WorkoutFiltersInput.fromJson(_bloc.filters.apiJson));
 
     final query = PublicWorkoutsQuery(variables: variables);
-    final response = await context.graphQLStore.execute(query);
+    final response = await GraphQLStore.store.execute(query);
 
     if ((response.errors != null && response.errors!.isNotEmpty) ||
         response.data == null) {

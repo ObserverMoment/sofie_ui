@@ -3,7 +3,6 @@ import 'package:sofie_ui/components/creators/body_tracking/body_tracking_entry_c
 import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
 import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
-import 'package:sofie_ui/modules/gym_profile/gym_profile_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
@@ -16,8 +15,6 @@ import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dar
 import 'package:sofie_ui/components/creators/workout_plan_creator/workout_plan_creator.dart';
 import 'package:sofie_ui/components/creators/workout_plan_review_creator.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_wrapper_page.dart';
-import 'package:sofie_ui/components/profile/user_public_content/profile_public_workout_plans.dart';
-import 'package:sofie_ui/components/profile/user_public_content/profile_public_workouts.dart';
 import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
@@ -27,9 +24,12 @@ import 'package:sofie_ui/modules/home/notifications_page.dart';
 import 'package:sofie_ui/modules/home/your_posts_page.dart';
 import 'package:sofie_ui/modules/profile/archive_page.dart';
 import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
+import 'package:sofie_ui/modules/profile/gym_profile/gym_profile_creator.dart';
+import 'package:sofie_ui/modules/profile/gym_profile/gym_profiles_page.dart';
 import 'package:sofie_ui/modules/profile/profile_page.dart';
-import 'package:sofie_ui/modules/profile/settings.dart';
+import 'package:sofie_ui/modules/profile/settings_page.dart';
 import 'package:sofie_ui/modules/profile/skills/skills_page.dart';
+import 'package:sofie_ui/modules/profile/social/social_links_page.dart';
 import 'package:sofie_ui/modules/sign_in_registration/unauthed_landing_page.dart';
 import 'package:sofie_ui/modules/workout_session/creator/workout_session_creator_page.dart';
 import 'package:sofie_ui/pages/authed/circles/circles_page.dart';
@@ -51,7 +51,6 @@ import 'package:sofie_ui/pages/authed/details_pages/workout_plan_enrolment_detai
 import 'package:sofie_ui/pages/authed/my_studio/my_studio_page.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_clubs.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_collections.dart';
-import 'package:sofie_ui/modules/gym_profile/gym_profiles_page.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_moves_library.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_throwdowns.dart';
 import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_plans.dart';
@@ -108,6 +107,7 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'settings', page: SettingsPage),
           AutoRoute(path: 'skills', page: SkillsPage),
+          AutoRoute(path: 'social-links', page: SocialLinksPage),
           AutoRoute(path: 'notifications', page: NotificationsPage),
           AutoRoute(path: 'edit-profile', page: EditProfilePage),
 
@@ -133,13 +133,6 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
               path: 'workout-logs/analysis', page: LoggedWorkoutsAnalysisPage),
           AutoRoute(
               path: 'workout-logs/history', page: LoggedWorkoutsHistoryPage),
-
-          /// Other users public content.
-          AutoRoute(
-              path: 'public-workouts/:userId', page: ProfilePublicWorkoutsPage),
-          AutoRoute(
-              path: 'public-plans/:userId',
-              page: ProfilePublicWorkoutPlansPage),
 
           /// Finders and Public Content.
           /// Consider renaming these all as discover?

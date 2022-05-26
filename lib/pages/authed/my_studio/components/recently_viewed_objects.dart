@@ -4,11 +4,11 @@ import 'package:sofie_ui/components/cards/club_card.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Uses the same logic as [ProfilePage] to watch the router and re-query for recently viewed items whenever the user pushes or pops to this page.
 /// [List<UserRecentlyViewedObject>]: List of mixed type objects that the user has interacted with recently.
@@ -30,12 +30,12 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
   late StackRouter _router;
 
   Future<void> _getRecentlyViewedList() async {
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .networkOnlyOperation(operation: UserRecentlyViewedObjectsQuery());
 
     _initDataRetrieved = true;
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () {
           setState(
             () {

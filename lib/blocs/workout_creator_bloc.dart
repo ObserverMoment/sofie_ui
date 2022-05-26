@@ -43,7 +43,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   /// Store gets written and the UI gets updated when the user clicks [done].
   /// This flow should be reviewed at some point.
   bool saveAllChanges() {
-    final writeWorkoutSuccess = context.graphQLStore.writeDataToStore(
+    final writeWorkoutSuccess = GraphQLStore.store.writeDataToStore(
       data: workout.toJson(),
       broadcastQueryIds: [
         GQLVarParamKeys.workoutById(workout.id),
@@ -51,7 +51,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     );
 
     if (writeWorkoutSuccess) {
-      final success = context.graphQLStore.writeDataToStore(
+      final success = GraphQLStore.store.writeDataToStore(
         data: workout.summary.toJson(),
         broadcastQueryIds: [
           GQLOpNames.userScheduledWorkouts,
@@ -123,7 +123,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutArguments(
         data: UpdateWorkoutInput.fromJson(workout.toJson()));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .networkOnlyOperation<UpdateWorkout$Mutation, UpdateWorkoutArguments>(
       operation: UpdateWorkoutMutation(variables: variables),
     );
@@ -157,7 +157,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
             workoutSectionType: ConnectRelationInput(
                 id: workoutSection.workoutSectionType.id)));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CreateWorkoutSection$Mutation, CreateWorkoutSectionArguments>(
       operation: CreateWorkoutSectionMutation(variables: variables),
     );
@@ -190,7 +190,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
         data:
             UpdateWorkoutSectionInput.fromJson(updatedWorkoutSection.toJson()));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutSection$Mutation, UpdateWorkoutSectionArguments>(
       operation: UpdateWorkoutSectionMutation(variables: variables),
     );
@@ -228,7 +228,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
                   id: s.id, sortPosition: s.sortPosition))
               .toList());
 
-      final result = await context.graphQLStore.networkOnlyOperation<
+      final result = await GraphQLStore.store.networkOnlyOperation<
           ReorderWorkoutSections$Mutation, ReorderWorkoutSectionsArguments>(
         operation: ReorderWorkoutSectionsMutation(variables: variables),
       );
@@ -264,7 +264,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     /// Api.
     final variables = DeleteWorkoutSectionByIdArguments(id: idToDelete);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             DeleteWorkoutSectionById$Mutation,
             DeleteWorkoutSectionByIdArguments>(
         operation: DeleteWorkoutSectionByIdMutation(variables: variables));
@@ -331,7 +331,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
           .toList(),
     ));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CreateWorkoutSetWithWorkoutMoves$Mutation,
         CreateWorkoutSetWithWorkoutMovesArguments>(
       operation: CreateWorkoutSetWithWorkoutMovesMutation(variables: variables),
@@ -374,7 +374,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
       workoutSection: ConnectRelationInput(id: parentSection.id),
     ));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CreateWorkoutSet$Mutation, CreateWorkoutSetArguments>(
       operation: CreateWorkoutSetMutation(variables: variables),
     );
@@ -416,7 +416,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutSetArguments(
         data: UpdateWorkoutSetInput.fromJson(updatedWorkoutSet.toJson()));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutSet$Mutation, UpdateWorkoutSetArguments>(
       operation: UpdateWorkoutSetMutation(variables: variables),
     );
@@ -472,7 +472,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     /// Api
     final variables = DuplicateWorkoutSetByIdArguments(id: toDuplicate.id);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         DuplicateWorkoutSetById$Mutation, DuplicateWorkoutSetByIdArguments>(
       operation: DuplicateWorkoutSetByIdMutation(variables: variables),
     );
@@ -548,7 +548,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
                   id: s.id, sortPosition: s.sortPosition))
               .toList());
 
-      final result = await context.graphQLStore.networkOnlyOperation<
+      final result = await GraphQLStore.store.networkOnlyOperation<
           ReorderWorkoutSets$Mutation, ReorderWorkoutSetsArguments>(
         operation: ReorderWorkoutSetsMutation(variables: variables),
       );
@@ -586,7 +586,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     /// Api.
     final variables = DeleteWorkoutSetByIdArguments(id: idToDelete);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             DeleteWorkoutSetById$Mutation, DeleteWorkoutSetByIdArguments>(
         operation: DeleteWorkoutSetByIdMutation(variables: variables));
 
@@ -635,7 +635,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
             move: ConnectRelationInput(id: workoutMove.move.id),
             workoutSet: ConnectRelationInput(id: workoutSetId)));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CreateWorkoutMove$Mutation, CreateWorkoutMoveArguments>(
       operation: CreateWorkoutMoveMutation(variables: variables),
     );
@@ -665,7 +665,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutMoveArguments(
         data: UpdateWorkoutMoveInput.fromJson(workoutMove.toJson()));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutMove$Mutation, UpdateWorkoutMoveArguments>(
       operation: UpdateWorkoutMoveMutation(variables: variables),
     );
@@ -702,7 +702,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
 
     final variables = UpdateWorkoutMovesArguments(data: input);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutMoves$Mutation, UpdateWorkoutMovesArguments>(
       operation: UpdateWorkoutMovesMutation(variables: variables),
     );
@@ -740,7 +740,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     // Api.
     final variables = DeleteWorkoutMoveByIdArguments(id: idToDelete);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             DeleteWorkoutMoveById$Mutation, DeleteWorkoutMoveByIdArguments>(
         operation: DeleteWorkoutMoveByIdMutation(variables: variables));
 
@@ -779,7 +779,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
     /// If we do optimistic client update then the user can immediately click to edit a workoutMove with a temp id that does not exist in the DB - causing network error on an update mutation request.
     final variables = DuplicateWorkoutMoveByIdArguments(id: toDuplicate.id);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         DuplicateWorkoutMoveById$Mutation, DuplicateWorkoutMoveByIdArguments>(
       operation: DuplicateWorkoutMoveByIdMutation(variables: variables),
     );
@@ -824,7 +824,7 @@ class WorkoutCreatorBloc extends ChangeNotifier {
                   id: s.id, sortPosition: s.sortPosition))
               .toList());
 
-      final result = await context.graphQLStore.networkOnlyOperation<
+      final result = await GraphQLStore.store.networkOnlyOperation<
           ReorderWorkoutMoves$Mutation, ReorderWorkoutMovesArguments>(
         operation: ReorderWorkoutMovesMutation(variables: variables),
       );

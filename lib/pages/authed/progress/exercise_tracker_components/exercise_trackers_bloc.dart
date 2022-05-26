@@ -32,7 +32,7 @@ class ExerciseTrackersBloc extends ChangeNotifier {
   }
 
   Future<void> _init(BuildContext context) async {
-    _graphQlStore = context.read<GraphQLStore>();
+    _graphQlStore = GraphQLStore.store;
     await Future.wait([
       _setupLoggedWorkoutsQuery(),
       _setupExerciseLoadTrackersQuery(),

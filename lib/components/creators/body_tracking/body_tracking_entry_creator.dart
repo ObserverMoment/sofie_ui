@@ -15,6 +15,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class BodyTrackingEntryCreatorPage extends StatefulWidget {
   final BodyTrackingEntry? bodyTrackingEntry;
@@ -81,13 +82,13 @@ class _BodyTrackingEntryCreatorPageState
           variables: CreateBodyTrackingEntryArguments(
               data: CreateBodyTrackingEntryInput.fromJson(data)));
 
-      final result = await context.graphQLStore.create<
+      final result = await GraphQLStore.store.create<
               CreateBodyTrackingEntry$Mutation,
               CreateBodyTrackingEntryArguments>(
           mutation: mutation,
           addRefToQueries: [GQLOpNames.bodyTrackingEntries]);
 
-      checkOperationResult(context, result,
+      checkOperationResult(result,
           onFail: _handleOnFailAndBackup,
           onSuccess: () =>
               _handleSuccessfulUpdate(result.data!.createBodyTrackingEntry));
@@ -97,13 +98,13 @@ class _BodyTrackingEntryCreatorPageState
               data: UpdateBodyTrackingEntryInput.fromJson(
                   _activeBodyTrackingEntry!.toJson())));
 
-      final result = await context.graphQLStore.mutate<
+      final result = await GraphQLStore.store.mutate<
               UpdateBodyTrackingEntry$Mutation,
               UpdateBodyTrackingEntryArguments>(
           mutation: mutation,
           broadcastQueryIds: [GQLOpNames.bodyTrackingEntries]);
 
-      checkOperationResult(context, result,
+      checkOperationResult(result,
           onFail: _handleOnFailAndBackup,
           onSuccess: () =>
               _handleSuccessfulUpdate(result.data!.updateBodyTrackingEntry));

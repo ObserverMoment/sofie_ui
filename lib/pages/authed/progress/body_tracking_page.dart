@@ -21,6 +21,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class BodyTrackingPage extends StatefulWidget {
   const BodyTrackingPage({Key? key}) : super(key: key);
@@ -153,7 +154,7 @@ class _Entries extends StatelessWidget {
     final mutation = DeleteBodyTrackingEntryByIdMutation(
         variables: DeleteBodyTrackingEntryByIdArguments(id: entryId));
 
-    final result = await context.graphQLStore.delete<
+    final result = await GraphQLStore.store.delete<
             DeleteBodyTrackingEntryById$Mutation,
             DeleteBodyTrackingEntryByIdArguments>(
         mutation: mutation,
@@ -162,7 +163,7 @@ class _Entries extends StatelessWidget {
         removeRefFromQueries: [GQLOpNames.bodyTrackingEntries],
         removeAllRefsToId: true);
 
-    checkOperationResult(context, result, onFail: () {
+    checkOperationResult(result, onFail: () {
       context.showToast(
           message: 'Sorry, there was a problem',
           toastType: ToastType.destructive);

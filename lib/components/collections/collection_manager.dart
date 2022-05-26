@@ -6,6 +6,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Class for a set of functions used to perfom operations on collections.
 /// Adding and removing objects.
@@ -99,7 +100,7 @@ class CollectionManager {
             collectionId: collection.id,
             workout: ConnectRelationInput(id: workout.id)));
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             AddWorkoutToCollection$Mutation, AddWorkoutToCollectionArguments>(
         mutation: AddWorkoutToCollectionMutation(variables: variables),
         broadcastQueryIds: [
@@ -127,7 +128,7 @@ class CollectionManager {
             collectionId: collection.id,
             workout: ConnectRelationInput(id: workout.id)));
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             RemoveWorkoutFromCollection$Mutation,
             RemoveWorkoutFromCollectionArguments>(
         mutation: RemoveWorkoutFromCollectionMutation(variables: variables),
@@ -158,7 +159,7 @@ class CollectionManager {
             collectionId: collection.id,
             workoutPlan: ConnectRelationInput(id: workoutPlan.id)));
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             AddWorkoutPlanToCollection$Mutation,
             AddWorkoutPlanToCollectionArguments>(
         mutation: AddWorkoutPlanToCollectionMutation(variables: variables),
@@ -187,7 +188,7 @@ class CollectionManager {
             collectionId: collection.id,
             workoutPlan: ConnectRelationInput(id: workoutPlan.id)));
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             RemoveWorkoutPlanFromCollection$Mutation,
             RemoveWorkoutPlanFromCollectionArguments>(
         mutation: RemoveWorkoutPlanFromCollectionMutation(variables: variables),

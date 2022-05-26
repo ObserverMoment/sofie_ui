@@ -115,7 +115,7 @@ class WelcomeTodoItemCard extends StatelessWidget {
         data: MarkWelcomeTodoItemAsSeenInput(
             welcomeTodoItemId: welcomeTodoItem.id, userId: authedUserId));
 
-    await context.graphQLStore.delete(
+    await GraphQLStore.store.delete(
         mutation: MarkWelcomeTodoItemAsSeenMutation(variables: variables),
         objectId: welcomeTodoItem.id,
         typename: kWelcomeTodoItemTypename,

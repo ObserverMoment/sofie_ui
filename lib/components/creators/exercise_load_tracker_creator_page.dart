@@ -13,6 +13,7 @@ import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
 class ExerciseLoadTrackerCreatorPage extends StatefulWidget {
@@ -61,11 +62,11 @@ class ExerciseLoadTrackerCreatorPageState
                 ? ConnectRelationInput(id: _equipment!.id)
                 : null));
 
-    final result = await context.graphQLStore.create(
+    final result = await GraphQLStore.store.create(
         mutation: CreateUserExerciseLoadTrackerMutation(variables: variables),
         addRefToQueries: [GQLOpNames.userExerciseLoadTrackers]);
 
-    checkOperationResult(context, result, onSuccess: () {
+    checkOperationResult(result, onSuccess: () {
       setState(() {
         _loading = true;
       });

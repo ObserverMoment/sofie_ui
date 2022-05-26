@@ -54,7 +54,7 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
   late GraphQLStore _store;
 
   void _initObservableQuery() {
-    _store = context.read<GraphQLStore>();
+    _store = GraphQLStore.store;
 
     _observableQuery = _store.registerObserver<TData, TVars>(widget.query,
         parameterizeQuery: widget.parameterizeQuery);

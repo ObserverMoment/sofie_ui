@@ -4,7 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_post_comment_input.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';

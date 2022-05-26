@@ -9,7 +9,9 @@ import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Gets the workout from the DB based on its ID and then inits the DoWorkoutBloc.
 /// Uses [AutoRouter.declarative] to move the user from the do workout page to the log workout page onec all workout sections are completed.
@@ -31,7 +33,7 @@ class DoWorkoutWrapperPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DoWorkoutWrapperPageState createState() => _DoWorkoutWrapperPageState();
+  State<DoWorkoutWrapperPage> createState() => _DoWorkoutWrapperPageState();
 }
 
 class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
@@ -43,9 +45,12 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
     final query = WorkoutByIdQuery(variables: variables);
 
     final result =
-        await context.graphQLStore.networkOnlyOperation(operation: query);
+        await GraphQLStore.store.networkOnlyOperation(operation: query);
 
-    checkOperationResult(context, result);
+    checkOperationResult(result,
+        onFail: () => context.showToast(
+            message: 'Sorry, there was a problem.',
+            toastType: ToastType.destructive));
 
     return result.data!.workoutById;
   }

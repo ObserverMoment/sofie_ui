@@ -12,6 +12,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class GymProfileCreatorPage extends StatefulWidget {
   final GymProfile? gymProfile;
@@ -115,7 +116,7 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
 
       final variables = UpdateGymProfileArguments(data: input);
 
-      await context.graphQLStore.mutate(
+      await GraphQLStore.store.mutate(
           mutation: UpdateGymProfileMutation(variables: variables),
           broadcastQueryIds: [GymProfilesQuery().operationName]);
     } else {
@@ -127,7 +128,7 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
 
       final variables = CreateGymProfileArguments(data: input);
 
-      await context.graphQLStore.create(
+      await GraphQLStore.store.create(
           mutation: CreateGymProfileMutation(variables: variables),
           addRefToQueries: [GymProfilesQuery().operationName]);
     }
@@ -147,7 +148,7 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
     setState(() => _loading = true);
     final variables = DeleteGymProfileByIdArguments(id: _activeGymProfile.id);
 
-    await context.graphQLStore.delete(
+    await GraphQLStore.store.delete(
         typename: kGymProfileTypename,
         objectId: _activeGymProfile.id,
         mutation: DeleteGymProfileByIdMutation(variables: variables),

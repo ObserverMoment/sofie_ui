@@ -15,6 +15,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Updates everything to DB when user saves and closes.
 class CustomMoveCreatorPage extends StatefulWidget {
@@ -80,7 +81,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
       final variables = UpdateMoveArguments(
           data: UpdateMoveInput.fromJson(_activeMove!.toJson()));
 
-      final result = await context.graphQLStore.mutate(
+      final result = await GraphQLStore.store.mutate(
           mutation: UpdateMoveMutation(variables: variables),
           broadcastQueryIds: [CustomMovesQuery().operationName]);
 
@@ -96,7 +97,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
       final variables = CreateMoveArguments(
           data: CreateMoveInput.fromJson(_activeMove!.toJson()));
 
-      final result = await context.graphQLStore.create(
+      final result = await GraphQLStore.store.create(
           mutation: CreateMoveMutation(variables: variables),
           addRefToQueries: [CustomMovesQuery().operationName]);
 

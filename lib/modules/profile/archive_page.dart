@@ -11,6 +11,7 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// User content where [archived] = true
 class ArchivePage extends StatefulWidget {
@@ -143,7 +144,7 @@ class _ArchivedCustomMoves extends StatelessWidget {
   const _ArchivedCustomMoves({Key? key}) : super(key: key);
 
   Future<void> _unarchiveCustomMove(BuildContext context, String id) async {
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
         UnarchiveCustomMoveById$Mutation, UnarchiveCustomMoveByIdArguments>(
       mutation: UnarchiveCustomMoveByIdMutation(
           variables: UnarchiveCustomMoveByIdArguments(id: id)),
@@ -151,7 +152,7 @@ class _ArchivedCustomMoves extends StatelessWidget {
       removeRefFromQueries: [GQLOpNames.userArchivedCustomMoves],
     );
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () => context.showToast(message: 'Custom move unarchived'),
         onFail: () => context.showErrorAlert(
             'Something went wrong, the move was not unarchived correctly'));

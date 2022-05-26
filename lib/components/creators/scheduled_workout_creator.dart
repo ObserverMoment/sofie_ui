@@ -14,6 +14,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/model/toast_request.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// [scheduledOn] will be ignored if [scheduledWorkout] is present.
 /// Otherwise it will be set as the initial date when the widget is opened.
@@ -78,7 +79,7 @@ class _ScheduledWorkoutCreatorPageState
 
       final createVariables = CreateScheduledWorkoutArguments(data: input);
 
-      final result = await context.graphQLStore.create(
+      final result = await GraphQLStore.store.create(
           mutation: CreateScheduledWorkoutMutation(variables: createVariables),
           addRefToQueries: [GQLOpNames.userScheduledWorkouts]);
 
@@ -98,7 +99,7 @@ class _ScheduledWorkoutCreatorPageState
           data: UpdateScheduledWorkoutInput.fromJson(
               _activeScheduledWorkout.toJson()));
 
-      final result = await context.graphQLStore.mutate(
+      final result = await GraphQLStore.store.mutate(
           mutation: UpdateScheduledWorkoutMutation(variables: updateVariables),
           broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
 
@@ -131,7 +132,7 @@ class _ScheduledWorkoutCreatorPageState
       final variables =
           DeleteScheduledWorkoutByIdArguments(id: widget.scheduledWorkout!.id);
 
-      final result = await context.graphQLStore.delete(
+      final result = await GraphQLStore.store.delete(
           mutation: DeleteScheduledWorkoutByIdMutation(variables: variables),
           objectId: widget.scheduledWorkout!.id,
           typename: kScheduledWorkoutTypename,

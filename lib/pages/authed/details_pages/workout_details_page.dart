@@ -65,13 +65,13 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         verb: 'Make Copy',
         message: 'Note: Media will not be copied across.',
         onConfirm: () async {
-          final result = await context.graphQLStore.create<
+          final result = await GraphQLStore.store.create<
                   DuplicateWorkoutById$Mutation, DuplicateWorkoutByIdArguments>(
               mutation: DuplicateWorkoutByIdMutation(
                   variables: DuplicateWorkoutByIdArguments(id: id)),
               addRefToQueries: [GQLOpNames.userWorkouts]);
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () => context.showToast(
                   message: 'Copy created. View in Your Workouts'),
               onFail: () => context.showErrorAlert(
@@ -100,21 +100,21 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         message:
             'It will be moved to your archive where it can be retrieved if needed.',
         onConfirm: () async {
-          final result = await context.graphQLStore
+          final result = await GraphQLStore.store
               .mutate<ArchiveWorkoutById$Mutation, ArchiveWorkoutByIdArguments>(
             mutation: ArchiveWorkoutByIdMutation(
                 variables: ArchiveWorkoutByIdArguments(id: workout.id)),
             processResult: (data) {
               // Remove WorkoutSummary from store.
-              context.graphQLStore.deleteNormalizedObject(
+              GraphQLStore.store.deleteNormalizedObject(
                   resolveDataId(workout.summary.toJson())!);
 
               // Remove all refs to it from queries.
-              context.graphQLStore.removeAllQueryRefsToId(
+              GraphQLStore.store.removeAllQueryRefsToId(
                   resolveDataId(workout.summary.toJson())!);
 
               // Rebroadcast all queries that may be affected.
-              context.graphQLStore.broadcastQueriesByIds([
+              GraphQLStore.store.broadcastQueriesByIds([
                 GQLOpNames.userWorkouts,
                 GQLOpNames.userCollections,
                 GQLOpNames.userScheduledWorkouts,
@@ -122,14 +122,14 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
               ]);
 
               // Update Workout and workoutById query
-              context.graphQLStore.writeDataToStore(
+              GraphQLStore.store.writeDataToStore(
                   data: {...workout.summary.toJson(), 'archived': true},
                   broadcastQueryIds: [GQLVarParamKeys.workoutById(widget.id)]);
             },
             addRefToQueries: [GQLOpNames.userArchivedWorkouts],
           );
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () => context.showToast(message: 'Workout archived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not archived correctly'));
@@ -142,7 +142,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
         verb: 'Unarchive',
         message: 'It will be moved back into your workouts.',
         onConfirm: () async {
-          final result = await context.graphQLStore.mutate<
+          final result = await GraphQLStore.store.mutate<
               UnarchiveWorkoutById$Mutation, UnarchiveWorkoutByIdArguments>(
             mutation: UnarchiveWorkoutByIdMutation(
               variables: UnarchiveWorkoutByIdArguments(id: workout.id),
@@ -150,7 +150,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
             processResult: (data) {
               // This operation returns a full Workout object.
               // Add a WorkoutSummary to store and to userWorkoutsQuery
-              context.graphQLStore.writeDataToStore(
+              GraphQLStore.store.writeDataToStore(
                 data: data.unarchiveWorkoutById.summary.toJson(),
                 addRefToQueries: [GQLOpNames.userWorkouts],
               );
@@ -161,10 +161,10 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
               };
 
               // Remove ArchivedWorkout from store and ref from userArchivedWorkoutsQuery.
-              context.graphQLStore
+              GraphQLStore.store
                   .deleteNormalizedObject(resolveDataId(archivedWorkout)!);
 
-              context.graphQLStore.removeRefFromQueryData(
+              GraphQLStore.store.removeRefFromQueryData(
                   data: archivedWorkout,
                   queryIds: [GQLOpNames.userArchivedWorkouts]);
             },
@@ -173,7 +173,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
             ],
           );
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () => context.showToast(message: 'Workout unarchived'),
               onFail: () => context.showErrorAlert(
                   'Something went wrong, the workout was not unarchived correctly'));

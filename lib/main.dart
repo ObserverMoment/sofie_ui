@@ -20,7 +20,7 @@ import 'package:sofie_ui/components/user_input/filters/blocs/workout_filters_blo
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_plan_filters_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/pages/feedback_collection.dart';
+import 'package:sofie_ui/modules/feedback_collection/feedback_collection.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
@@ -69,17 +69,23 @@ class AuthRouter extends StatefulWidget {
 class AuthRouterState extends State<AuthRouter> {
   final _authBloc = AuthBloc();
   final _appRouter = AppRouter();
+  final _graphQLStore = GraphQLStore();
 
   @override
   void initState() {
     super.initState();
     GetIt.I.registerSingleton<AuthBloc>(_authBloc);
+    GetIt.I.registerSingleton<GraphQLStore>(_graphQLStore);
   }
 
   @override
   void dispose() {
     GetIt.I.unregister<AuthBloc>(
       instance: _authBloc,
+      disposingFunction: (bloc) => bloc.dispose(),
+    );
+    GetIt.I.unregister<GraphQLStore>(
+      instance: _graphQLStore,
       disposingFunction: (bloc) => bloc.dispose(),
     );
     _appRouter.dispose();
@@ -92,10 +98,6 @@ class AuthRouterState extends State<AuthRouter> {
       providers: [
         ChangeNotifierProvider<AuthBloc>.value(value: _authBloc),
         ChangeNotifierProvider<ThemeBloc>(create: (_) => ThemeBloc()),
-        Provider<GraphQLStore>(
-          create: (_) => GraphQLStore(),
-          dispose: (context, store) => store.dispose(),
-        ),
         ChangeNotifierProvider<MoveFiltersBloc>(
             create: (_) => MoveFiltersBloc()),
         ChangeNotifierProvider<WorkoutFiltersBloc>(

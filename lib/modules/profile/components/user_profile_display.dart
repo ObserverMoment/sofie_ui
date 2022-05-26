@@ -4,13 +4,12 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
-import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
+import 'package:sofie_ui/modules/profile/components/club_summaries_list.dart';
+import 'package:sofie_ui/modules/profile/components/fitness_benchmark_scores_list.dart';
+import 'package:sofie_ui/modules/profile/skills/skills_list.dart';
+import 'package:sofie_ui/modules/profile/social/social_links.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
-import 'package:sofie_ui/components/profile/club_summaries_list.dart';
-import 'package:sofie_ui/components/profile/fitness_benchmark_scores_list.dart';
-import 'package:sofie_ui/components/profile/skills_list.dart';
-import 'package:sofie_ui/components/profile/social_media_links.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -18,7 +17,6 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/country.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page_components/summary_stat_display.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:auto_route/auto_route.dart';
 
@@ -26,15 +24,12 @@ class UserProfileDisplay extends StatelessWidget {
   final UserProfile profile;
   const UserProfileDisplay({Key? key, required this.profile}) : super(key: key);
 
-  double get _avatarSize => 160.0;
+  double get _avatarSize => 140.0;
 
   @override
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
     final bool isAuthedUserProfile = authedUserId == profile.id;
-
-    final int workoutCount = profile.workoutCount ?? 0;
-    final int planCount = profile.planCount ?? 0;
 
     final hasSocialLinks = [
       profile.youtubeHandle,
@@ -77,26 +72,37 @@ class UserProfileDisplay extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (!isAuthedUserProfile)
-                          _ProfileButtons(
-                            profile: profile,
+                          TertiaryButton(
+                            text: 'Chat',
+                            prefixIconData: CupertinoIcons.chat_bubble_2,
+                            iconSize: 20,
+                            fontSize: FONTSIZE.three,
+                            onPressed: () =>
+                                context.navigateTo(OneToOneChatRoute(
+                              otherUserId: profile.id,
+                            )),
                           ),
-                        if (followerCount > 0)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MyText('$followerCount',
-                                    size: FONTSIZE.one,
-                                    weight: FontWeight.bold),
-                                const SizedBox(width: 3),
-                                const MyText(
-                                  'FOLLOWERS',
-                                  size: FONTSIZE.one,
-                                )
-                              ],
-                            ),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.all(3.0),
+                          child: Card(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              if (profile.lifetimeLogStatsSummary != null)
+                                SummaryStatDisplay(
+                                  label: 'SESSIONS',
+                                  number: profile
+                                      .lifetimeLogStatsSummary!.sessionsLogged,
+                                ),
+                              if (profile.lifetimeLogStatsSummary != null)
+                                SummaryStatDisplay(
+                                  label: 'MINUTES',
+                                  number: profile
+                                      .lifetimeLogStatsSummary!.minutesWorked,
+                                ),
+                            ],
+                          )),
+                        ),
                       ],
                     ),
                 ],
@@ -122,60 +128,8 @@ class UserProfileDisplay extends StatelessWidget {
             if (hasSocialLinks)
               Padding(
                 padding: const EdgeInsets.only(bottom: 12.0),
-                child: SocialMediaLinks(
+                child: SocialLinks(
                   profile: profile,
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: Card(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  if (profile.lifetimeLogStatsSummary != null)
-                    SummaryStatDisplay(
-                      label: 'SESSIONS',
-                      number: profile.lifetimeLogStatsSummary!.sessionsLogged,
-                    ),
-                  if (profile.lifetimeLogStatsSummary != null)
-                    SummaryStatDisplay(
-                      label: 'MINUTES',
-                      number: profile.lifetimeLogStatsSummary!.minutesWorked,
-                    ),
-                  if (isAuthedUserProfile || workoutCount > 0)
-                    SummaryStatDisplay(
-                      label: 'WORKOUTS',
-                      number: workoutCount,
-                    ),
-                  if (isAuthedUserProfile || workoutCount > 0)
-                    SummaryStatDisplay(
-                      label: 'PLANS',
-                      number: planCount,
-                    ),
-                ],
-              )),
-            ),
-            if (!isAuthedUserProfile && (workoutCount > 0 || planCount > 0))
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: 4, top: 16, right: 4, bottom: 4),
-                child: Column(
-                  children: [
-                    if (workoutCount > 0)
-                      PageLink(
-                          linkText: 'View Workouts ($workoutCount)',
-                          onPress: () => context.navigateTo(
-                              ProfilePublicWorkoutsRoute(
-                                  userId: profile.id,
-                                  userDisplayName: profile.displayName))),
-                    if (planCount > 0)
-                      PageLink(
-                          linkText: 'View Plans ($planCount)',
-                          onPress: () => context.navigateTo(
-                              ProfilePublicWorkoutPlansRoute(
-                                  userId: profile.id,
-                                  userDisplayName: profile.displayName))),
-                  ],
                 ),
               ),
             const SizedBox(height: 4),
@@ -190,8 +144,8 @@ class UserProfileDisplay extends StatelessWidget {
                   )),
             if (profile.clubs.isNotEmpty)
               _InfoSection(
-                header: 'Clubs',
-                icon: MyCustomIcons.clubsIcon,
+                header: 'Circles',
+                icon: CupertinoIcons.circle,
                 content: ClubSummariesList(
                   clubs: profile.clubs,
                 ),
@@ -291,48 +245,6 @@ class _Location extends StatelessWidget {
             size: FONTSIZE.two,
             subtext: true,
           ),
-      ],
-    );
-  }
-}
-
-class _ProfileButtons extends StatelessWidget {
-  final UserProfile profile;
-  const _ProfileButtons({Key? key, required this.profile}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (Utils.textNotNull(profile.introVideoThumbUri))
-          TertiaryButton(
-            onPressed: () => VideoSetupManager.openFullScreenVideoPlayer(
-                context: context,
-                videoUri: profile.introVideoUri!,
-                videoThumbUri: profile.introVideoThumbUri,
-                autoPlay: true,
-                autoLoop: true),
-            prefixIconData: CupertinoIcons.film,
-            iconSize: 20,
-            fontSize: FONTSIZE.three,
-            text: 'Watch Video',
-          ),
-        TertiaryButton(
-          text: 'Chat',
-          prefixIconData: CupertinoIcons.chat_bubble_2,
-          iconSize: 20,
-          fontSize: FONTSIZE.three,
-          onPressed: () => context.navigateTo(OneToOneChatRoute(
-            otherUserId: profile.id,
-          )),
-        ),
-        SizedBox(
-          width: 150,
-          child: UserFeedConnectionButton(
-            otherUserId: profile.id,
-          ),
-        ),
       ],
     );
   }

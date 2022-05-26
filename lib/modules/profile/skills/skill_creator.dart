@@ -13,6 +13,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class SkillCreator extends StatefulWidget {
   final Skill? skill;
@@ -76,16 +77,17 @@ class _SkillCreatorState extends State<SkillCreator> {
             name: _nameController.text,
             experience: _experienceController.text));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .networkOnlyOperation<CreateSkill$Mutation, CreateSkillArguments>(
       operation: CreateSkillMutation(variables: variables),
     );
 
     setState(() => _savingToDB = false);
 
-    checkOperationResult(context, result,
-        onFail: () => context.showErrorAlert(
-            'Sorry there was a problem, the Skill was not created.'),
+    checkOperationResult(result,
+        onFail: () => context.showToast(
+            message: 'Sorry, there was a problem.',
+            toastType: ToastType.destructive),
         onSuccess: () {
           setState(() {
             _activeSkill = result.data!.createSkill;
@@ -117,17 +119,18 @@ class _SkillCreatorState extends State<SkillCreator> {
     final variables = UpdateSkillArguments(
         data: UpdateSkillInput.fromJson(_activeSkill!.toJson()));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .networkOnlyOperation<UpdateSkill$Mutation, UpdateSkillArguments>(
       operation: UpdateSkillMutation(variables: variables),
     );
 
-    checkOperationResult(context, result, onFail: () {
+    checkOperationResult(result, onFail: () {
       setState(() {
         _activeSkill = Skill.fromJson(_activeSkillBackup);
       });
-      context.showErrorAlert(
-          'Sorry there was a problem, the Skill was not updated.');
+      context.showToast(
+          message: 'Sorry, there was a problem.',
+          toastType: ToastType.destructive);
     }, onSuccess: () {
       setState(() {
         _activeSkill = result.data!.updateSkill;
@@ -142,7 +145,7 @@ class _SkillCreatorState extends State<SkillCreator> {
   /// Merge the new skill data into the parent user profile data within the store and then re-broadcast.
   /// When creating a new skill set [addNewSkill] as true. This will add the skill to the profile.skills before merging into store. When [addNewSkill] is false this will find the previous skill and overwrite it.
   void _mergeSkillToUserProfileInStore({bool addNewSkill = false}) {
-    final prev = context.graphQLStore
+    final prev = GraphQLStore.store
         .readDenomalized('$kUserProfileTypename:$_authedUserId');
     final profile = UserProfile.fromJson(prev);
     final activeId = _activeSkill!.id;
@@ -155,7 +158,7 @@ class _SkillCreatorState extends State<SkillCreator> {
           .toList();
     }
 
-    context.graphQLStore.writeDataToStore(
+    GraphQLStore.store.writeDataToStore(
         data: profile.toJson(),
         broadcastQueryIds: [GQLVarParamKeys.userProfile(_authedUserId)]);
   }

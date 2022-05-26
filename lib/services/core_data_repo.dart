@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
 class CoreDataRepo {
@@ -14,10 +14,10 @@ class CoreDataRepo {
   static List<FitnessBenchmarkCategory> fitnessBenchmarkCategories = [];
 
   static Future<void> initCoreData(BuildContext context) async {
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .networkOnlyOperation(operation: CoreDataQuery());
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => throw Exception('Could not load core app data!'),
         onSuccess: () {
           final coreData = result.data!.coreData;

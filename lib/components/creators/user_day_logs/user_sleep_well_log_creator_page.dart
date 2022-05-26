@@ -90,7 +90,7 @@ class _UserSleepWellLogCreatorPageState
       _saving = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: _showErrorToast, onSuccess: context.pop);
   }
 
@@ -104,7 +104,7 @@ class _UserSleepWellLogCreatorPageState
       note: _note,
     ));
 
-    final result = await context.graphQLStore.create(
+    final result = await GraphQLStore.store.create(
       mutation: CreateUserSleepWellLogMutation(variables: variables),
       addRefToQueries: [
         GQLOpNames.userSleepWellLogs,
@@ -122,7 +122,7 @@ class _UserSleepWellLogCreatorPageState
       note: _note,
     ));
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
       mutation: UpdateUserSleepWellLogMutation(variables: variables),
       broadcastQueryIds: [
         GQLOpNames.userSleepWellLogs,

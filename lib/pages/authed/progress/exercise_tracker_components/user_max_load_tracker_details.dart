@@ -17,6 +17,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Displays a graph at the top of the screen showing progress over time + a list below the graph of the top x entries (including manual entries) + any videos that the user has uploaded.
 class UserMaxLoadTrackerDetails extends StatelessWidget {
@@ -31,7 +32,7 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
             'Deleting this tracker will not delete anything from your logs, scores or history.',
         itemType: 'Score Tracker',
         onConfirm: () async {
-          final result = await context.graphQLStore.delete(
+          final result = await GraphQLStore.store.delete(
               mutation: DeleteUserExerciseLoadTrackerMutation(
                   variables:
                       DeleteUserExerciseLoadTrackerArguments(id: tracker.id)),
@@ -39,7 +40,7 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
               typename: kUserExerciseLoadTracker,
               removeRefFromQueries: [GQLOpNames.userExerciseLoadTrackers]);
 
-          checkOperationResult(context, result, onSuccess: context.pop);
+          checkOperationResult(result, onSuccess: context.pop);
         });
   }
 

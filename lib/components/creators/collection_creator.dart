@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class CollectionCreatorPage extends StatefulWidget {
   final Collection? collection;
@@ -64,7 +65,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
             name: _nameController.text,
             description: _descriptionController.text));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<UpdateCollection$Mutation, UpdateCollectionArguments>(
       mutation: UpdateCollectionMutation(variables: variables),
       broadcastQueryIds: [
@@ -92,7 +93,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
             name: _nameController.text,
             description: _descriptionController.text));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<CreateCollection$Mutation, CreateCollectionArguments>(
             mutation: CreateCollectionMutation(variables: variables),
             addRefToQueries: [UserCollectionsQuery().operationName]);

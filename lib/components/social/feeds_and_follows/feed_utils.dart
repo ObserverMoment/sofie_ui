@@ -7,6 +7,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 const kDefaultFeedPostVerb = 'post';
 const kDefaultClubFeedPostVerb = 'post-club';
@@ -158,7 +159,7 @@ class FeedUtils {
   static Future<List<FollowWithUserAvatarData>> getFollowsWithUserData(
       BuildContext context, List<Follow> follows, List<String> userIds) async {
     /// Call API and get UserAvatarData[]
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .networkOnlyOperation<UserAvatars$Query, UserAvatarsArguments>(
             operation: UserAvatarsQuery(
                 variables: UserAvatarsArguments(ids: userIds)));

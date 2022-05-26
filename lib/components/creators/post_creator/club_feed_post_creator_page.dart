@@ -25,6 +25,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:dio/src/cancel_token.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubFeedPostCreatorPage extends StatefulWidget {
   final String clubId;
@@ -293,13 +294,13 @@ class _ClubFeedPostCreatorPageState extends State<ClubFeedPostCreatorPage> {
                   object: _activity!.object,
                   verb: _activity!.verb));
 
-          final result = await context.graphQLStore.networkOnlyOperation<
+          final result = await GraphQLStore.store.networkOnlyOperation<
                   CreateClubMembersFeedPost$Mutation,
                   CreateClubMembersFeedPostArguments>(
               operation:
                   CreateClubMembersFeedPostMutation(variables: variables));
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () {
                 context.pop();
                 widget.onSuccess();

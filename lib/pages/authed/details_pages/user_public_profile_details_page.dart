@@ -2,10 +2,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/profile/user_profile_display.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/modules/profile/components/user_profile_display.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 

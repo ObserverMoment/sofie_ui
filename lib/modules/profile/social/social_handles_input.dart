@@ -20,6 +20,7 @@ class SocialHandlesInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         const MyHeaderText('Social Handles'),
         const SizedBox(height: 6),
@@ -81,8 +82,7 @@ class _HandleInput extends StatelessWidget {
       onSave: updateHandle,
       title: title,
       icon: icon,
-      validationMessage:
-          'Enter your user name or handle, NOT a full web address',
+      validationMessage: 'Enter user name or handle, NOT full address',
     );
   }
 }

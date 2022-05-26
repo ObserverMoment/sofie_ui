@@ -73,7 +73,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   /// Should only be run when user is editing the log ([_isEditing] is true),
   /// not when they are creating it.
   bool writeAllChangesToStore() {
-    final success = context.graphQLStore.writeDataToStore(
+    final success = GraphQLStore.store.writeDataToStore(
         data: loggedWorkout.toJson(),
         broadcastQueryIds: [GQLOpNames.userLoggedWorkouts]);
     return success;
@@ -122,7 +122,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         data: UpdateLoggedWorkoutInput.fromJson(loggedWorkout.toJson()));
 
     try {
-      final result = await context.graphQLStore.networkOnlyOperation(
+      final result = await GraphQLStore.store.networkOnlyOperation(
           operation: UpdateLoggedWorkoutMutation(variables: variables));
 
       _checkApiResult(result, onSuccess: writeAllChangesToStore);
@@ -166,7 +166,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         data: UpdateLoggedWorkoutSectionInput.fromJson(section.toJson()));
 
     try {
-      final result = await context.graphQLStore.networkOnlyOperation(
+      final result = await GraphQLStore.store.networkOnlyOperation(
           operation: UpdateLoggedWorkoutSectionMutation(variables: variables));
 
       _checkApiResult(result, onSuccess: writeAllChangesToStore);
@@ -199,7 +199,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         data:
             UpdateLoggedWorkoutSetInput(id: setId, timeTakenSeconds: seconds));
 
-    final result = await context.graphQLStore.networkOnlyOperation(
+    final result = await GraphQLStore.store.networkOnlyOperation(
         operation: UpdateLoggedWorkoutSetMutation(variables: variables));
 
     /// If no errors then assume update has worked, otherwise revert UI to backup.
@@ -235,7 +235,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         data: UpdateLoggedWorkoutMoveInput.fromJson(
             updatedLoggedWorkoutMove.toJson()));
 
-    final result = await context.graphQLStore.networkOnlyOperation(
+    final result = await GraphQLStore.store.networkOnlyOperation(
         operation: UpdateLoggedWorkoutMoveMutation(variables: variables));
 
     /// If no errors then assume update has worked, otherwise revert UI to backup.
@@ -264,7 +264,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteLoggedWorkoutMoveArguments(id: loggedMoveId);
 
-    final result = await context.graphQLStore.networkOnlyOperation(
+    final result = await GraphQLStore.store.networkOnlyOperation(
         operation: DeleteLoggedWorkoutMoveMutation(variables: variables));
 
     /// If no errors then assume update has worked, otherwise revert UI to backup.
@@ -336,11 +336,11 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
 
     final variables = CreateLoggedWorkoutArguments(data: input);
 
-    final result = await context.graphQLStore.create(
+    final result = await GraphQLStore.store.create(
         mutation: CreateLoggedWorkoutMutation(variables: variables),
         addRefToQueries: [GQLOpNames.userLoggedWorkouts]);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, something went wrong',
             toastType: ToastType.destructive),
@@ -368,13 +368,13 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   /// Meaning that the user's schedule will update and show the scheduled workout as completed.
   static void updateScheduleWithLoggedWorkout(BuildContext context,
       ScheduledWorkout scheduledWorkout, LoggedWorkout loggedWorkout) {
-    final prevData = context.graphQLStore
+    final prevData = GraphQLStore.store
         .readDenomalized('$kScheduledWorkoutTypename:${scheduledWorkout.id}');
 
     final updated = ScheduledWorkout.fromJson(prevData);
     updated.loggedWorkoutId = loggedWorkout.id;
 
-    context.graphQLStore.writeDataToStore(
+    GraphQLStore.store.writeDataToStore(
         data: updated.toJson(),
         broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
   }
@@ -383,7 +383,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   /// This would be overly complex to manage purely on the FE.
   static Future<void> refetchWorkoutPlanEnrolmentQueries(
       BuildContext context, String workoutPlanEnrolmentId) async {
-    await context.graphQLStore.refetchQueriesByIds([
+    await GraphQLStore.store.refetchQueriesByIds([
       GQLOpNames.workoutPlanEnrolments,
       GQLVarParamKeys.workoutPlanEnrolmentById(workoutPlanEnrolmentId)
     ]);

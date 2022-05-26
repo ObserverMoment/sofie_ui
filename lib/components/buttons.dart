@@ -174,18 +174,17 @@ class SecondaryButton extends StatelessWidget {
       prefix: prefixIconData != null
           ? Icon(
               prefixIconData,
-              color: Styles.white,
+              color: context.theme.primary,
               size: 20,
             )
           : null,
       suffix: suffixIconData != null
-          ? Icon(suffixIconData, color: Styles.white, size: 20)
+          ? Icon(suffixIconData, color: context.theme.primary, size: 20)
           : null,
       text: text,
       disabled: disabled,
       onPressed: onPressed,
-      // backgroundGradient: Styles.secondaryButtonGradient,
-      contentColor: Styles.white,
+      contentColor: context.theme.primary,
       withMinWidth: withMinWidth,
       border: true,
     );

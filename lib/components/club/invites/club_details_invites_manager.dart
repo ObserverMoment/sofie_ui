@@ -12,6 +12,7 @@ import 'package:collection/collection.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubDetailsInvitesManager extends StatelessWidget {
   final String clubId;
@@ -36,13 +37,13 @@ class ClubDetailsInvitesManager extends StatelessWidget {
     final variables = DeleteClubInviteTokenArguments(
         data: DeleteClubInviteTokenInput(clubId: clubId, tokenId: token.id));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<DeleteClubInviteToken$Mutation, DeleteClubInviteTokenArguments>(
       mutation: DeleteClubInviteTokenMutation(variables: variables),
       broadcastQueryIds: [GQLVarParamKeys.clubInviteTokens(clubId)],
     );
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showErrorAlert(
             'Sorry there was a problem deleting this invite link.'));
   }

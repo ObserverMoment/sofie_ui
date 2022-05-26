@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gql_exec/gql_exec.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/debounce.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -70,7 +70,7 @@ class TextSearchBloc<T> {
           final query = TextSearchWorkoutsQuery(
               variables: TextSearchWorkoutsArguments(text: text));
 
-          response = await context.graphQLStore.execute(query);
+          response = await GraphQLStore.store.execute(query);
 
           _checkResponse(response);
 
@@ -81,7 +81,7 @@ class TextSearchBloc<T> {
           final query = TextSearchWorkoutNamesQuery(
               variables: TextSearchWorkoutNamesArguments(text: text));
 
-          response = await context.graphQLStore.execute(query);
+          response = await GraphQLStore.store.execute(query);
 
           _checkResponse(response);
 
@@ -93,7 +93,7 @@ class TextSearchBloc<T> {
           final query = TextSearchWorkoutPlansQuery(
               variables: TextSearchWorkoutPlansArguments(text: text));
 
-          response = await context.graphQLStore.execute(query);
+          response = await GraphQLStore.store.execute(query);
 
           _checkResponse(response);
 
@@ -105,7 +105,7 @@ class TextSearchBloc<T> {
           final query = TextSearchWorkoutPlanNamesQuery(
               variables: TextSearchWorkoutPlanNamesArguments(text: text));
 
-          response = await context.graphQLStore.execute(query);
+          response = await GraphQLStore.store.execute(query);
 
           _checkResponse(response);
 

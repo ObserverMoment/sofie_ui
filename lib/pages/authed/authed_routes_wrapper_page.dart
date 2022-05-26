@@ -19,6 +19,7 @@ import 'package:stream_feed/src/client/notification_feed.dart';
 import 'package:stream_feed/stream_feed.dart' as feed;
 import 'package:stream_feed/stream_feed.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 /// https://github.com/Milad-Akarie/auto_route_library/issues/418
@@ -81,15 +82,15 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     final userScheduledWorkoutsQuery = UserScheduledWorkoutsQuery();
 
     Future.wait([
-      context.graphQLStore.query(query: userProfileQuery),
+      GraphQLStore.store.query(query: userProfileQuery),
 
       /// Get all the user logs - then we can always use [storeFirst] for these queries in the app. Removing this and not changing in app queries to [storeAndNetwork] will result in a query list of a single log in the case that the user logs a workout BEFORE downloading their full list of logs.
-      context.graphQLStore.query(query: userLoggedWorkoutsQuery),
+      GraphQLStore.store.query(query: userLoggedWorkoutsQuery),
 
       /// Get data required to display the Feed page that the user lands on.
-      context.graphQLStore.query(query: announcementUpdatesQuery),
-      context.graphQLStore.query(query: welcomeTodoItemsQuery),
-      context.graphQLStore.query(query: userScheduledWorkoutsQuery),
+      GraphQLStore.store.query(query: announcementUpdatesQuery),
+      GraphQLStore.store.query(query: welcomeTodoItemsQuery),
+      GraphQLStore.store.query(query: userScheduledWorkoutsQuery),
     ]);
 
     _coreAppDataInitialized = true;

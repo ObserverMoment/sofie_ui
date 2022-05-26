@@ -11,6 +11,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class CreateEditMemberNote extends StatefulWidget {
   final String clubId;
@@ -91,10 +92,10 @@ class _CreateEditMemberNoteState extends State<CreateEditMemberNote> {
                 note: _textInputController.text,
                 tags: _tags));
 
-        final result = await context.graphQLStore.networkOnlyOperation(
+        final result = await GraphQLStore.store.networkOnlyOperation(
             operation: CreateClubMemberNoteMutation(variables: variables));
 
-        checkOperationResult(context, result, onSuccess: () {
+        checkOperationResult(result, onSuccess: () {
           setState(() {
             _loading = false;
           });
@@ -122,10 +123,10 @@ class _CreateEditMemberNoteState extends State<CreateEditMemberNote> {
                 note: _textInputController.text,
                 tags: _tags));
 
-        final result = await context.graphQLStore.networkOnlyOperation(
+        final result = await GraphQLStore.store.networkOnlyOperation(
             operation: UpdateClubMemberNoteMutation(variables: variables));
 
-        checkOperationResult(context, result, onSuccess: () {
+        checkOperationResult(result, onSuccess: () {
           setState(() {
             _loading = false;
           });

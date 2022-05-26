@@ -14,7 +14,7 @@ import 'package:sofie_ui/components/user_input/selectors/content_access_scope_se
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -50,19 +50,19 @@ class _WorkoutCreatorPageState extends State<WorkoutCreatorPage> {
       _creatingNewWorkout = true;
     });
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .create<CreateWorkout$Mutation, CreateWorkoutArguments>(
       mutation:
           CreateWorkoutMutation(variables: CreateWorkoutArguments(data: input)),
       processResult: (data) {
         // The WorkoutSummary gets immediately added to the userWorkouts query when a workout is created.
-        context.graphQLStore.writeDataToStore(
-            data: data.createWorkout.summary.toJson(),
-            addRefToQueries: [GQLOpNames.userWorkouts]);
+        // GraphQLStore.store.writeDataToStore(
+        //     data: data.createWorkout.summary.toJson(),
+        //     addRefToQueries: [GQLOpNames.userWorkouts]);
       },
     );
 
-    checkOperationResult(context, result, onSuccess: () {
+    checkOperationResult(result, onSuccess: () {
       _initBloc(result.data!.createWorkout);
     });
 

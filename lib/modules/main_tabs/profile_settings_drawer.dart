@@ -11,7 +11,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -42,18 +42,29 @@ class ProfileSettingsDrawer extends StatelessWidget {
                   child: SafeArea(
                     child: Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        Column(
                           children: [
-                            IconButton(
-                                iconData: CupertinoIcons.clear,
-                                onPressed: context.pop),
-                            const SizedBox(width: 10)
+                            Stack(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    UserAvatar(
+                                      avatarUri: profile?.avatarUri,
+                                      size: 100,
+                                    ),
+                                  ],
+                                ),
+                                Positioned(
+                                  top: -8,
+                                  right: 10,
+                                  child: IconButton(
+                                      iconData: CupertinoIcons.clear,
+                                      onPressed: context.pop),
+                                ),
+                              ],
+                            )
                           ],
-                        ),
-                        UserAvatar(
-                          avatarUri: profile?.avatarUri,
-                          size: 100,
                         ),
                         const SizedBox(height: 16),
                         if (Utils.textNotNull(profile?.displayName))
@@ -97,13 +108,15 @@ class ProfileSettingsDrawer extends StatelessWidget {
                             context.pop();
                             context.navigateTo(const GymProfilesRoute());
                           }),
-                      PageLink(
-                          linkText: 'Social Links',
-                          icon: CupertinoIcons.link,
-                          onPress: () {
-                            context.pop();
-                            context.navigateTo(const SettingsRoute());
-                          }),
+                      if (profile != null)
+                        PageLink(
+                            linkText: 'Social Links',
+                            icon: CupertinoIcons.link,
+                            onPress: () {
+                              context.pop();
+                              context.navigateTo(
+                                  SocialLinksRoute(profile: profile));
+                            }),
                       PageLink(
                           linkText: 'Skills',
                           icon: MyCustomIcons.certificateIcon,

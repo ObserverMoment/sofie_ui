@@ -83,7 +83,7 @@ class _UserMeditationLogCreatorPageState
       _saving = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: _showErrorToast, onSuccess: context.pop);
   }
 
@@ -96,7 +96,7 @@ class _UserMeditationLogCreatorPageState
       note: _note,
     ));
 
-    final result = await context.graphQLStore.create(
+    final result = await GraphQLStore.store.create(
       mutation: CreateUserMeditationLogMutation(variables: variables),
       addRefToQueries: [
         GQLOpNames.userMeditationLogs,
@@ -113,7 +113,7 @@ class _UserMeditationLogCreatorPageState
       note: _note,
     ));
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
       mutation: UpdateUserMeditationLogMutation(variables: variables),
       broadcastQueryIds: [
         GQLOpNames.userMeditationLogs,

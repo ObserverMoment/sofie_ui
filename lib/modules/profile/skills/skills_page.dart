@@ -45,21 +45,21 @@ class _SkillsPageState extends State<SkillsPage> {
   Future<void> _handleDeleteSkill(Skill skill, String authedUserId) async {
     final variables = DeleteSkillByIdArguments(id: skill.id);
 
-    final result = await context.graphQLStore.networkOnlyOperation(
+    final result = await GraphQLStore.store.networkOnlyOperation(
         operation: DeleteSkillByIdMutation(variables: variables));
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, there was a problem.',
             toastType: ToastType.destructive),
         onSuccess: () {
-          final prev = context.graphQLStore
+          final prev = GraphQLStore.store
               .readDenomalized('$kUserProfileTypename:$authedUserId');
           final profile = UserProfile.fromJson(prev);
 
           profile.skills.removeWhere((s) => s.id == skill.id);
 
-          context.graphQLStore.writeDataToStore(
+          GraphQLStore.store.writeDataToStore(
               data: profile.toJson(),
               broadcastQueryIds: [GQLVarParamKeys.userProfile(authedUserId)]);
         });
@@ -92,17 +92,18 @@ class _SkillsPageState extends State<SkillsPage> {
     final variables = AddDocumentToSkillArguments(
         data: AddDocumentToSkillInput(id: skill.id, uri: uri));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         AddDocumentToSkill$Mutation, AddDocumentToSkillArguments>(
       operation: AddDocumentToSkillMutation(variables: variables),
     );
 
-    checkOperationResult(context, result, onFail: () async {
+    checkOperationResult(result, onFail: () async {
       /// Remove the failed upload from server.
-      await UploadcareService().deleteFiles(fileIds: [uri]);
-
-      context.showErrorAlert(
-          'Sorry there was a problem, the Skill was not updated.');
+      await UploadcareService().deleteFiles(
+          fileIds: [uri],
+          onComplete: () => context.showToast(
+              message: 'Sorry, there was a problem.',
+              toastType: ToastType.destructive));
     }, onSuccess: () {
       _writeSkillUpdateToStore(result.data!.addDocumentToSkill);
     });
@@ -127,12 +128,12 @@ class _SkillsPageState extends State<SkillsPage> {
     final variables = RemoveDocumentFromSkillArguments(
         data: RemoveDocumentFromSkillInput(id: skill.id));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         RemoveDocumentFromSkill$Mutation, RemoveDocumentFromSkillArguments>(
       operation: RemoveDocumentFromSkillMutation(variables: variables),
     );
 
-    checkOperationResult(context, result, onFail: () async {
+    checkOperationResult(result, onFail: () async {
       context.showErrorAlert(
           'Sorry there was a problem, the Skill was not updated.');
     }, onSuccess: () {
@@ -146,14 +147,14 @@ class _SkillsPageState extends State<SkillsPage> {
 
   void _writeSkillUpdateToStore(Skill updated) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
-    final prev = context.graphQLStore
+    final prev = GraphQLStore.store
         .readDenomalized('$kUserProfileTypename:$authedUserId');
     final profile = UserProfile.fromJson(prev);
 
     profile.skills =
         profile.skills.map((s) => s.id == updated.id ? updated : s).toList();
 
-    context.graphQLStore.writeDataToStore(
+    GraphQLStore.store.writeDataToStore(
         data: profile.toJson(),
         broadcastQueryIds: [GQLVarParamKeys.userProfile(authedUserId)]);
   }
@@ -177,10 +178,10 @@ class _SkillsPageState extends State<SkillsPage> {
         final skills = data.userProfile!.skills;
 
         return MyPageScaffold(
-            child: NestedScrollView(
-          headerSliverBuilder: (c, i) =>
-              [const MySliverNavbar(title: 'Skills Manager')],
-          body: skills.isEmpty
+          navigationBar: const MyNavBar(
+            middle: NavBarLargeTitle('Skills'),
+          ),
+          child: skills.isEmpty
               ? YourContentEmptyPlaceholder(
                   message: 'No skills added',
                   explainer:
@@ -243,7 +244,7 @@ class _SkillsPageState extends State<SkillsPage> {
                       ),
                     ),
                   )),
-        ));
+        );
       },
     );
   }

@@ -14,6 +14,7 @@ import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/util
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Logic to handle the necessary actions is also contained within this widget.
 class FitnessBenchmarkActionsMenu extends StatelessWidget {
@@ -41,14 +42,14 @@ class FitnessBenchmarkActionsMenu extends StatelessWidget {
         message:
             'All benchmark info and data, including submitted scores, will be deleted. OK?',
         onConfirm: () async {
-          final result = await context.graphQLStore.delete(
+          final result = await GraphQLStore.store.delete(
               mutation: DeleteFitnessBenchmarkMutation(
                   variables: DeleteFitnessBenchmarkArguments(id: benchmark.id)),
               objectId: benchmark.id,
               typename: kFitnessBenchmarkTypename,
               removeRefFromQueries: [GQLOpNames.userFitnessBenchmarks]);
 
-          checkOperationResult(context, result, onSuccess: onBenchmarkDelete);
+          checkOperationResult(result, onSuccess: onBenchmarkDelete);
         });
   }
 

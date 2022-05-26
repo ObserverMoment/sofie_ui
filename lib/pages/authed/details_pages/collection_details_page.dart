@@ -11,6 +11,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class CollectionDetailsPage extends StatefulWidget {
   final String id;
@@ -18,7 +19,7 @@ class CollectionDetailsPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _CollectionDetailsPageState createState() => _CollectionDetailsPageState();
+  State<CollectionDetailsPage> createState() => _CollectionDetailsPageState();
 }
 
 class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
@@ -39,7 +40,7 @@ class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
   Future<void> _deleteCollectionById(BuildContext context) async {
     final variables = DeleteCollectionByIdArguments(id: widget.id);
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .delete<DeleteCollectionById$Mutation, DeleteCollectionByIdArguments>(
             mutation: DeleteCollectionByIdMutation(variables: variables),
             objectId: widget.id,

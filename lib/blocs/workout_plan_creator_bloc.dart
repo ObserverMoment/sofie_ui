@@ -36,7 +36,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
   /// When updating data in this bloc we write to the bloc data and to the network only.
   /// This flow should be reviewed at some point.
   bool saveAllChanges() {
-    final writePlanSuccess = context.graphQLStore.writeDataToStore(
+    final writePlanSuccess = GraphQLStore.store.writeDataToStore(
       data: workoutPlan.toJson(),
       broadcastQueryIds: [
         GQLVarParamKeys.workoutPlanById(workoutPlan.id),
@@ -44,7 +44,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     );
 
     if (writePlanSuccess) {
-      final success = context.graphQLStore.writeDataToStore(
+      final success = GraphQLStore.store.writeDataToStore(
         data: workoutPlan.summary.toJson(),
         broadcastQueryIds: [
           GQLOpNames.userWorkoutPlans,
@@ -115,7 +115,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         data: UpdateWorkoutPlanInput.fromJson(
             {...workoutPlan.toJson(), ...data}));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutPlan$Mutation, UpdateWorkoutPlanArguments>(
       operation: UpdateWorkoutPlanMutation(variables: variables),
     );
@@ -148,7 +148,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteWorkoutPlanDaysByIdArguments(ids: idsToDelete);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             DeleteWorkoutPlanDaysById$Mutation,
             DeleteWorkoutPlanDaysByIdArguments>(
         operation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
@@ -179,7 +179,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
             workout: ConnectRelationInput(id: workout.id),
             workoutPlan: ConnectRelationInput(id: workoutPlan.id)));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CreateWorkoutPlanDayWithWorkout$Mutation,
         CreateWorkoutPlanDayWithWorkoutArguments>(
       operation: CreateWorkoutPlanDayWithWorkoutMutation(variables: variables),
@@ -209,7 +209,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutPlanDayArguments(
         data: UpdateWorkoutPlanDayInput(id: dayToUpdate.id));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutPlanDay$Mutation, UpdateWorkoutPlanDayArguments>(
       operation: UpdateWorkoutPlanDayMutation(variables: variables),
       customVariablesMap: {
@@ -260,7 +260,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         data: MoveWorkoutPlanDayToAnotherDayInput(
             id: dayToUpdate.id, moveToDay: toDayNumber));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         MoveWorkoutPlanDayToAnotherDay$Mutation,
         MoveWorkoutPlanDayToAnotherDayArguments>(
       operation: MoveWorkoutPlanDayToAnotherDayMutation(variables: variables),
@@ -315,7 +315,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
         data: CopyWorkoutPlanDayToAnotherDayInput(
             id: originalIdToCopy, copyToDay: toDayNumber));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CopyWorkoutPlanDayToAnotherDay$Mutation,
         CopyWorkoutPlanDayToAnotherDayArguments>(
       operation: CopyWorkoutPlanDayToAnotherDayMutation(variables: variables),
@@ -351,7 +351,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
 
     final variables = DeleteWorkoutPlanDaysByIdArguments(ids: idsToDelete);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             DeleteWorkoutPlanDaysById$Mutation,
             DeleteWorkoutPlanDaysByIdArguments>(
         operation: DeleteWorkoutPlanDaysByIdMutation(variables: variables));
@@ -388,7 +388,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
             workout: ConnectRelationInput(id: workout.id),
             workoutPlanDay: ConnectRelationInput(id: dayToUpdate.id)));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         CreateWorkoutPlanDayWorkout$Mutation,
         CreateWorkoutPlanDayWorkoutArguments>(
       operation: CreateWorkoutPlanDayWorkoutMutation(variables: variables),
@@ -433,7 +433,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables = UpdateWorkoutPlanDayWorkoutArguments(
         data: UpdateWorkoutPlanDayWorkoutInput(id: idToUpdate));
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         UpdateWorkoutPlanDayWorkout$Mutation,
         UpdateWorkoutPlanDayWorkoutArguments>(
       operation: UpdateWorkoutPlanDayWorkoutMutation(variables: variables),
@@ -478,7 +478,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
                 id: sw.id, sortPosition: sw.sortPosition))
             .toList());
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
         ReorderWorkoutPlanDayWorkouts$Mutation,
         ReorderWorkoutPlanDayWorkoutsArguments>(
       operation: ReorderWorkoutPlanDayWorkoutsMutation(variables: variables),
@@ -523,7 +523,7 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
     final variables =
         DeleteWorkoutPlanDayWorkoutByIdArguments(id: workoutPlanDayWorkout.id);
 
-    final result = await context.graphQLStore.networkOnlyOperation<
+    final result = await GraphQLStore.store.networkOnlyOperation<
             DeleteWorkoutPlanDayWorkoutById$Mutation,
             DeleteWorkoutPlanDayWorkoutByIdArguments>(
         operation:

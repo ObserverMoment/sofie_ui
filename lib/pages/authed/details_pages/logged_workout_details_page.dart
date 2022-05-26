@@ -46,7 +46,7 @@ class LoggedWorkoutDetailsPage extends StatelessWidget {
         itemType: 'Log',
         message: 'This cannot be undone.',
         onConfirm: () async {
-          final result = await context.graphQLStore
+          final result = await GraphQLStore.store
               .delete<DeleteLoggedWorkoutById$Mutation, json.JsonSerializable>(
             typename: kLoggedWorkoutTypename,
             objectId: id,

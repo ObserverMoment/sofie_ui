@@ -4,7 +4,8 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart' as avatar;
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart'
+    as avatar;
 import 'package:sofie_ui/components/social/chat/message_list_view.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';

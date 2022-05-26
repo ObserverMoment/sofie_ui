@@ -15,6 +15,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubDetailsWorkouts extends StatefulWidget {
   final String clubId;
@@ -76,7 +77,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     final variables =
         AddWorkoutToClubArguments(clubId: widget.clubId, workoutId: workout.id);
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<AddWorkoutToClub$Mutation, AddWorkoutToClubArguments>(
             mutation: AddWorkoutToClubMutation(variables: variables),
             refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
@@ -86,7 +87,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
       _loading = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () => context.showToast(message: 'Workout Added'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem',
@@ -113,7 +114,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
     final variables = RemoveWorkoutFromClubArguments(
         clubId: widget.clubId, workoutId: workout.id);
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<RemoveWorkoutFromClub$Mutation, RemoveWorkoutFromClubArguments>(
             mutation: RemoveWorkoutFromClubMutation(variables: variables),
             refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
@@ -123,7 +124,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
       _loading = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () => context.showToast(message: 'Workout Removed'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem',

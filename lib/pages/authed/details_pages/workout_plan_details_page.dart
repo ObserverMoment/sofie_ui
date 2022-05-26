@@ -50,7 +50,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
     final variables =
         CreateWorkoutPlanEnrolmentArguments(workoutPlanId: workoutPlan.id);
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             CreateWorkoutPlanEnrolment$Mutation,
             CreateWorkoutPlanEnrolmentArguments>(
         mutation: CreateWorkoutPlanEnrolmentMutation(variables: variables),
@@ -58,20 +58,20 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
           /// Add a [WorkoutPlanEnrolmentSummary] to the store and a ref to [workoutPlanEnrolmentsQuery].
           final enrolmentSummary = data.createWorkoutPlanEnrolment.summary;
 
-          context.graphQLStore.writeDataToStore(
+          GraphQLStore.store.writeDataToStore(
             data: enrolmentSummary.toJson(),
             addRefToQueries: [GQLOpNames.workoutPlanEnrolments],
           );
 
           /// Write the workoutPlan with the updated enrolment to store.
           /// TODO: Investigate why this is necessary to do manually when I would expect that normalizing [WorkoutPlanEnrolmentWithPlan] would also write over [WorkoutPlanEnrolmentWithPlan.workoutPlan] object.
-          context.graphQLStore.writeDataToStore(
+          GraphQLStore.store.writeDataToStore(
             data: data.createWorkoutPlanEnrolment.workoutPlan.toJson(),
           );
         },
         broadcastQueryIds: [GQLVarParamKeys.workoutPlanById(workoutPlan.id)]);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () =>
             context.showToast(message: 'Plan joined. Congratulations!'),
         onFail: () => context.showErrorAlert(
@@ -90,29 +90,29 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         message:
             'It will be moved to your archive where it can be retrieved if needed.',
         onConfirm: () async {
-          final result = await context.graphQLStore.mutate<
+          final result = await GraphQLStore.store.mutate<
               ArchiveWorkoutPlanById$Mutation, ArchiveWorkoutPlanByIdArguments>(
             mutation: ArchiveWorkoutPlanByIdMutation(
               variables: ArchiveWorkoutPlanByIdArguments(id: workoutPlan.id),
             ),
             processResult: (data) {
               // Remove WorkoutPlanSummary from store.
-              context.graphQLStore.deleteNormalizedObject(
+              GraphQLStore.store.deleteNormalizedObject(
                   resolveDataId(workoutPlan.summary.toJson())!);
 
               // Remove all refs to it from queries.
-              context.graphQLStore.removeAllQueryRefsToId(
+              GraphQLStore.store.removeAllQueryRefsToId(
                   resolveDataId(workoutPlan.summary.toJson())!);
 
               // Rebroadcast all queries that may be affected.
-              context.graphQLStore.broadcastQueriesByIds([
+              GraphQLStore.store.broadcastQueriesByIds([
                 GQLOpNames.userWorkoutPlans,
                 GQLOpNames.userCollections,
                 GQLOpNames.userClubs,
               ]);
 
               // Update WorkoutPlan and workoutPlanById query
-              context.graphQLStore.writeDataToStore(data: {
+              GraphQLStore.store.writeDataToStore(data: {
                 ...workoutPlan.summary.toJson(),
                 'archived': true
               }, broadcastQueryIds: [
@@ -122,7 +122,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             addRefToQueries: [GQLOpNames.userArchivedWorkoutPlans],
           );
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () =>
                   context.showToast(message: 'Workout plan archived'),
               onFail: () => context.showErrorAlert(
@@ -136,7 +136,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
         message: 'It will be moved back into your plans.',
         verb: 'Unarchive',
         onConfirm: () async {
-          final result = await context.graphQLStore.mutate<
+          final result = await GraphQLStore.store.mutate<
               UnarchiveWorkoutPlanById$Mutation,
               UnarchiveWorkoutPlanByIdArguments>(
             mutation: UnarchiveWorkoutPlanByIdMutation(
@@ -145,7 +145,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             processResult: (data) {
               // This operation returns a full WorkoutPlan object.
               // Add a WorkoutPlanSummary to store and to userWorkoutPlansQuery
-              context.graphQLStore.writeDataToStore(
+              GraphQLStore.store.writeDataToStore(
                 data: data.unarchiveWorkoutPlanById.summary.toJson(),
                 addRefToQueries: [GQLOpNames.userWorkoutPlans],
               );
@@ -156,10 +156,10 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
               };
 
               // Remove ArchivedWorkoutPlan from store and ref from userArchivedWorkoutPlansQuery.
-              context.graphQLStore
+              GraphQLStore.store
                   .deleteNormalizedObject(resolveDataId(archivedWorkoutPlan)!);
 
-              context.graphQLStore.removeRefFromQueryData(
+              GraphQLStore.store.removeRefFromQueryData(
                   data: archivedWorkoutPlan,
                   queryIds: [GQLOpNames.userArchivedWorkoutPlans]);
             },
@@ -168,7 +168,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
             ],
           );
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () =>
                   context.showToast(message: 'Workout plan unarchived'),
               onFail: () => context.showErrorAlert(

@@ -25,6 +25,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubDetailsMembersPage extends StatefulWidget {
   final ClubSummary club;
@@ -157,7 +158,7 @@ class AnimatedNavBar extends StatelessWidget {
         onConfirm: () async {
           cancelFeedPolling();
           try {
-            await context.graphQLStore
+            await GraphQLStore.store
                 .delete<DeleteClub$Mutation, DeleteClubArguments>(
               mutation: DeleteClubMutation(
                   variables: DeleteClubArguments(id: club.id)),
@@ -166,15 +167,15 @@ class AnimatedNavBar extends StatelessWidget {
               removeAllRefsToId: true,
               processResult: (data) {
                 // Remove ClubSummary from userClubs query.
-                context.graphQLStore
+                GraphQLStore.store
                     .deleteNormalizedObject(resolveDataId(club.toJson())!);
 
                 // Remove all refs to it from queries.
-                context.graphQLStore
+                GraphQLStore.store
                     .removeAllQueryRefsToId(resolveDataId(club.toJson())!);
 
                 // Rebroadcast all queries that may be affected.
-                context.graphQLStore.broadcastQueriesByIds([
+                GraphQLStore.store.broadcastQueriesByIds([
                   GQLOpNames.userClubs,
                 ]);
               },
@@ -199,17 +200,17 @@ class AnimatedNavBar extends StatelessWidget {
         onConfirm: () async {
           cancelFeedPolling();
           try {
-            final result = await context.graphQLStore.mutate<
+            final result = await GraphQLStore.store.mutate<
                 RemoveUserFromClub$Mutation, RemoveUserFromClubArguments>(
               mutation: RemoveUserFromClubMutation(
                   variables: RemoveUserFromClubArguments(
                       userToRemoveId: authedUserId, clubId: clubId)),
             );
 
-            checkOperationResult(context, result,
+            checkOperationResult(result,
                 onSuccess: () async {
                   /// Update / re-run the userClubs query to get and broadcast updated list minus the club they just left.
-                  await context.graphQLStore
+                  await GraphQLStore.store
                       .query<UserClubs$Query, json.JsonSerializable>(
                           query: UserClubsQuery(),
                           broadcastQueryIds: [GQLOpNames.userClubs]);

@@ -17,14 +17,14 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class WorkoutPlanCreatorPage extends StatefulWidget {
   final WorkoutPlan? workoutPlan;
   const WorkoutPlanCreatorPage({Key? key, this.workoutPlan}) : super(key: key);
 
   @override
-  _WorkoutPlanCreatorPageState createState() => _WorkoutPlanCreatorPageState();
+  State<WorkoutPlanCreatorPage> createState() => _WorkoutPlanCreatorPageState();
 }
 
 class _WorkoutPlanCreatorPageState extends State<WorkoutPlanCreatorPage> {
@@ -49,18 +49,18 @@ class _WorkoutPlanCreatorPageState extends State<WorkoutPlanCreatorPage> {
       _creatingNewWorkoutPlan = true;
     });
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .create<CreateWorkoutPlan$Mutation, CreateWorkoutPlanArguments>(
             mutation: CreateWorkoutPlanMutation(
                 variables: CreateWorkoutPlanArguments(data: input)),
             processResult: (data) {
               // The WorkoutPlanSummary gets immediately added to the userWorkoutPlans query when a workout is created.
-              context.graphQLStore.writeDataToStore(
-                  data: data.createWorkoutPlan.summary.toJson(),
-                  addRefToQueries: [GQLOpNames.userWorkoutPlans]);
+              // GraphQLStore.store.writeDataToStore(
+              //     data: data.createWorkoutPlan.summary.toJson(),
+              //     addRefToQueries: [GQLOpNames.userWorkoutPlans]);
             });
 
-    checkOperationResult(context, result, onSuccess: () {
+    checkOperationResult(result, onSuccess: () {
       // Only the [UserSummary] sub object is returned by the create resolver.
       // Add these other fields manually to avoid [fromJson] throwing an error.
       _initBloc(result.data!.createWorkoutPlan);

@@ -12,6 +12,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class WorkoutPlanReviewCreatorPage extends StatefulWidget {
   final String parentWorkoutPlanId;
@@ -25,7 +26,7 @@ class WorkoutPlanReviewCreatorPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutPlanReviewCreatorPageState createState() =>
+  State<WorkoutPlanReviewCreatorPage> createState() =>
       _WorkoutPlanReviewCreatorPageState();
 }
 
@@ -64,7 +65,7 @@ class _WorkoutPlanReviewCreatorPageState
               workoutPlan:
                   ConnectRelationInput(id: widget.parentWorkoutPlanId)));
 
-      final result = await context.graphQLStore.networkOnlyOperation<
+      final result = await GraphQLStore.store.networkOnlyOperation<
               CreateWorkoutPlanReview$Mutation,
               CreateWorkoutPlanReviewArguments>(
           operation: CreateWorkoutPlanReviewMutation(variables: variables));
@@ -93,7 +94,7 @@ class _WorkoutPlanReviewCreatorPageState
               score: _score,
               comment: _comment));
 
-      final result = await context.graphQLStore.networkOnlyOperation<
+      final result = await GraphQLStore.store.networkOnlyOperation<
               UpdateWorkoutPlanReview$Mutation,
               UpdateWorkoutPlanReviewArguments>(
           operation: UpdateWorkoutPlanReviewMutation(variables: variables));
@@ -117,7 +118,7 @@ class _WorkoutPlanReviewCreatorPageState
   /// We must broadcast to lists queries for Enrolments and WorkoutPlans, and details pages for WorkoutPlan and WorkoutPlanEnrolment.
   void _writeReviewToStore(
       {required WorkoutPlanReview review, required bool isCreate}) {
-    final parentData = context.graphQLStore.readDenomalized(
+    final parentData = GraphQLStore.store.readDenomalized(
       '$kWorkoutPlanTypename:${widget.parentWorkoutPlanId}',
     );
 
@@ -134,7 +135,7 @@ class _WorkoutPlanReviewCreatorPageState
           .toList();
     }
 
-    context.graphQLStore.writeDataToStore(
+    GraphQLStore.store.writeDataToStore(
       data: updatedParentWorkoutPlan.toJson(),
       broadcastQueryIds: [
         UserWorkoutPlansQuery().operationName,

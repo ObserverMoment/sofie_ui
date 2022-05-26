@@ -9,7 +9,7 @@ import 'package:sofie_ui/components/club/invites/club_details_invites_manager.da
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
@@ -24,6 +24,7 @@ import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubDetailsPeople extends StatefulWidget {
   final String clubId;
@@ -106,7 +107,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
   Future<void> _giveMemberAdminStatus(String userId) async {
     setState(() => _loading = true);
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<GiveMemberAdminStatus$Mutation, GiveMemberAdminStatusArguments>(
             mutation: GiveMemberAdminStatusMutation(
                 variables: GiveMemberAdminStatusArguments(
@@ -116,7 +117,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
 
     setState(() => _loading = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, there was a problem adding admin status!',
             toastType: ToastType.destructive),
@@ -128,7 +129,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
   Future<void> _removeMemberAdminStatus(String userId) async {
     setState(() => _loading = true);
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             RemoveMemberAdminStatus$Mutation, RemoveMemberAdminStatusArguments>(
         mutation: RemoveMemberAdminStatusMutation(
             variables: RemoveMemberAdminStatusArguments(
@@ -138,7 +139,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
 
     setState(() => _loading = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, there was a problem removing admin status!',
             toastType: ToastType.destructive),
@@ -166,7 +167,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
 
     setState(() => _loading = true);
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<RemoveUserFromClub$Mutation, RemoveUserFromClubArguments>(
             mutation: RemoveUserFromClubMutation(
                 variables: RemoveUserFromClubArguments(
@@ -176,7 +177,7 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
 
     setState(() => _loading = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, there was a problem removing this person!',
             toastType: ToastType.destructive),

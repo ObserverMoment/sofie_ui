@@ -17,15 +17,15 @@ Map<_Network, String> _mapping = {
   _Network.linkedin: kLinkedinBaseUrl
 };
 
-class SocialMediaLinks extends StatelessWidget {
+class SocialLinks extends StatelessWidget {
   final UserProfile profile;
-  const SocialMediaLinks({Key? key, required this.profile}) : super(key: key);
+  const SocialLinks({Key? key, required this.profile}) : super(key: key);
 
   Future<void> _handleOpenSocialUrl(_Network network, String handle) async {
     final url = '${_mapping[network]}/$handle';
 
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrl(Uri(path: url))) {
+      await launchUrl(Uri(path: url));
     } else {
       throw 'Could not launch $handle';
     }

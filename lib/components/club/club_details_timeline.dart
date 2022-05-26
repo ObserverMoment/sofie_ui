@@ -11,9 +11,9 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
-import 'package:sofie_ui/services/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:stream_feed/stream_feed.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// NOTE: Logic in this widget is simlar to that in [AuthedUserTimeline] in [FeedsAndFollows]. Except there is no sharing of posts to club feeds - they are club specific. Plus we may add some additional functionality - such as comments / threads to timeline posts here.
 class ClubDetailsTimeline extends StatefulWidget {
@@ -91,7 +91,7 @@ class ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   // }) async {
   //   if (mounted) {
   //     try {
-  //       final result = await context.graphQLStore.networkOnlyOperation<
+  //       final result = await GraphQLStore.store.networkOnlyOperation<
   //               ClubMembersFeedPosts$Query, ClubMembersFeedPostsArguments>(
   //           operation: ClubMembersFeedPostsQuery(
   //               variables: ClubMembersFeedPostsArguments(
@@ -99,7 +99,7 @@ class ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
   //                   limit: _postsPerPage,
   //                   offset: offset)));
 
-  //       checkOperationResult(context, result,
+  //       checkOperationResult(result,
   //           onFail: () => throw Exception(result.errors));
 
   //       final feedActivities = result.data!.clubMembersFeedPosts;
@@ -186,14 +186,14 @@ class ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
         itemType: 'Post',
         message: 'This cannot be undone, are you sure?',
         onConfirm: () async {
-          final result = await context.graphQLStore.networkOnlyOperation<
+          final result = await GraphQLStore.store.networkOnlyOperation<
                   DeleteClubMembersFeedPost$Mutation,
                   DeleteClubMembersFeedPostArguments>(
               operation: DeleteClubMembersFeedPostMutation(
                   variables:
                       DeleteClubMembersFeedPostArguments(activityId: post.id)));
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onSuccess: () => context.showToast(message: 'Post deleted'),
               onFail: () => context.showToast(
                   message: 'Sorry, there was a problem deleting the post',

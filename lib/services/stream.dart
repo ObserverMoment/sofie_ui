@@ -150,17 +150,7 @@ class ChatsIconButton extends StatelessWidget {
             onPressed: () => context.navigateTo(const ChatsOverviewRoute()),
             child: Stack(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(CupertinoIcons.chat_bubble_text),
-                    SizedBox(height: 2),
-                    MyText(
-                      'Chat',
-                      size: FONTSIZE.one,
-                    )
-                  ],
-                ),
+                const Icon(CupertinoIcons.chat_bubble_text),
                 if (unreadCount != null && unreadCount > 0)
                   Positioned(
                     top: -2,
@@ -181,121 +171,121 @@ class ChatsIconButton extends StatelessWidget {
   }
 }
 
-/// Displays a button which updates depending on whether or not the authed users [user_timeline] feed is following the user with [otherUserId]s [user_feed].
-/// Onpress it handles follow / unfollow functionality.
-class UserFeedConnectionButton extends StatefulWidget {
-  final String otherUserId;
-  final double iconSize;
-  final FONTSIZE fontSize;
-  const UserFeedConnectionButton(
-      {Key? key,
-      required this.otherUserId,
-      this.iconSize = 20,
-      this.fontSize = FONTSIZE.three})
-      : super(key: key);
+// /// Displays a button which updates depending on whether or not the authed users [user_timeline] feed is following the user with [otherUserId]s [user_feed].
+// /// Onpress it handles follow / unfollow functionality.
+// class UserFeedConnectionButton extends StatefulWidget {
+//   final String otherUserId;
+//   final double iconSize;
+//   final FONTSIZE fontSize;
+//   const UserFeedConnectionButton(
+//       {Key? key,
+//       required this.otherUserId,
+//       this.iconSize = 20,
+//       this.fontSize = FONTSIZE.three})
+//       : super(key: key);
 
-  @override
-  _UserFeedConnectionButtonState createState() =>
-      _UserFeedConnectionButtonState();
-}
+//   @override
+//   _UserFeedConnectionButtonState createState() =>
+//       _UserFeedConnectionButtonState();
+// }
 
-class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
-  late AuthedUser _authedUser;
-  late StreamFeedClient _streamFeedClient;
+// class _UserFeedConnectionButtonState extends State<UserFeedConnectionButton> {
+//   late AuthedUser _authedUser;
+//   late StreamFeedClient _streamFeedClient;
 
-  late FlatFeed _authedUserTimeline;
-  late FlatFeed _otherUserFeed;
+//   late FlatFeed _authedUserTimeline;
+//   late FlatFeed _otherUserFeed;
 
-  bool _isFollowing = false;
-  bool _isLoading = true;
+//   bool _isFollowing = false;
+//   bool _isLoading = true;
 
-  @override
-  void initState() {
-    _authedUser = GetIt.I<AuthBloc>().authedUser!;
-    _streamFeedClient = context.streamFeedClient;
+//   @override
+//   void initState() {
+//     _authedUser = GetIt.I<AuthBloc>().authedUser!;
+//     _streamFeedClient = context.streamFeedClient;
 
-    _authedUserTimeline =
-        _streamFeedClient.flatFeed(kUserTimelineName, _authedUser.id);
-    _otherUserFeed =
-        _streamFeedClient.flatFeed(kUserFeedName, widget.otherUserId);
+//     _authedUserTimeline =
+//         _streamFeedClient.flatFeed(kUserTimelineName, _authedUser.id);
+//     _otherUserFeed =
+//         _streamFeedClient.flatFeed(kUserFeedName, widget.otherUserId);
 
-    _checkUserConnection();
+//     _checkUserConnection();
 
-    super.initState();
-  }
+//     super.initState();
+//   }
 
-  /// Does [_authedUserTimeline] follow [_otherUserFeed]?
-  Future<void> _checkUserConnection() async {
-    // Check if authed user follows [user_feed] of otherUser.
-    final feed = await _authedUserTimeline.following(
-        offset: 0,
-        limit: 1,
-        filter: [FeedId.id('$kUserFeedName:${widget.otherUserId}')]);
+//   /// Does [_authedUserTimeline] follow [_otherUserFeed]?
+//   Future<void> _checkUserConnection() async {
+//     // Check if authed user follows [user_feed] of otherUser.
+//     final feed = await _authedUserTimeline.following(
+//         offset: 0,
+//         limit: 1,
+//         filter: [FeedId.id('$kUserFeedName:${widget.otherUserId}')]);
 
-    setState(() {
-      _isFollowing = feed.isNotEmpty;
-      _isLoading = false;
-    });
-  }
+//     setState(() {
+//       _isFollowing = feed.isNotEmpty;
+//       _isLoading = false;
+//     });
+//   }
 
-  Future<void> _followOtherUser() async {
-    Vibrate.feedback(FeedbackType.selection);
+//   Future<void> _followOtherUser() async {
+//     Vibrate.feedback(FeedbackType.selection);
 
-    /// Optimistic: Assume succes and revert later if not.
-    setState(() => _isFollowing = true);
-    try {
-      // Follow feed without copying the activities:
-      await _authedUserTimeline.follow(_otherUserFeed, activityCopyLimit: 0);
-    } catch (e) {
-      setState(() => _isFollowing = false);
-      context.showToast(
-          toastType: ToastType.destructive,
-          message: 'Sorry, there was a problem, please try again');
-      printLog(e.toString());
-    }
-  }
+//     /// Optimistic: Assume succes and revert later if not.
+//     setState(() => _isFollowing = true);
+//     try {
+//       // Follow feed without copying the activities:
+//       await _authedUserTimeline.follow(_otherUserFeed, activityCopyLimit: 0);
+//     } catch (e) {
+//       setState(() => _isFollowing = false);
+//       context.showToast(
+//           toastType: ToastType.destructive,
+//           message: 'Sorry, there was a problem, please try again');
+//       printLog(e.toString());
+//     }
+//   }
 
-  Future<void> _unfollowOtherUser() async {
-    /// Optimistic: Assume succes and revert later if not.
-    setState(() => _isFollowing = false);
+//   Future<void> _unfollowOtherUser() async {
+//     /// Optimistic: Assume succes and revert later if not.
+//     setState(() => _isFollowing = false);
 
-    try {
-      // Unfollow feed but do not purge already received activities.
-      await _authedUserTimeline.unfollow(_otherUserFeed, keepHistory: true);
-    } catch (e) {
-      setState(() => _isFollowing = true);
-      context.showToast(
-          toastType: ToastType.destructive,
-          message: 'Sorry, there was a problem, please try again');
-      printLog(e.toString());
-    }
-  }
+//     try {
+//       // Unfollow feed but do not purge already received activities.
+//       await _authedUserTimeline.unfollow(_otherUserFeed, keepHistory: true);
+//     } catch (e) {
+//       setState(() => _isFollowing = true);
+//       context.showToast(
+//           toastType: ToastType.destructive,
+//           message: 'Sorry, there was a problem, please try again');
+//       printLog(e.toString());
+//     }
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedSwitcher(
-        duration: kStandardAnimationDuration,
-        child: SizedBox(
-          height: 44,
-          child: _authedUser.id == widget.otherUserId
-              ? const Center(child: MyText('...'))
-              : _isLoading
-                  ? const Center(child: LoadingIndicator(size: 10))
-                  : _isFollowing
-                      ? TertiaryButton(
-                          text: 'Following',
-                          prefixIconData: CupertinoIcons.checkmark_alt,
-                          onPressed: _unfollowOtherUser,
-                          iconSize: widget.iconSize,
-                          fontSize: widget.fontSize,
-                          backgroundColor: Styles.primaryAccent,
-                          textColor: Styles.white)
-                      : TertiaryButton(
-                          prefixIconData: CupertinoIcons.person,
-                          iconSize: widget.iconSize,
-                          fontSize: widget.fontSize,
-                          text: 'Follow',
-                          onPressed: _followOtherUser),
-        ));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return AnimatedSwitcher(
+//         duration: kStandardAnimationDuration,
+//         child: SizedBox(
+//           height: 44,
+//           child: _authedUser.id == widget.otherUserId
+//               ? const Center(child: MyText('...'))
+//               : _isLoading
+//                   ? const Center(child: LoadingIndicator(size: 10))
+//                   : _isFollowing
+//                       ? TertiaryButton(
+//                           text: 'Following',
+//                           prefixIconData: CupertinoIcons.checkmark_alt,
+//                           onPressed: _unfollowOtherUser,
+//                           iconSize: widget.iconSize,
+//                           fontSize: widget.fontSize,
+//                           backgroundColor: Styles.primaryAccent,
+//                           textColor: Styles.white)
+//                       : TertiaryButton(
+//                           prefixIconData: CupertinoIcons.person,
+//                           iconSize: widget.iconSize,
+//                           fontSize: widget.fontSize,
+//                           text: 'Follow',
+//                           onPressed: _followOtherUser),
+//         ));
+//   }
+// }

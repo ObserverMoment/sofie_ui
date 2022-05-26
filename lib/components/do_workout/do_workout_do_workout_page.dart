@@ -12,6 +12,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// This widget is watching app state to check when it is moved into the background by the user.
 /// When moved into the background we pause the workout.
@@ -92,11 +93,11 @@ class _DoWorkoutDoWorkoutPageState extends State<DoWorkoutDoWorkoutPage>
           final variables =
               CreateLoggedWorkoutArguments(data: loggedWorkoutInput);
 
-          final result = await context.graphQLStore.create(
+          final result = await GraphQLStore.store.create(
               mutation: CreateLoggedWorkoutMutation(variables: variables),
               addRefToQueries: [GQLOpNames.userLoggedWorkouts]);
 
-          checkOperationResult(context, result,
+          checkOperationResult(result,
               onFail: () => context.showToast(
                   message: 'Sorry, something went wrong',
                   toastType: ToastType.destructive),

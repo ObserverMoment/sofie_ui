@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/logo.dart';
+import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/modules/main_tabs/profile_settings_drawer.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar_display.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar_display.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -72,14 +74,7 @@ class _MainTabsPageState extends State<MainTabsPage> {
               ),
               trailing: NavBarTrailingRow(
                 children: [
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () =>
-                        context.navigateTo(WorkoutSessionCreatorRoute()),
-                    child: const Icon(
-                      CupertinoIcons.plus,
-                    ),
-                  ),
+                  const ChatsIconButton(),
                   const NotificationsIconButton(),
                   Padding(
                     padding: const EdgeInsets.only(left: 6.0),
@@ -91,6 +86,38 @@ class _MainTabsPageState extends State<MainTabsPage> {
                 ],
               ),
             ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 10,
+          backgroundColor: Styles.primaryAccent,
+          foregroundColor: Styles.white,
+          child: const Icon(CupertinoIcons.plus),
+          onPressed: () {
+            openBottomSheetMenu(
+                context: context,
+                child: BottomSheetMenu(
+                    header: const BottomSheetMenuHeader(
+                        name: 'What do you want to do?'),
+                    items: [
+                      BottomSheetMenuItem(
+                          icon: CupertinoIcons.text_badge_checkmark,
+                          text: 'Log a Workout',
+                          onPressed: () {}),
+                      BottomSheetMenuItem(
+                          icon: MyCustomIcons.dumbbell,
+                          text: 'Create a new Workout',
+                          onPressed: () =>
+                              context.navigateTo(WorkoutSessionCreatorRoute())),
+                      BottomSheetMenuItem(
+                          icon: MyCustomIcons.plansIcon,
+                          text: 'Create a new Plan',
+                          onPressed: () {}),
+                      BottomSheetMenuItem(
+                          icon: CupertinoIcons.circle,
+                          text: 'Create a new Circle',
+                          onPressed: () {}),
+                    ]));
+          },
+        ),
         endDrawer: const ProfileSettingsDrawer(),
         bottomNavigationBuilder: (context, tabsRouter) => ClipRect(
               child: BackdropFilter(

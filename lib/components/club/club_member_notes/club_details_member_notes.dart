@@ -7,6 +7,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Members notes are not persisted to the store but just handled in local state within the widget.
@@ -18,7 +19,7 @@ class ClubDetailsMemberNotes extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ClubDetailsMemberNotesState createState() => _ClubDetailsMemberNotesState();
+  State<ClubDetailsMemberNotes> createState() => _ClubDetailsMemberNotesState();
 }
 
 class _ClubDetailsMemberNotesState extends State<ClubDetailsMemberNotes> {
@@ -78,7 +79,7 @@ class _ClubDetailsMemberNotesState extends State<ClubDetailsMemberNotes> {
     );
 
     final query = ClubMemberNotesQuery(variables: variables);
-    final response = await context.graphQLStore.execute(query);
+    final response = await GraphQLStore.store.execute(query);
 
     if ((response.errors != null && response.errors!.isNotEmpty) ||
         response.data == null) {

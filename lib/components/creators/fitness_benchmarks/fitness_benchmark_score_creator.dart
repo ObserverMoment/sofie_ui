@@ -25,6 +25,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class FitnessBenchmarkScoreCreator extends StatefulWidget {
   final FitnessBenchmark fitnessBenchmark;
@@ -157,14 +158,14 @@ class _FitnessBenchmarkScoreCreatorState
               fitnessBenchmark:
                   ConnectRelationInput(id: widget.fitnessBenchmark.id)));
 
-      final result = await context.graphQLStore.mutate(
+      final result = await GraphQLStore.store.mutate(
           mutation: CreateFitnessBenchmarkScoreMutation(variables: variables),
           broadcastQueryIds: [GQLOpNames.userFitnessBenchmarks]);
 
       setState(() => _loading = false);
 
       if (mounted) {
-        checkOperationResult(context, result,
+        checkOperationResult(result,
             onFail: () => context.showToast(
                 message: "Sorry, there was a problem creating this score.",
                 toastType: ToastType.destructive),
@@ -185,7 +186,7 @@ class _FitnessBenchmarkScoreCreatorState
         videoThumbUri: _videoThumbUri,
       ));
 
-      final result = await context.graphQLStore.mutate(
+      final result = await GraphQLStore.store.mutate(
           mutation: UpdateFitnessBenchmarkScoreMutation(variables: variables),
           broadcastQueryIds: [
             GQLOpNames.userFitnessBenchmarks,
@@ -194,7 +195,7 @@ class _FitnessBenchmarkScoreCreatorState
       setState(() => _loading = false);
 
       if (mounted) {
-        checkOperationResult(context, result,
+        checkOperationResult(result,
             onFail: () => context.showToast(
                 message: kDefaultErrorMessage,
                 toastType: ToastType.destructive),

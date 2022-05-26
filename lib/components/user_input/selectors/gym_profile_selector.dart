@@ -5,13 +5,13 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/modules/gym_profile/gym_profile_card.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/modules/profile/gym_profile/gym_profile_card.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
@@ -74,7 +74,7 @@ class GymProfileSelector extends StatefulWidget {
       : super(key: key);
 
   @override
-  _GymProfileSelectorState createState() => _GymProfileSelectorState();
+  State<GymProfileSelector> createState() => _GymProfileSelectorState();
 }
 
 class _GymProfileSelectorState extends State<GymProfileSelector> {

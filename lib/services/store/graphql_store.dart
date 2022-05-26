@@ -51,6 +51,10 @@ class GraphQLStore {
     gc();
   }
 
+  /// Must first register with GetIt for this to work.
+  /// Should only ever be one instance per runtime of GraphQLStore.
+  static GraphQLStore get store => GetIt.I<GraphQLStore>();
+
   Map<String, ObservableQuery> observableQueries = <String, ObservableQuery>{};
 
   List<ObservableQuery<TData, TVars>>

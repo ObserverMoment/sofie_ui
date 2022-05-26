@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubUtils {
   static Future<UserClubMemberStatus?> checkAuthedUserMemberStatus(
-      BuildContext context, String clubId) async {
-    final result = await context.graphQLStore.networkOnlyOperation(
+      BuildContext context, String clubId, VoidCallback onFail) async {
+    final result = await GraphQLStore.store.networkOnlyOperation(
         operation: CheckUserClubMemberStatusQuery(
             variables: CheckUserClubMemberStatusArguments(clubId: clubId)));
 
-    final success = checkOperationResult(context, result);
+    final success = checkOperationResult(result);
 
     if (success) {
       return result.data!.checkUserClubMemberStatus;
     } else {
-      context.showToast(
-          message: 'Sorry, there was a problem checking your membership.');
+      onFail();
       return null;
     }
   }

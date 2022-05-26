@@ -17,6 +17,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Allows the user to CRUD their set of [WorkoutTags]
 /// Works via a [QueryObserver] and the [GraphQL store] directly to update state.
@@ -57,13 +58,13 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
     final variables = CreateWorkoutTagArguments(
         data: CreateWorkoutTagInput(tag: _tagNameController.text));
 
-    final result = await context.graphQLStore.create(
+    final result = await GraphQLStore.store.create(
         mutation: CreateWorkoutTagMutation(variables: variables),
         addRefToQueries: [GQLOpNames.userWorkoutTags]);
 
     setState(() => _isLoading = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, there was a problem creating the tag',
             toastType: ToastType.destructive),
@@ -88,7 +89,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
     final variables = UpdateWorkoutTagArguments(
         data: UpdateWorkoutTagInput(id: tag.id, tag: tag.tag));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<UpdateWorkoutTag$Mutation, UpdateWorkoutTagArguments>(
             mutation: UpdateWorkoutTagMutation(variables: variables),
             broadcastQueryIds: [
@@ -119,7 +120,7 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
     setState(() => _isLoading = true);
 
     final variables = DeleteWorkoutTagByIdArguments(id: tag.id);
-    final result = await context.graphQLStore.delete(
+    final result = await GraphQLStore.store.delete(
         mutation: DeleteWorkoutTagByIdMutation(variables: variables),
         objectId: tag.id,
         typename: kWorkoutTagTypename,

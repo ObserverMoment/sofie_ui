@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
@@ -14,6 +15,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/toast_request.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class ScheduledWorkoutCard extends StatelessWidget {
@@ -62,7 +64,7 @@ class ScheduledWorkoutCard extends StatelessWidget {
     final variables =
         DeleteScheduledWorkoutByIdArguments(id: scheduledWorkout.id);
 
-    final result = await context.graphQLStore.delete(
+    final result = await GraphQLStore.store.delete(
         mutation: DeleteScheduledWorkoutByIdMutation(variables: variables),
         objectId: scheduledWorkout.id,
         typename: kScheduledWorkoutTypename,

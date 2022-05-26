@@ -15,6 +15,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:collection/collection.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 const List<String> kGoodFeelings = [
   'Calm',
@@ -72,7 +73,7 @@ class _UserDayLogMoodCreatorPageState extends State<UserDayLogMoodCreatorPage> {
               tags: _tags,
               note: _note));
 
-      final result = await context.graphQLStore.create(
+      final result = await GraphQLStore.store.create(
         mutation: CreateUserDayLogMoodMutation(variables: variables),
         addRefToQueries: [
           GQLOpNames.userDayLogMoods,
@@ -83,7 +84,7 @@ class _UserDayLogMoodCreatorPageState extends State<UserDayLogMoodCreatorPage> {
         _saving = false;
       });
 
-      checkOperationResult(context, result,
+      checkOperationResult(result,
           onFail: _showErrorToast, onSuccess: context.pop);
     }
   }

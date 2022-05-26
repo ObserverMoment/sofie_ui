@@ -13,6 +13,7 @@ import 'package:sofie_ui/components/workout_plan/workout_plan_finder/public/publ
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class PublicWorkoutPlanFinderPage extends StatefulWidget {
   final void Function(WorkoutPlanSummary workoutPlan)? selectWorkoutPlan;
@@ -23,7 +24,7 @@ class PublicWorkoutPlanFinderPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PublicWorkoutPlanFinderPageState createState() =>
+  State<PublicWorkoutPlanFinderPage> createState() =>
       _PublicWorkoutPlanFinderPageState();
 }
 
@@ -83,7 +84,7 @@ class _PublicWorkoutPlanFinderPageState
         filters: WorkoutPlanFiltersInput.fromJson(_bloc.filters.apiJson));
 
     final query = PublicWorkoutPlansQuery(variables: variables);
-    final response = await context.graphQLStore.execute(query);
+    final response = await GraphQLStore.store.execute(query);
 
     if ((response.errors != null && response.errors!.isNotEmpty) ||
         response.data == null) {

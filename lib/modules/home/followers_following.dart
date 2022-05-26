@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_followers.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/authed_user_following.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';

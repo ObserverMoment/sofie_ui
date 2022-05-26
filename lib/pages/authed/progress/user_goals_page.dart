@@ -25,7 +25,7 @@ class UserGoalsPage extends StatelessWidget {
   Future<void> _deleteUserGoal(BuildContext context, String id) async {
     final variables = DeleteUserGoalArguments(id: id);
 
-    final result = await context.graphQLStore.delete(
+    final result = await GraphQLStore.store.delete(
         mutation: DeleteUserGoalMutation(variables: variables),
         objectId: id,
         typename: kUserGoalTypename,
@@ -34,7 +34,7 @@ class UserGoalsPage extends StatelessWidget {
         ],
         removeAllRefsToId: true);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, there was a problem deleting this goal.',
             toastType: ToastType.destructive));

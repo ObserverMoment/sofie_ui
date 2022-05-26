@@ -6,13 +6,12 @@ import 'package:gql/ast.dart';
 import 'package:hive/hive.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 const kStoreReferenceKey = '\$ref';
 
-bool checkOperationResult<T>(BuildContext context, OperationResult<T> result,
+bool checkOperationResult<T>(OperationResult<T> result,
     {VoidCallback? onSuccess, VoidCallback? onFail}) {
   if (result.hasErrors || result.data == null) {
     result.errors?.forEach((e) async {
@@ -23,9 +22,6 @@ bool checkOperationResult<T>(BuildContext context, OperationResult<T> result,
     });
     if (onFail != null) {
       onFail();
-    } else {
-      // Default to showing a generic error toast.
-      context.showToast(message: "Sorry, there was a problem, it didn't work!");
     }
     return false;
   } else {

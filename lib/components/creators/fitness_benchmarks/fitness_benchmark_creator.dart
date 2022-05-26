@@ -21,6 +21,7 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class FitnessBenchmarkCreator extends StatefulWidget {
   final FitnessBenchmark? fitnessBenchmark;
@@ -143,14 +144,14 @@ class _FitnessBenchmarkCreatorState extends State<FitnessBenchmarkCreator> {
               scope: FitnessBenchmarkScope.custom,
               type: _type!));
 
-      final result = await context.graphQLStore.create(
+      final result = await GraphQLStore.store.create(
           mutation: CreateFitnessBenchmarkMutation(variables: variables),
           addRefToQueries: [GQLOpNames.userFitnessBenchmarks]);
 
       setState(() => _loading = false);
 
       if (mounted) {
-        checkOperationResult(context, result, onSuccess: context.pop);
+        checkOperationResult(result, onSuccess: context.pop);
       }
     }
   }
@@ -168,7 +169,7 @@ class _FitnessBenchmarkCreatorState extends State<FitnessBenchmarkCreator> {
               name: _name!,
               type: _type!));
 
-      final result = await context.graphQLStore.mutate(
+      final result = await GraphQLStore.store.mutate(
           mutation: UpdateFitnessBenchmarkMutation(variables: variables),
           broadcastQueryIds: [
             GQLOpNames.userFitnessBenchmarks,
@@ -177,7 +178,7 @@ class _FitnessBenchmarkCreatorState extends State<FitnessBenchmarkCreator> {
       setState(() => _loading = false);
 
       if (mounted) {
-        checkOperationResult(context, result, onSuccess: context.pop);
+        checkOperationResult(result, onSuccess: context.pop);
       }
     }
   }

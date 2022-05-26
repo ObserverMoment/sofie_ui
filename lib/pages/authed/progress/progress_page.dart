@@ -14,7 +14,8 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/modules/profile/blocs/profile_bloc.dart';
 import 'package:sofie_ui/pages/authed/progress/active_widgets_selector.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/eat_well_logs_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_meditations_full_screen.dart';
@@ -77,8 +78,12 @@ class ProgressPage extends StatelessWidget {
 
       final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
 
-      await EditProfilePage.updateUserFields(context, authedUserId,
-          {'activeProgressWidgets': activeProgressWidgets});
+      await ProfileBloc.updateUserFields(
+          authedUserId,
+          {'activeProgressWidgets': activeProgressWidgets},
+          () => context.showToast(
+              message: 'Sorry, there was a problem',
+              toastType: ToastType.destructive));
     }
   }
 
@@ -95,8 +100,12 @@ class ProgressPage extends StatelessWidget {
 
       final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
 
-      await EditProfilePage.updateUserFields(context, authedUserId,
-          {'activeProgressWidgets': activeProgressWidgets});
+      await ProfileBloc.updateUserFields(
+          authedUserId,
+          {'activeProgressWidgets': activeProgressWidgets},
+          () => context.showToast(
+              message: 'Sorry, there was a problem',
+              toastType: ToastType.destructive));
     }
   }
 
@@ -132,8 +141,12 @@ class ProgressPage extends StatelessWidget {
 
         activeProgressWidgets.remove(widgetId);
 
-        await EditProfilePage.updateUserFields(context, authedUserId,
-            {'activeProgressWidgets': activeProgressWidgets});
+        await ProfileBloc.updateUserFields(
+            authedUserId,
+            {'activeProgressWidgets': activeProgressWidgets},
+            () => context.showToast(
+                message: 'Sorry, there was a problem',
+                toastType: ToastType.destructive));
       }
     }
 

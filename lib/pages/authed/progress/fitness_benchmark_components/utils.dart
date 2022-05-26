@@ -2,9 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
+import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/modules/profile/blocs/profile_bloc.dart';
 
 class FitnessBenchmarkScoreDisplay {
   final String score;
@@ -25,8 +27,12 @@ class FitnessBenchmarkUtils {
       updated = [...activeBenchmarkIds, benchmarkId];
     }
 
-    await EditProfilePage.updateUserFields(
-        context, authedUserId, {'activeFitnessBenchmarks': updated});
+    await ProfileBloc.updateUserFields(
+        authedUserId,
+        {'activeFitnessBenchmarks': updated},
+        () => context.showToast(
+            message: 'Sorry, there was a problem',
+            toastType: ToastType.destructive));
   }
 
   static FitnessBenchmarkScoreDisplay scoreDisplayText(

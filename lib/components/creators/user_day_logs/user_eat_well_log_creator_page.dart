@@ -71,7 +71,7 @@ class _UserEatWellLogCreatorPageState extends State<UserEatWellLogCreatorPage> {
       _saving = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: _showErrorToast, onSuccess: context.pop);
   }
 
@@ -84,7 +84,7 @@ class _UserEatWellLogCreatorPageState extends State<UserEatWellLogCreatorPage> {
       note: _note,
     ));
 
-    final result = await context.graphQLStore.create(
+    final result = await GraphQLStore.store.create(
       mutation: CreateUserEatWellLogMutation(variables: variables),
       addRefToQueries: [
         GQLOpNames.userEatWellLogs,
@@ -101,7 +101,7 @@ class _UserEatWellLogCreatorPageState extends State<UserEatWellLogCreatorPage> {
       note: _note,
     ));
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
       mutation: UpdateUserEatWellLogMutation(variables: variables),
       broadcastQueryIds: [
         GQLOpNames.userEatWellLogs,

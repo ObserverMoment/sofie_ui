@@ -14,6 +14,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class LoggedMoodsWidget extends StatefulWidget {
   final List<UserDayLogMood> loggedMoods;
@@ -54,14 +55,14 @@ class _LoggedMoodsWidgetState extends State<LoggedMoodsWidget> {
   }
 
   Future<void> _deleteUserDayLogMood(UserDayLogMood mood) async {
-    final result = await context.graphQLStore.delete(
+    final result = await GraphQLStore.store.delete(
         mutation: DeleteUserDayLogMoodMutation(
             variables: DeleteUserDayLogMoodArguments(id: mood.id)),
         objectId: mood.id,
         typename: kUserDayLogMoodTypename,
         removeRefFromQueries: [GQLOpNames.userDayLogMoods]);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () => context.showToast(
               message: 'Mood log deleted',
             ),

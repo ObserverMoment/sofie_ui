@@ -6,7 +6,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/inline_audio_player.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_image.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';

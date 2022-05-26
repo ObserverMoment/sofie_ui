@@ -23,7 +23,7 @@ class AnnouncementUpdateCard extends StatelessWidget {
   //       data: MarkAnnouncementUpdateAsSeenInput(
   //           announcementUpdateId: announcement.id, userId: authedUserId));
 
-  //   await context.graphQLStore.delete(
+  //   await GraphQLStore.store.delete(
   //       mutation: MarkAnnouncementUpdateAsSeenMutation(variables: variables),
   //       objectId: announcement.id,
   //       typename: kAnnouncementUpdateTypename,

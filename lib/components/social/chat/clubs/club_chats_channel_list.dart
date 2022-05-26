@@ -14,14 +14,15 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:sofie_ui/modules/profile/components/user_avatar.dart' as avatar;
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart'
+    as avatar;
 import 'package:json_annotation/json_annotation.dart' as json;
 
 class ClubChatsChannelList extends StatefulWidget {
   const ClubChatsChannelList({Key? key}) : super(key: key);
 
   @override
-  _ClubChatsChannelListState createState() => _ClubChatsChannelListState();
+  State<ClubChatsChannelList> createState() => _ClubChatsChannelListState();
 }
 
 class _ClubChatsChannelListState extends State<ClubChatsChannelList> {
@@ -48,7 +49,7 @@ class _ClubChatsChannelListState extends State<ClubChatsChannelList> {
   //   final clubIds = channels.map((c) => c.id!).toList();
 
   //   /// Then call our API to get UserAvatarData[]
-  //   final result = await context.graphQLStore
+  //   final result = await GraphQLStore.store
   //       .networkOnlyOperation<ClubSummaries$Query, ClubSummariesArguments>(
   //           operation: ClubSummariesQuery(
   //               variables: ClubSummariesArguments(ids: clubIds)));

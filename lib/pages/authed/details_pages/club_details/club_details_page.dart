@@ -14,6 +14,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubDetailsPage extends StatefulWidget {
   final String id;
@@ -21,15 +22,19 @@ class ClubDetailsPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ClubDetailsPageState createState() => _ClubDetailsPageState();
+  State<ClubDetailsPage> createState() => _ClubDetailsPageState();
 }
 
 class _ClubDetailsPageState extends State<ClubDetailsPage> {
   UserClubMemberStatus? _authedUserMemberType;
 
   Future<void> _checkUserMemberStatus() async {
-    final status =
-        await ClubUtils.checkAuthedUserMemberStatus(context, widget.id);
+    final status = await ClubUtils.checkAuthedUserMemberStatus(
+        context,
+        widget.id,
+        () => context.showToast(
+            message: 'Sorry, there was a problem',
+            toastType: ToastType.destructive));
 
     setState(() {
       _authedUserMemberType = status ?? UserClubMemberStatus.none;
@@ -42,7 +47,8 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
     _checkUserMemberStatus();
   }
 
-  Future<void> _addUserToPublicClub(ClubSummary club) async {
+  Future<void> _addUserToPublicClub(
+      ClubSummary club, VoidCallback onSuccess) async {
     if (club.contentAccessScope == ContentAccessScope.public) {
       context.showToast(
         message: 'Joining Club! Just a second...',
@@ -50,22 +56,18 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
 
       final variables = UserJoinPublicClubArguments(clubId: club.id);
 
-      final result = await context.graphQLStore.networkOnlyOperation<
+      final result = await GraphQLStore.store.networkOnlyOperation<
               UserJoinPublicClub$Mutation, UserJoinPublicClubArguments>(
           operation: UserJoinPublicClubMutation(variables: variables));
 
-      checkOperationResult(context, result, onSuccess: () async {
+      checkOperationResult(result, onSuccess: () async {
         /// Update / re-run the userClubs query to get and broadcast updated list.
-        await context.graphQLStore
-            .query<UserClubs$Query, json.JsonSerializable>(
-                query: UserClubsQuery(),
-                broadcastQueryIds: [GQLOpNames.userClubs]);
+        await GraphQLStore.store.query<UserClubs$Query, json.JsonSerializable>(
+            query: UserClubsQuery(), broadcastQueryIds: [GQLOpNames.userClubs]);
 
         await _checkUserMemberStatus();
 
-        context.showToast(
-          message: 'Nice One! Welcome to ${club.name}!',
-        );
+        onSuccess();
       }, onFail: () {
         context.showToast(
             message: 'Sorry, there was a problem joining the club.',
@@ -130,7 +132,12 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
                         )
                       : ClubDetailsNonMembersPage(
                           club: club,
-                          joinClub: () => _addUserToPublicClub(club),
+                          joinClub: () => _addUserToPublicClub(
+                              club,
+                              () => context.showToast(
+                                    message:
+                                        'Nice One! Welcome to ${club.name}!',
+                                  )),
                         ));
             });
   }

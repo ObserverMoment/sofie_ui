@@ -28,6 +28,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class WorkoutPlanEnrolmentDetailsPage extends StatefulWidget {
   final String id;
@@ -36,7 +37,7 @@ class WorkoutPlanEnrolmentDetailsPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutPlanEnrolmentDetailsPageState createState() =>
+  State<WorkoutPlanEnrolmentDetailsPage> createState() =>
       _WorkoutPlanEnrolmentDetailsPageState();
 }
 
@@ -71,7 +72,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
         data: CreateScheduleForPlanEnrolmentInput(
             startDate: startDate, workoutPlanEnrolmentId: widget.id));
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
         mutation: CreateScheduleForPlanEnrolmentMutation(variables: variables),
         refetchQueryIds: [
           GQLOpNames.userScheduledWorkouts,
@@ -82,7 +83,6 @@ class _WorkoutPlanEnrolmentDetailsPageState
         ]);
 
     checkOperationResult(
-      context,
       result,
       onFail: () => context.showToast(
           message: 'Sorry, there was a problem',
@@ -106,7 +106,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
     final variables =
         ClearScheduleForPlanEnrolmentArguments(enrolmentId: widget.id);
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
         mutation: ClearScheduleForPlanEnrolmentMutation(variables: variables),
         refetchQueryIds: [
           GQLOpNames.userScheduledWorkouts,
@@ -117,7 +117,6 @@ class _WorkoutPlanEnrolmentDetailsPageState
         ]);
 
     checkOperationResult(
-      context,
       result,
       onFail: () => context.showToast(
           message: 'Sorry, there was a problem',
@@ -141,7 +140,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
     final variables =
         ClearWorkoutPlanEnrolmentProgressArguments(enrolmentId: widget.id);
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
         mutation:
             ClearWorkoutPlanEnrolmentProgressMutation(variables: variables),
         refetchQueryIds: [
@@ -152,7 +151,6 @@ class _WorkoutPlanEnrolmentDetailsPageState
         ]);
 
     checkOperationResult(
-      context,
       result,
       onFail: () => context.showToast(
           message: 'Sorry, there was a problem',
@@ -181,7 +179,7 @@ class _WorkoutPlanEnrolmentDetailsPageState
   Future<void> _deleteWorkoutPlanEnrolmentById(WorkoutPlan workoutPlan) async {
     final variables = DeleteWorkoutPlanEnrolmentByIdArguments(id: widget.id);
 
-    final result = await context.graphQLStore.delete<
+    final result = await GraphQLStore.store.delete<
             DeleteWorkoutPlanEnrolmentById$Mutation,
             DeleteWorkoutPlanEnrolmentByIdArguments>(
         mutation: DeleteWorkoutPlanEnrolmentByIdMutation(variables: variables),
@@ -191,18 +189,18 @@ class _WorkoutPlanEnrolmentDetailsPageState
           /// Remove the [WorkoutPlanEnrolmentSummary].
           final summaryKey =
               '$kWorkoutPlanEnrolmentSummaryTypename:${widget.id}';
-          context.graphQLStore.deleteNormalizedObject(summaryKey);
-          context.graphQLStore.removeAllQueryRefsToId(summaryKey);
+          GraphQLStore.store.deleteNormalizedObject(summaryKey);
+          GraphQLStore.store.removeAllQueryRefsToId(summaryKey);
 
           /// Remove the enrolment from the [WorkoutPlan] in store then re-write.
           final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
           final planKey = '$kWorkoutPlanTypename:${workoutPlan.id}';
-          final plan = WorkoutPlan.fromJson(
-              context.graphQLStore.readDenomalized(planKey));
+          final plan =
+              WorkoutPlan.fromJson(GraphQLStore.store.readDenomalized(planKey));
           plan.workoutPlanEnrolments
               .removeWhere((e) => e.user.id == authedUserId);
 
-          context.graphQLStore.writeDataToStore(data: plan.toJson());
+          GraphQLStore.store.writeDataToStore(data: plan.toJson());
         },
         broadcastQueryIds: [
           GQLOpNames.workoutPlanEnrolments,

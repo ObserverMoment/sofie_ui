@@ -15,6 +15,7 @@ import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class UserGoalCreatorPage extends StatelessWidget {
   final UserGoal? journalGoal;
@@ -66,7 +67,7 @@ class _CreateGoalState extends State<_CreateGoal> {
         deadline: _deadline,
       ));
 
-      final result = await context.graphQLStore.create(
+      final result = await GraphQLStore.store.create(
         mutation: CreateUserGoalMutation(variables: variables),
         addRefToQueries: [
           GQLOpNames.userGoals,
@@ -77,7 +78,7 @@ class _CreateGoalState extends State<_CreateGoal> {
         _saving = false;
       });
 
-      checkOperationResult(context, result,
+      checkOperationResult(result,
           onFail: _showErrorToast, onSuccess: context.pop);
     }
   }
@@ -218,14 +219,14 @@ class _EditGoalState extends State<_EditGoal> {
       deadline: _activeUserGoal.deadline,
     ));
 
-    final result = await context.graphQLStore.mutate(
+    final result = await GraphQLStore.store.mutate(
       mutation: UpdateUserGoalMutation(variables: variables),
       broadcastQueryIds: [
         GQLOpNames.userGoals,
       ],
     );
 
-    checkOperationResult(context, result, onFail: _showErrorToast);
+    checkOperationResult(result, onFail: _showErrorToast);
   }
 
   void _showErrorToast() => context.showToast(

@@ -14,6 +14,7 @@ import 'package:sofie_ui/services/default_object_factory.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Creates or updates an invite token via the API and then updates the client store with [ClubInviteTokens] object that is returned.
 class ClubInviteTokenCreator extends StatefulWidget {
@@ -81,7 +82,7 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
             inviteLimit: _enableInviteLimit ? _activeToken.inviteLimit : 0,
             clubId: widget.clubId));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<CreateClubInviteToken$Mutation, CreateClubInviteTokenArguments>(
             mutation: CreateClubInviteTokenMutation(variables: variables),
             broadcastQueryIds: [
@@ -90,7 +91,7 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
 
     setState(() => _savingToDB = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry there was a problem creating the invite link.',
             toastType: ToastType.destructive),
@@ -107,7 +108,7 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
             id: _activeToken.id,
             clubId: widget.clubId));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<UpdateClubInviteToken$Mutation, UpdateClubInviteTokenArguments>(
             mutation: UpdateClubInviteTokenMutation(variables: variables),
             broadcastQueryIds: [
@@ -116,7 +117,7 @@ class _ClubInviteTokenCreatorState extends State<ClubInviteTokenCreator> {
 
     setState(() => _savingToDB = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry there was a problem updating the invite link.',
             toastType: ToastType.destructive),

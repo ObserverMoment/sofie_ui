@@ -15,6 +15,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubDetailsWorkoutPlans extends StatefulWidget {
   final String clubId;
@@ -79,7 +80,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
     final variables = AddWorkoutPlanToClubArguments(
         clubId: widget.clubId, workoutPlanId: workoutPlan.id);
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             AddWorkoutPlanToClub$Mutation, AddWorkoutPlanToClubArguments>(
         mutation: AddWorkoutPlanToClubMutation(variables: variables),
         refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
@@ -89,7 +90,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
       _loading = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () => context.showToast(message: 'Plan Added'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem.',
@@ -115,7 +116,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
     final variables = RemoveWorkoutPlanFromClubArguments(
         clubId: widget.clubId, workoutPlanId: workoutPlan.id);
 
-    final result = await context.graphQLStore.mutate<
+    final result = await GraphQLStore.store.mutate<
             RemoveWorkoutPlanFromClub$Mutation,
             RemoveWorkoutPlanFromClubArguments>(
         mutation: RemoveWorkoutPlanFromClubMutation(variables: variables),
@@ -126,7 +127,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
       _loading = false;
     });
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onSuccess: () => context.showToast(message: 'Plan Removed'),
         onFail: () => context.showToast(
             message: 'Sorry there was a problem.',

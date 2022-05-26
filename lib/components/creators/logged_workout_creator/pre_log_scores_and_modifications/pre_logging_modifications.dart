@@ -74,7 +74,7 @@ class PreLoggingModificationsAndUserInputs extends StatelessWidget {
 
     context.read<WorkoutStructureModificationsBloc>().setSavingLogToDB(false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry, something went wrong',
             toastType: ToastType.destructive),

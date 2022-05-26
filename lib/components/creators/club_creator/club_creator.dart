@@ -17,6 +17,7 @@ import 'package:sofie_ui/services/debounce.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// This creator retrieves the full club data (when editing) before the owner / admin starts editing.
 class ClubCreatorPage extends StatefulWidget {
@@ -92,7 +93,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     if (_nameIsValid) {
       _debouncer.run(() async {
-        final isAvailable = await context.graphQLStore.networkOnlyOperation(
+        final isAvailable = await GraphQLStore.store.networkOnlyOperation(
             operation: CheckUniqueClubNameQuery(
                 variables: CheckUniqueClubNameArguments(name: text)));
         setState(() => _nameIsAvailable =
@@ -110,7 +111,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
             description: _descriptionController.text,
             location: _locationController.text));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .create<CreateClub$Mutation, CreateClubArguments>(
       mutation: CreateClubMutation(variables: variables),
       addRefToQueries: [GQLOpNames.userClubs],
@@ -118,7 +119,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     setState(() => _savingToDB = false);
 
-    checkOperationResult(context, result,
+    checkOperationResult(result,
         onFail: () => context.showToast(
             message: 'Sorry there was a problem, the Club was not created.',
             toastType: ToastType.destructive),
@@ -172,7 +173,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
       id: _activeClub!.id,
     ));
 
-    final result = await context.graphQLStore
+    final result = await GraphQLStore.store
         .mutate<UpdateClubSummary$Mutation, UpdateClubSummaryArguments>(
       mutation: UpdateClubSummaryMutation(variables: variables),
       customVariablesMap: {
@@ -186,7 +187,7 @@ class _ClubCreatorPageState extends State<ClubCreatorPage> {
 
     setState(() => _savingToDB = false);
 
-    checkOperationResult(context, result, onFail: () {
+    checkOperationResult(result, onFail: () {
       context.showToast(
           message: 'Sorry there was a problem updating the Club.',
           toastType: ToastType.destructive);
