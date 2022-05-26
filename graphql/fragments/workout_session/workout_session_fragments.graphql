@@ -1,0 +1,40 @@
+fragment WorkoutSessionSummary on WorkoutSessionSummary {
+  __typename
+  id
+  createdAt
+  updatedAt
+  archived
+  name
+  description
+  coverImageUri
+  introAudioUri
+  introVideoUri
+  introVideoThumbUri
+  User {
+    ...UserAvatarData
+  }
+}
+
+fragment WorkoutSession on WorkoutSession {
+  __typename
+  id
+  createdAt
+  updatedAt
+  archived
+  name
+  description
+  coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  sessionOrder
+  # CardioSessions: [CardioSession!]!
+  # ResistanceSessions: [ResistanceSession!]!
+  # IntervalSessions: [IntervalSession!]!
+  # MobilitySessions: [MobilitySession!]!
+  # AmrapSessions: [AmrapSession!]!
+  # ForTimeSessions: [ForTimeSession!]!
+  User {
+    ...UserAvatarData
+  }
+}

@@ -9,10 +9,6 @@ import 'package:supercharged/supercharged.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
-extension ClubChatSummaryExtension on ClubChatSummary {
-  int get totalMembers => 1 + admins.length + members.length;
-}
-
 extension EquipmentExtension on Equipment {
   bool get isBodyweight => id == kBodyweightEquipmentId;
 }

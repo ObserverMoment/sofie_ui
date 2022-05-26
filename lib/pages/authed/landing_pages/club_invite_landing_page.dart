@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/audio/audio_thumbnail_player.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_thumbnail_player.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';

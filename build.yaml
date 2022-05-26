@@ -7,7 +7,7 @@ targets:
     builders:
       artemis:
         options:
-          fragments_glob: graphql/fragments/**.graphql
+          fragments_glob: graphql/fragments/**/**.graphql
           scalar_mapping:
             - custom_parser_import: 'package:sofie_ui/coercers.dart'
               graphql_type: DateTime

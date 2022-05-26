@@ -9,7 +9,7 @@ import 'package:sofie_ui/components/club/invites/club_details_invites_manager.da
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/lists.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';

@@ -1,0 +1,41 @@
+fragment FitnessBenchmarkCategory on FitnessBenchmarkCategory {
+  __typename
+  id
+  createdAt
+  name
+  description
+}
+
+fragment FitnessBenchmark on FitnessBenchmark {
+  __typename
+  id
+  createdAt
+  scope
+  type
+  name
+  description
+  instructions
+  instructionalVideoUri
+  instructionalVideoThumbUri
+}
+
+fragment FitnessBenchmarkScore on FitnessBenchmarkScore {
+  __typename
+  id
+  createdAt
+  completedOn
+  # Units that this represents depends on FitnessBenchmarkScoreType.
+  score
+  note
+  videoUri
+  videoThumbUri
+}
+
+#### Automatic Load Tracker / Data Vis ####
+fragment UserExerciseLoadTracker on UserExerciseLoadTracker {
+  __typename
+  id
+  createdAt
+  reps
+  loadUnit
+}

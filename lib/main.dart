@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
@@ -13,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/move_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_plan_filters_bloc.dart';
@@ -109,7 +111,12 @@ class AuthRouterState extends State<AuthRouter> {
         /// Material Theme required to ensure auto_route background color is correct.
         return material.Theme(
           data: material.ThemeData(
-              scaffoldBackgroundColor: context.theme.background),
+              scaffoldBackgroundColor: context.theme.background,
+              highlightColor: material.Colors.transparent,
+              splashColor: material.Colors.transparent,
+              primaryTextTheme: TextTheme(
+                  bodyText1:
+                      context.theme.cupertinoThemeData.textTheme.textStyle)),
           child: BetterFeedback(
             feedbackBuilder: (context, onSubmit, scrollController) =>
                 FeedbackCollectionPage(
@@ -162,10 +169,7 @@ class GlobalLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoPageScaffold(
-        child: SizedBox.expand(
-      child: CupertinoActivityIndicator(),
-    ));
+    return const LoadingPage();
   }
 }
 

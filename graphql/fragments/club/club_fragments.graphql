@@ -1,0 +1,79 @@
+fragment Club on Club {
+  __typename
+  id
+  createdAt
+  name
+  description
+  location
+  coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  contentAccessScope
+}
+
+fragment ClubSummary on ClubSummary {
+  __typename
+  id
+  createdAt
+  name
+  description
+  coverImageUri
+  introVideoUri
+  introVideoThumbUri
+  introAudioUri
+  contentAccessScope
+  location
+  memberCount
+  workoutCount
+  planCount
+}
+
+fragment ClubMemberNote on ClubMemberNote {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+  tags
+}
+
+fragment ClubMemberSummary on ClubMemberSummary {
+  __typename
+  id
+  displayName
+  avatarUri
+  townCity
+  countryCode
+  tagline
+  skills
+}
+
+fragment ClubInviteToken on ClubInviteToken {
+  __typename
+  id
+  createdAt
+  name
+  active
+  # How many times can this token be used.
+  # 0 means unlimited.
+  inviteLimit
+  # Only updated by the sever when user joins via this token.
+  joinedUserIds
+}
+
+fragment ClubWorkouts on ClubWorkouts {
+  __typename
+  id
+  workouts {
+    ...WorkoutSummary
+  }
+}
+
+fragment ClubWorkoutPlans on ClubWorkoutPlans {
+  __typename
+  id
+  workoutPlans {
+    ...WorkoutPlanSummary
+  }
+}

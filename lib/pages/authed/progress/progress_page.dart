@@ -14,7 +14,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
+import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/progress/active_widgets_selector.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/eat_well_logs_full_screen.dart';
 import 'package:sofie_ui/pages/authed/progress/full_screen_widgets/logged_meditations_full_screen.dart';

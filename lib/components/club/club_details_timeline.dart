@@ -48,86 +48,86 @@ class ClubDetailsTimelineState extends State<ClubDetailsTimeline> {
 
     _streamFeedClient = context.streamFeedClient;
 
-    _loadInitialData().then((_) => _initPollingForNewPosts());
+    // _loadInitialData().then((_) => _initPollingForNewPosts());
 
     _pagingController = PagingController<int, StreamEnrichedActivity>(
         firstPageKey: 0, invisibleItemsThreshold: 5);
 
-    _pagingController.addPageRequestListener((nextPageKey) {
-      _getTimelinePosts(offset: nextPageKey);
-    });
+    // _pagingController.addPageRequestListener((nextPageKey) {
+    //   _getTimelinePosts(offset: nextPageKey);
+    // });
   }
 
-  Future<void> _loadInitialData() async {
-    final posts = await _getTimelinePosts(offset: 0);
-    _appendNewposts(posts);
-  }
+  // Future<void> _loadInitialData() async {
+  //   final posts = await _getTimelinePosts(offset: 0);
+  //   _appendNewposts(posts);
+  // }
 
-  void _initPollingForNewPosts() {
-    _pollingTimer =
-        Timer.periodic(const Duration(seconds: 30), (Timer t) async {
-      if (!widget.enableFeedPolling) {
-        _pollingTimer.cancel();
-      } else {
-        _pollForNewPosts();
-      }
-    });
-  }
+  // void _initPollingForNewPosts() {
+  //   _pollingTimer =
+  //       Timer.periodic(const Duration(seconds: 30), (Timer t) async {
+  //     if (!widget.enableFeedPolling) {
+  //       _pollingTimer.cancel();
+  //     } else {
+  //       _pollForNewPosts();
+  //     }
+  //   });
+  // }
 
-  Future<void> _pollForNewPosts() async {
-    if (mounted) {
-      final posts = await _getTimelinePosts(offset: 0);
-      if (posts.isNotEmpty) {
-        final shouldGetMore = _prependNewPosts(posts);
-        if (shouldGetMore) {
-          _pollForNewPosts();
-        }
-      }
-    }
-  }
+  // Future<void> _pollForNewPosts() async {
+  //   if (mounted) {
+  //     final posts = await _getTimelinePosts(offset: 0);
+  //     if (posts.isNotEmpty) {
+  //       final shouldGetMore = _prependNewPosts(posts);
+  //       if (shouldGetMore) {
+  //         _pollForNewPosts();
+  //       }
+  //     }
+  //   }
+  // }
 
-  Future<List<StreamEnrichedActivity>> _getTimelinePosts({
-    required int offset,
-  }) async {
-    if (mounted) {
-      try {
-        final result = await context.graphQLStore.networkOnlyOperation<
-                ClubMembersFeedPosts$Query, ClubMembersFeedPostsArguments>(
-            operation: ClubMembersFeedPostsQuery(
-                variables: ClubMembersFeedPostsArguments(
-                    clubId: widget.club.id,
-                    limit: _postsPerPage,
-                    offset: offset)));
+  // Future<List<StreamEnrichedActivity>> _getTimelinePosts({
+  //   required int offset,
+  // }) async {
+  //   if (mounted) {
+  //     try {
+  //       final result = await context.graphQLStore.networkOnlyOperation<
+  //               ClubMembersFeedPosts$Query, ClubMembersFeedPostsArguments>(
+  //           operation: ClubMembersFeedPostsQuery(
+  //               variables: ClubMembersFeedPostsArguments(
+  //                   clubId: widget.club.id,
+  //                   limit: _postsPerPage,
+  //                   offset: offset)));
 
-        checkOperationResult(context, result,
-            onFail: () => throw Exception(result.errors));
+  //       checkOperationResult(context, result,
+  //           onFail: () => throw Exception(result.errors));
 
-        final feedActivities = result.data!.clubMembersFeedPosts;
+  //       final feedActivities = result.data!.clubMembersFeedPosts;
 
-        final feedActivitiesWithOwnLikeReactions = feedActivities
-            .where((a) => a.userLikeReactionId != null)
-            .map((a) => PostWithLikeReaction(
-                activityId: a.id, reactionId: a.userLikeReactionId!))
-            .toList();
+  //       final feedActivitiesWithOwnLikeReactions = feedActivities
+  //           .where((a) => a.userLikeReactionId != null)
+  //           .map((a) => PostWithLikeReaction(
+  //               activityId: a.id, reactionId: a.userLikeReactionId!))
+  //           .toList();
 
-        _userLikedPosts = [
-          ..._userLikedPosts,
-          ...feedActivitiesWithOwnLikeReactions
-        ];
+  //       _userLikedPosts = [
+  //         ..._userLikedPosts,
+  //         ...feedActivitiesWithOwnLikeReactions
+  //       ];
 
-        return feedActivities;
-      } catch (e) {
-        printLog(e.toString());
-        _pagingController.error = e.toString();
-        context.showToast(
-            message: 'Sorry there was a problem loading the timeline.',
-            toastType: ToastType.destructive);
-        return [];
-      }
-    } else {
-      return [];
-    }
-  }
+  //       return feedActivities;
+  //     } catch (e) {
+  //       printLog(e.toString());
+  //       _pagingController.error = e.toString();
+  //       context.showToast(
+  //           message: 'Sorry there was a problem loading the timeline.',
+  //           toastType: ToastType.destructive);
+  //       return [];
+  //     }
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
   /// When [polling] for new posts we need to check if those that get returned are new or not.
   /// New posts are posts that are not already contained within [_pagingController.itemList].

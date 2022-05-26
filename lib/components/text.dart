@@ -20,19 +20,19 @@ enum FONTSIZE {
 }
 
 Map<FONTSIZE, double> _fontSizeMap = {
-  FONTSIZE.zero: 9,
-  FONTSIZE.one: 11,
-  FONTSIZE.two: 14,
-  FONTSIZE.three: 16,
-  FONTSIZE.four: 18,
-  FONTSIZE.five: 22,
-  FONTSIZE.six: 25,
-  FONTSIZE.seven: 28,
-  FONTSIZE.eight: 32,
-  FONTSIZE.nine: 38,
-  FONTSIZE.ten: 48,
-  FONTSIZE.eleven: 58,
-  FONTSIZE.twelve: 60,
+  FONTSIZE.zero: 8,
+  FONTSIZE.one: 10,
+  FONTSIZE.two: 13,
+  FONTSIZE.three: 15,
+  FONTSIZE.four: 17,
+  FONTSIZE.five: 21,
+  FONTSIZE.six: 24,
+  FONTSIZE.seven: 27,
+  FONTSIZE.eight: 31,
+  FONTSIZE.nine: 37,
+  FONTSIZE.ten: 47,
+  FONTSIZE.eleven: 57,
+  FONTSIZE.twelve: 59,
 };
 
 class MyText extends StatelessWidget {
@@ -59,7 +59,7 @@ class MyText extends StatelessWidget {
       this.decoration,
       this.lineHeight = 1.1,
       this.subtext = false,
-      this.letterSpacing = 1.2})
+      this.letterSpacing = 1.1})
       : super(key: key);
 
   @override
@@ -102,7 +102,7 @@ class MyRichText extends StatelessWidget {
               fontWeight: weight,
               fontSize: _fontSizeMap[size],
               height: lineHeight,
-              letterSpacing: 1.2),
+              letterSpacing: 1.1),
         ));
   }
 }
@@ -131,7 +131,7 @@ class MyHeaderText extends StatelessWidget {
       this.decoration,
       this.lineHeight = 1.1,
       this.subtext = false,
-      this.letterSpacing = 1.6})
+      this.letterSpacing = 1.2})
       : super(key: key);
 
   @override

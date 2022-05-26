@@ -4,7 +4,7 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart';
+import 'package:sofie_ui/modules/profile/components/user_avatar.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/profile/club_summaries_list.dart';

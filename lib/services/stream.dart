@@ -13,7 +13,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/pages/authed/home/notifications_page.dart';
+import 'package:sofie_ui/modules/home/notifications_page.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;

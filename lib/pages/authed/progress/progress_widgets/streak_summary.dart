@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_picker_modal.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
+import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class StreaksSummaryWidget extends StatelessWidget {

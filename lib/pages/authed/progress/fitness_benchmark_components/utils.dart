@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
+import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
 
 class FitnessBenchmarkScoreDisplay {
   final String score;

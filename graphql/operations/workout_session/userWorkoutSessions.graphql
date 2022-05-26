@@ -1,0 +1,5 @@
+query userWorkoutSessions {
+  userWorkoutSessions {
+    ...WorkoutSessionSummary
+  }
+}

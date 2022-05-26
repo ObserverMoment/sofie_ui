@@ -10,7 +10,7 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/pages/authed/profile/edit_profile_page.dart';
+import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';

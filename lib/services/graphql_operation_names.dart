@@ -29,9 +29,6 @@ class GQLOpNames {
   static String get userFitnessBenchmarks =>
       UserFitnessBenchmarksQuery().operationName;
 
-  static String get userBenchmarkWorkouts =>
-      UserBenchmarkWorkoutsQuery().operationName;
-
   static String get workoutPlanEnrolments =>
       WorkoutPlanEnrolmentsQuery().operationName;
 

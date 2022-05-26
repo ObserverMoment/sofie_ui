@@ -14,7 +14,7 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
-import 'package:sofie_ui/components/media/images/user_avatar.dart' as avatar;
+import 'package:sofie_ui/modules/profile/components/user_avatar.dart' as avatar;
 import 'package:json_annotation/json_annotation.dart' as json;
 
 class ClubChatsChannelList extends StatefulWidget {

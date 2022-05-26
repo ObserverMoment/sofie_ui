@@ -1,5 +1,0 @@
-query clubChatSummary($clubId: ID!) {
-  clubChatSummary(clubId: $clubId) {
-    ...ClubChatSummary
-  }
-}

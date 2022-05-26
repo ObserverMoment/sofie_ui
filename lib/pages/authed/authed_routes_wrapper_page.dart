@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -73,12 +73,16 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     /// Core app data such as equipment, moves, body areas and other non user generated content.
     await CoreDataRepo.initCoreData(context);
 
+    final userProfileQuery = UserProfileQuery(
+        variables: UserProfileArguments(userId: _authedUser.id));
     final userLoggedWorkoutsQuery = UserLoggedWorkoutsQuery();
     final announcementUpdatesQuery = AnnouncementUpdatesQuery();
     final welcomeTodoItemsQuery = WelcomeTodoItemsQuery();
     final userScheduledWorkoutsQuery = UserScheduledWorkoutsQuery();
 
     Future.wait([
+      context.graphQLStore.query(query: userProfileQuery),
+
       /// Get all the user logs - then we can always use [storeFirst] for these queries in the app. Removing this and not changing in app queries to [storeAndNetwork] will result in a query list of a single log in the case that the user logs a workout BEFORE downloading their full list of logs.
       context.graphQLStore.query(query: userLoggedWorkoutsQuery),
 
@@ -217,27 +221,6 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
               child: const AutoRouter(),
             ),
           )
-        : const _LoadingPage();
-  }
-}
-
-class _LoadingPage extends StatelessWidget {
-  const _LoadingPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-        child: Center(
-      child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const Text('CIRCLES',
-                style: TextStyle(fontFamily: 'Bauhaus', fontSize: 26)),
-            const SizedBox(height: 8),
-            LoadingAnimationWidget.threeArchedCircle(
-                color: context.theme.primary, size: 30)
-          ]),
-    ));
+        : const LoadingPage();
   }
 }
