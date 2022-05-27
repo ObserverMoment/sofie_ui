@@ -1,0 +1,8 @@
+mutation duplicateWorkoutSession($id: ID!) {
+  duplicateWorkoutSession(id: $id) {
+    ...WorkoutSession
+    CardioSessions {
+      ...CardioSession
+    }
+  }
+}

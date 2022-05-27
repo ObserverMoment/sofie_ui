@@ -1,5 +1,8 @@
 query userWorkoutSessions {
   userWorkoutSessions {
-    ...WorkoutSessionSummary
+    ...WorkoutSession
+    CardioSessions {
+      ...CardioSession
+    }
   }
 }

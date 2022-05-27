@@ -90,33 +90,8 @@ class _MainTabsPageState extends State<MainTabsPage> {
           elevation: 10,
           backgroundColor: Styles.primaryAccent,
           foregroundColor: Styles.white,
-          child: const Icon(CupertinoIcons.plus),
-          onPressed: () {
-            openBottomSheetMenu(
-                context: context,
-                child: BottomSheetMenu(
-                    header: const BottomSheetMenuHeader(
-                        name: 'What do you want to do?'),
-                    items: [
-                      BottomSheetMenuItem(
-                          icon: CupertinoIcons.text_badge_checkmark,
-                          text: 'Log a Workout',
-                          onPressed: () {}),
-                      BottomSheetMenuItem(
-                          icon: MyCustomIcons.dumbbell,
-                          text: 'Create a new Workout',
-                          onPressed: () =>
-                              context.navigateTo(WorkoutSessionCreatorRoute())),
-                      BottomSheetMenuItem(
-                          icon: MyCustomIcons.plansIcon,
-                          text: 'Create a new Plan',
-                          onPressed: () {}),
-                      BottomSheetMenuItem(
-                          icon: CupertinoIcons.circle,
-                          text: 'Create a new Circle',
-                          onPressed: () {}),
-                    ]));
-          },
+          child: const Icon(CupertinoIcons.quote_bubble),
+          onPressed: () => Utils.openUserFeedbackPage(context),
         ),
         endDrawer: const ProfileSettingsDrawer(),
         bottomNavigationBuilder: (context, tabsRouter) => ClipRect(
@@ -145,6 +120,42 @@ class _MainTabsPageState extends State<MainTabsPage> {
                             label: 'Circles',
                             inactiveIconData: CupertinoIcons.circle,
                             activeIconData: CupertinoIcons.circle_fill),
+                        CupertinoButton(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          pressedOpacity: 0.9,
+                          onPressed: () {
+                            openBottomSheetMenu(
+                                context: context,
+                                child: BottomSheetMenu(
+                                    header: const BottomSheetMenuHeader(
+                                        name: 'What do you want to do?'),
+                                    items: [
+                                      BottomSheetMenuItem(
+                                          icon: CupertinoIcons
+                                              .text_badge_checkmark,
+                                          text: 'Log a Workout',
+                                          onPressed: () {}),
+                                      BottomSheetMenuItem(
+                                          icon: MyCustomIcons.dumbbell,
+                                          text: 'Create a new Workout',
+                                          onPressed: () => context.navigateTo(
+                                              WorkoutSessionCreatorRoute())),
+                                      BottomSheetMenuItem(
+                                          icon: MyCustomIcons.plansIcon,
+                                          text: 'Create a new Plan',
+                                          onPressed: () {}),
+                                      BottomSheetMenuItem(
+                                          icon: CupertinoIcons.circle,
+                                          text: 'Create a new Circle',
+                                          onPressed: () {}),
+                                    ]));
+                          },
+                          child: Icon(
+                            CupertinoIcons.plus_circled,
+                            size: 38,
+                            color: context.theme.primary.withOpacity(0.85),
+                          ),
+                        ),
                         _buildTabItem(
                             tabsRouter: tabsRouter,
                             activeIndex: tabsRouter.activeIndex,
@@ -161,7 +172,7 @@ class _MainTabsPageState extends State<MainTabsPage> {
                             label: 'Progress',
                             inactiveIconData: Icons.stacked_line_chart_outlined,
                             activeIconData: Icons.stacked_line_chart_rounded),
-                        const _FeedbackIcon()
+                        // const _FeedbackIcon()
                       ],
                     )),
               ),

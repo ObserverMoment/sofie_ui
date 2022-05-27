@@ -95,13 +95,6 @@ class ProfileSettingsDrawer extends StatelessWidget {
                             context.navigateTo(const EditProfileRoute());
                           }),
                       PageLink(
-                          linkText: 'Settings',
-                          icon: CupertinoIcons.gear,
-                          onPress: () {
-                            context.pop();
-                            context.navigateTo(const SettingsRoute());
-                          }),
-                      PageLink(
                           linkText: 'Gym Profiles',
                           icon: MyCustomIcons.clubsIcon,
                           onPress: () {
@@ -123,6 +116,13 @@ class ProfileSettingsDrawer extends StatelessWidget {
                           onPress: () {
                             context.pop();
                             context.navigateTo(const SkillsRoute());
+                          }),
+                      PageLink(
+                          linkText: 'Settings',
+                          icon: CupertinoIcons.gear,
+                          onPress: () {
+                            context.pop();
+                            context.navigateTo(const SettingsRoute());
                           }),
                       Padding(
                         padding: const EdgeInsets.all(8.0),

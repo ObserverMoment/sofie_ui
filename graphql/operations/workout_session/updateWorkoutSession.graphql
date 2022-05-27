@@ -1,0 +1,8 @@
+mutation updateWorkoutSession($data: UpdateWorkoutSessionInput!) {
+  updateWorkoutSession(data: $data) {
+    ...WorkoutSession
+    CardioSessions {
+      ...CardioSession
+    }
+  }
+}

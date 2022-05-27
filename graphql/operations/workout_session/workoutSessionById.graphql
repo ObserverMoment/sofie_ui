@@ -1,5 +1,8 @@
 query workoutSessionById($id: ID!) {
   workoutSessionById(id: $id) {
     ...WorkoutSession
+    CardioSessions {
+      ...CardioSession
+    }
   }
 }
