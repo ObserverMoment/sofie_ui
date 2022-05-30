@@ -3,10 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/media/images/utils.dart';
+import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
@@ -25,6 +27,7 @@ class ImageUploader extends StatefulWidget {
   final VoidCallback? onUploadFail;
   final void Function(String uri) removeImage;
   final IconData emptyThumbIcon;
+  final String? emptyText;
   const ImageUploader(
       {Key? key,
       this.imageUri,
@@ -33,12 +36,13 @@ class ImageUploader extends StatefulWidget {
       this.onUploadStart,
       required this.removeImage,
       this.onUploadFail,
-      this.emptyThumbIcon = CupertinoIcons.photo,
-      this.borderRadius = 8})
+      this.emptyThumbIcon = CupertinoIcons.add,
+      this.borderRadius = 8,
+      this.emptyText})
       : super(key: key);
 
   @override
-  _ImageUploaderState createState() => _ImageUploaderState();
+  State<ImageUploader> createState() => _ImageUploaderState();
 }
 
 class _ImageUploaderState extends State<ImageUploader> {
@@ -124,15 +128,26 @@ class _ImageUploaderState extends State<ImageUploader> {
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 400),
           child: _uploading
-              ? LoadingIndicator(
+              ? LoadingSpinnerCircle(
                   color: primary,
                 )
               : hasImage
                   ? SizedUploadcareImage(widget.imageUri!)
-                  : Icon(
-                      widget.emptyThumbIcon,
-                      size: widget.displaySize.width / 2.5,
-                      color: primary.withOpacity(0.3),
+                  : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(
+                          widget.emptyThumbIcon,
+                          size: widget.displaySize.width / 2.5,
+                          color: primary.withOpacity(0.1),
+                        ),
+                        if (widget.emptyText != null)
+                          MyText(
+                            widget.emptyText!,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                          )
+                      ],
                     ),
         ),
       ),

@@ -1968,6 +1968,7 @@ input UpdateWorkoutSessionInput {
   introVideoUri: String
   name: String
   sessionOrder: [String!]
+  tags: [String!]
 }
 
 input UpdateWorkoutSetInput {
@@ -2336,6 +2337,7 @@ type WorkoutSession {
   introVideoUri: String
   name: String!
   sessionOrder: [String!]!
+  tags: [String!]!
   updatedAt: DateTime!
 }
 

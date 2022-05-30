@@ -1,0 +1,29 @@
+fragment AmrapSession on AmrapSession {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  # If forced rests are required between sections then add [rest:seconds].
+  # [AMRAPSectionId, rest:60, AMRAPSection]
+  sectionOrder
+}
+
+fragment AmrapSection on AmrapSection {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  moveOrder
+}
+
+fragment AmrapMove on AmrapMove {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+}

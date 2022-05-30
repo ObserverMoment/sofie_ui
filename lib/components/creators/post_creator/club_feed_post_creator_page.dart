@@ -360,7 +360,6 @@ class _ClubFeedPostCreatorPageState extends State<ClubFeedPostCreatorPage> {
                       child: NavBarTrailingRow(children: [
                         NavBarCancelButton(
                           _confirmReset,
-                          text: 'Reset',
                           color: Styles.errorRed,
                         ),
                         Padding(

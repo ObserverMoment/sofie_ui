@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/icons.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -76,7 +77,7 @@ class MyButton extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      LoadingIndicator(color: contentColor, size: 10),
+                      LoadingSpinnerCircle(color: contentColor, size: 10),
                     ],
                   )
                 : Row(
@@ -281,6 +282,174 @@ class TertiaryButton extends StatelessWidget {
   }
 }
 
+class DestructiveButton extends StatelessWidget {
+  final IconData? prefixIconData;
+  final String text;
+  final IconData? suffixIconData;
+  final void Function() onPressed;
+  final bool loading;
+  final bool withMinWidth;
+
+  const DestructiveButton(
+      {Key? key,
+      this.prefixIconData,
+      required this.text,
+      this.suffixIconData,
+      required this.onPressed,
+      this.withMinWidth = true,
+      this.loading = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MyButton(
+      prefix: prefixIconData != null
+          ? Icon(
+              prefixIconData,
+              color: Styles.white,
+              size: 20,
+            )
+          : null,
+      text: text,
+      suffix: suffixIconData != null
+          ? Icon(
+              prefixIconData,
+              color: Styles.white,
+              size: 20,
+            )
+          : null,
+      loading: loading,
+      onPressed: onPressed,
+      backgroundColor: Styles.errorRed,
+      contentColor: Styles.white,
+      withMinWidth: withMinWidth,
+    );
+  }
+}
+
+/// Has no padding which allows it to act as 'Leading' / 'trailing' widget in the nav bar.
+class NavBarCancelButton extends StatelessWidget {
+  final void Function() onPressed;
+  final Color? color;
+  const NavBarCancelButton(
+    this.onPressed, {
+    Key? key,
+    this.color,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        child: Icon(
+          CupertinoIcons.clear,
+          color: color,
+        ));
+  }
+}
+
+/// Has no padding which allows it to act as 'Leading' / 'trailing' widget in the nav bar.
+class NavBarSaveButton extends StatelessWidget {
+  final void Function() onPressed;
+  final Color? color;
+  const NavBarSaveButton(
+    this.onPressed, {
+    Key? key,
+    this.color,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        child: Icon(
+          CupertinoIcons.checkmark_alt,
+          size: 30,
+          color: color,
+        ));
+  }
+}
+
+/// Clickable row which spans the width of parent
+/// With title on left and right chevron on right.
+class PageLink extends StatelessWidget {
+  final void Function() onPress;
+  final String linkText;
+  final IconData? icon;
+  final bool infoHighlight;
+  final bool destructiveHighlight;
+  final bool separator;
+  final bool loading;
+  final bool bold;
+
+  const PageLink(
+      {Key? key,
+      required this.linkText,
+      required this.onPress,
+      this.icon,
+      this.infoHighlight = false,
+      this.destructiveHighlight = false,
+      this.loading = false,
+      this.bold = false,
+      this.separator = true})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: loading ? null : onPress,
+      child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.only(top: 12, left: 8, bottom: 8, right: 8),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      if (icon != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 12.0),
+                          child: Icon(icon, size: 18),
+                        ),
+                      MyText(
+                        linkText,
+                        color: infoHighlight
+                            ? Styles.infoBlue
+                            : destructiveHighlight
+                                ? Styles.errorRed
+                                : null,
+                        lineHeight: 1,
+                        weight: bold ? FontWeight.bold : FontWeight.normal,
+                      ),
+                      if (loading)
+                        const FadeIn(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: LoadingIndicator(
+                              size: 10,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const Icon(CupertinoIcons.right_chevron, size: 18),
+                ],
+              ),
+              if (separator)
+                const Padding(
+                  padding: EdgeInsets.only(left: 30.0, top: 8),
+                  child: Opacity(opacity: 0.4, child: HorizontalLine()),
+                )
+            ],
+          )),
+    );
+  }
+}
+
+/////////// DEPRECATED /////////////
 class BorderButton extends StatelessWidget {
   final Widget? prefix;
   final String? text;
@@ -358,51 +527,6 @@ class BorderButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class DestructiveButton extends StatelessWidget {
-  final IconData? prefixIconData;
-  final String text;
-  final IconData? suffixIconData;
-  final void Function() onPressed;
-  final bool loading;
-  final bool withMinWidth;
-
-  const DestructiveButton(
-      {Key? key,
-      this.prefixIconData,
-      required this.text,
-      this.suffixIconData,
-      required this.onPressed,
-      this.withMinWidth = true,
-      this.loading = false})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MyButton(
-      prefix: prefixIconData != null
-          ? Icon(
-              prefixIconData,
-              color: Styles.white,
-              size: 20,
-            )
-          : null,
-      text: text,
-      suffix: suffixIconData != null
-          ? Icon(
-              prefixIconData,
-              color: Styles.white,
-              size: 20,
-            )
-          : null,
-      loading: loading,
-      onPressed: onPressed,
-      backgroundColor: Styles.errorRed,
-      contentColor: Styles.white,
-      withMinWidth: withMinWidth,
     );
   }
 }
@@ -536,85 +660,6 @@ class IconButton extends StatelessWidget {
               color: iconColor,
             )),
       ),
-    );
-  }
-}
-
-/// Clickable row which spans the width of parent
-/// With title on left and right chevron on right.
-class PageLink extends StatelessWidget {
-  final void Function() onPress;
-  final String linkText;
-  final IconData? icon;
-  final bool infoHighlight;
-  final bool destructiveHighlight;
-  final bool separator;
-  final bool loading;
-  final bool bold;
-
-  const PageLink(
-      {Key? key,
-      required this.linkText,
-      required this.onPress,
-      this.icon,
-      this.infoHighlight = false,
-      this.destructiveHighlight = false,
-      this.loading = false,
-      this.bold = false,
-      this.separator = true})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: loading ? null : onPress,
-      child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.only(top: 12, left: 8, bottom: 8, right: 8),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Row(
-                    children: [
-                      if (icon != null)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 12.0),
-                          child: Icon(icon, size: 18),
-                        ),
-                      MyText(
-                        linkText,
-                        color: infoHighlight
-                            ? Styles.infoBlue
-                            : destructiveHighlight
-                                ? Styles.errorRed
-                                : null,
-                        lineHeight: 1,
-                        weight: bold ? FontWeight.bold : FontWeight.normal,
-                      ),
-                      if (loading)
-                        const FadeIn(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 8.0),
-                            child: LoadingIndicator(
-                              size: 10,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                  const Icon(CupertinoIcons.right_chevron, size: 18),
-                ],
-              ),
-              if (separator)
-                const Padding(
-                  padding: EdgeInsets.only(left: 30.0, top: 8),
-                  child: Opacity(opacity: 0.4, child: HorizontalLine()),
-                )
-            ],
-          )),
     );
   }
 }
@@ -792,31 +837,6 @@ class CreateTextIconButton extends StatelessWidget {
 }
 
 /// Has no padding which allows it to act as 'Leading' / 'trailing' widget in the nav bar.
-class NavBarCancelButton extends StatelessWidget {
-  final void Function() onPressed;
-  final String text;
-  final Color? color;
-  final FontWeight weight;
-  const NavBarCancelButton(this.onPressed,
-      {Key? key,
-      this.text = 'Cancel',
-      this.color,
-      this.weight = FontWeight.normal})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoButton(
-        padding: EdgeInsets.zero,
-        onPressed: onPressed,
-        child: MyText(
-          text,
-          color: color,
-          weight: weight,
-        ));
-  }
-}
-
-/// Has no padding which allows it to act as 'Leading' / 'trailing' widget in the nav bar.
 class NavBarChevronDownButton extends StatelessWidget {
   final void Function() onPressed;
   const NavBarChevronDownButton(this.onPressed, {Key? key}) : super(key: key);
@@ -850,30 +870,26 @@ class NavBarTextButton extends StatelessWidget {
 }
 
 /// Has no padding which allows it to act as 'Leading' / 'trailing' widget in the nav bar.
-class NavBarSaveButton extends StatelessWidget {
+class NavBarIconButton extends StatelessWidget {
   final void Function() onPressed;
-  final String text;
   final bool loading;
-  const NavBarSaveButton(this.onPressed,
-      {Key? key, this.text = 'Save', this.loading = false})
+  final IconData iconData;
+  final Color? color;
+  const NavBarIconButton(
+      {Key? key,
+      required this.onPressed,
+      this.loading = false,
+      required this.iconData,
+      this.color})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: loading ? null : onPressed,
-            child: loading
-                ? const LoadingIndicator(
-                    size: 10,
-                  )
-                : MyText(
-                    text,
-                  )),
-      ],
-    );
+    return CupertinoButton(
+        padding: EdgeInsets.zero,
+        onPressed: loading ? null : onPressed,
+        child: loading
+            ? const NavBarLoadingIndicator()
+            : Icon(iconData, color: color));
   }
 }
 

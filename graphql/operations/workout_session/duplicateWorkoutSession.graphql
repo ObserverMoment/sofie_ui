@@ -3,6 +3,93 @@ mutation duplicateWorkoutSession($id: ID!) {
     ...WorkoutSession
     CardioSessions {
       ...CardioSession
+      CardioExercises {
+        ...CardioExercise
+        MoveSummary: Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+        }
+      }
+    }
+    ResistanceSessions {
+      ...ResistanceSession
+      ResistanceExercises {
+        ...ResistanceExercise
+        ResistanceSets {
+          ...ResistanceSet
+          MoveSummary: Move {
+            ...Move
+            MoveType {
+              ...MoveType
+            }
+          }
+          Equipment {
+            ...Equipment
+          }
+        }
+      }
+    }
+    AmrapSessions {
+      ...AmrapSession
+      AmrapSections {
+        ...AmrapSection
+        AmrapMoves {
+          ...AmrapMove
+          MoveSummary: Move {
+            ...Move
+            MoveType {
+              ...MoveType
+            }
+          }
+          Equipment {
+            ...Equipment
+          }
+        }
+      }
+    }
+    IntervalSessions {
+      ...IntervalSession
+      IntervalExercises {
+        ...IntervalExercise
+        IntervalSets {
+          ...IntervalSet
+          MoveSummary: Move {
+            ...Move
+            MoveType {
+              ...MoveType
+            }
+          }
+          Equipment {
+            ...Equipment
+          }
+        }
+      }
+    }
+    ForTimeSessions {
+      ...ForTimeSession
+      ForTimeSections {
+        ...ForTimeSection
+        ForTimeMoves {
+          ...ForTimeMove
+          MoveSummary: Move {
+            ...Move
+            MoveType {
+              ...MoveType
+            }
+          }
+          Equipment {
+            ...Equipment
+          }
+        }
+      }
+    }
+    MobilitySessions {
+      ...MobilitySession
+    }
+    User {
+      ...UserAvatarData
     }
   }
 }

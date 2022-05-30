@@ -213,19 +213,10 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
         navigationBar: MyNavBar(
-          customLeading: Padding(
-            padding: const EdgeInsets.only(left: 4.0),
-            child: NavBarCancelButton(context.pop, text: 'Cancel'),
-          ),
+          customLeading: NavBarCancelButton(context.pop),
           middle: NavBarTitle(widget.title),
           trailing: _formIsDirty && _inputIsValid()
-              ? FadeIn(
-                  child: TertiaryButton(
-                  backgroundColor: Styles.primaryAccent,
-                  textColor: Styles.white,
-                  onPressed: _handleSave,
-                  text: 'Save',
-                ))
+              ? FadeIn(child: NavBarSaveButton(_handleSave))
               : null,
         ),
         child: SingleChildScrollView(
@@ -243,7 +234,7 @@ class _FullScreenTextEditingState extends State<FullScreenTextEditing> {
                   controller: _controller),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 16),
                 child: Row(
                   children: [
                     if (widget.maxChars != null)

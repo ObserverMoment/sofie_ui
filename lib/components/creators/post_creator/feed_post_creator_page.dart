@@ -231,7 +231,6 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                       child: NavBarTrailingRow(children: [
                         NavBarCancelButton(
                           _confirmReset,
-                          text: 'Reset',
                           color: Styles.errorRed,
                         ),
                         Padding(

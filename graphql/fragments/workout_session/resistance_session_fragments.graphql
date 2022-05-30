@@ -1,0 +1,27 @@
+fragment ResistanceSession on ResistanceSession {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  setOrder
+}
+
+fragment ResistanceExercise on ResistanceExercise {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+  setOrder
+}
+
+fragment ResistanceSet on ResistanceSet {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+  reps
+}

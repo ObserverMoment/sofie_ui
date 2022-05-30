@@ -127,8 +127,7 @@ class FloatingButton extends StatelessWidget {
                         const SizedBox(width: 7),
                       if (text != null)
                         MyText(
-                          text!,
-                          // weight: FontWeight.bold,
+                          text!.toUpperCase(),
                         ),
                     ],
                   ),

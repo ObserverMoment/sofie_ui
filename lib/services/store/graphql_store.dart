@@ -378,6 +378,7 @@ class GraphQLStore {
   Future<OperationResult<TData>>
       mutate<TData, TVars extends json.JsonSerializable>({
     required GraphQLQuery<TData, TVars> mutation,
+    Map<String, dynamic>? optimisticData,
 
     /// If you want to add / remove ref to / from queries the you have to provide [id] and [__typename] in the optimistic data and these fields must also be returned by the api in the result object.
     List<String> addRefToQueries = const [],
@@ -394,10 +395,17 @@ class GraphQLStore {
     /// i.e. [workoutById(id: 123)].
     List<String> clearQueryDataAtKeys = const [],
 
-    /// [customVariablesMap] - if you do not want to pass all the fields of the object to the API. If you pass null fields then those fields will be set null in the DB.
+    /// [customVariablesMap] - if you do not want to pass all the fields of the object to the API. If you pass null fields / omit some fields to the typed inputs then those fields will be set null in the DB.
     Map<String, dynamic>? customVariablesMap,
     void Function(TData resultData)? processResult,
   }) async {
+    if (optimisticData != null) {
+      writeDataToStore(
+        data: optimisticData,
+        broadcastQueryIds: broadcastQueryIds,
+      );
+    }
+
     final response =
         await execute(mutation, customVariablesMap: customVariablesMap);
 
@@ -407,6 +415,8 @@ class GraphQLStore {
       response.errors?.forEach((e) {
         printLog(e.toString());
       });
+
+      /// TODO: Handle optimistic data rollback.
     }
 
     final result = OperationResult<TData>(

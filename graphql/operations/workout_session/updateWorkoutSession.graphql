@@ -1,8 +1,5 @@
 mutation updateWorkoutSession($data: UpdateWorkoutSessionInput!) {
-  updateWorkoutSession(data: $data) {
+  updateWorkoutSession: updateWorkoutSession(data: $data) {
     ...WorkoutSession
-    CardioSessions {
-      ...CardioSession
-    }
   }
 }

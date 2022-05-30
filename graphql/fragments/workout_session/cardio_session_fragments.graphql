@@ -6,9 +6,6 @@ fragment CardioSession on CardioSession {
   name
   note
   exerciseOrder
-  CardioExercises {
-    ...CardioExercise
-  }
 }
 
 fragment CardioExercise on CardioExercise {
@@ -22,7 +19,4 @@ fragment CardioExercise on CardioExercise {
   distance
   distanceUnit
   cardioZone
-  Move {
-    ...Move
-  }
 }

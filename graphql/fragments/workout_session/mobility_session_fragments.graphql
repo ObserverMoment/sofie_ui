@@ -1,0 +1,9 @@
+fragment MobilitySession on MobilitySession {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  moveOrder
+}

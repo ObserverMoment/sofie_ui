@@ -10,13 +10,6 @@ fragment WorkoutSession on WorkoutSession {
   introVideoUri
   introVideoThumbUri
   introAudioUri
+  tags
   sessionOrder
-  # ResistanceSessions: [ResistanceSession!]!
-  # IntervalSessions: [IntervalSession!]!
-  # MobilitySessions: [MobilitySession!]!
-  # AmrapSessions: [AmrapSession!]!
-  # ForTimeSessions: [ForTimeSession!]!
-  User {
-    ...UserAvatarData
-  }
 }
