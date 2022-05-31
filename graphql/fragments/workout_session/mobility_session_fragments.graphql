@@ -5,5 +5,8 @@ fragment MobilitySession on MobilitySession {
   updatedAt
   name
   note
+  audioUri
+  videoUri
+  videoThumbUri
   moveOrder
 }

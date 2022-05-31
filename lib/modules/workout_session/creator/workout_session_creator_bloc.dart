@@ -10,7 +10,6 @@ class WorkoutSessionCreatorBloc extends ChangeNotifier {
   late String workoutSessionId;
 
   /// User can revert to this if they want to void all changes.
-  ///
   late Map<String, dynamic> original;
 
   /// Before every update we make a copy of the last workoutSession here.

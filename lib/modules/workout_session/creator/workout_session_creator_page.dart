@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_session/creator/workout_session_create.dart';
+import 'package:sofie_ui/modules/workout_session/creator/components/workout_session_create.dart';
 import 'package:sofie_ui/modules/workout_session/creator/workout_session_creator_bloc.dart';
-import 'package:sofie_ui/modules/workout_session/creator/workout_session_edit.dart';
+import 'package:sofie_ui/modules/workout_session/creator/components/workout_session_edit.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';

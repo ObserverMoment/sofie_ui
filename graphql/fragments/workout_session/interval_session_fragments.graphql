@@ -5,6 +5,9 @@ fragment IntervalSession on IntervalSession {
   updatedAt
   name
   note
+  audioUri
+  videoUri
+  videoThumbUri
   repeats
   # For rest intervals add 'rest' to the array.
   # E.g. [IntervalExerciseId, IntervalExerciseId, rest, IntervalExerciseId, IntervalExerciseId, rest]
