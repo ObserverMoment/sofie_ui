@@ -17,6 +17,6 @@ targets:
               dart_type: Map
           schema_mapping:
             - schema: schema.graphql
-              queries_glob: graphql/operations/**/**.graphql
+              queries_glob: graphql/operations/**/*.graphql
               output: lib/generated/api/graphql_api.dart
               naming_scheme: simple

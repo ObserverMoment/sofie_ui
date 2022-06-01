@@ -1,0 +1,20 @@
+mutation duplicateResistanceSession($id: ID!) {
+  duplicateResistanceSession(id: $id) {
+    ...ResistanceSession
+    ResistanceExercises {
+      ...ResistanceExercise
+      ResistanceSets {
+        ...ResistanceSet
+        MoveSummary: Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+        }
+        Equipment {
+          ...Equipment
+        }
+      }
+    }
+  }
+}

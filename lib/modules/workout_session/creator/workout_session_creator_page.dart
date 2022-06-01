@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_session/creator/components/workout_session_create.dart';
-import 'package:sofie_ui/modules/workout_session/creator/workout_session_creator_bloc.dart';
+import 'package:sofie_ui/modules/workout_session/creator/blocs/workout_session_bloc.dart';
 import 'package:sofie_ui/modules/workout_session/creator/components/workout_session_edit.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -19,7 +19,7 @@ class WorkoutSessionCreatorPage extends StatefulWidget {
 }
 
 class _WorkoutSessionCreatorPageState extends State<WorkoutSessionCreatorPage> {
-  WorkoutSessionCreatorBloc? _bloc;
+  WorkoutSessionBloc? _bloc;
   bool _creatingNewWorkoutSession = false;
 
   @override
@@ -31,7 +31,7 @@ class _WorkoutSessionCreatorPageState extends State<WorkoutSessionCreatorPage> {
   }
 
   void _initBloc(WorkoutSession workoutSession) {
-    setState(() => _bloc = WorkoutSessionCreatorBloc(workoutSession));
+    setState(() => _bloc = WorkoutSessionBloc(workoutSession));
   }
 
   /// Create a bare bones workout in the DB and add it to the store.

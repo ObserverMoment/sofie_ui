@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
@@ -9,9 +8,13 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/user_input/tags_editor.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_session/creator/workout_session_creator_bloc.dart';
+import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/modules/workout_session/creator/components/cards/resistance_session_card.dart';
+import 'package:sofie_ui/modules/workout_session/creator/components/resistance_session_edit.dart';
+import 'package:sofie_ui/modules/workout_session/creator/blocs/workout_session_bloc.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 enum WorkoutSessionType {
@@ -25,13 +28,19 @@ enum WorkoutSessionType {
 
 /// Edit workout UI. We land here if the user is editing an existing workout or after they have just created a new workout and have submitted required fields.
 class WorkoutSessionEdit extends StatelessWidget {
-  final WorkoutSessionCreatorBloc bloc;
+  final WorkoutSessionBloc bloc;
   const WorkoutSessionEdit({Key? key, required this.bloc}) : super(key: key);
 
-  Widget _buildSectionCardByType(dynamic section) {
-    switch (section.runtimeType) {
+  Widget _buildSectionCardByType(BuildContext context, dynamic session) {
+    switch (session.runtimeType) {
       case ResistanceSession:
-        return Card(child: MyText('Resistance'));
+        return GestureDetector(
+            onTap: () => context.push(
+                    child: ResistanceSessionEdit(
+                  resistanceSession: session,
+                  workoutSessionId: bloc.workoutSessionId,
+                )),
+            child: ResistanceSessionCard(resistanceSession: session));
       case CardioSession:
         return Card(child: MyText('Cardio'));
       case AmrapSession:
@@ -43,10 +52,13 @@ class WorkoutSessionEdit extends StatelessWidget {
       case MobilitySession:
         return Card(child: MyText('Mobility'));
       default:
-        throw new Exception(
-            'WorkoutSessionEdit._buildSectionCardByType: No builder defined for type: ${section.runtimeType}');
+        throw Exception(
+            'WorkoutSessionEdit._buildSectionCardByType: No builder defined for type: ${session.runtimeType}');
     }
   }
+
+  void _showErrorToast(BuildContext context) => context.showToast(
+      message: kDefaultErrorMessage, toastType: ToastType.destructive);
 
   void _openSectionTypeSelector(BuildContext context) {
     openBottomSheetMenu(
@@ -55,7 +67,15 @@ class WorkoutSessionEdit extends StatelessWidget {
             header: const BottomSheetMenuHeader(name: 'Select Session Type'),
             items: [
               BottomSheetMenuItem(text: 'Cardio', onPressed: () {}),
-              BottomSheetMenuItem(text: 'Resistance', onPressed: () => {}),
+              BottomSheetMenuItem(
+                  text: 'Resistance',
+                  onPressed: () => bloc.createResistanceSession(
+                      onFail: () => _showErrorToast(context),
+                      onSuccess: (created) => context.push(
+                              child: ResistanceSessionEdit(
+                            resistanceSession: created,
+                            workoutSessionId: bloc.workoutSessionId,
+                          )))),
               BottomSheetMenuItem(text: 'Interval', onPressed: () => {}),
               BottomSheetMenuItem(text: 'Mobility', onPressed: () => {}),
               BottomSheetMenuItem(text: 'AMRAP', onPressed: () => {}),
@@ -77,18 +97,18 @@ class WorkoutSessionEdit extends StatelessWidget {
         builder: (data) {
           final workoutSession = data.workoutSessionById!;
 
-          final allSections = [
-            ...workoutSession.resistanceSessions,
-            ...workoutSession.cardioSessions,
-            ...workoutSession.amrapSessions,
-            ...workoutSession.forTimeSessions,
-            ...workoutSession.intervalSessions,
-            ...workoutSession.mobilitySessions
+          final allSectionsAndIds = [
+            ...workoutSession.resistanceSessions.map((s) => ([s.id, s])),
+            ...workoutSession.cardioSessions.map((s) => ([s.id, s])),
+            ...workoutSession.amrapSessions.map((s) => ([s.id, s])),
+            ...workoutSession.forTimeSessions.map((s) => ([s.id, s])),
+            ...workoutSession.intervalSessions.map((s) => ([s.id, s])),
+            ...workoutSession.mobilitySessions.map((s) => ([s.id, s])),
           ];
 
           final sortedSectionCards = workoutSession.sessionOrder
               .map((id) => _buildSectionCardByType(
-                  allSections.firstWhere((s) => (s as ObjWithId).id == id)))
+                  context, allSectionsAndIds.firstWhere((s) => s[0] == id)[1]))
               .toList();
 
           return MyPageScaffold(
@@ -97,16 +117,8 @@ class WorkoutSessionEdit extends StatelessWidget {
               middle: const LeadingNavBarTitle(
                 'Workout Session',
               ),
-              trailing: NavBarTrailingRow(
-                children: [
-                  NavBarCancelButton(
-                    () => print('check exit without saving'),
-                    color: Styles.errorRed,
-                  ),
-                  NavBarSaveButton(
-                    context.pop,
-                  ),
-                ],
+              trailing: NavBarSaveButton(
+                context.pop,
               ),
             ),
             child: FABPage(
@@ -171,9 +183,4 @@ class WorkoutSessionEdit extends StatelessWidget {
           );
         });
   }
-}
-
-class ObjWithId {
-  final String id;
-  ObjWithId(this.id);
 }

@@ -1,0 +1,20 @@
+mutation updateResistanceSession($data: UpdateResistanceSessionInput!) {
+  updateResistanceSession(data: $data) {
+    ...ResistanceSession
+    ResistanceExercises {
+      ...ResistanceExercise
+      ResistanceSets {
+        ...ResistanceSet
+        MoveSummary: Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+        }
+        Equipment {
+          ...Equipment
+        }
+      }
+    }
+  }
+}

@@ -1039,8 +1039,9 @@ ResistanceSession _$ResistanceSessionFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..name = json['name'] as String?
       ..note = json['note'] as String?
-      ..setOrder =
-          (json['setOrder'] as List<dynamic>).map((e) => e as String).toList()
+      ..exerciseOrder = (json['exerciseOrder'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList()
       ..resistanceExercises = (json['ResistanceExercises'] as List<dynamic>)
           .map((e) => ResistanceExercise.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -1053,7 +1054,7 @@ Map<String, dynamic> _$ResistanceSessionToJson(ResistanceSession instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
-      'setOrder': instance.setOrder,
+      'exerciseOrder': instance.exerciseOrder,
       'ResistanceExercises':
           instance.resistanceExercises.map((e) => e.toJson()).toList(),
     };
@@ -1186,6 +1187,9 @@ IntervalSession _$IntervalSessionFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..name = json['name'] as String?
       ..note = json['note'] as String?
+      ..audioUri = json['audioUri'] as String?
+      ..videoUri = json['videoUri'] as String?
+      ..videoThumbUri = json['videoThumbUri'] as String?
       ..repeats = json['repeats'] as int
       ..intervalExerciseOrder = (json['intervalExerciseOrder'] as List<dynamic>)
           .map((e) => e as String)
@@ -1204,6 +1208,9 @@ Map<String, dynamic> _$IntervalSessionToJson(IntervalSession instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
+      'audioUri': instance.audioUri,
+      'videoUri': instance.videoUri,
+      'videoThumbUri': instance.videoThumbUri,
       'repeats': instance.repeats,
       'intervalExerciseOrder': instance.intervalExerciseOrder,
       'intervals': instance.intervals,
@@ -1300,6 +1307,9 @@ MobilitySession _$MobilitySessionFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..name = json['name'] as String?
       ..note = json['note'] as String?
+      ..audioUri = json['audioUri'] as String?
+      ..videoUri = json['videoUri'] as String?
+      ..videoThumbUri = json['videoThumbUri'] as String?
       ..moveOrder =
           (json['moveOrder'] as List<dynamic>).map((e) => e as String).toList();
 
@@ -1311,6 +1321,9 @@ Map<String, dynamic> _$MobilitySessionToJson(MobilitySession instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
+      'audioUri': instance.audioUri,
+      'videoUri': instance.videoUri,
+      'videoThumbUri': instance.videoThumbUri,
       'moveOrder': instance.moveOrder,
     };
 
@@ -7371,6 +7384,87 @@ Map<String, dynamic> _$DuplicateWorkoutSession$MutationToJson(
       'duplicateWorkoutSession': instance.duplicateWorkoutSession.toJson(),
     };
 
+CreateResistanceSession$Mutation _$CreateResistanceSession$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSession$Mutation()
+      ..createResistanceSession = ResistanceSession.fromJson(
+          json['createResistanceSession'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateResistanceSession$MutationToJson(
+        CreateResistanceSession$Mutation instance) =>
+    <String, dynamic>{
+      'createResistanceSession': instance.createResistanceSession.toJson(),
+    };
+
+CreateResistanceSessionInput _$CreateResistanceSessionInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSessionInput(
+      workoutSession: ConnectRelationInput.fromJson(
+          json['WorkoutSession'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateResistanceSessionInputToJson(
+        CreateResistanceSessionInput instance) =>
+    <String, dynamic>{
+      'WorkoutSession': instance.workoutSession.toJson(),
+    };
+
+DuplicateResistanceSession$Mutation
+    _$DuplicateResistanceSession$MutationFromJson(Map<String, dynamic> json) =>
+        DuplicateResistanceSession$Mutation()
+          ..duplicateResistanceSession = ResistanceSession.fromJson(
+              json['duplicateResistanceSession'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$DuplicateResistanceSession$MutationToJson(
+        DuplicateResistanceSession$Mutation instance) =>
+    <String, dynamic>{
+      'duplicateResistanceSession':
+          instance.duplicateResistanceSession.toJson(),
+    };
+
+UpdateResistanceSession$Mutation _$UpdateResistanceSession$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceSession$Mutation()
+      ..updateResistanceSession = ResistanceSession.fromJson(
+          json['updateResistanceSession'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateResistanceSession$MutationToJson(
+        UpdateResistanceSession$Mutation instance) =>
+    <String, dynamic>{
+      'updateResistanceSession': instance.updateResistanceSession.toJson(),
+    };
+
+UpdateResistanceSessionInput _$UpdateResistanceSessionInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceSessionInput(
+      exerciseOrder: (json['exerciseOrder'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      id: json['id'] as String,
+      name: json['name'] as String?,
+      note: json['note'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateResistanceSessionInputToJson(
+        UpdateResistanceSessionInput instance) =>
+    <String, dynamic>{
+      'exerciseOrder': instance.exerciseOrder,
+      'id': instance.id,
+      'name': instance.name,
+      'note': instance.note,
+    };
+
+DeleteResistanceSession$Mutation _$DeleteResistanceSession$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteResistanceSession$Mutation()
+      ..deleteResistanceSession = json['deleteResistanceSession'] as String;
+
+Map<String, dynamic> _$DeleteResistanceSession$MutationToJson(
+        DeleteResistanceSession$Mutation instance) =>
+    <String, dynamic>{
+      'deleteResistanceSession': instance.deleteResistanceSession,
+    };
+
 DeleteClubArguments _$DeleteClubArgumentsFromJson(Map<String, dynamic> json) =>
     DeleteClubArguments(
       id: json['id'] as String,
@@ -9359,6 +9453,56 @@ DuplicateWorkoutSessionArguments _$DuplicateWorkoutSessionArgumentsFromJson(
 
 Map<String, dynamic> _$DuplicateWorkoutSessionArgumentsToJson(
         DuplicateWorkoutSessionArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+CreateResistanceSessionArguments _$CreateResistanceSessionArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSessionArguments(
+      data: CreateResistanceSessionInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateResistanceSessionArgumentsToJson(
+        CreateResistanceSessionArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DuplicateResistanceSessionArguments
+    _$DuplicateResistanceSessionArgumentsFromJson(Map<String, dynamic> json) =>
+        DuplicateResistanceSessionArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DuplicateResistanceSessionArgumentsToJson(
+        DuplicateResistanceSessionArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+UpdateResistanceSessionArguments _$UpdateResistanceSessionArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceSessionArguments(
+      data: UpdateResistanceSessionInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateResistanceSessionArgumentsToJson(
+        UpdateResistanceSessionArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteResistanceSessionArguments _$DeleteResistanceSessionArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteResistanceSessionArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteResistanceSessionArgumentsToJson(
+        DeleteResistanceSessionArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
     };

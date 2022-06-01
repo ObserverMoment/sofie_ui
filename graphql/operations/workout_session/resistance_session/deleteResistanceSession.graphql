@@ -1,0 +1,3 @@
+mutation deleteResistanceSession($id: ID!) {
+  deleteResistanceSession(id: $id)
+}

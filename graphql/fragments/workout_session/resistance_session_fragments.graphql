@@ -5,7 +5,7 @@ fragment ResistanceSession on ResistanceSession {
   updatedAt
   name
   note
-  setOrder
+  exerciseOrder
 }
 
 fragment ResistanceExercise on ResistanceExercise {

@@ -142,10 +142,13 @@ class _ImageUploaderState extends State<ImageUploader> {
                           color: primary.withOpacity(0.1),
                         ),
                         if (widget.emptyText != null)
-                          MyText(
-                            widget.emptyText!,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: MyText(
+                              widget.emptyText!,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                            ),
                           )
                       ],
                     ),
