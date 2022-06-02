@@ -10,7 +10,7 @@ fragment ForTimeSession on ForTimeSession {
   timecapSeconds
   # If forced rests are required between sections then add [rest:seconds].
   # [ForTimeSectionId, rest:60, ForTimeSectionId]
-  sectionOrder
+  childrenOrder
 }
 
 fragment ForTimeSection on ForTimeSection {
@@ -20,7 +20,7 @@ fragment ForTimeSection on ForTimeSection {
   updatedAt
   name
   note
-  moveOrder
+  childrenOrder
 }
 
 fragment ForTimeMove on ForTimeMove {

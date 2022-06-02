@@ -948,7 +948,7 @@ CardioSession _$CardioSessionFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..name = json['name'] as String?
       ..note = json['note'] as String?
-      ..exerciseOrder = (json['exerciseOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..cardioExercises = (json['CardioExercises'] as List<dynamic>)
@@ -963,7 +963,7 @@ Map<String, dynamic> _$CardioSessionToJson(CardioSession instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
-      'exerciseOrder': instance.exerciseOrder,
+      'childrenOrder': instance.childrenOrder,
       'CardioExercises':
           instance.cardioExercises.map((e) => e.toJson()).toList(),
     };
@@ -1014,8 +1014,9 @@ ResistanceExercise _$ResistanceExerciseFromJson(Map<String, dynamic> json) =>
       ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..note = json['note'] as String?
-      ..setOrder =
-          (json['setOrder'] as List<dynamic>).map((e) => e as String).toList()
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList()
       ..resistanceSets = (json['ResistanceSets'] as List<dynamic>)
           .map((e) => ResistanceSet.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -1027,7 +1028,7 @@ Map<String, dynamic> _$ResistanceExerciseToJson(ResistanceExercise instance) =>
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'note': instance.note,
-      'setOrder': instance.setOrder,
+      'childrenOrder': instance.childrenOrder,
       'ResistanceSets': instance.resistanceSets.map((e) => e.toJson()).toList(),
     };
 
@@ -1039,7 +1040,7 @@ ResistanceSession _$ResistanceSessionFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..name = json['name'] as String?
       ..note = json['note'] as String?
-      ..exerciseOrder = (json['exerciseOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..resistanceExercises = (json['ResistanceExercises'] as List<dynamic>)
@@ -1054,7 +1055,7 @@ Map<String, dynamic> _$ResistanceSessionToJson(ResistanceSession instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
-      'exerciseOrder': instance.exerciseOrder,
+      'childrenOrder': instance.childrenOrder,
       'ResistanceExercises':
           instance.resistanceExercises.map((e) => e.toJson()).toList(),
     };
@@ -1088,8 +1089,8 @@ AmrapSection _$AmrapSectionFromJson(Map<String, dynamic> json) => AmrapSection()
   ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..name = json['name'] as String?
   ..note = json['note'] as String?
-  ..moveOrder =
-      (json['moveOrder'] as List<dynamic>).map((e) => e as String).toList()
+  ..childrenOrder =
+      (json['childrenOrder'] as List<dynamic>).map((e) => e as String).toList()
   ..amrapMoves = (json['AmrapMoves'] as List<dynamic>)
       .map((e) => AmrapMove.fromJson(e as Map<String, dynamic>))
       .toList();
@@ -1102,7 +1103,7 @@ Map<String, dynamic> _$AmrapSectionToJson(AmrapSection instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
-      'moveOrder': instance.moveOrder,
+      'childrenOrder': instance.childrenOrder,
       'AmrapMoves': instance.amrapMoves.map((e) => e.toJson()).toList(),
     };
 
@@ -1113,8 +1114,8 @@ AmrapSession _$AmrapSessionFromJson(Map<String, dynamic> json) => AmrapSession()
   ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..name = json['name'] as String?
   ..note = json['note'] as String?
-  ..sectionOrder =
-      (json['sectionOrder'] as List<dynamic>).map((e) => e as String).toList()
+  ..childrenOrder =
+      (json['childrenOrder'] as List<dynamic>).map((e) => e as String).toList()
   ..amrapSections = (json['AmrapSections'] as List<dynamic>)
       .map((e) => AmrapSection.fromJson(e as Map<String, dynamic>))
       .toList();
@@ -1127,7 +1128,7 @@ Map<String, dynamic> _$AmrapSessionToJson(AmrapSession instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
-      'sectionOrder': instance.sectionOrder,
+      'childrenOrder': instance.childrenOrder,
       'AmrapSections': instance.amrapSections.map((e) => e.toJson()).toList(),
     };
 
@@ -1161,7 +1162,7 @@ IntervalExercise _$IntervalExerciseFromJson(Map<String, dynamic> json) =>
       ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..note = json['note'] as String?
-      ..intervalSetOrder = (json['intervalSetOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..intervalSets = (json['IntervalSets'] as List<dynamic>)
@@ -1175,7 +1176,7 @@ Map<String, dynamic> _$IntervalExerciseToJson(IntervalExercise instance) =>
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'note': instance.note,
-      'intervalSetOrder': instance.intervalSetOrder,
+      'childrenOrder': instance.childrenOrder,
       'IntervalSets': instance.intervalSets.map((e) => e.toJson()).toList(),
     };
 
@@ -1191,7 +1192,7 @@ IntervalSession _$IntervalSessionFromJson(Map<String, dynamic> json) =>
       ..videoUri = json['videoUri'] as String?
       ..videoThumbUri = json['videoThumbUri'] as String?
       ..repeats = json['repeats'] as int
-      ..intervalExerciseOrder = (json['intervalExerciseOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..intervals =
@@ -1212,7 +1213,7 @@ Map<String, dynamic> _$IntervalSessionToJson(IntervalSession instance) =>
       'videoUri': instance.videoUri,
       'videoThumbUri': instance.videoThumbUri,
       'repeats': instance.repeats,
-      'intervalExerciseOrder': instance.intervalExerciseOrder,
+      'childrenOrder': instance.childrenOrder,
       'intervals': instance.intervals,
       'IntervalExercises':
           instance.intervalExercises.map((e) => e.toJson()).toList(),
@@ -1249,8 +1250,9 @@ ForTimeSection _$ForTimeSectionFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..name = json['name'] as String?
       ..note = json['note'] as String?
-      ..moveOrder =
-          (json['moveOrder'] as List<dynamic>).map((e) => e as String).toList()
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList()
       ..forTimeMoves = (json['ForTimeMoves'] as List<dynamic>)
           .map((e) => ForTimeMove.fromJson(e as Map<String, dynamic>))
           .toList();
@@ -1263,7 +1265,7 @@ Map<String, dynamic> _$ForTimeSectionToJson(ForTimeSection instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'name': instance.name,
       'note': instance.note,
-      'moveOrder': instance.moveOrder,
+      'childrenOrder': instance.childrenOrder,
       'ForTimeMoves': instance.forTimeMoves.map((e) => e.toJson()).toList(),
     };
 
@@ -1277,7 +1279,7 @@ ForTimeSession _$ForTimeSessionFromJson(Map<String, dynamic> json) =>
       ..note = json['note'] as String?
       ..repeats = json['repeats'] as int
       ..timecapSeconds = json['timecapSeconds'] as int
-      ..sectionOrder = (json['sectionOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..forTimeSections = (json['ForTimeSections'] as List<dynamic>)
@@ -1294,7 +1296,7 @@ Map<String, dynamic> _$ForTimeSessionToJson(ForTimeSession instance) =>
       'note': instance.note,
       'repeats': instance.repeats,
       'timecapSeconds': instance.timecapSeconds,
-      'sectionOrder': instance.sectionOrder,
+      'childrenOrder': instance.childrenOrder,
       'ForTimeSections':
           instance.forTimeSections.map((e) => e.toJson()).toList(),
     };
@@ -1310,8 +1312,9 @@ MobilitySession _$MobilitySessionFromJson(Map<String, dynamic> json) =>
       ..audioUri = json['audioUri'] as String?
       ..videoUri = json['videoUri'] as String?
       ..videoThumbUri = json['videoThumbUri'] as String?
-      ..moveOrder =
-          (json['moveOrder'] as List<dynamic>).map((e) => e as String).toList();
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList();
 
 Map<String, dynamic> _$MobilitySessionToJson(MobilitySession instance) =>
     <String, dynamic>{
@@ -1324,7 +1327,7 @@ Map<String, dynamic> _$MobilitySessionToJson(MobilitySession instance) =>
       'audioUri': instance.audioUri,
       'videoUri': instance.videoUri,
       'videoThumbUri': instance.videoThumbUri,
-      'moveOrder': instance.moveOrder,
+      'childrenOrder': instance.childrenOrder,
     };
 
 WorkoutSession _$WorkoutSessionFromJson(Map<String, dynamic> json) =>
@@ -1341,7 +1344,7 @@ WorkoutSession _$WorkoutSessionFromJson(Map<String, dynamic> json) =>
       ..introVideoThumbUri = json['introVideoThumbUri'] as String?
       ..introAudioUri = json['introAudioUri'] as String?
       ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
-      ..sessionOrder = (json['sessionOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList()
       ..cardioSessions = (json['CardioSessions'] as List<dynamic>)
@@ -1378,7 +1381,7 @@ Map<String, dynamic> _$WorkoutSessionToJson(WorkoutSession instance) =>
       'introVideoThumbUri': instance.introVideoThumbUri,
       'introAudioUri': instance.introAudioUri,
       'tags': instance.tags,
-      'sessionOrder': instance.sessionOrder,
+      'childrenOrder': instance.childrenOrder,
       'CardioSessions': instance.cardioSessions.map((e) => e.toJson()).toList(),
       'ResistanceSessions':
           instance.resistanceSessions.map((e) => e.toJson()).toList(),
@@ -7306,7 +7309,7 @@ UpdateWorkoutSession _$UpdateWorkoutSessionFromJson(
       ..introVideoThumbUri = json['introVideoThumbUri'] as String?
       ..introAudioUri = json['introAudioUri'] as String?
       ..tags = (json['tags'] as List<dynamic>).map((e) => e as String).toList()
-      ..sessionOrder = (json['sessionOrder'] as List<dynamic>)
+      ..childrenOrder = (json['childrenOrder'] as List<dynamic>)
           .map((e) => e as String)
           .toList();
 
@@ -7325,7 +7328,7 @@ Map<String, dynamic> _$UpdateWorkoutSessionToJson(
       'introVideoThumbUri': instance.introVideoThumbUri,
       'introAudioUri': instance.introAudioUri,
       'tags': instance.tags,
-      'sessionOrder': instance.sessionOrder,
+      'childrenOrder': instance.childrenOrder,
     };
 
 UpdateWorkoutSession$Mutation _$UpdateWorkoutSession$MutationFromJson(
@@ -7344,6 +7347,9 @@ UpdateWorkoutSessionInput _$UpdateWorkoutSessionInputFromJson(
         Map<String, dynamic> json) =>
     UpdateWorkoutSessionInput(
       archived: json['archived'] as bool?,
+      childrenOrder: (json['childrenOrder'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       coverImageUri: json['coverImageUri'] as String?,
       description: json['description'] as String?,
       id: json['id'] as String,
@@ -7351,9 +7357,6 @@ UpdateWorkoutSessionInput _$UpdateWorkoutSessionInputFromJson(
       introVideoThumbUri: json['introVideoThumbUri'] as String?,
       introVideoUri: json['introVideoUri'] as String?,
       name: json['name'] as String?,
-      sessionOrder: (json['sessionOrder'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
@@ -7361,6 +7364,7 @@ Map<String, dynamic> _$UpdateWorkoutSessionInputToJson(
         UpdateWorkoutSessionInput instance) =>
     <String, dynamic>{
       'archived': instance.archived,
+      'childrenOrder': instance.childrenOrder,
       'coverImageUri': instance.coverImageUri,
       'description': instance.description,
       'id': instance.id,
@@ -7368,7 +7372,6 @@ Map<String, dynamic> _$UpdateWorkoutSessionInputToJson(
       'introVideoThumbUri': instance.introVideoThumbUri,
       'introVideoUri': instance.introVideoUri,
       'name': instance.name,
-      'sessionOrder': instance.sessionOrder,
       'tags': instance.tags,
     };
 
@@ -7437,7 +7440,7 @@ Map<String, dynamic> _$UpdateResistanceSession$MutationToJson(
 UpdateResistanceSessionInput _$UpdateResistanceSessionInputFromJson(
         Map<String, dynamic> json) =>
     UpdateResistanceSessionInput(
-      exerciseOrder: (json['exerciseOrder'] as List<dynamic>?)
+      childrenOrder: (json['childrenOrder'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
       id: json['id'] as String,
@@ -7448,7 +7451,7 @@ UpdateResistanceSessionInput _$UpdateResistanceSessionInputFromJson(
 Map<String, dynamic> _$UpdateResistanceSessionInputToJson(
         UpdateResistanceSessionInput instance) =>
     <String, dynamic>{
-      'exerciseOrder': instance.exerciseOrder,
+      'childrenOrder': instance.childrenOrder,
       'id': instance.id,
       'name': instance.name,
       'note': instance.note,
@@ -7463,6 +7466,110 @@ Map<String, dynamic> _$DeleteResistanceSession$MutationToJson(
         DeleteResistanceSession$Mutation instance) =>
     <String, dynamic>{
       'deleteResistanceSession': instance.deleteResistanceSession,
+    };
+
+DeleteResistanceExercise$Mutation _$DeleteResistanceExercise$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteResistanceExercise$Mutation()
+      ..deleteResistanceExercise = json['deleteResistanceExercise'] as String;
+
+Map<String, dynamic> _$DeleteResistanceExercise$MutationToJson(
+        DeleteResistanceExercise$Mutation instance) =>
+    <String, dynamic>{
+      'deleteResistanceExercise': instance.deleteResistanceExercise,
+    };
+
+UpdateResistanceExercise$Mutation _$UpdateResistanceExercise$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceExercise$Mutation()
+      ..updateResistanceExercise = ResistanceExercise.fromJson(
+          json['updateResistanceExercise'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateResistanceExercise$MutationToJson(
+        UpdateResistanceExercise$Mutation instance) =>
+    <String, dynamic>{
+      'updateResistanceExercise': instance.updateResistanceExercise.toJson(),
+    };
+
+UpdateResistanceExerciseInput _$UpdateResistanceExerciseInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceExerciseInput(
+      childrenOrder: (json['childrenOrder'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      id: json['id'] as String,
+      note: json['note'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateResistanceExerciseInputToJson(
+        UpdateResistanceExerciseInput instance) =>
+    <String, dynamic>{
+      'childrenOrder': instance.childrenOrder,
+      'id': instance.id,
+      'note': instance.note,
+    };
+
+DuplicateResistanceExercise$Mutation
+    _$DuplicateResistanceExercise$MutationFromJson(Map<String, dynamic> json) =>
+        DuplicateResistanceExercise$Mutation()
+          ..duplicateResistanceExercise = ResistanceExercise.fromJson(
+              json['duplicateResistanceExercise'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$DuplicateResistanceExercise$MutationToJson(
+        DuplicateResistanceExercise$Mutation instance) =>
+    <String, dynamic>{
+      'duplicateResistanceExercise':
+          instance.duplicateResistanceExercise.toJson(),
+    };
+
+CreateResistanceExercise$Mutation _$CreateResistanceExercise$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceExercise$Mutation()
+      ..createResistanceExercise = ResistanceExercise.fromJson(
+          json['createResistanceExercise'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateResistanceExercise$MutationToJson(
+        CreateResistanceExercise$Mutation instance) =>
+    <String, dynamic>{
+      'createResistanceExercise': instance.createResistanceExercise.toJson(),
+    };
+
+CreateResistanceExerciseInput _$CreateResistanceExerciseInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceExerciseInput(
+      resistanceSession: ConnectRelationInput.fromJson(
+          json['ResistanceSession'] as Map<String, dynamic>),
+      resistanceSets: (json['ResistanceSets'] as List<dynamic>?)
+          ?.map((e) => CreateResistanceSetInExerciseInput.fromJson(
+              e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$CreateResistanceExerciseInputToJson(
+        CreateResistanceExerciseInput instance) =>
+    <String, dynamic>{
+      'ResistanceSession': instance.resistanceSession.toJson(),
+      'ResistanceSets':
+          instance.resistanceSets?.map((e) => e.toJson()).toList(),
+    };
+
+CreateResistanceSetInExerciseInput _$CreateResistanceSetInExerciseInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSetInExerciseInput(
+      equipment: json['Equipment'] == null
+          ? null
+          : ConnectRelationInput.fromJson(
+              json['Equipment'] as Map<String, dynamic>),
+      move: ConnectRelationInput.fromJson(json['Move'] as Map<String, dynamic>),
+      reps: json['reps'] as int?,
+    );
+
+Map<String, dynamic> _$CreateResistanceSetInExerciseInputToJson(
+        CreateResistanceSetInExerciseInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move.toJson(),
+      'reps': instance.reps,
     };
 
 DeleteClubArguments _$DeleteClubArgumentsFromJson(Map<String, dynamic> json) =>
@@ -9505,4 +9612,54 @@ Map<String, dynamic> _$DeleteResistanceSessionArgumentsToJson(
         DeleteResistanceSessionArguments instance) =>
     <String, dynamic>{
       'id': instance.id,
+    };
+
+DeleteResistanceExerciseArguments _$DeleteResistanceExerciseArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteResistanceExerciseArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteResistanceExerciseArgumentsToJson(
+        DeleteResistanceExerciseArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+UpdateResistanceExerciseArguments _$UpdateResistanceExerciseArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceExerciseArguments(
+      data: UpdateResistanceExerciseInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateResistanceExerciseArgumentsToJson(
+        UpdateResistanceExerciseArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DuplicateResistanceExerciseArguments
+    _$DuplicateResistanceExerciseArgumentsFromJson(Map<String, dynamic> json) =>
+        DuplicateResistanceExerciseArguments(
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$DuplicateResistanceExerciseArgumentsToJson(
+        DuplicateResistanceExerciseArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+CreateResistanceExerciseArguments _$CreateResistanceExerciseArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceExerciseArguments(
+      data: CreateResistanceExerciseInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateResistanceExerciseArgumentsToJson(
+        CreateResistanceExerciseArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
     };

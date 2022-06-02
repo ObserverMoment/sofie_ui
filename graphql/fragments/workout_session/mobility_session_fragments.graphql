@@ -8,5 +8,5 @@ fragment MobilitySession on MobilitySession {
   audioUri
   videoUri
   videoThumbUri
-  moveOrder
+  childrenOrder
 }

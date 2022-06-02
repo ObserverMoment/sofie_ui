@@ -11,5 +11,5 @@ fragment WorkoutSession on WorkoutSession {
   introVideoThumbUri
   introAudioUri
   tags
-  sessionOrder
+  childrenOrder
 }

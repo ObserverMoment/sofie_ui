@@ -21,7 +21,7 @@ class NumberPickerModal extends StatefulWidget {
       required this.max})
       : super(key: key);
   @override
-  _NumberPickerModalState createState() => _NumberPickerModalState();
+  State<NumberPickerModal> createState() => _NumberPickerModalState();
 }
 
 class _NumberPickerModalState<T> extends State<NumberPickerModal> {

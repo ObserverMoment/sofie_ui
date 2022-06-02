@@ -5,7 +5,7 @@ fragment ResistanceSession on ResistanceSession {
   updatedAt
   name
   note
-  exerciseOrder
+  childrenOrder
 }
 
 fragment ResistanceExercise on ResistanceExercise {
@@ -14,7 +14,7 @@ fragment ResistanceExercise on ResistanceExercise {
   createdAt
   updatedAt
   note
-  setOrder
+  childrenOrder
 }
 
 fragment ResistanceSet on ResistanceSet {

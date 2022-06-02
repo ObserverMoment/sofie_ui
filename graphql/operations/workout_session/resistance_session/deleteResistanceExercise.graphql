@@ -1,0 +1,3 @@
+mutation deleteResistanceExercise($id: ID!) {
+  deleteResistanceExercise(id: $id)
+}

@@ -60,7 +60,7 @@ class WorkoutSessionBloc {
 
     if (created != null) {
       WorkoutSession updated = WorkoutSession.fromJson(_backup);
-      updated.sessionOrder.add(created.id);
+      updated.childrenOrder.add(created.id);
       updated.resistanceSessions.add(created);
 
       _writeToStoreAndBackup(updated.toJson());
@@ -81,8 +81,8 @@ class WorkoutSessionBloc {
       WorkoutSession updated = WorkoutSession.fromJson(_backup);
 
       /// Add new ID just after the duplicated session.
-      final i = updated.sessionOrder.indexOf(resistanceSession.id);
-      updated.sessionOrder.insert(i + 1, duplicated.id);
+      final i = updated.childrenOrder.indexOf(resistanceSession.id);
+      updated.childrenOrder.insert(i + 1, duplicated.id);
 
       updated.resistanceSessions.add(duplicated);
 
@@ -101,7 +101,7 @@ class WorkoutSessionBloc {
     if (deletedId == resistanceSession.id) {
       WorkoutSession updated = WorkoutSession.fromJson(_backup);
 
-      updated.sessionOrder.remove(deletedId);
+      updated.childrenOrder.remove(deletedId);
       updated.resistanceSessions.removeWhere((s) => s.id == deletedId);
 
       _writeToStoreAndBackup(updated.toJson());

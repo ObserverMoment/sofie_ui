@@ -341,10 +341,7 @@ class NavBarCancelButton extends StatelessWidget {
     return CupertinoButton(
         padding: EdgeInsets.zero,
         onPressed: onPressed,
-        child: Icon(
-          CupertinoIcons.clear,
-          color: color,
-        ));
+        child: MyText('Cancel', color: color, weight: FontWeight.bold));
   }
 }
 
@@ -362,11 +359,7 @@ class NavBarSaveButton extends StatelessWidget {
     return CupertinoButton(
         padding: EdgeInsets.zero,
         onPressed: onPressed,
-        child: Icon(
-          CupertinoIcons.checkmark_alt,
-          size: 30,
-          color: color,
-        ));
+        child: MyText('Save', color: color, weight: FontWeight.bold));
   }
 }
 

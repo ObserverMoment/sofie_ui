@@ -12,7 +12,7 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/modules/workout_session/creator/components/cards/resistance_session_card.dart';
+import 'package:sofie_ui/modules/workout_session/creator/components/display/resistance_session_card.dart';
 import 'package:sofie_ui/modules/workout_session/creator/components/resistance_session_edit.dart';
 import 'package:sofie_ui/modules/workout_session/creator/blocs/workout_session_bloc.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -106,7 +106,7 @@ class WorkoutSessionEdit extends StatelessWidget {
             ...workoutSession.mobilitySessions.map((s) => ([s.id, s])),
           ];
 
-          final sortedSectionCards = workoutSession.sessionOrder
+          final sortedSectionCards = workoutSession.childrenOrder
               .map((id) => _buildSectionCardByType(
                   context, allSectionsAndIds.firstWhere((s) => s[0] == id)[1]))
               .toList();

@@ -11,7 +11,7 @@ fragment IntervalSession on IntervalSession {
   repeats
   # For rest intervals add 'rest' to the array.
   # E.g. [IntervalExerciseId, IntervalExerciseId, rest, IntervalExerciseId, IntervalExerciseId, rest]
-  intervalExerciseOrder
+  childrenOrder
   # Align with setOrder. Interval length in seconds.
   # E.g [60, 60, 30, 60, 60, 30]
   intervals
@@ -23,7 +23,7 @@ fragment IntervalExercise on IntervalExercise {
   createdAt
   updatedAt
   note
-  intervalSetOrder
+  childrenOrder
 }
 
 fragment IntervalSet on IntervalSet {

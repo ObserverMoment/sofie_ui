@@ -90,4 +90,35 @@ class ResistanceSessionBloc extends ChangeNotifier {
 
     notifyListeners();
   }
+
+  ////////////////////////////////////////
+  //////// Resistance Exercise ///////////
+  Future<void> createResistanceExercise(
+      {required ResistanceExercise resistanceExercise,
+      required VoidCallback onFail}) async {
+    final result = await GraphQLStore.store.networkOnlyOperation(
+        operation: CreateResistanceExerciseMutation(
+            variables: CreateResistanceExerciseArguments(
+                data: CreateResistanceExerciseInput(
+                    resistanceSets: resistanceExercise.resistanceSets
+                        .map((s) => CreateResistanceSetInExerciseInput(
+                              reps: s.reps,
+                              equipment: s.equipment != null
+                                  ? ConnectRelationInput(id: s.equipment!.id)
+                                  : null,
+                              move: ConnectRelationInput(id: s.moveSummary.id),
+                            ))
+                        .toList(),
+                    resistanceSession:
+                        ConnectRelationInput(id: resistanceSession.id)))));
+
+    checkOperationResult(result, onFail: onFail, onSuccess: () {
+      resistanceSession.resistanceExercises
+          .add(result.data!.createResistanceExercise);
+      resistanceSession.childrenOrder
+          .add(result.data!.createResistanceExercise.id);
+    });
+
+    notifyListeners();
+  }
 }

@@ -15,7 +15,7 @@ class IntPickerRowTapToEdit extends StatelessWidget {
   final int max;
   const IntPickerRowTapToEdit(
       {Key? key,
-      this.min = 20,
+      this.min = 1,
       this.max = 500,
       this.value,
       required this.saveValue,

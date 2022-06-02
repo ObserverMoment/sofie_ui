@@ -187,7 +187,7 @@ mixin CardioSessionMixin {
   late DateTime updatedAt;
   String? name;
   String? note;
-  late List<String> exerciseOrder;
+  late List<String> childrenOrder;
 }
 mixin EquipmentMixin {
   @JsonKey(name: '__typename')
@@ -224,7 +224,7 @@ mixin ResistanceExerciseMixin {
       toJson: fromDartDateTimeToGraphQLDateTime)
   late DateTime updatedAt;
   String? note;
-  late List<String> setOrder;
+  late List<String> childrenOrder;
 }
 mixin ResistanceSessionMixin {
   @JsonKey(name: '__typename')
@@ -240,7 +240,7 @@ mixin ResistanceSessionMixin {
   late DateTime updatedAt;
   String? name;
   String? note;
-  late List<String> exerciseOrder;
+  late List<String> childrenOrder;
 }
 mixin AmrapMoveMixin {
   @JsonKey(name: '__typename')
@@ -270,7 +270,7 @@ mixin AmrapSectionMixin {
   late DateTime updatedAt;
   String? name;
   String? note;
-  late List<String> moveOrder;
+  late List<String> childrenOrder;
 }
 mixin AmrapSessionMixin {
   @JsonKey(name: '__typename')
@@ -286,7 +286,7 @@ mixin AmrapSessionMixin {
   late DateTime updatedAt;
   String? name;
   String? note;
-  late List<String> sectionOrder;
+  late List<String> childrenOrder;
 }
 mixin IntervalSetMixin {
   @JsonKey(name: '__typename')
@@ -315,7 +315,7 @@ mixin IntervalExerciseMixin {
       toJson: fromDartDateTimeToGraphQLDateTime)
   late DateTime updatedAt;
   String? note;
-  late List<String> intervalSetOrder;
+  late List<String> childrenOrder;
 }
 mixin IntervalSessionMixin {
   @JsonKey(name: '__typename')
@@ -335,7 +335,7 @@ mixin IntervalSessionMixin {
   String? videoUri;
   String? videoThumbUri;
   late int repeats;
-  late List<String> intervalExerciseOrder;
+  late List<String> childrenOrder;
   late List<int> intervals;
 }
 mixin ForTimeMoveMixin {
@@ -366,7 +366,7 @@ mixin ForTimeSectionMixin {
   late DateTime updatedAt;
   String? name;
   String? note;
-  late List<String> moveOrder;
+  late List<String> childrenOrder;
 }
 mixin ForTimeSessionMixin {
   @JsonKey(name: '__typename')
@@ -384,7 +384,7 @@ mixin ForTimeSessionMixin {
   String? note;
   late int repeats;
   late int timecapSeconds;
-  late List<String> sectionOrder;
+  late List<String> childrenOrder;
 }
 mixin MobilitySessionMixin {
   @JsonKey(name: '__typename')
@@ -403,7 +403,7 @@ mixin MobilitySessionMixin {
   String? audioUri;
   String? videoUri;
   String? videoThumbUri;
-  late List<String> moveOrder;
+  late List<String> childrenOrder;
 }
 mixin WorkoutSessionMixin {
   @JsonKey(name: '__typename')
@@ -425,7 +425,7 @@ mixin WorkoutSessionMixin {
   String? introVideoThumbUri;
   String? introAudioUri;
   late List<String> tags;
-  late List<String> sessionOrder;
+  late List<String> childrenOrder;
 }
 mixin BodyAreaMixin {
   @JsonKey(name: '__typename')
@@ -2167,7 +2167,7 @@ class CardioSession extends JsonSerializable
         updatedAt,
         name,
         note,
-        exerciseOrder,
+        childrenOrder,
         cardioExercises
       ];
   @override
@@ -2228,8 +2228,15 @@ class ResistanceExercise extends JsonSerializable
   late List<ResistanceSet> resistanceSets;
 
   @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, updatedAt, note, setOrder, resistanceSets];
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        updatedAt,
+        note,
+        childrenOrder,
+        resistanceSets
+      ];
   @override
   Map<String, dynamic> toJson() => _$ResistanceExerciseToJson(this);
 }
@@ -2253,7 +2260,7 @@ class ResistanceSession extends JsonSerializable
         updatedAt,
         name,
         note,
-        exerciseOrder,
+        childrenOrder,
         resistanceExercises
       ];
   @override
@@ -2292,8 +2299,16 @@ class AmrapSection extends JsonSerializable
   late List<AmrapMove> amrapMoves;
 
   @override
-  List<Object?> get props =>
-      [$$typename, id, createdAt, updatedAt, name, note, moveOrder, amrapMoves];
+  List<Object?> get props => [
+        $$typename,
+        id,
+        createdAt,
+        updatedAt,
+        name,
+        note,
+        childrenOrder,
+        amrapMoves
+      ];
   @override
   Map<String, dynamic> toJson() => _$AmrapSectionToJson(this);
 }
@@ -2317,7 +2332,7 @@ class AmrapSession extends JsonSerializable
         updatedAt,
         name,
         note,
-        sectionOrder,
+        childrenOrder,
         amrapSections
       ];
   @override
@@ -2357,15 +2372,8 @@ class IntervalExercise extends JsonSerializable
   late List<IntervalSet> intervalSets;
 
   @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        updatedAt,
-        note,
-        intervalSetOrder,
-        intervalSets
-      ];
+  List<Object?> get props =>
+      [$$typename, id, createdAt, updatedAt, note, childrenOrder, intervalSets];
   @override
   Map<String, dynamic> toJson() => _$IntervalExerciseToJson(this);
 }
@@ -2393,7 +2401,7 @@ class IntervalSession extends JsonSerializable
         videoUri,
         videoThumbUri,
         repeats,
-        intervalExerciseOrder,
+        childrenOrder,
         intervals,
         intervalExercises
       ];
@@ -2441,7 +2449,7 @@ class ForTimeSection extends JsonSerializable
         updatedAt,
         name,
         note,
-        moveOrder,
+        childrenOrder,
         forTimeMoves
       ];
   @override
@@ -2469,7 +2477,7 @@ class ForTimeSession extends JsonSerializable
         note,
         repeats,
         timecapSeconds,
-        sectionOrder,
+        childrenOrder,
         forTimeSections
       ];
   @override
@@ -2495,7 +2503,7 @@ class MobilitySession extends JsonSerializable
         audioUri,
         videoUri,
         videoThumbUri,
-        moveOrder
+        childrenOrder
       ];
   @override
   Map<String, dynamic> toJson() => _$MobilitySessionToJson(this);
@@ -2544,7 +2552,7 @@ class WorkoutSession extends JsonSerializable
         introVideoThumbUri,
         introAudioUri,
         tags,
-        sessionOrder,
+        childrenOrder,
         cardioSessions,
         resistanceSessions,
         amrapSessions,
@@ -9362,7 +9370,7 @@ class UpdateWorkoutSession extends JsonSerializable
         introVideoThumbUri,
         introAudioUri,
         tags,
-        sessionOrder
+        childrenOrder
       ];
   @override
   Map<String, dynamic> toJson() => _$UpdateWorkoutSessionToJson(this);
@@ -9388,6 +9396,7 @@ class UpdateWorkoutSession$Mutation extends JsonSerializable
 class UpdateWorkoutSessionInput extends JsonSerializable with EquatableMixin {
   UpdateWorkoutSessionInput(
       {this.archived,
+      this.childrenOrder,
       this.coverImageUri,
       this.description,
       required this.id,
@@ -9395,13 +9404,14 @@ class UpdateWorkoutSessionInput extends JsonSerializable with EquatableMixin {
       this.introVideoThumbUri,
       this.introVideoUri,
       this.name,
-      this.sessionOrder,
       this.tags});
 
   factory UpdateWorkoutSessionInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateWorkoutSessionInputFromJson(json);
 
   bool? archived;
+
+  List<String>? childrenOrder;
 
   String? coverImageUri;
 
@@ -9417,13 +9427,12 @@ class UpdateWorkoutSessionInput extends JsonSerializable with EquatableMixin {
 
   String? name;
 
-  List<String>? sessionOrder;
-
   List<String>? tags;
 
   @override
   List<Object?> get props => [
         archived,
+        childrenOrder,
         coverImageUri,
         description,
         id,
@@ -9431,7 +9440,6 @@ class UpdateWorkoutSessionInput extends JsonSerializable with EquatableMixin {
         introVideoThumbUri,
         introVideoUri,
         name,
-        sessionOrder,
         tags
       ];
   @override
@@ -9531,12 +9539,12 @@ class UpdateResistanceSession$Mutation extends JsonSerializable
 class UpdateResistanceSessionInput extends JsonSerializable
     with EquatableMixin {
   UpdateResistanceSessionInput(
-      {this.exerciseOrder, required this.id, this.name, this.note});
+      {this.childrenOrder, required this.id, this.name, this.note});
 
   factory UpdateResistanceSessionInput.fromJson(Map<String, dynamic> json) =>
       _$UpdateResistanceSessionInputFromJson(json);
 
-  List<String>? exerciseOrder;
+  List<String>? childrenOrder;
 
   late String id;
 
@@ -9545,7 +9553,7 @@ class UpdateResistanceSessionInput extends JsonSerializable
   String? note;
 
   @override
-  List<Object?> get props => [exerciseOrder, id, name, note];
+  List<Object?> get props => [childrenOrder, id, name, note];
   @override
   Map<String, dynamic> toJson() => _$UpdateResistanceSessionInputToJson(this);
 }
@@ -9566,6 +9574,145 @@ class DeleteResistanceSession$Mutation extends JsonSerializable
   @override
   Map<String, dynamic> toJson() =>
       _$DeleteResistanceSession$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteResistanceExercise$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DeleteResistanceExercise$Mutation();
+
+  factory DeleteResistanceExercise$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteResistanceExercise$MutationFromJson(json);
+
+  late String deleteResistanceExercise;
+
+  @override
+  List<Object?> get props => [deleteResistanceExercise];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteResistanceExercise$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateResistanceExercise$Mutation extends JsonSerializable
+    with EquatableMixin {
+  UpdateResistanceExercise$Mutation();
+
+  factory UpdateResistanceExercise$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateResistanceExercise$MutationFromJson(json);
+
+  late ResistanceExercise updateResistanceExercise;
+
+  @override
+  List<Object?> get props => [updateResistanceExercise];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateResistanceExercise$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateResistanceExerciseInput extends JsonSerializable
+    with EquatableMixin {
+  UpdateResistanceExerciseInput(
+      {this.childrenOrder, required this.id, this.note});
+
+  factory UpdateResistanceExerciseInput.fromJson(Map<String, dynamic> json) =>
+      _$UpdateResistanceExerciseInputFromJson(json);
+
+  List<String>? childrenOrder;
+
+  late String id;
+
+  String? note;
+
+  @override
+  List<Object?> get props => [childrenOrder, id, note];
+  @override
+  Map<String, dynamic> toJson() => _$UpdateResistanceExerciseInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DuplicateResistanceExercise$Mutation extends JsonSerializable
+    with EquatableMixin {
+  DuplicateResistanceExercise$Mutation();
+
+  factory DuplicateResistanceExercise$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$DuplicateResistanceExercise$MutationFromJson(json);
+
+  late ResistanceExercise duplicateResistanceExercise;
+
+  @override
+  List<Object?> get props => [duplicateResistanceExercise];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DuplicateResistanceExercise$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateResistanceExercise$Mutation extends JsonSerializable
+    with EquatableMixin {
+  CreateResistanceExercise$Mutation();
+
+  factory CreateResistanceExercise$Mutation.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateResistanceExercise$MutationFromJson(json);
+
+  late ResistanceExercise createResistanceExercise;
+
+  @override
+  List<Object?> get props => [createResistanceExercise];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateResistanceExercise$MutationToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateResistanceExerciseInput extends JsonSerializable
+    with EquatableMixin {
+  CreateResistanceExerciseInput(
+      {required this.resistanceSession, this.resistanceSets});
+
+  factory CreateResistanceExerciseInput.fromJson(Map<String, dynamic> json) =>
+      _$CreateResistanceExerciseInputFromJson(json);
+
+  @JsonKey(name: 'ResistanceSession')
+  late ConnectRelationInput resistanceSession;
+
+  @JsonKey(name: 'ResistanceSets')
+  List<CreateResistanceSetInExerciseInput>? resistanceSets;
+
+  @override
+  List<Object?> get props => [resistanceSession, resistanceSets];
+  @override
+  Map<String, dynamic> toJson() => _$CreateResistanceExerciseInputToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateResistanceSetInExerciseInput extends JsonSerializable
+    with EquatableMixin {
+  CreateResistanceSetInExerciseInput(
+      {this.equipment, required this.move, this.reps});
+
+  factory CreateResistanceSetInExerciseInput.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateResistanceSetInExerciseInputFromJson(json);
+
+  @JsonKey(name: 'Equipment')
+  ConnectRelationInput? equipment;
+
+  @JsonKey(name: 'Move')
+  late ConnectRelationInput move;
+
+  int? reps;
+
+  @override
+  List<Object?> get props => [equipment, move, reps];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateResistanceSetInExerciseInputToJson(this);
 }
 
 enum ContentAccessScope {
@@ -13774,7 +13921,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13894,7 +14041,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13944,7 +14091,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14032,7 +14179,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14082,7 +14229,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14164,7 +14311,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalSetOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14238,7 +14385,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalExerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14332,7 +14479,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14394,7 +14541,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14462,7 +14609,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14580,7 +14727,7 @@ final WORKOUT_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sessionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15144,7 +15291,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15264,7 +15411,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15314,7 +15461,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15402,7 +15549,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15452,7 +15599,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15534,7 +15681,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalSetOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15608,7 +15755,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalExerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15702,7 +15849,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15764,7 +15911,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15832,7 +15979,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15950,7 +16097,7 @@ final USER_WORKOUT_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sessionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -58657,7 +58804,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -58777,7 +58924,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -58827,7 +58974,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -58915,7 +59062,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -58965,7 +59112,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59047,7 +59194,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalSetOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59121,7 +59268,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalExerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59215,7 +59362,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59277,7 +59424,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59345,7 +59492,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59463,7 +59610,7 @@ final CREATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sessionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -59620,7 +59767,7 @@ final UPDATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sessionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60213,7 +60360,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60333,7 +60480,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60383,7 +60530,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60471,7 +60618,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60521,7 +60668,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60603,7 +60750,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalSetOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60677,7 +60824,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'intervalExerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60771,7 +60918,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60833,7 +60980,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sectionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -60901,7 +61048,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'moveOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -61019,7 +61166,7 @@ final DUPLICATE_WORKOUT_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'sessionOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -61361,7 +61508,7 @@ final CREATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -61411,7 +61558,7 @@ final CREATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -61752,7 +61899,7 @@ final DUPLICATE_RESISTANCE_SESSION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -61802,7 +61949,7 @@ final DUPLICATE_RESISTANCE_SESSION_MUTATION_DOCUMENT =
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -62144,7 +62291,7 @@ final UPDATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'setOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -62194,7 +62341,7 @@ final UPDATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'exerciseOrder'),
+            name: NameNode(value: 'childrenOrder'),
             alias: null,
             arguments: [],
             directives: [],
@@ -62289,4 +62436,1062 @@ class DeleteResistanceSessionMutation extends GraphQLQuery<
   @override
   DeleteResistanceSession$Mutation parse(Map<String, dynamic> json) =>
       DeleteResistanceSession$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteResistanceExerciseArguments extends JsonSerializable
+    with EquatableMixin {
+  DeleteResistanceExerciseArguments({required this.id});
+
+  @override
+  factory DeleteResistanceExerciseArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DeleteResistanceExerciseArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DeleteResistanceExerciseArgumentsToJson(this);
+}
+
+final DELETE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'deleteResistanceExercise';
+final DELETE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'deleteResistanceExercise'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'deleteResistanceExercise'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DeleteResistanceExerciseMutation extends GraphQLQuery<
+    DeleteResistanceExercise$Mutation, DeleteResistanceExerciseArguments> {
+  DeleteResistanceExerciseMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DELETE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName =
+      DELETE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME;
+
+  @override
+  final DeleteResistanceExerciseArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DeleteResistanceExercise$Mutation parse(Map<String, dynamic> json) =>
+      DeleteResistanceExercise$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UpdateResistanceExerciseArguments extends JsonSerializable
+    with EquatableMixin {
+  UpdateResistanceExerciseArguments({required this.data});
+
+  @override
+  factory UpdateResistanceExerciseArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$UpdateResistanceExerciseArgumentsFromJson(json);
+
+  late UpdateResistanceExerciseInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UpdateResistanceExerciseArgumentsToJson(this);
+}
+
+final UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'updateResistanceExercise';
+final UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'updateResistanceExercise'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'UpdateResistanceExerciseInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'updateResistanceExercise'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ResistanceExercise'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'ResistanceSets'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ResistanceSet'), directives: []),
+                    FieldNode(
+                        name: NameNode(value: 'Move'),
+                        alias: NameNode(value: 'MoveSummary'),
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'Move'), directives: []),
+                          FieldNode(
+                              name: NameNode(value: 'MoveType'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: SelectionSetNode(selections: [
+                                FragmentSpreadNode(
+                                    name: NameNode(value: 'MoveType'),
+                                    directives: [])
+                              ]))
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'Equipment'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'Equipment'),
+                              directives: [])
+                        ]))
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'MoveType'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'MoveType'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ResistanceSet'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ResistanceSet'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ResistanceExercise'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ResistanceExercise'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'childrenOrder'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class UpdateResistanceExerciseMutation extends GraphQLQuery<
+    UpdateResistanceExercise$Mutation, UpdateResistanceExerciseArguments> {
+  UpdateResistanceExerciseMutation({required this.variables});
+
+  @override
+  final DocumentNode document = UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName =
+      UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME;
+
+  @override
+  final UpdateResistanceExerciseArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  UpdateResistanceExercise$Mutation parse(Map<String, dynamic> json) =>
+      UpdateResistanceExercise$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class DuplicateResistanceExerciseArguments extends JsonSerializable
+    with EquatableMixin {
+  DuplicateResistanceExerciseArguments({required this.id});
+
+  @override
+  factory DuplicateResistanceExerciseArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$DuplicateResistanceExerciseArgumentsFromJson(json);
+
+  late String id;
+
+  @override
+  List<Object?> get props => [id];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$DuplicateResistanceExerciseArgumentsToJson(this);
+}
+
+final DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'duplicateResistanceExercise';
+final DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
+    DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'duplicateResistanceExercise'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'id')),
+            type: NamedTypeNode(name: NameNode(value: 'ID'), isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'duplicateResistanceExercise'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'id'),
+                  value: VariableNode(name: NameNode(value: 'id')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ResistanceExercise'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'ResistanceSets'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ResistanceSet'), directives: []),
+                    FieldNode(
+                        name: NameNode(value: 'Move'),
+                        alias: NameNode(value: 'MoveSummary'),
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'Move'), directives: []),
+                          FieldNode(
+                              name: NameNode(value: 'MoveType'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: SelectionSetNode(selections: [
+                                FragmentSpreadNode(
+                                    name: NameNode(value: 'MoveType'),
+                                    directives: [])
+                              ]))
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'Equipment'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'Equipment'),
+                              directives: [])
+                        ]))
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'MoveType'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'MoveType'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ResistanceSet'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ResistanceSet'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ResistanceExercise'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ResistanceExercise'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'childrenOrder'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class DuplicateResistanceExerciseMutation extends GraphQLQuery<
+    DuplicateResistanceExercise$Mutation,
+    DuplicateResistanceExerciseArguments> {
+  DuplicateResistanceExerciseMutation({required this.variables});
+
+  @override
+  final DocumentNode document = DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName =
+      DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME;
+
+  @override
+  final DuplicateResistanceExerciseArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  DuplicateResistanceExercise$Mutation parse(Map<String, dynamic> json) =>
+      DuplicateResistanceExercise$Mutation.fromJson(json);
+}
+
+@JsonSerializable(explicitToJson: true)
+class CreateResistanceExerciseArguments extends JsonSerializable
+    with EquatableMixin {
+  CreateResistanceExerciseArguments({required this.data});
+
+  @override
+  factory CreateResistanceExerciseArguments.fromJson(
+          Map<String, dynamic> json) =>
+      _$CreateResistanceExerciseArgumentsFromJson(json);
+
+  late CreateResistanceExerciseInput data;
+
+  @override
+  List<Object?> get props => [data];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$CreateResistanceExerciseArgumentsToJson(this);
+}
+
+final CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME =
+    'createResistanceExercise';
+final CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
+  OperationDefinitionNode(
+      type: OperationType.mutation,
+      name: NameNode(value: 'createResistanceExercise'),
+      variableDefinitions: [
+        VariableDefinitionNode(
+            variable: VariableNode(name: NameNode(value: 'data')),
+            type: NamedTypeNode(
+                name: NameNode(value: 'CreateResistanceExerciseInput'),
+                isNonNull: true),
+            defaultValue: DefaultValueNode(value: null),
+            directives: [])
+      ],
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: 'createResistanceExercise'),
+            alias: null,
+            arguments: [
+              ArgumentNode(
+                  name: NameNode(value: 'data'),
+                  value: VariableNode(name: NameNode(value: 'data')))
+            ],
+            directives: [],
+            selectionSet: SelectionSetNode(selections: [
+              FragmentSpreadNode(
+                  name: NameNode(value: 'ResistanceExercise'), directives: []),
+              FieldNode(
+                  name: NameNode(value: 'ResistanceSets'),
+                  alias: null,
+                  arguments: [],
+                  directives: [],
+                  selectionSet: SelectionSetNode(selections: [
+                    FragmentSpreadNode(
+                        name: NameNode(value: 'ResistanceSet'), directives: []),
+                    FieldNode(
+                        name: NameNode(value: 'Move'),
+                        alias: NameNode(value: 'MoveSummary'),
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'Move'), directives: []),
+                          FieldNode(
+                              name: NameNode(value: 'MoveType'),
+                              alias: null,
+                              arguments: [],
+                              directives: [],
+                              selectionSet: SelectionSetNode(selections: [
+                                FragmentSpreadNode(
+                                    name: NameNode(value: 'MoveType'),
+                                    directives: [])
+                              ]))
+                        ])),
+                    FieldNode(
+                        name: NameNode(value: 'Equipment'),
+                        alias: null,
+                        arguments: [],
+                        directives: [],
+                        selectionSet: SelectionSetNode(selections: [
+                          FragmentSpreadNode(
+                              name: NameNode(value: 'Equipment'),
+                              directives: [])
+                        ]))
+                  ]))
+            ]))
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'MoveType'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'MoveType'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'imageUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Move'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'searchTerms'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'description'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'demoVideoThumbUri'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'scope'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'validRepTypes'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ResistanceSet'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ResistanceSet'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'reps'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'ResistanceExercise'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'ResistanceExercise'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'createdAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'updatedAt'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'note'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'childrenOrder'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null)
+      ]))
+]);
+
+class CreateResistanceExerciseMutation extends GraphQLQuery<
+    CreateResistanceExercise$Mutation, CreateResistanceExerciseArguments> {
+  CreateResistanceExerciseMutation({required this.variables});
+
+  @override
+  final DocumentNode document = CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT;
+
+  @override
+  final String operationName =
+      CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT_OPERATION_NAME;
+
+  @override
+  final CreateResistanceExerciseArguments variables;
+
+  @override
+  List<Object?> get props => [document, operationName, variables];
+  @override
+  CreateResistanceExercise$Mutation parse(Map<String, dynamic> json) =>
+      CreateResistanceExercise$Mutation.fromJson(json);
 }

@@ -92,7 +92,7 @@ class FloatingButton extends StatelessWidget {
     this.text,
     this.icon,
     required this.onTap,
-    this.iconSize = 24,
+    this.iconSize = 20,
     this.margin = EdgeInsets.zero,
     this.padding = const EdgeInsets.all(11),
     this.loading = false,

@@ -131,7 +131,7 @@ class UserInputContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
       decoration: BoxDecoration(
           border:
               Border(bottom: BorderSide(color: context.theme.cardBackground))),

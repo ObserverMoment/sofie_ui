@@ -5,7 +5,7 @@ fragment CardioSession on CardioSession {
   updatedAt
   name
   note
-  exerciseOrder
+  childrenOrder
 }
 
 fragment CardioExercise on CardioExercise {
