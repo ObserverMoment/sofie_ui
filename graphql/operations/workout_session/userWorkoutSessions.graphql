@@ -5,7 +5,7 @@ query userWorkoutSessions {
       ...CardioSession
       CardioExercises {
         ...CardioExercise
-        MoveSummary: Move {
+        Move {
           ...Move
           MoveType {
             ...MoveType
@@ -19,7 +19,7 @@ query userWorkoutSessions {
         ...ResistanceExercise
         ResistanceSets {
           ...ResistanceSet
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -37,7 +37,7 @@ query userWorkoutSessions {
         ...AmrapSection
         AmrapMoves {
           ...AmrapMove
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -55,7 +55,7 @@ query userWorkoutSessions {
         ...IntervalExercise
         IntervalSets {
           ...IntervalSet
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -73,7 +73,7 @@ query userWorkoutSessions {
         ...ForTimeSection
         ForTimeMoves {
           ...ForTimeMove
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType

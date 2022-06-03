@@ -1,5 +1,5 @@
-mutation updateResistanceExercise($data: UpdateResistanceExerciseInput!) {
-  updateResistanceExercise(data: $data) {
+mutation duplicateResistanceSet($id: ID!) {
+  duplicateResistanceSet(id: $id) {
     ...ResistanceExercise
     ResistanceSets {
       ...ResistanceSet

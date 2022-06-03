@@ -836,7 +836,7 @@ Map<String, dynamic> _$MoveTypeToJson(MoveType instance) => <String, dynamic>{
       'imageUri': instance.imageUri,
     };
 
-MoveSummary _$MoveSummaryFromJson(Map<String, dynamic> json) => MoveSummary()
+Move _$MoveFromJson(Map<String, dynamic> json) => Move()
   ..$$typename = json['__typename'] as String?
   ..id = json['id'] as String
   ..name = json['name'] as String
@@ -852,8 +852,7 @@ MoveSummary _$MoveSummaryFromJson(Map<String, dynamic> json) => MoveSummary()
       .toList()
   ..moveType = MoveType.fromJson(json['MoveType'] as Map<String, dynamic>);
 
-Map<String, dynamic> _$MoveSummaryToJson(MoveSummary instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
       '__typename': instance.$$typename,
       'id': instance.id,
       'name': instance.name,
@@ -897,9 +896,9 @@ CardioExercise _$CardioExerciseFromJson(Map<String, dynamic> json) =>
           unknownValue: DistanceUnit.artemisUnknown)
       ..cardioZone = $enumDecode(_$CardioZoneEnumMap, json['cardioZone'],
           unknownValue: CardioZone.artemisUnknown)
-      ..moveSummary = json['MoveSummary'] == null
+      ..move = json['Move'] == null
           ? null
-          : MoveSummary.fromJson(json['MoveSummary'] as Map<String, dynamic>);
+          : Move.fromJson(json['Move'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$CardioExerciseToJson(CardioExercise instance) =>
     <String, dynamic>{
@@ -913,7 +912,7 @@ Map<String, dynamic> _$CardioExerciseToJson(CardioExercise instance) =>
       'distance': instance.distance,
       'distanceUnit': _$DistanceUnitEnumMap[instance.distanceUnit],
       'cardioZone': _$CardioZoneEnumMap[instance.cardioZone],
-      'MoveSummary': instance.moveSummary?.toJson(),
+      'Move': instance.move?.toJson(),
     };
 
 const _$TimeUnitEnumMap = {
@@ -989,8 +988,7 @@ ResistanceSet _$ResistanceSetFromJson(Map<String, dynamic> json) =>
       ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
       ..note = json['note'] as String?
       ..reps = json['reps'] as int?
-      ..moveSummary =
-          MoveSummary.fromJson(json['MoveSummary'] as Map<String, dynamic>)
+      ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
       ..equipment = json['Equipment'] == null
           ? null
           : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>);
@@ -1003,7 +1001,7 @@ Map<String, dynamic> _$ResistanceSetToJson(ResistanceSet instance) =>
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'note': instance.note,
       'reps': instance.reps,
-      'MoveSummary': instance.moveSummary.toJson(),
+      'Move': instance.move.toJson(),
       'Equipment': instance.equipment?.toJson(),
     };
 
@@ -1066,8 +1064,7 @@ AmrapMove _$AmrapMoveFromJson(Map<String, dynamic> json) => AmrapMove()
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
   ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..note = json['note'] as String?
-  ..moveSummary =
-      MoveSummary.fromJson(json['MoveSummary'] as Map<String, dynamic>)
+  ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
   ..equipment = json['Equipment'] == null
       ? null
       : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>);
@@ -1078,7 +1075,7 @@ Map<String, dynamic> _$AmrapMoveToJson(AmrapMove instance) => <String, dynamic>{
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'note': instance.note,
-      'MoveSummary': instance.moveSummary.toJson(),
+      'Move': instance.move.toJson(),
       'Equipment': instance.equipment?.toJson(),
     };
 
@@ -1138,8 +1135,7 @@ IntervalSet _$IntervalSetFromJson(Map<String, dynamic> json) => IntervalSet()
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
   ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..note = json['note'] as String?
-  ..moveSummary =
-      MoveSummary.fromJson(json['MoveSummary'] as Map<String, dynamic>)
+  ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
   ..equipment = json['Equipment'] == null
       ? null
       : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>);
@@ -1151,7 +1147,7 @@ Map<String, dynamic> _$IntervalSetToJson(IntervalSet instance) =>
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'note': instance.note,
-      'MoveSummary': instance.moveSummary.toJson(),
+      'Move': instance.move.toJson(),
       'Equipment': instance.equipment?.toJson(),
     };
 
@@ -1225,8 +1221,7 @@ ForTimeMove _$ForTimeMoveFromJson(Map<String, dynamic> json) => ForTimeMove()
   ..createdAt = fromGraphQLDateTimeToDartDateTime(json['createdAt'] as int)
   ..updatedAt = fromGraphQLDateTimeToDartDateTime(json['updatedAt'] as int)
   ..note = json['note'] as String?
-  ..moveSummary =
-      MoveSummary.fromJson(json['MoveSummary'] as Map<String, dynamic>)
+  ..move = Move.fromJson(json['Move'] as Map<String, dynamic>)
   ..equipment = json['Equipment'] == null
       ? null
       : Equipment.fromJson(json['Equipment'] as Map<String, dynamic>);
@@ -1238,7 +1233,7 @@ Map<String, dynamic> _$ForTimeMoveToJson(ForTimeMove instance) =>
       'createdAt': fromDartDateTimeToGraphQLDateTime(instance.createdAt),
       'updatedAt': fromDartDateTimeToGraphQLDateTime(instance.updatedAt),
       'note': instance.note,
-      'MoveSummary': instance.moveSummary.toJson(),
+      'Move': instance.move.toJson(),
       'Equipment': instance.equipment?.toJson(),
     };
 
@@ -1421,94 +1416,6 @@ Map<String, dynamic> _$UserWorkoutSessions$QueryToJson(
     <String, dynamic>{
       'userWorkoutSessions':
           instance.userWorkoutSessions.map((e) => e.toJson()).toList(),
-    };
-
-BodyArea _$BodyAreaFromJson(Map<String, dynamic> json) => BodyArea()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..name = json['name'] as String
-  ..frontBack = $enumDecode(_$BodyAreaFrontBackEnumMap, json['frontBack'],
-      unknownValue: BodyAreaFrontBack.artemisUnknown)
-  ..upperLower = $enumDecode(_$BodyAreaUpperLowerEnumMap, json['upperLower'],
-      unknownValue: BodyAreaUpperLower.artemisUnknown);
-
-Map<String, dynamic> _$BodyAreaToJson(BodyArea instance) => <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'name': instance.name,
-      'frontBack': _$BodyAreaFrontBackEnumMap[instance.frontBack],
-      'upperLower': _$BodyAreaUpperLowerEnumMap[instance.upperLower],
-    };
-
-const _$BodyAreaFrontBackEnumMap = {
-  BodyAreaFrontBack.back: 'BACK',
-  BodyAreaFrontBack.both: 'BOTH',
-  BodyAreaFrontBack.front: 'FRONT',
-  BodyAreaFrontBack.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-const _$BodyAreaUpperLowerEnumMap = {
-  BodyAreaUpperLower.core: 'CORE',
-  BodyAreaUpperLower.lower: 'LOWER',
-  BodyAreaUpperLower.upper: 'UPPER',
-  BodyAreaUpperLower.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-BodyAreaMoveScore _$BodyAreaMoveScoreFromJson(Map<String, dynamic> json) =>
-    BodyAreaMoveScore()
-      ..score = json['score'] as int
-      ..bodyArea = BodyArea.fromJson(json['BodyArea'] as Map<String, dynamic>);
-
-Map<String, dynamic> _$BodyAreaMoveScoreToJson(BodyAreaMoveScore instance) =>
-    <String, dynamic>{
-      'score': instance.score,
-      'BodyArea': instance.bodyArea.toJson(),
-    };
-
-Move _$MoveFromJson(Map<String, dynamic> json) => Move()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..name = json['name'] as String
-  ..searchTerms = json['searchTerms'] as String?
-  ..description = json['description'] as String?
-  ..demoVideoUri = json['demoVideoUri'] as String?
-  ..demoVideoThumbUri = json['demoVideoThumbUri'] as String?
-  ..scope = $enumDecode(_$MoveScopeEnumMap, json['scope'],
-      unknownValue: MoveScope.artemisUnknown)
-  ..validRepTypes = (json['validRepTypes'] as List<dynamic>)
-      .map((e) => $enumDecode(_$WorkoutMoveRepTypeEnumMap, e,
-          unknownValue: WorkoutMoveRepType.artemisUnknown))
-      .toList()
-  ..moveType = MoveType.fromJson(json['MoveType'] as Map<String, dynamic>)
-  ..bodyAreaMoveScores = (json['BodyAreaMoveScores'] as List<dynamic>)
-      .map((e) => BodyAreaMoveScore.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..requiredEquipments = (json['RequiredEquipments'] as List<dynamic>)
-      .map((e) => Equipment.fromJson(e as Map<String, dynamic>))
-      .toList()
-  ..selectableEquipments = (json['SelectableEquipments'] as List<dynamic>)
-      .map((e) => Equipment.fromJson(e as Map<String, dynamic>))
-      .toList();
-
-Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'name': instance.name,
-      'searchTerms': instance.searchTerms,
-      'description': instance.description,
-      'demoVideoUri': instance.demoVideoUri,
-      'demoVideoThumbUri': instance.demoVideoThumbUri,
-      'scope': _$MoveScopeEnumMap[instance.scope],
-      'validRepTypes': instance.validRepTypes
-          .map((e) => _$WorkoutMoveRepTypeEnumMap[e])
-          .toList(),
-      'MoveType': instance.moveType.toJson(),
-      'BodyAreaMoveScores':
-          instance.bodyAreaMoveScores.map((e) => e.toJson()).toList(),
-      'RequiredEquipments':
-          instance.requiredEquipments.map((e) => e.toJson()).toList(),
-      'SelectableEquipments':
-          instance.selectableEquipments.map((e) => e.toJson()).toList(),
     };
 
 WorkoutMove _$WorkoutMoveFromJson(Map<String, dynamic> json) => WorkoutMove()
@@ -5713,6 +5620,37 @@ Map<String, dynamic> _$DeleteWorkoutSetById$MutationToJson(
       'deleteWorkoutSetById': instance.deleteWorkoutSetById,
     };
 
+BodyArea _$BodyAreaFromJson(Map<String, dynamic> json) => BodyArea()
+  ..$$typename = json['__typename'] as String?
+  ..id = json['id'] as String
+  ..name = json['name'] as String
+  ..frontBack = $enumDecode(_$BodyAreaFrontBackEnumMap, json['frontBack'],
+      unknownValue: BodyAreaFrontBack.artemisUnknown)
+  ..upperLower = $enumDecode(_$BodyAreaUpperLowerEnumMap, json['upperLower'],
+      unknownValue: BodyAreaUpperLower.artemisUnknown);
+
+Map<String, dynamic> _$BodyAreaToJson(BodyArea instance) => <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'frontBack': _$BodyAreaFrontBackEnumMap[instance.frontBack],
+      'upperLower': _$BodyAreaUpperLowerEnumMap[instance.upperLower],
+    };
+
+const _$BodyAreaFrontBackEnumMap = {
+  BodyAreaFrontBack.back: 'BACK',
+  BodyAreaFrontBack.both: 'BOTH',
+  BodyAreaFrontBack.front: 'FRONT',
+  BodyAreaFrontBack.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
+const _$BodyAreaUpperLowerEnumMap = {
+  BodyAreaUpperLower.core: 'CORE',
+  BodyAreaUpperLower.lower: 'LOWER',
+  BodyAreaUpperLower.upper: 'UPPER',
+  BodyAreaUpperLower.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
 ProgressWidget _$ProgressWidgetFromJson(Map<String, dynamic> json) =>
     ProgressWidget()
       ..$$typename = json['__typename'] as String?
@@ -7471,12 +7409,13 @@ Map<String, dynamic> _$DeleteResistanceSession$MutationToJson(
 DeleteResistanceExercise$Mutation _$DeleteResistanceExercise$MutationFromJson(
         Map<String, dynamic> json) =>
     DeleteResistanceExercise$Mutation()
-      ..deleteResistanceExercise = json['deleteResistanceExercise'] as String;
+      ..deleteResistanceExercise = ResistanceSession.fromJson(
+          json['deleteResistanceExercise'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$DeleteResistanceExercise$MutationToJson(
         DeleteResistanceExercise$Mutation instance) =>
     <String, dynamic>{
-      'deleteResistanceExercise': instance.deleteResistanceExercise,
+      'deleteResistanceExercise': instance.deleteResistanceExercise.toJson(),
     };
 
 UpdateResistanceExercise$Mutation _$UpdateResistanceExercise$MutationFromJson(
@@ -7512,7 +7451,7 @@ Map<String, dynamic> _$UpdateResistanceExerciseInputToJson(
 DuplicateResistanceExercise$Mutation
     _$DuplicateResistanceExercise$MutationFromJson(Map<String, dynamic> json) =>
         DuplicateResistanceExercise$Mutation()
-          ..duplicateResistanceExercise = ResistanceExercise.fromJson(
+          ..duplicateResistanceExercise = ResistanceSession.fromJson(
               json['duplicateResistanceExercise'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$DuplicateResistanceExercise$MutationToJson(
@@ -7525,7 +7464,7 @@ Map<String, dynamic> _$DuplicateResistanceExercise$MutationToJson(
 CreateResistanceExercise$Mutation _$CreateResistanceExercise$MutationFromJson(
         Map<String, dynamic> json) =>
     CreateResistanceExercise$Mutation()
-      ..createResistanceExercise = ResistanceExercise.fromJson(
+      ..createResistanceExercise = ResistanceSession.fromJson(
           json['createResistanceExercise'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$CreateResistanceExercise$MutationToJson(
@@ -7539,8 +7478,8 @@ CreateResistanceExerciseInput _$CreateResistanceExerciseInputFromJson(
     CreateResistanceExerciseInput(
       resistanceSession: ConnectRelationInput.fromJson(
           json['ResistanceSession'] as Map<String, dynamic>),
-      resistanceSets: (json['ResistanceSets'] as List<dynamic>?)
-          ?.map((e) => CreateResistanceSetInExerciseInput.fromJson(
+      resistanceSets: (json['ResistanceSets'] as List<dynamic>)
+          .map((e) => CreateResistanceSetInExerciseInput.fromJson(
               e as Map<String, dynamic>))
           .toList(),
     );
@@ -7549,8 +7488,7 @@ Map<String, dynamic> _$CreateResistanceExerciseInputToJson(
         CreateResistanceExerciseInput instance) =>
     <String, dynamic>{
       'ResistanceSession': instance.resistanceSession.toJson(),
-      'ResistanceSets':
-          instance.resistanceSets?.map((e) => e.toJson()).toList(),
+      'ResistanceSets': instance.resistanceSets.map((e) => e.toJson()).toList(),
     };
 
 CreateResistanceSetInExerciseInput _$CreateResistanceSetInExerciseInputFromJson(
@@ -7570,6 +7508,94 @@ Map<String, dynamic> _$CreateResistanceSetInExerciseInputToJson(
       'Equipment': instance.equipment?.toJson(),
       'Move': instance.move.toJson(),
       'reps': instance.reps,
+    };
+
+UpdateResistanceSet$Mutation _$UpdateResistanceSet$MutationFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceSet$Mutation()
+      ..updateResistanceSet = ResistanceSet.fromJson(
+          json['updateResistanceSet'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$UpdateResistanceSet$MutationToJson(
+        UpdateResistanceSet$Mutation instance) =>
+    <String, dynamic>{
+      'updateResistanceSet': instance.updateResistanceSet.toJson(),
+    };
+
+UpdateResistanceSetInput _$UpdateResistanceSetInputFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceSetInput(
+      equipment: json['Equipment'] == null
+          ? null
+          : ConnectRelationInput.fromJson(
+              json['Equipment'] as Map<String, dynamic>),
+      move: json['Move'] == null
+          ? null
+          : ConnectRelationInput.fromJson(json['Move'] as Map<String, dynamic>),
+      id: json['id'] as String,
+      note: json['note'] as String?,
+      reps: json['reps'] as int?,
+    );
+
+Map<String, dynamic> _$UpdateResistanceSetInputToJson(
+        UpdateResistanceSetInput instance) =>
+    <String, dynamic>{
+      'Equipment': instance.equipment?.toJson(),
+      'Move': instance.move?.toJson(),
+      'id': instance.id,
+      'note': instance.note,
+      'reps': instance.reps,
+    };
+
+CreateResistanceSet$Mutation _$CreateResistanceSet$MutationFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSet$Mutation()
+      ..createResistanceSet = ResistanceExercise.fromJson(
+          json['createResistanceSet'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$CreateResistanceSet$MutationToJson(
+        CreateResistanceSet$Mutation instance) =>
+    <String, dynamic>{
+      'createResistanceSet': instance.createResistanceSet.toJson(),
+    };
+
+CreateResistanceSetInput _$CreateResistanceSetInputFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSetInput(
+      move: ConnectRelationInput.fromJson(json['Move'] as Map<String, dynamic>),
+      resistanceExercise: ConnectRelationInput.fromJson(
+          json['ResistanceExercise'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateResistanceSetInputToJson(
+        CreateResistanceSetInput instance) =>
+    <String, dynamic>{
+      'Move': instance.move.toJson(),
+      'ResistanceExercise': instance.resistanceExercise.toJson(),
+    };
+
+DeleteResistanceSet$Mutation _$DeleteResistanceSet$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DeleteResistanceSet$Mutation()
+      ..deleteResistanceSet = ResistanceExercise.fromJson(
+          json['deleteResistanceSet'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$DeleteResistanceSet$MutationToJson(
+        DeleteResistanceSet$Mutation instance) =>
+    <String, dynamic>{
+      'deleteResistanceSet': instance.deleteResistanceSet.toJson(),
+    };
+
+DuplicateResistanceSet$Mutation _$DuplicateResistanceSet$MutationFromJson(
+        Map<String, dynamic> json) =>
+    DuplicateResistanceSet$Mutation()
+      ..duplicateResistanceSet = ResistanceExercise.fromJson(
+          json['duplicateResistanceSet'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$DuplicateResistanceSet$MutationToJson(
+        DuplicateResistanceSet$Mutation instance) =>
+    <String, dynamic>{
+      'duplicateResistanceSet': instance.duplicateResistanceSet.toJson(),
     };
 
 DeleteClubArguments _$DeleteClubArgumentsFromJson(Map<String, dynamic> json) =>
@@ -9662,4 +9688,54 @@ Map<String, dynamic> _$CreateResistanceExerciseArgumentsToJson(
         CreateResistanceExerciseArguments instance) =>
     <String, dynamic>{
       'data': instance.data.toJson(),
+    };
+
+UpdateResistanceSetArguments _$UpdateResistanceSetArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    UpdateResistanceSetArguments(
+      data: UpdateResistanceSetInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UpdateResistanceSetArgumentsToJson(
+        UpdateResistanceSetArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+CreateResistanceSetArguments _$CreateResistanceSetArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    CreateResistanceSetArguments(
+      data: CreateResistanceSetInput.fromJson(
+          json['data'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$CreateResistanceSetArgumentsToJson(
+        CreateResistanceSetArguments instance) =>
+    <String, dynamic>{
+      'data': instance.data.toJson(),
+    };
+
+DeleteResistanceSetArguments _$DeleteResistanceSetArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DeleteResistanceSetArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DeleteResistanceSetArgumentsToJson(
+        DeleteResistanceSetArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+    };
+
+DuplicateResistanceSetArguments _$DuplicateResistanceSetArgumentsFromJson(
+        Map<String, dynamic> json) =>
+    DuplicateResistanceSetArguments(
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$DuplicateResistanceSetArgumentsToJson(
+        DuplicateResistanceSetArguments instance) =>
+    <String, dynamic>{
+      'id': instance.id,
     };

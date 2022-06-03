@@ -5,7 +5,7 @@ mutation duplicateResistanceSession($id: ID!) {
       ...ResistanceExercise
       ResistanceSets {
         ...ResistanceSet
-        MoveSummary: Move {
+        Move {
           ...Move
           MoveType {
             ...MoveType

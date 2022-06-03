@@ -1,6 +1,6 @@
-query userExerciseLoadTrackers {
-  userExerciseLoadTrackers {
-    ...UserExerciseLoadTracker
+mutation updateResistanceSet($data: UpdateResistanceSetInput!) {
+  updateResistanceSet(data: $data) {
+    ...ResistanceSet
     Move {
       ...Move
       MoveType {

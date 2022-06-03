@@ -5,7 +5,7 @@ mutation updateResistanceSession($data: UpdateResistanceSessionInput!) {
       ...ResistanceExercise
       ResistanceSets {
         ...ResistanceSet
-        MoveSummary: Move {
+        Move {
           ...Move
           MoveType {
             ...MoveType

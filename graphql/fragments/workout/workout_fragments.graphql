@@ -42,18 +42,6 @@ fragment WorkoutData on Workout {
           MoveType {
             ...MoveType
           }
-          BodyAreaMoveScores {
-            score
-            BodyArea {
-              ...BodyArea
-            }
-          }
-          RequiredEquipments {
-            ...Equipment
-          }
-          SelectableEquipments {
-            ...Equipment
-          }
         }
       }
     }

@@ -11,7 +11,7 @@
 // ignore_for_file: type=lint
 
 import 'package:auto_route/auto_route.dart' as _i65;
-import 'package:flutter/cupertino.dart' as _i67;
+import 'package:flutter/foundation.dart' as _i67;
 import 'package:flutter/material.dart' as _i66;
 import 'package:sofie_ui/components/creators/body_tracking/body_tracking_entry_creator.dart'
     as _i43;

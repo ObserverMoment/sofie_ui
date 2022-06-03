@@ -15,7 +15,7 @@ import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_session/creator/components/display/resistance_set_display.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_set_display.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
@@ -161,6 +161,32 @@ class _ResistanceExerciseGeneratorState
       ),
       child: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 80,
+                  child: _activePageIndex == 0
+                      ? Container()
+                      : TertiaryButton(
+                          text: 'Prev',
+                          onPressed: () => _changeTab(_activePageIndex - 1)),
+                ),
+                BasicProgressDots(
+                    numDots: _numActivePages, currentIndex: _activePageIndex),
+                SizedBox(
+                  width: 80,
+                  child: _activePageIndex == _numActivePages - 1
+                      ? Container()
+                      : TertiaryButton(
+                          text: 'Next',
+                          onPressed: () => _changeTab(_activePageIndex + 1)),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: PageView(
               onPageChanged: _changeTab,
@@ -197,32 +223,6 @@ class _ResistanceExerciseGeneratorState
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 80,
-                  child: _activePageIndex == 0
-                      ? Container()
-                      : TertiaryButton(
-                          text: 'Prev',
-                          onPressed: () => _changeTab(_activePageIndex - 1)),
-                ),
-                BasicProgressDots(
-                    numDots: _numActivePages, currentIndex: _activePageIndex),
-                SizedBox(
-                  width: 80,
-                  child: _activePageIndex == _numActivePages - 1
-                      ? Container()
-                      : TertiaryButton(
-                          text: 'Next',
-                          onPressed: () => _changeTab(_activePageIndex + 1)),
-                ),
-              ],
-            ),
-          )
         ],
       ),
     );
@@ -274,7 +274,7 @@ class _MoveSelectorUI extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.only(left: 8.0, bottom: 8, top: 8),
                 child: MyHeaderText(
-                  'SELECT MOVES',
+                  'SELECT MOVE(S)',
                 ),
               ),
               if (moves.isNotEmpty)

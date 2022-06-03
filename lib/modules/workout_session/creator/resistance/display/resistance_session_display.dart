@@ -3,9 +3,9 @@ import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
-class ResistanceSessionCard extends StatelessWidget {
+class ResistanceSessionDisplay extends StatelessWidget {
   final ResistanceSession resistanceSession;
-  const ResistanceSessionCard({Key? key, required this.resistanceSession})
+  const ResistanceSessionDisplay({Key? key, required this.resistanceSession})
       : super(key: key);
 
   @override
@@ -14,7 +14,8 @@ class ResistanceSessionCard extends StatelessWidget {
         child: Column(
       children: [
         MyText('Resistance'),
-        MyText(resistanceSession.note ?? 'no note')
+        MyText(resistanceSession.note ?? 'no note'),
+        MyText(resistanceSession.childrenOrder.length.toString())
       ],
     ));
   }

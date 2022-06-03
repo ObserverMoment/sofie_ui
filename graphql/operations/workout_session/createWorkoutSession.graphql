@@ -5,7 +5,7 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
       ...CardioSession
       CardioExercises {
         ...CardioExercise
-        MoveSummary: Move {
+        Move {
           ...Move
           MoveType {
             ...MoveType
@@ -19,7 +19,7 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
         ...ResistanceExercise
         ResistanceSets {
           ...ResistanceSet
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -37,7 +37,7 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
         ...AmrapSection
         AmrapMoves {
           ...AmrapMove
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -55,7 +55,7 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
         ...IntervalExercise
         IntervalSets {
           ...IntervalSet
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -73,7 +73,7 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
         ...ForTimeSection
         ForTimeMoves {
           ...ForTimeMove
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType

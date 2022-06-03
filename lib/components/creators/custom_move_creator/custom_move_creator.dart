@@ -50,10 +50,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
         ..validRepTypes = WorkoutMoveRepType.values
             .where((v) => v != WorkoutMoveRepType.artemisUnknown)
             .toList()
-        ..scope = MoveScope.custom
-        ..bodyAreaMoveScores = []
-        ..requiredEquipments = []
-        ..selectableEquipments = [];
+        ..scope = MoveScope.custom;
 
       setState(() => _activeMove = newMove);
     } else {
@@ -181,14 +178,14 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
                       move: _activeMove!,
                       updateMove: _updateMove,
                     ),
-                    CustomMoveCreatorEquipment(
-                      move: _activeMove!,
-                      updateMove: _updateMove,
-                    ),
-                    CustomMoveCreatorBody(
-                      move: _activeMove!,
-                      updateMove: _updateMove,
-                    ),
+                    // CustomMoveCreatorEquipment(
+                    //   move: _activeMove!,
+                    //   updateMove: _updateMove,
+                    // ),
+                    // CustomMoveCreatorBody(
+                    //   move: _activeMove!,
+                    //   updateMove: _updateMove,
+                    // ),
                   ],
                 ),
               ),

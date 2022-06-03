@@ -1,16 +1,19 @@
 mutation duplicateResistanceExercise($id: ID!) {
   duplicateResistanceExercise(id: $id) {
-    ...ResistanceExercise
-    ResistanceSets {
-      ...ResistanceSet
-      MoveSummary: Move {
-        ...Move
-        MoveType {
-          ...MoveType
+    ...ResistanceSession
+    ResistanceExercises {
+      ...ResistanceExercise
+      ResistanceSets {
+        ...ResistanceSet
+        Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
         }
-      }
-      Equipment {
-        ...Equipment
+        Equipment {
+          ...Equipment
+        }
       }
     }
   }

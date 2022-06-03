@@ -5,7 +5,7 @@ query workoutSessionById($id: ID!) {
       ...CardioSession
       CardioExercises {
         ...CardioExercise
-        MoveSummary: Move {
+        Move {
           ...Move
           MoveType {
             ...MoveType
@@ -19,7 +19,7 @@ query workoutSessionById($id: ID!) {
         ...ResistanceExercise
         ResistanceSets {
           ...ResistanceSet
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -37,7 +37,7 @@ query workoutSessionById($id: ID!) {
         ...AmrapSection
         AmrapMoves {
           ...AmrapMove
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -55,7 +55,7 @@ query workoutSessionById($id: ID!) {
         ...IntervalExercise
         IntervalSets {
           ...IntervalSet
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType
@@ -73,7 +73,7 @@ query workoutSessionById($id: ID!) {
         ...ForTimeSection
         ForTimeMoves {
           ...ForTimeMove
-          MoveSummary: Move {
+          Move {
             ...Move
             MoveType {
               ...MoveType

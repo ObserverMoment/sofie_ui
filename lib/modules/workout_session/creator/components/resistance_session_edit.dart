@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -15,8 +12,8 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/modules/workout_session/creator/blocs/resistance_session_bloc.dart';
-import 'package:sofie_ui/modules/workout_session/creator/components/display/resistance_exercise_card.dart';
-import 'package:sofie_ui/modules/workout_session/creator/components/resistance_exercise_generator.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_exercise_display.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/resistance_exercise_generator.dart';
 
 class ResistanceSessionEdit extends StatelessWidget {
   final ResistanceSession resistanceSession;
@@ -46,6 +43,9 @@ class ResistanceSessionEdit extends StatelessWidget {
         final bloc = context.watch<ResistanceSessionBloc>();
         final session = bloc.resistanceSession;
 
+        print('session.childrenOrder');
+        print(session.childrenOrder);
+
         final sortedExercises = session.childrenOrder
             .map((id) =>
                 session.resistanceExercises.firstWhere((e) => e.id == id))
@@ -69,6 +69,7 @@ class ResistanceSessionEdit extends StatelessWidget {
                     onTap: () => _openGenerator(context, bloc))
               ],
               child: ListView(
+                shrinkWrap: true,
                 children: [
                   UserInputContainer(
                     child: EditableTextAreaRow(
@@ -89,7 +90,7 @@ class ResistanceSessionEdit extends StatelessWidget {
                             curve: Curves.easeInOut,
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 12.0),
-                              child: ResistanceExerciseCard(
+                              child: ResistanceExerciseDisplay(
                                 resistanceExercise: exercise,
                               ),
                             ),

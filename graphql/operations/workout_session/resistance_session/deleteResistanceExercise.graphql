@@ -1,3 +1,20 @@
 mutation deleteResistanceExercise($id: ID!) {
-  deleteResistanceExercise(id: $id)
+  deleteResistanceExercise(id: $id) {
+    ...ResistanceSession
+    ResistanceExercises {
+      ...ResistanceExercise
+      ResistanceSets {
+        ...ResistanceSet
+        Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+        }
+        Equipment {
+          ...Equipment
+        }
+      }
+    }
+  }
 }

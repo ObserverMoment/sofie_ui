@@ -12,7 +12,7 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/modules/workout_session/creator/components/display/resistance_session_card.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_session_display.dart';
 import 'package:sofie_ui/modules/workout_session/creator/components/resistance_session_edit.dart';
 import 'package:sofie_ui/modules/workout_session/creator/blocs/workout_session_bloc.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -40,7 +40,7 @@ class WorkoutSessionEdit extends StatelessWidget {
                   resistanceSession: session,
                   workoutSessionId: bloc.workoutSessionId,
                 )),
-            child: ResistanceSessionCard(resistanceSession: session));
+            child: ResistanceSessionDisplay(resistanceSession: session));
       case CardioSession:
         return Card(child: MyText('Cardio'));
       case AmrapSession:
@@ -95,7 +95,9 @@ class WorkoutSessionEdit extends StatelessWidget {
         query: workoutSessionByIdQuery,
         parameterizeQuery: true,
         builder: (data) {
+          print('building WorkoutSessionEdit');
           final workoutSession = data.workoutSessionById!;
+          print(workoutSession.resistanceSessions);
 
           final allSectionsAndIds = [
             ...workoutSession.resistanceSessions.map((s) => ([s.id, s])),

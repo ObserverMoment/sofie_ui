@@ -545,7 +545,7 @@ input CreateMoveInput {
 
 input CreateResistanceExerciseInput {
   ResistanceSession: ConnectRelationInput!
-  ResistanceSets: [CreateResistanceSetInExerciseInput!]
+  ResistanceSets: [CreateResistanceSetInExerciseInput!]!
 }
 
 input CreateResistanceSessionInput {
@@ -1159,11 +1159,11 @@ type Mutation {
   createMove(data: CreateMoveInput!): Move!
   createResistanceExercise(
     data: CreateResistanceExerciseInput!
-  ): ResistanceExercise!
+  ): ResistanceSession!
   createResistanceSession(
     data: CreateResistanceSessionInput!
   ): ResistanceSession!
-  createResistanceSet(data: CreateResistanceSetInput!): ResistanceSet!
+  createResistanceSet(data: CreateResistanceSetInput!): ResistanceExercise!
   createScheduleForPlanEnrolment(
     data: CreateScheduleForPlanEnrolmentInput!
   ): WorkoutPlanEnrolment!
@@ -1225,9 +1225,9 @@ type Mutation {
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteLoggedWorkoutMove(id: ID!): ID!
   deleteMobilitySession(id: ID!): ID!
-  deleteResistanceExercise(id: ID!): ID!
+  deleteResistanceExercise(id: ID!): ResistanceSession!
   deleteResistanceSession(id: ID!): ID!
-  deleteResistanceSet(id: ID!): ID!
+  deleteResistanceSet(id: ID!): ResistanceExercise!
   deleteScheduledWorkoutById(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
@@ -1254,9 +1254,9 @@ type Mutation {
   duplicateIntervalSession(id: ID!): IntervalSession!
   duplicateIntervalSet(id: ID!): IntervalSet!
   duplicateMobilitySession(id: ID!): MobilitySession!
-  duplicateResistanceExercise(id: ID!): ResistanceExercise!
+  duplicateResistanceExercise(id: ID!): ResistanceSession!
   duplicateResistanceSession(id: ID!): ResistanceSession!
-  duplicateResistanceSet(id: ID!): ResistanceSet!
+  duplicateResistanceSet(id: ID!): ResistanceExercise!
   duplicateWorkoutById(id: ID!): Workout!
   duplicateWorkoutMoveById(id: ID!): WorkoutMove!
   duplicateWorkoutSession(id: ID!): WorkoutSession!

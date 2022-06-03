@@ -13,18 +13,6 @@ mutation createWorkoutSetWithWorkoutMoves(
         MoveType {
           ...MoveType
         }
-        BodyAreaMoveScores {
-          score
-          BodyArea {
-            ...BodyArea
-          }
-        }
-        RequiredEquipments {
-          ...Equipment
-        }
-        SelectableEquipments {
-          ...Equipment
-        }
       }
     }
   }
