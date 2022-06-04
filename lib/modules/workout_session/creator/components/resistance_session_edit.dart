@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:provider/provider.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -43,9 +44,6 @@ class ResistanceSessionEdit extends StatelessWidget {
         final bloc = context.watch<ResistanceSessionBloc>();
         final session = bloc.resistanceSession;
 
-        print('session.childrenOrder');
-        print(session.childrenOrder);
-
         final sortedExercises = session.childrenOrder
             .map((id) =>
                 session.resistanceExercises.firstWhere((e) => e.id == id))
@@ -55,7 +53,7 @@ class ResistanceSessionEdit extends StatelessWidget {
             navigationBar: MyNavBar(
               withoutLeading: true,
               middle: const LeadingNavBarTitle(
-                'Resistance Session',
+                'Resistance',
               ),
               trailing: NavBarSaveButton(
                 context.pop,
@@ -68,34 +66,31 @@ class ResistanceSessionEdit extends StatelessWidget {
                     text: 'Add Set',
                     onTap: () => _openGenerator(context, bloc))
               ],
-              child: ListView(
-                shrinkWrap: true,
+              child: FABPageList(
                 children: [
                   UserInputContainer(
                     child: EditableTextAreaRow(
                       title: 'Session Notes',
                       text: session.note ?? '',
+                      placeholder: 'Add note',
                       onSave: (text) =>
                           bloc.updateResistanceSession({'note': text}),
                       inputValidation: (t) => true,
                     ),
                   ),
-                  ImplicitlyAnimatedList<ResistanceExercise>(
-                      shrinkWrap: true,
-                      items: sortedExercises,
-                      itemBuilder: (context, animation, exercise, index) =>
-                          SizeFadeTransition(
-                            animation: animation,
-                            sizeFraction: 0.7,
-                            curve: Curves.easeInOut,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: ResistanceExerciseDisplay(
-                                resistanceExercise: exercise,
-                              ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: sortedExercises
+                        .map(
+                          (e) => FadeIn(
+                            key: Key(e.id),
+                            child: ResistanceExerciseDisplay(
+                              resistanceExercise: e,
                             ),
                           ),
-                      areItemsTheSame: (a, b) => a.id == b.id)
+                        )
+                        .toList(),
+                  ),
                 ],
               ),
             ));

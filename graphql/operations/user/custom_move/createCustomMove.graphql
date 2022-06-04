@@ -4,5 +4,17 @@ mutation createMove($data: CreateMoveInput!) {
     MoveType {
       ...MoveType
     }
+    BodyAreaMoveScores {
+      score
+      BodyArea {
+        ...BodyArea
+      }
+    }
+    RequiredEquipments {
+      ...Equipment
+    }
+    SelectableEquipments {
+      ...Equipment
+    }
   }
 }

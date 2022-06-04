@@ -21,6 +21,18 @@ query coreData {
       MoveType {
         ...MoveType
       }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
     }
     progressWidgets {
       ...ProgressWidget

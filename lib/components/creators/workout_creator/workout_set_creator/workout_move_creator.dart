@@ -82,10 +82,10 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
       _activeWorkoutMove = WorkoutMove()
         ..id = _activeWorkoutMove!.id
         ..sortPosition = widget.sortPosition
-        ..equipment =
-            move.selectableEquipments.contains(_activeWorkoutMove!.equipment)
-                ? _activeWorkoutMove!.equipment
-                : null
+        // ..equipment =
+        //     move.selectableEquipments.contains(_activeWorkoutMove!.equipment)
+        //         ? _activeWorkoutMove!.equipment
+        //         : null
         ..reps = _activeWorkoutMove!.reps
         ..repType = move.validRepTypes.contains(_activeWorkoutMove!.repType)
             ? _activeWorkoutMove!.repType

@@ -372,7 +372,7 @@ class _EquipmentSelectorUI extends StatelessWidget {
                           )),
                           const SizedBox(height: 16),
                           EquipmentSelectorList(
-                              tileSize: 90,
+                              tileSize: 100,
                               selectedEquipments: equipmentForMoves[m] != null
                                   ? [equipmentForMoves[m]!]
                                   : [],
@@ -432,13 +432,17 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const MyText('How many sets?'),
+                          const MyText(
+                            'How many sets?',
+                            size: FONTSIZE.five,
+                          ),
                           SizedBox(
                             width: 100,
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: MyStatefulNumberInput(
                                 initialValue: numSetsPerMove,
+                                textSize: 24,
                                 update: (reps) =>
                                     updateNumSetsPerMove(reps.toInt()),
                               ),
@@ -452,6 +456,7 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                         size: FONTSIZE.two,
                         maxLines: 3,
                         subtext: true,
+                        lineHeight: 1.2,
                       ),
                     ],
                   )),
@@ -485,7 +490,10 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      const MyText('Reps '),
+                                      const MyText(
+                                        'Reps ',
+                                        size: FONTSIZE.four,
+                                      ),
                                       SizedBox(
                                         width: 100,
                                         child: Padding(
@@ -572,27 +580,15 @@ class _GeneratedSetPreview extends StatelessWidget {
   /// [round] is zero indexed
   ResistanceSet _genSet(
       Move m, Equipment? e, MoveRepData r, int round, int index) {
-    final moveSummary = convertMoveToSummary(m);
-
     return ResistanceSet()
       ..id = const Uuid().v1()
       ..createdAt = DateTime.now()
       ..updatedAt = DateTime.now()
-      ..moveSummary = moveSummary
+      ..move = m
       ..equipment = e
       ..reps = r.enableLadder
           ? (r.initialReps + (r.perSetRepAdjust * round)).clamp(0, 1000)
           : r.initialReps;
-  }
-
-  MoveSummary convertMoveToSummary(Move move) {
-    return MoveSummary()
-      ..$$typename = move.$$typename
-      ..id = move.id
-      ..name = move.name
-      ..scope = move.scope
-      ..validRepTypes = move.validRepTypes
-      ..moveType = move.moveType;
   }
 
   @override

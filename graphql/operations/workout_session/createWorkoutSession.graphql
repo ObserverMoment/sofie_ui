@@ -10,6 +10,18 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
           MoveType {
             ...MoveType
           }
+          BodyAreaMoveScores {
+            score
+            BodyArea {
+              ...BodyArea
+            }
+          }
+          RequiredEquipments {
+            ...Equipment
+          }
+          SelectableEquipments {
+            ...Equipment
+          }
         }
       }
     }
@@ -23,6 +35,18 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
             ...Move
             MoveType {
               ...MoveType
+            }
+            BodyAreaMoveScores {
+              score
+              BodyArea {
+                ...BodyArea
+              }
+            }
+            RequiredEquipments {
+              ...Equipment
+            }
+            SelectableEquipments {
+              ...Equipment
             }
           }
           Equipment {
@@ -42,6 +66,18 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
             MoveType {
               ...MoveType
             }
+            BodyAreaMoveScores {
+              score
+              BodyArea {
+                ...BodyArea
+              }
+            }
+            RequiredEquipments {
+              ...Equipment
+            }
+            SelectableEquipments {
+              ...Equipment
+            }
           }
           Equipment {
             ...Equipment
@@ -60,6 +96,18 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
             MoveType {
               ...MoveType
             }
+            BodyAreaMoveScores {
+              score
+              BodyArea {
+                ...BodyArea
+              }
+            }
+            RequiredEquipments {
+              ...Equipment
+            }
+            SelectableEquipments {
+              ...Equipment
+            }
           }
           Equipment {
             ...Equipment
@@ -77,6 +125,18 @@ mutation createWorkoutSession($data: CreateWorkoutSessionInput!) {
             ...Move
             MoveType {
               ...MoveType
+            }
+            BodyAreaMoveScores {
+              score
+              BodyArea {
+                ...BodyArea
+              }
+            }
+            RequiredEquipments {
+              ...Equipment
+            }
+            SelectableEquipments {
+              ...Equipment
             }
           }
           Equipment {

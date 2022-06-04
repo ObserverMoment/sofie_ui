@@ -95,9 +95,7 @@ class WorkoutSessionEdit extends StatelessWidget {
         query: workoutSessionByIdQuery,
         parameterizeQuery: true,
         builder: (data) {
-          print('building WorkoutSessionEdit');
           final workoutSession = data.workoutSessionById!;
-          print(workoutSession.resistanceSessions);
 
           final allSectionsAndIds = [
             ...workoutSession.resistanceSessions.map((s) => ([s.id, s])),

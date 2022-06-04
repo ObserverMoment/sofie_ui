@@ -73,7 +73,6 @@ class ResistanceSessionBloc extends ChangeNotifier {
     notifyListeners();
 
     final result = await GraphQLStore.store.mutate(
-        optimisticData: resistanceSession.toJson(),
         broadcastQueryIds: [
           GQLVarParamKeys.workoutSessionById(workoutSessionId),
           GQLOpNames.userWorkoutSessions,
@@ -106,7 +105,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
                             equipment: s.equipment != null
                                 ? ConnectRelationInput(id: s.equipment!.id)
                                 : null,
-                            move: ConnectRelationInput(id: s.moveSummary.id),
+                            move: ConnectRelationInput(id: s.move.id),
                           ))
                       .toList(),
                   resistanceSession:
@@ -123,5 +122,37 @@ class ResistanceSessionBloc extends ChangeNotifier {
     });
 
     notifyListeners();
+  }
+
+  Future<void> updateResistanceExercise(
+      String exerciseId, Map<String, dynamic> data) async {
+    ResistanceExercise updateExercise = resistanceSession.resistanceExercises
+        .firstWhere((e) => e.id == exerciseId);
+
+    updateExercise =
+        ResistanceExercise.fromJson({...updateExercise.toJson(), ...data});
+
+    resistanceSession.resistanceExercises = resistanceSession
+        .resistanceExercises
+        .map((e) => e.id == exerciseId ? updateExercise : e)
+        .toList();
+
+    /// Optimistic.
+    notifyListeners();
+
+    final result = await GraphQLStore.store.mutate(
+        broadcastQueryIds: [
+          GQLVarParamKeys.workoutSessionById(workoutSessionId),
+          GQLOpNames.userWorkoutSessions,
+        ],
+        mutation: UpdateResistanceExerciseMutation(
+            variables: UpdateResistanceExerciseArguments(
+                data: UpdateResistanceExerciseInput.fromJson(
+                    updateExercise.toJson()))));
+
+    checkOperationResult(result, onFail: () {
+      /// Revert to backup and rebroadcast.
+      _revertToBackup();
+    });
   }
 }

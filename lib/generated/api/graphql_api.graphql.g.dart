@@ -836,6 +836,61 @@ Map<String, dynamic> _$MoveTypeToJson(MoveType instance) => <String, dynamic>{
       'imageUri': instance.imageUri,
     };
 
+BodyArea _$BodyAreaFromJson(Map<String, dynamic> json) => BodyArea()
+  ..$$typename = json['__typename'] as String?
+  ..id = json['id'] as String
+  ..name = json['name'] as String
+  ..frontBack = $enumDecode(_$BodyAreaFrontBackEnumMap, json['frontBack'],
+      unknownValue: BodyAreaFrontBack.artemisUnknown)
+  ..upperLower = $enumDecode(_$BodyAreaUpperLowerEnumMap, json['upperLower'],
+      unknownValue: BodyAreaUpperLower.artemisUnknown);
+
+Map<String, dynamic> _$BodyAreaToJson(BodyArea instance) => <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'frontBack': _$BodyAreaFrontBackEnumMap[instance.frontBack],
+      'upperLower': _$BodyAreaUpperLowerEnumMap[instance.upperLower],
+    };
+
+const _$BodyAreaFrontBackEnumMap = {
+  BodyAreaFrontBack.back: 'BACK',
+  BodyAreaFrontBack.both: 'BOTH',
+  BodyAreaFrontBack.front: 'FRONT',
+  BodyAreaFrontBack.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
+const _$BodyAreaUpperLowerEnumMap = {
+  BodyAreaUpperLower.core: 'CORE',
+  BodyAreaUpperLower.lower: 'LOWER',
+  BodyAreaUpperLower.upper: 'UPPER',
+  BodyAreaUpperLower.artemisUnknown: 'ARTEMIS_UNKNOWN',
+};
+
+BodyAreaMoveScore _$BodyAreaMoveScoreFromJson(Map<String, dynamic> json) =>
+    BodyAreaMoveScore()
+      ..score = json['score'] as int
+      ..bodyArea = BodyArea.fromJson(json['BodyArea'] as Map<String, dynamic>);
+
+Map<String, dynamic> _$BodyAreaMoveScoreToJson(BodyAreaMoveScore instance) =>
+    <String, dynamic>{
+      'score': instance.score,
+      'BodyArea': instance.bodyArea.toJson(),
+    };
+
+Equipment _$EquipmentFromJson(Map<String, dynamic> json) => Equipment()
+  ..$$typename = json['__typename'] as String?
+  ..id = json['id'] as String
+  ..name = json['name'] as String
+  ..loadAdjustable = json['loadAdjustable'] as bool;
+
+Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
+      '__typename': instance.$$typename,
+      'id': instance.id,
+      'name': instance.name,
+      'loadAdjustable': instance.loadAdjustable,
+    };
+
 Move _$MoveFromJson(Map<String, dynamic> json) => Move()
   ..$$typename = json['__typename'] as String?
   ..id = json['id'] as String
@@ -850,7 +905,16 @@ Move _$MoveFromJson(Map<String, dynamic> json) => Move()
       .map((e) => $enumDecode(_$WorkoutMoveRepTypeEnumMap, e,
           unknownValue: WorkoutMoveRepType.artemisUnknown))
       .toList()
-  ..moveType = MoveType.fromJson(json['MoveType'] as Map<String, dynamic>);
+  ..moveType = MoveType.fromJson(json['MoveType'] as Map<String, dynamic>)
+  ..bodyAreaMoveScores = (json['BodyAreaMoveScores'] as List<dynamic>)
+      .map((e) => BodyAreaMoveScore.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..requiredEquipments = (json['RequiredEquipments'] as List<dynamic>)
+      .map((e) => Equipment.fromJson(e as Map<String, dynamic>))
+      .toList()
+  ..selectableEquipments = (json['SelectableEquipments'] as List<dynamic>)
+      .map((e) => Equipment.fromJson(e as Map<String, dynamic>))
+      .toList();
 
 Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
       '__typename': instance.$$typename,
@@ -865,6 +929,12 @@ Map<String, dynamic> _$MoveToJson(Move instance) => <String, dynamic>{
           .map((e) => _$WorkoutMoveRepTypeEnumMap[e])
           .toList(),
       'MoveType': instance.moveType.toJson(),
+      'BodyAreaMoveScores':
+          instance.bodyAreaMoveScores.map((e) => e.toJson()).toList(),
+      'RequiredEquipments':
+          instance.requiredEquipments.map((e) => e.toJson()).toList(),
+      'SelectableEquipments':
+          instance.selectableEquipments.map((e) => e.toJson()).toList(),
     };
 
 const _$MoveScopeEnumMap = {
@@ -965,19 +1035,6 @@ Map<String, dynamic> _$CardioSessionToJson(CardioSession instance) =>
       'childrenOrder': instance.childrenOrder,
       'CardioExercises':
           instance.cardioExercises.map((e) => e.toJson()).toList(),
-    };
-
-Equipment _$EquipmentFromJson(Map<String, dynamic> json) => Equipment()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..name = json['name'] as String
-  ..loadAdjustable = json['loadAdjustable'] as bool;
-
-Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'name': instance.name,
-      'loadAdjustable': instance.loadAdjustable,
     };
 
 ResistanceSet _$ResistanceSetFromJson(Map<String, dynamic> json) =>
@@ -5619,37 +5676,6 @@ Map<String, dynamic> _$DeleteWorkoutSetById$MutationToJson(
     <String, dynamic>{
       'deleteWorkoutSetById': instance.deleteWorkoutSetById,
     };
-
-BodyArea _$BodyAreaFromJson(Map<String, dynamic> json) => BodyArea()
-  ..$$typename = json['__typename'] as String?
-  ..id = json['id'] as String
-  ..name = json['name'] as String
-  ..frontBack = $enumDecode(_$BodyAreaFrontBackEnumMap, json['frontBack'],
-      unknownValue: BodyAreaFrontBack.artemisUnknown)
-  ..upperLower = $enumDecode(_$BodyAreaUpperLowerEnumMap, json['upperLower'],
-      unknownValue: BodyAreaUpperLower.artemisUnknown);
-
-Map<String, dynamic> _$BodyAreaToJson(BodyArea instance) => <String, dynamic>{
-      '__typename': instance.$$typename,
-      'id': instance.id,
-      'name': instance.name,
-      'frontBack': _$BodyAreaFrontBackEnumMap[instance.frontBack],
-      'upperLower': _$BodyAreaUpperLowerEnumMap[instance.upperLower],
-    };
-
-const _$BodyAreaFrontBackEnumMap = {
-  BodyAreaFrontBack.back: 'BACK',
-  BodyAreaFrontBack.both: 'BOTH',
-  BodyAreaFrontBack.front: 'FRONT',
-  BodyAreaFrontBack.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
-
-const _$BodyAreaUpperLowerEnumMap = {
-  BodyAreaUpperLower.core: 'CORE',
-  BodyAreaUpperLower.lower: 'LOWER',
-  BodyAreaUpperLower.upper: 'UPPER',
-  BodyAreaUpperLower.artemisUnknown: 'ARTEMIS_UNKNOWN',
-};
 
 ProgressWidget _$ProgressWidgetFromJson(Map<String, dynamic> json) =>
     ProgressWidget()

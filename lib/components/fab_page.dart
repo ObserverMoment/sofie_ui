@@ -77,6 +77,20 @@ class FABPage extends StatelessWidget {
   }
 }
 
+/// Lifts a list up over the FABs.
+class FABPageList extends StatelessWidget {
+  final List<Widget> children;
+  const FABPageList({Key? key, required this.children}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      shrinkWrap: true,
+      children: [...children, const SizedBox(height: 80)],
+    );
+  }
+}
+
 class FloatingButton extends StatelessWidget {
   final IconData? icon;
   final String? text;

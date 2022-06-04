@@ -122,18 +122,18 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
     ));
   }
 
-  Future<void> _openWorkoutSetGeneratorCreator(BuildContext context) async {
-    await context.push(
-        child: WorkoutSetGeneratorCreator(
-      handleGeneratedSet: (workoutSet) {
-        context
-            .read<WorkoutCreatorBloc>()
-            .createWorkoutSetWithWorkoutMoves(widget.sectionIndex, workoutSet);
-        context.pop();
-      },
-      newSetSortPosition: _sortedWorkoutSets.length,
-    ));
-  }
+  // Future<void> _openWorkoutSetGeneratorCreator(BuildContext context) async {
+  //   await context.push(
+  //       child: WorkoutSetGeneratorCreator(
+  //     handleGeneratedSet: (workoutSet) {
+  //       context
+  //           .read<WorkoutCreatorBloc>()
+  //           .createWorkoutSetWithWorkoutMoves(widget.sectionIndex, workoutSet);
+  //       context.pop();
+  //     },
+  //     newSetSortPosition: _sortedWorkoutSets.length,
+  //   ));
+  // }
 
   Future<void> _addRestSet(
       BuildContext context, Move restMove, int seconds) async {
@@ -291,12 +291,12 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
               loading: creatingSet,
               onTap: () => _addRestSet(context, restMove, 10),
             ),
-          if (!workoutSectionType.isTimed)
-            _floatingButton(
-              text: 'Set Generator',
-              loading: creatingSet,
-              onTap: () => _openWorkoutSetGeneratorCreator(context),
-            ),
+          // if (!workoutSectionType.isTimed)
+          //   _floatingButton(
+          //     text: 'Set Generator',
+          //     loading: creatingSet,
+          //     onTap: () => _openWorkoutSetGeneratorCreator(context),
+          //   ),
         ],
         child: ListView(
           padding: const EdgeInsets.only(bottom: 70),

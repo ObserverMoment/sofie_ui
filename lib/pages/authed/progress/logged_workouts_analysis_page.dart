@@ -109,10 +109,10 @@ class _LoggedWorkoutsAnalysisPageState
                                     return WorkoutGoalsTargetedWidget(
                                       loggedWorkouts: filteredSortedLogs,
                                     );
-                                  case 2:
-                                    return BodyAreasTargetedWidget(
-                                      loggedWorkouts: filteredSortedLogs,
-                                    );
+                                  // case 2:
+                                  //   return BodyAreasTargetedWidget(
+                                  //     loggedWorkouts: filteredSortedLogs,
+                                  //   );
                                   case 3:
                                     return MostLoggedWorkoutsWidget(
                                       loggedWorkouts: filteredSortedLogs,

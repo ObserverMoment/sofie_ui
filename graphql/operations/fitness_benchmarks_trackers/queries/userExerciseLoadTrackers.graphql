@@ -6,6 +6,18 @@ query userExerciseLoadTrackers {
       MoveType {
         ...MoveType
       }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
     }
     Equipment {
       ...Equipment
