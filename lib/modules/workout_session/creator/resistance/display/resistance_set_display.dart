@@ -1,53 +1,48 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_set_reps_display.dart';
 
 class ResistanceSetDisplay extends StatelessWidget {
-  final int setPosition;
   final ResistanceSet resistanceSet;
-  const ResistanceSetDisplay(
-      {Key? key, required this.resistanceSet, required this.setPosition})
+  const ResistanceSetDisplay({Key? key, required this.resistanceSet})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final equipment = resistanceSet.equipment ??
+        (resistanceSet.move.requiredEquipments.isNotEmpty
+            ? resistanceSet.move.requiredEquipments[0]
+            : null);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.only(right: 8),
-                margin: const EdgeInsets.only(right: 16),
-                decoration: BoxDecoration(
-                    border: Border(
-                        right: BorderSide(
-                            color: context.theme.primary.withOpacity(0.3)))),
-                child: MyText(
-                  '${setPosition + 1}',
-                  size: FONTSIZE.one,
-                  subtext: true,
-                ),
-              ),
-              MyText(
-                resistanceSet.move.name,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyText(
+                    resistanceSet.move.name,
+                  ),
+                  if (equipment != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: MyText(
+                        equipment.name.toUpperCase(),
+                        size: FONTSIZE.two,
+                        subtext: true,
+                      ),
+                    ),
+                ],
               ),
             ],
           ),
-          if (resistanceSet.equipment != null)
-            MyText(
-              resistanceSet.equipment!.name,
-              size: FONTSIZE.two,
-              subtext: true,
-            ),
-          MyText(
-            'x ${resistanceSet.reps.toString()}',
-            size: FONTSIZE.four,
+          RepsDisplay(
+            resistanceSet: resistanceSet,
           ),
         ],
       ),

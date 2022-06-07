@@ -15,17 +15,15 @@ class EquipmentTile extends StatelessWidget {
   final bool isSelected;
   final double iconSize;
   final FONTSIZE fontSize;
-  final bool withBorder;
-  const EquipmentTile(
-      {Key? key,
-      required this.equipment,
-      this.isSelected = false,
-      this.showIcon = true,
-      this.showText = true,
-      this.iconSize = 35,
-      this.fontSize = FONTSIZE.three,
-      this.withBorder = true})
-      : assert(showIcon || showText),
+  const EquipmentTile({
+    Key? key,
+    required this.equipment,
+    this.isSelected = false,
+    this.showIcon = true,
+    this.showText = true,
+    this.iconSize = 35,
+    this.fontSize = FONTSIZE.three,
+  })  : assert(showIcon || showText),
         super(key: key);
 
   @override
@@ -35,10 +33,12 @@ class EquipmentTile extends StatelessWidget {
       duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-          color: isSelected ? Styles.primaryAccent : primary.withOpacity(0.1),
+          color: primary.withOpacity(0.06),
           borderRadius: BorderRadius.circular(8),
-          border:
-              withBorder ? Border.all(color: primary.withOpacity(0.5)) : null),
+          border: Border.all(
+              color: isSelected
+                  ? Styles.primaryAccent
+                  : primary.withOpacity(0.06))),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +77,6 @@ class EquipmentSelectorList extends StatelessWidget {
   final List<Equipment> equipments;
   final Function(Equipment) handleSelection;
   final bool showIcon;
-  final bool tilesBorder;
   final FONTSIZE fontSize;
   final double tileSize;
   const EquipmentSelectorList({
@@ -87,7 +86,6 @@ class EquipmentSelectorList extends StatelessWidget {
     this.showIcon = false,
     required this.handleSelection,
     this.fontSize = FONTSIZE.two,
-    this.tilesBorder = false,
     this.tileSize = 100,
   }) : super(key: key);
 
@@ -110,7 +108,6 @@ class EquipmentSelectorList extends StatelessWidget {
                 child: EquipmentTile(
                     showIcon: showIcon,
                     equipment: equipments[index],
-                    withBorder: tilesBorder,
                     fontSize: fontSize,
                     isSelected: selectedEquipments.contains(equipments[index])),
               ),
@@ -126,7 +123,6 @@ class EquipmentMultiSelectorGrid extends StatelessWidget {
   final Function(Equipment) handleSelection;
   final bool showIcon;
   final int crossAxisCount;
-  final bool tilesBorder;
   final FONTSIZE fontSize;
   const EquipmentMultiSelectorGrid({
     Key? key,
@@ -136,7 +132,6 @@ class EquipmentMultiSelectorGrid extends StatelessWidget {
     required this.handleSelection,
     this.crossAxisCount = 4,
     this.fontSize = FONTSIZE.three,
-    this.tilesBorder = false,
   }) : super(key: key);
 
   @override
@@ -155,7 +150,6 @@ class EquipmentMultiSelectorGrid extends StatelessWidget {
             child: EquipmentTile(
                 showIcon: showIcon,
                 equipment: equipments[index],
-                withBorder: tilesBorder,
                 fontSize: fontSize,
                 isSelected: selectedEquipments.contains(equipments[index])),
           );
@@ -164,11 +158,11 @@ class EquipmentMultiSelectorGrid extends StatelessWidget {
 }
 
 class FullScreenEquipmentSelector extends StatefulWidget {
+  final bool allowMultiSelect;
   final List<Equipment> selectedEquipments;
   final List<Equipment> allEquipments;
   final Function(List<Equipment>) handleSelection;
   final int crossAxisCount;
-  final bool tilesBorder;
   final FONTSIZE fontSize;
   const FullScreenEquipmentSelector({
     Key? key,
@@ -177,11 +171,11 @@ class FullScreenEquipmentSelector extends StatefulWidget {
     required this.handleSelection,
     this.crossAxisCount = 4,
     this.fontSize = FONTSIZE.two,
-    this.tilesBorder = true,
+    this.allowMultiSelect = true,
   }) : super(key: key);
 
   @override
-  _FullScreenEquipmentSelectorState createState() =>
+  State<FullScreenEquipmentSelector> createState() =>
       _FullScreenEquipmentSelectorState();
 }
 
@@ -196,30 +190,36 @@ class _FullScreenEquipmentSelectorState
   }
 
   void _handleSelection(Equipment e) {
-    setState(() =>
-        _activeSelectedEquipments = _activeSelectedEquipments.toggleItem(e));
-    widget.handleSelection(_activeSelectedEquipments);
+    if (widget.allowMultiSelect) {
+      setState(() =>
+          _activeSelectedEquipments = _activeSelectedEquipments.toggleItem(e));
+    } else {
+      setState(() => _activeSelectedEquipments = [e]);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        middle: const NavBarTitle('Select Equipment'),
-        trailing: NavBarTertiarySaveButton(
-          context.pop,
+        withoutLeading: true,
+        middle: const LeadingNavBarTitle('Select Equipment'),
+        trailing: NavBarSaveButton(
+          () {
+            widget.handleSelection(_activeSelectedEquipments);
+            context.pop();
+          },
           text: 'Done',
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        padding: const EdgeInsets.all(10.0),
         child: EquipmentMultiSelectorGrid(
           showIcon: true,
           equipments: widget.allEquipments,
           handleSelection: _handleSelection,
           selectedEquipments: _activeSelectedEquipments,
           fontSize: widget.fontSize,
-          tilesBorder: widget.tilesBorder,
         ),
       ),
     );

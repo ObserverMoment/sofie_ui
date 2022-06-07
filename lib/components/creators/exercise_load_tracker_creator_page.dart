@@ -160,7 +160,6 @@ class ExerciseLoadTrackerCreatorPageState
                                       child: EquipmentTile(
                                           showIcon: true,
                                           equipment: e,
-                                          withBorder: false,
                                           fontSize: FONTSIZE.two,
                                           isSelected: _equipment == e)),
                                 ))

@@ -150,7 +150,7 @@ Object? recursiveRemoveRefsToId(
   if (data is Map) {
     return data.entries.fold<Map<String, dynamic>>({}, (obj, entry) {
       if (entry.key == kStoreReferenceKey && entry.value == id) {
-        /// This is an entry we want to delete. Ignore
+        /// This is an entry we want to delete. Don't add to object.
         return obj;
       } else {
         obj[entry.key as String] =

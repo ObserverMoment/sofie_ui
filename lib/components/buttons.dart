@@ -349,17 +349,19 @@ class NavBarCancelButton extends StatelessWidget {
 class NavBarSaveButton extends StatelessWidget {
   final void Function() onPressed;
   final Color? color;
+  final String text;
   const NavBarSaveButton(
     this.onPressed, {
     Key? key,
     this.color,
+    this.text = 'Save',
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
         padding: EdgeInsets.zero,
         onPressed: onPressed,
-        child: MyText('Save', color: color, weight: FontWeight.bold));
+        child: MyText(text, color: color, weight: FontWeight.bold));
   }
 }
 

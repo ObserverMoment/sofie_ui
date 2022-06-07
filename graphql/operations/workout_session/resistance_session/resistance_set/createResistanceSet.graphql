@@ -1,0 +1,26 @@
+mutation createResistanceSet($data: CreateResistanceSetInput!) {
+  createResistanceSet(data: $data) {
+    ...ResistanceSet
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+  }
+}

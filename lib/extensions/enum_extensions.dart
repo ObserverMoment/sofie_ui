@@ -202,6 +202,11 @@ extension LoadUnitExtension on LoadUnit {
   String get apiValue => describeEnum(this).toUpperCase();
 }
 
+extension ResistanceSetRepTypeExtension on ResistanceSetRepType {
+  String get display => describeEnum(this).capitalize;
+  String get apiValue => describeEnum(this).toUpperCase();
+}
+
 extension TimeUnitExtension on TimeUnit {
   String get shortDisplay {
     switch (this) {

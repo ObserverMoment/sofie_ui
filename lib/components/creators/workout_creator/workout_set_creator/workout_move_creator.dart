@@ -351,7 +351,6 @@ class _WorkoutMoveCreatorState extends State<WorkoutMoveCreator> {
                                                 child: EquipmentTile(
                                                     showIcon: true,
                                                     equipment: e,
-                                                    withBorder: false,
                                                     fontSize: FONTSIZE.two,
                                                     isSelected:
                                                         _activeWorkoutMove!

@@ -1,0 +1,3 @@
+mutation deleteResistanceSet($id: ID!) {
+  deleteResistanceSet(id: $id)
+}

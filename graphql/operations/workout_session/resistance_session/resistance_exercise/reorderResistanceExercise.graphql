@@ -1,5 +1,5 @@
-mutation duplicateResistanceSet($id: ID!) {
-  duplicateResistanceSet(id: $id) {
+mutation reorderResistanceExercise($id: ID!, $moveTo: Int!) {
+  reorderResistanceExercise(id: $id, moveTo: $moveTo) {
     ...ResistanceExercise
     ResistanceSets {
       ...ResistanceSet

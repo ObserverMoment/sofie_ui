@@ -55,6 +55,10 @@ const kFitnessBenchmarkScoreTypename = 'FitnessBenchmarkScore';
 const kFitnessBenchmarkWorkoutTypename = 'FitnessBenchmarkWorkout';
 const kFitnessBenchmarkWorkoutScoreTypename = 'FitnessBenchmarkWorkoutScore';
 
+const kResistanceSessionTypeName = 'ResistanceSession';
+const kResistanceExerciseTypeName = 'ResistanceExercise';
+const kResistanceSetTypeName = 'ResistanceSet';
+
 const kBodyTransformationPhotoTypename = 'BodyTransformationPhoto';
 const kGymProfileTypename = 'GymProfile';
 const kMoveTypename = 'Move';

@@ -48,7 +48,7 @@ class MoveSelector extends StatefulWidget {
       : super(key: key);
 
   @override
-  _MoveSelectorState createState() => _MoveSelectorState();
+  State<MoveSelector> createState() => _MoveSelectorState();
 }
 
 class _MoveSelectorState extends State<MoveSelector> {

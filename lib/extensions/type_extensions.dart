@@ -322,6 +322,13 @@ extension ListExtension on List {
     }
     return result;
   }
+
+  List<T> reorderItemInList<T>(int from, int to) {
+    final copyItems = List<T>.from(this);
+    final inTransit = copyItems.removeAt(from);
+    copyItems.insert(to, inTransit);
+    return copyItems;
+  }
 }
 
 extension PageControllerExtension on PageController {

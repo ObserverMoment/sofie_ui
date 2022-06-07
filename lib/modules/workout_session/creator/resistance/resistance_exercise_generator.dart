@@ -6,6 +6,7 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_set_definition.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/number_picker_row_tap_to_edit.dart';
 import 'package:sofie_ui/components/user_input/number_input.dart';
@@ -13,9 +14,11 @@ import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_set_display.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/resistance_rep_type_selector.dart';
 import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
@@ -24,10 +27,12 @@ class MoveRepData {
   int initialReps;
   int perSetRepAdjust;
   bool enableLadder;
+  ResistanceSetRepType repType;
   MoveRepData(
       {this.initialReps = 10,
       this.perSetRepAdjust = 0,
-      this.enableLadder = false});
+      this.enableLadder = false,
+      this.repType = ResistanceSetRepType.reps});
 }
 
 class ResistanceExerciseGenerator extends StatefulWidget {
@@ -130,6 +135,9 @@ class _ResistanceExerciseGeneratorState
   void _updateNumSetsPerMove(int numSets) =>
       setState(() => _numSetsPerMove = numSets);
 
+  void _updateRepType(Move move, ResistanceSetRepType repType) =>
+      setState(() => _repDataForMoves[move]!.repType = repType);
+
   void _updateInitialReps(Move move, int reps) =>
       setState(() => _repDataForMoves[move]!.initialReps = reps);
 
@@ -209,6 +217,7 @@ class _ResistanceExerciseGeneratorState
                   updateNumSetsPerMove: _updateNumSetsPerMove,
                   updatePerSetRepAdjust: _updatePerSetRepAdjust,
                   updateInitialReps: _updateInitialReps,
+                  updateRepType: _updateRepType,
                   equipmentForMoves: _equipmentForMoves,
                   updateEnableRepLadder: _updateEnableRepLadder,
                 ),
@@ -271,18 +280,18 @@ class _MoveSelectorUI extends StatelessWidget {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0, bottom: 8, top: 8),
-                child: MyHeaderText(
-                  'SELECT MOVE(S)',
-                ),
-              ),
+              const HorizontalLine(),
               if (moves.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: MyText(
-                    getWorkoutSetDefinitionText(moves.length) ?? '',
-                    color: Styles.primaryAccent,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MyText(
+                        getWorkoutSetDefinitionText(moves.length) ?? '',
+                      ),
+                    ],
                   ),
                 ),
               if (moves.isNotEmpty)
@@ -342,12 +351,7 @@ class _EquipmentSelectorUI extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 8.0, bottom: 16, top: 8),
-          child: MyHeaderText(
-            'SELECT EQUIPMENT',
-          ),
-        ),
+        const HorizontalLine(),
         Expanded(
           child: ListView(
             shrinkWrap: true,
@@ -397,6 +401,7 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
   final Map<Move, Equipment?> equipmentForMoves;
   final void Function(Move move, int perSetRepAdjust) updatePerSetRepAdjust;
   final void Function(Move move, int initialReps) updateInitialReps;
+  final void Function(Move move, ResistanceSetRepType repType) updateRepType;
   final void Function(Move move, bool enableLadder) updateEnableRepLadder;
   const _NumSetsAndRepsSelectorUI(
       {Key? key,
@@ -406,7 +411,8 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
       required this.updateInitialReps,
       required this.updatePerSetRepAdjust,
       required this.equipmentForMoves,
-      required this.updateEnableRepLadder})
+      required this.updateEnableRepLadder,
+      required this.updateRepType})
       : super(key: key);
 
   @override
@@ -414,12 +420,6 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 8.0, top: 8),
-          child: MyHeaderText(
-            'DEFINE REPS',
-          ),
-        ),
         const HorizontalLine(),
         Expanded(
           child: ListView(
@@ -485,29 +485,31 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const MyText(
-                                        'Reps ',
-                                        size: FONTSIZE.four,
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 8.0),
-                                          child: MyStatefulNumberInput(
-                                            initialValue: e.value.initialReps,
-                                            update: (reps) => updateInitialReps(
-                                                e.key, reps.toInt()),
-                                          ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 100,
+                                      height: 50,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: MyStatefulNumberInput(
+                                          initialValue: e.value.initialReps,
+                                          update: (reps) => updateInitialReps(
+                                              e.key, reps.toInt()),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    ResistanceRepTypeSelector(
+                                      resistanceSetRepType: e.value.repType,
+                                      updateResistanceSetRepType: (repType) =>
+                                          updateRepType(
+                                        e.key,
+                                        repType,
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 CupertinoSwitchRow(
                                     title: 'Ladder',
@@ -528,7 +530,7 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                                     saveValue: (adjustBy) =>
                                         updatePerSetRepAdjust(e.key, adjustBy),
                                     title: 'Each round adjust by',
-                                    suffix: 'reps'),
+                                    suffix: e.value.repType.display),
                               ),
                             ),
                           ],
@@ -563,36 +565,36 @@ class _GeneratedSetPreview extends StatelessWidget {
 
   ResistanceExercise _genExercise() {
     final now = DateTime.now();
-    final resistanceSets = List.generate(
-            numSetsPerMove,
-            (round) => moves.mapIndexed((i, m) => _genSet(
-                m, equipmentForMoves[m], repDataForMoves[m]!, round, i)))
-        .expand((x) => x)
+    final resistanceSets = moves
+        .mapIndexed(
+            (i, m) => _genSet(m, equipmentForMoves[m], repDataForMoves[m]!, i))
         .toList();
     return ResistanceExercise()
       ..id = 'tempId-${const Uuid().v1()}'
       ..createdAt = now
       ..updatedAt = now
-      ..childrenOrder = resistanceSets.map((s) => s.id).toList()
+      ..sortPosition = 0
       ..resistanceSets = resistanceSets;
   }
 
   /// [round] is zero indexed
-  ResistanceSet _genSet(
-      Move m, Equipment? e, MoveRepData r, int round, int index) {
+  ResistanceSet _genSet(Move m, Equipment? e, MoveRepData r, int index) {
     return ResistanceSet()
       ..id = const Uuid().v1()
       ..createdAt = DateTime.now()
       ..updatedAt = DateTime.now()
+      ..sortPosition = index
       ..move = m
       ..equipment = e
-      ..reps = r.enableLadder
-          ? (r.initialReps + (r.perSetRepAdjust * round)).clamp(0, 1000)
-          : r.initialReps;
+      ..repType = r.repType
+      ..reps = List.generate(
+          numSetsPerMove, (i) => r.initialReps + (i * r.perSetRepAdjust));
   }
 
   @override
   Widget build(BuildContext context) {
+    final isSuperSet = moves.length > 1;
+
     return errors.isEmpty
         ? Column(
             children: [
@@ -604,7 +606,7 @@ class _GeneratedSetPreview extends StatelessWidget {
                         onPressed: () => onSave(_genExercise()),
                         text: 'Generate Set'),
                     const Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.only(top: 10.0),
                       child: MyText(
                           'You can edit further after generating the set',
                           size: FONTSIZE.two,
@@ -615,20 +617,27 @@ class _GeneratedSetPreview extends StatelessWidget {
               ),
               Expanded(
                   child: ListView(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                shrinkWrap: true,
-                children: List.generate(
-                    numSetsPerMove,
-                    (round) => moves.mapIndexed((i, m) => ResistanceSetDisplay(
-                        setPosition: (round * moves.length) + i,
-                        resistanceSet: _genSet(
-                            m,
-                            equipmentForMoves[m],
-                            repDataForMoves[m]!,
-                            round,
-                            i)))).expand((x) => x).toList(),
-              ))
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 12),
+                      shrinkWrap: true,
+                      children: [
+                    if (isSuperSet)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Tag(tag: 'SUPERSET'),
+                          ],
+                        ),
+                      ),
+                    ...moves
+                        .mapIndexed((i, m) => ResistanceSetDisplay(
+                            resistanceSet: _genSet(m, equipmentForMoves[m],
+                                repDataForMoves[m]!, i)))
+                        .toList()
+                  ]))
             ],
           )
         : ListView(

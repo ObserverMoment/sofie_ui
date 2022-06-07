@@ -1,0 +1,26 @@
+mutation duplicateResistanceSet($id: ID!) {
+  duplicateResistanceSet(id: $id) {
+    ...ResistanceSet
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+  }
+}

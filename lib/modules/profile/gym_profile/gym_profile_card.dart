@@ -47,7 +47,6 @@ class GymProfileCard extends StatelessWidget {
                               equipment: gymProfile.equipments[index],
                               fontSize: FONTSIZE.one,
                               iconSize: 26,
-                              withBorder: false,
                             ),
                           ),
                         )),

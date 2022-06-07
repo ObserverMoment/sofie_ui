@@ -1,0 +1,26 @@
+mutation reorderResistanceSet($id: ID!, $moveTo: Int!) {
+  reorderResistanceSet(id: $id, moveTo: $moveTo) {
+    ...ResistanceSet
+    Move {
+      ...Move
+      MoveType {
+        ...MoveType
+      }
+      BodyAreaMoveScores {
+        score
+        BodyArea {
+          ...BodyArea
+        }
+      }
+      RequiredEquipments {
+        ...Equipment
+      }
+      SelectableEquipments {
+        ...Equipment
+      }
+    }
+    Equipment {
+      ...Equipment
+    }
+  }
+}

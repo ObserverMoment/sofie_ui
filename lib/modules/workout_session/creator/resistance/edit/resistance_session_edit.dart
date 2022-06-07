@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
-import 'package:implicitly_animated_reorderable_list/transitions.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
+import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/animated/my_reorderable_list.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -14,6 +16,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/modules/workout_session/creator/blocs/resistance_session_bloc.dart';
 import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_exercise_display.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/edit/resistance_exercise_edit.dart';
 import 'package:sofie_ui/modules/workout_session/creator/resistance/resistance_exercise_generator.dart';
 
 class ResistanceSessionEdit extends StatelessWidget {
@@ -27,6 +30,7 @@ class ResistanceSessionEdit extends StatelessWidget {
 
   void _openGenerator(BuildContext context, ResistanceSessionBloc bloc) {
     context.push(child: ResistanceExerciseGenerator(onSave: (e) {
+      e.sortPosition = resistanceSession.resistanceExercises.length;
       context.pop();
       bloc.createResistanceExercise(
           resistanceExercise: e,
@@ -44,10 +48,8 @@ class ResistanceSessionEdit extends StatelessWidget {
         final bloc = context.watch<ResistanceSessionBloc>();
         final session = bloc.resistanceSession;
 
-        final sortedExercises = session.childrenOrder
-            .map((id) =>
-                session.resistanceExercises.firstWhere((e) => e.id == id))
-            .toList();
+        final sortedExercises =
+            session.resistanceExercises.sortedBy<num>((e) => e.sortPosition);
 
         return MyPageScaffold(
             navigationBar: MyNavBar(
@@ -70,7 +72,7 @@ class ResistanceSessionEdit extends StatelessWidget {
                 children: [
                   UserInputContainer(
                     child: EditableTextAreaRow(
-                      title: 'Session Notes',
+                      title: 'Notes',
                       text: session.note ?? '',
                       placeholder: 'Add note',
                       onSave: (text) =>
@@ -78,18 +80,52 @@ class ResistanceSessionEdit extends StatelessWidget {
                       inputValidation: (t) => true,
                     ),
                   ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: sortedExercises
-                        .map(
-                          (e) => FadeIn(
-                            key: Key(e.id),
-                            child: ResistanceExerciseDisplay(
-                              resistanceExercise: e,
+                  MyReorderableList<ResistanceExercise>(
+                    physics: const NeverScrollableScrollPhysics(),
+                    items: sortedExercises,
+                    itemBuilder: (context, index, item) => FadeIn(
+                      key: Key(item.id),
+                      child: GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context).push(CupertinoPageRoute(
+                          fullscreenDialog: true,
+                          builder: (context) => ChangeNotifierProvider.value(
+                            value: bloc,
+                            child: ResistanceExerciseEdit(
+                              resistanceExerciseId: item.id,
                             ),
                           ),
-                        )
-                        .toList(),
+                        )),
+                        child: AnimatedSlidable(
+                          key: Key(item.id),
+                          index: index,
+                          itemType: 'Exercise',
+                          removeItem: (_) =>
+                              bloc.deleteResistanceExercise(item.id),
+                          secondaryActions: [
+                            SlidableAction(
+                              label: 'Copy',
+                              padding: EdgeInsets.zero,
+                              icon: CupertinoIcons.doc_on_doc,
+                              backgroundColor: context.theme.primary,
+                              foregroundColor: context.theme.background,
+                              onPressed: (_) =>
+                                  bloc.duplicateResistanceExercise(
+                                      resistanceExercise: item,
+                                      onFail: () => context.showToast(
+                                          message: kDefaultErrorMessage,
+                                          toastType: ToastType.destructive)),
+                            ),
+                          ],
+                          child: ResistanceExerciseDisplay(
+                            resistanceExercise: item,
+                          ),
+                        ),
+                      ),
+                    ),
+                    reorderItems: (_, to, __, movedItem) {
+                      bloc.reorderResistanceExercise(movedItem.id, to);
+                    },
                   ),
                 ],
               ),

@@ -12,8 +12,8 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_session_display.dart';
-import 'package:sofie_ui/modules/workout_session/creator/components/resistance_session_edit.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_session_summary_display.dart';
+import 'package:sofie_ui/modules/workout_session/creator/resistance/edit/resistance_session_edit.dart';
 import 'package:sofie_ui/modules/workout_session/creator/blocs/workout_session_bloc.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
@@ -31,16 +31,20 @@ class WorkoutSessionEdit extends StatelessWidget {
   final WorkoutSessionBloc bloc;
   const WorkoutSessionEdit({Key? key, required this.bloc}) : super(key: key);
 
-  Widget _buildSectionCardByType(BuildContext context, dynamic session) {
-    switch (session.runtimeType) {
+  Widget _buildSectionCardByType(
+      BuildContext context, WorkoutSession workoutSession, dynamic section) {
+    switch (section.runtimeType) {
       case ResistanceSession:
         return GestureDetector(
             onTap: () => context.push(
                     child: ResistanceSessionEdit(
-                  resistanceSession: session,
+                  resistanceSession: section,
                   workoutSessionId: bloc.workoutSessionId,
                 )),
-            child: ResistanceSessionDisplay(resistanceSession: session));
+            child: ResistanceSessionSummaryDisplay(
+                resistanceSession: section,
+                workoutSession: workoutSession,
+                workoutSessionBloc: bloc));
       case CardioSession:
         return Card(child: MyText('Cardio'));
       case AmrapSession:
@@ -53,14 +57,15 @@ class WorkoutSessionEdit extends StatelessWidget {
         return Card(child: MyText('Mobility'));
       default:
         throw Exception(
-            'WorkoutSessionEdit._buildSectionCardByType: No builder defined for type: ${session.runtimeType}');
+            'WorkoutSessionEdit._buildSectionCardByType: No builder defined for type: ${section.runtimeType}');
     }
   }
 
   void _showErrorToast(BuildContext context) => context.showToast(
       message: kDefaultErrorMessage, toastType: ToastType.destructive);
 
-  void _openSectionTypeSelector(BuildContext context) {
+  void _openSectionTypeSelector(
+      BuildContext context, WorkoutSession workoutSession) {
     openBottomSheetMenu(
         context: context,
         child: BottomSheetMenu(
@@ -70,6 +75,7 @@ class WorkoutSessionEdit extends StatelessWidget {
               BottomSheetMenuItem(
                   text: 'Resistance',
                   onPressed: () => bloc.createResistanceSession(
+                      workoutSession: workoutSession,
                       onFail: () => _showErrorToast(context),
                       onSuccess: (created) => context.push(
                               child: ResistanceSessionEdit(
@@ -107,8 +113,8 @@ class WorkoutSessionEdit extends StatelessWidget {
           ];
 
           final sortedSectionCards = workoutSession.childrenOrder
-              .map((id) => _buildSectionCardByType(
-                  context, allSectionsAndIds.firstWhere((s) => s[0] == id)[1]))
+              .map((id) => _buildSectionCardByType(context, workoutSession,
+                  allSectionsAndIds.firstWhere((s) => s[0] == id)[1]))
               .toList();
 
           return MyPageScaffold(
@@ -126,16 +132,17 @@ class WorkoutSessionEdit extends StatelessWidget {
                 FloatingButton(
                     icon: CupertinoIcons.add,
                     text: 'Add Section',
-                    onTap: () => _openSectionTypeSelector(context))
+                    onTap: () =>
+                        _openSectionTypeSelector(context, workoutSession))
               ],
-              child: ListView(
+              child: FABPageList(
                 children: [
                   UserInputContainer(
                     child: EditableTextFieldRow(
                       title: 'Name',
                       text: workoutSession.name,
-                      onSave: (text) =>
-                          bloc.updateWorkoutSession({'name': text}),
+                      onSave: (text) => bloc.updateWorkoutSession(
+                          workoutSession: workoutSession, data: {'name': text}),
                       inputValidation: (t) => t.length > 2 && t.length <= 50,
                       maxChars: 50,
                       validationMessage: 'Required. Min 3 chars. max 50',
@@ -145,8 +152,9 @@ class WorkoutSessionEdit extends StatelessWidget {
                     child: EditableTextAreaRow(
                       title: 'Description',
                       text: workoutSession.description ?? '',
-                      onSave: (text) =>
-                          bloc.updateWorkoutSession({'description': text}),
+                      onSave: (text) => bloc.updateWorkoutSession(
+                          workoutSession: workoutSession,
+                          data: {'description': text}),
                       inputValidation: (t) => true,
                     ),
                   ),
@@ -157,8 +165,9 @@ class WorkoutSessionEdit extends StatelessWidget {
                         Expanded(
                           child: TagsEditor(
                             tags: workoutSession.tags,
-                            updateTags: (tags) =>
-                                bloc.updateWorkoutSession({'tags': tags}),
+                            updateTags: (tags) => bloc.updateWorkoutSession(
+                                workoutSession: workoutSession,
+                                data: {'tags': tags}),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -169,9 +178,11 @@ class WorkoutSessionEdit extends StatelessWidget {
                           emptyThumbIcon: CupertinoIcons.photo,
                           onUploadSuccess: (coverImageUri) => bloc
                               .updateWorkoutSession(
-                                  {'coverImageUri': coverImageUri}),
-                          removeImage: (_) => bloc
-                              .updateWorkoutSession({'coverImageUri': null}),
+                                  workoutSession: workoutSession,
+                                  data: {'coverImageUri': coverImageUri}),
+                          removeImage: (_) => bloc.updateWorkoutSession(
+                              workoutSession: workoutSession,
+                              data: {'coverImageUri': null}),
                         ),
                       ],
                     ),

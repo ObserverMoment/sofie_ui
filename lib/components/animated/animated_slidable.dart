@@ -141,12 +141,13 @@ class AnimatedSlidableState extends State<AnimatedSlidable>
           data: IconThemeData(color: Styles.white, size: _iconSize),
           child: Slidable(
             key: widget.key,
-            startActionPane: ActionPane(
-                extentRatio: 0.20,
+            endActionPane: ActionPane(
+                extentRatio: 0.30,
                 motion: const DrawerMotion(),
                 children: <SlidableAction>[
                   ...widget.secondaryActions,
                   SlidableAction(
+                    padding: EdgeInsets.zero,
                     label: widget.verb,
                     backgroundColor: Styles.errorRed,
                     foregroundColor: Styles.white,
@@ -215,7 +216,7 @@ class MySlidable extends StatelessWidget {
       data: const IconThemeData(color: Styles.white),
       child: Slidable(
         key: key,
-        startActionPane: ActionPane(
+        endActionPane: ActionPane(
           motion: const DrawerMotion(),
           extentRatio: 0.25,
           children: [

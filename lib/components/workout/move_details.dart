@@ -40,7 +40,6 @@ class MoveDetails extends StatelessWidget {
                             child: EquipmentTile(
                               equipment: e,
                               fontSize: FONTSIZE.two,
-                              withBorder: false,
                             ),
                           ),
                         )
@@ -78,7 +77,6 @@ class MoveDetails extends StatelessWidget {
                             child: EquipmentTile(
                               equipment: e,
                               fontSize: FONTSIZE.two,
-                              withBorder: false,
                             ),
                           ),
                         )

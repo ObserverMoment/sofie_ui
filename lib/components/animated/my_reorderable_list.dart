@@ -4,12 +4,20 @@ import 'package:sofie_ui/components/animated/dragged_item.dart';
 class MyReorderableList<T> extends StatefulWidget {
   final List<T> items;
   final Widget Function(BuildContext context, int index, T item) itemBuilder;
-  final void Function(List<T> reordered) reorderItems;
+  final Widget Function(Widget child, int index, Animation<double> animation)?
+      proxyDecoratorBuilder;
+  final void Function(int from, int to, List<T> reordered, T movedItem)
+      reorderItems;
+  final ScrollPhysics? physics;
+  final BorderRadius? proxyDecoratorBorderRadius;
   const MyReorderableList(
       {Key? key,
       required this.items,
       required this.itemBuilder,
-      required this.reorderItems})
+      required this.reorderItems,
+      this.physics = const AlwaysScrollableScrollPhysics(),
+      this.proxyDecoratorBorderRadius,
+      this.proxyDecoratorBuilder})
       : super(key: key);
 
   @override
@@ -21,21 +29,12 @@ class _MyReorderableListState<T> extends State<MyReorderableList<T>> {
 
   @override
   void initState() {
-    // print('initState');
     _items = List.from(widget.items);
     super.initState();
   }
 
   @override
-  void didChangeDependencies() {
-    // print('didChangeDependencies');
-    _items = List.from(widget.items);
-    super.didChangeDependencies();
-  }
-
-  @override
   void didUpdateWidget(covariant MyReorderableList<T> oldWidget) {
-    // print('didUpdateWidget');
     _items = List.from(widget.items);
     super.didUpdateWidget(oldWidget);
   }
@@ -50,15 +49,19 @@ class _MyReorderableListState<T> extends State<MyReorderableList<T>> {
       _items.insert(moveTo, i);
     });
 
-    widget.reorderItems(_items);
+    widget.reorderItems(from, moveTo, _items, i);
   }
 
   @override
   Widget build(BuildContext context) {
     return ReorderableListView.builder(
-        proxyDecorator: (child, index, animation) => DraggedItem(child: child),
+        physics: widget.physics,
+        proxyDecorator: widget.proxyDecoratorBuilder ??
+            (child, index, animation) => DraggedItem(
+                  borderRadius: widget.proxyDecoratorBorderRadius,
+                  child: child,
+                ),
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         itemCount: _items.length,
         itemBuilder: (context, index) =>
             widget.itemBuilder(context, index, _items[index]),

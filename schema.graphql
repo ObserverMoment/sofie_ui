@@ -555,7 +555,8 @@ input CreateResistanceSessionInput {
 input CreateResistanceSetInExerciseInput {
   Equipment: ConnectRelationInput
   Move: ConnectRelationInput!
-  reps: Int
+  repType: ResistanceSetRepType!
+  reps: [Int!]!
 }
 
 input CreateResistanceSetInput {
@@ -1159,11 +1160,11 @@ type Mutation {
   createMove(data: CreateMoveInput!): Move!
   createResistanceExercise(
     data: CreateResistanceExerciseInput!
-  ): ResistanceSession!
+  ): ResistanceExercise!
   createResistanceSession(
     data: CreateResistanceSessionInput!
   ): ResistanceSession!
-  createResistanceSet(data: CreateResistanceSetInput!): ResistanceExercise!
+  createResistanceSet(data: CreateResistanceSetInput!): ResistanceSet!
   createScheduleForPlanEnrolment(
     data: CreateScheduleForPlanEnrolmentInput!
   ): WorkoutPlanEnrolment!
@@ -1225,9 +1226,9 @@ type Mutation {
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteLoggedWorkoutMove(id: ID!): ID!
   deleteMobilitySession(id: ID!): ID!
-  deleteResistanceExercise(id: ID!): ResistanceSession!
+  deleteResistanceExercise(id: ID!): ID!
   deleteResistanceSession(id: ID!): ID!
-  deleteResistanceSet(id: ID!): ResistanceExercise!
+  deleteResistanceSet(id: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
@@ -1254,9 +1255,9 @@ type Mutation {
   duplicateIntervalSession(id: ID!): IntervalSession!
   duplicateIntervalSet(id: ID!): IntervalSet!
   duplicateMobilitySession(id: ID!): MobilitySession!
-  duplicateResistanceExercise(id: ID!): ResistanceSession!
+  duplicateResistanceExercise(id: ID!): [ResistanceExercise!]!
   duplicateResistanceSession(id: ID!): ResistanceSession!
-  duplicateResistanceSet(id: ID!): ResistanceExercise!
+  duplicateResistanceSet(id: ID!): [ResistanceSet!]!
   duplicateWorkoutById(id: ID!): Workout!
   duplicateWorkoutMoveById(id: ID!): WorkoutMove!
   duplicateWorkoutSession(id: ID!): WorkoutSession!
@@ -1279,6 +1280,8 @@ type Mutation {
   removeWorkoutPlanFromCollection(
     data: RemoveWorkoutPlanFromCollectionInput!
   ): Collection!
+  reorderResistanceExercise(id: ID!, moveTo: Int!): [ResistanceExercise!]!
+  reorderResistanceSet(id: ID!, moveTo: Int!): [ResistanceSet!]!
   reorderWorkoutMoves(
     data: [UpdateSortPositionInput!]!
   ): [SortPositionUpdated!]!
@@ -1545,16 +1548,15 @@ input RemoveWorkoutPlanFromCollectionInput {
 
 type ResistanceExercise {
   ResistanceSets: [ResistanceSet!]!
-  childrenOrder: [String!]!
   createdAt: DateTime!
   id: ID!
   note: String
+  sortPosition: Int!
   updatedAt: DateTime!
 }
 
 type ResistanceSession {
   ResistanceExercises: [ResistanceExercise!]!
-  childrenOrder: [String!]!
   createdAt: DateTime!
   id: ID!
   name: String
@@ -1568,8 +1570,18 @@ type ResistanceSet {
   createdAt: DateTime!
   id: ID!
   note: String
-  reps: Int
+  repType: ResistanceSetRepType!
+  reps: [Int!]!
+  sortPosition: Int!
   updatedAt: DateTime!
+}
+
+enum ResistanceSetRepType {
+  CALORIES
+  METRES
+  MINUTES
+  REPS
+  SECONDS
 }
 
 type ScheduledWorkout {
@@ -1984,13 +1996,11 @@ input UpdateMoveInput {
 }
 
 input UpdateResistanceExerciseInput {
-  childrenOrder: [String!]
   id: ID!
   note: String
 }
 
 input UpdateResistanceSessionInput {
-  childrenOrder: [String!]
   id: ID!
   name: String
   note: String
@@ -2001,7 +2011,8 @@ input UpdateResistanceSetInput {
   Move: ConnectRelationInput
   id: ID!
   note: String
-  reps: Int
+  repType: ResistanceSetRepType
+  reps: [Int!]
 }
 
 input UpdateScheduledWorkoutInput {
