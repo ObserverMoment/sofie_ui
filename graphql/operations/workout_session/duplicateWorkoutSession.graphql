@@ -1,155 +1,155 @@
-mutation duplicateWorkoutSession($id: ID!) {
-  duplicateWorkoutSession(id: $id) {
-    ...WorkoutSession
-    CardioSessions {
-      ...CardioSession
-      CardioExercises {
-        ...CardioExercise
-        Move {
-          ...Move
-          MoveType {
-            ...MoveType
-          }
-          BodyAreaMoveScores {
-            score
-            BodyArea {
-              ...BodyArea
-            }
-          }
-          RequiredEquipments {
-            ...Equipment
-          }
-          SelectableEquipments {
-            ...Equipment
-          }
-        }
-      }
-    }
-    ResistanceSessions {
-      ...ResistanceSession
-      ResistanceExercises {
-        ...ResistanceExercise
-        ResistanceSets {
-          ...ResistanceSet
-          Move {
-            ...Move
-            MoveType {
-              ...MoveType
-            }
-            BodyAreaMoveScores {
-              score
-              BodyArea {
-                ...BodyArea
-              }
-            }
-            RequiredEquipments {
-              ...Equipment
-            }
-            SelectableEquipments {
-              ...Equipment
-            }
-          }
-          Equipment {
-            ...Equipment
-          }
-        }
-      }
-    }
-    AmrapSessions {
-      ...AmrapSession
-      AmrapSections {
-        ...AmrapSection
-        AmrapMoves {
-          ...AmrapMove
-          Move {
-            ...Move
-            MoveType {
-              ...MoveType
-            }
-            BodyAreaMoveScores {
-              score
-              BodyArea {
-                ...BodyArea
-              }
-            }
-            RequiredEquipments {
-              ...Equipment
-            }
-            SelectableEquipments {
-              ...Equipment
-            }
-          }
-          Equipment {
-            ...Equipment
-          }
-        }
-      }
-    }
-    IntervalSessions {
-      ...IntervalSession
-      IntervalExercises {
-        ...IntervalExercise
-        IntervalSets {
-          ...IntervalSet
-          Move {
-            ...Move
-            MoveType {
-              ...MoveType
-            }
-            BodyAreaMoveScores {
-              score
-              BodyArea {
-                ...BodyArea
-              }
-            }
-            RequiredEquipments {
-              ...Equipment
-            }
-            SelectableEquipments {
-              ...Equipment
-            }
-          }
-          Equipment {
-            ...Equipment
-          }
-        }
-      }
-    }
-    ForTimeSessions {
-      ...ForTimeSession
-      ForTimeSections {
-        ...ForTimeSection
-        ForTimeMoves {
-          ...ForTimeMove
-          Move {
-            ...Move
-            MoveType {
-              ...MoveType
-            }
-            BodyAreaMoveScores {
-              score
-              BodyArea {
-                ...BodyArea
-              }
-            }
-            RequiredEquipments {
-              ...Equipment
-            }
-            SelectableEquipments {
-              ...Equipment
-            }
-          }
-          Equipment {
-            ...Equipment
-          }
-        }
-      }
-    }
-    MobilitySessions {
-      ...MobilitySession
-    }
-    User {
-      ...UserAvatarData
-    }
-  }
-}
+# mutation duplicateWorkoutSession($id: ID!) {
+#   duplicateWorkoutSession(id: $id) {
+#     ...WorkoutSession
+#     CardioSessions {
+#       ...CardioSession
+#       CardioExercises {
+#         ...CardioExercise
+#         Move {
+#           ...Move
+#           MoveType {
+#             ...MoveType
+#           }
+#           BodyAreaMoveScores {
+#             score
+#             BodyArea {
+#               ...BodyArea
+#             }
+#           }
+#           RequiredEquipments {
+#             ...Equipment
+#           }
+#           SelectableEquipments {
+#             ...Equipment
+#           }
+#         }
+#       }
+#     }
+#     ResistanceSessions {
+#       ...ResistanceSession
+#       ResistanceExercises {
+#         ...ResistanceExercise
+#         ResistanceSets {
+#           ...ResistanceSet
+#           Move {
+#             ...Move
+#             MoveType {
+#               ...MoveType
+#             }
+#             BodyAreaMoveScores {
+#               score
+#               BodyArea {
+#                 ...BodyArea
+#               }
+#             }
+#             RequiredEquipments {
+#               ...Equipment
+#             }
+#             SelectableEquipments {
+#               ...Equipment
+#             }
+#           }
+#           Equipment {
+#             ...Equipment
+#           }
+#         }
+#       }
+#     }
+#     AmrapSessions {
+#       ...AmrapSession
+#       AmrapSections {
+#         ...AmrapSection
+#         AmrapMoves {
+#           ...AmrapMove
+#           Move {
+#             ...Move
+#             MoveType {
+#               ...MoveType
+#             }
+#             BodyAreaMoveScores {
+#               score
+#               BodyArea {
+#                 ...BodyArea
+#               }
+#             }
+#             RequiredEquipments {
+#               ...Equipment
+#             }
+#             SelectableEquipments {
+#               ...Equipment
+#             }
+#           }
+#           Equipment {
+#             ...Equipment
+#           }
+#         }
+#       }
+#     }
+#     IntervalSessions {
+#       ...IntervalSession
+#       IntervalExercises {
+#         ...IntervalExercise
+#         IntervalSets {
+#           ...IntervalSet
+#           Move {
+#             ...Move
+#             MoveType {
+#               ...MoveType
+#             }
+#             BodyAreaMoveScores {
+#               score
+#               BodyArea {
+#                 ...BodyArea
+#               }
+#             }
+#             RequiredEquipments {
+#               ...Equipment
+#             }
+#             SelectableEquipments {
+#               ...Equipment
+#             }
+#           }
+#           Equipment {
+#             ...Equipment
+#           }
+#         }
+#       }
+#     }
+#     ForTimeSessions {
+#       ...ForTimeSession
+#       ForTimeSections {
+#         ...ForTimeSection
+#         ForTimeMoves {
+#           ...ForTimeMove
+#           Move {
+#             ...Move
+#             MoveType {
+#               ...MoveType
+#             }
+#             BodyAreaMoveScores {
+#               score
+#               BodyArea {
+#                 ...BodyArea
+#               }
+#             }
+#             RequiredEquipments {
+#               ...Equipment
+#             }
+#             SelectableEquipments {
+#               ...Equipment
+#             }
+#           }
+#           Equipment {
+#             ...Equipment
+#           }
+#         }
+#       }
+#     }
+#     MobilitySessions {
+#       ...MobilitySession
+#     }
+#     User {
+#       ...UserAvatarData
+#     }
+#   }
+# }

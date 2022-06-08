@@ -23,7 +23,7 @@ class Card extends StatelessWidget {
       this.borderRadius,
       this.elevation = 2,
       this.backgroundImage,
-      this.margin = const EdgeInsets.all(4)})
+      this.margin = EdgeInsets.zero})
       : super(key: key);
 
   @override

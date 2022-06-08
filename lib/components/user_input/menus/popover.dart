@@ -146,7 +146,7 @@ class PopoverMenuItem extends StatelessWidget {
           if (iconData != null)
             Icon(
               iconData,
-              size: 21,
+              size: 18,
               color: color,
             )
         ],

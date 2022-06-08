@@ -73,7 +73,7 @@ import 'package:sofie_ui/modules/profile/skills/skills_page.dart' as _i14;
 import 'package:sofie_ui/modules/profile/social/social_links_page.dart' as _i15;
 import 'package:sofie_ui/modules/sign_in_registration/unauthed_landing_page.dart'
     as _i1;
-import 'package:sofie_ui/modules/workout_session/creator/workout_session_creator_page.dart'
+import 'package:sofie_ui/modules/workout_sessions/resistance_session/resistance_session_creator_page.dart'
     as _i56;
 import 'package:sofie_ui/pages/authed/authed_routes_wrapper_page.dart' as _i3;
 import 'package:sofie_ui/pages/authed/circles/circles_page.dart' as _i62;
@@ -522,13 +522,13 @@ class AppRouter extends _i65.RootStackRouter {
           routeData: routeData,
           child: _i55.WorkoutCreatorPage(key: args.key, workout: args.workout));
     },
-    WorkoutSessionCreatorRoute.name: (routeData) {
-      final args = routeData.argsAs<WorkoutSessionCreatorRouteArgs>(
-          orElse: () => const WorkoutSessionCreatorRouteArgs());
+    ResistanceSessionCreatorRoute.name: (routeData) {
+      final args = routeData.argsAs<ResistanceSessionCreatorRouteArgs>(
+          orElse: () => const ResistanceSessionCreatorRouteArgs());
       return _i65.AdaptivePage<dynamic>(
           routeData: routeData,
-          child: _i56.WorkoutSessionCreatorPage(
-              key: args.key, workoutSession: args.workoutSession));
+          child: _i56.ResistanceSessionCreatorPage(
+              key: args.key, resistanceSession: args.resistanceSession));
     },
     WorkoutPlanCreatorRoute.name: (routeData) {
       final args = routeData.argsAs<WorkoutPlanCreatorRouteArgs>(
@@ -695,8 +695,8 @@ class AppRouter extends _i65.RootStackRouter {
               path: 'create/scheduled-workout', parent: AuthedRouter.name),
           _i65.RouteConfig(WorkoutCreatorRoute.name,
               path: 'create/workout', parent: AuthedRouter.name),
-          _i65.RouteConfig(WorkoutSessionCreatorRoute.name,
-              path: 'create/workout-session', parent: AuthedRouter.name),
+          _i65.RouteConfig(ResistanceSessionCreatorRoute.name,
+              path: 'create/resistance-session', parent: AuthedRouter.name),
           _i65.RouteConfig(WorkoutPlanCreatorRoute.name,
               path: 'create/workout-plan', parent: AuthedRouter.name),
           _i65.RouteConfig(WorkoutPlanReviewCreatorRoute.name,
@@ -1920,29 +1920,29 @@ class WorkoutCreatorRouteArgs {
 }
 
 /// generated route for
-/// [_i56.WorkoutSessionCreatorPage]
-class WorkoutSessionCreatorRoute
-    extends _i65.PageRouteInfo<WorkoutSessionCreatorRouteArgs> {
-  WorkoutSessionCreatorRoute(
-      {_i67.Key? key, _i68.WorkoutSession? workoutSession})
-      : super(WorkoutSessionCreatorRoute.name,
-            path: 'create/workout-session',
-            args: WorkoutSessionCreatorRouteArgs(
-                key: key, workoutSession: workoutSession));
+/// [_i56.ResistanceSessionCreatorPage]
+class ResistanceSessionCreatorRoute
+    extends _i65.PageRouteInfo<ResistanceSessionCreatorRouteArgs> {
+  ResistanceSessionCreatorRoute(
+      {_i67.Key? key, _i68.ResistanceSession? resistanceSession})
+      : super(ResistanceSessionCreatorRoute.name,
+            path: 'create/resistance-session',
+            args: ResistanceSessionCreatorRouteArgs(
+                key: key, resistanceSession: resistanceSession));
 
-  static const String name = 'WorkoutSessionCreatorRoute';
+  static const String name = 'ResistanceSessionCreatorRoute';
 }
 
-class WorkoutSessionCreatorRouteArgs {
-  const WorkoutSessionCreatorRouteArgs({this.key, this.workoutSession});
+class ResistanceSessionCreatorRouteArgs {
+  const ResistanceSessionCreatorRouteArgs({this.key, this.resistanceSession});
 
   final _i67.Key? key;
 
-  final _i68.WorkoutSession? workoutSession;
+  final _i68.ResistanceSession? resistanceSession;
 
   @override
   String toString() {
-    return 'WorkoutSessionCreatorRouteArgs{key: $key, workoutSession: $workoutSession}';
+    return 'ResistanceSessionCreatorRouteArgs{key: $key, resistanceSession: $resistanceSession}';
   }
 }
 

@@ -10,6 +10,8 @@ class MyReorderableList<T> extends StatefulWidget {
       reorderItems;
   final ScrollPhysics? physics;
   final BorderRadius? proxyDecoratorBorderRadius;
+  final EdgeInsets listPadding;
+  final EdgeInsets itemPadding;
   const MyReorderableList(
       {Key? key,
       required this.items,
@@ -17,7 +19,9 @@ class MyReorderableList<T> extends StatefulWidget {
       required this.reorderItems,
       this.physics = const AlwaysScrollableScrollPhysics(),
       this.proxyDecoratorBorderRadius,
-      this.proxyDecoratorBuilder})
+      this.proxyDecoratorBuilder,
+      this.itemPadding = const EdgeInsets.symmetric(vertical: 4),
+      this.listPadding = EdgeInsets.zero})
       : super(key: key);
 
   @override
@@ -55,6 +59,7 @@ class _MyReorderableListState<T> extends State<MyReorderableList<T>> {
   @override
   Widget build(BuildContext context) {
     return ReorderableListView.builder(
+        padding: widget.listPadding,
         physics: widget.physics,
         proxyDecorator: widget.proxyDecoratorBuilder ??
             (child, index, animation) => DraggedItem(
@@ -63,8 +68,15 @@ class _MyReorderableListState<T> extends State<MyReorderableList<T>> {
                 ),
         shrinkWrap: true,
         itemCount: _items.length,
-        itemBuilder: (context, index) =>
-            widget.itemBuilder(context, index, _items[index]),
+        itemBuilder: (context, index) {
+          final child = widget.itemBuilder(context, index, _items[index]);
+
+          return Padding(
+            key: child.key,
+            padding: widget.itemPadding,
+            child: child,
+          );
+        },
         onReorder: _handleReorder);
   }
 }

@@ -9,16 +9,16 @@ class DraggedItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Transform.rotate(
-      angle: 0.01,
+      angle: 0.015,
       child: Container(
           decoration: BoxDecoration(
               borderRadius: borderRadius ?? BorderRadius.circular(6),
               boxShadow: [
                 BoxShadow(
-                  color: context.theme.primary.withOpacity(0.15),
-                  spreadRadius: 1,
-                  blurRadius: 1,
-                  offset: const Offset(1, 2), // changes position of shadow
+                  color: context.theme.primary.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 2,
+                  offset: const Offset(0, 1), // changes position of shadow
                 ),
               ]),
           child: child),

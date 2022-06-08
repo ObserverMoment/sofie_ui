@@ -1,5 +1,5 @@
-mutation updateWorkoutSession($data: UpdateWorkoutSessionInput!) {
-  updateWorkoutSession: updateWorkoutSession(data: $data) {
-    ...WorkoutSession
-  }
-}
+# mutation updateWorkoutSession($data: UpdateWorkoutSessionInput!) {
+#   updateWorkoutSession: updateWorkoutSession(data: $data) {
+#     ...WorkoutSession
+#   }
+# }

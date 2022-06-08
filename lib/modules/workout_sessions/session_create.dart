@@ -7,24 +7,21 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/text_input.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
-import 'package:sofie_ui/generated/api/graphql_api.dart';
 
-/// Allows user to enter the basic info required to create a workoutSession in the DB.
+/// Allows user to enter the basic info required to create a sesssion of any type (they all require a name when creating) in the DB.
 /// They can also abort here if they want and nothing will be created in the DB.
-class WorkoutSessionCreate extends StatefulWidget {
-  final void Function(CreateWorkoutSessionInput input) createWorkoutSession;
-  final bool creatingNewWorkoutSession;
-  const WorkoutSessionCreate(
-      {Key? key,
-      required this.createWorkoutSession,
-      required this.creatingNewWorkoutSession})
+class SessionCreate extends StatefulWidget {
+  final void Function(String name) createSession;
+  final bool creatingNewSession;
+  const SessionCreate(
+      {Key? key, required this.createSession, required this.creatingNewSession})
       : super(key: key);
 
   @override
-  State<WorkoutSessionCreate> createState() => _WorkoutSessionCreateState();
+  State<SessionCreate> createState() => _SessionCreateState();
 }
 
-class _WorkoutSessionCreateState extends State<WorkoutSessionCreate> {
+class _SessionCreateState extends State<SessionCreate> {
   final TextEditingController _nameController = TextEditingController();
 
   @override
@@ -41,14 +38,14 @@ class _WorkoutSessionCreateState extends State<WorkoutSessionCreate> {
     return MyPageScaffold(
       navigationBar: MyNavBar(
           customLeading: NavBarCancelButton(context.pop),
-          trailing: widget.creatingNewWorkoutSession
+          trailing: widget.creatingNewSession
               ? const NavBarLoadingIndicator()
               : null),
       child: ListView(children: [
         const Padding(
           padding: EdgeInsets.all(12.0),
           child: MyHeaderText(
-            'Name for this workout',
+            'Name for this session',
             size: FONTSIZE.four,
           ),
         ),
@@ -69,9 +66,8 @@ class _WorkoutSessionCreateState extends State<WorkoutSessionCreate> {
               padding: const EdgeInsets.all(16.0),
               child: PrimaryButton(
                   text: 'Create',
-                  loading: widget.creatingNewWorkoutSession,
-                  onPressed: () => widget.createWorkoutSession(
-                      CreateWorkoutSessionInput(name: _nameController.text))),
+                  loading: widget.creatingNewSession,
+                  onPressed: () => widget.createSession(_nameController.text)),
             ),
           )
       ]),

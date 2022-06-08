@@ -53,8 +53,8 @@ class GQLOpNames {
       UserScheduledWorkoutsQuery().operationName;
 
   //// Workout Session Related ////
-  static String get userWorkoutSessions =>
-      UserWorkoutSessionsQuery().operationName;
+  static String get userResistanceSessions =>
+      UserResistanceSessionsQuery().operationName;
 
   //// Archive Related ////
   static String get userArchivedWorkouts =>
@@ -91,8 +91,9 @@ class GQLVarParamKeys {
   static String userProfile(String id) => getParameterizedQueryId(
       UserProfileQuery(variables: UserProfileArguments(userId: id)));
 
-  static String workoutSessionById(String id) => getParameterizedQueryId(
-      WorkoutSessionByIdQuery(variables: WorkoutSessionByIdArguments(id: id)));
+  static String resistanceSessionById(String id) =>
+      getParameterizedQueryId(ResistanceSessionByIdQuery(
+          variables: ResistanceSessionByIdArguments(id: id)));
 
   static String workoutById(String id) => getParameterizedQueryId(
       WorkoutByIdQuery(variables: WorkoutByIdArguments(id: id)));

@@ -28,6 +28,24 @@ class MainTabsPage extends StatefulWidget {
 class _MainTabsPageState extends State<MainTabsPage> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
+  void _openSessionTypeSelector(BuildContext context) {
+    openBottomSheetMenu(
+        context: context,
+        child: BottomSheetMenu(
+            header: const BottomSheetMenuHeader(name: 'Select Type'),
+            items: [
+              BottomSheetMenuItem(text: 'Cardio', onPressed: () {}),
+              BottomSheetMenuItem(
+                  text: 'Resistance',
+                  onPressed: () =>
+                      context.navigateTo(ResistanceSessionCreatorRoute())),
+              BottomSheetMenuItem(text: 'Interval', onPressed: () => {}),
+              BottomSheetMenuItem(text: 'Mobility', onPressed: () => {}),
+              BottomSheetMenuItem(text: 'AMRAP', onPressed: () => {}),
+              BottomSheetMenuItem(text: 'For Time', onPressed: () => {}),
+            ]));
+  }
+
   Widget _buildTabItem({
     required TabsRouter tabsRouter,
     required int tabIndex,
@@ -138,8 +156,9 @@ class _MainTabsPageState extends State<MainTabsPage> {
                                       BottomSheetMenuItem(
                                           icon: MyCustomIcons.dumbbell,
                                           text: 'Create a new Workout',
-                                          onPressed: () => context.navigateTo(
-                                              WorkoutSessionCreatorRoute())),
+                                          onPressed: () =>
+                                              _openSessionTypeSelector(
+                                                  context)),
                                       BottomSheetMenuItem(
                                           icon: MyCustomIcons.plansIcon,
                                           text: 'Create a new Plan',

@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_set_creator/workout_set_definition.dart';
-import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_session/creator/resistance/display/resistance_set_display.dart';
 import "package:collection/collection.dart";
+import 'package:sofie_ui/modules/workout_sessions/resistance_session/display/resistance_set_display.dart';
 
 class ResistanceExerciseDisplay extends StatelessWidget {
   final ResistanceExercise resistanceExercise;

@@ -9,61 +9,29 @@ import 'package:sofie_ui/services/store/store_utils.dart';
 class ResistanceSessionBloc extends ChangeNotifier {
   /// The main data that gets edited on the client by the user.
   late ResistanceSession resistanceSession;
-  final String workoutSessionId;
 
   late Map<String, dynamic> _backup;
 
-  ResistanceSessionBloc(
-      {required ResistanceSession initial, required this.workoutSessionId}) {
+  late List<String> _storeQueryIds;
+
+  ResistanceSessionBloc(ResistanceSession initial) {
     resistanceSession = ResistanceSession.fromJson(initial.toJson());
     _backup = initial.toJson();
+    _storeQueryIds = [
+      GQLVarParamKeys.resistanceSessionById(resistanceSession.id),
+      GQLOpNames.userResistanceSessions,
+    ];
   }
 
   void _writeToStore(Map<String, dynamic> data) {
-    GraphQLStore.store.writeDataToStore(data: data, broadcastQueryIds: [
-      GQLVarParamKeys.workoutSessionById(workoutSessionId),
-      GQLOpNames.userWorkoutSessions,
-    ]);
+    GraphQLStore.store
+        .writeDataToStore(data: data, broadcastQueryIds: _storeQueryIds);
   }
 
   void _revertToBackup() {
     resistanceSession = ResistanceSession.fromJson(_backup);
     _writeToStore(_backup);
     notifyListeners();
-  }
-
-  static Future<ResistanceSession?> createResistanceSession(
-      {required String workoutSessionId}) async {
-    final result = await GraphQLStore.store.networkOnlyOperation(
-        operation: CreateResistanceSessionMutation(
-            variables: CreateResistanceSessionArguments(
-                data: CreateResistanceSessionInput(
-                    workoutSession:
-                        ConnectRelationInput(id: workoutSessionId)))));
-
-    return result.data?.createResistanceSession;
-  }
-
-  static Future<ResistanceSession?> duplicateResistanceSession({
-    required ResistanceSession resistanceSession,
-  }) async {
-    final result = await GraphQLStore.store.networkOnlyOperation(
-        operation: DuplicateResistanceSessionMutation(
-            variables:
-                DuplicateResistanceSessionArguments(id: resistanceSession.id)));
-
-    return result.data?.duplicateResistanceSession;
-  }
-
-  static Future<String?> deleteResistanceSession({
-    required ResistanceSession resistanceSession,
-  }) async {
-    final result = await GraphQLStore.store.networkOnlyOperation(
-        operation: DeleteResistanceSessionMutation(
-            variables:
-                DeleteResistanceSessionArguments(id: resistanceSession.id)));
-
-    return result.data?.deleteResistanceSession;
   }
 
   Future<void> updateResistanceSession(Map<String, dynamic> data) async {
@@ -74,10 +42,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
     notifyListeners();
 
     final result = await GraphQLStore.store.mutate(
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
         mutation: UpdateResistanceSessionMutation(
             variables: UpdateResistanceSessionArguments(
                 data: UpdateResistanceSessionInput.fromJson(
@@ -120,10 +85,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
 
       GraphQLStore.store.writeDataToStore(
         data: resistanceSession.toJson(),
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
       );
 
       _backup = resistanceSession.toJson();
@@ -147,10 +109,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
 
       GraphQLStore.store.writeDataToStore(
         data: resistanceSession.toJson(),
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
       );
 
       _backup = resistanceSession.toJson();
@@ -176,10 +135,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
     notifyListeners();
 
     final result = await GraphQLStore.store.mutate(
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
         mutation: UpdateResistanceExerciseMutation(
             variables: UpdateResistanceExerciseArguments(
                 data: UpdateResistanceExerciseInput.fromJson(
@@ -199,10 +155,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
     int moveTo,
   ) async {
     final result = await GraphQLStore.store.mutate(
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
         mutation: ReorderResistanceExerciseMutation(
             variables: ReorderResistanceExerciseArguments(
                 id: resistanceExerciseId, moveTo: moveTo)));
@@ -230,10 +183,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
         typename: kResistanceExerciseTypeName,
         objectId: resistanceExerciseId,
         removeAllRefsToId: true,
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
         mutation: DeleteResistanceExerciseMutation(
             variables:
                 DeleteResistanceExerciseArguments(id: resistanceExerciseId)));
@@ -251,6 +201,55 @@ class ResistanceSessionBloc extends ChangeNotifier {
   ///////////////////////////////
   /////// ResistanceSet /////////
   ///////////////////////////////
+  /// Add a ResistanceSet to an already existing ResistanceExercise ///
+  Future<void> createResistanceSet(String exerciseId, Move move) async {
+    final result = await GraphQLStore.store.mutate(
+        broadcastQueryIds: _storeQueryIds,
+        mutation: CreateResistanceSetMutation(
+            variables: CreateResistanceSetArguments(
+                data: CreateResistanceSetInput(
+                    move: ConnectRelationInput(id: move.id),
+                    resistanceExercise:
+                        ConnectRelationInput(id: exerciseId)))));
+
+    checkOperationResult(result, onFail: () {
+      /// Revert to backup and rebroadcast.
+      _revertToBackup();
+    }, onSuccess: () {
+      final newSet = result.data!.createResistanceSet;
+      ResistanceExercise resistanceExercise = resistanceSession
+          .resistanceExercises
+          .firstWhere((e) => e.id == exerciseId);
+      resistanceExercise.resistanceSets.add(newSet);
+      _backup = resistanceSession.toJson();
+    });
+
+    notifyListeners();
+  }
+
+  Future<void> duplicateResistanceSet(
+      String exerciseId, ResistanceSet resistanceSet) async {
+    final result = await GraphQLStore.store.mutate(
+        broadcastQueryIds: _storeQueryIds,
+        mutation: DuplicateResistanceSetMutation(
+            variables: DuplicateResistanceSetArguments(id: resistanceSet.id)));
+
+    checkOperationResult(result, onFail: () {
+      /// Revert to backup and rebroadcast.
+      _revertToBackup();
+    }, onSuccess: () {
+      final updatedSets = result.data!.duplicateResistanceSet;
+      ResistanceExercise resistanceExercise = resistanceSession
+          .resistanceExercises
+          .firstWhere((e) => e.id == exerciseId);
+
+      resistanceExercise.resistanceSets = updatedSets;
+      _backup = resistanceSession.toJson();
+    });
+
+    notifyListeners();
+  }
+
   Future<void> updateResistanceSet(
       String exerciseId, String setId, Map<String, dynamic> data) async {
     ResistanceExercise resistanceExercise = resistanceSession
@@ -270,10 +269,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
     notifyListeners();
 
     final result = await GraphQLStore.store.mutate(
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
         mutation: UpdateResistanceSetMutation(
             variables: UpdateResistanceSetArguments(
                 data: UpdateResistanceSetInput.fromJson(updateSet.toJson()))));
@@ -293,10 +289,7 @@ class ResistanceSessionBloc extends ChangeNotifier {
     int moveTo,
   ) async {
     final result = await GraphQLStore.store.mutate(
-        broadcastQueryIds: [
-          GQLVarParamKeys.workoutSessionById(workoutSessionId),
-          GQLOpNames.userWorkoutSessions,
-        ],
+        broadcastQueryIds: _storeQueryIds,
         mutation: ReorderResistanceSetMutation(
             variables: ReorderResistanceSetArguments(
                 id: resistanceSetId, moveTo: moveTo)));
@@ -310,6 +303,35 @@ class ResistanceSessionBloc extends ChangeNotifier {
           .resistanceSets = result.data!.reorderResistanceSet;
       _backup = resistanceSession.toJson();
     });
+    notifyListeners();
+  }
+
+  Future<void> deleteResistanceSet(
+    String resistanceExerciseId,
+    String resistanceSetId,
+  ) async {
+    resistanceSession.resistanceExercises
+        .firstWhere((e) => e.id == resistanceExerciseId)
+        .resistanceSets
+        .removeWhere((e) => e.id == resistanceSetId);
+
+    notifyListeners();
+
+    final result = await GraphQLStore.store.delete(
+        typename: kResistanceSetTypeName,
+        objectId: resistanceSetId,
+        removeAllRefsToId: true,
+        broadcastQueryIds: _storeQueryIds,
+        mutation: DeleteResistanceSetMutation(
+            variables: DeleteResistanceSetArguments(id: resistanceSetId)));
+
+    checkOperationResult(result, onFail: () {
+      /// Revert to backup and rebroadcast.
+      _revertToBackup();
+    }, onSuccess: () {
+      _backup = resistanceSession.toJson();
+    });
+
     notifyListeners();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/number_input.dart';
@@ -9,8 +8,8 @@ import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_session/creator/blocs/resistance_session_bloc.dart';
-import 'package:sofie_ui/modules/workout_session/creator/resistance/resistance_rep_type_selector.dart';
+import 'package:sofie_ui/modules/workout_sessions/resistance_session/components/resistance_rep_type_selector.dart';
+import 'package:sofie_ui/modules/workout_sessions/resistance_session/resistance_session_bloc.dart';
 
 class ResistanceSetEdit extends StatelessWidget {
   final ResistanceExercise resistanceExercise;
@@ -60,6 +59,7 @@ class ResistanceSetEdit extends StatelessWidget {
   Widget build(BuildContext context) {
     final reps = resistanceSet.reps;
     final setsPerMove = reps.length;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Column(
@@ -83,20 +83,25 @@ class ResistanceSetEdit extends StatelessWidget {
                   ),
                 ),
               ),
-              if (resistanceSet.equipment != null)
+              if (resistanceSet.move.selectableEquipments.isNotEmpty)
                 GestureDetector(
                   onTap: () => context.push(
                       fullscreenDialog: true,
                       child: FullScreenEquipmentSelector(
                         allowMultiSelect: false,
-                        selectedEquipments: [resistanceSet.equipment!],
+                        selectedEquipments: resistanceSet.equipment != null
+                            ? [resistanceSet.equipment!]
+                            : [],
                         allEquipments: resistanceSet.move.selectableEquipments,
                         handleSelection: (e) => _handleEquipmentUpdate(
                             context, e.isNotEmpty ? e[0] : null),
                       )),
                   child: Card(
                     child: MyText(
-                      resistanceSet.equipment!.name,
+                      resistanceSet.equipment != null
+                          ? resistanceSet.equipment!.name
+                          : 'select equipment',
+                      subtext: resistanceSet.equipment == null,
                     ),
                   ),
                 ),
