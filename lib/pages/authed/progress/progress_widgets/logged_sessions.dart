@@ -33,8 +33,8 @@ class LoggedSessionsWidget extends StatelessWidget {
                 BottomSheetMenuItem(
                     text: 'Schedule a Workout',
                     icon: CupertinoIcons.calendar_badge_plus,
-                    onPressed: () => context
-                        .navigateTo(YourScheduleRoute(openAtDate: date))),
+                    onPressed: () =>
+                        context.navigateTo(CalendarRoute(openAtDate: date))),
               ...(logsOnDay ?? [])
                   .map((l) => BottomSheetMenuItem(
                       text: 'View Log: ${l.name}',

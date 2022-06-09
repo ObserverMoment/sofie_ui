@@ -1438,7 +1438,6 @@ type Query {
   adminStandardFitnessBenchmarks: [FitnessBenchmark!]!
   announcementUpdates: [AnnouncementUpdate!]!
   bodyTrackingEntries: [BodyTrackingEntry!]!
-  cardioExerciseById(id: ID!): CardioExercise
   cardioSessionById(id: ID!): CardioSession
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
   checkUniqueClubName(name: String!): Boolean!
@@ -1503,11 +1502,11 @@ type Query {
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
-  userResistanceSessions: [ResistanceSession!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userSleepWellLogs: [UserSleepWellLog!]!
   userTrainingPlans: [TrainingPlanSummary!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
+  userWorkoutSessions: UserWorkoutSessions!
   userWorkoutTags: [WorkoutTag!]!
   userWorkouts: [WorkoutSummary!]!
   validateToken: Boolean!
@@ -2370,9 +2369,9 @@ type UserProfileSummary {
 }
 
 type UserRecentlyViewedObject {
-  Club: ClubSummary
-  Workout: WorkoutSummary
-  WorkoutPlan: WorkoutPlanSummary
+  id: String!
+  name: String!
+  type: String!
 }
 
 type UserSleepWellLog {
@@ -2383,6 +2382,21 @@ type UserSleepWellLog {
   note: String
   rating: UserDayLogRating!
   year: Int!
+}
+
+type UserWorkoutSessions {
+  AmrapSessions: [AmrapSession!]!
+  CardioSessions: [CardioSession!]!
+  ForTimeSessions: [ForTimeSession!]!
+  IntervalSessions: [IntervalSession!]!
+  MobilitySessions: [MobilitySession!]!
+  ResistanceSessions: [ResistanceSession!]!
+  SavedAmrapSessions: [AmrapSession!]!
+  SavedCardioSessions: [CardioSession!]!
+  SavedForTimeSessions: [ForTimeSession!]!
+  SavedIntervalSessions: [IntervalSession!]!
+  SavedMobilitySessions: [MobilitySession!]!
+  SavedResistanceSessions: [ResistanceSession!]!
 }
 
 type WelcomeTodoItem {

@@ -15,28 +15,27 @@ import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/text_search_filters.dart';
 
 /// Text search (client side only) your created and saved workouts.
-class YourWorkoutsTextSearch extends StatefulWidget {
-  const YourWorkoutsTextSearch({Key? key}) : super(key: key);
+class WorkoutsTextSearch extends StatefulWidget {
+  const WorkoutsTextSearch({Key? key}) : super(key: key);
 
   @override
-  _YourWorkoutsTextSearchState createState() => _YourWorkoutsTextSearchState();
+  State<WorkoutsTextSearch> createState() => _WorkoutsTextSearchState();
 }
 
-class _YourWorkoutsTextSearchState extends State<YourWorkoutsTextSearch> {
+class _WorkoutsTextSearchState extends State<WorkoutsTextSearch> {
   String _searchString = '';
 
   @override
   Widget build(BuildContext context) {
     /// Nested query observers a good idea? Both have a [storeFirst] fetch policy to avoid pummeling the api with requests.
     return QueryObserver<UserWorkouts$Query, json.JsonSerializable>(
-        key: Key(
-            'YourWorkoutsTextSearch - ${UserWorkoutsQuery().operationName}'),
+        key: Key('WorkoutsTextSearch - ${UserWorkoutsQuery().operationName}'),
         query: UserWorkoutsQuery(),
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (createdWorkoutsData) {
           return QueryObserver<UserCollections$Query, json.JsonSerializable>(
               key: Key(
-                  'YourWorkoutsTextSearch - ${UserCollectionsQuery().operationName}'),
+                  'WorkoutsTextSearch - ${UserCollectionsQuery().operationName}'),
               query: UserCollectionsQuery(),
               fetchPolicy: QueryFetchPolicy.storeFirst,
               builder: (savedWorkoutsData) {

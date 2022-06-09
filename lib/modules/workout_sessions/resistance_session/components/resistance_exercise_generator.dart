@@ -19,7 +19,7 @@ import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_sessions/resistance_session/components/resistance_rep_type_selector.dart';
 import 'package:sofie_ui/modules/workout_sessions/resistance_session/display/resistance_set_display.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
 
@@ -266,7 +266,7 @@ class _MoveSelectorUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return moves.isEmpty
-        ? YourContentEmptyPlaceholder(
+        ? ContentEmptyPlaceholder(
             message: 'Set Generator!',
             explainer:
                 'The set generator allow you to easily create simple sets or more complex sets such as supersets and rep ladders. Select your moves, choose your equipment, enter rep info and then hit generate!',
@@ -478,7 +478,7 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                             )
                           ],
                         )),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -493,7 +493,7 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
                                       height: 50,
                                       child: Padding(
                                         padding:
-                                            const EdgeInsets.only(left: 8.0),
+                                            const EdgeInsets.only(right: 8.0),
                                         child: MyStatefulNumberInput(
                                           initialValue: e.value.initialReps,
                                           update: (reps) => updateInitialReps(

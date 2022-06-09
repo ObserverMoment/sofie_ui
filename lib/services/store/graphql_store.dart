@@ -716,7 +716,7 @@ class GraphQLStore {
   }
 
   /// Retrieves data from a key and then recursively retrieves all of its children.
-  /// Children can be scalar or [$ref] objects and plain json Map is returned.
+  /// Children can be scalar or [$ref] objects where plain json Map is returned.
   Map<String, dynamic> readDenomalized(String key) {
     return readFromStoreDenormalized(key, _box);
   }

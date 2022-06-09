@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:auto_route/auto_route.dart';
@@ -62,10 +62,10 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
   }
 
   void _openWorkoutFinder() {
-    context.navigateTo(YourWorkoutsRoute(
-        pageTitle: 'Select Workout',
-        showSaved: false,
-        selectWorkout: (w) => _addWorkoutToClub(context, w)));
+    // context.navigateTo(WorkoutsRoute(
+    //     pageTitle: 'Select Workout',
+    //     showSaved: false,
+    //     selectWorkout: (w) => _addWorkoutToClub(context, w)));
   }
 
   Future<void> _addWorkoutToClub(
@@ -181,7 +181,7 @@ class _ClubWorkoutsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return workouts.isEmpty
-        ? const YourContentEmptyPlaceholder(message: 'No Workouts', actions: [])
+        ? const ContentEmptyPlaceholder(message: 'No Workouts', actions: [])
         : ImplicitlyAnimatedList<WorkoutSummary>(
             padding: const EdgeInsets.only(
                 top: 8, bottom: kAssumedFloatingButtonHeight),

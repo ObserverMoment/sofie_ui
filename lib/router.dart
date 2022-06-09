@@ -21,7 +21,6 @@ import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dar
 import 'package:sofie_ui/components/timers/timers_page.dart';
 import 'package:sofie_ui/modules/home/home_page.dart';
 import 'package:sofie_ui/modules/home/notifications_page.dart';
-import 'package:sofie_ui/modules/home/your_posts_page.dart';
 import 'package:sofie_ui/modules/profile/archive_page.dart';
 import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
 import 'package:sofie_ui/modules/profile/gym_profile/gym_profile_creator.dart';
@@ -31,6 +30,12 @@ import 'package:sofie_ui/modules/profile/settings_page.dart';
 import 'package:sofie_ui/modules/profile/skills/skills_page.dart';
 import 'package:sofie_ui/modules/profile/social/social_links_page.dart';
 import 'package:sofie_ui/modules/sign_in_registration/unauthed_landing_page.dart';
+import 'package:sofie_ui/modules/studio/calendar.dart';
+import 'package:sofie_ui/modules/studio/collections.dart';
+import 'package:sofie_ui/modules/studio/moves_library.dart';
+import 'package:sofie_ui/modules/studio/plans/plans.dart';
+import 'package:sofie_ui/modules/studio/studio_page.dart';
+import 'package:sofie_ui/modules/studio/workouts/workouts.dart';
 import 'package:sofie_ui/modules/workout_sessions/resistance_session/resistance_session_creator_page.dart';
 import 'package:sofie_ui/pages/authed/circles/circles_page.dart';
 import 'package:sofie_ui/pages/authed/circles/discover_clubs_page.dart';
@@ -48,14 +53,6 @@ import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_
 import 'package:sofie_ui/pages/authed/details_pages/workout_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/workout_plan_enrolment_details_page.dart';
-import 'package:sofie_ui/pages/authed/my_studio/my_studio_page.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_clubs.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_collections.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_moves_library.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_throwdowns.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_plans.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_schedule.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_workouts/your_workouts.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
 import 'package:sofie_ui/modules/main_tabs/main_tabs_page.dart';
 import 'package:sofie_ui/pages/authed/page_not_found.dart';
@@ -86,7 +83,18 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
               path: 'circles',
               page: CirclesPage,
             ),
-            AutoRoute(path: 'studio', page: MyStudioPage),
+            AutoRoute(
+                path: 'studio',
+                name: 'studioStack',
+                page: EmptyRouterPage,
+                children: [
+                  AutoRoute(path: '', page: StudioPage),
+                  AutoRoute(path: 'collections', page: CollectionsPage),
+                  AutoRoute(path: 'moves', page: MovesLibraryPage),
+                  AutoRoute(path: 'plans', page: PlansPage),
+                  AutoRoute(path: 'workouts', page: WorkoutsPage),
+                  RedirectRoute(path: '*', redirectTo: '')
+                ]),
             AutoRoute(
               path: 'progress',
               page: ProgressPage,
@@ -110,20 +118,12 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           AutoRoute(path: 'social-links', page: SocialLinksPage),
           AutoRoute(path: 'notifications', page: NotificationsPage),
           AutoRoute(path: 'edit-profile', page: EditProfilePage),
+          AutoRoute(path: 'gym-profiles', page: GymProfilesPage),
+          AutoRoute(path: 'calendar', page: CalendarPage),
+          AutoRoute(path: 'circles', page: CirclesPage),
 
           /// Misc
           AutoRoute(path: 'timers', page: TimersPage),
-
-          /// Users own content.
-          AutoRoute(path: 'your-clubs', page: YourClubsPage),
-          AutoRoute(path: 'your-collections', page: YourCollectionsPage),
-          AutoRoute(path: 'gym-profiles', page: GymProfilesPage),
-          AutoRoute(path: 'your-moves', page: YourMovesLibraryPage),
-          AutoRoute(path: 'your-plans', page: YourPlansPage),
-          AutoRoute(path: "your-posts", page: YourPostsPage),
-          AutoRoute(path: 'your-schedule', page: YourSchedulePage),
-          AutoRoute(path: 'your-throwdowns', page: YourThrowdownsPage),
-          AutoRoute(path: 'your-workouts', page: YourWorkoutsPage),
 
           /// User progress, stats and workout history
           AutoRoute(path: 'personal-scores', page: PersonalScoresPage),

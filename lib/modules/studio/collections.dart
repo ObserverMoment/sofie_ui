@@ -5,19 +5,18 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/cards/collection_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
-class YourCollectionsPage extends StatelessWidget {
-  const YourCollectionsPage({Key? key}) : super(key: key);
+class CollectionsPage extends StatelessWidget {
+  const CollectionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return QueryObserver<UserCollections$Query, json.JsonSerializable>(
-        key: Key(
-            'YourCollectionsPage - ${UserCollectionsQuery().operationName}'),
+        key: Key('CollectionsPage - ${UserCollectionsQuery().operationName}'),
         query: UserCollectionsQuery(),
         builder: (data) {
           final collections = data.userCollections
@@ -30,7 +29,7 @@ class YourCollectionsPage extends StatelessWidget {
                   headerSliverBuilder: (c, i) =>
                       [const MySliverNavbar(title: 'Collections')],
                   body: collections.isEmpty
-                      ? YourContentEmptyPlaceholder(
+                      ? ContentEmptyPlaceholder(
                           message: 'No collections yet',
                           explainer:
                               'Collections are a great way to organise your things! Group your workouts, plans and other content however you like and easily save new stuff here whenever you want.',

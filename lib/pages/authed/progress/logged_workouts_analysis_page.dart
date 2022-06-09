@@ -11,7 +11,7 @@ import 'package:sofie_ui/components/user_input/pickers/date_and_range_picker.dar
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/body_areas_targeted_widget.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/logged_workouts_history_page.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/log_analysis_averages_widget.dart';
@@ -81,7 +81,7 @@ class _LoggedWorkoutsAnalysisPageState
                 children: [
                   filteredSortedLogs.isEmpty
                       ? Expanded(
-                          child: YourContentEmptyPlaceholder(
+                          child: ContentEmptyPlaceholder(
                               message: 'No logs...',
                               explainer:
                                   'There is no workout log data available for the date range selected. ',

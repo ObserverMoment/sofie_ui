@@ -4,11 +4,11 @@ import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:auto_route/auto_route.dart';
@@ -64,7 +64,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
   }
 
   void _openWorkoutPlanFinder() {
-    context.navigateTo(YourPlansRoute(
+    context.navigateTo(PlansRoute(
         showCreateButton: true,
         showJoined: false,
         showSaved: false,
@@ -186,7 +186,7 @@ class _ClubWorkoutPlansList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return workoutPlans.isEmpty
-        ? const YourContentEmptyPlaceholder(message: 'No Plans', actions: [])
+        ? const ContentEmptyPlaceholder(message: 'No Plans', actions: [])
         : ImplicitlyAnimatedList<WorkoutPlanSummary>(
             padding: const EdgeInsets.only(
                 top: 8, bottom: kAssumedFloatingButtonHeight),

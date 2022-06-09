@@ -22,14 +22,14 @@ import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class YourSchedulePage extends StatefulWidget {
+class CalendarPage extends StatefulWidget {
   final DateTime? openAtDate;
-  const YourSchedulePage({Key? key, this.openAtDate}) : super(key: key);
+  const CalendarPage({Key? key, this.openAtDate}) : super(key: key);
   @override
-  _YourSchedulePageState createState() => _YourSchedulePageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _YourSchedulePageState extends State<YourSchedulePage> {
+class _CalendarPageState extends State<CalendarPage> {
   final ScrollController _scrollController = ScrollController();
   late DateTime _selectedDay;
   late DateTime _focusedDay;
@@ -74,9 +74,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
           items: [
             BottomSheetMenuItem(
                 text: 'Your Workouts',
-                onPressed: () => context.navigateTo(YourWorkoutsRoute(
-                    selectWorkout: (w) => _openScheduleWorkout(w),
-                    pageTitle: 'Select Workout'))),
+                onPressed: () => context.navigateTo(WorkoutsRoute())),
             BottomSheetMenuItem(
                 text: 'Public Workouts',
                 onPressed: () => context.navigateTo(PublicWorkoutFinderRoute(
@@ -103,8 +101,7 @@ class _YourSchedulePageState extends State<YourSchedulePage> {
   @override
   Widget build(BuildContext context) {
     return QueryObserver<UserScheduledWorkouts$Query, json.JsonSerializable>(
-      key: Key(
-          'YourSchedulePage - ${UserScheduledWorkoutsQuery().operationName}'),
+      key: Key('CalendarPage - ${UserScheduledWorkoutsQuery().operationName}'),
       query: UserScheduledWorkoutsQuery(),
       builder: (data) {
         final allScheduled =

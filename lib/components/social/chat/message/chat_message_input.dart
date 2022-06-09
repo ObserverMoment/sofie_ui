@@ -160,18 +160,18 @@ class ChatMessageInputState extends State<ChatMessageInput> {
   }
 
   Future<void> _pickWorkout() async {
-    context.navigateTo(YourWorkoutsRoute(
-        pageTitle: 'Select Workout',
-        showCreateButton: false,
-        selectWorkout: (workout) async {
-          await _sendMessage(Message(
-              extraData: _formatMessageExtraData(
-                  ChatMessageType.workout, workout.id, workout.name)));
-        }));
+    // context.navigateTo(WorkoutsRoute(
+    //     pageTitle: 'Select Workout',
+    //     showCreateButton: false,
+    //     selectWorkout: (workout) async {
+    //       await _sendMessage(Message(
+    //           extraData: _formatMessageExtraData(
+    //               ChatMessageType.workout, workout.id, workout.name)));
+    //     }));
   }
 
   Future<void> _pickWorkoutPlan() async {
-    context.navigateTo(YourPlansRoute(
+    context.navigateTo(PlansRoute(
         pageTitle: 'Select Plan',
         showCreateButton: false,
         selectPlan: (plan) async {

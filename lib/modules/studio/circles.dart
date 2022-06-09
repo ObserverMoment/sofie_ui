@@ -6,29 +6,29 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/cards/club_card.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:collection/collection.dart';
 
-enum ClubMemberTypeFilter { all, owner, member }
+enum CircleMemberTypeFilter { all, owner, member }
 
-class YourClubsPage extends StatefulWidget {
-  const YourClubsPage({Key? key}) : super(key: key);
+class CirclesPage extends StatefulWidget {
+  const CirclesPage({Key? key}) : super(key: key);
 
   @override
-  State<YourClubsPage> createState() => _YourClubsPageState();
+  State<CirclesPage> createState() => _CirclesPageState();
 }
 
-class _YourClubsPageState extends State<YourClubsPage> {
+class _CirclesPageState extends State<CirclesPage> {
   @override
   Widget build(BuildContext context) {
     final query = UserClubsQuery();
 
     return QueryObserver<UserClubs$Query, json.JsonSerializable>(
-        key: Key('YourClubsPage- ${query.operationName}'),
+        key: Key('CirclesPage- ${query.operationName}'),
         query: query,
         builder: (data) {
           return _FilterableClubsList(
@@ -47,7 +47,7 @@ class _FilterableClubsList extends StatefulWidget {
 }
 
 class __FilterableClubsListState extends State<_FilterableClubsList> {
-  ClubMemberTypeFilter _memberTypeFilter = ClubMemberTypeFilter.all;
+  CircleMemberTypeFilter _memberTypeFilter = CircleMemberTypeFilter.all;
   late String _authedUserId;
 
   @override
@@ -58,9 +58,9 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredClubs = _memberTypeFilter == ClubMemberTypeFilter.all
+    final filteredClubs = _memberTypeFilter == CircleMemberTypeFilter.all
         ? widget.clubs
-        : _memberTypeFilter == ClubMemberTypeFilter.owner
+        : _memberTypeFilter == CircleMemberTypeFilter.owner
             ? widget.clubs.where((c) => c.owner.id == _authedUserId)
             : widget.clubs.where((c) => c.owner.id != _authedUserId);
 
@@ -83,20 +83,20 @@ class __FilterableClubsListState extends State<_FilterableClubsList> {
               rowButtons: [
                 FABPageButtonContainer(
                   padding: EdgeInsets.zero,
-                  child: MySlidingSegmentedControl<ClubMemberTypeFilter>(
+                  child: MySlidingSegmentedControl<CircleMemberTypeFilter>(
                       margin: EdgeInsets.zero,
                       childPadding: const EdgeInsets.symmetric(vertical: 7.5),
                       value: _memberTypeFilter,
                       updateValue: (t) => setState(() => _memberTypeFilter = t),
                       children: const {
-                        ClubMemberTypeFilter.all: 'All',
-                        ClubMemberTypeFilter.owner: 'Owner',
-                        ClubMemberTypeFilter.member: 'Member',
+                        CircleMemberTypeFilter.all: 'All',
+                        CircleMemberTypeFilter.owner: 'Owner',
+                        CircleMemberTypeFilter.member: 'Member',
                       }),
                 ),
               ],
               child: sortedClubs.isEmpty
-                  ? YourContentEmptyPlaceholder(
+                  ? ContentEmptyPlaceholder(
                       message: 'No clubs to display',
                       explainer:
                           'Clubs are the heart of the Sofie experience! Use them to organise events and groups, share fitness stuff, build teams, sell services and merch, entertain fans, reward dedicated team members, create competitions and so much more!',

@@ -149,6 +149,7 @@ flutter:
     - assets/other_app_icons/
     - assets/placeholder_images/
     - assets/workout_filters_icons/
+    - assets/workout_session_icons/
     
   fonts:
   - family: Bauhaus

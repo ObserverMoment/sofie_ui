@@ -272,9 +272,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                         description:
                             'Share a workout you have created, found or are going to do!',
                         assetImageUri: 'assets/placeholder_images/workout.jpg',
-                        onPressed: () => context.navigateTo(YourWorkoutsRoute(
-                            pageTitle: 'Select Workout',
-                            selectWorkout: _selectWorkout)),
+                        onPressed: () => context.navigateTo(WorkoutsRoute()),
                       ),
                       ShareObjectTypeSelectorButton(
                           title: 'Workout Plan',
@@ -282,7 +280,7 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                               'Share a plan you have created, found or are going to do!',
                           assetImageUri: 'assets/placeholder_images/plan.jpg',
                           onPressed: () => context.navigateTo(
-                                YourPlansRoute(
+                                PlansRoute(
                                     selectPlan: _selectWorkoutPlan,
                                     showCreateButton: true,
                                     pageTitle: 'Select Plan'),

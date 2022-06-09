@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.da
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/modules/home/followers_following.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
@@ -99,7 +99,7 @@ class _AuthedUserFollowingState extends State<AuthedUserFollowing> {
         _isLoading
             ? const ShimmerCirclesGrid()
             : _following.isEmpty
-                ? YourContentEmptyPlaceholder(
+                ? ContentEmptyPlaceholder(
                     message: 'Not following anyone yet',
                     explainer:
                         "Keep up with the latest news and fitness content by subscribing to people's feeds.",

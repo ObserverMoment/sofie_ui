@@ -63,10 +63,10 @@ class _WorkoutPlanCreatorStructureWeekState
   WorkoutPlanCreatorBloc get bloc => context.read<WorkoutPlanCreatorBloc>();
 
   void _createWorkoutPlanDay(int dayIndex) {
-    context.navigateTo(YourWorkoutsRoute(
-        pageTitle: 'Select Workout',
-        selectWorkout: (w) => bloc.createWorkoutPlanDayWithWorkout(
-            dayNumberFromDayIndex(dayIndex), w)));
+    // context.navigateTo(WorkoutsRoute(
+    //     pageTitle: 'Select Workout',
+    //     selectWorkout: (w) => bloc.createWorkoutPlanDayWithWorkout(
+    //         dayNumberFromDayIndex(dayIndex), w)));
   }
 
   void _addNoteToWorkoutPlanDay(int dayIndex, String note) {
@@ -74,10 +74,10 @@ class _WorkoutPlanCreatorStructureWeekState
   }
 
   void _addWorkoutToPlanDay(int dayIndex) {
-    context.navigateTo(YourWorkoutsRoute(
-        pageTitle: 'Select Workout',
-        selectWorkout: (w) => bloc.createWorkoutPlanDayWorkout(
-            dayNumberFromDayIndex(dayIndex), w)));
+    // context.navigateTo(WorkoutsRoute(
+    //     pageTitle: 'Select Workout',
+    //     selectWorkout: (w) => bloc.createWorkoutPlanDayWorkout(
+    //         dayNumberFromDayIndex(dayIndex), w)));
   }
 
   /// Removes a [WorkoutPlanDayWorkout] from a [WorkoutPlanDay].

@@ -19,7 +19,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/modules/profile/skills/skill_creator.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -182,7 +182,7 @@ class _SkillsPageState extends State<SkillsPage> {
             middle: NavBarLargeTitle('Skills'),
           ),
           child: skills.isEmpty
-              ? YourContentEmptyPlaceholder(
+              ? ContentEmptyPlaceholder(
                   message: 'No skills added',
                   explainer:
                       'Add skills, qualifications, experience and areas of special interest to your profile. Help people looking for your skill to find you and check out what do!',

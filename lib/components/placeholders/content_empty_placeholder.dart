@@ -14,14 +14,14 @@ class EmptyPlaceholderAction {
 }
 
 /// E.g. if user has not created or saved any workouts - show this so that they can navigate somewhere to rectify the situation.
-class YourContentEmptyPlaceholder extends StatelessWidget {
+class ContentEmptyPlaceholder extends StatelessWidget {
   final String message;
 
   /// Useful for explaining what a function is used for - before the user has ever created one.
   final String? explainer;
   final bool showIcon;
   final List<EmptyPlaceholderAction> actions;
-  const YourContentEmptyPlaceholder({
+  const ContentEmptyPlaceholder({
     Key? key,
     this.message = 'Nothing to display',
     required this.actions,

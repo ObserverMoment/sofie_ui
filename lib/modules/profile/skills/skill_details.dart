@@ -4,7 +4,7 @@ import 'package:sofie_ui/components/media/multi_media_viewer.dart';
 import 'package:sofie_ui/components/read_more_text_block.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
@@ -27,7 +27,7 @@ class SkillDetails extends StatelessWidget {
       child: NestedScrollView(
         headerSliverBuilder: (c, i) => [MySliverNavbar(title: skill.name)],
         body: noInfo
-            ? const YourContentEmptyPlaceholder(
+            ? const ContentEmptyPlaceholder(
                 message: 'No details provided', actions: [])
             : ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 8),

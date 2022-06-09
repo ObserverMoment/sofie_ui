@@ -43,12 +43,16 @@ class _ResistanceSessionCreatorPageState
     });
 
     final result = await GraphQLStore.store.create<
-            CreateResistanceSession$Mutation, CreateResistanceSessionArguments>(
-        mutation: CreateResistanceSessionMutation(
-          variables: CreateResistanceSessionArguments(
-              data: CreateResistanceSessionInput(name: name)),
-        ),
-        addRefToQueries: [GQLOpNames.userResistanceSessions]);
+        CreateResistanceSession$Mutation, CreateResistanceSessionArguments>(
+      mutation: CreateResistanceSessionMutation(
+        variables: CreateResistanceSessionArguments(
+            data: CreateResistanceSessionInput(name: name)),
+      ),
+      processResult: (newSession) {
+        final prev = GraphQLStore.store.readDenomalized('userWorkoutSessions');
+        // prev.re
+      },
+    );
 
     checkOperationResult(result, onSuccess: () {
       _initBloc(result.data!.createResistanceSession);

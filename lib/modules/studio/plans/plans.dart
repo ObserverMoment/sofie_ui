@@ -2,22 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_created_workout_plans.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_enroled_workout_plans.dart';
-import 'package:sofie_ui/pages/authed/my_studio/your_plans/your_saved_workout_plans.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:collection/collection.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
-class YourPlansPage extends StatefulWidget {
+class PlansPage extends StatefulWidget {
   final void Function(WorkoutPlanSummary plan)? selectPlan;
   final bool showCreateButton;
   final bool showDiscoverButton;
   final String pageTitle;
   final bool showJoined;
   final bool showSaved;
-  const YourPlansPage({
+  const PlansPage({
     Key? key,
     this.selectPlan,
     this.showCreateButton = false,
@@ -28,10 +25,10 @@ class YourPlansPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _YourPlansPageState createState() => _YourPlansPageState();
+  State<PlansPage> createState() => _PlansPageState();
 }
 
-class _YourPlansPageState extends State<YourPlansPage> {
+class _PlansPageState extends State<PlansPage> {
   /// 0 = CreatedPlans, 1 = Participating in plans, 2 = saved to collections
   int _activeTabIndex = 0;
 
@@ -66,7 +63,7 @@ class _YourPlansPageState extends State<YourPlansPage> {
   /// Then passes the selected plan to the parent.
   void _handlePlanSelect(WorkoutPlanSummary plan) {
     /// If the text search is open then we pop back to the main widget.
-    context.router.popUntilRouteWithName(YourPlansRoute.name);
+    context.router.popUntilRouteWithName(PlansRoute.name);
     context.pop();
     widget.selectPlan?.call(plan);
   }
@@ -90,26 +87,26 @@ class _YourPlansPageState extends State<YourPlansPage> {
                           children: _segmentChildren),
                     ),
                   ),
-                Expanded(
-                    child: IndexedStack(
-                  index: _activeTabIndex,
-                  children: [
-                    if (widget.showJoined)
-                      YourWorkoutPlanEnrolments(
-                        selectPlan: _selectPlan,
-                        showDiscoverButton: widget.showDiscoverButton,
-                      ),
-                    if (widget.showSaved)
-                      YourSavedPlans(
-                        showDiscoverButton: widget.showDiscoverButton,
-                        selectWorkoutPlan: _selectPlan,
-                      ),
-                    YourCreatedPlans(
-                      showDiscoverButton: widget.showDiscoverButton,
-                      selectWorkoutPlan: _selectPlan,
-                    ),
-                  ],
-                ))
+                // Expanded(
+                //     child: IndexedStack(
+                //   index: _activeTabIndex,
+                //   children: [
+                //     if (widget.showJoined)
+                //       YourWorkoutPlanEnrolments(
+                //         selectPlan: _selectPlan,
+                //         showDiscoverButton: widget.showDiscoverButton,
+                //       ),
+                //     if (widget.showSaved)
+                //       YourSavedPlans(
+                //         showDiscoverButton: widget.showDiscoverButton,
+                //         selectWorkoutPlan: _selectPlan,
+                //       ),
+                //     YourCreatedPlans(
+                //       showDiscoverButton: widget.showDiscoverButton,
+                //       selectWorkoutPlan: _selectPlan,
+                //     ),
+                //   ],
+                // ))
               ],
             )));
   }

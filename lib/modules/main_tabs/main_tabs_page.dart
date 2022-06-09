@@ -4,29 +4,18 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/logo.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/modules/main_tabs/profile_settings_drawer.dart';
-import 'package:sofie_ui/modules/profile/user_avatar/user_avatar_display.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Scaffold for the main top level tabs view.
-class MainTabsPage extends StatefulWidget {
+class MainTabsPage extends StatelessWidget {
   const MainTabsPage({Key? key}) : super(key: key);
-
-  @override
-  State<MainTabsPage> createState() => _MainTabsPageState();
-}
-
-class _MainTabsPageState extends State<MainTabsPage> {
-  final GlobalKey<ScaffoldState> _key = GlobalKey();
 
   void _openSessionTypeSelector(BuildContext context) {
     openBottomSheetMenu(
@@ -69,41 +58,14 @@ class _MainTabsPageState extends State<MainTabsPage> {
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
-        scaffoldKey: _key,
         // https://github.com/Milad-Akarie/auto_route_library/issues/619#issuecomment-945187688
         backgroundColor: context.theme.background,
         routes: const [
           HomeRoute(),
           CirclesRoute(),
-          MyStudioRoute(),
+          StudioStack(),
           ProgressRoute(),
         ],
-        appBarBuilder: (context, tabsRouter) => MyNavBar(
-              customLeading: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Logo(size: 24),
-                  SizedBox(width: 3),
-                  LogoText(
-                    fontSize: 18,
-                  )
-                ],
-              ),
-              trailing: NavBarTrailingRow(
-                children: [
-                  const ChatsIconButton(),
-                  const NotificationsIconButton(),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6.0),
-                    child: CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        child: const UserAvatarDisplay(size: 40),
-                        onPressed: () => _key.currentState!.openEndDrawer()),
-                  )
-                ],
-              ),
-            ),
         floatingActionButton: FloatingActionButton(
           elevation: 10,
           backgroundColor: Styles.primaryAccent,
@@ -111,7 +73,6 @@ class _MainTabsPageState extends State<MainTabsPage> {
           child: const Icon(CupertinoIcons.quote_bubble),
           onPressed: () => Utils.openUserFeedbackPage(context),
         ),
-        endDrawer: const ProfileSettingsDrawer(),
         bottomNavigationBuilder: (context, tabsRouter) => ClipRect(
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),

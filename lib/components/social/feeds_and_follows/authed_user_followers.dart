@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.da
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/modules/home/followers_following.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 
@@ -96,7 +96,7 @@ class _AuthedUserFollowersState extends State<AuthedUserFollowers> {
         _isLoading
             ? const ShimmerCirclesGrid()
             : _followers.isEmpty
-                ? const YourContentEmptyPlaceholder(
+                ? const ContentEmptyPlaceholder(
                     message: 'No followers yet',
                     explainer:
                         'Anyone who subscribes to your feed will show here. Easily keep in touch with your friends and fans!',

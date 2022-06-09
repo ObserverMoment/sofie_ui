@@ -1,13 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/cards/club_card.dart';
-import 'package:sofie_ui/components/cards/workout_card.dart';
-import 'package:sofie_ui/components/cards/workout_plan_card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
-import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Uses the same logic as [ProfilePage] to watch the router and re-query for recently viewed items whenever the user pushes or pops to this page.
@@ -75,30 +71,6 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
     }
   }
 
-  Widget _buildRecentObjectCard(
-      BuildContext context, UserRecentlyViewedObject object) {
-    if (object.club != null) {
-      return GestureDetector(
-          onTap: () =>
-              context.navigateTo(ClubDetailsRoute(id: object.club!.id)),
-          child: ClubCard(club: object.club!));
-    } else if (object.workout != null) {
-      return GestureDetector(
-          onTap: () =>
-              context.navigateTo(WorkoutDetailsRoute(id: object.workout!.id)),
-          child: WorkoutCard(object.workout!));
-    } else if (object.workoutPlan != null) {
-      return GestureDetector(
-          onTap: () => context
-              .navigateTo(WorkoutPlanDetailsRoute(id: object.workoutPlan!.id)),
-          child: WorkoutPlanCard(object.workoutPlan!));
-    } else {
-      printLog(
-          'RecentlyViewedObjects._buildRecentObjectCard: No valid sub field was found for $object');
-      return Container();
-    }
-  }
-
   @override
   void dispose() {
     _router.root.removeListener(_didPopOrSwitchToThisRoute);
@@ -135,7 +107,6 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _recents.length,
                 separatorBuilder: (c, i) => const SizedBox(height: 16),
-                itemBuilder: (c, i) =>
-                    _buildRecentObjectCard(context, _recents[i]));
+                itemBuilder: (c, i) => MyText(_recents[i].name));
   }
 }

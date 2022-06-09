@@ -12,7 +12,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
@@ -203,9 +203,8 @@ class _YourPostsPageState extends State<YourPostsPage> {
                 const CupertinoActivityIndicator(),
             newPageProgressIndicatorBuilder: (c) =>
                 const CupertinoActivityIndicator(),
-            noItemsFoundIndicatorBuilder: (c) =>
-                const YourContentEmptyPlaceholder(
-                    message: 'No posts yet', actions: []),
+            noItemsFoundIndicatorBuilder: (c) => const ContentEmptyPlaceholder(
+                message: 'No posts yet', actions: []),
           ),
         ),
       ),

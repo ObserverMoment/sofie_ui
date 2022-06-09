@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/exercise_trackers_bloc.dart';
 import 'package:sofie_ui/pages/authed/progress/exercise_tracker_components/user_max_load_exercise_display_widget.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -40,7 +40,7 @@ class ExerciseTrackersDashboard extends StatelessWidget {
         ),
         userExerciseLoadTrackers.isEmpty
             ? Center(
-                child: YourContentEmptyPlaceholder(
+                child: ContentEmptyPlaceholder(
                     message: 'Track lifting progress over time.',
                     explainer:
                         'Define your trackers here and then your scores will auto update when you log workouts.',

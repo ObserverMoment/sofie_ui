@@ -20,7 +20,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:uuid/uuid.dart';
@@ -359,7 +359,7 @@ class _MoveSelectorUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return moves.isEmpty
-        ? YourContentEmptyPlaceholder(
+        ? ContentEmptyPlaceholder(
             message: 'Set Generator!',
             explainer:
                 'The set generator allow you to easily create more complex sets such as supersets, rep ladders and load ladders. Select your moves, choose your equipment, enter reps and load info and then hit generate!',

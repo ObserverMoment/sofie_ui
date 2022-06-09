@@ -10,7 +10,7 @@ import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/services/data_utils.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -107,7 +107,7 @@ class ExerciseLoadTrackerCreatorPageState
         onCancel: context.pop,
       ),
       child: _move == null
-          ? YourContentEmptyPlaceholder(
+          ? ContentEmptyPlaceholder(
               message: 'Track progress over time for your lifts!',
               explainer:
                   'Specify move, equipment and number of reps. For e.g. "3 Reps of Bench Press with Barbell". Anything that you log during a workout will be automatically submitted!',

@@ -5,6 +5,7 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/move_list_item.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/move_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/screens/move_filters_screen.dart';
@@ -12,7 +13,6 @@ import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.da
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/pages/authed/my_studio/components/your_content_empty_placeholder.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/core_data_repo.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
@@ -21,14 +21,14 @@ import 'package:sofie_ui/services/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:collection/collection.dart';
 
-class YourMovesLibraryPage extends StatefulWidget {
-  const YourMovesLibraryPage({Key? key}) : super(key: key);
+class MovesLibraryPage extends StatefulWidget {
+  const MovesLibraryPage({Key? key}) : super(key: key);
 
   @override
-  State<YourMovesLibraryPage> createState() => _YourMovesLibraryPageState();
+  State<MovesLibraryPage> createState() => _MovesLibraryPageState();
 }
 
-class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
+class _MovesLibraryPageState extends State<MovesLibraryPage> {
   /// 0 is standard moves, 1 is custom moves.
   int _activeTabIndex = 0;
   String _searchString = '';
@@ -68,7 +68,7 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
 
     /// Also used in WorkoutMoveCreator, hence [onCancel] which is not needed here.
     return QueryObserver<CustomMoves$Query, json.JsonSerializable>(
-        key: Key('YourMovesLibraryPage - ${CustomMovesQuery().operationName}'),
+        key: Key('MovesLibraryPage - ${CustomMovesQuery().operationName}'),
         query: CustomMovesQuery(),
         builder: (customMovesData) {
           final customMoves = customMovesData.customMoves;
@@ -143,7 +143,7 @@ class _YourMovesLibraryPageState extends State<YourMovesLibraryPage> {
                       ),
                     ),
                     if (filteredMoves.isEmpty)
-                      const YourContentEmptyPlaceholder(
+                      const ContentEmptyPlaceholder(
                           message: 'No moves to display',
                           explainer:
                               'If there is a move that you think we have missed then please let us know! Or you can always make your own custom moves, especially useful for unusual, compound or adapted moves.',
