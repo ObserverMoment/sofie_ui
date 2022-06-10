@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 /// Display for either the front or back of the body, with targeted areas highlighted.

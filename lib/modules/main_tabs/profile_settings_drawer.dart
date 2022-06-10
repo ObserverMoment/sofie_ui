@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
@@ -40,6 +41,7 @@ class ProfileSettingsDrawer extends StatelessWidget {
                 Container(
                   color: context.theme.barBackground,
                   child: SafeArea(
+                    bottom: false,
                     child: Column(
                       children: [
                         Column(
@@ -69,7 +71,9 @@ class ProfileSettingsDrawer extends StatelessWidget {
                         const SizedBox(height: 16),
                         if (Utils.textNotNull(profile?.displayName))
                           MyHeaderText(profile!.displayName),
-                        const SizedBox(height: 16)
+                        const SizedBox(height: 8),
+                        const CalendarLinkTile(),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
@@ -93,13 +97,6 @@ class ProfileSettingsDrawer extends StatelessWidget {
                           onPress: () {
                             context.pop();
                             context.navigateTo(const EditProfileRoute());
-                          }),
-                      PageLink(
-                          linkText: 'Gym Profiles',
-                          icon: MyCustomIcons.clubsIcon,
-                          onPress: () {
-                            context.pop();
-                            context.navigateTo(const GymProfilesRoute());
                           }),
                       if (profile != null)
                         PageLink(
@@ -151,5 +148,28 @@ class ProfileSettingsDrawer extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+class CalendarLinkTile extends StatelessWidget {
+  const CalendarLinkTile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        context.pop();
+        context.navigateTo(CalendarRoute());
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        child: SvgPicture.asset(
+          'assets/category_icons/calendar_icon.svg',
+          height: 70,
+          color: context.theme.primary,
+        ),
+      ),
+    );
   }
 }

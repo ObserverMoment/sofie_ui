@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/edit/resistance_session_edit.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/resistance_session_bloc.dart';
-import 'package:sofie_ui/modules/workout_sessions/session_create.dart';
-import 'package:sofie_ui/services/graphql_operation_names.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/edit/resistance_session_edit.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_bloc.dart';
+import 'package:sofie_ui/modules/workout_session/session_create.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 

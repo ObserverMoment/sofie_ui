@@ -158,3 +158,6 @@ flutter:
   - family: MyCustomIcons
     fonts:
     - asset: fonts/MyCustomIcons.ttf
+  - family: SessionType
+    fonts:
+    - asset: fonts/SessionType.ttf

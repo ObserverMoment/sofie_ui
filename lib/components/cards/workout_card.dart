@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';

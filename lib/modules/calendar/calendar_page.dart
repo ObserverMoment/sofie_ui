@@ -24,7 +24,9 @@ import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
   final DateTime? openAtDate;
-  const CalendarPage({Key? key, this.openAtDate}) : super(key: key);
+  final String? previousPageTitle;
+  const CalendarPage({Key? key, this.openAtDate, this.previousPageTitle})
+      : super(key: key);
   @override
   State<CalendarPage> createState() => _CalendarPageState();
 }
@@ -72,9 +74,9 @@ class _CalendarPageState extends State<CalendarPage> {
             name: 'Schedule a Workout From',
           ),
           items: [
-            BottomSheetMenuItem(
-                text: 'Your Workouts',
-                onPressed: () => context.navigateTo(WorkoutsRoute())),
+            // BottomSheetMenuItem(
+            //     text: 'Your Workouts',
+            //     onPressed: () => context.navigateTo(WorkoutsRoute())),
             BottomSheetMenuItem(
                 text: 'Public Workouts',
                 onPressed: () => context.navigateTo(PublicWorkoutFinderRoute(
@@ -113,6 +115,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
         return MyPageScaffold(
             navigationBar: MyNavBar(
+              previousPageTitle: widget.previousPageTitle,
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,

@@ -12,7 +12,7 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/fitness_benchmark_components/user_fitness_benchmark_details.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 
 /// A list of all standard (in app) and custom (user generated) fitness benchmarks, broken down into categories.
 /// User can browse and then 'activate' benchmarks.

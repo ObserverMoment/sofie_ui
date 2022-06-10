@@ -4,7 +4,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/selectors/selectable_boxes.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 
 class MoveTypeSelector extends StatelessWidget {
   final MoveType? moveType;

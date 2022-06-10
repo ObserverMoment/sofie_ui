@@ -18,6 +18,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout/move_details.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/extensions/graphql_type_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';

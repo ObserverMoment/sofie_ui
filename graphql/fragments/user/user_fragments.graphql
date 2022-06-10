@@ -93,6 +93,8 @@ fragment Collection on Collection {
 fragment GymProfile on GymProfile {
   __typename
   id
+  createdAt
+  updatedAt
   name
   description
 }

@@ -11,7 +11,7 @@ import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/profile/gym_profile/gym_profile_card.dart';
+import 'package:sofie_ui/modules/gym_profile/gym_profile_card.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 

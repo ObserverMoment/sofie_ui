@@ -125,6 +125,38 @@ Object? denormalizeObject({required Object? data, required Box box}) {
   }
 }
 
+//// @experimental
+Object? readFromStoreDenormalizedTest(
+    {required Object? object, required Map<String, dynamic> data}) {
+  return denormalizeObjectTest(object: object, data: data);
+}
+
+/// @Experimental
+/// Recursive function which will denormalize a normalized object.
+/// [object]: The object to be denormalized.
+/// [data]: The full normalized data object where ref data can be retrieved. Gets passed down the recursion.
+Object? denormalizeObjectTest(
+    {required Object? object, required Map<String, dynamic> data}) {
+  if (object is Map<String, dynamic>) {
+    return object.entries.fold<Map<String, dynamic>>({}, (acum, e) {
+      if (e.key == kStoreReferenceKey) {
+        return Map<String, dynamic>.from(
+            denormalizeObjectTest(object: e.value, data: data)
+                as Map<String, dynamic>);
+      } else {
+        acum[e.key] = denormalizeObjectTest(object: e.value, data: data);
+        return acum;
+      }
+    });
+  } else if (object is List) {
+    return object
+        .map((obj) => denormalizeObjectTest(object: obj, data: data))
+        .toList();
+  } else {
+    return data;
+  }
+}
+
 String? resolveDataId(Map<String, dynamic> data) {
   if (data['__typename'] == null) {
     /// Cannot normalize an object without a data["__typename"] field as this is required to resolve the unique id.

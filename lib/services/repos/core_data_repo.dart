@@ -7,11 +7,11 @@ class CoreDataRepo {
   static List<BodyArea> bodyAreas = [];
   static List<Equipment> equipment = [];
   static List<MoveType> moveTypes = [];
-  static List<WorkoutGoal> workoutGoals = [];
-  static List<WorkoutSectionType> workoutSectionTypes = [];
-  static List<Move> standardMoves = [];
   static List<ProgressWidget> progressWidgets = [];
   static List<FitnessBenchmarkCategory> fitnessBenchmarkCategories = [];
+  /// TODO: Deprecated.
+  static List<WorkoutGoal> workoutGoals = [];
+  static List<WorkoutSectionType> workoutSectionTypes = [];
 
   static Future<void> initCoreData(BuildContext context) async {
     final result = await GraphQLStore.store
@@ -24,11 +24,10 @@ class CoreDataRepo {
           bodyAreas = coreData.bodyAreas;
           equipment = coreData.equipment;
           moveTypes = coreData.moveTypes;
-          workoutGoals = coreData.workoutGoals;
-          workoutSectionTypes = coreData.workoutSectionTypes;
-          standardMoves = coreData.standardMoves;
           progressWidgets = coreData.progressWidgets;
           fitnessBenchmarkCategories = coreData.fitnessBenchmarkCategories;
+          workoutSectionTypes = coreData.workoutSectionTypes;
+          workoutGoals = coreData.workoutGoals;
         });
   }
 }

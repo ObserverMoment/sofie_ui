@@ -3,7 +3,7 @@ import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/data_vis/percentage_bar_chart.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/widget_header.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 import 'package:collection/collection.dart';
 
 class WorkoutGoalsTargetedWidget extends StatelessWidget {

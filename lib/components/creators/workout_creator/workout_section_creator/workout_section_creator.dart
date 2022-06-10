@@ -21,8 +21,9 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 import 'package:sofie_ui/services/default_object_factory.dart';
+import 'package:sofie_ui/services/repos/move_data.repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class WorkoutSectionCreator extends StatefulWidget {
@@ -203,7 +204,7 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
 
     /// Need to get the Move [Rest] for use when user taps [+ Add Rest]
     final restMove =
-        CoreDataRepo.standardMoves.firstWhere((m) => m.id == kRestMoveId);
+        MoveDataRepo.standardMoves.firstWhere((m) => m.id == kRestMoveId);
 
     return MyPageScaffold(
       navigationBar: MyNavBar(

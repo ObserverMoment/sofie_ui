@@ -1,16 +1,15 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/widgets.dart';
-import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
+import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class MyTabBarView extends StatefulWidget {
   final List<String> tabs;
   final List<Widget> pages;
-  const MyTabBarView({Key? key, required this.tabs, required this.pages})
+  final Widget? leading;
+  const MyTabBarView(
+      {Key? key, required this.tabs, required this.pages, this.leading})
       : assert(tabs.length == pages.length,
             '[must supply the same number of tabs and pages]'),
         super(key: key);
@@ -42,31 +41,42 @@ class _MyTabBarViewState extends State<MyTabBarView>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: context.theme.barBackground,
+      color: context.theme.background,
       child: Column(
         children: [
-          Align(
+          Container(
+            height: 46,
             alignment: Alignment.centerLeft,
-            child: TabBar(
-              isScrollable: true,
-              controller: _tabController,
-              indicatorWeight: 3,
-              tabs: widget.tabs
-                  .mapIndexed((i, t) => Tab(
-                      height: 40,
-                      child: Text(
-                        t,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      )))
-                  .toList(),
-              indicatorSize: TabBarIndicatorSize.label,
-              indicatorColor: Styles.primaryAccent,
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              children: [
+                if (widget.leading != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: widget.leading!,
+                  ),
+                ...widget.tabs
+                    .mapIndexed((i, t) => Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: SelectableTag(
+                            isSelected: _tabController.index == i,
+                            onPressed: () => _tabController.animateTo(i),
+                            text: widget.tabs[i],
+                          ),
+                        ))
+                    .toList(),
+              ],
             ),
+          ),
+          const HorizontalLine(
+            verticalPadding: 8,
           ),
           Expanded(
             child: TabBarView(
               controller: _tabController,
+              physics: const NeverScrollableScrollPhysics(),
               children: widget.pages,
             ),
           ),

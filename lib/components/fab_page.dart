@@ -160,7 +160,7 @@ class FABPageButtonContainer extends StatelessWidget {
   const FABPageButtonContainer(
       {Key? key,
       required this.child,
-      this.padding = const EdgeInsets.all(12),
+      this.padding = const EdgeInsets.all(16),
       this.gradient = Styles.primaryAccentGradient,
       this.margin = EdgeInsets.zero,
       this.width})
@@ -174,8 +174,7 @@ class FABPageButtonContainer extends StatelessWidget {
       width: width,
       decoration: BoxDecoration(
           boxShadow: kElevation[6],
-          gradient: Styles.primaryAccentGradient,
-          border: Border.all(color: context.theme.primary, width: 2),
+          color: Styles.primaryAccent,
           borderRadius: BorderRadius.circular(60)),
       child: child,
     );

@@ -114,6 +114,8 @@ class SelectableTag extends StatelessWidget {
       onTap: onPressed,
       child: AnimatedContainer(
         curve: Curves.easeIn,
+        height: 40,
+        alignment: Alignment.center,
         duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
             border: isSelected

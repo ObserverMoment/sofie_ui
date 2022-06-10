@@ -9,10 +9,6 @@ import 'package:supercharged/supercharged.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
-extension EquipmentExtension on Equipment {
-  bool get isBodyweight => id == kBodyweightEquipmentId;
-}
-
 extension LoggedWorkoutExtension on LoggedWorkout {
   /// Returns a copy of the LoggedWorkout
   /// with its LoggedWorkoutSections sorted correctly by [sortPosition].

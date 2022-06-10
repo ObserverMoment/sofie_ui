@@ -8,8 +8,8 @@ import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/components/resistance_rep_type_selector.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/resistance_session_bloc.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/components/resistance_rep_type_selector.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_bloc.dart';
 
 class ResistanceSetEdit extends StatelessWidget {
   final ResistanceExercise resistanceExercise;

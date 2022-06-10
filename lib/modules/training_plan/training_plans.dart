@@ -7,14 +7,14 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:collection/collection.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
-class PlansPage extends StatefulWidget {
+class TrainingPlansPage extends StatefulWidget {
   final void Function(WorkoutPlanSummary plan)? selectPlan;
   final bool showCreateButton;
   final bool showDiscoverButton;
   final String pageTitle;
   final bool showJoined;
   final bool showSaved;
-  const PlansPage({
+  const TrainingPlansPage({
     Key? key,
     this.selectPlan,
     this.showCreateButton = false,
@@ -25,10 +25,10 @@ class PlansPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<PlansPage> createState() => _PlansPageState();
+  State<TrainingPlansPage> createState() => _TrainingPlansPageState();
 }
 
-class _PlansPageState extends State<PlansPage> {
+class _TrainingPlansPageState extends State<TrainingPlansPage> {
   /// 0 = CreatedPlans, 1 = Participating in plans, 2 = saved to collections
   int _activeTabIndex = 0;
 
@@ -63,7 +63,7 @@ class _PlansPageState extends State<PlansPage> {
   /// Then passes the selected plan to the parent.
   void _handlePlanSelect(WorkoutPlanSummary plan) {
     /// If the text search is open then we pop back to the main widget.
-    context.router.popUntilRouteWithName(PlansRoute.name);
+    context.router.popUntilRouteWithName(TrainingPlansRoute.name);
     context.pop();
     widget.selectPlan?.call(plan);
   }

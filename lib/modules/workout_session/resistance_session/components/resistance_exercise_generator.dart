@@ -17,9 +17,9 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/components/resistance_rep_type_selector.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/display/resistance_set_display.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/components/resistance_rep_type_selector.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/display/resistance_set_display.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
 

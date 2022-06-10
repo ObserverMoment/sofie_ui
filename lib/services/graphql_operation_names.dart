@@ -35,8 +35,6 @@ class GQLOpNames {
   static String get userClubs => UserClubsQuery().operationName;
   static String get userCollections => UserCollectionsQuery().operationName;
 
-  static String get customMoves => CustomMovesQuery().operationName;
-
   static String get userLoggedWorkouts =>
       UserLoggedWorkoutsQuery().operationName;
 
@@ -53,8 +51,10 @@ class GQLOpNames {
       UserScheduledWorkoutsQuery().operationName;
 
   //// Workout Session Related ////
-  static String get userWorkoutSessions =>
-      UserWorkoutSessionsQuery().operationName;
+  static String get userResistanceSessions =>
+      UserResistanceSessionsQuery().operationName;
+  static String get userSavedResistanceSessions =>
+      UserSavedResistanceSessionsQuery().operationName;
 
   //// Archive Related ////
   static String get userArchivedWorkouts =>

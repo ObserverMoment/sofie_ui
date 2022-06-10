@@ -37,7 +37,7 @@ import 'package:sofie_ui/pages/authed/progress/progress_widgets/logged_sessions.
 import 'package:sofie_ui/pages/authed/progress/progress_widgets/sleep_well_logs.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_widgets/streak_summary.dart';
 import 'package:sofie_ui/router.gr.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';

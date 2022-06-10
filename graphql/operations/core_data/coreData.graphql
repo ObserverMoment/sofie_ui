@@ -10,35 +10,17 @@ query coreData {
     moveTypes {
       ...MoveType
     }
-    workoutGoals {
-      ...WorkoutGoal
-    }
-    workoutSectionTypes {
-      ...WorkoutSectionType
-    }
-    standardMoves {
-      ...Move
-      MoveType {
-        ...MoveType
-      }
-      BodyAreaMoveScores {
-        score
-        BodyArea {
-          ...BodyArea
-        }
-      }
-      RequiredEquipments {
-        ...Equipment
-      }
-      SelectableEquipments {
-        ...Equipment
-      }
-    }
     progressWidgets {
       ...ProgressWidget
     }
     fitnessBenchmarkCategories {
       ...FitnessBenchmarkCategory
+    }
+    workoutGoals {
+      ...WorkoutGoal
+    }
+    workoutSectionTypes {
+      ...WorkoutSectionType
     }
   }
 }

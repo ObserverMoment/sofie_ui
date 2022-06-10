@@ -64,7 +64,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
   }
 
   void _openWorkoutPlanFinder() {
-    context.navigateTo(PlansRoute(
+    context.navigateTo(TrainingPlansRoute(
         showCreateButton: true,
         showJoined: false,
         showSaved: false,

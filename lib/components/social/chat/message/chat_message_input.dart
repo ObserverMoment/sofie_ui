@@ -171,7 +171,7 @@ class ChatMessageInputState extends State<ChatMessageInput> {
   }
 
   Future<void> _pickWorkoutPlan() async {
-    context.navigateTo(PlansRoute(
+    context.navigateTo(TrainingPlansRoute(
         pageTitle: 'Select Plan',
         showCreateButton: false,
         selectPlan: (plan) async {

@@ -1,6 +1,9 @@
 mutation duplicateResistanceSession($id: ID!) {
   duplicateResistanceSession(id: $id) {
     ...ResistanceSession
+    User {
+      ...UserAvatarData
+    }
     ResistanceExercises {
       ...ResistanceExercise
       ResistanceSets {

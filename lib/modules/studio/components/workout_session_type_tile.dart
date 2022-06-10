@@ -20,6 +20,7 @@ class WorkoutSessionTypeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(
             color: context.theme.background,
@@ -27,10 +28,13 @@ class WorkoutSessionTypeTile extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              'assets/workout_session_icons/$assetImagePath',
-              height: tileHeight - 75,
-              color: context.theme.primary,
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: SvgPicture.asset(
+                'assets/workout_session_icons/$assetImagePath',
+                height: tileHeight * 0.27,
+                color: context.theme.primary,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),

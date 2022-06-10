@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
+import 'package:sofie_ui/components/session_type_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/env_config.dart';
@@ -23,15 +24,29 @@ class MainTabsPage extends StatelessWidget {
         child: BottomSheetMenu(
             header: const BottomSheetMenuHeader(name: 'Select Type'),
             items: [
-              BottomSheetMenuItem(text: 'Cardio', onPressed: () {}),
+              BottomSheetMenuItem(
+                  text: 'Cardio', icon: SessionType.cardio, onPressed: () {}),
               BottomSheetMenuItem(
                   text: 'Resistance',
+                  icon: SessionType.resistance,
                   onPressed: () =>
                       context.navigateTo(ResistanceSessionCreatorRoute())),
-              BottomSheetMenuItem(text: 'Interval', onPressed: () => {}),
-              BottomSheetMenuItem(text: 'Mobility', onPressed: () => {}),
-              BottomSheetMenuItem(text: 'AMRAP', onPressed: () => {}),
-              BottomSheetMenuItem(text: 'For Time', onPressed: () => {}),
+              BottomSheetMenuItem(
+                  text: 'Intervals',
+                  icon: SessionType.intervals,
+                  onPressed: () => {}),
+              BottomSheetMenuItem(
+                  text: 'Mobility',
+                  icon: SessionType.stability,
+                  onPressed: () => {}),
+              BottomSheetMenuItem(
+                  text: 'AMRAP',
+                  icon: SessionType.stopwatch,
+                  onPressed: () => {}),
+              BottomSheetMenuItem(
+                  text: 'For Time',
+                  icon: SessionType.stopwatch,
+                  onPressed: () => {}),
             ]));
   }
 

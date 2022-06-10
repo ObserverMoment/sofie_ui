@@ -6,7 +6,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/pages/authed/progress/logged_workouts/widget_header.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 
 class SessionTypeAndMoveTypeWidgets extends StatelessWidget {
   final List<LoggedWorkout> loggedWorkouts;

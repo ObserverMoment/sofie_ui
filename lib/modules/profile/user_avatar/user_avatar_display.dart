@@ -11,10 +11,12 @@ import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
-class UserAvatarDisplay extends StatelessWidget {
+/// Calls the API to get the logged in user avatar details.
+class AuthedUserAvatarDisplay extends StatelessWidget {
   final double size;
   final bool withBorder;
-  const UserAvatarDisplay({Key? key, this.size = 100, this.withBorder = false})
+  const AuthedUserAvatarDisplay(
+      {Key? key, this.size = 100, this.withBorder = false})
       : super(key: key);
 
   @override

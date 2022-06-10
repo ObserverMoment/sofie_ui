@@ -6,12 +6,12 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/workout_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
-import 'package:sofie_ui/components/user_input/selectors/gym_profile_selector.dart';
+import 'package:sofie_ui/modules/gym_profile/gym_profile_selector.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 
 class WorkoutFiltersEquipment extends StatelessWidget {
   const WorkoutFiltersEquipment({Key? key}) : super(key: key);

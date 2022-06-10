@@ -1,6 +1,9 @@
 mutation createResistanceSession($data: CreateResistanceSessionInput!) {
   createResistanceSession(data: $data) {
     ...ResistanceSession
+    User {
+      ...UserAvatarData
+    }
     ResistanceExercises {
       ...ResistanceExercise
       ResistanceSets {

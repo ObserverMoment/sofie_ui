@@ -8,7 +8,7 @@ import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_e
 import 'package:sofie_ui/components/user_input/pickers/date_time_pickers.dart';
 import 'package:sofie_ui/components/user_input/pickers/duration_picker.dart';
 import 'package:sofie_ui/components/user_input/pickers/number_picker.dart';
-import 'package:sofie_ui/components/user_input/selectors/gym_profile_selector.dart';
+import 'package:sofie_ui/modules/gym_profile/gym_profile_selector.dart';
 import 'package:sofie_ui/components/user_input/selectors/workout_goals_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/data_type_extensions.dart';

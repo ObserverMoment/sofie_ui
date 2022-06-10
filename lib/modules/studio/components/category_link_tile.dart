@@ -20,6 +20,7 @@ class CategoryLinkTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -33,7 +34,7 @@ class CategoryLinkTile extends StatelessWidget {
               children: [
                 SvgPicture.asset(
                   'assets/category_icons/$assetImagePath',
-                  height: tileHeight - 45,
+                  height: tileHeight * 0.5,
                   color: context.theme.primary,
                 ),
                 Expanded(

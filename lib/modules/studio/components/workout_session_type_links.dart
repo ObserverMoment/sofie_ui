@@ -1,8 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/modules/studio/components/workout_session_type_tile.dart';
+import 'package:sofie_ui/router.gr.dart';
 
 class WorkoutSessionTypeLinks extends StatelessWidget {
   const WorkoutSessionTypeLinks({Key? key}) : super(key: key);
@@ -36,7 +38,8 @@ class WorkoutSessionTypeLinks extends StatelessWidget {
                   label: 'Resistance',
                   assetImagePath: 'resistance.svg',
                   tileHeight: tileHeight,
-                  onTap: () {}),
+                  onTap: () => context.navigateTo(
+                      ResistanceSessionsRoute(previousPageTitle: 'Studio'))),
               WorkoutSessionTypeTile(
                 label: 'Cardio',
                 tileHeight: tileHeight,
@@ -55,7 +58,7 @@ class WorkoutSessionTypeLinks extends StatelessWidget {
                 onTap: () {},
               ),
               WorkoutSessionTypeTile(
-                label: 'ForTime',
+                label: 'For Time',
                 tileHeight: tileHeight,
                 assetImagePath: 'stopwatch.svg',
                 onTap: () {},

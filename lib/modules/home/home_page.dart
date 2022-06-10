@@ -27,17 +27,21 @@ class _HomePageState extends State<HomePage> {
       key: _key,
       appBar: buildMainNavBar(_key),
       endDrawer: const ProfileSettingsDrawer(),
-      body: MyTabBarView(
-        tabs: const ['Recents', 'Feed'],
-        pages: [
-          ListView(
-            children: const [
-              AnnouncementsUpdates(),
-              ComingUpList(),
-            ],
-          ),
-          MyText('Feed')
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: MyTabBarView(
+          tabs: const ['Recents', 'Feed', 'Bleed'],
+          pages: [
+            ListView(
+              children: const [
+                AnnouncementsUpdates(),
+                ComingUpList(),
+              ],
+            ),
+            MyText('Feed'),
+            MyText('Bleed')
+          ],
+        ),
       ),
     );
   }

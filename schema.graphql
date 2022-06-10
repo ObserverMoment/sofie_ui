@@ -338,7 +338,6 @@ type CoreData {
   fitnessBenchmarkCategories: [FitnessBenchmarkCategory!]!
   moveTypes: [MoveType!]!
   progressWidgets: [ProgressWidget!]!
-  standardMoves: [Move!]!
   workoutGoals: [WorkoutGoal!]!
   workoutSectionTypes: [WorkoutSectionType!]!
 }
@@ -913,9 +912,11 @@ enum Gender {
 
 type GymProfile {
   Equipments: [Equipment!]!
+  createdAt: DateTime!
   description: String
   id: ID!
   name: String!
+  updatedAt: DateTime!
 }
 
 type IntervalExercise {
@@ -1076,6 +1077,11 @@ type Move {
   scope: MoveScope!
   searchTerms: String
   validRepTypes: [WorkoutMoveRepType!]!
+}
+
+type MoveData {
+  customMoves: [Move!]!
+  standardMoves: [Move!]!
 }
 
 """
@@ -1456,11 +1462,11 @@ type Query {
   clubWorkoutPlans(clubId: ID!): ClubWorkoutPlans!
   clubWorkouts(clubId: ID!): ClubWorkouts!
   coreData: CoreData!
-  customMoves: [Move!]!
   gymProfiles: [GymProfile!]!
   lifetimeLogStatsSummary(userId: ID!): LifetimeLogStatsSummary!
   logCountByWorkout(id: ID!): Int!
   loggedWorkoutById(id: ID!): LoggedWorkout
+  moveData: MoveData!
   publicClubs: [ClubSummary!]!
   publicWorkoutPlans(
     cursor: ID
@@ -1502,11 +1508,12 @@ type Query {
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
+  userResistanceSessions: [ResistanceSession!]!
+  userSavedResistanceSessions: [ResistanceSession!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userSleepWellLogs: [UserSleepWellLog!]!
   userTrainingPlans: [TrainingPlanSummary!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
-  userWorkoutSessions: UserWorkoutSessions!
   userWorkoutTags: [WorkoutTag!]!
   userWorkouts: [WorkoutSummary!]!
   validateToken: Boolean!
@@ -1552,6 +1559,7 @@ type ResistanceExercise {
 
 type ResistanceSession {
   ResistanceExercises: [ResistanceExercise!]!
+  User: UserAvatarData!
   createdAt: DateTime!
   id: ID!
   name: String!

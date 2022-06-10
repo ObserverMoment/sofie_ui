@@ -72,40 +72,41 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
   }
 
   Future<void> _saveAndClose() async {
-    setState(() => _loading = true);
-    if (widget.move != null) {
-      // Update.
-      final variables = UpdateMoveArguments(
-          data: UpdateMoveInput.fromJson(_activeMove!.toJson()));
+    /// TODO.
+    // setState(() => _loading = true);
+    // if (widget.move != null) {
+    //   // Update.
+    //   final variables = UpdateMoveArguments(
+    //       data: UpdateMoveInput.fromJson(_activeMove!.toJson()));
 
-      final result = await GraphQLStore.store.mutate(
-          mutation: UpdateMoveMutation(variables: variables),
-          broadcastQueryIds: [CustomMovesQuery().operationName]);
+    //   final result = await GraphQLStore.store.mutate(
+    //       mutation: UpdateMoveMutation(variables: variables),
+    //       broadcastQueryIds: [CustomMovesQuery().operationName]);
 
-      if (result.hasErrors) {
-        context.showToast(
-            message: 'Sorry, it went wrong, changes not saved!',
-            toastType: ToastType.destructive);
-      } else {
-        context.pop(result: true);
-      }
-    } else {
-      // Create.
-      final variables = CreateMoveArguments(
-          data: CreateMoveInput.fromJson(_activeMove!.toJson()));
+    //   if (result.hasErrors) {
+    //     context.showToast(
+    //         message: 'Sorry, it went wrong, changes not saved!',
+    //         toastType: ToastType.destructive);
+    //   } else {
+    //     context.pop(result: true);
+    //   }
+    // } else {
+    //   // Create.
+    //   final variables = CreateMoveArguments(
+    //       data: CreateMoveInput.fromJson(_activeMove!.toJson()));
 
-      final result = await GraphQLStore.store.create(
-          mutation: CreateMoveMutation(variables: variables),
-          addRefToQueries: [CustomMovesQuery().operationName]);
+    //   final result = await GraphQLStore.store.create(
+    //       mutation: CreateMoveMutation(variables: variables),
+    //       addRefToQueries: [CustomMovesQuery().operationName]);
 
-      if (result.hasErrors) {
-        context.showToast(
-            message: 'Sorry, it went wrong, changes not saved!',
-            toastType: ToastType.destructive);
-      } else {
-        context.pop(result: true);
-      }
-    }
+    //   if (result.hasErrors) {
+    //     context.showToast(
+    //         message: 'Sorry, it went wrong, changes not saved!',
+    //         toastType: ToastType.destructive);
+    //   } else {
+    //     context.pop(result: true);
+    //   }
+    // }
 
     setState(() => _loading = false);
   }

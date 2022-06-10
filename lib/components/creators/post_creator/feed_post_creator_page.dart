@@ -267,20 +267,20 @@ class _FeedPostCreatorPageState extends State<FeedPostCreatorPage> {
                   )
                 : Column(
                     children: [
-                      ShareObjectTypeSelectorButton(
-                        title: 'Workout',
-                        description:
-                            'Share a workout you have created, found or are going to do!',
-                        assetImageUri: 'assets/placeholder_images/workout.jpg',
-                        onPressed: () => context.navigateTo(WorkoutsRoute()),
-                      ),
+                      // ShareObjectTypeSelectorButton(
+                      //   title: 'Workout',
+                      //   description:
+                      //       'Share a workout you have created, found or are going to do!',
+                      //   assetImageUri: 'assets/placeholder_images/workout.jpg',
+                      //   onPressed: () => context.navigateTo(WorkoutsRoute()),
+                      // ),
                       ShareObjectTypeSelectorButton(
                           title: 'Workout Plan',
                           description:
                               'Share a plan you have created, found or are going to do!',
                           assetImageUri: 'assets/placeholder_images/plan.jpg',
                           onPressed: () => context.navigateTo(
-                                PlansRoute(
+                                TrainingPlansRoute(
                                     selectPlan: _selectWorkoutPlan,
                                     showCreateButton: true,
                                     pageTitle: 'Select Plan'),

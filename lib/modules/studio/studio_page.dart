@@ -52,7 +52,7 @@ class _StudioPageState extends State<StudioPage> {
                 label: 'Training Plans',
                 assetImagePath: 'journal.svg',
                 tileHeight: tileHeight,
-                onTap: () => context.navigateTo(PlansRoute(
+                onTap: () => context.navigateTo(TrainingPlansRoute(
                     showCreateButton: true, showDiscoverButton: true)),
               ),
               CategoryLinkTile(
@@ -65,13 +65,15 @@ class _StudioPageState extends State<StudioPage> {
                 label: 'Exercise Library',
                 assetImagePath: 'library.svg',
                 tileHeight: tileHeight,
-                onTap: () => context.navigateTo(const MovesLibraryRoute()),
+                onTap: () => context.navigateTo(
+                    ExerciseLibraryRoute(previousPageTitle: 'Studio')),
               ),
               CategoryLinkTile(
                   label: 'Gym Profiles',
                   assetImagePath: 'gym_profiles.svg',
                   tileHeight: tileHeight,
-                  onTap: () {}),
+                  onTap: () => context.navigateTo(
+                      GymProfilesRoute(previousPageTitle: 'Studio'))),
             ],
           ),
         ],

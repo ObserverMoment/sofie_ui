@@ -4,7 +4,7 @@ import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
 
 class BodyAreaSelectorFrontBackPaged extends StatefulWidget {
   final List<BodyArea> selectedBodyAreas;

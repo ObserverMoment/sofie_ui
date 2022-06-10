@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/workout_sessions/resistance_session/display/resistance_set_reps_display.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/display/resistance_set_reps_display.dart';
 
 class ResistanceSetDisplay extends StatelessWidget {
   final ResistanceSet resistanceSet;

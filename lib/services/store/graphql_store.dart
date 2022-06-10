@@ -174,25 +174,27 @@ class GraphQLStore {
           return false;
         }
 
-        final GraphQLQuery query = observableQuery.query;
+        // final GraphQLQuery query = observableQuery.query;
 
-        // Denormalize the data
-        final data = denormalizeOperation(
-            variables: observableQuery.parameterize
-                ? query.variables?.toJson() ?? const {}
-                : const {},
-            typePolicies: _typePolicies,
-            document: query.document,
-            returnPartialData: true,
-            read: (dataId) => readNormalized(dataId));
+        // // Denormalize the data
+        // final data = denormalizeOperation(
+        //     variables: observableQuery.parameterize
+        //         ? query.variables?.toJson() ?? const {}
+        //         : const {},
+        //     typePolicies: _typePolicies,
+        //     document: query.document,
+        //     returnPartialData: true,
+        //     read: (dataId) => readNormalized(dataId));
 
-        if (data == null) {
-          printLog('_queryStore: Data returned null for ${observableQuery.id}');
-          return false;
-        }
+        // if (data == null) {
+        //   printLog('_queryStore: Data returned null for ${observableQuery.id}');
+        //   return false;
+        // }
+
+        final data = readQueryData(observableQuery.id);
 
         // Add to the stream to broadcastQueriesByIds to all listeners.
-        observableQuery.subject.add(GraphQLResponse(data: query.parse(data)));
+        observableQuery.subject.add(GraphQLResponse(data: data));
         return true;
       } catch (e) {
         printLog(e.toString());
@@ -729,6 +731,15 @@ class GraphQLStore {
 
   Future<void> deleteNormalizedObject(String key) async {
     await _box.delete(key);
+  }
+
+  /// @Experimental.
+  Object readQueryData(String queryId) {
+    final boxData = Map<String, dynamic>.from(_box.toMap());
+
+    final queryObject = boxData[_queryRootKey][queryId];
+
+    return readFromStoreDenormalizedTest(object: queryObject, data: boxData);
   }
 
   /// Within the root query key - does data for this query exist.

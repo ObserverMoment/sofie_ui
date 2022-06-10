@@ -11,7 +11,8 @@ import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/services/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/core_data_repo.dart';
+import 'package:sofie_ui/services/repos/move_data.repo.dart';
 import 'package:sofie_ui/services/stream.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart' as chat;
@@ -72,7 +73,8 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
 
   Future<void> _initCoreAppData() async {
     /// Core app data such as equipment, moves, body areas and other non user generated content.
-    await CoreDataRepo.initCoreData(context);
+    if (mounted) await CoreDataRepo.initCoreData(context);
+    if (mounted) await MoveDataRepo.initMoveData(context);
 
     final userProfileQuery = UserProfileQuery(
         variables: UserProfileArguments(userId: _authedUser.id));

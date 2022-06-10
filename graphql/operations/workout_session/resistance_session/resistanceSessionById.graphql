@@ -1,6 +1,9 @@
 query resistanceSessionById($id: ID!) {
   resistanceSessionById(id: $id) {
     ...ResistanceSession
+    User {
+      ...UserAvatarData
+    }
     ResistanceExercises {
       ...ResistanceExercise
       ResistanceSets {

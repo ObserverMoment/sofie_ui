@@ -1,31 +1,36 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/profile/gym_profile/gym_profile_card.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
+import 'package:sofie_ui/modules/gym_profile/gym_profile_card.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class GymProfilesPage extends StatelessWidget {
-  const GymProfilesPage({Key? key}) : super(key: key);
+  final String? previousPageTitle;
+  const GymProfilesPage({Key? key, this.previousPageTitle}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return QueryObserver<GymProfiles$Query, json.JsonSerializable>(
-        key: Key('GymProfilesPage - ${GymProfilesQuery().operationName}'),
-        query: GymProfilesQuery(),
-        builder: (data) {
-          final gymProfiles = data.gymProfiles.reversed.toList();
+    return MyPageScaffold(
+        navigationBar: MyNavBar(
+          previousPageTitle: previousPageTitle,
+          middle: const NavBarTitle('Gym Profiles'),
+        ),
+        child: QueryObserver<GymProfiles$Query, json.JsonSerializable>(
+            key: Key('GymProfilesPage - ${GymProfilesQuery().operationName}'),
+            query: GymProfilesQuery(),
+            builder: (data) {
+              final gymProfiles = data.gymProfiles
+                  .sortedBy<DateTime>((p) => p.updatedAt)
+                  .toList();
 
-          return MyPageScaffold(
-              navigationBar: const MyNavBar(
-                middle: NavBarLargeTitle('Gym Profiles'),
-              ),
-              child: gymProfiles.isEmpty
+              return gymProfiles.isEmpty
                   ? ContentEmptyPlaceholder(
                       message: 'No gym profiles yet',
                       explainer:
@@ -63,7 +68,7 @@ class GymProfilesPage extends StatelessWidget {
                                 ))
                             .toList(),
                       ),
-                    ));
-        });
+                    );
+            }));
   }
 }

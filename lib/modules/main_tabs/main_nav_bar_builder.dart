@@ -25,7 +25,7 @@ buildMainNavBar(GlobalKey<material.ScaffoldState> scaffoldKey) => MyNavBar(
             padding: const EdgeInsets.only(left: 6.0),
             child: CupertinoButton(
                 padding: EdgeInsets.zero,
-                child: const UserAvatarDisplay(size: 40),
+                child: const AuthedUserAvatarDisplay(size: 40),
                 onPressed: () => scaffoldKey.currentState!.openEndDrawer()),
           )
         ],

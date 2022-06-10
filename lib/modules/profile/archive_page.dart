@@ -144,18 +144,19 @@ class _ArchivedCustomMoves extends StatelessWidget {
   const _ArchivedCustomMoves({Key? key}) : super(key: key);
 
   Future<void> _unarchiveCustomMove(BuildContext context, String id) async {
-    final result = await GraphQLStore.store.mutate<
-        UnarchiveCustomMoveById$Mutation, UnarchiveCustomMoveByIdArguments>(
-      mutation: UnarchiveCustomMoveByIdMutation(
-          variables: UnarchiveCustomMoveByIdArguments(id: id)),
-      addRefToQueries: [GQLOpNames.customMoves],
-      removeRefFromQueries: [GQLOpNames.userArchivedCustomMoves],
-    );
+    /// TODO:
+    // final result = await GraphQLStore.store.mutate<
+    //     UnarchiveCustomMoveById$Mutation, UnarchiveCustomMoveByIdArguments>(
+    //   mutation: UnarchiveCustomMoveByIdMutation(
+    //       variables: UnarchiveCustomMoveByIdArguments(id: id)),
+    //   addRefToQueries: [GQLOpNames.customMoves],
+    //   removeRefFromQueries: [GQLOpNames.userArchivedCustomMoves],
+    // );
 
-    checkOperationResult(result,
-        onSuccess: () => context.showToast(message: 'Custom move unarchived'),
-        onFail: () => context.showErrorAlert(
-            'Something went wrong, the move was not unarchived correctly'));
+    // checkOperationResult(result,
+    //     onSuccess: () => context.showToast(message: 'Custom move unarchived'),
+    //     onFail: () => context.showErrorAlert(
+    //         'Something went wrong, the move was not unarchived correctly'));
   }
 
   @override

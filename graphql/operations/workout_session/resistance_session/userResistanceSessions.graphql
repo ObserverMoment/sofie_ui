@@ -1,0 +1,35 @@
+query userResistanceSessions {
+  userResistanceSessions {
+    ...ResistanceSession
+    User {
+      ...UserAvatarData
+    }
+    ResistanceExercises {
+      ...ResistanceExercise
+      ResistanceSets {
+        ...ResistanceSet
+        Move {
+          ...Move
+          MoveType {
+            ...MoveType
+          }
+          BodyAreaMoveScores {
+            score
+            BodyArea {
+              ...BodyArea
+            }
+          }
+          RequiredEquipments {
+            ...Equipment
+          }
+          SelectableEquipments {
+            ...Equipment
+          }
+        }
+        Equipment {
+          ...Equipment
+        }
+      }
+    }
+  }
+}
