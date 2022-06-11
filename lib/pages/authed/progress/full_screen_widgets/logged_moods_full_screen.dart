@@ -59,11 +59,11 @@ class _LoggedMoodsFullScreenState extends State<LoggedMoodsFullScreen> {
 
   Future<void> _deleteUserDayLogMood(UserDayLogMood mood) async {
     final result = await GraphQLStore.store.delete(
-        mutation: DeleteUserDayLogMoodMutation(
-            variables: DeleteUserDayLogMoodArguments(id: mood.id)),
-        objectId: mood.id,
-        typename: kUserDayLogMoodTypename,
-        removeRefFromQueries: [GQLOpNames.userDayLogMoods]);
+      mutation: DeleteUserDayLogMoodMutation(
+          variables: DeleteUserDayLogMoodArguments(id: mood.id)),
+      objectId: mood.id,
+      typename: kUserDayLogMoodTypename,
+    );
 
     checkOperationResult(result,
         onSuccess: () => context.showToast(

@@ -155,13 +155,12 @@ class _Entries extends StatelessWidget {
         variables: DeleteBodyTrackingEntryByIdArguments(id: entryId));
 
     final result = await GraphQLStore.store.delete<
-            DeleteBodyTrackingEntryById$Mutation,
-            DeleteBodyTrackingEntryByIdArguments>(
-        mutation: mutation,
-        objectId: entryId,
-        typename: kBodyTrackingEntryTypename,
-        removeRefFromQueries: [GQLOpNames.bodyTrackingEntries],
-        removeAllRefsToId: true);
+        DeleteBodyTrackingEntryById$Mutation,
+        DeleteBodyTrackingEntryByIdArguments>(
+      mutation: mutation,
+      objectId: entryId,
+      typename: kBodyTrackingEntryTypename,
+    );
 
     checkOperationResult(result, onFail: () {
       context.showToast(

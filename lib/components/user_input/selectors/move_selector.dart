@@ -92,8 +92,9 @@ class _MoveSelectorState extends State<MoveSelector> {
 
   @override
   Widget build(BuildContext context) {
-    final standardMoves = MoveDataRepo.standardMoves;
-    final customMoves = MoveDataRepo.customMoves;
+    final moveDataRepo = context.watch<MoveDataRepo>();
+    final standardMoves = moveDataRepo.standardMoves;
+    final customMoves = moveDataRepo.customMoves;
 
     final displayMoves = _activeTabIndex == 0 ? standardMoves : customMoves;
 

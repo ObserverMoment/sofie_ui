@@ -119,7 +119,7 @@ class _WorkoutPlanDetailsPageState extends State<WorkoutPlanDetailsPage> {
                 GQLVarParamKeys.workoutPlanById(widget.id)
               ]);
             },
-            addRefToQueries: [GQLOpNames.userArchivedWorkoutPlans],
+            // addRefToQueries: [GQLOpNames.userArchivedWorkoutPlans],
           );
 
           checkOperationResult(result,

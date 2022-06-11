@@ -33,12 +33,12 @@ class UserMaxLoadTrackerDetails extends StatelessWidget {
         itemType: 'Score Tracker',
         onConfirm: () async {
           final result = await GraphQLStore.store.delete(
-              mutation: DeleteUserExerciseLoadTrackerMutation(
-                  variables:
-                      DeleteUserExerciseLoadTrackerArguments(id: tracker.id)),
-              objectId: tracker.id,
-              typename: kUserExerciseLoadTracker,
-              removeRefFromQueries: [GQLOpNames.userExerciseLoadTrackers]);
+            mutation: DeleteUserExerciseLoadTrackerMutation(
+                variables:
+                    DeleteUserExerciseLoadTrackerArguments(id: tracker.id)),
+            objectId: tracker.id,
+            typename: kUserExerciseLoadTracker,
+          );
 
           checkOperationResult(result, onSuccess: context.pop);
         });

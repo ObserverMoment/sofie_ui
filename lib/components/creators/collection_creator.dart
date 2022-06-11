@@ -94,7 +94,7 @@ class _CollectionCreatorPageState extends State<CollectionCreatorPage> {
             description: _descriptionController.text));
 
     final result = await GraphQLStore.store
-        .mutate<CreateCollection$Mutation, CreateCollectionArguments>(
+        .create<CreateCollection$Mutation, CreateCollectionArguments>(
             mutation: CreateCollectionMutation(variables: variables),
             addRefToQueries: [UserCollectionsQuery().operationName]);
 

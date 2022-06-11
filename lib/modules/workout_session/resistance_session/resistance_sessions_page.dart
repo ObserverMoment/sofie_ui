@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_tab_bar_view.dart';
@@ -10,6 +12,7 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/components/resistance_session_card.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class ResistanceSessionsPage extends StatelessWidget {
@@ -41,20 +44,24 @@ class YourResistanceSessions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
+
     return QueryObserver<UserResistanceSessions$Query, json.JsonSerializable>(
         key: Key(
             'ResistanceSessionsPage - ${UserResistanceSessionsQuery().operationName}'),
         query: UserResistanceSessionsQuery(),
+        fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (created) => QueryObserver<UserSavedResistanceSessions$Query,
                 json.JsonSerializable>(
             key: Key(
                 'ResistanceSessionsPage - ${UserSavedResistanceSessionsQuery().operationName}'),
             query: UserSavedResistanceSessionsQuery(),
+            fetchPolicy: QueryFetchPolicy.storeFirst,
             builder: (saved) {
               final sortedByUpdatedAt = [
-                ...created.userResistanceSessions,
-                ...saved.userSavedResistanceSessions
-              ].sortedBy<DateTime>((s) => s.updatedAt);
+                ...created.userResistanceSessionSummary,
+                ...saved.userResistanceSessionSummary
+              ].sortedBy<DateTime>((s) => s.updatedAt).reversed;
 
               return sortedByUpdatedAt.isEmpty
                   ? ContentEmptyPlaceholder(
@@ -73,8 +80,9 @@ class YourResistanceSessions extends StatelessWidget {
                       children: sortedByUpdatedAt
                           .map((s) => Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
-                                child:
-                                    ResistanceSessionCard(resistanceSession: s),
+                                child: ResistanceSessionCard(
+                                    resistanceSession: s,
+                                    showUserAvatar: authedUserId != s.user.id),
                               ))
                           .toList(),
                     );

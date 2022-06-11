@@ -164,7 +164,6 @@ class AnimatedNavBar extends StatelessWidget {
                   variables: DeleteClubArguments(id: club.id)),
               objectId: club.id,
               typename: kClubSummaryTypeName,
-              removeAllRefsToId: true,
               processResult: (data) {
                 // Remove ClubSummary from userClubs query.
                 GraphQLStore.store

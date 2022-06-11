@@ -64,8 +64,9 @@ class _ExerciseLibraryPageState extends State<ExerciseLibraryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final standardMoves = MoveDataRepo.standardMoves;
-    final customMoves = MoveDataRepo.customMoves;
+    final moveDataRepo = context.watch<MoveDataRepo>();
+    final standardMoves = moveDataRepo.standardMoves;
+    final customMoves = moveDataRepo.customMoves;
 
     final displayMoves = _activeTabIndex == 0 ? standardMoves : customMoves;
 

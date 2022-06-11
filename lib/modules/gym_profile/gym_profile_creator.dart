@@ -149,10 +149,10 @@ class _GymProfileCreatorPageState extends State<GymProfileCreatorPage> {
     final variables = DeleteGymProfileByIdArguments(id: _activeGymProfile.id);
 
     await GraphQLStore.store.delete(
-        typename: kGymProfileTypename,
-        objectId: _activeGymProfile.id,
-        mutation: DeleteGymProfileByIdMutation(variables: variables),
-        removeRefFromQueries: [GymProfilesQuery().operationName]);
+      typename: kGymProfileTypename,
+      objectId: _activeGymProfile.id,
+      mutation: DeleteGymProfileByIdMutation(variables: variables),
+    );
 
     setState(() => _loading = false);
     context.pop();

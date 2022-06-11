@@ -26,13 +26,13 @@ class UserGoalsPage extends StatelessWidget {
     final variables = DeleteUserGoalArguments(id: id);
 
     final result = await GraphQLStore.store.delete(
-        mutation: DeleteUserGoalMutation(variables: variables),
-        objectId: id,
-        typename: kUserGoalTypename,
-        broadcastQueryIds: [
-          GQLOpNames.userGoals,
-        ],
-        removeAllRefsToId: true);
+      mutation: DeleteUserGoalMutation(variables: variables),
+      objectId: id,
+      typename: kUserGoalTypename,
+      broadcastQueryIds: [
+        GQLOpNames.userGoals,
+      ],
+    );
 
     checkOperationResult(result,
         onFail: () => context.showToast(

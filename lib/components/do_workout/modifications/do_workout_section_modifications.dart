@@ -193,8 +193,10 @@ class DoWorkoutSectionModifications extends StatelessWidget {
         (b) => b.getControllerForSection(sectionIndex).sectionHasStarted);
 
     /// Need to get the Move [Rest] for use when user taps [+ Add Rest]
-    final restMove =
-        MoveDataRepo.standardMoves.firstWhere((m) => m.id == kRestMoveId);
+    final restMove = context
+        .watch<MoveDataRepo>()
+        .standardMoves
+        .firstWhere((m) => m.id == kRestMoveId);
 
     final allowSetsReorder = activeWorkoutSection.workoutSets.length > 1;
 

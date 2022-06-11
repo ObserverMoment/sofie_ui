@@ -48,6 +48,8 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   late StreamSubscription _linkStreamSub;
   bool _incomingLinkStreamInitialized = false;
 
+  late MoveDataRepo _moveDataRepo;
+
   @override
   void initState() {
     super.initState();
@@ -74,7 +76,10 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   Future<void> _initCoreAppData() async {
     /// Core app data such as equipment, moves, body areas and other non user generated content.
     if (mounted) await CoreDataRepo.initCoreData(context);
-    if (mounted) await MoveDataRepo.initMoveData(context);
+    if (mounted) {
+      _moveDataRepo = MoveDataRepo();
+      await _moveDataRepo.initMoveData(context);
+    }
 
     final userProfileQuery = UserProfileQuery(
         variables: UserProfileArguments(userId: _authedUser.id));
@@ -214,6 +219,9 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
             client: _streamChatClient,
             child: MultiProvider(
               providers: [
+                ChangeNotifierProvider<MoveDataRepo>.value(
+                  value: _moveDataRepo,
+                ),
                 Provider<feed.StreamFeedClient>.value(
                   value: _streamFeedClient,
                 ),

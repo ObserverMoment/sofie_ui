@@ -203,8 +203,10 @@ class _WorkoutSectionCreatorState extends State<WorkoutSectionCreator> {
     final workoutSectionType = _workoutSection.workoutSectionType;
 
     /// Need to get the Move [Rest] for use when user taps [+ Add Rest]
-    final restMove =
-        MoveDataRepo.standardMoves.firstWhere((m) => m.id == kRestMoveId);
+    final restMove = context
+        .watch<MoveDataRepo>()
+        .standardMoves
+        .firstWhere((m) => m.id == kRestMoveId);
 
     return MyPageScaffold(
       navigationBar: MyNavBar(

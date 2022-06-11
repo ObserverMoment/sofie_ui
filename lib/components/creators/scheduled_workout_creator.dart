@@ -133,10 +133,10 @@ class _ScheduledWorkoutCreatorPageState
           DeleteScheduledWorkoutByIdArguments(id: widget.scheduledWorkout!.id);
 
       final result = await GraphQLStore.store.delete(
-          mutation: DeleteScheduledWorkoutByIdMutation(variables: variables),
-          objectId: widget.scheduledWorkout!.id,
-          typename: kScheduledWorkoutTypename,
-          removeRefFromQueries: [GQLOpNames.userScheduledWorkouts]);
+        mutation: DeleteScheduledWorkoutByIdMutation(variables: variables),
+        objectId: widget.scheduledWorkout!.id,
+        typename: kScheduledWorkoutTypename,
+      );
 
       if (result.hasErrors) {
         context.showErrorAlert(

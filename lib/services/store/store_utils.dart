@@ -9,8 +9,6 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-const kStoreReferenceKey = '\$ref';
-
 bool checkOperationResult<T>(OperationResult<T> result,
     {VoidCallback? onSuccess, VoidCallback? onFail}) {
   if (result.hasErrors || result.data == null) {
@@ -37,18 +35,17 @@ bool checkOperationResult<T>(OperationResult<T> result,
 /// Objects without these fields, or that are in [kExcludeFromNormalization], will not be normalized and will be accessible from their parents.
 void normalizeToStore(
     {String? queryKey,
-    required Map<String, dynamic> data,
+    required Object data,
     required void Function(String key, Object? data) write,
     required Map<String, dynamic> Function(String key) read,
-    String referenceKey = kStoreReferenceKey}) {
+    String referenceKey = GraphQLStore.refKey}) {
   final Map<String, dynamic> normalizedResult = {};
 
   try {
     if (queryKey != null) {
-      /// { userWorkouts: [obj, obj, obj] }.
-      normalizedResult['Query'] = {
-        queryKey:
-            normalizeObject(normalized: normalizedResult, data: data[queryKey])
+      /// i.e. { userWorkouts: [obj, obj, obj] }.
+      normalizedResult[GraphQLStore.queryRootKey] = {
+        queryKey: normalizeObject(normalized: normalizedResult, data: data)
       };
     } else {
       normalizeObject(normalized: normalizedResult, data: data);
@@ -71,7 +68,7 @@ void normalizeToStore(
 Object? normalizeObject(
     {required Object? data,
     required Map<String, dynamic> normalized,
-    String referenceKey = kStoreReferenceKey}) {
+    String referenceKey = GraphQLStore.refKey}) {
   if (data is Map<String, dynamic>) {
     final dataId = resolveDataId(data);
     if (dataId == null) {
@@ -99,7 +96,8 @@ Object? normalizeObject(
 }
 
 /// Read a key from the store and recursively denormalize all the $refs.
-Map<String, dynamic> readFromStoreDenormalized(String key, Box box) {
+Map<String, dynamic> readFromStoreDenormalized(
+    {required String key, required Box box}) {
   final normalized = Map<String, dynamic>.from(box.get(key) as Map? ?? {});
   return Map<String, dynamic>.from(
       denormalizeObject(data: normalized, box: box) as Map<String, dynamic>);
@@ -109,7 +107,7 @@ Map<String, dynamic> readFromStoreDenormalized(String key, Box box) {
 Object? denormalizeObject({required Object? data, required Box box}) {
   if (data is Map<String, dynamic>) {
     return data.entries.fold<Map<String, dynamic>>({}, (acum, e) {
-      if (e.key == kStoreReferenceKey) {
+      if (e.key == GraphQLStore.refKey) {
         final refData = Map<String, dynamic>.from(box.get(e.value) as Map);
         return Map<String, dynamic>.from(
             denormalizeObject(data: refData, box: box) as Map<String, dynamic>);
@@ -125,48 +123,12 @@ Object? denormalizeObject({required Object? data, required Box box}) {
   }
 }
 
-//// @experimental
-Object? readFromStoreDenormalizedTest(
-    {required Object? object, required Map<String, dynamic> data}) {
-  return denormalizeObjectTest(object: object, data: data);
-}
-
-/// @Experimental
-/// Recursive function which will denormalize a normalized object.
-/// [object]: The object to be denormalized.
-/// [data]: The full normalized data object where ref data can be retrieved. Gets passed down the recursion.
-Object? denormalizeObjectTest(
-    {required Object? object, required Map<String, dynamic> data}) {
-  if (object is Map<String, dynamic>) {
-    return object.entries.fold<Map<String, dynamic>>({}, (acum, e) {
-      if (e.key == kStoreReferenceKey) {
-        return Map<String, dynamic>.from(
-            denormalizeObjectTest(object: e.value, data: data)
-                as Map<String, dynamic>);
-      } else {
-        acum[e.key] = denormalizeObjectTest(object: e.value, data: data);
-        return acum;
-      }
-    });
-  } else if (object is List) {
-    return object
-        .map((obj) => denormalizeObjectTest(object: obj, data: data))
-        .toList();
-  } else {
-    return data;
-  }
-}
-
 String? resolveDataId(Map<String, dynamic> data) {
   if (data['__typename'] == null) {
     /// Cannot normalize an object without a data["__typename"] field as this is required to resolve the unique id.
     return null;
   } else if (data['id'] == null) {
     /// Cannot normalize an object without a data["id"] field as this is required to resolve the unique id.
-    return null;
-  } else if (kExcludeFromNormalization.contains(data['__typename'])) {
-    /// We do not want to normalize these objects - they are always children and should be considered only in relation to their parent.
-    /// i.e. There should be no entry under [WorkoutMove:id]. This is never accessed directly and should be deleted if its parents [set, section, workout] are deleted.
     return null;
   } else {
     return '${data["__typename"]}:${data["id"]}';
@@ -178,10 +140,10 @@ String? resolveDataId(Map<String, dynamic> data) {
 Object? recursiveRemoveRefsToId(
     {required Object? data,
     required String id,
-    String referenceKey = kStoreReferenceKey}) {
+    String referenceKey = GraphQLStore.refKey}) {
   if (data is Map) {
     return data.entries.fold<Map<String, dynamic>>({}, (obj, entry) {
-      if (entry.key == kStoreReferenceKey && entry.value == id) {
+      if (entry.key == GraphQLStore.refKey && entry.value == id) {
         /// This is an entry we want to delete. Don't add to object.
         return obj;
       } else {
@@ -195,7 +157,7 @@ Object? recursiveRemoveRefsToId(
         .map((e) {
           if (e is Map &&
               e.entries.length == 1 &&
-              e[kStoreReferenceKey] == id) {
+              e[GraphQLStore.refKey] == id) {
             return null;
           } else {
             return recursiveRemoveRefsToId(data: e, id: id);

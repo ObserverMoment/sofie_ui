@@ -182,7 +182,6 @@ class ResistanceSessionBloc extends ChangeNotifier {
     final result = await GraphQLStore.store.delete(
         typename: kResistanceExerciseTypeName,
         objectId: resistanceExerciseId,
-        removeAllRefsToId: true,
         broadcastQueryIds: _storeQueryIds,
         mutation: DeleteResistanceExerciseMutation(
             variables:
@@ -320,7 +319,6 @@ class ResistanceSessionBloc extends ChangeNotifier {
     final result = await GraphQLStore.store.delete(
         typename: kResistanceSetTypeName,
         objectId: resistanceSetId,
-        removeAllRefsToId: true,
         broadcastQueryIds: _storeQueryIds,
         mutation: DeleteResistanceSetMutation(
             variables: DeleteResistanceSetArguments(id: resistanceSetId)));

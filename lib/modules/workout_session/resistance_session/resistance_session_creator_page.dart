@@ -5,6 +5,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/edit/resistance_session_edit.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_bloc.dart';
 import 'package:sofie_ui/modules/workout_session/session_create.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
@@ -47,10 +48,7 @@ class _ResistanceSessionCreatorPageState
         variables: CreateResistanceSessionArguments(
             data: CreateResistanceSessionInput(name: name)),
       ),
-      processResult: (newSession) {
-        final prev = GraphQLStore.store.readDenomalized('userWorkoutSessions');
-        // prev.re
-      },
+      addRefToQueries: [GQLOpNames.userResistanceSessions],
     );
 
     checkOperationResult(result, onSuccess: () {

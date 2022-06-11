@@ -43,11 +43,11 @@ class FitnessBenchmarkActionsMenu extends StatelessWidget {
             'All benchmark info and data, including submitted scores, will be deleted. OK?',
         onConfirm: () async {
           final result = await GraphQLStore.store.delete(
-              mutation: DeleteFitnessBenchmarkMutation(
-                  variables: DeleteFitnessBenchmarkArguments(id: benchmark.id)),
-              objectId: benchmark.id,
-              typename: kFitnessBenchmarkTypename,
-              removeRefFromQueries: [GQLOpNames.userFitnessBenchmarks]);
+            mutation: DeleteFitnessBenchmarkMutation(
+                variables: DeleteFitnessBenchmarkArguments(id: benchmark.id)),
+            objectId: benchmark.id,
+            typename: kFitnessBenchmarkTypename,
+          );
 
           checkOperationResult(result, onSuccess: onBenchmarkDelete);
         });

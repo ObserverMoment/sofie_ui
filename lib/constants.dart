@@ -94,21 +94,6 @@ const kSkillTypeName = 'Skill';
 /// Exercise Tracker Typenames ////
 const kUserExerciseLoadTracker = 'UserExerciseLoadTracker';
 
-const kExcludeFromNormalization = [
-  // Within the Workout
-  kWorkoutSectionTypename,
-  kWorkoutSetTypename,
-  kWorkoutMoveTypename,
-  // Within the LoggedWorkout
-  kLoggedWorkoutSectionTypename,
-  kLoggedWorkoutSetTypename,
-  kLoggedWorkoutMoveTypename,
-  // Within the UserProfile
-  kSkillTypeName,
-  // Within the WorkoutPlan
-  kWorkoutPlanReviewTypename,
-];
-
 /// WorkoutSectionTypeNames
 const kCustomSessionName = 'Custom';
 const kHIITCircuitName = 'HIIT Circuit';

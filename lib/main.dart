@@ -23,7 +23,6 @@ import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/modules/feedback_collection/feedback_collection.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
-import 'package:sofie_ui/services/store/graphql_store_v2.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 
 Future<void> main() async {
@@ -71,14 +70,12 @@ class AuthRouterState extends State<AuthRouter> {
   final _authBloc = AuthBloc();
   final _appRouter = AppRouter();
   final _graphQLStore = GraphQLStore();
-  final _graphQLStore2 = GraphQLStoreV2();
 
   @override
   void initState() {
     super.initState();
     GetIt.I.registerSingleton<AuthBloc>(_authBloc);
     GetIt.I.registerSingleton<GraphQLStore>(_graphQLStore);
-    GetIt.I.registerSingleton<GraphQLStoreV2>(_graphQLStore2);
   }
 
   @override
@@ -89,10 +86,6 @@ class AuthRouterState extends State<AuthRouter> {
     );
     GetIt.I.unregister<GraphQLStore>(
       instance: _graphQLStore,
-      disposingFunction: (bloc) => bloc.dispose(),
-    );
-    GetIt.I.unregister<GraphQLStoreV2>(
-      instance: _graphQLStore2,
       disposingFunction: (bloc) => bloc.dispose(),
     );
     _appRouter.dispose();

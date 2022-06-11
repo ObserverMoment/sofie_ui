@@ -124,10 +124,6 @@ class WorkoutTagsManagerState extends State<WorkoutTagsManager> {
         mutation: DeleteWorkoutTagByIdMutation(variables: variables),
         objectId: tag.id,
         typename: kWorkoutTagTypename,
-        removeAllRefsToId: true,
-        removeRefFromQueries: [
-          UserWorkoutTagsQuery().operationName
-        ],
         broadcastQueryIds: [
           UserWorkoutsQuery().operationName,
         ]);

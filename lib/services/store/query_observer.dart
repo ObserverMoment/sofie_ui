@@ -59,7 +59,7 @@ class QueryObserverState<TData, TVars extends json.JsonSerializable>
     _observableQuery = _store.registerObserver<TData, TVars>(widget.query,
         parameterizeQuery: widget.parameterizeQuery);
 
-    _store.fetchInitialQuery(
+    _store.fetchInitialQuery<TData>(
         id: _observableQuery.id,
         fetchPolicy: widget.fetchPolicy,
         garbageCollectAfterFetch: widget.garbageCollectAfterFetch);

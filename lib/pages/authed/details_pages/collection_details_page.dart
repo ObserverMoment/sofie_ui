@@ -42,11 +42,10 @@ class _CollectionDetailsPageState extends State<CollectionDetailsPage> {
 
     final result = await GraphQLStore.store
         .delete<DeleteCollectionById$Mutation, DeleteCollectionByIdArguments>(
-            mutation: DeleteCollectionByIdMutation(variables: variables),
-            objectId: widget.id,
-            typename: kCollectionTypename,
-            removeAllRefsToId: true,
-            removeRefFromQueries: [UserCollectionsQuery().operationName]);
+      mutation: DeleteCollectionByIdMutation(variables: variables),
+      objectId: widget.id,
+      typename: kCollectionTypename,
+    );
 
     if (result.hasErrors ||
         result.data == null ||

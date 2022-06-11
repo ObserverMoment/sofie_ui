@@ -126,7 +126,7 @@ class _WorkoutDetailsPageState extends State<WorkoutDetailsPage> {
                   data: {...workout.summary.toJson(), 'archived': true},
                   broadcastQueryIds: [GQLVarParamKeys.workoutById(widget.id)]);
             },
-            addRefToQueries: [GQLOpNames.userArchivedWorkouts],
+            // addRefToQueries: [GQLOpNames.userArchivedWorkouts],
           );
 
           checkOperationResult(result,

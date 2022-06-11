@@ -3,11 +3,11 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
-class MoveDataRepo {
-  static List<Move> standardMoves = [];
-  static List<Move> customMoves = [];
+class MoveDataRepo extends ChangeNotifier {
+  List<Move> standardMoves = [];
+  List<Move> customMoves = [];
 
-  static Future<void> initMoveData(BuildContext context) async {
+  Future<void> initMoveData(BuildContext context) async {
     final result = await GraphQLStore.store
         .networkOnlyOperation(operation: MoveDataQuery());
 
@@ -19,4 +19,8 @@ class MoveDataRepo {
           customMoves = moveData.customMoves;
         });
   }
+
+  Move moveById(String id) => [...standardMoves, ...customMoves].firstWhere(
+        (m) => id == m.id,
+      );
 }

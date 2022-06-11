@@ -5,10 +5,8 @@ import 'package:gql_http_link/gql_http_link.dart';
 import 'package:gql_link/gql_link.dart';
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
-import 'package:normalize/normalize.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
-import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/env_config.dart';
 import 'package:sofie_ui/services/store/links/auth_link.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -21,17 +19,9 @@ class GraphQLStore {
   late Link _link;
   late Box _box;
 
-  final _refKey = '\$ref';
-  final _queryRootKey = 'Query';
-
-  /// See [normalize -> Policies -> TypePolicy]
-  /// These objects will NOT be normalized as root objects and will instead sit inside their parent as raw json data.
-  /// Generate the policy object from the list of excluded typenames at [kExcludeFromNormalization]
-  final Map<String, TypePolicy> _typePolicies = kExcludeFromNormalization
-      .fold<Map<String, TypePolicy>>({}, (policyObj, typename) {
-    policyObj[typename] = TypePolicy(keyFields: {});
-    return policyObj;
-  });
+  static const refKey = '\$ref';
+  static const queryRootKey = 'query';
+  static const dataRootKey = 'data';
 
   GraphQLStore() {
     _httpLink = HttpLink(
@@ -51,7 +41,7 @@ class GraphQLStore {
     gc();
   }
 
-  /// Must first register with GetIt for this to work.
+  /// Must first register instance with GetIt for this to work.
   /// Should only ever be one instance per runtime of GraphQLStore.
   static GraphQLStore get store => GetIt.I<GraphQLStore>();
 
@@ -123,7 +113,7 @@ class GraphQLStore {
   }
 
   /// Called by a [QueryObserver] when the widget mounts.
-  Future<void> fetchInitialQuery(
+  Future<void> fetchInitialQuery<TData>(
       {required String id,
       required QueryFetchPolicy fetchPolicy,
       bool garbageCollectAfterFetch = false}) async {
@@ -132,20 +122,20 @@ class GraphQLStore {
     } else {
       switch (fetchPolicy) {
         case QueryFetchPolicy.storeAndNetwork:
-          _queryStore(id);
-          await _queryNetwork(id);
+          _queryStore<TData>(id);
+          await _queryNetwork<TData>(id);
           break;
         case QueryFetchPolicy.storeFirst:
-          final success = _queryStore(id);
+          final success = _queryStore<TData>(id);
           if (!success) {
-            await _queryNetwork(id);
+            await _queryNetwork<TData>(id);
           }
           break;
         case QueryFetchPolicy.storeOnly:
-          _queryStore(id);
+          _queryStore<TData>(id);
           break;
         case QueryFetchPolicy.networkOnly:
-          await _queryNetwork(id);
+          await _queryNetwork<TData>(id);
           break;
         default:
           throw Exception('$fetchPolicy is not valid.');
@@ -159,7 +149,7 @@ class GraphQLStore {
 
   /// Fetches data requested by a graphql query selection set from the normalized store.
   /// Broadcasts data to the associated stream if query is successful.
-  bool _queryStore(String id) {
+  bool _queryStore<TData>(String id) {
     final observableQuery = observableQueries[id];
     if (observableQuery == null) {
       printLog(
@@ -168,33 +158,26 @@ class GraphQLStore {
     } else {
       try {
         // Does a key exist in the store?
-        if (!_hasQueryDataInStore(observableQuery.id)) {
+        if (!hasQueryDataInStore(observableQuery.id)) {
           printLog(
               '_queryStore: No key in data store for ${observableQuery.id}');
           return false;
         }
 
-        // final GraphQLQuery query = observableQuery.query;
+        final queryData = readQueryData(observableQuery.id);
 
-        // // Denormalize the data
-        // final data = denormalizeOperation(
-        //     variables: observableQuery.parameterize
-        //         ? query.variables?.toJson() ?? const {}
-        //         : const {},
-        //     typePolicies: _typePolicies,
-        //     document: query.document,
-        //     returnPartialData: true,
-        //     read: (dataId) => readNormalized(dataId));
+        if (queryData == null) {
+          printLog('_queryStore: Data returned null for ${observableQuery.id}');
+          return false;
+        }
 
-        // if (data == null) {
-        //   printLog('_queryStore: Data returned null for ${observableQuery.id}');
-        //   return false;
-        // }
+        final aliasOrId =
+            extractRootFieldAliasFromOperation(observableQuery.query) ?? id;
 
-        final data = readQueryData(observableQuery.id);
+        final TData data = observableQuery.query.parse({aliasOrId: queryData});
 
         // Add to the stream to broadcastQueriesByIds to all listeners.
-        observableQuery.subject.add(GraphQLResponse(data: data));
+        observableQuery.subject.add(GraphQLResponse<TData>(data: data));
         return true;
       } catch (e) {
         printLog(e.toString());
@@ -204,44 +187,19 @@ class GraphQLStore {
   }
 
   /// Get data from the network, normalize it, add it to the store, broadcastQueriesByIds to the observable query.
-  Future<bool> _queryNetwork(String id) async {
+  Future<bool> _queryNetwork<TData>(String id) async {
     final observableQuery = observableQueries[id];
     if (observableQuery == null) {
       printLog(
           '_queryNetwork: QueryNotFoundOrNotInitialized: There is no ObservableQuery with id: $id');
       return false;
     } else {
-      final GraphQLQuery query = observableQuery.query;
-
-      final response = await execute(query);
-
-      if (response.errors != null && response.errors!.isNotEmpty) {
-        // Broadcast the error. Do not update the store.
-        observableQuery.subject
-            .add(GraphQLResponse(data: response.data, errors: response.errors));
+      try {
+        await query(query: observableQuery.query, broadcastQueryIds: [id]);
+        return true;
+      } catch (e) {
+        printLog(e.toString());
         return false;
-      } else {
-        try {
-          /// Important! [normalizeOperation.variables] is by default in alphabetical order.
-          /// i.e. [userPublicProfiles({"cursor":null,"take":null})]
-          /// vs [userPublicProfiles({"take":null,"cursor":null})]
-          /// These will be different keys as far as the store is concerned.
-          normalizeOperation(
-              data: response.data ?? {},
-              document: query.document,
-              variables: observableQuery.parameterize
-                  ? query.getVariablesMap()
-                  : const {},
-              typePolicies: _typePolicies,
-              read: readNormalized,
-              write: mergeWriteNormalized);
-          // Broadcast the updated data.
-          broadcastQueriesByIds([id]);
-          return true;
-        } catch (e) {
-          printLog(e.toString());
-          return false;
-        }
       }
     }
   }
@@ -284,6 +242,63 @@ class GraphQLStore {
     return response;
   }
 
+  /// Network query which writes to store and optionally re-broadcasts specified queries. Returns the query result or null if fail.
+  /// Update the store with returned (after normalizing) data, then broadcastQueriesByIds (broadcastQueriesByIds is really a store read follwed by a broadcastQueriesByIds) to specified ids.
+  Future<OperationResult<TData>?>
+      query<TData, TVars extends json.JsonSerializable>({
+    required GraphQLQuery<TData, TVars> query,
+    bool parameterizeQuery = true,
+    List<String> broadcastQueryIds = const [],
+  }) async {
+    final response = await execute(query);
+
+    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      printLog('There was an error...${query.operationName}');
+      response.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+    }
+
+    if (!hasErrors && response.data != null) {
+      /// Get the correct query ID for writing data to the store on the response is received.
+      final String id = query.variables == null
+          ? query.operationName!
+          : parameterizeQuery
+
+              /// If we want to split instances of the query data when the variables change then we set [parameterizeQuery] to true.
+              /// [workoutById({"id":736373-837737-39383})]
+              /// Each time we query a new workoutById (i.e. the [id] variable changes) a new key under the [Query] root will be created. Each workout will be stored and accessible separately.
+              ? getParameterizedQueryId(query)
+
+              /// For non parametized queries, all instances of the same query should be saved under a single key - regardless of variable changes. Mainly for list type queries which we want to just overwrite with new data when it comes in.
+              /// We need to set all vars to in the varsMap to null like this
+              /// [userLoggedWorkouts({"first":null})]
+              : getNulledVarsQueryId(query);
+
+      /// Check for a top level field alias to ensure we look under the correct key for the response.
+      final alias = extractRootFieldAliasFromOperation(query);
+      final data = response.data![alias ?? query.operationName];
+
+      normalizeToStore(
+        queryKey: id,
+        data: data,
+        write: mergeWriteNormalized,
+        read: readNormalized,
+      );
+
+      if (broadcastQueryIds.isNotEmpty) {
+        broadcastQueriesByIds(broadcastQueryIds);
+      }
+    }
+
+    final result = OperationResult<TData>(
+        data: query.parse(response.data ?? {}), errors: response.errors);
+
+    return result;
+  }
+
   //////////////////////////////////////////
   ////// Store Update Operations ///////////
   //////////////////////////////////////////
@@ -298,6 +313,7 @@ class GraphQLStore {
     final hasErrors = response.errors != null && response.errors!.isNotEmpty;
 
     if (hasErrors) {
+      printLog('There was an error...${mutation.operationName}');
       response.errors?.forEach((e) {
         printLog(e.toString());
       });
@@ -307,18 +323,17 @@ class GraphQLStore {
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
     if (!result.hasErrors && result.data != null) {
-      /// Check for a top level field alias - these are needed sometimes due to the way Artemis generates return types for operations.
+      /// Check for a top level field alias to ensure we look under the correct key for the response.
       final alias = extractRootFieldAliasFromOperation(mutation);
       final data = response.data![alias ?? mutation.operationName];
 
-      /// Handle cases where returned data is a list of created objects.
+      /// Handle cases where returned data is a list of objects.
+      /// E.g CreateBodyTransformPhotosMutation returns [List<BodyTransformPhoto>]
+      /// Note: Optimistic data cannot be a list...currently.
       if (data is List) {
         for (final e in data) {
           normalizeToStore(
-            data: e,
-            write: mergeWriteNormalized,
-            read: readNormalized,
-          );
+              data: e, write: mergeWriteNormalized, read: readNormalized);
           addRefToQueryData(data: e, queryIds: addRefToQueries);
         }
       } else {
@@ -333,47 +348,6 @@ class GraphQLStore {
     return result;
   }
 
-  /// Network query which writes to store and optionally re-broadcasts specified queries. Returns the query result or null if fail.
-  /// Update the store with returned (after normalizing) data, then broadcastQueriesByIds (broadcastQueriesByIds is really a store read follwed by a broadcastQueriesByIds) to specified ids.
-  Future<OperationResult<TData>?>
-      query<TData, TVars extends json.JsonSerializable>({
-    required GraphQLQuery<TData, TVars> query,
-    List<String> broadcastQueryIds = const [],
-  }) async {
-    final response = await execute(query);
-
-    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
-
-    if (hasErrors) {
-      response.errors?.forEach((e) {
-        printLog(e.toString());
-      });
-    }
-
-    if (!hasErrors) {
-      /// Important! [normalizeOperation.variables] is by default in alphabetical order.
-      /// i.e. [userPublicProfiles({"cursor":null,"take":null})]
-      /// vs [userPublicProfiles({"take":null,"cursor":null})]
-      /// These will be different keys as far as the store is concerned.
-      normalizeOperation(
-          data: response.data ?? {},
-          document: query.document,
-          variables: query.getVariablesMap(),
-          typePolicies: _typePolicies,
-          read: readNormalized,
-          write: mergeWriteNormalized);
-
-      if (broadcastQueryIds.isNotEmpty) {
-        broadcastQueriesByIds(broadcastQueryIds);
-      }
-    }
-
-    final result = OperationResult<TData>(
-        data: query.parse(response.data ?? {}), errors: response.errors);
-
-    return result;
-  }
-
   /// Network mutation with optional optimism.
   /// Wrap execute function - add cache writing and broadcastQueriesByIdsing.
   /// Update the store with returned (after normalizing) data, then broadcastQueriesByIds (broadcastQueriesByIds is really a store read follwed by a broadcastQueriesByIds) to specified ids.
@@ -382,20 +356,11 @@ class GraphQLStore {
     required GraphQLQuery<TData, TVars> mutation,
     Map<String, dynamic>? optimisticData,
 
-    /// If you want to add / remove ref to / from queries the you have to provide [id] and [__typename] in the optimistic data and these fields must also be returned by the api in the result object.
-    List<String> addRefToQueries = const [],
-    List<String> removeRefFromQueries = const [],
-
     /// Query IDs passed here will be refetched from the network. Data will be added to store and then the query broadcast.
     List<String> refetchQueryIds = const [],
 
     /// Broascast from the store - no network request made.
     List<String> broadcastQueryIds = const [],
-
-    /// Remove a whole query key from the store.
-    /// Useful when deleting single objects that have query root data in the store.
-    /// i.e. [workoutById(id: 123)].
-    List<String> clearQueryDataAtKeys = const [],
 
     /// [customVariablesMap] - if you do not want to pass all the fields of the object to the API. If you pass null fields / omit some fields to the typed inputs then those fields will be set null in the DB.
     Map<String, dynamic>? customVariablesMap,
@@ -414,6 +379,7 @@ class GraphQLStore {
     final hasErrors = response.errors != null && response.errors!.isNotEmpty;
 
     if (hasErrors) {
+      printLog('There was an error...${mutation.operationName}');
       response.errors?.forEach((e) {
         printLog(e.toString());
       });
@@ -436,31 +402,13 @@ class GraphQLStore {
         for (final e in data) {
           normalizeToStore(
               data: e, write: mergeWriteNormalized, read: readNormalized);
-          if (addRefToQueries.isNotEmpty) {
-            addRefToQueryData(data: e, queryIds: addRefToQueries);
-          }
-          if (removeRefFromQueries.isNotEmpty) {
-            removeRefFromQueryData(data: e, queryIds: removeRefFromQueries);
-          }
         }
       } else {
         normalizeToStore(
             data: data, write: mergeWriteNormalized, read: readNormalized);
-        if (addRefToQueries.isNotEmpty) {
-          addRefToQueryData(data: data, queryIds: addRefToQueries);
-        }
-        if (removeRefFromQueries.isNotEmpty) {
-          removeRefFromQueryData(data: data, queryIds: removeRefFromQueries);
-        }
       }
 
       processResult?.call(result.data as TData);
-
-      /// Handled the same way whether return value is a list or not - it just deletes the data at the specified keys.
-      /// Use this to handle side effects where deleting data is necessary. E.g when a user leaves a club we need to delete all data relating to the club from the store.
-      if (clearQueryDataAtKeys.isNotEmpty) {
-        _clearQueryDataAtKeys(clearQueryDataAtKeys);
-      }
 
       broadcastQueriesByIds(broadcastQueryIds);
       refetchQueriesByIds(refetchQueryIds);
@@ -477,10 +425,6 @@ class GraphQLStore {
       {required GraphQLQuery<TData, TVars> mutation,
       required String objectId,
       required String typename,
-
-      /// Useful if you have deleted an object that has parent(s) which may still be referencing it.
-      bool removeAllRefsToId = false,
-      List<String> removeRefFromQueries = const [],
       void Function(TData resultData)? processResult,
 
       /// Remove a whole query key from the store.
@@ -493,6 +437,7 @@ class GraphQLStore {
     final hasErrors = response.errors != null && response.errors!.isNotEmpty;
 
     if (hasErrors) {
+      printLog('There was an error...${mutation.operationName}');
       response.errors?.forEach((e) {
         printLog(e.toString());
       });
@@ -501,23 +446,14 @@ class GraphQLStore {
     final result = OperationResult<TData>(
         data: mutation.parse(response.data ?? {}), errors: response.errors);
 
-    if (!result.hasErrors &&
-        response.data?[mutation.operationName] == objectId) {
+    if (!result.hasErrors && result.data != null) {
       final id = '$typename:$objectId';
       await deleteNormalizedObject(id);
 
-      if (removeAllRefsToId) {
-        removeAllQueryRefsToId(id);
-      }
-
-      if (removeRefFromQueries.isNotEmpty) {
-        removeRefFromQueryData(
-            data: {'id': objectId, '__typename': typename},
-            queryIds: removeRefFromQueries);
-      }
+      removeAllQueryRefsToId(id);
 
       if (clearQueryDataAtKeys.isNotEmpty) {
-        _clearQueryDataAtKeys(clearQueryDataAtKeys);
+        clearQueryData(clearQueryDataAtKeys);
       }
 
       processResult?.call(result.data as TData);
@@ -530,18 +466,14 @@ class GraphQLStore {
 
   /// Similar to [delete] but will delete a list of objects from store.
   /// Must all be the same [typename].
-  Future<OperationResult<TData>> deleteMultiple<TData,
-          TVars extends json.JsonSerializable>(
-      {required GraphQLQuery<TData, TVars> mutation,
-      required List<String> objectIds,
-      required String typename,
-      void Function(TData resultData)? processResult,
-
-      // useful if you have deleted an object that has parent(s) which may still be referencing it.
-      bool removeAllRefsToIds = false,
-      List<String> removeRefsFromQueries = const [],
-      List<String> clearQueryDataAtKeys = const [],
-      List<String> broadcastQueryIds = const []}) async {
+  Future<OperationResult<TData>>
+      deleteMultiple<TData, TVars extends json.JsonSerializable>(
+          {required GraphQLQuery<TData, TVars> mutation,
+          required List<String> objectIds,
+          required String typename,
+          List<String> clearQueryDataAtKeys = const [],
+          void Function(TData resultData)? processResult,
+          List<String> broadcastQueryIds = const []}) async {
     final response = await execute(mutation);
 
     final hasErrors = response.errors != null && response.errors!.isNotEmpty;
@@ -561,22 +493,14 @@ class GraphQLStore {
         final objectStoreId = '$typename:$id';
         await deleteNormalizedObject(objectStoreId);
 
-        if (removeAllRefsToIds) {
-          removeAllQueryRefsToId(id);
-        }
-
-        if (removeRefsFromQueries.isNotEmpty) {
-          removeRefFromQueryData(
-              data: {'id': id, '__typename': typename},
-              queryIds: removeRefsFromQueries);
-        }
+        removeAllQueryRefsToId(id);
       }
 
       if (clearQueryDataAtKeys.isNotEmpty) {
         /// Remove a whole query key from the store.
         /// Useful when deleting single objects that have query root data in the store.
         /// i.e. [workoutById(id: 123)].
-        _clearQueryDataAtKeys(clearQueryDataAtKeys);
+        clearQueryData(clearQueryDataAtKeys);
       }
 
       processResult?.call(result.data as TData);
@@ -611,17 +535,46 @@ class GraphQLStore {
     return result;
   }
 
+  /////////////////////////////////////
+  ///// Hive box reads and writes /////
+  /////////////////////////////////////
+  /// Client side (Store) reads.
+  Object? readQueryData(String queryId) {
+    final allQueries = _box.get(queryRootKey);
+
+    final queryObject = allQueries[queryId];
+
+    return denormalizeObject(data: queryObject, box: _box);
+  }
+
+  /// Retrieves the raw normalized data.
+  /// Normalized children will be [$ref] objects. Not plain json maps.
+  Map<String, dynamic> readNormalized(String key) {
+    return Map<String, dynamic>.from(_box.get(key) ?? {});
+  }
+
+  /// Retrieves data from a key and then recursively retrieves all of its children.
+  /// Children can be scalar or [$ref] objects where plain json Map is returned.
+  Map<String, dynamic> readDenomalized(String key) {
+    return readFromStoreDenormalized(key: key, box: _box);
+  }
+
   /// Client side (Store) write.
-  /// Will merge / overwrite with previous data, or creating it if not present.
+  /// Writes query response data and / or straight JSON data to the store.
+  /// For query data the object will be { [queryId]: [Map] or []}
   bool writeDataToStore(
-      {required Map<String, dynamic> data,
+      {String? queryId,
+      required Map<String, dynamic> data,
       List<String> broadcastQueryIds = const [],
 
-      /// Only queries whose data is a list of refs can accept refs like this.
+      /// Only queries whose data is a [list] of refs can accept refs like this. Do not use for queries where data is a single Map.
       List<String> addRefToQueries = const []}) {
     try {
       normalizeToStore(
-          data: data, write: mergeWriteNormalized, read: readNormalized);
+          queryKey: queryId,
+          data: data,
+          write: mergeWriteNormalized,
+          read: readNormalized);
 
       if (addRefToQueries.isNotEmpty) {
         addRefToQueryData(data: data, queryIds: addRefToQueries);
@@ -635,75 +588,6 @@ class GraphQLStore {
     }
   }
 
-  /// Add a ref obj to all specified query ids.
-  /// Does not write a normalized object to the store.
-  bool addRefToQueryData(
-      {required Map<String, dynamic> data, required List<String> queryIds}) {
-    final objectId = resolveDataId(data);
-    if (objectId == null) {
-      printLog(
-          'Warning: Could not resolveDataId in [data]. If you want to add a ref to queries then you need to provide [id] and [__typename] in the data.');
-      return false;
-    }
-    final allQueries = _box.get(_queryRootKey);
-
-    for (final queryId in queryIds) {
-      final prevList = allQueries[queryId];
-
-      if (prevList != null && prevList is! List) {
-        throw AssertionError(
-            'There is data under [$_queryRootKey][$queryId], but it is not a list. You cannot add a ref to a non list object.');
-      }
-
-      final newRef = {_refKey: objectId};
-
-      final updatedList = [if (prevList != null) ...prevList as List, newRef];
-
-      // Rewrite to box.
-      _box.put(_queryRootKey, {...allQueries, queryId: updatedList});
-
-      broadcastQueriesByIds([queryId]);
-    }
-    return true;
-  }
-
-  /// Remove a ref obj from all specified query ids.
-  /// [objectId] must be in the format [type:id] as a string.
-  /// If [_box.get(_queryRootKey)] is null then this key will be created.
-  /// Runs broadcast once the ref has been removed.
-  bool removeRefFromQueryData(
-      {required Map<String, dynamic> data, required List<String> queryIds}) {
-    final objectId = resolveDataId(data);
-    if (objectId == null) {
-      printLog(
-          'Warning: Could not resolveDataId in [data]. If you want to remove a ref from queries then you need to provide [id] and [__typename] in the data.');
-      return false;
-    }
-    final allQueries = _box.get(_queryRootKey);
-
-    for (final queryId in queryIds) {
-      final prevList = allQueries[queryId];
-
-      if (prevList != null && prevList is! List) {
-        throw AssertionError(
-            'There is data under [$_queryRootKey][$queryId], but it is not a list. You cannot remove a ref from a non list object.');
-      }
-
-      final updatedList = prevList != null
-          ? (prevList as List).where((e) => e[_refKey] != objectId).toList()
-          : [];
-
-      // Rewrite to box.
-      _box.put(_queryRootKey, {...allQueries, queryId: updatedList});
-
-      broadcastQueriesByIds([queryId]);
-    }
-    return true;
-  }
-
-  /////////////////////////////////////
-  ///// Hive box reads and writes /////
-  /////////////////////////////////////
   /// Merges / overwrites [value] with existing data at [key].
   Future<void> mergeWriteNormalized(String key, dynamic value) async {
     if (value is Map<String, Object>) {
@@ -717,46 +601,94 @@ class GraphQLStore {
     }
   }
 
-  /// Retrieves data from a key and then recursively retrieves all of its children.
-  /// Children can be scalar or [$ref] objects where plain json Map is returned.
-  Map<String, dynamic> readDenomalized(String key) {
-    return readFromStoreDenormalized(key, _box);
-  }
-
-  /// Retrieves the raw normalized data.
-  /// Normalized children will be [$ref] objects. Not plain json maps.
-  Map<String, dynamic> readNormalized(String key) {
-    return Map<String, dynamic>.from(_box.get(key) ?? {});
-  }
-
   Future<void> deleteNormalizedObject(String key) async {
     await _box.delete(key);
   }
 
-  /// @Experimental.
-  Object readQueryData(String queryId) {
-    final boxData = Map<String, dynamic>.from(_box.toMap());
+  ////////////////////////////
+  //// Handle Ref Updates ////
+  ////////////////////////////
+  /// Add a $ref obj to all specified query ids. Query data must be a [List]
+  /// Does not write a normalized object to the store.
+  bool addRefToQueryData(
+      {required Map<String, dynamic> data, required List<String> queryIds}) {
+    final objectId = resolveDataId(data);
+    if (objectId == null) {
+      printLog(
+          'Warning: Could not resolveDataId in [data]. If you want to add a ref to queries then you need to provide [id] and [__typename] in the data.');
+      return false;
+    }
+    final allQueries = _box.get(queryRootKey);
 
-    final queryObject = boxData[_queryRootKey][queryId];
+    for (final queryId in queryIds) {
+      final prevList = allQueries[queryId];
 
-    return readFromStoreDenormalizedTest(object: queryObject, data: boxData);
+      if (prevList != null && prevList is! List) {
+        throw AssertionError(
+            'There is data under [$queryRootKey][$queryId], but it is not a list. You cannot add a ref to a non list object.');
+      }
+
+      final newRef = {refKey: objectId};
+
+      final updatedList = [if (prevList != null) ...prevList as List, newRef];
+
+      // Rewrite to box.
+      _box.put(queryRootKey, {...allQueries, queryId: updatedList});
+
+      broadcastQueriesByIds([queryId]);
+    }
+    return true;
+  }
+
+  ///  Remove a ref obj from all specified query ids (where those ID's data is in [List] format).
+  /// [objectId] must be in the format [type:id] as a string.
+  /// If [_box.get(queryRootKey)] is null then this key will be created.
+  /// Runs broadcast once the ref has been removed.
+  bool removeRefFromQueryData(
+      {required Map<String, dynamic> data, required List<String> queryIds}) {
+    final objectId = resolveDataId(data);
+    if (objectId == null) {
+      printLog(
+          'Warning: Could not resolveDataId in [data]. If you want to remove a ref from queries then you need to provide [id] and [__typename] in the data.');
+      return false;
+    }
+    final allQueries = _box.get(queryRootKey);
+
+    for (final queryId in queryIds) {
+      final prevList = allQueries[queryId];
+
+      if (prevList != null && prevList is! List) {
+        throw AssertionError(
+            'There is data under [$queryRootKey][$queryId], but it is not a list. You cannot remove a ref from a non list object.');
+      }
+
+      final updatedList = prevList != null
+          ? (prevList as List).where((e) => e[refKey] != objectId).toList()
+          : [];
+
+      // Rewrite to box.
+      _box.put(queryRootKey, {...allQueries, queryId: updatedList});
+
+      broadcastQueriesByIds([queryId]);
+    }
+    return true;
   }
 
   /// Within the root query key - does data for this query exist.
-  bool _hasQueryDataInStore(String queryKey) {
-    return _box.get(_queryRootKey, defaultValue: {})[queryKey] != null;
+  bool hasQueryDataInStore(String queryKey) {
+    return _box.get(queryRootKey, defaultValue: {})[queryKey] != null;
   }
 
-  void _clearQueryDataAtKeys(List<String> queryKeys) {
-    final queriesData = Map<String, dynamic>.from(_box.get(_queryRootKey));
+  void clearQueryData(List<String> queryKeys) {
+    final queriesData = Map<String, dynamic>.from(_box.get(queryRootKey));
     for (final key in queryKeys) {
       queriesData.remove(key);
     }
-    _box.put(_queryRootKey, queriesData);
+    _box.put(queryRootKey, queriesData);
   }
 
   /// [id] should be [type:id] as standard.
-  /// Will remove all objects in the store's queries which = {_refKey: key}
+  /// Will remove all objects in the store which = {refKey: key}
   void removeAllQueryRefsToId(String id) {
     for (final rootKey in _box.keys) {
       final data = _box.get(rootKey);
@@ -767,13 +699,13 @@ class GraphQLStore {
   /// Removes all entities that cannot be reached from the Query root key.
   Set<String> gc() {
     final reachable = reachableIdsFromDataId(
-      dataId: _queryRootKey,
+      dataId: queryRootKey,
       read: (dataId) => readNormalized(dataId),
     );
 
     final keysToRemove = _box.keys
         .where(
-          (key) => key != _queryRootKey && !reachable.contains(key),
+          (key) => key != queryRootKey && !reachable.contains(key),
         )
         .map((k) => k.toString())
         .toSet();
