@@ -64,13 +64,13 @@ class _ResistanceExerciseGeneratorState
 
   // Page 1
   // For supersets user can pick multiple moves.
-  final List<Move> _moves = [];
+  final List<MoveData> _moves = [];
   // Page 2
   // Must be same length as moves array. Store selected equipment here.
-  final Map<Move, Equipment?> _equipmentForMoves = <Move, Equipment?>{};
+  final Map<MoveData, Equipment?> _equipmentForMoves = <MoveData, Equipment?>{};
   // Page 3
   int _numSetsPerMove = 3;
-  final Map<Move, MoveRepData> _repDataForMoves = <Move, MoveRepData>{};
+  final Map<MoveData, MoveRepData> _repDataForMoves = <MoveData, MoveRepData>{};
 
   /// Check data from each page is valid.
   List<String> get _pageOneErrors {
@@ -100,7 +100,7 @@ class _ResistanceExerciseGeneratorState
 
   final bool _savingToDB = false;
 
-  void _selectMove(Move move) {
+  void _selectMove(MoveData move) {
     setState(() {
       _moves.add(move);
       _equipmentForMoves[move] = null;
@@ -109,14 +109,14 @@ class _ResistanceExerciseGeneratorState
     _checkIfEquipmentSelectorsRequired();
   }
 
-  void _removeMove(Move move) {
+  void _removeMove(MoveData move) {
     _moves.remove(move);
     _equipmentForMoves.remove(move);
     _repDataForMoves.remove(move);
     _checkIfEquipmentSelectorsRequired();
   }
 
-  void _updateEquipment(Move move, Equipment equipment) {
+  void _updateEquipment(MoveData move, Equipment equipment) {
     _equipmentForMoves[move] = equipment;
     _checkIfEquipmentSelectorsRequired();
   }
@@ -135,16 +135,16 @@ class _ResistanceExerciseGeneratorState
   void _updateNumSetsPerMove(int numSets) =>
       setState(() => _numSetsPerMove = numSets);
 
-  void _updateRepType(Move move, ResistanceSetRepType repType) =>
+  void _updateRepType(MoveData move, ResistanceSetRepType repType) =>
       setState(() => _repDataForMoves[move]!.repType = repType);
 
-  void _updateInitialReps(Move move, int reps) =>
+  void _updateInitialReps(MoveData move, int reps) =>
       setState(() => _repDataForMoves[move]!.initialReps = reps);
 
-  void _updateEnableRepLadder(Move move, bool enableLadder) =>
+  void _updateEnableRepLadder(MoveData move, bool enableLadder) =>
       setState(() => _repDataForMoves[move]!.enableLadder = enableLadder);
 
-  void _updatePerSetRepAdjust(Move move, int perSetRepAdjust) =>
+  void _updatePerSetRepAdjust(MoveData move, int perSetRepAdjust) =>
       setState(() => _repDataForMoves[move]!.perSetRepAdjust = perSetRepAdjust);
 
   void _saveGeneratedSet(ResistanceExercise resistanceExercise) {
@@ -240,9 +240,9 @@ class _ResistanceExerciseGeneratorState
 
 /// Allows the user to select one (set) or many (superset+) moves one by one.
 class _MoveSelectorUI extends StatelessWidget {
-  final List<Move> moves;
-  final void Function(Move move) selectMove;
-  final void Function(Move move) removeMove;
+  final List<MoveData> moves;
+  final void Function(MoveData move) selectMove;
+  final void Function(MoveData move) removeMove;
   const _MoveSelectorUI({
     Key? key,
     required this.moves,
@@ -336,9 +336,9 @@ class _MoveSelectorUI extends StatelessWidget {
 }
 
 class _EquipmentSelectorUI extends StatelessWidget {
-  final List<Move> moves;
-  final Map<Move, Equipment?> equipmentForMoves;
-  final void Function(Move move, Equipment equipment) updateEquipment;
+  final List<MoveData> moves;
+  final Map<MoveData, Equipment?> equipmentForMoves;
+  final void Function(MoveData move, Equipment equipment) updateEquipment;
   const _EquipmentSelectorUI(
       {Key? key,
       required this.moves,
@@ -397,12 +397,13 @@ class _EquipmentSelectorUI extends StatelessWidget {
 class _NumSetsAndRepsSelectorUI extends StatelessWidget {
   final int numSetsPerMove;
   final void Function(int numSets) updateNumSetsPerMove;
-  final Map<Move, MoveRepData> repDataForMoves;
-  final Map<Move, Equipment?> equipmentForMoves;
-  final void Function(Move move, int perSetRepAdjust) updatePerSetRepAdjust;
-  final void Function(Move move, int initialReps) updateInitialReps;
-  final void Function(Move move, ResistanceSetRepType repType) updateRepType;
-  final void Function(Move move, bool enableLadder) updateEnableRepLadder;
+  final Map<MoveData, MoveRepData> repDataForMoves;
+  final Map<MoveData, Equipment?> equipmentForMoves;
+  final void Function(MoveData move, int perSetRepAdjust) updatePerSetRepAdjust;
+  final void Function(MoveData move, int initialReps) updateInitialReps;
+  final void Function(MoveData move, ResistanceSetRepType repType)
+      updateRepType;
+  final void Function(MoveData move, bool enableLadder) updateEnableRepLadder;
   const _NumSetsAndRepsSelectorUI(
       {Key? key,
       required this.numSetsPerMove,
@@ -548,9 +549,9 @@ class _NumSetsAndRepsSelectorUI extends StatelessWidget {
 
 class _GeneratedSetPreview extends StatelessWidget {
   final int numSetsPerMove;
-  final List<Move> moves;
-  final Map<Move, Equipment?> equipmentForMoves;
-  final Map<Move, MoveRepData> repDataForMoves;
+  final List<MoveData> moves;
+  final Map<MoveData, Equipment?> equipmentForMoves;
+  final Map<MoveData, MoveRepData> repDataForMoves;
   final List<String> errors;
   final void Function(ResistanceExercise resistanceExercise) onSave;
   const _GeneratedSetPreview({
@@ -578,7 +579,7 @@ class _GeneratedSetPreview extends StatelessWidget {
   }
 
   /// [round] is zero indexed
-  ResistanceSet _genSet(Move m, Equipment? e, MoveRepData r, int index) {
+  ResistanceSet _genSet(MoveData m, Equipment? e, MoveRepData r, int index) {
     return ResistanceSet()
       ..id = const Uuid().v1()
       ..createdAt = DateTime.now()

@@ -30,24 +30,24 @@ class NowAndNextMovesTimer extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        ImplicitlyAnimatedList<WorkoutSet>(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            items: nowAndNextSets.whereType<WorkoutSet>().toList(),
-            itemBuilder: (context, animation, workoutSet, index) =>
-                SizeFadeTransition(
-                  animation: animation,
-                  sizeFraction: 0.7,
-                  curve: Curves.easeInOut,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: WorkoutSetDisplay(
-                      workoutSet: workoutSet,
-                      workoutSectionType: workoutSection.workoutSectionType,
-                    ),
-                  ),
-                ),
-            areItemsTheSame: (a, b) => a == b),
+        // ImplicitlyAnimatedList<WorkoutSet>(
+        //     shrinkWrap: true,
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     items: nowAndNextSets.whereType<WorkoutSet>().toList(),
+        //     itemBuilder: (context, animation, workoutSet, index) =>
+        //         SizeFadeTransition(
+        //           animation: animation,
+        //           sizeFraction: 0.7,
+        //           curve: Curves.easeInOut,
+        //           child: Padding(
+        //             padding: const EdgeInsets.only(bottom: 4.0),
+        //             child: WorkoutSetDisplay(
+        //               workoutSet: workoutSet,
+        //               workoutSectionType: workoutSection.workoutSectionType,
+        //             ),
+        //           ),
+        //         ),
+        //     areItemsTheSame: (a, b) => a == b),
         if (nowAndNextSets.contains(null))
           Padding(
             padding:

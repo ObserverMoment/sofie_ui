@@ -21,7 +21,8 @@ class SelectableWorkoutCard extends StatelessWidget {
       : super(key: key);
 
   void _openWorkoutDetailsPage(BuildContext context, WorkoutSummary workout) =>
-      context.navigateTo(WorkoutDetailsRoute(id: workout.id));
+      null;
+  // context.navigateTo(WorkoutDetailsRoute(id: workout.id));
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +42,11 @@ class SelectableWorkoutCard extends StatelessWidget {
                           text: 'Select',
                           icon: CupertinoIcons.add,
                           onPressed: () => selectWorkout!(workout)),
-                    BottomSheetMenuItem(
-                        text: 'View',
-                        icon: CupertinoIcons.eye,
-                        onPressed: () => context
-                            .navigateTo(WorkoutDetailsRoute(id: workout.id))),
+                    // BottomSheetMenuItem(
+                    //     text: 'View',
+                    //     icon: CupertinoIcons.eye,
+                    //     onPressed: () => context
+                    //         .navigateTo(WorkoutDetailsRoute(id: workout.id))),
                   ]))
           : () => _openWorkoutDetailsPage(context, workout),
       child: WorkoutCard(workout),

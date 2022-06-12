@@ -1,14 +1,14 @@
 query userSavedResistanceSessions {
-  userResistanceSessionSummary: userSavedResistanceSessions {
+  userSavedResistanceSessions {
     ...ResistanceSession
     User {
       ...UserAvatarData
     }
-    ResistanceExerciseSummary: ResistanceExercises {
+    ResistanceExercises {
       ...ResistanceExercise
-      ResistanceSetSummary: ResistanceSets {
+      ResistanceSets {
         ...ResistanceSet
-        MoveSummary: Move {
+        Move {
           ...Move
         }
         Equipment {

@@ -33,34 +33,35 @@ class WorkoutSetWorkoutMove extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => openEditWorkoutMove(workoutMove),
-      child: AnimatedSlidable(
-        key: key,
-        index: workoutMove.sortPosition,
-        itemType: 'Move',
-        removeItem: deleteWorkoutMove,
-        secondaryActions: [
-          SlidableAction(
-            label: 'Duplicate',
-            backgroundColor: Styles.primaryAccent,
-            foregroundColor: Styles.white,
-            icon: CupertinoIcons.plus_square_on_square,
-            onPressed: (_) => duplicateWorkoutMove(workoutMove.sortPosition),
-          ),
-        ],
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-          decoration: BoxDecoration(
-              border: isLast
-                  ? null
-                  : Border(
-                      bottom: BorderSide(
-                          color: context.theme.primary.withOpacity(0.1)))),
-          child: WorkoutMoveDisplay(
-            workoutMove,
-            showReps: showReps,
-          ),
-        ),
-      ),
+
+      // child: AnimatedSlidable(
+      //   key: key,
+      //   index: workoutMove.sortPosition,
+      //   itemType: 'Move',
+      //   removeItem: deleteWorkoutMove,
+      //   secondaryActions: [
+      //     SlidableAction(
+      //       label: 'Duplicate',
+      //       backgroundColor: Styles.primaryAccent,
+      //       foregroundColor: Styles.white,
+      //       icon: CupertinoIcons.plus_square_on_square,
+      //       onPressed: (_) => duplicateWorkoutMove(workoutMove.sortPosition),
+      //     ),
+      //   ],
+      //   child: Container(
+      //     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+      //     decoration: BoxDecoration(
+      //         border: isLast
+      //             ? null
+      //             : Border(
+      //                 bottom: BorderSide(
+      //                     color: context.theme.primary.withOpacity(0.1)))),
+      //     child: WorkoutMoveDisplay(
+      //       workoutMove,
+      //       showReps: showReps,
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

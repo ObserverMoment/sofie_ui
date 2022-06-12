@@ -33,20 +33,20 @@ class _ExerciseLibraryPageState extends State<ExerciseLibraryPage> {
   int _activeTabIndex = 0;
   String _searchString = '';
 
-  bool _filter(Move move) {
+  bool _filter(MoveData move) {
     return [move.name, move.searchTerms, move.moveType.name]
         .where((t) => Utils.textNotNull(t))
         .map((t) => t!.toLowerCase())
         .any((t) => t.contains(_searchString));
   }
 
-  List<Move> _filterBySearchString(List<Move> moves) {
+  List<MoveData> _filterBySearchString(List<MoveData> moves) {
     return Utils.textNotNull(_searchString)
         ? moves.where((m) => _filter(m)).toList()
         : moves;
   }
 
-  Future<void> _openCustomMoveCreator(Move? moveToUpdate) async {
+  Future<void> _openCustomMoveCreator(MoveData? moveToUpdate) async {
     Utils.unfocusAny();
     Utils.hideKeyboard(context);
     final success =

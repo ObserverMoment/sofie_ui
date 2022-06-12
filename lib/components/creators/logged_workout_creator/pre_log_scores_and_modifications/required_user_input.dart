@@ -3,7 +3,6 @@ import 'package:sofie_ui/blocs/workout_structure_modifications_bloc.dart';
 import 'package:sofie_ui/components/creators/logged_workout_creator/pre_log_scores_and_modifications/score_inputs.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 
 /// Certain loggedWorkoutSection types require some input from the user before they can be created.
@@ -20,7 +19,7 @@ class RequiredUserInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTimedSection = workoutSectionWithInput.workoutSection.isTimed;
+    final isTimedSection = false;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

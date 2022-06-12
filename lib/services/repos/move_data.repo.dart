@@ -4,8 +4,8 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 
 class MoveDataRepo extends ChangeNotifier {
-  List<Move> standardMoves = [];
-  List<Move> customMoves = [];
+  List<MoveData> standardMoves = [];
+  List<MoveData> customMoves = [];
 
   Future<void> initMoveData(BuildContext context) async {
     final result = await GraphQLStore.store
@@ -20,7 +20,7 @@ class MoveDataRepo extends ChangeNotifier {
         });
   }
 
-  Move moveById(String id) => [...standardMoves, ...customMoves].firstWhere(
+  MoveData moveById(String id) => [...standardMoves, ...customMoves].firstWhere(
         (m) => id == m.id,
       );
 }

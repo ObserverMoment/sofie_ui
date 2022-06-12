@@ -28,6 +28,11 @@ input AddWorkoutToCollectionInput {
   collectionId: ID!
 }
 
+type AllMoves {
+  customMoves: [MoveData!]!
+  standardMoves: [MoveData!]!
+}
+
 type AmrapMove {
   Equipment: Equipment
   Move: Move!
@@ -1064,6 +1069,17 @@ type MobilitySession {
 }
 
 type Move {
+  archived: Boolean!
+  demoVideoThumbUri: String
+  demoVideoUri: String
+  description: String
+  id: ID!
+  name: String!
+  scope: MoveScope!
+  searchTerms: String
+}
+
+type MoveData {
   BodyAreaMoveScores: [BodyAreaMoveScore!]!
   MoveType: MoveType!
   RequiredEquipments: [Equipment!]!
@@ -1077,11 +1093,6 @@ type Move {
   scope: MoveScope!
   searchTerms: String
   validRepTypes: [WorkoutMoveRepType!]!
-}
-
-type MoveData {
-  customMoves: [Move!]!
-  standardMoves: [Move!]!
 }
 
 """
@@ -1466,7 +1477,7 @@ type Query {
   lifetimeLogStatsSummary(userId: ID!): LifetimeLogStatsSummary!
   logCountByWorkout(id: ID!): Int!
   loggedWorkoutById(id: ID!): LoggedWorkout
-  moveData: MoveData!
+  moveData: AllMoves!
   publicClubs: [ClubSummary!]!
   publicWorkoutPlans(
     cursor: ID

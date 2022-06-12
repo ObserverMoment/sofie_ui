@@ -140,8 +140,6 @@ mixin MoveMixin {
   String? demoVideoThumbUri;
   @JsonKey(unknownEnumValue: MoveScope.artemisUnknown)
   late MoveScope scope;
-  @JsonKey(unknownEnumValue: WorkoutMoveRepType.artemisUnknown)
-  late List<WorkoutMoveRepType> validRepTypes;
 }
 mixin EquipmentMixin {
   @JsonKey(name: '__typename')
@@ -197,24 +195,6 @@ mixin ResistanceSessionMixin {
   late DateTime updatedAt;
   late String name;
   String? note;
-}
-mixin MoveTypeMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  late String name;
-  String? description;
-  String? imageUri;
-}
-mixin BodyAreaMixin {
-  @JsonKey(name: '__typename')
-  String? $$typename;
-  late String id;
-  late String name;
-  @JsonKey(unknownEnumValue: BodyAreaFrontBack.artemisUnknown)
-  late BodyAreaFrontBack frontBack;
-  @JsonKey(unknownEnumValue: BodyAreaUpperLower.artemisUnknown)
-  late BodyAreaUpperLower upperLower;
 }
 mixin WorkoutMoveMixin {
   @JsonKey(name: '__typename')
@@ -760,6 +740,24 @@ mixin UserRecentlyViewedObjectMixin {
   late String name;
   late String type;
 }
+mixin BodyAreaMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late String name;
+  @JsonKey(unknownEnumValue: BodyAreaFrontBack.artemisUnknown)
+  late BodyAreaFrontBack frontBack;
+  @JsonKey(unknownEnumValue: BodyAreaUpperLower.artemisUnknown)
+  late BodyAreaUpperLower upperLower;
+}
+mixin MoveTypeMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late String name;
+  String? description;
+  String? imageUri;
+}
 mixin ProgressWidgetMixin {
   @JsonKey(name: '__typename')
   String? $$typename;
@@ -771,6 +769,20 @@ mixin ProgressWidgetMixin {
   late String name;
   String? subtitle;
   String? description;
+}
+mixin MoveDataMixin {
+  @JsonKey(name: '__typename')
+  String? $$typename;
+  late String id;
+  late String name;
+  String? searchTerms;
+  String? description;
+  String? demoVideoUri;
+  String? demoVideoThumbUri;
+  @JsonKey(unknownEnumValue: MoveScope.artemisUnknown)
+  late MoveScope scope;
+  @JsonKey(unknownEnumValue: WorkoutMoveRepType.artemisUnknown)
+  late List<WorkoutMoveRepType> validRepTypes;
 }
 mixin AnnouncementUpdateActionMixin {
   @JsonKey(name: '__typename')
@@ -1874,11 +1886,10 @@ class UserDayLogMoods$Query extends JsonSerializable with EquatableMixin {
 }
 
 @JsonSerializable(explicitToJson: true)
-class MoveSummary extends JsonSerializable with EquatableMixin, MoveMixin {
-  MoveSummary();
+class Move extends JsonSerializable with EquatableMixin, MoveMixin {
+  Move();
 
-  factory MoveSummary.fromJson(Map<String, dynamic> json) =>
-      _$MoveSummaryFromJson(json);
+  factory Move.fromJson(Map<String, dynamic> json) => _$MoveFromJson(json);
 
   @override
   List<Object?> get props => [
@@ -1889,11 +1900,10 @@ class MoveSummary extends JsonSerializable with EquatableMixin, MoveMixin {
         description,
         demoVideoUri,
         demoVideoThumbUri,
-        scope,
-        validRepTypes
+        scope
       ];
   @override
-  Map<String, dynamic> toJson() => _$MoveSummaryToJson(this);
+  Map<String, dynamic> toJson() => _$MoveToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -1907,191 +1917,6 @@ class Equipment extends JsonSerializable with EquatableMixin, EquipmentMixin {
   List<Object?> get props => [$$typename, id, name, loadAdjustable];
   @override
   Map<String, dynamic> toJson() => _$EquipmentToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ResistanceSetSummary extends JsonSerializable
-    with EquatableMixin, ResistanceSetMixin {
-  ResistanceSetSummary();
-
-  factory ResistanceSetSummary.fromJson(Map<String, dynamic> json) =>
-      _$ResistanceSetSummaryFromJson(json);
-
-  @JsonKey(name: 'MoveSummary')
-  late MoveSummary moveSummary;
-
-  @JsonKey(name: 'Equipment')
-  Equipment? equipment;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        updatedAt,
-        sortPosition,
-        note,
-        reps,
-        repType,
-        moveSummary,
-        equipment
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$ResistanceSetSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class ResistanceExerciseSummary extends JsonSerializable
-    with EquatableMixin, ResistanceExerciseMixin {
-  ResistanceExerciseSummary();
-
-  factory ResistanceExerciseSummary.fromJson(Map<String, dynamic> json) =>
-      _$ResistanceExerciseSummaryFromJson(json);
-
-  @JsonKey(name: 'ResistanceSetSummary')
-  late List<ResistanceSetSummary> resistanceSetSummary;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        updatedAt,
-        sortPosition,
-        note,
-        resistanceSetSummary
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$ResistanceExerciseSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserResistanceSessionSummary extends JsonSerializable
-    with EquatableMixin, ResistanceSessionMixin {
-  UserResistanceSessionSummary();
-
-  factory UserResistanceSessionSummary.fromJson(Map<String, dynamic> json) =>
-      _$UserResistanceSessionSummaryFromJson(json);
-
-  @JsonKey(name: 'User')
-  late UserAvatarData user;
-
-  @JsonKey(name: 'ResistanceExerciseSummary')
-  late List<ResistanceExerciseSummary> resistanceExerciseSummary;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        createdAt,
-        updatedAt,
-        name,
-        note,
-        user,
-        resistanceExerciseSummary
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$UserResistanceSessionSummaryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class UserSavedResistanceSessions$Query extends JsonSerializable
-    with EquatableMixin {
-  UserSavedResistanceSessions$Query();
-
-  factory UserSavedResistanceSessions$Query.fromJson(
-          Map<String, dynamic> json) =>
-      _$UserSavedResistanceSessions$QueryFromJson(json);
-
-  late List<UserResistanceSessionSummary> userResistanceSessionSummary;
-
-  @override
-  List<Object?> get props => [userResistanceSessionSummary];
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UserSavedResistanceSessions$QueryToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class MoveType extends JsonSerializable with EquatableMixin, MoveTypeMixin {
-  MoveType();
-
-  factory MoveType.fromJson(Map<String, dynamic> json) =>
-      _$MoveTypeFromJson(json);
-
-  @override
-  List<Object?> get props => [$$typename, id, name, description, imageUri];
-  @override
-  Map<String, dynamic> toJson() => _$MoveTypeToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class BodyArea extends JsonSerializable with EquatableMixin, BodyAreaMixin {
-  BodyArea();
-
-  factory BodyArea.fromJson(Map<String, dynamic> json) =>
-      _$BodyAreaFromJson(json);
-
-  @override
-  List<Object?> get props => [$$typename, id, name, frontBack, upperLower];
-  @override
-  Map<String, dynamic> toJson() => _$BodyAreaToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class BodyAreaMoveScore extends JsonSerializable with EquatableMixin {
-  BodyAreaMoveScore();
-
-  factory BodyAreaMoveScore.fromJson(Map<String, dynamic> json) =>
-      _$BodyAreaMoveScoreFromJson(json);
-
-  late int score;
-
-  @JsonKey(name: 'BodyArea')
-  late BodyArea bodyArea;
-
-  @override
-  List<Object?> get props => [score, bodyArea];
-  @override
-  Map<String, dynamic> toJson() => _$BodyAreaMoveScoreToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class Move extends JsonSerializable with EquatableMixin, MoveMixin {
-  Move();
-
-  factory Move.fromJson(Map<String, dynamic> json) => _$MoveFromJson(json);
-
-  @JsonKey(name: 'MoveType')
-  late MoveType moveType;
-
-  @JsonKey(name: 'BodyAreaMoveScores')
-  late List<BodyAreaMoveScore> bodyAreaMoveScores;
-
-  @JsonKey(name: 'RequiredEquipments')
-  late List<Equipment> requiredEquipments;
-
-  @JsonKey(name: 'SelectableEquipments')
-  late List<Equipment> selectableEquipments;
-
-  @override
-  List<Object?> get props => [
-        $$typename,
-        id,
-        name,
-        searchTerms,
-        description,
-        demoVideoUri,
-        demoVideoThumbUri,
-        scope,
-        validRepTypes,
-        moveType,
-        bodyAreaMoveScores,
-        requiredEquipments,
-        selectableEquipments
-      ];
-  @override
-  Map<String, dynamic> toJson() => _$MoveToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2177,6 +2002,24 @@ class ResistanceSession extends JsonSerializable
       ];
   @override
   Map<String, dynamic> toJson() => _$ResistanceSessionToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserSavedResistanceSessions$Query extends JsonSerializable
+    with EquatableMixin {
+  UserSavedResistanceSessions$Query();
+
+  factory UserSavedResistanceSessions$Query.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserSavedResistanceSessions$QueryFromJson(json);
+
+  late List<ResistanceSession> userSavedResistanceSessions;
+
+  @override
+  List<Object?> get props => [userSavedResistanceSessions];
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UserSavedResistanceSessions$QueryToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -2620,10 +2463,10 @@ class UserResistanceSessions$Query extends JsonSerializable
   factory UserResistanceSessions$Query.fromJson(Map<String, dynamic> json) =>
       _$UserResistanceSessions$QueryFromJson(json);
 
-  late List<UserResistanceSessionSummary> userResistanceSessionSummary;
+  late List<ResistanceSession> userResistanceSessions;
 
   @override
-  List<Object?> get props => [userResistanceSessionSummary];
+  List<Object?> get props => [userResistanceSessions];
   @override
   Map<String, dynamic> toJson() => _$UserResistanceSessions$QueryToJson(this);
 }
@@ -7292,6 +7135,32 @@ class DeleteWorkoutSetById$Mutation extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
+class BodyArea extends JsonSerializable with EquatableMixin, BodyAreaMixin {
+  BodyArea();
+
+  factory BodyArea.fromJson(Map<String, dynamic> json) =>
+      _$BodyAreaFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, name, frontBack, upperLower];
+  @override
+  Map<String, dynamic> toJson() => _$BodyAreaToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MoveType extends JsonSerializable with EquatableMixin, MoveTypeMixin {
+  MoveType();
+
+  factory MoveType.fromJson(Map<String, dynamic> json) =>
+      _$MoveTypeFromJson(json);
+
+  @override
+  List<Object?> get props => [$$typename, id, name, description, imageUri];
+  @override
+  Map<String, dynamic> toJson() => _$MoveTypeToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class ProgressWidget extends JsonSerializable
     with EquatableMixin, ProgressWidgetMixin {
   ProgressWidget();
@@ -7377,23 +7246,80 @@ class CheckUniqueDisplayName$Query extends JsonSerializable
 }
 
 @JsonSerializable(explicitToJson: true)
-class MoveData extends JsonSerializable with EquatableMixin {
+class BodyAreaMoveScore extends JsonSerializable with EquatableMixin {
+  BodyAreaMoveScore();
+
+  factory BodyAreaMoveScore.fromJson(Map<String, dynamic> json) =>
+      _$BodyAreaMoveScoreFromJson(json);
+
+  late int score;
+
+  @JsonKey(name: 'BodyArea')
+  late BodyArea bodyArea;
+
+  @override
+  List<Object?> get props => [score, bodyArea];
+  @override
+  Map<String, dynamic> toJson() => _$BodyAreaMoveScoreToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MoveData extends JsonSerializable with EquatableMixin, MoveDataMixin {
   MoveData();
 
   factory MoveData.fromJson(Map<String, dynamic> json) =>
       _$MoveDataFromJson(json);
 
+  @JsonKey(name: 'MoveType')
+  late MoveType moveType;
+
+  @JsonKey(name: 'BodyAreaMoveScores')
+  late List<BodyAreaMoveScore> bodyAreaMoveScores;
+
+  @JsonKey(name: 'RequiredEquipments')
+  late List<Equipment> requiredEquipments;
+
+  @JsonKey(name: 'SelectableEquipments')
+  late List<Equipment> selectableEquipments;
+
+  @override
+  List<Object?> get props => [
+        $$typename,
+        id,
+        name,
+        searchTerms,
+        description,
+        demoVideoUri,
+        demoVideoThumbUri,
+        scope,
+        validRepTypes,
+        moveType,
+        bodyAreaMoveScores,
+        requiredEquipments,
+        selectableEquipments
+      ];
+  @override
+  Map<String, dynamic> toJson() => _$MoveDataToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class AllMoves extends JsonSerializable with EquatableMixin {
+  AllMoves();
+
+  factory AllMoves.fromJson(Map<String, dynamic> json) =>
+      _$AllMovesFromJson(json);
+
   @JsonKey(name: '__typename')
   String? $$typename;
 
-  late List<Move> standardMoves;
+  late List<MoveData> standardMoves;
 
-  late List<Move> customMoves;
+  late List<MoveData> customMoves;
 
   @override
   List<Object?> get props => [$$typename, standardMoves, customMoves];
   @override
-  Map<String, dynamic> toJson() => _$MoveDataToJson(this);
+  Map<String, dynamic> toJson() => _$AllMovesToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -7403,7 +7329,7 @@ class MoveData$Query extends JsonSerializable with EquatableMixin {
   factory MoveData$Query.fromJson(Map<String, dynamic> json) =>
       _$MoveData$QueryFromJson(json);
 
-  late MoveData moveData;
+  late AllMoves moveData;
 
   @override
   List<Object?> get props => [moveData];
@@ -9339,28 +9265,6 @@ enum WorkoutMoveRepType {
   artemisUnknown,
 }
 
-enum BodyAreaFrontBack {
-  @JsonValue('BACK')
-  back,
-  @JsonValue('BOTH')
-  both,
-  @JsonValue('FRONT')
-  front,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-
-enum BodyAreaUpperLower {
-  @JsonValue('CORE')
-  core,
-  @JsonValue('LOWER')
-  lower,
-  @JsonValue('UPPER')
-  upper,
-  @JsonValue('ARTEMIS_UNKNOWN')
-  artemisUnknown,
-}
-
 enum DistanceUnit {
   @JsonValue('KILOMETRES')
   kilometres,
@@ -9459,6 +9363,28 @@ enum Gender {
   nonbinary,
   @JsonValue('PNTS')
   pnts,
+  @JsonValue('ARTEMIS_UNKNOWN')
+  artemisUnknown,
+}
+
+enum BodyAreaFrontBack {
+  @JsonValue('BACK')
+  back,
+  @JsonValue('BOTH')
+  both,
+  @JsonValue('FRONT')
+  front,
+  @JsonValue('ARTEMIS_UNKNOWN')
+  artemisUnknown,
+}
+
+enum BodyAreaUpperLower {
+  @JsonValue('CORE')
+  core,
+  @JsonValue('LOWER')
+  lower,
+  @JsonValue('UPPER')
+  upper,
   @JsonValue('ARTEMIS_UNKNOWN')
   artemisUnknown,
 }
@@ -12930,7 +12856,7 @@ final USER_SAVED_RESISTANCE_SESSIONS_QUERY_DOCUMENT =
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
             name: NameNode(value: 'userSavedResistanceSessions'),
-            alias: NameNode(value: 'userResistanceSessionSummary'),
+            alias: null,
             arguments: [],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
@@ -12947,7 +12873,7 @@ final USER_SAVED_RESISTANCE_SESSIONS_QUERY_DOCUMENT =
                   ])),
               FieldNode(
                   name: NameNode(value: 'ResistanceExercises'),
-                  alias: NameNode(value: 'ResistanceExerciseSummary'),
+                  alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
@@ -12956,7 +12882,7 @@ final USER_SAVED_RESISTANCE_SESSIONS_QUERY_DOCUMENT =
                         directives: []),
                     FieldNode(
                         name: NameNode(value: 'ResistanceSets'),
-                        alias: NameNode(value: 'ResistanceSetSummary'),
+                        alias: null,
                         arguments: [],
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
@@ -12965,7 +12891,7 @@ final USER_SAVED_RESISTANCE_SESSIONS_QUERY_DOCUMENT =
                               directives: []),
                           FieldNode(
                               name: NameNode(value: 'Move'),
-                              alias: NameNode(value: 'MoveSummary'),
+                              alias: null,
                               arguments: [],
                               directives: [],
                               selectionSet: SelectionSetNode(selections: [
@@ -13069,12 +12995,6 @@ final USER_SAVED_RESISTANCE_SESSIONS_QUERY_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13355,63 +13275,7 @@ final RESISTANCE_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ])),
                           FieldNode(
                               name: NameNode(value: 'Equipment'),
@@ -13454,114 +13318,6 @@ final RESISTANCE_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13620,9 +13376,35 @@ final RESISTANCE_SESSION_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -13877,63 +13659,7 @@ final DUPLICATE_RESISTANCE_SESSION_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ])),
                           FieldNode(
                               name: NameNode(value: 'Equipment'),
@@ -13976,114 +13702,6 @@ final DUPLICATE_RESISTANCE_SESSION_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14142,9 +13760,35 @@ final DUPLICATE_RESISTANCE_SESSION_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14400,63 +14044,7 @@ final CREATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ])),
                           FieldNode(
                               name: NameNode(value: 'Equipment'),
@@ -14499,114 +14087,6 @@ final CREATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14665,9 +14145,35 @@ final CREATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -14971,60 +14477,7 @@ final UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Move'), directives: []),
-                          FieldNode(
-                              name: NameNode(value: 'MoveType'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'BodyAreaMoveScores'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FieldNode(
-                                    name: NameNode(value: 'score'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: null),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'RequiredEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'SelectableEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ]))
+                              name: NameNode(value: 'Move'), directives: [])
                         ])),
                     FieldNode(
                         name: NameNode(value: 'Equipment'),
@@ -15038,114 +14491,6 @@ final UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         ]))
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -15200,9 +14545,35 @@ final UPDATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15393,60 +14764,7 @@ final DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Move'), directives: []),
-                          FieldNode(
-                              name: NameNode(value: 'MoveType'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'BodyAreaMoveScores'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FieldNode(
-                                    name: NameNode(value: 'score'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: null),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'RequiredEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'SelectableEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ]))
+                              name: NameNode(value: 'Move'), directives: [])
                         ])),
                     FieldNode(
                         name: NameNode(value: 'Equipment'),
@@ -15460,114 +14778,6 @@ final DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
                         ]))
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -15622,9 +14832,35 @@ final DUPLICATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -15817,60 +15053,7 @@ final CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Move'), directives: []),
-                          FieldNode(
-                              name: NameNode(value: 'MoveType'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'BodyAreaMoveScores'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FieldNode(
-                                    name: NameNode(value: 'score'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: null),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'RequiredEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'SelectableEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ]))
+                              name: NameNode(value: 'Move'), directives: [])
                         ])),
                     FieldNode(
                         name: NameNode(value: 'Equipment'),
@@ -15884,114 +15067,6 @@ final CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         ]))
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -16046,9 +15121,35 @@ final CREATE_RESISTANCE_EXERCISE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -16249,60 +15350,7 @@ final REORDER_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Move'), directives: []),
-                          FieldNode(
-                              name: NameNode(value: 'MoveType'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'BodyAreaMoveScores'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FieldNode(
-                                    name: NameNode(value: 'score'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: null),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'RequiredEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'SelectableEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ]))
+                              name: NameNode(value: 'Move'), directives: [])
                         ])),
                     FieldNode(
                         name: NameNode(value: 'Equipment'),
@@ -16316,114 +15364,6 @@ final REORDER_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
                         ]))
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -16478,9 +15418,35 @@ final REORDER_RESISTANCE_EXERCISE_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -16692,63 +15658,7 @@ final UPDATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ])),
                           FieldNode(
                               name: NameNode(value: 'Equipment'),
@@ -16791,114 +15701,6 @@ final UPDATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'displayName'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -16957,9 +15759,35 @@ final UPDATE_RESISTANCE_SESSION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -17253,59 +16081,7 @@ final UPDATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Equipment'),
@@ -17317,114 +16093,6 @@ final UPDATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'Equipment'), directives: [])
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -17479,9 +16147,35 @@ final UPDATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -17619,59 +16313,7 @@ final CREATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Equipment'),
@@ -17683,114 +16325,6 @@ final CREATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'Equipment'), directives: [])
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -17845,9 +16379,35 @@ final CREATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18050,59 +16610,7 @@ final DUPLICATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Equipment'),
@@ -18114,114 +16622,6 @@ final DUPLICATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'Equipment'), directives: [])
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -18276,9 +16676,35 @@ final DUPLICATE_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18424,59 +16850,7 @@ final REORDER_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Equipment'),
@@ -18488,114 +16862,6 @@ final REORDER_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'Equipment'), directives: [])
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -18650,9 +16916,35 @@ final REORDER_RESISTANCE_SET_MUTATION_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -18748,7 +17040,7 @@ final USER_RESISTANCE_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
             name: NameNode(value: 'userResistanceSessions'),
-            alias: NameNode(value: 'userResistanceSessionSummary'),
+            alias: null,
             arguments: [],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
@@ -18765,7 +17057,7 @@ final USER_RESISTANCE_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   ])),
               FieldNode(
                   name: NameNode(value: 'ResistanceExercises'),
-                  alias: NameNode(value: 'ResistanceExerciseSummary'),
+                  alias: null,
                   arguments: [],
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
@@ -18774,7 +17066,7 @@ final USER_RESISTANCE_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
                         directives: []),
                     FieldNode(
                         name: NameNode(value: 'ResistanceSets'),
-                        alias: NameNode(value: 'ResistanceSetSummary'),
+                        alias: null,
                         arguments: [],
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
@@ -18783,7 +17075,7 @@ final USER_RESISTANCE_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
                               directives: []),
                           FieldNode(
                               name: NameNode(value: 'Move'),
-                              alias: NameNode(value: 'MoveSummary'),
+                              alias: null,
                               arguments: [],
                               directives: [],
                               selectionSet: SelectionSetNode(selections: [
@@ -18887,12 +17179,6 @@ final USER_RESISTANCE_SESSIONS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19155,59 +17441,7 @@ final CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ]))
             ]))
       ])),
@@ -19238,82 +17472,6 @@ final CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19369,12 +17527,6 @@ final CREATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19528,59 +17680,7 @@ final UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ]))
             ]))
       ])),
@@ -19611,82 +17711,6 @@ final UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19742,12 +17766,6 @@ final UPDATE_WORKOUT_MOVES_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -19901,59 +17919,7 @@ final DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT =
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ]))
             ]))
       ])),
@@ -19984,82 +17950,6 @@ final DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
             alias: null,
             arguments: [],
             directives: [],
@@ -20115,12 +18005,6 @@ final DUPLICATE_WORKOUT_MOVE_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -20421,59 +18305,7 @@ final UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ]))
             ]))
       ])),
@@ -20504,82 +18336,6 @@ final UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
             alias: null,
             arguments: [],
             directives: [],
@@ -20635,12 +18391,6 @@ final UPDATE_WORKOUT_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -24756,63 +22506,7 @@ final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -24979,82 +22673,6 @@ final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -25104,12 +22722,6 @@ final CREATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -25585,63 +23197,7 @@ final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -25808,82 +23364,6 @@ final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -25933,12 +23413,6 @@ final UPDATE_WORKOUT_PLAN_DAY_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -27134,63 +24608,7 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -27325,82 +24743,6 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -27450,12 +24792,6 @@ final WORKOUT_PLAN_ENROLMENT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -28495,63 +25831,7 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -28686,82 +25966,6 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -28811,12 +26015,6 @@ final CREATE_WORKOUT_PLAN_ENROLMENT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -30120,63 +27318,7 @@ final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -30343,82 +27485,6 @@ final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -30468,12 +27534,6 @@ final MOVE_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -31061,63 +28121,7 @@ final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -31284,82 +28288,6 @@ final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -31409,12 +28337,6 @@ final UPDATE_WORKOUT_PLAN_DAY_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -31930,63 +28852,7 @@ final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -32153,82 +29019,6 @@ final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -32278,12 +29068,6 @@ final CREATE_WORKOUT_PLAN_DAY_WITH_WORKOUT_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -32801,63 +29585,7 @@ final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -33024,82 +29752,6 @@ final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -33149,12 +29801,6 @@ final COPY_WORKOUT_PLAN_DAY_TO_ANOTHER_DAY_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -33554,74 +30200,7 @@ final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                                     selectionSet: SelectionSetNode(selections: [
                                       FragmentSpreadNode(
                                           name: NameNode(value: 'Move'),
-                                          directives: []),
-                                      FieldNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'MoveType'),
-                                                directives: [])
-                                          ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'BodyAreaMoveScores'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FieldNode(
-                                                name: NameNode(value: 'score'),
-                                                alias: null,
-                                                arguments: [],
-                                                directives: [],
-                                                selectionSet: null),
-                                            FieldNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                alias: null,
-                                                arguments: [],
-                                                directives: [],
-                                                selectionSet: SelectionSetNode(
-                                                    selections: [
-                                                      FragmentSpreadNode(
-                                                          name: NameNode(
-                                                              value:
-                                                                  'BodyArea'),
-                                                          directives: [])
-                                                    ]))
-                                          ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'RequiredEquipments'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: SelectionSetNode(
-                                              selections: [
-                                                FragmentSpreadNode(
-                                                    name: NameNode(
-                                                        value: 'Equipment'),
-                                                    directives: [])
-                                              ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'SelectableEquipments'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: SelectionSetNode(
-                                              selections: [
-                                                FragmentSpreadNode(
-                                                    name: NameNode(
-                                                        value: 'Equipment'),
-                                                    directives: [])
-                                              ]))
+                                          directives: [])
                                     ])),
                                 FieldNode(
                                     name: NameNode(value: 'Equipment'),
@@ -33817,82 +30396,6 @@ final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -33942,12 +30445,6 @@ final LOGGED_WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -34430,74 +30927,7 @@ final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
                                     selectionSet: SelectionSetNode(selections: [
                                       FragmentSpreadNode(
                                           name: NameNode(value: 'Move'),
-                                          directives: []),
-                                      FieldNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'MoveType'),
-                                                directives: [])
-                                          ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'BodyAreaMoveScores'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FieldNode(
-                                                name: NameNode(value: 'score'),
-                                                alias: null,
-                                                arguments: [],
-                                                directives: [],
-                                                selectionSet: null),
-                                            FieldNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                alias: null,
-                                                arguments: [],
-                                                directives: [],
-                                                selectionSet: SelectionSetNode(
-                                                    selections: [
-                                                      FragmentSpreadNode(
-                                                          name: NameNode(
-                                                              value:
-                                                                  'BodyArea'),
-                                                          directives: [])
-                                                    ]))
-                                          ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'RequiredEquipments'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: SelectionSetNode(
-                                              selections: [
-                                                FragmentSpreadNode(
-                                                    name: NameNode(
-                                                        value: 'Equipment'),
-                                                    directives: [])
-                                              ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'SelectableEquipments'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: SelectionSetNode(
-                                              selections: [
-                                                FragmentSpreadNode(
-                                                    name: NameNode(
-                                                        value: 'Equipment'),
-                                                    directives: [])
-                                              ]))
+                                          directives: [])
                                     ])),
                                 FieldNode(
                                     name: NameNode(value: 'Equipment'),
@@ -34693,82 +31123,6 @@ final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -34818,12 +31172,6 @@ final USER_LOGGED_WORKOUTS_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -35280,74 +31628,7 @@ final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
                                     selectionSet: SelectionSetNode(selections: [
                                       FragmentSpreadNode(
                                           name: NameNode(value: 'Move'),
-                                          directives: []),
-                                      FieldNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'MoveType'),
-                                                directives: [])
-                                          ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'BodyAreaMoveScores'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FieldNode(
-                                                name: NameNode(value: 'score'),
-                                                alias: null,
-                                                arguments: [],
-                                                directives: [],
-                                                selectionSet: null),
-                                            FieldNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                alias: null,
-                                                arguments: [],
-                                                directives: [],
-                                                selectionSet: SelectionSetNode(
-                                                    selections: [
-                                                      FragmentSpreadNode(
-                                                          name: NameNode(
-                                                              value:
-                                                                  'BodyArea'),
-                                                          directives: [])
-                                                    ]))
-                                          ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'RequiredEquipments'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: SelectionSetNode(
-                                              selections: [
-                                                FragmentSpreadNode(
-                                                    name: NameNode(
-                                                        value: 'Equipment'),
-                                                    directives: [])
-                                              ])),
-                                      FieldNode(
-                                          name: NameNode(
-                                              value: 'SelectableEquipments'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: SelectionSetNode(
-                                              selections: [
-                                                FragmentSpreadNode(
-                                                    name: NameNode(
-                                                        value: 'Equipment'),
-                                                    directives: [])
-                                              ]))
+                                          directives: [])
                                     ])),
                                 FieldNode(
                                     name: NameNode(value: 'Equipment'),
@@ -35543,82 +31824,6 @@ final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -35668,12 +31873,6 @@ final CREATE_LOGGED_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -36817,59 +33016,7 @@ final CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT =
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Equipment'),
@@ -36881,114 +33028,6 @@ final CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT =
                         name: NameNode(value: 'Equipment'), directives: [])
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -37043,9 +33082,35 @@ final CREATE_USER_EXERCISE_LOAD_TRACKER_MUTATION_DOCUMENT =
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -38568,59 +34633,7 @@ final USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
-                    FieldNode(
-                        name: NameNode(value: 'MoveType'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'MoveType'), directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'BodyAreaMoveScores'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FieldNode(
-                              name: NameNode(value: 'score'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: null),
-                          FieldNode(
-                              name: NameNode(value: 'BodyArea'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    directives: [])
-                              ]))
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'RequiredEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ])),
-                    FieldNode(
-                        name: NameNode(value: 'SelectableEquipments'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'Equipment'),
-                              directives: [])
-                        ]))
+                        name: NameNode(value: 'Move'), directives: [])
                   ])),
               FieldNode(
                   name: NameNode(value: 'Equipment'),
@@ -38632,114 +34645,6 @@ final USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT = DocumentNode(definitions: [
                         name: NameNode(value: 'Equipment'), directives: [])
                   ]))
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -38794,9 +34699,35 @@ final USER_EXERCISE_LOAD_TRACKERS_QUERY_DOCUMENT = DocumentNode(definitions: [
             alias: null,
             arguments: [],
             directives: [],
+            selectionSet: null)
+      ])),
+  FragmentDefinitionNode(
+      name: NameNode(value: 'Equipment'),
+      typeCondition: TypeConditionNode(
+          on: NamedTypeNode(
+              name: NameNode(value: 'Equipment'), isNonNull: false)),
+      directives: [],
+      selectionSet: SelectionSetNode(selections: [
+        FieldNode(
+            name: NameNode(value: '__typename'),
+            alias: null,
+            arguments: [],
+            directives: [],
             selectionSet: null),
         FieldNode(
-            name: NameNode(value: 'validRepTypes'),
+            name: NameNode(value: 'id'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'name'),
+            alias: null,
+            arguments: [],
+            directives: [],
+            selectionSet: null),
+        FieldNode(
+            name: NameNode(value: 'loadAdjustable'),
             alias: null,
             arguments: [],
             directives: [],
@@ -41670,63 +37601,7 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -41861,82 +37736,6 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -41986,12 +37785,6 @@ final WORKOUT_PLAN_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -43250,63 +39043,7 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -43441,82 +39178,6 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -43566,12 +39227,6 @@ final CREATE_WORKOUT_PLAN_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -44781,63 +40436,7 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -44972,82 +40571,6 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -45097,12 +40620,6 @@ final UNARCHIVE_WORKOUT_PLAN_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -45588,165 +41105,8 @@ final UNARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT =
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'MoveType'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'MoveType'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'BodyAreaMoveScores'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'score'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null),
-                    FieldNode(
-                        name: NameNode(value: 'BodyArea'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'BodyArea'), directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'RequiredEquipments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'Equipment'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'SelectableEquipments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'Equipment'), directives: [])
-                  ]))
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -45798,12 +41158,6 @@ final UNARCHIVE_CUSTOM_MOVE_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -46151,63 +41505,7 @@ final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -46374,82 +41672,6 @@ final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -46499,12 +41721,6 @@ final UNARCHIVE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -47197,165 +42413,8 @@ final CREATE_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'MoveType'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'MoveType'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'BodyAreaMoveScores'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'score'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null),
-                    FieldNode(
-                        name: NameNode(value: 'BodyArea'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'BodyArea'), directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'RequiredEquipments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'Equipment'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'SelectableEquipments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'Equipment'), directives: [])
-                  ]))
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -47407,12 +42466,6 @@ final CREATE_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -47481,165 +42534,8 @@ final UPDATE_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             ],
             directives: [],
             selectionSet: SelectionSetNode(selections: [
-              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: []),
-              FieldNode(
-                  name: NameNode(value: 'MoveType'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'MoveType'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'BodyAreaMoveScores'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FieldNode(
-                        name: NameNode(value: 'score'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: null),
-                    FieldNode(
-                        name: NameNode(value: 'BodyArea'),
-                        alias: null,
-                        arguments: [],
-                        directives: [],
-                        selectionSet: SelectionSetNode(selections: [
-                          FragmentSpreadNode(
-                              name: NameNode(value: 'BodyArea'), directives: [])
-                        ]))
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'RequiredEquipments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'Equipment'), directives: [])
-                  ])),
-              FieldNode(
-                  name: NameNode(value: 'SelectableEquipments'),
-                  alias: null,
-                  arguments: [],
-                  directives: [],
-                  selectionSet: SelectionSetNode(selections: [
-                    FragmentSpreadNode(
-                        name: NameNode(value: 'Equipment'), directives: [])
-                  ]))
+              FragmentSpreadNode(name: NameNode(value: 'Move'), directives: [])
             ]))
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'Equipment'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'Equipment'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
       ])),
   FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
@@ -47691,12 +42587,6 @@ final UPDATE_MOVE_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49577,60 +44467,7 @@ final CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT =
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Move'), directives: []),
-                          FieldNode(
-                              name: NameNode(value: 'MoveType'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'BodyAreaMoveScores'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FieldNode(
-                                    name: NameNode(value: 'score'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: null),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'RequiredEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'SelectableEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ]))
+                              name: NameNode(value: 'Move'), directives: [])
                         ]))
                   ]))
             ]))
@@ -49662,82 +44499,6 @@ final CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49793,12 +44554,6 @@ final CREATE_WORKOUT_SET_WITH_WORKOUT_MOVES_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -49995,60 +44750,7 @@ final DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT =
                         directives: [],
                         selectionSet: SelectionSetNode(selections: [
                           FragmentSpreadNode(
-                              name: NameNode(value: 'Move'), directives: []),
-                          FieldNode(
-                              name: NameNode(value: 'MoveType'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'BodyAreaMoveScores'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FieldNode(
-                                    name: NameNode(value: 'score'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: null),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyArea'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          directives: [])
-                                    ]))
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'RequiredEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ])),
-                          FieldNode(
-                              name: NameNode(value: 'SelectableEquipments'),
-                              alias: null,
-                              arguments: [],
-                              directives: [],
-                              selectionSet: SelectionSetNode(selections: [
-                                FragmentSpreadNode(
-                                    name: NameNode(value: 'Equipment'),
-                                    directives: [])
-                              ]))
+                              name: NameNode(value: 'Move'), directives: [])
                         ]))
                   ]))
             ]))
@@ -50080,82 +44782,6 @@ final DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'loadAdjustable'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
             alias: null,
             arguments: [],
             directives: [],
@@ -50211,12 +44837,6 @@ final DUPLICATE_WORKOUT_SET_BY_ID_MUTATION_DOCUMENT =
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -51049,7 +45669,7 @@ final MOVE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
+                        name: NameNode(value: 'MoveData'), directives: []),
                     FieldNode(
                         name: NameNode(value: 'MoveType'),
                         alias: null,
@@ -51110,7 +45730,7 @@ final MOVE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
                   directives: [],
                   selectionSet: SelectionSetNode(selections: [
                     FragmentSpreadNode(
-                        name: NameNode(value: 'Move'), directives: []),
+                        name: NameNode(value: 'MoveData'), directives: []),
                     FieldNode(
                         name: NameNode(value: 'MoveType'),
                         alias: null,
@@ -51275,9 +45895,10 @@ final MOVE_DATA_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'Move'),
+      name: NameNode(value: 'MoveData'),
       typeCondition: TypeConditionNode(
-          on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
+          on: NamedTypeNode(
+              name: NameNode(value: 'MoveData'), isNonNull: false)),
       directives: [],
       selectionSet: SelectionSetNode(selections: [
         FieldNode(
@@ -52536,63 +47157,7 @@ final CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -52663,82 +47228,6 @@ final CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -52788,12 +47277,6 @@ final CREATE_WORKOUT_SECTION_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -55643,63 +50126,7 @@ final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -55866,82 +50293,6 @@ final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -55991,12 +50342,6 @@ final DUPLICATE_WORKOUT_BY_ID_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -56645,63 +50990,7 @@ final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -56868,82 +51157,6 @@ final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -56993,12 +51206,6 @@ final CREATE_WORKOUT_MUTATION_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],
@@ -57421,63 +51628,7 @@ final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
                               selectionSet: SelectionSetNode(selections: [
                                 FragmentSpreadNode(
                                     name: NameNode(value: 'Move'),
-                                    directives: []),
-                                FieldNode(
-                                    name: NameNode(value: 'MoveType'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'MoveType'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'BodyAreaMoveScores'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FieldNode(
-                                          name: NameNode(value: 'score'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet: null),
-                                      FieldNode(
-                                          name: NameNode(value: 'BodyArea'),
-                                          alias: null,
-                                          arguments: [],
-                                          directives: [],
-                                          selectionSet:
-                                              SelectionSetNode(selections: [
-                                            FragmentSpreadNode(
-                                                name:
-                                                    NameNode(value: 'BodyArea'),
-                                                directives: [])
-                                          ]))
-                                    ])),
-                                FieldNode(
-                                    name: NameNode(value: 'RequiredEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ])),
-                                FieldNode(
-                                    name:
-                                        NameNode(value: 'SelectableEquipments'),
-                                    alias: null,
-                                    arguments: [],
-                                    directives: [],
-                                    selectionSet: SelectionSetNode(selections: [
-                                      FragmentSpreadNode(
-                                          name: NameNode(value: 'Equipment'),
-                                          directives: [])
-                                    ]))
+                                    directives: [])
                               ]))
                         ]))
                   ]))
@@ -57644,82 +51795,6 @@ final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null)
       ])),
   FragmentDefinitionNode(
-      name: NameNode(value: 'MoveType'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'MoveType'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'description'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'imageUri'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
-      name: NameNode(value: 'BodyArea'),
-      typeCondition: TypeConditionNode(
-          on: NamedTypeNode(
-              name: NameNode(value: 'BodyArea'), isNonNull: false)),
-      directives: [],
-      selectionSet: SelectionSetNode(selections: [
-        FieldNode(
-            name: NameNode(value: '__typename'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'id'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'name'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'frontBack'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'upperLower'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null)
-      ])),
-  FragmentDefinitionNode(
       name: NameNode(value: 'Move'),
       typeCondition: TypeConditionNode(
           on: NamedTypeNode(name: NameNode(value: 'Move'), isNonNull: false)),
@@ -57769,12 +51844,6 @@ final WORKOUT_BY_ID_QUERY_DOCUMENT = DocumentNode(definitions: [
             selectionSet: null),
         FieldNode(
             name: NameNode(value: 'scope'),
-            alias: null,
-            arguments: [],
-            directives: [],
-            selectionSet: null),
-        FieldNode(
-            name: NameNode(value: 'validRepTypes'),
             alias: null,
             arguments: [],
             directives: [],

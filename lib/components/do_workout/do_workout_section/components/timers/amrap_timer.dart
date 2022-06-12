@@ -66,14 +66,14 @@ class AMRAPTimer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(
-                            children: [
-                              NameAndRepScore(workoutSection: workoutSection)
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        //   child: Row(
+                        //     children: [
+                        //       NameAndRepScore(workoutSection: workoutSection)
+                        //     ],
+                        //   ),
+                        // ),
                         Stack(
                           alignment: Alignment.center,
                           children: [

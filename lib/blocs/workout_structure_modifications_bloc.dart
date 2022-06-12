@@ -2,7 +2,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:uuid/uuid.dart';
@@ -33,18 +32,15 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
   ];
 
   WorkoutStructureModificationsBloc(this.context, Workout initialWorkout) {
-    workout = initialWorkout.copyAndSortAllChildren;
-    includedSectionIds = workout.workoutSections.map((ws) => ws.id).toList();
-    sectionInputs = workout.workoutSections
-        .map((wSection) => WorkoutSectionInput(
-            workoutSection: wSection, input: getInputFromSection(wSection)))
-        .toList();
+    // workout = initialWorkout.copyAndSortAllChildren;
+    // includedSectionIds = workout.workoutSections.map((ws) => ws.id).toList();
+    // sectionInputs = workout.workoutSections
+    //     .map((wSection) => WorkoutSectionInput(
+    //         workoutSection: wSection, input: getInputFromSection(wSection)))
+    //     .toList();
   }
 
-  int? getInputFromSection(WorkoutSection wSection) =>
-      typesInputRequired.contains(wSection.workoutSectionType.name)
-          ? null
-          : wSection.timedSectionDuration.inSeconds;
+  int? getInputFromSection(WorkoutSection wSection) => 9;
 
   bool savingLogToDB = false;
 
@@ -175,11 +171,11 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
         WorkoutSection.fromJson(workout.workoutSections[sectionIndex].toJson());
 
     section.workoutSets.forEachIndexed((i, w) {
-      if (type == DurationUpdateType.sets && !w.isRestSet ||
-          type == DurationUpdateType.rests && w.isRestSet) {
-        /// [updateWorkoutSetDuration] will reset section and notify listeners.
-        updateWorkoutSetDuration(sectionIndex, i, seconds);
-      }
+      // if (type == DurationUpdateType.sets && !w.isRestSet ||
+      //     type == DurationUpdateType.rests && w.isRestSet) {
+      //   /// [updateWorkoutSetDuration] will reset section and notify listeners.
+      //   updateWorkoutSetDuration(sectionIndex, i, seconds);
+      // }
     });
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 
 String? getWorkoutSetDefinitionText(int length) {
@@ -32,10 +31,10 @@ class WorkoutSetDefinition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int length = workoutSet.uniqueMovesInSet;
+    final int length = 4;
 
     return length == 1
-        ? workoutSet.isRestSet
+        ? false
             ? const MyText(
                 'REST',
                 lineHeight: 1,

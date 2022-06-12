@@ -23,21 +23,13 @@ class LoggedWorkoutMoveDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Don't need reps for timed sets with only one move in.
-    final reps = generateRepString(
-        distanceUnit: loggedWorkoutMove.distanceUnit,
-        reps: loggedWorkoutMove.reps,
-        repType: loggedWorkoutMove.repType,
-        timeUnit: loggedWorkoutMove.timeUnit);
+    final reps = '';
 
     final equipment = displayEquipment && loggedWorkoutMove.equipment != null
         ? loggedWorkoutMove.equipment!.name
         : '';
 
-    final load = displayLoad && loggedWorkoutMove.loadAmount != 0
-        ? generateLoadString(
-            loadAmount: loggedWorkoutMove.loadAmount,
-            loadUnit: loggedWorkoutMove.loadUnit)
-        : '';
+    final load = 'fff';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

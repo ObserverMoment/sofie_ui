@@ -12,7 +12,6 @@ import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/model/toast_request.dart';
@@ -146,22 +145,22 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
 
   Future<void> _openScheduleWorkout(
       BuildContext context, WorkoutPlanDayWorkout workoutPlanDayWorkout) async {
-    final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
-      workout: workoutPlanDayWorkout.workout.summary,
-      workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id,
-    ));
-    if (result is ToastRequest) {
-      context.showToast(message: result.message, toastType: result.type);
-    }
+    // final result = await context.pushRoute(ScheduledWorkoutCreatorRoute(
+    //   workout: workoutPlanDayWorkout.workout.summary,
+    //   workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id,
+    // ));
+    // if (result is ToastRequest) {
+    //   context.showToast(message: result.message, toastType: result.type);
+    // }
   }
 
   Future<void> _handleLogWorkoutProgramWorkout(
       BuildContext context, WorkoutPlanDayWorkout planDayWorkout) async {
-    await context.push(
-        child: PreLoggingModificationsAndUserInputs(
-            workoutId: planDayWorkout.workout.id,
-            workoutPlanDayWorkoutId: planDayWorkout.id,
-            workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id));
+    // await context.push(
+    //     child: PreLoggingModificationsAndUserInputs(
+    //         workoutId: planDayWorkout.workout.id,
+    //         workoutPlanDayWorkoutId: planDayWorkout.id,
+    //         workoutPlanEnrolmentId: enrolmentWithPlan.workoutPlanEnrolment.id));
   }
 
   void _confirmDeleteCompletedWorkout(BuildContext context,
@@ -292,13 +291,13 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                           ),
                           items: [
                             if (completedPlanDayWorkout != null) ...[
-                              BottomSheetMenuItem(
-                                  text: 'View Log',
-                                  icon: CupertinoIcons.doc_chart,
-                                  onPressed: () => context.navigateTo(
-                                      LoggedWorkoutDetailsRoute(
-                                          id: completedPlanDayWorkout
-                                              .loggedWorkoutId))),
+                              // BottomSheetMenuItem(
+                              //     text: 'View Log',
+                              //     icon: CupertinoIcons.doc_chart,
+                              //     onPressed: () => context.navigateTo(
+                              //         LoggedWorkoutDetailsRoute(
+                              //             id: completedPlanDayWorkout
+                              //                 .loggedWorkoutId))),
                               BottomSheetMenuItem(
                                   text: 'Reset Workout',
                                   icon: CupertinoIcons.doc_chart,
@@ -329,23 +328,23 @@ class _WorkoutPlanEnrolmentDayCard extends StatelessWidget {
                                   onPressed: () => _openScheduleWorkout(
                                       context, dayWorkout)),
                             ],
-                            BottomSheetMenuItem(
-                                text: 'View workout',
-                                icon: CupertinoIcons.eye,
-                                onPressed: () => context.navigateTo(
-                                    WorkoutDetailsRoute(
-                                        id: dayWorkout.workout.id,
-                                        workoutPlanDayWorkoutId: dayWorkout.id,
-                                        workoutPlanEnrolmentId:
-                                            enrolmentWithPlan
-                                                .workoutPlanEnrolment.id))),
+                            // BottomSheetMenuItem(
+                            //     text: 'View workout',
+                            //     icon: CupertinoIcons.eye,
+                            //     onPressed: () => context.navigateTo(
+                            //         WorkoutDetailsRoute(
+                            //             id: dayWorkout.workout.id,
+                            //             workoutPlanDayWorkoutId: dayWorkout.id,
+                            //             workoutPlanEnrolmentId:
+                            //                 enrolmentWithPlan
+                            //                     .workoutPlanEnrolment.id))),
                           ])),
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      MinimalWorkoutCard(
-                        dayWorkout.workout.summary,
-                      ),
+                      // MinimalWorkoutCard(
+                      //   dayWorkout.workout.summary,
+                      // ),
                       if (completedworkoutPlanDayWorkoutIds
                           .contains(dayWorkout.id))
                         const Positioned(

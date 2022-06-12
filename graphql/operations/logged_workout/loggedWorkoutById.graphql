@@ -24,21 +24,6 @@ query loggedWorkoutById($id: ID!) {
           ...LoggedWorkoutMove
           Move {
             ...Move
-            MoveType {
-              ...MoveType
-            }
-            BodyAreaMoveScores {
-              score
-              BodyArea {
-                ...BodyArea
-              }
-            }
-            RequiredEquipments {
-              ...Equipment
-            }
-            SelectableEquipments {
-              ...Equipment
-            }
           }
           Equipment {
             ...Equipment

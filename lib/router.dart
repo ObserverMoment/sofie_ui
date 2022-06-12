@@ -8,7 +8,6 @@ import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_eat_well_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_sleep_well_log_creator_page.dart';
-import 'package:sofie_ui/components/creators/exercise_load_tracker_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_goal_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_meditation_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/workout_creator/workout_creator.dart';
@@ -114,7 +113,7 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
 
           /// User related.
           AutoRoute(path: 'profile', page: ProfilePage),
-          AutoRoute(path: 'archive', page: ArchivePage),
+          // AutoRoute(path: 'archive', page: ArchivePage),
           AutoRoute(path: 'settings', page: SettingsPage),
           AutoRoute(path: 'skills', page: SkillsPage),
           AutoRoute(path: 'social-links', page: SocialLinksPage),
@@ -130,30 +129,30 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           AutoRoute(path: 'personal-scores', page: PersonalScoresPage),
           AutoRoute(path: 'goals', page: UserGoalsPage),
           AutoRoute(path: 'body-tracking', page: BodyTrackingPage),
-          AutoRoute(
-              path: 'workout-logs/analysis', page: LoggedWorkoutsAnalysisPage),
-          AutoRoute(
-              path: 'workout-logs/history', page: LoggedWorkoutsHistoryPage),
+          // AutoRoute(
+          //     path: 'workout-logs/analysis', page: LoggedWorkoutsAnalysisPage),
+          // AutoRoute(
+          //     path: 'workout-logs/history', page: LoggedWorkoutsHistoryPage),
 
           /// Finders and Public Content.
           /// Consider renaming these all as discover?
           /// Is a finder different from discover?
-          AutoRoute(path: 'public-workouts', page: PublicWorkoutFinderPage),
-          AutoRoute(path: 'public-plans', page: PublicWorkoutPlanFinderPage),
+          // AutoRoute(path: 'public-workouts', page: PublicWorkoutFinderPage),
+          // AutoRoute(path: 'public-plans', page: PublicWorkoutPlanFinderPage),
           AutoRoute(path: 'discover-people', page: DiscoverPeoplePage),
           AutoRoute(path: 'discover-clubs', page: DiscoverClubsPage),
 
           /// Details pages - for certain object types.
           AutoRoute(path: 'club/:id', page: ClubDetailsPage),
-          AutoRoute(path: 'logged-workout/:id', page: LoggedWorkoutDetailsPage),
+          // AutoRoute(path: 'logged-workout/:id', page: LoggedWorkoutDetailsPage),
           AutoRoute(
               path: 'profile/:userId', page: UserPublicProfileDetailsPage),
 
-          AutoRoute(path: 'workout/:id', page: WorkoutDetailsPage),
-          AutoRoute(path: 'workout-plan/:id', page: WorkoutPlanDetailsPage),
-          AutoRoute(
-              path: 'workout-plan-progress/:id',
-              page: WorkoutPlanEnrolmentDetailsPage),
+          // AutoRoute(path: 'workout/:id', page: WorkoutDetailsPage),
+          // AutoRoute(path: 'workout-plan/:id', page: WorkoutPlanDetailsPage),
+          // AutoRoute(
+          //     path: 'workout-plan-progress/:id',
+          //     page: WorkoutPlanEnrolmentDetailsPage),
 
           /// Creator pages. CRUD pages for database models.
           AutoRoute(
@@ -184,9 +183,9 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
               page: WorkoutPlanReviewCreatorPage),
 
           /// Create exercise tracker widgets.
-          AutoRoute(
-              path: 'create/max-lift-tracker',
-              page: ExerciseLoadTrackerCreatorPage),
+          // AutoRoute(
+          //     path: 'create/max-lift-tracker',
+          //     page: ExerciseLoadTrackerCreatorPage),
 
           AutoRoute(page: PageNotFoundPage, path: '404'),
           RedirectRoute(path: '*', redirectTo: '404')

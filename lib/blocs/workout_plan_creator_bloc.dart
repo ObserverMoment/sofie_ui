@@ -7,7 +7,6 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uuid/uuid.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 /// All updates to workout plan or descendants follow this pattern.
 /// 1: Update local data
@@ -43,17 +42,17 @@ class WorkoutPlanCreatorBloc extends ChangeNotifier {
       ],
     );
 
-    if (writePlanSuccess) {
-      final success = GraphQLStore.store.writeDataToStore(
-        data: workoutPlan.summary.toJson(),
-        broadcastQueryIds: [
-          GQLOpNames.userWorkoutPlans,
-          GQLOpNames.userCollections,
-          GQLOpNames.userClubs
-        ],
-      );
-      return success;
-    }
+    // if (writePlanSuccess) {
+    //   final success = GraphQLStore.store.writeDataToStore(
+    //     data: workoutPlan.summary.toJson(),
+    //     broadcastQueryIds: [
+    //       GQLOpNames.userWorkoutPlans,
+    //       GQLOpNames.userCollections,
+    //       GQLOpNames.userClubs
+    //     ],
+    //   );
+    //   return success;
+    // }
     return false;
   }
 

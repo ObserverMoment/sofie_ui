@@ -25,20 +25,20 @@ class ChatMessageSharedContent extends StatelessWidget {
       : super(key: key);
 
   void _navigateToSharedContent(BuildContext context) {
-    switch (type) {
-      case ChatMessageType.workout:
-        context.navigateTo(WorkoutDetailsRoute(id: objectId));
-        break;
-      case ChatMessageType.workoutPlan:
-        context.navigateTo(WorkoutPlanDetailsRoute(id: objectId));
-        break;
-      case ChatMessageType.loggedWorkout:
-        context.navigateTo(LoggedWorkoutDetailsRoute(id: objectId));
-        break;
-      default:
-        throw Exception(
-            'ChatMessageSharedContent._navigateToSharedContent: No method provided for $type');
-    }
+    // switch (type) {
+    //   case ChatMessageType.workout:
+    //     context.navigateTo(WorkoutDetailsRoute(id: objectId));
+    //     break;
+    //   case ChatMessageType.workoutPlan:
+    //     context.navigateTo(WorkoutPlanDetailsRoute(id: objectId));
+    //     break;
+    //   case ChatMessageType.loggedWorkout:
+    //     context.navigateTo(LoggedWorkoutDetailsRoute(id: objectId));
+    //     break;
+    //   default:
+    //     throw Exception(
+    //         'ChatMessageSharedContent._navigateToSharedContent: No method provided for $type');
+    // }
   }
 
   @override

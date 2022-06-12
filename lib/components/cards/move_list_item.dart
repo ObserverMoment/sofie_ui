@@ -5,7 +5,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 
 class MoveListItem extends StatelessWidget {
-  final Move move;
+  final MoveData move;
 
   /// Optional icon style button on far right of column. Eg. Info / Edit.
   final Widget? optionalButton;

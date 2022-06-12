@@ -43,7 +43,7 @@ class MoveFiltersBloc extends ChangeNotifier {
 
   int get numActiveFilters => _moveFilters.numActiveFilters;
 
-  bool _moveCanBeBodyWeight(Move move) {
+  bool _moveCanBeBodyWeight(MoveData move) {
     if (move.requiredEquipments.isEmpty && move.selectableEquipments.isEmpty) {
       return true;
     } else {
@@ -54,7 +54,7 @@ class MoveFiltersBloc extends ChangeNotifier {
     }
   }
 
-  bool _moveEquipmentIsOk(Move move) {
+  bool _moveEquipmentIsOk(MoveData move) {
     /// This is a move where the user has not added any equipment.
     /// If the user is requesting this equipment then it is assumed that they do want to see moves that use this equipment...not just moves that can be done given that you have it.
     /// i.e. all bodyweight moves can be done if you have a dumbbell...but this is probably not what the user is searching for.
@@ -70,7 +70,7 @@ class MoveFiltersBloc extends ChangeNotifier {
     }
   }
 
-  List<Move> filter(List<Move> moves) {
+  List<MoveData> filter(List<MoveData> moves) {
     final moveTypesFiltered = _moveFilters.moveTypes.isEmpty
         ? [...moves]
         : moves.where((m) => _moveFilters.moveTypes.contains(m.moveType));

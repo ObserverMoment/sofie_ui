@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/workout_structure_modifications_bloc.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_create_log_inputs.dart';
@@ -33,7 +32,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
     required this.context,
     required this.prevLoggedWorkout,
   }) {
-    loggedWorkout = prevLoggedWorkout.copyAndSortAllChildren;
+    loggedWorkout = prevLoggedWorkout;
   }
 
   /// Helpers for write methods.
@@ -278,47 +277,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
   static List<LoggedWorkoutSection> generateLoggedWorkoutSections(
       {required Workout workout,
       required List<WorkoutSectionInput> sectionInputs}) {
-    return workout.workoutSections
-        .sortedBy<num>((ws) => ws.sortPosition)
-        .map((ws) {
-      if (ws.workoutSectionType.isAMRAP) {
-        // Get the value from the inputs.
-        final s = sectionInputs.firstWhere((s) => ws.id == s.workoutSection.id);
-
-        final totalRepsCompleted = s.input!;
-        final repsPerRound = DataUtils.totalRepsInSection(ws);
-
-        final totalFullRounds = (totalRepsCompleted / repsPerRound).floor();
-
-        final remainingReps =
-            totalRepsCompleted - (totalFullRounds * repsPerRound);
-
-        final loggedSectionFullRounds = loggedWorkoutSectionFromWorkoutSection(
-            workoutSection: ws,
-            repScore: totalRepsCompleted,
-            rounds: totalFullRounds);
-
-        loggedSectionFullRounds.loggedWorkoutSets = [
-          ...loggedSectionFullRounds.loggedWorkoutSets,
-          ...loggedWorkoutSetsPartialRound(
-              reps: remainingReps,
-              roundNumber: totalFullRounds,
-              workoutSection: ws)
-        ];
-
-        return loggedSectionFullRounds;
-      } else if (ws.workoutSectionType.isCustom ||
-          ws.workoutSectionType.isForTime ||
-          ws.workoutSectionType.isLifting) {
-        // Get the value from the inputs
-        final s = sectionInputs.firstWhere((s) => ws.id == s.workoutSection.id);
-        return loggedWorkoutSectionFromWorkoutSection(
-            workoutSection: ws, timeTakenSeconds: s.input);
-      } else {
-        // Timed sections already have all the data needed to create a LoggedWorkoutSection
-        return loggedWorkoutSectionFromWorkoutSection(workoutSection: ws);
-      }
-    }).toList();
+    return [];
   }
 
   /// When creating a log we need to check if the log should be associated with a scheduled workout and / or with a workout plan enrolment.

@@ -10,7 +10,6 @@ import 'package:sofie_ui/components/cards/workout_card_minimal.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -59,25 +58,25 @@ class WorkoutPlanDayCard extends StatelessWidget {
           HorizontalLine(
               verticalPadding: 5,
               color: context.theme.primary.withOpacity(0.08)),
-          ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: sortedWorkoutPlanDayWorkouts.length,
-              separatorBuilder: (c, i) => HorizontalLine(
-                  color: context.theme.primary.withOpacity(0.15)),
-              itemBuilder: (c, i) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6.0),
-                    child: GestureDetector(
-                      onTap: openWorkoutDetailsOnTap
-                          ? () => context.navigateTo(WorkoutDetailsRoute(
-                              id: sortedWorkoutPlanDayWorkouts[i].workout.id))
-                          : null,
-                      child: MinimalWorkoutCard(
-                        sortedWorkoutPlanDayWorkouts[i].workout.summary,
-                        backgroundColor: context.theme.background,
-                      ),
-                    ),
-                  )),
+          // ListView.separated(
+          //     physics: const NeverScrollableScrollPhysics(),
+          //     shrinkWrap: true,
+          //     itemCount: sortedWorkoutPlanDayWorkouts.length,
+          //     separatorBuilder: (c, i) => HorizontalLine(
+          //         color: context.theme.primary.withOpacity(0.15)),
+          //     itemBuilder: (c, i) => Padding(
+          //           padding: const EdgeInsets.symmetric(vertical: 6.0),
+          //           child: GestureDetector(
+          //             onTap: openWorkoutDetailsOnTap
+          //                 ? () => context.navigateTo(WorkoutDetailsRoute(
+          //                     id: sortedWorkoutPlanDayWorkouts[i].workout.id))
+          //                 : null,
+          //             child: MinimalWorkoutCard(
+          //               sortedWorkoutPlanDayWorkouts[i].workout.summary,
+          //               backgroundColor: context.theme.background,
+          //             ),
+          //           ),
+          //         )),
         ],
       ),
     );
@@ -132,48 +131,48 @@ class EditableWorkoutPlanDayCard extends StatelessWidget {
                 size: FONTSIZE.two,
               ),
             ),
-          ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: sortedWorkoutPlanDayWorkouts.length,
-              separatorBuilder: (c, i) => const HorizontalLine(),
-              itemBuilder: (c, i) => AnimatedSlidable(
-                    key: Key(
-                        'EditableWorkoutPlanDayCard - ${sortedWorkoutPlanDayWorkouts[i].id}'),
-                    index: i,
-                    itemType: 'Workout',
-                    verb: 'Remove',
-                    removeItem: (removeAtIndex) => removeWorkoutPlanDayWorkout(
-                        sortedWorkoutPlanDayWorkouts[removeAtIndex]),
-                    secondaryActions: [
-                      if (i != 0)
-                        SlidableAction(
-                          label: 'Move up',
-                          backgroundColor: Styles.primaryAccent,
-                          foregroundColor: Styles.white,
-                          icon: CupertinoIcons.arrow_up,
-                          onPressed: (_) =>
-                              reorderWorkoutPlanDayWorkouts(i, i - 1),
-                        ),
-                      if (i != sortedWorkoutPlanDayWorkouts.length - 1)
-                        SlidableAction(
-                          label: 'Move down',
-                          foregroundColor: Styles.primaryAccent,
-                          backgroundColor: Styles.white,
-                          icon: CupertinoIcons.arrow_down,
-                          onPressed: (_) =>
-                              reorderWorkoutPlanDayWorkouts(i, i + 1),
-                        ),
-                    ],
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6.0, horizontal: 6),
-                      child: MinimalWorkoutCard(
-                        sortedWorkoutPlanDayWorkouts[i].workout.summary,
-                        backgroundColor: context.theme.background,
-                      ),
-                    ),
-                  )),
+          // ListView.separated(
+          //     physics: const NeverScrollableScrollPhysics(),
+          //     shrinkWrap: true,
+          //     itemCount: sortedWorkoutPlanDayWorkouts.length,
+          //     separatorBuilder: (c, i) => const HorizontalLine(),
+          //     itemBuilder: (c, i) => AnimatedSlidable(
+          //           key: Key(
+          //               'EditableWorkoutPlanDayCard - ${sortedWorkoutPlanDayWorkouts[i].id}'),
+          //           index: i,
+          //           itemType: 'Workout',
+          //           verb: 'Remove',
+          //           removeItem: (removeAtIndex) => removeWorkoutPlanDayWorkout(
+          //               sortedWorkoutPlanDayWorkouts[removeAtIndex]),
+          //           secondaryActions: [
+          //             if (i != 0)
+          //               SlidableAction(
+          //                 label: 'Move up',
+          //                 backgroundColor: Styles.primaryAccent,
+          //                 foregroundColor: Styles.white,
+          //                 icon: CupertinoIcons.arrow_up,
+          //                 onPressed: (_) =>
+          //                     reorderWorkoutPlanDayWorkouts(i, i - 1),
+          //               ),
+          //             if (i != sortedWorkoutPlanDayWorkouts.length - 1)
+          //               SlidableAction(
+          //                 label: 'Move down',
+          //                 foregroundColor: Styles.primaryAccent,
+          //                 backgroundColor: Styles.white,
+          //                 icon: CupertinoIcons.arrow_down,
+          //                 onPressed: (_) =>
+          //                     reorderWorkoutPlanDayWorkouts(i, i + 1),
+          //               ),
+          //           ],
+          //           child: Padding(
+          //             padding: const EdgeInsets.symmetric(
+          //                 vertical: 6.0, horizontal: 6),
+          //             child: MinimalWorkoutCard(
+          //               sortedWorkoutPlanDayWorkouts[i].workout.summary,
+          //               backgroundColor: context.theme.background,
+          //             ),
+          //           ),
+          //         )),
         ],
       ),
     );

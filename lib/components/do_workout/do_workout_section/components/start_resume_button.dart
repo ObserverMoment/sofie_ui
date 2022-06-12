@@ -5,7 +5,6 @@ import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/countdown_animation.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
 
 class StartResumeButton extends StatelessWidget {
@@ -50,10 +49,7 @@ class StartResumeButton extends StatelessWidget {
         (b) => b.getControllerForSection(sectionIndex).sectionHasStarted);
 
     /// No countdown required for a free session.
-    final isFreeSessionOrLifting = context.select<DoWorkoutBloc, bool>((b) {
-      return b.activeWorkout.workoutSections[sectionIndex].isCustomSession ||
-          b.activeWorkout.workoutSections[sectionIndex].isLifting;
-    });
+    final isFreeSessionOrLifting = false;
 
     return GestureDetector(
       onTap: sectionHasStarted

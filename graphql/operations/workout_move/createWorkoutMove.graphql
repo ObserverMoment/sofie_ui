@@ -6,21 +6,6 @@ mutation createWorkoutMove($data: CreateWorkoutMoveInput!) {
     }
     Move {
       ...Move
-      MoveType {
-        ...MoveType
-      }
-      BodyAreaMoveScores {
-        score
-        BodyArea {
-          ...BodyArea
-        }
-      }
-      RequiredEquipments {
-        ...Equipment
-      }
-      SelectableEquipments {
-        ...Equipment
-      }
     }
   }
 }

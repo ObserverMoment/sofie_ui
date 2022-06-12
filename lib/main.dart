@@ -98,12 +98,12 @@ class AuthRouterState extends State<AuthRouter> {
       providers: [
         ChangeNotifierProvider<AuthBloc>.value(value: _authBloc),
         ChangeNotifierProvider<ThemeBloc>(create: (_) => ThemeBloc()),
-        ChangeNotifierProvider<MoveFiltersBloc>(
-            create: (_) => MoveFiltersBloc()),
-        ChangeNotifierProvider<WorkoutFiltersBloc>(
-            create: (_) => WorkoutFiltersBloc()),
-        ChangeNotifierProvider<WorkoutPlanFiltersBloc>(
-            create: (_) => WorkoutPlanFiltersBloc()),
+        // ChangeNotifierProvider<MoveFiltersBloc>(
+        //     create: (_) => MoveFiltersBloc()),
+        // ChangeNotifierProvider<WorkoutFiltersBloc>(
+        //     create: (_) => WorkoutFiltersBloc()),
+        // ChangeNotifierProvider<WorkoutPlanFiltersBloc>(
+        //     create: (_) => WorkoutPlanFiltersBloc()),
       ],
       builder: (context, child) {
         final authBloc = context.watch<AuthBloc>();

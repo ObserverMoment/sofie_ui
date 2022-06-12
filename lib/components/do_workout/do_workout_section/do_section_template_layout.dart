@@ -8,7 +8,6 @@ import 'package:sofie_ui/blocs/do_workout_bloc/workout_progress_state.dart';
 import 'package:sofie_ui/components/animated/animated_submit_button_2.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_section/components/section_video_player_screen.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 
@@ -66,21 +65,21 @@ class DoSectionTemplateLayout extends StatelessWidget {
                     child: timer,
                   ),
                 ),
-                if (Utils.textNotNull(workoutSection.classVideoUri))
-                  SectionVideoPlayerScreen(
-                    workoutSection: workoutSection,
-                    state: state,
-                  )
+                // if (Utils.textNotNull(workoutSection.classVideoUri))
+                //   SectionVideoPlayerScreen(
+                //     workoutSection: workoutSection,
+                //     state: state,
+                //   )
               ],
             ),
           ),
 
           /// The set complete / start / stop button is always at the bottom of this column and is part of the layout for scored workouts.
-          if (workoutSection.isScored && isRunning)
-            _AnimatedSubmitButton(
-              height: startResumeButtonHeight,
-              sectionIndex: workoutSection.sortPosition,
-            )
+          //   if (workoutSection.isScored && isRunning)
+          //     _AnimatedSubmitButton(
+          //       height: startResumeButtonHeight,
+          //       sectionIndex: workoutSection.sortPosition,
+          //     )
         ],
       ),
     );

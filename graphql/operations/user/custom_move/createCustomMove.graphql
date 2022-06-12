@@ -1,20 +1,5 @@
 mutation createMove($data: CreateMoveInput!) {
   createMove(data: $data) {
     ...Move
-    MoveType {
-      ...MoveType
-    }
-    BodyAreaMoveScores {
-      score
-      BodyArea {
-        ...BodyArea
-      }
-    }
-    RequiredEquipments {
-      ...Equipment
-    }
-    SelectableEquipments {
-      ...Equipment
-    }
   }
 }

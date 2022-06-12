@@ -138,11 +138,11 @@ class _CollectionWorkoutsList extends StatelessWidget {
                         subtitle: 'WORKOUT',
                       ),
                       items: [
-                        BottomSheetMenuItem(
-                            text: 'View details',
-                            icon: CupertinoIcons.eye,
-                            onPressed: () => context.navigateTo(
-                                WorkoutDetailsRoute(id: workouts[i].id))),
+                        // BottomSheetMenuItem(
+                        //     text: 'View details',
+                        //     icon: CupertinoIcons.eye,
+                        //     onPressed: () => context.navigateTo(
+                        //         WorkoutDetailsRoute(id: workouts[i].id))),
                         BottomSheetMenuItem(
                             text: 'Move to other collection',
                             icon: CupertinoIcons.tray_arrow_up,

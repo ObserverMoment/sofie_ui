@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
@@ -25,8 +24,8 @@ class WorkoutCreatorBloc extends ChangeNotifier {
   late Map<String, dynamic> backupJson = {};
 
   WorkoutCreatorBloc(this.context, Workout initialWorkout) {
-    workout = initialWorkout.copyAndSortAllChildren;
-    backupJson = workout.toJson();
+    // workout = initialWorkout.copyAndSortAllChildren;
+    // backupJson = workout.toJson();
   }
 
   /// Use when creating new objects which have to wait for network responses before updating the UI with their presence.
@@ -50,18 +49,18 @@ class WorkoutCreatorBloc extends ChangeNotifier {
       ],
     );
 
-    if (writeWorkoutSuccess) {
-      final success = GraphQLStore.store.writeDataToStore(
-        data: workout.summary.toJson(),
-        broadcastQueryIds: [
-          GQLOpNames.userScheduledWorkouts,
-          GQLOpNames.userWorkouts,
-          GQLOpNames.userCollections,
-          GQLOpNames.userClubs
-        ],
-      );
-      return success;
-    }
+    // if (writeWorkoutSuccess) {
+    //   final success = GraphQLStore.store.writeDataToStore(
+    //     data: workout.summary.toJson(),
+    //     broadcastQueryIds: [
+    //       GQLOpNames.userScheduledWorkouts,
+    //       GQLOpNames.userWorkouts,
+    //       GQLOpNames.userCollections,
+    //       GQLOpNames.userClubs
+    //     ],
+    //   );
+    //   return success;
+    // }
 
     return false;
   }
@@ -444,10 +443,10 @@ class WorkoutCreatorBloc extends ChangeNotifier {
         workout.workoutSections[sectionIndex].workoutSets;
 
     workoutSets.forEachIndexed((i, w) {
-      if (type == DurationUpdateType.sets && !w.isRestSet ||
-          type == DurationUpdateType.rests && w.isRestSet) {
-        editWorkoutSet(sectionIndex, i, {'duration': duration});
-      }
+      // if (type == DurationUpdateType.sets && !w.isRestSet ||
+      //     type == DurationUpdateType.rests && w.isRestSet) {
+      //   editWorkoutSet(sectionIndex, i, {'duration': duration});
+      // }
     });
   }
 

@@ -4,7 +4,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/workout/workout_set_display_header.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/data_model_converters/workout_to_logged_workout.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 /// Details of a workout set in a compact a format as possible.
 class WorkoutSetMinimalDisplay extends StatelessWidget {
@@ -39,24 +38,24 @@ class WorkoutSetMinimalDisplay extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              WorkoutSetDisplayHeader(
-                workoutSectionType: workoutSectionType,
-                workoutSet: workoutSet,
-              ),
+              // WorkoutSetDisplayHeader(
+              //   workoutSectionType: workoutSectionType,
+              //   workoutSet: workoutSet,
+              // ),
             ],
           ),
-          if (!workoutSet.isRestSet)
-            ...workoutSet.workoutMoves
-                .map((wm) => MyText(
-                    generateWorkoutMoveString(
-                        workoutSet: workoutSet,
-                        workoutMove: wm,
-                        workoutSectionType: workoutSectionType,
-                        displayEquipment: displayEquipment,
-                        displayLoad: displayLoad),
-                    lineHeight: 1.4,
-                    size: textSize))
-                .toList()
+          // if (!workoutSet.isRestSet)
+          //   ...workoutSet.workoutMoves
+          //       .map((wm) => MyText(
+          //           generateWorkoutMoveString(
+          //               workoutSet: workoutSet,
+          //               workoutMove: wm,
+          //               workoutSectionType: workoutSectionType,
+          //               displayEquipment: displayEquipment,
+          //               displayLoad: displayLoad),
+          //           lineHeight: 1.4,
+          //           size: textSize))
+          //       .toList()
         ],
       ),
     );

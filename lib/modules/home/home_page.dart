@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
             ListView(
               children: const [
                 AnnouncementsUpdates(),
-                ComingUpList(),
+                // ComingUpList(),
               ],
             ),
             MyText('Feed'),

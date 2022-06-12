@@ -231,15 +231,15 @@ class _SingleEntryDisplay extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              if (Utils.textNotNull(score.loggedWorkoutId))
-                TertiaryButton(
-                    fontSize: FONTSIZE.one,
-                    iconSize: 14,
-                    backgroundColor: buttonTagColor,
-                    suffixIconData: CupertinoIcons.chevron_right,
-                    text: 'View Log',
-                    onPressed: () => context.navigateTo(
-                        LoggedWorkoutDetailsRoute(id: score.loggedWorkoutId!))),
+              // if (Utils.textNotNull(score.loggedWorkoutId))
+              //   TertiaryButton(
+              //       fontSize: FONTSIZE.one,
+              //       iconSize: 14,
+              //       backgroundColor: buttonTagColor,
+              //       suffixIconData: CupertinoIcons.chevron_right,
+              //       text: 'View Log',
+              //       onPressed: () => context.navigateTo(
+              //           LoggedWorkoutDetailsRoute(id: score.loggedWorkoutId!))),
             ],
           ),
           Column(

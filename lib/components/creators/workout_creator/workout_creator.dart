@@ -233,7 +233,7 @@ class __MainUIState extends State<_MainUI> {
                   sizing: StackFit.expand,
                   children: const [
                     WorkoutCreatorInfo(),
-                    WorkoutCreatorStructure(),
+                    // WorkoutCreatorStructure(),
                     WorkoutCreatorMedia()
                   ],
                 ),

@@ -15,7 +15,7 @@ import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class CustomMoveCreatorMeta extends StatelessWidget {
-  final Move move;
+  final MoveData move;
   final void Function(Map<String, dynamic> data) updateMove;
   const CustomMoveCreatorMeta(
       {Key? key, required this.move, required this.updateMove})

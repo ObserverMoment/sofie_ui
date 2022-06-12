@@ -489,17 +489,17 @@ class _ClubFeedPostCreatorPageState extends State<ClubFeedPostCreatorPage> {
                                     showCreateButton: true,
                                     pageTitle: 'Select Plan'),
                               )),
-                      ShareObjectTypeSelectorButton(
-                          title: 'Workout Log',
-                          description: 'Share a log you have done.',
-                          assetImageUri:
-                              'assets/placeholder_images/workout-log.jpg',
-                          onPressed: () => context.navigateTo(
-                                LoggedWorkoutsHistoryRoute(
-                                  selectLoggedWorkout: _selectWorkoutLog,
-                                  pageTitle: 'Select Log',
-                                ),
-                              ))
+                      // ShareObjectTypeSelectorButton(
+                      //     title: 'Workout Log',
+                      //     description: 'Share a log you have done.',
+                      //     assetImageUri:
+                      //         'assets/placeholder_images/workout-log.jpg',
+                      //     onPressed: () => context.navigateTo(
+                      //           LoggedWorkoutsHistoryRoute(
+                      //             selectLoggedWorkout: _selectWorkoutLog,
+                      //             pageTitle: 'Select Log',
+                      //           ),
+                      //         ))
                     ],
                   ),
           ),

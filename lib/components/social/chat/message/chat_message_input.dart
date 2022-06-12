@@ -182,13 +182,13 @@ class ChatMessageInputState extends State<ChatMessageInput> {
   }
 
   Future<void> _pickLoggedWorkout() async {
-    context.navigateTo(LoggedWorkoutsHistoryRoute(
-        pageTitle: 'Select Log',
-        selectLoggedWorkout: (log) async {
-          await _sendMessage(Message(
-              extraData: _formatMessageExtraData(
-                  ChatMessageType.loggedWorkout, log.id, log.name)));
-        }));
+    // context.navigateTo(LoggedWorkoutsHistoryRoute(
+    //     pageTitle: 'Select Log',
+    //     selectLoggedWorkout: (log) async {
+    //       await _sendMessage(Message(
+    //           extraData: _formatMessageExtraData(
+    //               ChatMessageType.loggedWorkout, log.id, log.name)));
+    //     }));
   }
 
   void _sendRegularMessage() {

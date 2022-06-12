@@ -152,21 +152,21 @@ class ProgressPage extends StatelessWidget {
 
     switch (widgetId) {
       case '001':
-        return LoggedSessionsContainer(
-          loadingShimmer: _widgetLoadingShimmer,
-          builder: (logs) => ProgressWidgetContainer(
-            index: index,
-            headerIcon: kWidgetIdToIconMap['001']!,
-            title: 'Summary',
-            widgetHeight: _widgetHeight,
-            widget: AllTimeStatsSummaryWidget(
-              loggedWorkouts: logs,
-            ),
-            moveWidgetUp: moveWidgetUp,
-            moveWidgetDown: moveWidgetDown,
-            deactivateWidget: deactivateWidget,
-          ),
-        );
+      // return LoggedSessionsContainer(
+      //   loadingShimmer: _widgetLoadingShimmer,
+      //   builder: (logs) => ProgressWidgetContainer(
+      //     index: index,
+      //     headerIcon: kWidgetIdToIconMap['001']!,
+      //     title: 'Summary',
+      //     widgetHeight: _widgetHeight,
+      //     widget: AllTimeStatsSummaryWidget(
+      //       loggedWorkouts: logs,
+      //     ),
+      //     moveWidgetUp: moveWidgetUp,
+      //     moveWidgetDown: moveWidgetDown,
+      //     deactivateWidget: deactivateWidget,
+      //   ),
+      // );
       case '002':
         return LoggedSessionsContainer(
           loadingShimmer: _widgetLoadingShimmer,
@@ -366,12 +366,12 @@ class ProgressPage extends StatelessWidget {
                       onTap: () =>
                           context.navigateTo(const BodyTrackingRoute()),
                     ),
-                    SubSectionLinkTile(
-                      label: 'Logs & Analysis',
-                      assetImagePath: 'logs_analysis.svg',
-                      onTap: () =>
-                          context.navigateTo(LoggedWorkoutsAnalysisRoute()),
-                    ),
+                    // SubSectionLinkTile(
+                    //   label: 'Logs & Analysis',
+                    //   assetImagePath: 'logs_analysis.svg',
+                    //   onTap: () =>
+                    //       context.navigateTo(LoggedWorkoutsAnalysisRoute()),
+                    // ),
                   ],
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/cards/card.dart';
-import 'package:sofie_ui/components/lists.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/body_areas/targeted_body_areas_display.dart';
@@ -10,24 +9,24 @@ import 'package:sofie_ui/services/repos/move_data.repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
 class ResistanceSessionCard extends StatelessWidget {
-  final UserResistanceSessionSummary resistanceSession;
+  final ResistanceSession resistanceSession;
   final bool showUserAvatar;
   const ResistanceSessionCard(
       {Key? key, required this.resistanceSession, required this.showUserAvatar})
       : super(key: key);
 
-  List<Move> _uniqueMovesInSession(MoveDataRepo moveDataRepo) {
+  List<MoveData> _uniqueMovesInSession(MoveDataRepo moveDataRepo) {
     Set<String> moveIds = {};
-    for (final e in resistanceSession.resistanceExerciseSummary) {
-      for (final s in e.resistanceSetSummary) {
-        moveIds.add(s.moveSummary.id);
+    for (final e in resistanceSession.resistanceExercises) {
+      for (final s in e.resistanceSets) {
+        moveIds.add(s.move.id);
       }
     }
 
     return moveIds.map((id) => moveDataRepo.moveById(id)).toList();
   }
 
-  List<BodyArea> _uniqueBodyAreas(List<Move> moves) {
+  List<BodyArea> _uniqueBodyAreas(List<MoveData> moves) {
     return moves.fold<Set<BodyArea>>({}, (acum, next) {
       final bodyAreas =
           moves.map((m) => m.bodyAreaMoveScores.map((bams) => bams.bodyArea));

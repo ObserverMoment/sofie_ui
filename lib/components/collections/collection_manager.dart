@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/components/user_input/selectors/collection_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
@@ -42,24 +41,24 @@ class CollectionManager {
   }
 
   static void selectCollectionToSaveTo<T>(BuildContext context, T object) {
-    context.push(
-        fullscreenDialog: true,
-        child: CollectionSelector(
-            title: 'Save to Collection',
-            selectCollection: (collection) {
-              if (object is Workout) {
-                addWorkoutToCollection(context, collection, object.summary);
-              } else if (object is WorkoutSummary) {
-                addWorkoutToCollection(context, collection, object);
-              } else if (object is WorkoutPlan) {
-                addWorkoutPlanToCollection(context, collection, object.summary);
-              } else if (object is WorkoutPlanSummary) {
-                addWorkoutPlanToCollection(context, collection, object);
-              } else {
-                throw Exception(
-                    'CollectionManager._selectCollectionToSaveTo: Cannot add type ${object.runtimeType} to a collection.');
-              }
-            }));
+    // context.push(
+    //     fullscreenDialog: true,
+    //     child: CollectionSelector(
+    //         title: 'Save to Collection',
+    //         selectCollection: (collection) {
+    //           if (object is Workout) {
+    //             addWorkoutToCollection(context, collection, object.summary);
+    //           } else if (object is WorkoutSummary) {
+    //             addWorkoutToCollection(context, collection, object);
+    //           } else if (object is WorkoutPlan) {
+    //             addWorkoutPlanToCollection(context, collection, object.summary);
+    //           } else if (object is WorkoutPlanSummary) {
+    //             addWorkoutPlanToCollection(context, collection, object);
+    //           } else {
+    //             throw Exception(
+    //                 'CollectionManager._selectCollectionToSaveTo: Cannot add type ${object.runtimeType} to a collection.');
+    //           }
+    //         }));
   }
 
   static void confirmRemoveObjectFromCollection<T>(
@@ -67,26 +66,26 @@ class CollectionManager {
     Collection collection,
     T object,
   ) {
-    context.showConfirmDialog(
-        title: 'Remove from Collection',
-        subtitle: collection.name,
-        verb: 'Remove',
-        isDestructive: true,
-        onConfirm: () {
-          if (object is Workout) {
-            removeWorkoutFromCollection(context, collection, object.summary);
-          } else if (object is WorkoutSummary) {
-            removeWorkoutFromCollection(context, collection, object);
-          } else if (object is WorkoutPlan) {
-            removeWorkoutPlanFromCollection(
-                context, collection, object.summary);
-          } else if (object is WorkoutPlanSummary) {
-            removeWorkoutPlanFromCollection(context, collection, object);
-          } else {
-            throw Exception(
-                'CollectionManager.confirmRemoveObjectFromCollection: Cannot remove type ${object.runtimeType} from a collection.');
-          }
-        });
+    // context.showConfirmDialog(
+    //     title: 'Remove from Collection',
+    //     subtitle: collection.name,
+    //     verb: 'Remove',
+    //     isDestructive: true,
+    //     onConfirm: () {
+    //       if (object is Workout) {
+    //         removeWorkoutFromCollection(context, collection, object.summary);
+    //       } else if (object is WorkoutSummary) {
+    //         removeWorkoutFromCollection(context, collection, object);
+    //       } else if (object is WorkoutPlan) {
+    //         removeWorkoutPlanFromCollection(
+    //             context, collection, object.summary);
+    //       } else if (object is WorkoutPlanSummary) {
+    //         removeWorkoutPlanFromCollection(context, collection, object);
+    //       } else {
+    //         throw Exception(
+    //             'CollectionManager.confirmRemoveObjectFromCollection: Cannot remove type ${object.runtimeType} from a collection.');
+    //       }
+    //     });
   }
 
   /// Add / Remove Workout from Collection ////

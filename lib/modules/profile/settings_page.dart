@@ -81,11 +81,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       child:
                           const WorkoutTagsManager(allowCreateTagOnly: false)),
                 ),
-                PageLink(
-                  linkText: 'View Archive',
-                  onPress: () => context.navigateTo(const ArchiveRoute()),
-                  icon: CupertinoIcons.archivebox,
-                ),
+                // PageLink(
+                //   linkText: 'View Archive',
+                //   onPress: () => context.navigateTo(const ArchiveRoute()),
+                //   icon: CupertinoIcons.archivebox,
+                // ),
                 PageLink(
                   linkText: 'Clear cache',
                   onPress: () => _clearCache(context, true),

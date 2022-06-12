@@ -152,17 +152,6 @@ class DataUtils {
     });
   }
 
-  static List<BodyArea> bodyAreasInWorkoutSection(WorkoutSection section) {
-    final List<BodyArea> bodyAreas = [];
-    for (final s in section.workoutSets) {
-      for (final m in s.workoutMoves) {
-        bodyAreas.addAll(
-            m.move.bodyAreaMoveScores.map((bams) => bams.bodyArea).toList());
-      }
-    }
-    return bodyAreas;
-  }
-
   /// Recursively cast a nested map of any [Map<K,V>]
   /// Initially to convert from [_InternalLinkedHashMap<dynamic, dynamic>] to [Map<String, dynamic>]
   /// When retrieving nested data from Hive.

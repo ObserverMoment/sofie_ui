@@ -12,12 +12,12 @@ import 'package:sofie_ui/services/utils.dart';
 
 /// Info about and exercise. Video and description.
 class MoveDetails extends StatelessWidget {
-  final Move move;
+  final MoveData move;
   const MoveDetails(this.move, {Key? key}) : super(key: key);
 
   double get kBodyGraphicHeight => 380.0;
 
-  Widget _buildEquipmentLists(Move move) => Column(
+  Widget _buildEquipmentLists(MoveData move) => Column(
         children: [
           if (move.requiredEquipments.isNotEmpty)
             Padding(

@@ -20,7 +20,7 @@ import 'package:sofie_ui/services/store/graphql_store.dart';
 /// Updates everything to DB when user saves and closes.
 class CustomMoveCreatorPage extends StatefulWidget {
   /// For use when editing.
-  final Move? move;
+  final MoveData? move;
   const CustomMoveCreatorPage({Key? key, this.move}) : super(key: key);
   @override
   State<CustomMoveCreatorPage> createState() => _CustomMoveCreatorPageState();
@@ -28,7 +28,7 @@ class CustomMoveCreatorPage extends StatefulWidget {
 
 class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
   int _activeTabIndex = 0;
-  late Move? _activeMove;
+  late MoveData? _activeMove;
   bool _formIsDirty = false;
   bool _loading = false;
 
@@ -36,13 +36,13 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
   void initState() {
     super.initState();
     _activeMove =
-        widget.move != null ? Move.fromJson(widget.move!.toJson()) : null;
+        widget.move != null ? MoveData.fromJson(widget.move!.toJson()) : null;
   }
 
   Future<void> _updateMoveType(MoveType moveType) async {
     _formIsDirty = true;
     if (_activeMove == null) {
-      final newMove = Move()
+      final newMove = MoveData()
         ..$$typename = 'Move'
         ..id = 'temp'
         ..name = 'Custom Move'
@@ -62,7 +62,7 @@ class _CustomMoveCreatorPageState extends State<CustomMoveCreatorPage> {
   void _updateMove(Map<String, dynamic> data) {
     setState(() {
       _formIsDirty = true;
-      _activeMove = Move.fromJson({..._activeMove!.toJson(), ...data});
+      _activeMove = MoveData.fromJson({..._activeMove!.toJson(), ...data});
     });
   }
 

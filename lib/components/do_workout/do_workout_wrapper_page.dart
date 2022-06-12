@@ -109,7 +109,9 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
 
                   if (!mediaSetupComplete) return _loadingWidget;
 
-                  return const DoWorkoutDoWorkoutPage();
+                  return MyText('TODO');
+
+                  // return const DoWorkoutDoWorkoutPage();
                 },
               ));
   }

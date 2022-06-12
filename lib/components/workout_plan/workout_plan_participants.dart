@@ -3,7 +3,6 @@ import 'package:sofie_ui/components/cards/plan_participant_card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 
 class WorkoutPlanParticipants extends StatelessWidget {
   final WorkoutPlan workoutPlan;
@@ -22,9 +21,8 @@ class WorkoutPlanParticipants extends StatelessWidget {
         : ListView(
             children: [
               ...enrolments
-                  .map((e) => ParticipantCard(
-                      enrolment: e,
-                      totalWorkouts: workoutPlan.workoutsInPlan.length))
+                  .map(
+                      (e) => ParticipantCard(enrolment: e, totalWorkouts: 9999))
                   .toList(),
               const SizedBox(height: kAssumedFloatingButtonHeight),
             ],

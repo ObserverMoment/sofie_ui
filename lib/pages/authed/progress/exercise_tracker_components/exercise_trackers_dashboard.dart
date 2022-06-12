@@ -30,11 +30,11 @@ class ExerciseTrackersDashboard extends StatelessWidget {
                 size: FONTSIZE.five,
                 weight: FontWeight.bold,
               ),
-              TertiaryButton(
-                  prefixIconData: CupertinoIcons.plus,
-                  text: 'Tracker',
-                  onPressed: () => context
-                      .navigateTo(const ExerciseLoadTrackerCreatorRoute())),
+              // TertiaryButton(
+              //     prefixIconData: CupertinoIcons.plus,
+              //     text: 'Tracker',
+              //     onPressed: () => context
+              //         .navigateTo(const ExerciseLoadTrackerCreatorRoute())),
             ],
           ),
         ),
@@ -45,11 +45,11 @@ class ExerciseTrackersDashboard extends StatelessWidget {
                     explainer:
                         'Define your trackers here and then your scores will auto update when you log workouts.',
                     actions: [
-                      EmptyPlaceholderAction(
-                          action: () => context.navigateTo(
-                              const ExerciseLoadTrackerCreatorRoute()),
-                          buttonIcon: CupertinoIcons.add,
-                          buttonText: 'Create Exercise Load Tracker'),
+                      // EmptyPlaceholderAction(
+                      //     action: () => context.navigateTo(
+                      //         const ExerciseLoadTrackerCreatorRoute()),
+                      //     buttonIcon: CupertinoIcons.add,
+                      //     buttonText: 'Create Exercise Load Tracker'),
                     ]),
               )
             : GridView.count(

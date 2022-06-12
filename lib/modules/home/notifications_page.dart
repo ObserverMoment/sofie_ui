@@ -509,15 +509,15 @@ class NotificationActivityJoinLeavePlan extends StatelessWidget {
                   : null,
           ),
           TextSpan(text: ' $action plan '),
-          TextSpan(
-            text: workoutPlanName,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-            recognizer: TapGestureRecognizer()
-              ..onTap = workoutPlanId != null
-                  ? () => context
-                      .navigateTo(WorkoutPlanDetailsRoute(id: workoutPlanId!))
-                  : null,
-          ),
+          // TextSpan(
+          //   text: workoutPlanName,
+          //   style: const TextStyle(fontWeight: FontWeight.bold),
+          //   recognizer: TapGestureRecognizer()
+          //     ..onTap = workoutPlanId != null
+          //         ? () => context
+          //             .navigateTo(WorkoutPlanDetailsRoute(id: workoutPlanId!))
+          //         : null,
+          // ),
         ])),
         if (isJoin)
           const Padding(
@@ -560,15 +560,15 @@ class NotificationActivityLogWorkout extends StatelessWidget {
                   : null,
           ),
           const TextSpan(text: ' logged your workout '),
-          TextSpan(
-            text: workoutName,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-            recognizer: TapGestureRecognizer()
-              ..onTap = workoutId != null
-                  ? () =>
-                      context.navigateTo(WorkoutDetailsRoute(id: workoutId!))
-                  : null,
-          ),
+          // TextSpan(
+          //   text: workoutName,
+          //   style: const TextStyle(fontWeight: FontWeight.bold),
+          //   recognizer: TapGestureRecognizer()
+          //     ..onTap = workoutId != null
+          //         ? () =>
+          //             context.navigateTo(WorkoutDetailsRoute(id: workoutId!))
+          //         : null,
+          // ),
         ])),
         const Padding(
           padding: EdgeInsets.only(left: 6.0),

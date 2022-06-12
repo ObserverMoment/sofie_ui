@@ -92,31 +92,31 @@ class _AddWorkoutSectionState extends State<AddWorkoutSection> {
       child: ListView(
         shrinkWrap: true,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: SizedBox(
-              height: 46,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (_workoutSection?.workoutSectionType != null)
-                    FadeIn(
-                        child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: WorkoutSectionTypeTag(
-                        workoutSection: _workoutSection!,
-                        fontSize: FONTSIZE.four,
-                      ),
-                    )),
-                  const Positioned(
-                    right: 0,
-                    child:
-                        InfoPopupButton(infoWidget: WorkoutSectionTypesInfo()),
-                  )
-                ],
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 8.0),
+          //   child: SizedBox(
+          //     height: 46,
+          //     child: Stack(
+          //       alignment: Alignment.center,
+          //       children: [
+          //         if (_workoutSection?.workoutSectionType != null)
+          //           FadeIn(
+          //               child: Padding(
+          //             padding: const EdgeInsets.only(left: 8.0),
+          //             child: WorkoutSectionTypeTag(
+          //               workoutSection: _workoutSection!,
+          //               fontSize: FONTSIZE.four,
+          //             ),
+          //           )),
+          //         const Positioned(
+          //           right: 0,
+          //           child:
+          //               InfoPopupButton(infoWidget: WorkoutSectionTypesInfo()),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
           if (_workoutSection?.workoutSectionType != null)
             GrowIn(
                 child: Padding(

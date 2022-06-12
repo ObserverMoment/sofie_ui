@@ -22,7 +22,7 @@ import 'package:sofie_ui/services/utils.dart';
 /// The user is required to select a move before moving on to the workoutMove creator.
 /// Unlike some other selectors this runs callback immediately on press.
 class MoveSelector extends StatefulWidget {
-  final void Function(Move move) selectMove;
+  final void Function(MoveData move) selectMove;
   final VoidCallback onCancel;
   final String pageTitle;
 
@@ -32,7 +32,7 @@ class MoveSelector extends StatefulWidget {
 
   /// Optional move filter. E.g only show yoga moves if user is programming a yoga session.
   /// Only show moves with REPS as a valid rep type if programming a lifting session.
-  final List<Move> Function(List<Move> moves)? customFilter;
+  final List<MoveData> Function(List<MoveData> moves)? customFilter;
 
   const MoveSelector(
       {Key? key,
@@ -53,20 +53,20 @@ class _MoveSelectorState extends State<MoveSelector> {
   int _activeTabIndex = 0;
   String _searchString = '';
 
-  bool _filter(Move move) {
+  bool _filter(MoveData move) {
     return [move.name, move.searchTerms, move.moveType.name]
         .where((t) => Utils.textNotNull(t))
         .map((t) => t!.toLowerCase())
         .any((t) => t.contains(_searchString));
   }
 
-  List<Move> _filterBySearchString(List<Move> moves) {
+  List<MoveData> _filterBySearchString(List<MoveData> moves) {
     return Utils.textNotNull(_searchString)
         ? moves.where((m) => _filter(m)).toList()
         : moves;
   }
 
-  Future<void> _openCustomMoveCreator(Move? moveToUpdate) async {
+  Future<void> _openCustomMoveCreator(MoveData? moveToUpdate) async {
     Utils.unfocusAny();
     final success =
         await context.pushRoute(CustomMoveCreatorRoute(move: moveToUpdate));
@@ -81,7 +81,7 @@ class _MoveSelectorState extends State<MoveSelector> {
     }
   }
 
-  Widget _buildButton(Move move) {
+  Widget _buildButton(MoveData move) {
     return move.scope == MoveScope.custom
         ? CupertinoButton(
             padding: EdgeInsets.zero,

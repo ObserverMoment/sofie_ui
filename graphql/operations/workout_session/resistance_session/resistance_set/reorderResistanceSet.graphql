@@ -3,21 +3,6 @@ mutation reorderResistanceSet($id: ID!, $moveTo: Int!) {
     ...ResistanceSet
     Move {
       ...Move
-      MoveType {
-        ...MoveType
-      }
-      BodyAreaMoveScores {
-        score
-        BodyArea {
-          ...BodyArea
-        }
-      }
-      RequiredEquipments {
-        ...Equipment
-      }
-      SelectableEquipments {
-        ...Equipment
-      }
     }
     Equipment {
       ...Equipment

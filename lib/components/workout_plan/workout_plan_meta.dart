@@ -14,8 +14,6 @@ import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
-import 'package:sofie_ui/extensions/type_extensions.dart';
 
 class WorkoutPlanMeta extends StatelessWidget {
   final WorkoutPlan workoutPlan;
@@ -60,23 +58,23 @@ class WorkoutPlanMeta extends StatelessWidget {
               ),
               label: 'Weeks',
             ),
-            _InfoIcon(
-              icon: MyText(
-                workoutPlan.workoutsInPlan.length.toString(),
-                size: FONTSIZE.seven,
-                lineHeight: 1,
-              ),
-              label: 'Workouts',
-            ),
-            if (workoutPlan.workoutPlanReviews.isNotEmpty)
-              _InfoIcon(
-                icon: MyText(
-                  workoutPlan.reviewAverage.stringMyDouble(),
-                  size: FONTSIZE.seven,
-                  lineHeight: 1,
-                ),
-                label: 'Avg Review',
-              ),
+            // _InfoIcon(
+            //   icon: MyText(
+            //     workoutPlan.workoutsInPlan.length.toString(),
+            //     size: FONTSIZE.seven,
+            //     lineHeight: 1,
+            //   ),
+            //   label: 'Workouts',
+            // ),
+            // if (workoutPlan.workoutPlanReviews.isNotEmpty)
+            //   _InfoIcon(
+            //     icon: MyText(
+            //       workoutPlan.reviewAverage.stringMyDouble(),
+            //       size: FONTSIZE.seven,
+            //       lineHeight: 1,
+            //     ),
+            //     label: 'Avg Review',
+            //   ),
             if (Utils.textNotNull(workoutPlan.introVideoUri))
               _ActionIconButton(
                   icon: const Icon(CupertinoIcons.tv),
@@ -149,15 +147,15 @@ class WorkoutPlanMeta extends StatelessWidget {
             ),
           ),
         ),
-        if (workoutPlan.workoutPlanDays.isNotEmpty)
-          _InfoSection(
-            header: 'Goals',
-            icon: CupertinoIcons.scope,
-            content: PercentageBarChartSingle(
-              inputs: workoutPlan.waffleChartInputs,
-              barHeight: 4,
-            ),
-          ),
+        // if (workoutPlan.workoutPlanDays.isNotEmpty)
+        //   _InfoSection(
+        //     header: 'Goals',
+        //     icon: CupertinoIcons.scope,
+        //     content: PercentageBarChartSingle(
+        //       inputs: workoutPlan.waffleChartInputs,
+        //       barHeight: 4,
+        //     ),
+        //   ),
         if (Utils.textNotNull(workoutPlan.description))
           _InfoSection(
             content: ReadMoreTextBlock(

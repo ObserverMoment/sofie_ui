@@ -22,22 +22,22 @@ class CirclesPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(
-                child: DiscoverPageTopButton(
-                  iconData: MyCustomIcons.dumbbell,
-                  onPressed: () =>
-                      context.navigateTo(PublicWorkoutFinderRoute()),
-                  text: 'Workouts',
-                ),
-              ),
-              Expanded(
-                child: DiscoverPageTopButton(
-                  iconData: MyCustomIcons.plansIcon,
-                  onPressed: () =>
-                      context.navigateTo(PublicWorkoutPlanFinderRoute()),
-                  text: 'Plans',
-                ),
-              ),
+              // Expanded(
+              //   child: DiscoverPageTopButton(
+              //     iconData: MyCustomIcons.dumbbell,
+              //     onPressed: () =>
+              //         context.navigateTo(PublicWorkoutFinderRoute()),
+              //     text: 'Workouts',
+              //   ),
+              // ),
+              // Expanded(
+              //   child: DiscoverPageTopButton(
+              //     iconData: MyCustomIcons.plansIcon,
+              //     onPressed: () =>
+              //         context.navigateTo(PublicWorkoutPlanFinderRoute()),
+              //     text: 'Plans',
+              //   ),
+              // ),
             ],
           ),
           _verticalPadding(child: const DiscoverCreators()),

@@ -60,7 +60,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
   }
 
   void _navigateToWorkoutPlanDetails(WorkoutPlanSummary workoutPlan) {
-    context.navigateTo(WorkoutPlanDetailsRoute(id: workoutPlan.id));
+    // context.navigateTo(WorkoutPlanDetailsRoute(id: workoutPlan.id));
   }
 
   void _openWorkoutPlanFinder() {

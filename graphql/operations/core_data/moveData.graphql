@@ -2,7 +2,7 @@ query moveData {
   moveData {
     __typename
     standardMoves {
-      ...Move
+      ...MoveData
       MoveType {
         ...MoveType
       }
@@ -20,7 +20,7 @@ query moveData {
       }
     }
     customMoves {
-      ...Move
+      ...MoveData
       MoveType {
         ...MoveType
       }

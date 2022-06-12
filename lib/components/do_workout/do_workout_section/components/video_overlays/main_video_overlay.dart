@@ -10,7 +10,6 @@ import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/timers/radial_countdown_timer.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 
@@ -30,9 +29,9 @@ class MainVideoOverlay extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _VideoOverlayContainer(
-              child: NameAndRepScore(workoutSection: workoutSection),
-            ),
+            // _VideoOverlayContainer(
+            //   child: NameAndRepScore(workoutSection: workoutSection),
+            // ),
             if (workoutSectionTypeName == kForTimeName)
               _VideoOverlayContainer(
                   child: WorkoutSectionSimpleTimer(
@@ -68,9 +67,7 @@ class _CircleTimerDisplay extends StatelessWidget {
       : super(key: key);
 
   /// Set.duration if timed workout or section timecap if AMRAP.
-  int get _currentCheckpointLength => workoutSection.isTimed
-      ? workoutSection.workoutSets[state.currentSetIndex].duration
-      : workoutSection.timecap;
+  int get _currentCheckpointLength => 9999;
 
   @override
   Widget build(BuildContext context) {

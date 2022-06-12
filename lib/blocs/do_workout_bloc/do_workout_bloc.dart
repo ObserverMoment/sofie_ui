@@ -13,7 +13,6 @@ import 'package:sofie_ui/blocs/workout_creator_bloc.dart';
 import 'package:sofie_ui/components/media/audio/audio_player_controller.dart';
 import 'package:sofie_ui/components/media/video/video_setup_manager.dart';
 import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/data_type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/audio_session_manager.dart';
 import 'package:sofie_ui/services/data_utils.dart';
@@ -92,7 +91,7 @@ class DoWorkoutBloc extends ChangeNotifier {
     /// Init / retrieve the settings
     userWorkoutSettingsBloc = UserWorkoutSettingsBloc();
 
-    activeWorkout = originalWorkout.copyAndSortAllChildren;
+    activeWorkout = originalWorkout;
 
     final workoutSections = activeWorkout.workoutSections;
 
@@ -478,8 +477,7 @@ class DoWorkoutBloc extends ChangeNotifier {
         activeWorkout.workoutSections[sectionIndex].toJson());
 
     section.workoutSets.forEachIndexed((i, w) {
-      if (type == DurationUpdateType.sets && !w.isRestSet ||
-          type == DurationUpdateType.rests && w.isRestSet) {
+      if (true) {
         /// [updateWorkoutSetDuration] will reset section and notify listeners.
         updateWorkoutSetDuration(sectionIndex, i, seconds);
       }
@@ -707,8 +705,7 @@ class DoWorkoutBloc extends ChangeNotifier {
 
       final timeTakenSeconds = controller.stopWatchTimer.secondTime.value;
 
-      if (controller.workoutSection.isLifting ||
-          controller.workoutSection.isCustomSession) {
+      if (true) {
         /// For Lifting and Custom sessions the user can modify moves while they are working out. Modifying moves when working out does not reset the controller (as is teh case when the user is modifying moves on other workout types BEFORE they start) - so the [workoutSection] being referenced in the controller will not be getting updated. Only the [activeWorkout] is getting updated - so we must use that to generate the log section inputs.
         final activeWorkoutSection = activeWorkout.workoutSections.firstWhere(
             (wSection) =>
@@ -735,13 +732,13 @@ class DoWorkoutBloc extends ChangeNotifier {
 
     int? repScore;
 
-    if (workoutSection.isAMRAP) {
-      repScore = (controller as AMRAPSectionController).repsCompleted;
-    } else if (workoutSection.isForTime) {
-      repScore = (controller as ForTimeSectionController).repsCompleted;
-    } else if (workoutSection.isLifting) {
-      repScore = DataUtils.totalRepsInLoggedSectionInput(loggedSectionInput);
-    }
+    // if (workoutSection.isAMRAP) {
+    //   repScore = (controller as AMRAPSectionController).repsCompleted;
+    // } else if (workoutSection.isForTime) {
+    //   repScore = (controller as ForTimeSectionController).repsCompleted;
+    // } else if (workoutSection.isLifting) {
+    //   repScore = DataUtils.totalRepsInLoggedSectionInput(loggedSectionInput);
+    // }
 
     return repScore;
   }

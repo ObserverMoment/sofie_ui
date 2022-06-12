@@ -61,20 +61,20 @@ class FeedPostCard extends StatelessWidget {
 
   void _openDetailsPageByType(
       BuildContext context, FeedPostType type, String objectId) {
-    switch (type) {
-      case FeedPostType.workout:
-        context.navigateTo(WorkoutDetailsRoute(id: objectId));
-        break;
-      case FeedPostType.workoutPlan:
-        context.navigateTo(WorkoutPlanDetailsRoute(id: objectId));
-        break;
-      case FeedPostType.loggedWorkout:
-        context.navigateTo(LoggedWorkoutDetailsRoute(id: objectId));
-        break;
-      default:
-        throw Exception(
-            'FeedPostCard._openDetailsPageByType: No method defined for $type.');
-    }
+    // switch (type) {
+    //   case FeedPostType.workout:
+    //     context.navigateTo(WorkoutDetailsRoute(id: objectId));
+    //     break;
+    //   case FeedPostType.workoutPlan:
+    //     context.navigateTo(WorkoutPlanDetailsRoute(id: objectId));
+    //     break;
+    //   case FeedPostType.loggedWorkout:
+    //     context.navigateTo(LoggedWorkoutDetailsRoute(id: objectId));
+    //     break;
+    //   default:
+    //     throw Exception(
+    //         'FeedPostCard._openDetailsPageByType: No method defined for $type.');
+    // }
   }
 
   Widget get _buildCaption => Padding(

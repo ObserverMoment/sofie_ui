@@ -35,12 +35,12 @@ class LoggedSessionsWidget extends StatelessWidget {
                     icon: CupertinoIcons.calendar_badge_plus,
                     onPressed: () =>
                         context.navigateTo(CalendarRoute(openAtDate: date))),
-              ...(logsOnDay ?? [])
-                  .map((l) => BottomSheetMenuItem(
-                      text: 'View Log: ${l.name}',
-                      onPressed: () => context
-                          .navigateTo(LoggedWorkoutDetailsRoute(id: l.id))))
-                  .toList(),
+              // ...(logsOnDay ?? [])
+              //     .map((l) => BottomSheetMenuItem(
+              //         text: 'View Log: ${l.name}',
+              //         onPressed: () => context
+              //             .navigateTo(LoggedWorkoutDetailsRoute(id: l.id))))
+              //     .toList(),
             ]));
   }
 

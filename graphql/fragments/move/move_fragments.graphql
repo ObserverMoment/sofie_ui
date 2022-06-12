@@ -1,4 +1,4 @@
-fragment Move on Move {
+fragment MoveData on MoveData {
   __typename
   id
   name
@@ -8,6 +8,17 @@ fragment Move on Move {
   demoVideoThumbUri
   scope
   validRepTypes
+}
+
+fragment Move on Move {
+  __typename
+  id
+  name
+  searchTerms
+  description
+  demoVideoUri
+  demoVideoThumbUri
+  scope
 }
 
 fragment ArchivedMove on Move {

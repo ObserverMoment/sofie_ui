@@ -68,8 +68,8 @@ class MostLoggedWorkoutsWidget extends StatelessWidget {
                   .map((e) => Padding(
                         padding: EdgeInsets.all(_cardMargin),
                         child: GestureDetector(
-                          onTap: () => context
-                              .navigateTo(WorkoutDetailsRoute(id: e.workoutId)),
+                          // onTap: () => context
+                          //     .navigateTo(WorkoutDetailsRoute(id: e.workoutId)),
                           child: Card(
                               margin: EdgeInsets.zero,
                               height: _cardHeight,

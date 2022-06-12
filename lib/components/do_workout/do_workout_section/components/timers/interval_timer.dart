@@ -81,7 +81,7 @@ class IntervalTimer extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              NameAndRepScore(workoutSection: workoutSection),
+                              // NameAndRepScore(workoutSection: workoutSection),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
