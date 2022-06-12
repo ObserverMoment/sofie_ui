@@ -171,10 +171,13 @@ class GraphQLStore {
           return false;
         }
 
-        final aliasOrId =
-            extractRootFieldAliasFromOperation(observableQuery.query) ?? id;
+        final aliasOrName =
+            extractRootFieldAliasFromOperation(observableQuery.query) ??
+                observableQuery.query.operationName ??
+                id;
 
-        final TData data = observableQuery.query.parse({aliasOrId: queryData});
+        final TData data =
+            observableQuery.query.parse({aliasOrName: queryData});
 
         // Add to the stream to broadcastQueriesByIds to all listeners.
         observableQuery.subject.add(GraphQLResponse<TData>(data: data));
@@ -279,7 +282,7 @@ class GraphQLStore {
 
       /// Check for a top level field alias to ensure we look under the correct key for the response.
       final alias = extractRootFieldAliasFromOperation(query);
-      final data = response.data![alias ?? query.operationName];
+      final data = response.data![alias ?? query.operationName ?? id];
 
       normalizeToStore(
         queryKey: id,

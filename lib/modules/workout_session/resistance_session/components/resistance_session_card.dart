@@ -23,7 +23,10 @@ class ResistanceSessionCard extends StatelessWidget {
       }
     }
 
-    return moveIds.map((id) => moveDataRepo.moveById(id)).toList();
+    return moveIds
+        .map((id) => moveDataRepo.moveDataById(id))
+        .whereType<MoveData>()
+        .toList();
   }
 
   List<BodyArea> _uniqueBodyAreas(List<MoveData> moves) {

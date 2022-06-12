@@ -10,6 +10,7 @@ import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/components/resistance_rep_type_selector.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_bloc.dart';
+import 'package:sofie_ui/services/repos/move_data.repo.dart';
 
 class ResistanceSetEdit extends StatelessWidget {
   final ResistanceExercise resistanceExercise;
@@ -18,19 +19,19 @@ class ResistanceSetEdit extends StatelessWidget {
       {Key? key, required this.resistanceSet, required this.resistanceExercise})
       : super(key: key);
 
-  void _handleMoveUpdate(BuildContext context, Move move) {
+  void _handleMoveUpdate(BuildContext context, MoveData moveData) {
     final prevEquipmentIsValid =
-        move.selectableEquipments.contains(resistanceSet.equipment);
+        moveData.selectableEquipments.contains(resistanceSet.equipment);
 
     context.read<ResistanceSessionBloc>().updateResistanceSet(
         resistanceExercise.id,
         resistanceSet.id,
         prevEquipmentIsValid
-            ? {'Move': move.toJson()}
+            ? {'Move': moveData.toJson()}
             : {
-                'Move': move.toJson(),
-                'Equipment': move.selectableEquipments.isNotEmpty
-                    ? move.selectableEquipments[0].toJson()
+                'Move': moveData.toJson(),
+                'Equipment': moveData.selectableEquipments.isNotEmpty
+                    ? moveData.selectableEquipments[0].toJson()
                     : null
               });
 
@@ -59,6 +60,12 @@ class ResistanceSetEdit extends StatelessWidget {
   Widget build(BuildContext context) {
     final reps = resistanceSet.reps;
     final setsPerMove = reps.length;
+    final moveData =
+        context.watch<MoveDataRepo>().moveDataById(resistanceSet.move.id);
+
+    if (moveData == null) {
+      /// TODO: Get data from API for custom move which is not in the repo?
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -83,7 +90,7 @@ class ResistanceSetEdit extends StatelessWidget {
                   ),
                 ),
               ),
-              if (resistanceSet.move.selectableEquipments.isNotEmpty)
+              if (moveData!.selectableEquipments.isNotEmpty)
                 GestureDetector(
                   onTap: () => context.push(
                       fullscreenDialog: true,
@@ -92,7 +99,7 @@ class ResistanceSetEdit extends StatelessWidget {
                         selectedEquipments: resistanceSet.equipment != null
                             ? [resistanceSet.equipment!]
                             : [],
-                        allEquipments: resistanceSet.move.selectableEquipments,
+                        allEquipments: moveData.selectableEquipments,
                         handleSelection: (e) => _handleEquipmentUpdate(
                             context, e.isNotEmpty ? e[0] : null),
                       )),

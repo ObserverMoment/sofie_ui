@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/display/resistance_set_reps_display.dart';
+import 'package:sofie_ui/services/repos/move_data.repo.dart';
 
 class ResistanceSetDisplay extends StatelessWidget {
   final ResistanceSet resistanceSet;
@@ -10,10 +12,18 @@ class ResistanceSetDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final moveData =
+        context.watch<MoveDataRepo>().moveDataById(resistanceSet.move.id);
+
+    if (moveData == null) {
+      /// TODO: Get data from API for custom move which is not in the repo?
+    }
+
     final equipment = resistanceSet.equipment ??
-        (resistanceSet.move.requiredEquipments.isNotEmpty
-            ? resistanceSet.move.requiredEquipments[0]
+        (moveData!.requiredEquipments.isNotEmpty
+            ? moveData.requiredEquipments[0]
             : null);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Row(

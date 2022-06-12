@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_spinners.dart';
-import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -252,32 +251,35 @@ class ObjectNotFoundIndicator extends StatelessWidget {
     final msg = message ??
         'Sorry, we could not find ${notFoundItemName ?? "the required data"}. It may have been moved or deleted.';
 
-    return MyPageScaffold(
-      navigationBar: const MyNavBar(
-        middle: NavBarTitle('Item Not Found'),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Opacity(
-                opacity: 0.6,
-                child: Icon(MyCustomIcons.itemNotFoundIcon, size: size)),
-            const SizedBox(height: 32),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: MyText(
-                msg,
-                maxLines: 3,
-                subtext: true,
-                lineHeight: 1.4,
-                textAlign: TextAlign.center,
-              ),
-            )
-          ],
+    return Column(
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: NavBarTitle('Item Not Found'),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Opacity(
+                  opacity: 0.6,
+                  child: Icon(MyCustomIcons.itemNotFoundIcon, size: size)),
+              const SizedBox(height: 32),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: MyText(
+                  msg,
+                  maxLines: 3,
+                  subtext: true,
+                  lineHeight: 1.4,
+                  textAlign: TextAlign.center,
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

@@ -26,9 +26,8 @@ class ResistanceExerciseEdit extends StatelessWidget {
         fullscreenDialog: true,
         child: MoveSelector(
             selectMove: (m) {
-              context
-                  .read<ResistanceSessionBloc>()
-                  .createResistanceSet(resistanceExerciseId, m);
+              context.read<ResistanceSessionBloc>().createResistanceSet(
+                  resistanceExerciseId, Move.fromJson(m.toJson()));
               context.pop();
             },
             onCancel: context.pop));

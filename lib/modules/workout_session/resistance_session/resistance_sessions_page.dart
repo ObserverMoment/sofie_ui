@@ -59,8 +59,8 @@ class YourResistanceSessions extends StatelessWidget {
             fetchPolicy: QueryFetchPolicy.storeFirst,
             builder: (saved) {
               final sortedByUpdatedAt = [
-                ...created.userResistanceSessionSummary,
-                ...saved.userResistanceSessionSummary
+                ...created.userResistanceSessions,
+                ...saved.userSavedResistanceSessions
               ].sortedBy<DateTime>((s) => s.updatedAt).reversed;
 
               return sortedByUpdatedAt.isEmpty
@@ -78,11 +78,17 @@ class YourResistanceSessions extends StatelessWidget {
                   : ListView(
                       shrinkWrap: true,
                       children: sortedByUpdatedAt
-                          .map((s) => Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: ResistanceSessionCard(
-                                    resistanceSession: s,
-                                    showUserAvatar: authedUserId != s.user.id),
+                          .map((s) => GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () => context.navigateTo(
+                                    ResistanceSessionDetailsRoute(id: s.id)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: ResistanceSessionCard(
+                                      resistanceSession: s,
+                                      showUserAvatar:
+                                          authedUserId != s.user.id),
+                                ),
                               ))
                           .toList(),
                     );

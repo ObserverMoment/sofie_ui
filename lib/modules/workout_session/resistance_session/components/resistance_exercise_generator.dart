@@ -585,7 +585,7 @@ class _GeneratedSetPreview extends StatelessWidget {
       ..createdAt = DateTime.now()
       ..updatedAt = DateTime.now()
       ..sortPosition = index
-      ..move = m
+      ..move = Move.fromJson(m.toJson())
       ..equipment = e
       ..repType = r.repType
       ..reps = List.generate(
