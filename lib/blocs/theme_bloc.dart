@@ -159,6 +159,7 @@ abstract class Styles {
   static const Color errorRed = CupertinoColors.destructiveRed;
   static const Color infoBlue = CupertinoColors.activeBlue;
   static const Color heartRed = Color(0xffA8294B);
+  static const Color gold = Color(0xffFFD700);
 
   // Button gradients.
   static const secondaryButtonGradient = LinearGradient(

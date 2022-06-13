@@ -8,8 +8,13 @@ class MyTabBarView extends StatefulWidget {
   final List<String> tabs;
   final List<Widget> pages;
   final Widget? leading;
+  final Alignment alignment;
   const MyTabBarView(
-      {Key? key, required this.tabs, required this.pages, this.leading})
+      {Key? key,
+      required this.tabs,
+      required this.pages,
+      this.leading,
+      this.alignment = Alignment.centerLeft})
       : assert(tabs.length == pages.length,
             '[must supply the same number of tabs and pages]'),
         super(key: key);
@@ -46,7 +51,7 @@ class _MyTabBarViewState extends State<MyTabBarView>
         children: [
           Container(
             height: 46,
-            alignment: Alignment.centerLeft,
+            alignment: widget.alignment,
             child: ListView(
               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               shrinkWrap: true,

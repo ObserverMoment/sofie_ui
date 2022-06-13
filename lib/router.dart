@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/components/creators/body_tracking/body_tracking_entry_creator.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
-import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator.dart';
 import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
 import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
@@ -18,10 +17,13 @@ import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
+import 'package:sofie_ui/modules/circles/circles_page.dart';
 import 'package:sofie_ui/modules/gym_profile/gym_profile_creator.dart';
 import 'package:sofie_ui/modules/gym_profile/gym_profiles_page.dart';
 import 'package:sofie_ui/modules/home/home_page.dart';
 import 'package:sofie_ui/modules/home/notifications_page.dart';
+import 'package:sofie_ui/modules/move/move_creator/custom_move_creator_page.dart';
+import 'package:sofie_ui/modules/move/move_details_page.dart';
 import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
 import 'package:sofie_ui/modules/profile/profile_page.dart';
 import 'package:sofie_ui/modules/profile/settings_page.dart';
@@ -35,18 +37,15 @@ import 'package:sofie_ui/modules/training_plan/training_plans.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_creator_page.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/resistance_session_details_page.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_sessions_page.dart';
-import 'package:sofie_ui/pages/authed/circles/circles_page.dart';
-import 'package:sofie_ui/pages/authed/circles/discover_clubs_page.dart';
-import 'package:sofie_ui/pages/authed/circles/discover_people_page.dart';
 import 'package:sofie_ui/pages/authed/progress/user_goals_page.dart';
 import 'package:sofie_ui/main.dart';
-import 'package:sofie_ui/pages/authed/authed_routes_wrapper_page.dart';
+import 'package:sofie_ui/modules/authed_routes_wrapper_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/club_details/club_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/collection_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_page.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
 import 'package:sofie_ui/modules/main_tabs/main_tabs_page.dart';
-import 'package:sofie_ui/pages/authed/page_not_found.dart';
+import 'package:sofie_ui/modules/page_not_found_page.dart';
 import 'package:sofie_ui/pages/authed/progress/body_tracking_page.dart';
 import 'package:sofie_ui/pages/authed/progress/personal_scorebook_page.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
@@ -112,7 +111,6 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           AutoRoute(path: 'notifications', page: NotificationsPage),
           AutoRoute(path: 'edit-profile', page: EditProfilePage),
           AutoRoute(path: 'calendar', page: CalendarPage),
-          AutoRoute(path: 'circles', page: CirclesPage),
 
           /// Misc
           AutoRoute(path: 'timers', page: TimersPage),
@@ -131,12 +129,13 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           /// Is a finder different from discover?
           // AutoRoute(path: 'public-workouts', page: PublicWorkoutFinderPage),
           // AutoRoute(path: 'public-plans', page: PublicWorkoutPlanFinderPage),
-          AutoRoute(path: 'discover-people', page: DiscoverPeoplePage),
-          AutoRoute(path: 'discover-clubs', page: DiscoverClubsPage),
+          // AutoRoute(path: 'discover-people', page: DiscoverPeoplePage),
+          // AutoRoute(path: 'discover-clubs', page: DiscoverClubsPage),
 
           /// Details pages - for certain object types. //////
           AutoRoute(path: 'circle/:id', page: ClubDetailsPage),
           // AutoRoute(path: 'logged-workout/:id', page: LoggedWorkoutDetailsPage),
+          AutoRoute(path: 'move/:id', page: MoveDetailsPage),
           AutoRoute(
               path: 'profile/:userId', page: UserPublicProfileDetailsPage),
 

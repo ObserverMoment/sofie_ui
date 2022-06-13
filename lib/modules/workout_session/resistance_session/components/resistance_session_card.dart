@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/modules/body_areas/targeted_body_areas_display.dart';
+import 'package:sofie_ui/modules/body_areas/display/targeted_body_areas.dart';
 import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
 import 'package:sofie_ui/services/repos/move_data.repo.dart';
 import 'package:sofie_ui/services/utils.dart';
+import 'package:sofie_ui/extensions/graphql_type_extensions.dart';
 
 class ResistanceSessionCard extends StatelessWidget {
   final ResistanceSession resistanceSession;
@@ -15,34 +16,11 @@ class ResistanceSessionCard extends StatelessWidget {
       {Key? key, required this.resistanceSession, required this.showUserAvatar})
       : super(key: key);
 
-  List<MoveData> _uniqueMovesInSession(MoveDataRepo moveDataRepo) {
-    Set<String> moveIds = {};
-    for (final e in resistanceSession.resistanceExercises) {
-      for (final s in e.resistanceSets) {
-        moveIds.add(s.move.id);
-      }
-    }
-
-    return moveIds
-        .map((id) => moveDataRepo.moveDataById(id))
-        .whereType<MoveData>()
-        .toList();
-  }
-
-  List<BodyArea> _uniqueBodyAreas(List<MoveData> moves) {
-    return moves.fold<Set<BodyArea>>({}, (acum, next) {
-      final bodyAreas =
-          moves.map((m) => m.bodyAreaMoveScores.map((bams) => bams.bodyArea));
-      acum.addAll(bodyAreas.expand((b) => b));
-      return acum;
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final moveDataRepo = context.watch<MoveDataRepo>();
-    final moves = _uniqueMovesInSession(moveDataRepo);
-    final bodyAreas = _uniqueBodyAreas(moves);
+    final moves = resistanceSession.uniqueMovesInSession(moveDataRepo);
+    final bodyAreas = resistanceSession.uniqueBodyAreas(moves);
 
     return Card(
         child: Column(
@@ -73,8 +51,7 @@ class ResistanceSessionCard extends StatelessWidget {
                           lineHeight: 1.4,
                         ),
                       ),
-                    if (true)
-                      // if (showUserAvatar)
+                    if (showUserAvatar)
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Row(
@@ -100,7 +77,7 @@ class ResistanceSessionCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8.0),
               child: Row(
                 children: [
-                  TargetedBodyAreasDisplay(
+                  TargetedBodyAreas(
                     height: 90,
                     frontBack: BodyAreaFrontBack.front,
                     selectedBodyAreas: bodyAreas
@@ -108,7 +85,7 @@ class ResistanceSessionCard extends StatelessWidget {
                         .toList(),
                   ),
                   const SizedBox(width: 8),
-                  TargetedBodyAreasDisplay(
+                  TargetedBodyAreas(
                     height: 90,
                     frontBack: BodyAreaFrontBack.back,
                     selectedBodyAreas: bodyAreas

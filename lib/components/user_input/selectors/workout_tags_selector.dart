@@ -6,7 +6,7 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/tag_managers/workout_tags_manager.dart';
+import 'package:sofie_ui/components/user_input/selectors/tag_managers/workout_tags_manager.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -135,7 +135,7 @@ class _WorkoutTagsSelectorState extends State<WorkoutTagsSelector> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          withoutLeading: true,
+          automaticallyImplyLeading: false,
           trailing: CupertinoButton(
               padding: EdgeInsets.zero,
               child: const MyText(

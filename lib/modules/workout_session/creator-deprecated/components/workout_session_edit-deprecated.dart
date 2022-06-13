@@ -119,7 +119,7 @@
 
 //           return MyPageScaffold(
 //             navigationBar: MyNavBar(
-//               withoutLeading: true,
+//               automaticallyImplyLeading: false,
 //               middle: const LeadingNavBarTitle(
 //                 'Workout Session',
 //               ),
@@ -129,7 +129,7 @@
 //             ),
 //             child: FABPage(
 //               rowButtons: [
-//                 FloatingButton(
+//                 FloatingTextButton(
 //                     icon: CupertinoIcons.add,
 //                     text: 'Add Section',
 //                     onTap: () =>

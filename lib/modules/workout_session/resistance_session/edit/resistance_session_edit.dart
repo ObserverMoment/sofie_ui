@@ -6,8 +6,10 @@ import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/animated/my_reorderable_list.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_icon_button.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/text_row_click_to_edit.dart';
 import 'package:sofie_ui/constants.dart';
@@ -45,7 +47,7 @@ class ResistanceSessionEdit extends StatelessWidget {
 
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          withoutLeading: true,
+          automaticallyImplyLeading: false,
           middle: const LeadingNavBarTitle(
             'Resistance',
           ),
@@ -55,7 +57,7 @@ class ResistanceSessionEdit extends StatelessWidget {
         ),
         child: FABPage(
           rowButtons: [
-            FloatingButton(
+            FloatingTextButton(
                 icon: CupertinoIcons.add,
                 text: 'Add Set',
                 onTap: () => _openGenerator(context, bloc))

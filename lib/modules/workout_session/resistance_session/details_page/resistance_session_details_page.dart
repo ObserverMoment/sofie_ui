@@ -11,20 +11,66 @@ import 'package:sofie_ui/components/my_tab_bar_view.dart';
 import 'package:sofie_ui/components/session_type_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
+import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/action_icon_button.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/resistance_session_body_areas.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/resistance_session_details.dart';
+import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/resistance_session_equipment.dart';
 import 'package:sofie_ui/router.gr.dart';
+import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
+import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 
 class ResistanceSessionDetailsPage extends StatelessWidget {
   final String id;
   final String? previousPageTitle;
   const ResistanceSessionDetailsPage(
-      {Key? key, required this.id, this.previousPageTitle})
+      {Key? key, @PathParam('id') required this.id, this.previousPageTitle})
       : super(key: key);
+
+  Future<void> _handleDeleteSession(BuildContext context) async {
+    context.showConfirmDeleteDialog(
+        itemType: 'Resistance Session',
+        onConfirm: () async {
+          try {
+            await GraphQLStore.store.delete(
+                mutation: DeleteResistanceSessionMutation(
+                    variables: DeleteResistanceSessionArguments(id: id)),
+                objectId: id,
+                typename: kResistanceSessionTypeName,
+                clearQueryDataAtKeys: [
+                  GQLVarParamKeys.resistanceSessionById(id),
+                ],
+                broadcastQueryIds: [GQLOpNames.userResistanceSessions],
+                onSuccess: context.pop);
+          } catch (e) {
+            context.showToast(
+                message: kDefaultErrorMessage,
+                toastType: ToastType.destructive);
+          }
+        });
+  }
+
+  Future<void> _handleDuplicateSession(BuildContext context) async {
+    try {
+      await GraphQLStore.store.create(
+          mutation: DuplicateResistanceSessionMutation(
+              variables: DuplicateResistanceSessionArguments(id: id)),
+          addRefToQueries: [GQLOpNames.userResistanceSessions],
+          onSuccess: () {
+            context.showToast(
+              message: 'Copy added to your sessions.',
+            );
+          });
+    } catch (e) {
+      context.showToast(
+          message: kDefaultErrorMessage, toastType: ToastType.destructive);
+    }
+  }
 
   Future<void> _shareWorkout() async {
     await SharingAndLinking.shareLink(
@@ -42,7 +88,6 @@ class ResistanceSessionDetailsPage extends StatelessWidget {
         query: query,
         parameterizeQuery: true,
         builder: (data) {
-          print(data.resistanceSessionById);
           final resistanceSession = data.resistanceSessionById;
 
           if (resistanceSession == null) {
@@ -73,21 +118,26 @@ class ResistanceSessionDetailsPage extends StatelessWidget {
                                   onPressed: () => context.navigateTo(
                                       UserPublicProfileDetailsRoute(
                                           userId: resistanceSession.user.id))),
-                            BottomSheetMenuItem(
-                                text: 'Share',
-                                icon: CupertinoIcons.paperplane,
-                                onPressed: _shareWorkout),
+                            if (isOwner)
+                              BottomSheetMenuItem(
+                                  text: 'Share',
+                                  icon: CupertinoIcons.paperplane,
+                                  onPressed: _shareWorkout),
                             if (isOwner)
                               BottomSheetMenuItem(
                                   text: 'Edit',
                                   icon: CupertinoIcons.pencil,
-                                  onPressed: () => print('edit session')),
+                                  onPressed: () => context.navigateTo(
+                                      ResistanceSessionCreatorRoute(
+                                          resistanceSession:
+                                              resistanceSession))),
                             if (isOwner)
                               BottomSheetMenuItem(
-                                  text: 'Copy',
+                                  text: 'Duplicate',
                                   icon: CupertinoIcons
                                       .plus_rectangle_on_rectangle,
-                                  onPressed: () => print('copy session')),
+                                  onPressed: () =>
+                                      _handleDuplicateSession(context)),
                             if (isOwner)
                               BottomSheetMenuItem(
                                   text: 'Export',
@@ -99,7 +149,8 @@ class ResistanceSessionDetailsPage extends StatelessWidget {
                                   text: 'Delete',
                                   icon: CupertinoIcons.delete_simple,
                                   isDestructive: true,
-                                  onPressed: () => print('delete workout')),
+                                  onPressed: () =>
+                                      _handleDeleteSession(context)),
                           ])),
                 ),
               ),
@@ -123,23 +174,27 @@ class ResistanceSessionDetailsPage extends StatelessWidget {
                         label: 'Plan It',
                         onPressed: () {},
                       ),
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () {
-                          Vibrate.feedback(FeedbackType.selection);
-                          print('save / unsave');
-                        },
-                        child: const ContentBox(
-                          child: AnimatedLikeHeart(active: true, size: 26),
+                      if (!isOwner)
+
+                        /// TODO:
+                        CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            Vibrate.feedback(FeedbackType.selection);
+                            print('save / unsave');
+                          },
+                          child: const ContentBox(
+                            child: AnimatedLikeHeart(active: false, size: 26),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const HorizontalLine(
                     verticalPadding: 8,
                   ),
                   Expanded(
-                    child: MyTabBarView(tabs: const [
+                    child:
+                        MyTabBarView(alignment: Alignment.center, tabs: const [
                       'Details',
                       'Equipment',
                       'Body Areas'
@@ -147,8 +202,12 @@ class ResistanceSessionDetailsPage extends StatelessWidget {
                       ResistanceSessionDetails(
                         resistanceSession: resistanceSession,
                       ),
-                      MyText('Equipment'),
-                      MyText('Body Areas'),
+                      ResistanceSessionEquipment(
+                        resistanceSession: resistanceSession,
+                      ),
+                      ResistanceSessionBodyAreas(
+                        resistanceSession: resistanceSession,
+                      ),
                     ]),
                   )
                 ],

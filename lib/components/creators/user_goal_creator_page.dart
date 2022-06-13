@@ -100,7 +100,7 @@ class _CreateGoalState extends State<_CreateGoal> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        withoutLeading: true,
+        automaticallyImplyLeading: false,
         middle: const LeadingNavBarTitle(
           'Add Goal',
         ),
@@ -236,7 +236,7 @@ class _EditGoalState extends State<_EditGoal> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        withoutLeading: true,
+        automaticallyImplyLeading: false,
         middle: const LeadingNavBarTitle(
           'Goal',
         ),

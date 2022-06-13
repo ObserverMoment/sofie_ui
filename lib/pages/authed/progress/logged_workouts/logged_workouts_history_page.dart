@@ -143,7 +143,7 @@
 //                               rowButtons: [
 //                                 if (_filterFrom != null || _filterTo != null)
 //                                   FadeInUp(
-//                                       child: FloatingButton(
+//                                       child: FloatingTextButton(
 //                                     onTap: _clearDateRange,
 //                                     icon: CupertinoIcons.clear_thick,
 //                                   )),

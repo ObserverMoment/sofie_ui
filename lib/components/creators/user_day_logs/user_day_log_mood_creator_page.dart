@@ -96,7 +96,7 @@ class _UserDayLogMoodCreatorPageState extends State<UserDayLogMoodCreatorPage> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        withoutLeading: true,
+        automaticallyImplyLeading: false,
         middle: const LeadingNavBarTitle(
           'Add Mood',
         ),

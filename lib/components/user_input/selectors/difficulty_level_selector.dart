@@ -118,7 +118,7 @@ class _DifficultyLevelSelectorState extends State<DifficultyLevelSelector> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        withoutLeading: true,
+        automaticallyImplyLeading: false,
         trailing: TertiaryButton(
             backgroundGradient: Styles.primaryAccentGradient,
             textColor: Styles.white,

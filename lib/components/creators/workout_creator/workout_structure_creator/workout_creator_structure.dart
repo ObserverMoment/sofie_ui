@@ -49,7 +49,7 @@
 
 //     return FABPage(
 //       rowButtons: [
-//         FloatingButton(
+//         FloatingTextButton(
 //             text: 'Add Section',
 //             icon: CupertinoIcons.add,
 //             onTap: () =>

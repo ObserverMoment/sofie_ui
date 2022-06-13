@@ -5,8 +5,9 @@ import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/body_tracking_entry_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/media/images/full_screen_image_gallery.dart';
 import 'package:sofie_ui/components/media/images/sized_uploadcare_image.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
@@ -97,7 +98,7 @@ class _BodyTrackingPageState extends State<BodyTrackingPage> {
                       rowButtons: [
                         if ((_activeTabIndex == 0 && entries.isNotEmpty) ||
                             (_activeTabIndex == 1 && allPhotoUris.isNotEmpty))
-                          FloatingButton(
+                          FloatingTextButton(
                               iconSize: 20,
                               padding: const EdgeInsets.symmetric(
                                   vertical: 11, horizontal: 16),

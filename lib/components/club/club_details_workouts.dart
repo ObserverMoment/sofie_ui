@@ -2,16 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
-import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
@@ -151,7 +150,7 @@ class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
                 ? FABPage(
                     rowButtonsAlignment: MainAxisAlignment.end,
                     rowButtons: [
-                      FloatingButton(
+                      FloatingTextButton(
                         text: 'Add Workout',
                         onTap: _openWorkoutFinder,
                         loading: _loading,

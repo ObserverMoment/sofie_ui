@@ -3,8 +3,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/components/cards/collection_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -42,7 +43,7 @@ class CollectionsPage extends StatelessWidget {
                             ])
                       : FABPage(
                           columnButtons: [
-                            FloatingButton(
+                            FloatingTextButton(
                                 text: 'Create Collection',
                                 icon: CupertinoIcons.add,
                                 onTap: () => context

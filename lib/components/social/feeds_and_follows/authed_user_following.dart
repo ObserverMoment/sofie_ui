@@ -104,11 +104,11 @@ class _AuthedUserFollowingState extends State<AuthedUserFollowing> {
                     explainer:
                         "Keep up with the latest news and fitness content by subscribing to people's feeds.",
                     actions: [
-                        EmptyPlaceholderAction(
-                            action: () =>
-                                context.navigateTo(const DiscoverPeopleRoute()),
-                            buttonIcon: CupertinoIcons.compass,
-                            buttonText: 'Discover People'),
+                        // EmptyPlaceholderAction(
+                        //     action: () =>
+                        //         context.navigateTo(const DiscoverPeopleRoute()),
+                        //     buttonIcon: CupertinoIcons.compass,
+                        //     buttonText: 'Discover People'),
                       ])
                 : GridView.count(
                     padding: const EdgeInsets.all(8),

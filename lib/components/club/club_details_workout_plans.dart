@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/components/cards/workout_plan_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/constants.dart';
@@ -154,7 +155,7 @@ class _ClubDetailsWorkoutPlansState extends State<ClubDetailsWorkoutPlans> {
                 ? FABPage(
                     rowButtonsAlignment: MainAxisAlignment.end,
                     rowButtons: [
-                      FloatingButton(
+                      FloatingTextButton(
                         text: 'Add Plan',
                         onTap: _openWorkoutPlanFinder,
                         loading: _loading,

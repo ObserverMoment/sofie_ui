@@ -18,8 +18,8 @@ class ResistanceSessionBloc extends ChangeNotifier {
     resistanceSession = ResistanceSession.fromJson(initial.toJson());
     _backup = initial.toJson();
     _storeQueryIds = [
-      // GQLVarParamKeys.resistanceSessionById(resistanceSession.id),
-      // GQLOpNames.userResistanceSessions,
+      GQLVarParamKeys.resistanceSessionById(resistanceSession.id),
+      GQLOpNames.userResistanceSessions,
     ];
   }
 

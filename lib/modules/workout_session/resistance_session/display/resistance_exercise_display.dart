@@ -8,9 +8,11 @@ import 'package:sofie_ui/modules/workout_session/resistance_session/display/resi
 
 class ResistanceExerciseDisplay extends StatelessWidget {
   final ResistanceExercise resistanceExercise;
+  final bool openMoveInfoPageOnSetTap;
   const ResistanceExerciseDisplay({
     Key? key,
     required this.resistanceExercise,
+    this.openMoveInfoPageOnSetTap = false,
   }) : super(key: key);
 
   @override
@@ -36,6 +38,7 @@ class ResistanceExerciseDisplay extends StatelessWidget {
               .map(
                 (s) => ResistanceSetDisplay(
                   resistanceSet: s,
+                  openMoveInfoPageOnTap: openMoveInfoPageOnSetTap,
                 ),
               )
               .toList(),

@@ -57,7 +57,7 @@ class _WorkoutsTextSearchState extends State<WorkoutsTextSearch> {
 
                 return MyPageScaffold(
                   navigationBar: MyNavBar(
-                    withoutLeading: true,
+                    automaticallyImplyLeading: false,
                     middle: Padding(
                       padding: const EdgeInsets.only(left: 2.0, right: 10),
                       child: MyCupertinoSearchTextField(

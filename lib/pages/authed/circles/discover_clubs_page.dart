@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/cards/club_card.dart';
+import 'package:sofie_ui/modules/circles/components/circle_card-deprecated.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -31,7 +31,7 @@ class DiscoverClubsPage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () => context.navigateTo(
                           ClubDetailsRoute(id: clubSummaries[i].id)),
-                      child: ClubCard(
+                      child: CircleCard(
                         club: clubSummaries[i],
                       ),
                     ),

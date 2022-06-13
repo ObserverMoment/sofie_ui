@@ -99,7 +99,7 @@
 //             rowButtonsAlignment: MainAxisAlignment.end,
 //             columnButtons: [
 //               if (widget.showDiscoverButton)
-//                 FloatingButton(
+//                 FloatingTextButton(
 //                     onTap: () =>
 //                         context.navigateTo(PublicWorkoutPlanFinderRoute()),
 //                     icon: CupertinoIcons.compass),
@@ -113,7 +113,7 @@
 //                       setState(() => _workoutTagFilter = t),
 //                 ),
 //               const SizedBox(width: 10),
-//               FloatingButton(
+//               FloatingTextButton(
 //                   icon: CupertinoIcons.add,
 //                   iconSize: 19,
 //                   text: 'Create Plan',

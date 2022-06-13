@@ -157,7 +157,7 @@
 //                 [const MySliverNavbar(title: 'Discover Plans')],
 //             body: FABPage(
 //               columnButtons: [
-//                 FloatingButton(
+//                 FloatingTextButton(
 //                     onTap: () => context.push(
 //                         fullscreenDialog: true,
 //                         child: PublicPlansTextSearch(
@@ -171,11 +171,11 @@
 //                   Padding(
 //                     padding: const EdgeInsets.only(right: 4.0),
 //                     child: FadeInUp(
-//                       child: FloatingButton(
+//                       child: FloatingTextButton(
 //                           onTap: _clearAllFilters, icon: CupertinoIcons.clear),
 //                     ),
 //                   ),
-//                 FloatingButton(
+//                 FloatingTextButton(
 //                     onTap: _openFilters,
 //                     text: _bloc.numActiveFilters == 0
 //                         ? null

@@ -1,4 +1,5 @@
 import 'package:artemis/artemis.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gql_exec/gql_exec.dart';
 import 'package:gql_http_link/gql_http_link.dart';
@@ -310,6 +311,10 @@ class GraphQLStore {
     required GraphQLQuery<TData, TVars> mutation,
     List<String> addRefToQueries = const [],
     void Function(TData resultData)? processResult,
+
+    /// Broadcast from the store - no network request made.
+    List<String> broadcastQueryIds = const [],
+    VoidCallback? onSuccess,
   }) async {
     final response = await execute(mutation);
 
@@ -345,7 +350,11 @@ class GraphQLStore {
         addRefToQueryData(data: data, queryIds: addRefToQueries);
       }
 
+      broadcastQueriesByIds(broadcastQueryIds);
+
       processResult?.call(result.data as TData);
+
+      onSuccess?.call();
     }
 
     return result;
@@ -362,12 +371,13 @@ class GraphQLStore {
     /// Query IDs passed here will be refetched from the network. Data will be added to store and then the query broadcast.
     List<String> refetchQueryIds = const [],
 
-    /// Broascast from the store - no network request made.
+    /// Broadcast from the store - no network request made.
     List<String> broadcastQueryIds = const [],
 
     /// [customVariablesMap] - if you do not want to pass all the fields of the object to the API. If you pass null fields / omit some fields to the typed inputs then those fields will be set null in the DB.
     Map<String, dynamic>? customVariablesMap,
     void Function(TData resultData)? processResult,
+    VoidCallback? onSuccess,
   }) async {
     if (optimisticData != null) {
       writeDataToStore(
@@ -415,6 +425,8 @@ class GraphQLStore {
 
       broadcastQueriesByIds(broadcastQueryIds);
       refetchQueriesByIds(refetchQueryIds);
+
+      onSuccess?.call();
     }
 
     return result;
@@ -434,7 +446,8 @@ class GraphQLStore {
       /// Useful when deleting single objects that have query root data in the store.
       /// i.e. [workoutById(id: 123)].
       List<String> clearQueryDataAtKeys = const [],
-      List<String> broadcastQueryIds = const []}) async {
+      List<String> broadcastQueryIds = const [],
+      VoidCallback? onSuccess}) async {
     final response = await execute(mutation);
 
     final hasErrors = response.errors != null && response.errors!.isNotEmpty;
@@ -462,6 +475,8 @@ class GraphQLStore {
       processResult?.call(result.data as TData);
 
       broadcastQueriesByIds(broadcastQueryIds);
+
+      onSuccess?.call();
     }
 
     return result;

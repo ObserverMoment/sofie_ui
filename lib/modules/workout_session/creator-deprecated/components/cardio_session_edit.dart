@@ -12,7 +12,7 @@ class CardioSessionEdit extends StatelessWidget {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          withoutLeading: true,
+          automaticallyImplyLeading: false,
           middle: const LeadingNavBarTitle(
             'Resistance Session',
           ),

@@ -9,9 +9,9 @@ import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/popover.dart';
-import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/modules/move/selectors/move_selector.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/edit/resistance_set_edit.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_bloc.dart';
 
@@ -86,7 +86,7 @@ class ResistanceExerciseEdit extends StatelessWidget {
 
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          withoutLeading: true,
+          automaticallyImplyLeading: false,
           middle: const LeadingNavBarTitle(
             'Edit',
           ),

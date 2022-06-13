@@ -43,7 +43,7 @@ class _PrivateWorkoutTextSearchState extends State<PrivateWorkoutTextSearch> {
   Widget build(BuildContext context) {
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          withoutLeading: true,
+          automaticallyImplyLeading: false,
           middle: Padding(
             padding: const EdgeInsets.only(right: 10),
             child: MyCupertinoSearchTextField(

@@ -12,12 +12,12 @@ import 'package:sofie_ui/components/user_input/click_to_edit/number_picker_row_t
 import 'package:sofie_ui/components/user_input/number_input.dart';
 import 'package:sofie_ui/components/user_input/pickers/cupertino_switch_row.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
-import 'package:sofie_ui/components/user_input/selectors/move_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/enum_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
+import 'package:sofie_ui/modules/move/selectors/move_selector.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/components/resistance_rep_type_selector.dart';
 import 'package:sofie_ui/modules/workout_session/resistance_session/display/resistance_set_display.dart';
 import 'package:sofie_ui/services/utils.dart';

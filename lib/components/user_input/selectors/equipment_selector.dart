@@ -202,7 +202,7 @@ class _FullScreenEquipmentSelectorState
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        withoutLeading: true,
+        automaticallyImplyLeading: false,
         middle: const LeadingNavBarTitle('Select Equipment'),
         trailing: NavBarSaveButton(
           () {

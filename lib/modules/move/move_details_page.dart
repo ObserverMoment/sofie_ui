@@ -1,21 +1,26 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/components/body_areas/targeted_body_areas_graphics.dart';
+import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/body_areas/targeted_body_areas_lists.dart';
-import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/video/video_players.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/selectors/equipment_selector.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.graphql.dart';
+import 'package:sofie_ui/modules/body_areas/display/targeted_body_areas_score_indicator.dart';
+import 'package:sofie_ui/services/repos/move_data.repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-/// Info about and exercise. Video and description.
-class MoveDetails extends StatelessWidget {
-  final MoveData move;
-  const MoveDetails(this.move, {Key? key}) : super(key: key);
+/// Info about an exercise. Video and description + authed user's history with this move based on their logs.
+class MoveDetailsPage extends StatelessWidget {
+  final String id;
+  final String? previousPageTitle;
+  const MoveDetailsPage(
+      {Key? key, @PathParam('id') required this.id, this.previousPageTitle})
+      : super(key: key);
 
-  double get kBodyGraphicHeight => 380.0;
+  double get kBodyGraphicHeight => 360.0;
 
   Widget _buildEquipmentLists(MoveData move) => Column(
         children: [
@@ -24,7 +29,7 @@ class MoveDetails extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  const H3('Required Equipment'),
+                  const MyHeaderText('Required Equipment'),
                   const SizedBox(height: 10),
                   Wrap(
                     alignment: WrapAlignment.center,
@@ -40,6 +45,7 @@ class MoveDetails extends StatelessWidget {
                             child: EquipmentTile(
                               equipment: e,
                               fontSize: FONTSIZE.two,
+                              isSelected: true,
                             ),
                           ),
                         )
@@ -53,7 +59,7 @@ class MoveDetails extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  const H3('Equipment Variants'),
+                  const MyHeaderText('Equipment Variants'),
                   const SizedBox(height: 10),
                   const MyText(
                     'You can select one of these for completing the move. Generally, these will be different modes of load / resistance (free weights, bands, machines etc), or items needed for certain modifications.',
@@ -77,6 +83,7 @@ class MoveDetails extends StatelessWidget {
                             child: EquipmentTile(
                               equipment: e,
                               fontSize: FONTSIZE.two,
+                              isSelected: true,
                             ),
                           ),
                         )
@@ -90,30 +97,36 @@ class MoveDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool bodyWeightOnly =
-        move.requiredEquipments.isEmpty && move.selectableEquipments.isEmpty;
+    final moveData = context.watch<MoveDataRepo>().moveDataById(id);
+
+    if (moveData == null) {
+      return const ObjectNotFoundIndicator();
+    }
+
+    final bool bodyWeightOnly = moveData.requiredEquipments.isEmpty &&
+        moveData.selectableEquipments.isEmpty;
 
     return CupertinoPageScaffold(
         navigationBar: MyNavBar(
-          customLeading: NavBarChevronDownButton(context.pop),
-          middle: NavBarTitle(move.name),
+          previousPageTitle: previousPageTitle,
+          middle: NavBarTitle(moveData.name),
         ),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              if (move.demoVideoUri != null)
+              if (moveData.demoVideoUri != null)
                 SizedBox(
                     height: 230,
                     child: LandscapeInlineVideoPlayer(
-                      videoUri: move.demoVideoUri!,
-                      title: move.name,
+                      videoUri: moveData.demoVideoUri!,
+                      title: moveData.name,
                     )),
-              if (Utils.textNotNull(move.description))
+              if (Utils.textNotNull(moveData.description))
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Center(
                     child: MyText(
-                      move.description!,
+                      moveData.description!,
                       textAlign: TextAlign.center,
                       maxLines: 10,
                       lineHeight: 1.5,
@@ -126,25 +139,27 @@ class MoveDetails extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Center(
-                      child: H3(
+                      child: MyHeaderText(
                         'Targeted Body Areas',
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    TargetedBodyAreasScoreList(move.bodyAreaMoveScores),
+                    const SizedBox(height: 12),
+                    TargetedBodyAreasScoreList(moveData.bodyAreaMoveScores),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Utils.notNullNotEmpty(move.bodyAreaMoveScores)
+                      child: Utils.notNullNotEmpty(moveData.bodyAreaMoveScores)
                           ? Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 TargetedBodyAreasScoreIndicator(
-                                    bodyAreaMoveScores: move.bodyAreaMoveScores,
+                                    bodyAreaMoveScores:
+                                        moveData.bodyAreaMoveScores,
                                     frontBack: BodyAreaFrontBack.front,
                                     height: kBodyGraphicHeight),
                                 TargetedBodyAreasScoreIndicator(
-                                    bodyAreaMoveScores: move.bodyAreaMoveScores,
+                                    bodyAreaMoveScores:
+                                        moveData.bodyAreaMoveScores,
                                     frontBack: BodyAreaFrontBack.back,
                                     height: kBodyGraphicHeight)
                               ],
@@ -170,7 +185,7 @@ class MoveDetails extends StatelessWidget {
                   ],
                 )
               else
-                _buildEquipmentLists(move),
+                _buildEquipmentLists(moveData),
               const HorizontalLine(),
             ],
           ),

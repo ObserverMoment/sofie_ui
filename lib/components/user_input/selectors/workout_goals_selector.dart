@@ -140,7 +140,7 @@ class _WorkoutGoalsSelectorState extends State<WorkoutGoalsSelector> {
 
     return MyPageScaffold(
         navigationBar: MyNavBar(
-          withoutLeading: true,
+          automaticallyImplyLeading: false,
           trailing: TertiaryButton(
               backgroundGradient: Styles.primaryAccentGradient,
               textColor: Styles.white,

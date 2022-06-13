@@ -1,21 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator_body.dart';
-import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator_equipment.dart';
-import 'package:sofie_ui/components/creators/custom_move_creator/custom_move_creator_meta.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/tags.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/components/user_input/selectors/move_type_selector.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
-import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/modules/move/move_creator/custom_move_creator_meta.dart';
+import 'package:sofie_ui/modules/move/selectors/move_type_selector.dart';
 import 'package:sofie_ui/services/uploadcare.dart';
 import 'package:sofie_ui/services/utils.dart';
-import 'package:sofie_ui/services/store/graphql_store.dart';
 
 /// Updates everything to DB when user saves and closes.
 class CustomMoveCreatorPage extends StatefulWidget {

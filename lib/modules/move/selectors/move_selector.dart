@@ -4,15 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
-import 'package:sofie_ui/components/cards/move_list_item.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_icon_button.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
+import 'package:sofie_ui/modules/move/move_list_item.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/filters/blocs/move_filters_bloc.dart';
 import 'package:sofie_ui/components/user_input/filters/screens/move_filters_screen.dart';
 import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/components/user_input/pickers/sliding_select.dart';
-import 'package:sofie_ui/components/workout/move_details.dart';
+import 'package:sofie_ui/modules/move/move_details_page.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -87,7 +89,10 @@ class _MoveSelectorState extends State<MoveSelector> {
             padding: EdgeInsets.zero,
             child: const Icon(CupertinoIcons.pencil_circle),
             onPressed: () => _openCustomMoveCreator(move))
-        : InfoPopupButton(withoutNavBar: true, infoWidget: MoveDetails(move));
+        : CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.info),
+            onPressed: () => context.navigateTo(MoveDetailsRoute(id: move.id)));
   }
 
   @override
@@ -119,20 +124,20 @@ class _MoveSelectorState extends State<MoveSelector> {
               Padding(
                 padding: const EdgeInsets.only(right: 4.0),
                 child: FadeInUp(
-                  child: FloatingButton(
+                  child: FloatingIconButton(
                       onTap: () =>
                           context.read<MoveFiltersBloc>().clearAllFilters(),
                       icon: CupertinoIcons.clear),
                 ),
               ),
-            FloatingButton(
+            FloatingTextButton(
                 onTap: () => context.push(child: const MoveFiltersScreen()),
                 text: moveFiltersBloc.numActiveFilters == 0
-                    ? null
+                    ? ''
                     : '${moveFiltersBloc.numActiveFilters} ${moveFiltersBloc.numActiveFilters == 1 ? "filter" : "filters"}',
                 icon: CupertinoIcons.slider_horizontal_3),
             const SizedBox(width: 12),
-            FloatingButton(
+            FloatingIconButton(
                 icon: CupertinoIcons.add,
                 onTap: () => context.navigateTo(CustomMoveCreatorRoute())),
           ],

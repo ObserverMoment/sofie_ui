@@ -181,7 +181,7 @@
 //           {required String text,
 //           required VoidCallback onTap,
 //           required bool loading}) =>
-//       FloatingButton(
+//       FloatingTextButton(
 //         text: text,
 //         iconSize: 19,
 //         icon: CupertinoIcons.add,

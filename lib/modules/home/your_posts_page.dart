@@ -5,8 +5,9 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/feed_post_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
@@ -164,7 +165,7 @@ class _YourPostsPageState extends State<YourPostsPage> {
       ),
       child: FABPage(
         rowButtons: [
-          FloatingButton(
+          FloatingTextButton(
               padding: const EdgeInsets.symmetric(vertical: 11, horizontal: 16),
               text: 'New Post',
               onTap: () => context.navigateTo(FeedPostCreatorRoute()),

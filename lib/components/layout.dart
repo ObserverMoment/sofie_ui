@@ -317,7 +317,6 @@ class MySliverNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoSliverNavigationBar(
-        previousPageTitle: 'Studio',
         backgroundColor: backgroundColor,
         // leading: NavBarBackButton(icon: leadingIcon),
         largeTitle: MediaQuery(
@@ -346,7 +345,7 @@ class MyNavBar extends CupertinoNavigationBar {
   final Color? backgroundColor;
   @override
   final String? previousPageTitle;
-  final bool withoutLeading;
+  // final bool withoutLeading;
   const MyNavBar({
     this.key,
     this.previousPageTitle,
@@ -355,7 +354,7 @@ class MyNavBar extends CupertinoNavigationBar {
     this.middle,
     this.trailing,
     this.backgroundColor,
-    this.withoutLeading = false,
+    // this.withoutLeading = false,
   }) : super(
           key: key,
           border: null,

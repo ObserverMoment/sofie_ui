@@ -1,15 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
-import 'package:sofie_ui/components/layout.dart';
-import 'package:sofie_ui/components/logo.dart';
 import 'package:sofie_ui/components/my_tab_bar_view.dart';
-import 'package:sofie_ui/components/schedule/coming_up_list.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/modules/home/announcements_updates.dart';
 import 'package:sofie_ui/modules/main_tabs/main_nav_bar_builder.dart';
 import 'package:sofie_ui/modules/main_tabs/profile_settings_drawer.dart';
-import 'package:sofie_ui/modules/profile/user_avatar/user_avatar_display.dart';
-import 'package:sofie_ui/services/stream.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -302,7 +297,7 @@ class _HomePageState extends State<HomePage> {
 
 //     return CupertinoPageScaffold(
 //       navigationBar: MyNavBar(
-//         withoutLeading: true,
+//         automaticallyImplyLeading: false,
 //         middle: Row(
 //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 //           children: [
@@ -436,7 +431,7 @@ class _HomePageState extends State<HomePage> {
 //             Positioned(
 //                 top: 40,
 //                 child: SizeFadeIn(
-//                     child: FloatingButton(
+//                     child: FloatingTextButton(
 //                   icon: CupertinoIcons.news,
 //                   onTap: _prependNewPosts,
 //                   text:

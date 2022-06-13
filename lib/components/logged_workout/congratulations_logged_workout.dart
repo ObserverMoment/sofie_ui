@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -149,7 +150,7 @@ class _CongratulationsLoggedWorkoutState
                             const SizedBox(
                               height: 8,
                             ),
-                            FloatingButton(
+                            FloatingTextButton(
                                 width: 240,
                                 iconSize: 20,
                                 icon: CupertinoIcons.news,

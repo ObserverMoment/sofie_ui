@@ -5,10 +5,8 @@ import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/tag_managers/workout_tags_manager.dart';
+import 'package:sofie_ui/components/user_input/selectors/tag_managers/workout_tags_manager.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
-import 'package:sofie_ui/router.gr.dart';
-import 'package:auto_route/auto_route.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 

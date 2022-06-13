@@ -5,21 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/calendar.dart';
-import 'package:sofie_ui/components/cards/scheduled_workout_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_icon_button.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-import 'package:sofie_ui/components/user_input/my_cupertino_search_text_field.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/toast_request.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
-import 'package:sofie_ui/services/utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -143,9 +139,9 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           child: FABPage(
               columnButtons: [
-                FloatingButton(
+                FloatingIconButton(
                     icon: CupertinoIcons.add, onTap: _findWorkoutToSchedule),
-                // FloatingButton(
+                // FloatingTextButton(
                 //     icon: CupertinoIcons.search,
                 //     onTap: () => context.push(
                 //             child: YourScheduleTextSearch(
@@ -254,7 +250,7 @@ class _CalendarPageState extends State<CalendarPage> {
 //     final filteredScheduledWorkouts = _filterBySearchString();
 //     return CupertinoPageScaffold(
 //       navigationBar: MyNavBar(
-//         withoutLeading: true,
+//         automaticallyImplyLeading: false,
 //         middle: Padding(
 //           padding: const EdgeInsets.only(right: 10.0),
 //           child: MyCupertinoSearchTextField(

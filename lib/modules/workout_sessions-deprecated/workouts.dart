@@ -168,7 +168,7 @@
 // //                   body: FABPage(
 // //                       rowButtonsAlignment: MainAxisAlignment.end,
 // //                       columnButtons: [
-// //                         FloatingButton(
+// //                         FloatingTextButton(
 // //                             onTap: () => context.push(
 // //                                     child: PrivateWorkoutTextSearch(
 // //                                   selectWorkout: _selectWorkout,
@@ -181,7 +181,7 @@
 // //                                 )),
 // //                             icon: CupertinoIcons.search),
 // //                         if (widget.showDiscoverButton)
-// //                           FloatingButton(
+// //                           FloatingTextButton(
 // //                               onTap: () =>
 // //                                   context.navigateTo(PublicWorkoutFinderRoute(
 // //                                     selectWorkout: _selectWorkout,
@@ -208,7 +208,7 @@
 // //                         if (widget.showCreateButton)
 // //                           Padding(
 // //                             padding: const EdgeInsets.only(left: 12.0),
-// //                             child: FloatingButton(
+// //                             child: FloatingTextButton(
 // //                                 text: 'Create Workout',
 // //                                 iconSize: 19,
 // //                                 icon: CupertinoIcons.add,

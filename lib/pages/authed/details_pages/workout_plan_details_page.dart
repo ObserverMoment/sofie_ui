@@ -329,7 +329,7 @@
 //                     ),
 //                     child: FABPage(
 //                       rowButtons: [
-//                         FloatingButton(
+//                         FloatingTextButton(
 //                           width: screenWidth * 0.8,
 //                           text: enrolmentInPlan != null
 //                               ? 'VIEW PROGRESS'

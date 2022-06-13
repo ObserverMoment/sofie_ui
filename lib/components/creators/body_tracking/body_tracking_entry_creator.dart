@@ -137,7 +137,7 @@ class _BodyTrackingEntryCreatorPageState
   Widget build(BuildContext context) {
     return MyPageScaffold(
       navigationBar: MyNavBar(
-        withoutLeading: true,
+        automaticallyImplyLeading: false,
         middle: Row(
           children: [
             NavBarLargeTitle(_isCreate ? 'Create Entry' : 'Edit Entry'),

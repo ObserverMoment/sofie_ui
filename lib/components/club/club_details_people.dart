@@ -203,36 +203,33 @@ class _ClubDetailsPeopleState extends State<ClubDetailsPeople> {
           final clubMembers = data.clubMembers;
 
           return MyPageScaffold(
-              child: NestedScrollView(
-                  headerSliverBuilder: (c, i) => [
-                        MySliverNavbar(
-                          title: 'Members',
-                          trailing: _loading
-                              ? const NavBarTrailingRow(
-                                  children: [
-                                    NavBarLoadingIndicator(),
-                                  ],
-                                )
-                              : _userIsOwnerOrAdmin
-                                  ? TertiaryButton(
-                                      onPressed: () => context.push(
-                                          child: ClubDetailsInvitesManager(
-                                        clubId: widget.clubId,
-                                      )),
-                                      prefixIconData:
-                                          CupertinoIcons.envelope_open,
-                                      iconSize: 12,
-                                      text: 'Invites',
-                                    )
-                                  : null,
-                        )
-                      ],
-                  body: _ClubMembersList(
-                    handleMemberTap: _handleMemberTap,
-                    owner: clubMembers.owner,
-                    admins: clubMembers.admins,
-                    members: clubMembers.members,
-                  )));
+              navigationBar: MyNavBar(
+                previousPageTitle: 'Circle',
+                middle: const NavBarTitle('Members'),
+                trailing: _loading
+                    ? const NavBarTrailingRow(
+                        children: [
+                          NavBarLoadingIndicator(),
+                        ],
+                      )
+                    : _userIsOwnerOrAdmin
+                        ? TertiaryButton(
+                            onPressed: () => context.push(
+                                child: ClubDetailsInvitesManager(
+                              clubId: widget.clubId,
+                            )),
+                            prefixIconData: CupertinoIcons.envelope_open,
+                            iconSize: 12,
+                            text: 'Invites',
+                          )
+                        : null,
+              ),
+              child: _ClubMembersList(
+                handleMemberTap: _handleMemberTap,
+                owner: clubMembers.owner,
+                admins: clubMembers.admins,
+                members: clubMembers.members,
+              ));
         });
   }
 }

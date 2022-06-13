@@ -2,8 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
@@ -44,7 +45,7 @@ class GymProfilesPage extends StatelessWidget {
                         ])
                   : FABPage(
                       rowButtons: [
-                        FloatingButton(
+                        FloatingTextButton(
                             icon: CupertinoIcons.add,
                             text: 'Create Gym Profile',
                             onTap: () =>

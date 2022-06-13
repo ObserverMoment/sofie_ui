@@ -4,8 +4,9 @@ import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorder
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:sofie_ui/components/animated/animated_slidable.dart';
 import 'package:sofie_ui/components/cards/user_goal_card.dart';
-import 'package:sofie_ui/components/fab_page.dart';
+import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
+import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -95,7 +96,7 @@ class UserGoalsPage extends StatelessWidget {
                             ])
                       : FABPage(
                           rowButtons: [
-                            FloatingButton(
+                            FloatingTextButton(
                               iconSize: 20,
                               text: 'Add Goal',
                               onTap: () =>

@@ -5,7 +5,7 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/repos/core_data_repo.dart';
 import 'package:sofie_ui/services/utils.dart';
 
-class TargetedBodyAreasDisplay extends StatelessWidget {
+class TargetedBodyAreas extends StatelessWidget {
   final Color? activeColor;
   final Color? inactiveColor;
 
@@ -13,7 +13,7 @@ class TargetedBodyAreasDisplay extends StatelessWidget {
   final List<BodyArea> selectedBodyAreas;
   final double height;
 
-  const TargetedBodyAreasDisplay({
+  const TargetedBodyAreas({
     Key? key,
     this.activeColor,
     this.inactiveColor,
@@ -35,28 +35,25 @@ class TargetedBodyAreasDisplay extends StatelessWidget {
 
     final bool isFront = frontBack == BodyAreaFrontBack.front;
 
-    return SizedBox(
-      height: height,
-      child: Stack(
-        children: [
-          SvgPicture.asset(
-              isFront
-                  ? 'assets/body_areas/front/background_front.svg'
-                  : 'assets/body_areas/back/background_back.svg',
-              height: height,
-              color: inactive),
-          ...bodyAreasToDisplay
-              .map(
-                (bodyArea) => SvgPicture.asset(
-                    'assets/body_areas/${isFront ? "front" : "back"}/${Utils.getSvgAssetUriFromBodyAreaName(bodyArea.name)}.svg',
-                    height: height,
-                    color: selectedBodyAreas.contains(bodyArea)
-                        ? active
-                        : inactive),
-              )
-              .toList()
-        ],
-      ),
+    return Stack(
+      alignment: Alignment.topCenter,
+      children: [
+        SvgPicture.asset(
+            isFront
+                ? 'assets/body_areas/front/background_front.svg'
+                : 'assets/body_areas/back/background_back.svg',
+            height: height,
+            color: inactive),
+        ...bodyAreasToDisplay
+            .map(
+              (bodyArea) => SvgPicture.asset(
+                  'assets/body_areas/${isFront ? "front" : "back"}/${Utils.getSvgAssetUriFromBodyAreaName(bodyArea.name)}.svg',
+                  height: height,
+                  color:
+                      selectedBodyAreas.contains(bodyArea) ? active : inactive),
+            )
+            .toList()
+      ],
     );
   }
 }

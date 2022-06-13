@@ -8,9 +8,9 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:uploadcare_flutter/uploadcare_flutter.dart';
 
-class ClubCard extends StatelessWidget {
+class CircleCard extends StatelessWidget {
   final ClubSummary club;
-  const ClubCard({Key? key, required this.club}) : super(key: key);
+  const CircleCard({Key? key, required this.club}) : super(key: key);
 
   double get _iconSize => 12.0;
 

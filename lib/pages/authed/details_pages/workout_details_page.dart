@@ -369,7 +369,7 @@
 //                           child: FABPage(
 //                               rowButtons: [
 //                                 if (workout.hasSomeSections)
-//                                   FloatingButton(
+//                                   FloatingTextButton(
 //                                     icon: CupertinoIcons.arrow_right_square,
 //                                     text: 'START WORKOUT',
 //                                     width: screenWidth * 0.8,

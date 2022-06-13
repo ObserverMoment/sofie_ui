@@ -183,7 +183,7 @@ class __MainUIState extends State<_MainUI> {
 
         return MyPageScaffold(
           navigationBar: MyNavBar(
-            withoutLeading: true,
+            automaticallyImplyLeading: false,
             middle: const LeadingNavBarTitle(
               'Workout',
             ),

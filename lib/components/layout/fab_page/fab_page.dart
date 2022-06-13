@@ -1,12 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
-import 'package:sofie_ui/components/indicators.dart';
-import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/constants.dart';
-import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/material_elevation.dart';
 
 class FABPage extends StatelessWidget {
@@ -88,65 +83,6 @@ class FABPageList extends StatelessWidget {
       shrinkWrap: true,
       children: [...children, const SizedBox(height: 80)],
     );
-  }
-}
-
-class FloatingButton extends StatelessWidget {
-  final IconData? icon;
-  final String? text;
-  final void Function() onTap;
-  final double iconSize;
-  final EdgeInsets margin;
-  final EdgeInsets padding;
-  final double? width;
-  final bool loading;
-
-  const FloatingButton({
-    Key? key,
-    this.text,
-    this.icon,
-    required this.onTap,
-    this.iconSize = 20,
-    this.margin = EdgeInsets.zero,
-    this.padding = const EdgeInsets.all(11),
-    this.loading = false,
-    this.width,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          Vibrate.feedback(FeedbackType.light);
-          onTap();
-        },
-        child: FABPageButtonContainer(
-          padding: padding,
-          margin: margin,
-          width: width,
-          child: AnimatedSwitcher(
-            duration: kStandardAnimationDuration,
-            child: loading
-                ? const LoadingIndicator(size: 8)
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (icon != null)
-                        Icon(
-                          icon,
-                          size: iconSize,
-                        ),
-                      if (icon != null && text != null)
-                        const SizedBox(width: 7),
-                      if (text != null)
-                        MyText(
-                          text!.toUpperCase(),
-                        ),
-                    ],
-                  ),
-          ),
-        ));
   }
 }
 
