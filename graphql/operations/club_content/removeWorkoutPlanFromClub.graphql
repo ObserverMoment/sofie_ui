@@ -1,5 +1,0 @@
-mutation removeWorkoutPlanFromClub($workoutPlanId: ID!, $clubId: ID!) {
-  removeWorkoutPlanFromClub(workoutPlanId: $workoutPlanId, clubId: $clubId) {
-    ...ClubWorkoutPlans
-  }
-}

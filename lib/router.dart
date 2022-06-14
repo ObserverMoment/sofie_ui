@@ -42,7 +42,7 @@ import 'package:sofie_ui/pages/authed/progress/user_goals_page.dart';
 import 'package:sofie_ui/main.dart';
 import 'package:sofie_ui/modules/authed_routes_wrapper_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/collection_details_page.dart';
-import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_page.dart';
+import 'package:sofie_ui/modules/profile/user_public_profile_details_page.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
 import 'package:sofie_ui/modules/main_tabs/main_tabs_page.dart';
 import 'package:sofie_ui/modules/page_not_found_page.dart';

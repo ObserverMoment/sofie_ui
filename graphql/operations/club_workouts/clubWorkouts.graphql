@@ -1,0 +1,17 @@
+query clubWorkouts(
+  $clubId: ID!
+  $requestTypes: ClubWorkoutsRequestTypes!
+  $cursors: ClubWorkoutsCursors!
+  $take: Int
+) {
+  clubWorkouts(
+    clubId: $clubId
+    cursors: $cursors
+    requestTypes: $requestTypes
+    take: $take
+  ) {
+    ResistanceWorkouts {
+      ...ResistanceWorkoutData
+    }
+  }
+}

@@ -19,7 +19,7 @@ class ResistanceWorkoutBloc extends ChangeNotifier {
     _backup = initial.toJson();
     _storeQueryIds = [
       GQLVarParamKeys.resistanceWorkoutById(resistanceWorkout.id),
-      GQLOpNames.userResistanceWorkouts,
+      GQLOpNames.userCreatedResistanceWorkouts,
     ];
   }
 

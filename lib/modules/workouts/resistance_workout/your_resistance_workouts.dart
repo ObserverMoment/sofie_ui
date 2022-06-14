@@ -18,10 +18,11 @@ class YourResistanceWorkouts extends StatelessWidget {
   Widget build(BuildContext context) {
     final authedUserId = GetIt.I<AuthBloc>().authedUser!.id;
 
-    return QueryObserver<UserResistanceWorkouts$Query, json.JsonSerializable>(
+    return QueryObserver<UserCreatedResistanceWorkouts$Query,
+            json.JsonSerializable>(
         key: Key(
-            'ResistanceWorkoutsPage - ${UserResistanceWorkoutsQuery().operationName}'),
-        query: UserResistanceWorkoutsQuery(),
+            'ResistanceWorkoutsPage - ${UserCreatedResistanceWorkoutsQuery().operationName}'),
+        query: UserCreatedResistanceWorkoutsQuery(),
         fetchPolicy: QueryFetchPolicy.storeFirst,
         builder: (created) => QueryObserver<UserSavedResistanceWorkouts$Query,
                 json.JsonSerializable>(
@@ -31,7 +32,7 @@ class YourResistanceWorkouts extends StatelessWidget {
             fetchPolicy: QueryFetchPolicy.storeFirst,
             builder: (saved) {
               final sortedByUpdatedAt = [
-                ...created.userResistanceWorkouts,
+                ...created.userCreatedResistanceWorkouts,
                 ...saved.userSavedResistanceWorkouts
               ].sortedBy<DateTime>((s) => s.updatedAt).reversed;
 
@@ -48,6 +49,7 @@ class YourResistanceWorkouts extends StatelessWidget {
                               buttonText: 'Create Workout'),
                         ])
                   : ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
                       shrinkWrap: true,
                       children: sortedByUpdatedAt
                           .map((s) => GestureDetector(

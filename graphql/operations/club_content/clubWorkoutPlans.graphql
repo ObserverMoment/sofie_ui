@@ -1,5 +1,0 @@
-query clubWorkoutPlans($clubId: ID!) {
-  clubWorkoutPlans(clubId: $clubId) {
-    ...ClubWorkoutPlans
-  }
-}

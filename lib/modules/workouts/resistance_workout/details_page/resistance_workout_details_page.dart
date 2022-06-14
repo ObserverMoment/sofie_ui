@@ -45,7 +45,7 @@ class ResistanceWorkoutDetailsPage extends StatelessWidget {
                 clearQueryDataAtKeys: [
                   GQLVarParamKeys.resistanceWorkoutById(id),
                 ],
-                broadcastQueryIds: [GQLOpNames.userResistanceWorkouts],
+                broadcastQueryIds: [GQLOpNames.userCreatedResistanceWorkouts],
                 onSuccess: context.pop);
           } catch (e) {
             context.showToast(
@@ -60,7 +60,7 @@ class ResistanceWorkoutDetailsPage extends StatelessWidget {
       await GraphQLStore.store.create(
           mutation: DuplicateResistanceWorkoutMutation(
               variables: DuplicateResistanceWorkoutArguments(id: id)),
-          addRefToQueries: [GQLOpNames.userResistanceWorkouts],
+          addRefToQueries: [GQLOpNames.userCreatedResistanceWorkouts],
           onSuccess: () {
             context.showToast(
               message: 'Copy added to your workouts.',
@@ -100,7 +100,10 @@ class ResistanceWorkoutDetailsPage extends StatelessWidget {
           return MyPageScaffold(
               navigationBar: MyNavBar(
                 previousPageTitle: previousPageTitle,
-                middle: NavBarTitle(resistanceWorkout.name),
+                middle: MyText(
+                  resistanceWorkout.name,
+                  weight: FontWeight.bold,
+                ),
                 trailing: NavBarIconButton(
                   iconData: CupertinoIcons.ellipsis,
                   onPressed: () => openBottomSheetMenu(

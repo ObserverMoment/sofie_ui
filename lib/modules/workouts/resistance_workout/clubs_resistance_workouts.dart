@@ -1,10 +1,16 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
+import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/modules/profile/user_avatar/user_avatar.dart';
+import 'package:sofie_ui/modules/workouts/resistance_workout/components/resistance_workout_card.dart';
+import 'package:sofie_ui/modules/workouts/resistance_workout/resistance_workout_bloc.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 
 class ClubsResistanceWorkouts extends StatefulWidget {
@@ -92,17 +98,64 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
   Widget build(BuildContext context) {
     return PagedListView<int, ClubResistanceWorkout>(
       cacheExtent: 3000,
-      padding: const EdgeInsets.only(top: 8, left: 2, right: 2, bottom: 130),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       pagingController: _pagingController,
       builderDelegate: PagedChildBuilderDelegate<ClubResistanceWorkout>(
-        itemBuilder: (context, workout, index) => FadeInUp(
-          key: Key(workout.id),
+        itemBuilder: (context, clubResistanceWorkout, index) => FadeInUp(
+          key: Key(clubResistanceWorkout.id),
           delay: 5,
           delayBasis: 20,
           duration: 100,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: MyText(workout.name),
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 26),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () =>
+                        context.navigateTo(ResistanceWorkoutDetailsRoute(
+                      id: clubResistanceWorkout.resistanceWorkout.id,
+                    )),
+                    child: ResistanceWorkoutCard(
+                      resistanceWorkout:
+                          clubResistanceWorkout.resistanceWorkout,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => context.navigateTo(
+                      ClubDetailsRoute(id: clubResistanceWorkout.id)),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Card(
+                      borderRadius: BorderRadius.circular(50),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 1, horizontal: 1),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          UserAvatar(
+                            avatarUri: clubResistanceWorkout.coverImageUri,
+                            size: 30,
+                          ),
+                          const SizedBox(width: 4),
+                          MyText(
+                            clubResistanceWorkout.name,
+                            size: FONTSIZE.one,
+                            subtext: true,
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         firstPageErrorIndicatorBuilder: (c) =>

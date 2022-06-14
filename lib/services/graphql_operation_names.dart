@@ -51,8 +51,9 @@ class GQLOpNames {
       UserScheduledWorkoutsQuery().operationName;
 
   //// Workout Workout Related ////
-  static String get userResistanceWorkouts =>
-      UserResistanceWorkoutsQuery().operationName;
+  static String get userCreatedResistanceWorkouts =>
+      UserCreatedResistanceWorkoutsQuery().operationName;
+
   static String get userSavedResistanceWorkouts =>
       UserSavedResistanceWorkoutsQuery().operationName;
 
@@ -78,12 +79,6 @@ class GQLVarParamKeys {
 
   static String clubMembers(String id) => getParameterizedQueryId(
       ClubMembersQuery(variables: ClubMembersArguments(clubId: id)));
-
-  static String clubWorkouts(String id) => getParameterizedQueryId(
-      ClubWorkoutsQuery(variables: ClubWorkoutsArguments(clubId: id)));
-
-  static String clubWorkoutPlans(String id) => getParameterizedQueryId(
-      ClubWorkoutPlansQuery(variables: ClubWorkoutPlansArguments(clubId: id)));
 
   static String userCollectionById(String id) => getParameterizedQueryId(
       UserCollectionByIdQuery(variables: UserCollectionByIdArguments(id: id)));

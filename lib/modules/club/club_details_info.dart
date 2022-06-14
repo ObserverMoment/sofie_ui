@@ -112,8 +112,9 @@ class ClubDetailsInfo extends StatelessWidget {
               admins: club.admins,
               members: const [],
               owner: club.owner,
-              onTapAvatar: (userId, _) => context
-                  .navigateTo(UserPublicProfileDetailsRoute(userId: userId))),
+              onTapAvatar: (userId, _) => context.navigateTo(
+                  UserPublicProfileDetailsRoute(
+                      userId: userId, previousPageTitle: 'Circle'))),
         ],
       ),
     );

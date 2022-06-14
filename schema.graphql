@@ -294,14 +294,31 @@ type ClubWithMetaDataAdmin {
   validated: PublicContentValidationStatus!
 }
 
-type ClubWorkoutPlans {
-  id: ID!
-  workoutPlans: [WorkoutPlanSummary!]!
+type ClubWorkouts {
+  AmrapWorkouts: [AmrapWorkout!]!
+  CardioWorkouts: [CardioWorkout!]!
+  ForTimeWorkouts: [ForTimeWorkout!]!
+  IntervalWorkouts: [IntervalWorkout!]!
+  MobilityWorkouts: [MobilityWorkout!]!
+  ResistanceWorkouts: [ResistanceWorkout!]!
 }
 
-type ClubWorkouts {
-  id: ID!
-  workouts: [WorkoutSummary!]!
+input ClubWorkoutsCursors {
+  amrapWorkout: String
+  cardioWorkout: String
+  forTimeWorkout: String
+  intervalWorkout: String
+  mobilityWorkout: String
+  resistanceWorkout: String
+}
+
+input ClubWorkoutsRequestTypes {
+  amrapWorkouts: Boolean
+  cardioWorkouts: Boolean
+  forTimeWorkouts: Boolean
+  intervalWorkouts: Boolean
+  mobilityWorkouts: Boolean
+  resistanceWorkouts: Boolean
 }
 
 type Collection {
@@ -1132,11 +1149,9 @@ type Mutation {
   addDocumentToSkill(data: AddDocumentToSkillInput!): Skill!
   addResistanceWorkoutToClub(clubId: ID!, workoutId: ID!): ResistanceWorkout!
   addUserToClubViaInviteToken(clubInviteTokenId: ID!, userId: ID!): ID!
-  addWorkoutPlanToClub(clubId: ID!, workoutPlanId: ID!): ClubWorkoutPlans!
   addWorkoutPlanToCollection(
     data: AddWorkoutPlanToCollectionInput!
   ): Collection!
-  addWorkoutToClub(clubId: ID!, workoutId: ID!): ClubWorkouts!
   addWorkoutToCollection(data: AddWorkoutToCollectionInput!): Collection!
   archiveCustomMoveById(id: ID!): Move!
   archiveWorkoutById(id: ID!): Workout!
@@ -1300,11 +1315,9 @@ type Mutation {
     workoutId: ID!
   ): ResistanceWorkout!
   removeUserFromClub(clubId: ID!, userToRemoveId: ID!): ClubMembers!
-  removeWorkoutFromClub(clubId: ID!, workoutId: ID!): ClubWorkouts!
   removeWorkoutFromCollection(
     data: RemoveWorkoutFromCollectionInput!
   ): Collection!
-  removeWorkoutPlanFromClub(clubId: ID!, workoutPlanId: ID!): ClubWorkoutPlans!
   removeWorkoutPlanFromCollection(
     data: RemoveWorkoutPlanFromCollectionInput!
   ): Collection!
@@ -1484,8 +1497,12 @@ type Query {
   clubMembers(clubId: ID!): ClubMembers!
   clubSummaries(ids: [ID!]!): [ClubSummary!]!
   clubSummary(id: ID!): ClubSummary
-  clubWorkoutPlans(clubId: ID!): ClubWorkoutPlans!
-  clubWorkouts(clubId: ID!): ClubWorkouts!
+  clubWorkouts(
+    clubId: ID!
+    cursors: ClubWorkoutsCursors!
+    requestTypes: ClubWorkoutsRequestTypes!
+    take: Int
+  ): ClubWorkouts!
   coreData: CoreData!
   gymProfiles: [GymProfile!]!
   lifetimeLogStatsSummary(userId: ID!): LifetimeLogStatsSummary!
@@ -1522,6 +1539,7 @@ type Query {
   userClubsResistanceWorkouts(cursor: ID, take: Int): [ClubResistanceWorkout!]!
   userCollectionById(id: ID!): Collection!
   userCollections: [Collection!]!
+  userCreatedResistanceWorkouts: [ResistanceWorkout!]!
   userDayLogMoods: [UserDayLogMood!]!
   userEatWellLogs: [UserEatWellLog!]!
   userExerciseLoadTrackers: [UserExerciseLoadTracker!]!
@@ -1534,7 +1552,6 @@ type Query {
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
-  userResistanceWorkouts: [ResistanceWorkout!]!
   userSavedResistanceWorkouts: [ResistanceWorkout!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userSleepWellLogs: [UserSleepWellLog!]!

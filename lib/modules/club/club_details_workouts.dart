@@ -1,8 +1,13 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
+import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/layout/fab_page/floating_text_button.dart';
@@ -14,10 +19,13 @@ import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/model/enum.dart';
 import 'package:sofie_ui/components/placeholders/content_empty_placeholder.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
+import 'package:sofie_ui/modules/workouts/resistance_workout/components/resistance_workout_card.dart';
+import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 import 'package:sofie_ui/services/store/store_utils.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
+import 'package:sofie_ui/services/utils.dart';
 
 class ClubDetailsWorkouts extends StatelessWidget {
   final String clubId;
@@ -29,210 +37,189 @@ class ClubDetailsWorkouts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MyPageScaffold(
-      navigationBar: const MyNavBar(
-        middle: NavBarTitle('Workouts'),
+      navigationBar: MyNavBar(
+        middle: const NavBarTitle('Circle Workouts'),
+        trailing: NavBarIconButton(
+            onPressed: () => print('enter edit mode'),
+            iconData: CupertinoIcons.pencil),
       ),
-      child: FABPage(
-        rowButtons: [
-          FloatingTextButton(
-            text: 'Add Workout',
-            onTap: () => print('open select type modal'),
-            icon: CupertinoIcons.add,
-          )
-        ],
-        child: MyText(
-          'Same functionality as ClubResistanceWorkouts - but will retrieve all workouts of all types - allow passing filter by type',
-          maxLines: 8,
-        ),
+      child: ClubsResistanceWorkouts(
+        clubId: clubId,
       ),
     );
   }
 }
 
+class PaginationObject {
+  final String id;
+  final String type;
+  final DateTime updatedAt;
+  PaginationObject(this.id, this.type, this.updatedAt);
+}
 
-//// DEPRECATED /////
-// class ClubDetailsWorkouts extends StatefulWidget {
-//   final String clubId;
-//   final bool isOwnerOrAdmin;
-//   const ClubDetailsWorkouts(
-//       {Key? key, required this.isOwnerOrAdmin, required this.clubId})
-//       : super(key: key);
+class ClubsResistanceWorkouts extends StatefulWidget {
+  final String clubId;
+  const ClubsResistanceWorkouts({
+    Key? key,
+    required this.clubId,
+  }) : super(key: key);
 
-//   @override
-//   State<ClubDetailsWorkouts> createState() => _ClubDetailsWorkoutsState();
-// }
+  @override
+  State<ClubsResistanceWorkouts> createState() =>
+      _ClubsResistanceWorkoutsState();
+}
 
-// class _ClubDetailsWorkoutsState extends State<ClubDetailsWorkouts> {
-//   bool _loading = false;
+class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
+  /// For inifinite scroll / pagination of public workouts from the network.
+  final _resultsPageSize = 20;
 
-//   void _handleWorkoutTap(WorkoutSummary workout) {
-//     if (widget.isOwnerOrAdmin) {
-//       openBottomSheetMenu(
-//           context: context,
-//           child: BottomSheetMenu(
-//               header: BottomSheetMenuHeader(
-//                   name: workout.name,
-//                   subtitle: 'Workout',
-//                   imageUri: workout.coverImageUri),
-//               items: [
-//                 BottomSheetMenuItem(
-//                     text: 'View',
-//                     icon: CupertinoIcons.arrow_right,
-//                     onPressed: () => _navigateToWorkoutDetails(workout)),
-//                 BottomSheetMenuItem(
-//                     text: 'Remove',
-//                     isDestructive: true,
-//                     icon: CupertinoIcons.delete_simple,
-//                     onPressed: () =>
-//                         _confirmRemoveWorkoutFromClub(context, workout)),
-//               ]));
-//     } else {
-//       _navigateToWorkoutDetails(workout);
-//     }
-//   }
+  /// Cursors pagination. One for each workout type.
+  final ClubWorkoutsCursors _cursors = ClubWorkoutsCursors();
+  final ClubWorkoutsRequestTypes _requestTypes = ClubWorkoutsRequestTypes(
+    cardioWorkouts: true,
+    resistanceWorkouts: true,
+    intervalWorkouts: true,
+    amrapWorkouts: true,
+    forTimeWorkouts: true,
+    mobilityWorkouts: true,
+  );
 
-//   void _navigateToWorkoutDetails(WorkoutSummary workout) {
-//     // context.navigateTo(WorkoutDetailsRoute(id: workout.id));
-//   }
+  /// Retrieved data.
+  List<ResistanceWorkout> _resistanceWorkouts = [];
 
-//   void _openWorkoutFinder() {
-//     // context.navigateTo(WorkoutsRoute(
-//     //     pageTitle: 'Select Workout',
-//     //     showSaved: false,
-//     //     selectWorkout: (w) => _addWorkoutToClub(context, w)));
-//   }
+  /// Type and id will be used to lookup
+  /// Updated at will be used to sort.
+  final PagingController<int, PaginationObject> _pagingController =
+      PagingController(firstPageKey: 0, invisibleItemsThreshold: 10);
 
-//   Future<void> _addWorkoutToClub(
-//       BuildContext context, WorkoutSummary workout) async {
-//     setState(() {
-//       _loading = true;
-//     });
+  @override
+  void initState() {
+    super.initState();
 
-//     final variables =
-//         AddWorkoutToClubArguments(clubId: widget.clubId, workoutId: workout.id);
+    /// [nextPageKey] will be [0] when no results are present and no pagination cursors exist. This means no cursors should be passed to the resolvers.
+    /// Any other number for the pageKey causes this function to look up the [_cursor] from state.
+    /// To standardize, we pass pageKey as [1] whenever a page is appended to the list.
+    _pagingController.addPageRequestListener((nextPageKey) {
+      _fetchClubWorkouts(nextPageKey);
+    });
+  }
 
-//     final result = await GraphQLStore.store
-//         .mutate<AddWorkoutToClub$Mutation, AddWorkoutToClubArguments>(
-//             mutation: AddWorkoutToClubMutation(variables: variables),
-//             refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
-//             broadcastQueryIds: [GQLVarParamKeys.clubWorkouts(widget.clubId)]);
+  Future<List<PaginationObject>> _executeClubWorkoutsQuery() async {
+    final variables = ClubWorkoutsArguments(
+        clubId: widget.clubId,
+        take: _resultsPageSize,
+        cursors: _cursors,
+        requestTypes: _requestTypes);
 
-//     setState(() {
-//       _loading = false;
-//     });
+    final query = ClubWorkoutsQuery(variables: variables);
+    final response = await GraphQLStore.store.execute(query);
 
-//     checkOperationResult(result,
-//         onSuccess: () => context.showToast(message: 'Workout Added'),
-//         onFail: () => context.showToast(
-//             message: 'Sorry there was a problem',
-//             toastType: ToastType.destructive));
-//   }
+    if ((response.errors != null && response.errors!.isNotEmpty) ||
+        response.data == null) {
+      throw Exception(
+          'Sorry, something went wrong!: ${response.errors != null ? response.errors!.join(',') : ''}');
+    }
 
-//   void _confirmRemoveWorkoutFromClub(
-//       BuildContext context, WorkoutSummary workout) {
-//     context.showConfirmDeleteDialog(
-//         verb: 'Remove',
-//         itemType: 'Workout',
-//         itemName: workout.name,
-//         message:
-//             'Club members will no longer have access to this workout via your club',
-//         onConfirm: () => _removeWorkoutFromClub(context, workout));
-//   }
+    final clubWorkouts = query.parse(response.data ?? {}).clubWorkouts;
 
-//   Future<void> _removeWorkoutFromClub(
-//       BuildContext context, WorkoutSummary workout) async {
-//     setState(() {
-//       _loading = true;
-//     });
+    /// Update cursors.
+    _cursors.resistanceWorkout = clubWorkouts.resistanceWorkouts.isNotEmpty
+        ? clubWorkouts.resistanceWorkouts.last.id
+        : _cursors.resistanceWorkout;
 
-//     final variables = RemoveWorkoutFromClubArguments(
-//         clubId: widget.clubId, workoutId: workout.id);
+    /// Put data in local state.
+    _resistanceWorkouts = [
+      ..._resistanceWorkouts,
+      ...clubWorkouts.resistanceWorkouts
+    ];
 
-//     final result = await GraphQLStore.store
-//         .mutate<RemoveWorkoutFromClub$Mutation, RemoveWorkoutFromClubArguments>(
-//             mutation: RemoveWorkoutFromClubMutation(variables: variables),
-//             refetchQueryIds: [GQLVarParamKeys.clubSummary(widget.clubId)],
-//             broadcastQueryIds: [GQLVarParamKeys.clubWorkouts(widget.clubId)]);
+    /// Format [type]:[id] strings to return.
+    final allSorted = [
+      ..._resistanceWorkouts.map((w) =>
+          PaginationObject(w.id, kResistanceWorkoutTypeName, w.updatedAt))
+    ].sortedBy<DateTime>((o) => o.updatedAt);
 
-//     setState(() {
-//       _loading = false;
-//     });
+    return allSorted;
+  }
 
-//     checkOperationResult(result,
-//         onSuccess: () => context.showToast(message: 'Workout Removed'),
-//         onFail: () => context.showToast(
-//             message: 'Sorry there was a problem',
-//             toastType: ToastType.destructive));
-//   }
+  Future<void> _fetchClubWorkouts(int nextPageKey) async {
+    try {
+      /// [nextPageKey] defaults to 0 when [_pagingController] is initialised.
+      /// For every subsequent call for a page [nextPageKey] will be [NOT 0]
+      /// Use as a boolean. If [not 0] then pass [_cursor] to the query args.
+      final paginationObjects = await _executeClubWorkoutsQuery();
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final query = ClubWorkoutsQuery(
-//         variables: ClubWorkoutsArguments(clubId: widget.clubId));
+      final isLastPage = paginationObjects.length < _resultsPageSize;
 
-//     return QueryObserver<ClubWorkouts$Query, ClubWorkoutsArguments>(
-//         key: Key('ClubDetailsWorkouts - ${query.operationName}'),
-//         query: query,
-//         parameterizeQuery: true,
-//         builder: (data) {
-//           final workouts = data.clubWorkouts.workouts;
+      if (isLastPage) {
+        _pagingController.appendLastPage(paginationObjects);
+      } else {
+        /// Pass nextPageKey as 1. Acts like a boolean to tell future fetch calls to get the _[cursor] from local state.
+        _pagingController.appendPage(paginationObjects, 1);
+      }
+    } catch (error) {
+      printLog(error.toString());
+      if (mounted) _pagingController.error = error;
+    }
 
-//           return MyPageScaffold(
-//               child: NestedScrollView(
-//             headerSliverBuilder: (c, i) =>
-//                 [const MySliverNavbar(title: 'Workouts')],
-//             body: widget.isOwnerOrAdmin
-//                 ? FABPage(
-//                     rowButtonsAlignment: MainAxisAlignment.end,
-//                     rowButtons: [
-//                       FloatingTextButton(
-//                         text: 'Add Workout',
-//                         onTap: _openWorkoutFinder,
-//                         loading: _loading,
-//                         icon: CupertinoIcons.add,
-//                       )
-//                     ],
-//                     child: _ClubWorkoutsList(
-//                       handleWorkoutTap: _handleWorkoutTap,
-//                       workouts: workouts,
-//                     ))
-//                 : _ClubWorkoutsList(
-//                     handleWorkoutTap: _handleWorkoutTap,
-//                     workouts: workouts,
-//                   ),
-//           ));
-//         });
-//   }
-// }
+    setState(() {});
+  }
 
-// class _ClubWorkoutsList extends StatelessWidget {
-//   final List<WorkoutSummary> workouts;
-//   final void Function(WorkoutSummary workout) handleWorkoutTap;
-//   const _ClubWorkoutsList(
-//       {Key? key, required this.workouts, required this.handleWorkoutTap})
-//       : super(key: key);
+  Widget _buildCardByWorkoutType(PaginationObject object) {
+    switch (object.type) {
+      case kResistanceWorkoutTypeName:
+        final resistanceWorkout =
+            _resistanceWorkouts.firstWhere((r) => r.id == object.id);
+        return GestureDetector(
+          onTap: () => context.navigateTo(ResistanceWorkoutDetailsRoute(
+              id: resistanceWorkout.id, previousPageTitle: 'Circle')),
+          behavior: HitTestBehavior.opaque,
+          child: ResistanceWorkoutCard(
+            resistanceWorkout: resistanceWorkout,
+            showUserAvatar: true,
+            showWorkoutTypeIndicator: true,
+          ),
+        );
+      default:
+        throw Exception(
+            'ClubsResistanceWorkouts: _buildCardByWorkoutType: No builder defined for type ${object.type}');
+    }
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return workouts.isEmpty
-//         ? const ContentEmptyPlaceholder(message: 'No Workouts', actions: [])
-//         : ImplicitlyAnimatedList<WorkoutSummary>(
-//             padding: const EdgeInsets.only(
-//                 top: 8, bottom: kAssumedFloatingButtonHeight),
-//             shrinkWrap: true,
-//             items: workouts,
-//             itemBuilder: (context, animation, workout, index) =>
-//                 SizeFadeTransition(
-//                   animation: animation,
-//                   sizeFraction: 0.7,
-//                   curve: Curves.easeInOut,
-//                   child: GestureDetector(
-//                       onTap: () => handleWorkoutTap(workout),
-//                       child: Padding(
-//                         padding: const EdgeInsets.only(bottom: 12.0),
-//                         child: WorkoutCard(workout),
-//                       )),
-//                 ),
-//             areItemsTheSame: (a, b) => a == b);
-//   }
-// }
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PagedListView<int, PaginationObject>(
+      padding: const EdgeInsets.all(4),
+      pagingController: _pagingController,
+      builderDelegate: PagedChildBuilderDelegate<PaginationObject>(
+        itemBuilder: (context, object, index) => FadeInUp(
+          key: Key(object.id),
+          delay: 5,
+          delayBasis: 20,
+          duration: 100,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: _buildCardByWorkoutType(object),
+          ),
+        ),
+        firstPageErrorIndicatorBuilder: (c) =>
+            const PageResultsErrorIndicator(),
+        newPageErrorIndicatorBuilder: (c) => const PageResultsErrorIndicator(),
+        firstPageProgressIndicatorBuilder: (c) =>
+            const CupertinoActivityIndicator(),
+        newPageProgressIndicatorBuilder: (c) =>
+            const CupertinoActivityIndicator(),
+        noItemsFoundIndicatorBuilder: (c) => const Center(
+          child: ContentEmptyPlaceholder(
+              message: 'Nothing to display', actions: []),
+        ),
+      ),
+    );
+  }
+}

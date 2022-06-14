@@ -48,7 +48,7 @@ class _ResistanceWorkoutCreatorPageState
         variables: CreateResistanceWorkoutArguments(
             data: CreateResistanceWorkoutInput(name: name)),
       ),
-      addRefToQueries: [GQLOpNames.userResistanceWorkouts],
+      addRefToQueries: [GQLOpNames.userCreatedResistanceWorkouts],
     );
 
     checkOperationResult(result, onSuccess: () {

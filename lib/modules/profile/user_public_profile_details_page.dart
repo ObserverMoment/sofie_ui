@@ -11,8 +11,11 @@ import 'package:sofie_ui/services/store/query_observer.dart';
 
 class UserPublicProfileDetailsPage extends StatelessWidget {
   final String userId;
+  final String? previousPageTitle;
   const UserPublicProfileDetailsPage(
-      {Key? key, @PathParam('userId') required this.userId})
+      {Key? key,
+      @PathParam('userId') required this.userId,
+      this.previousPageTitle})
       : super(key: key);
 
   Future<void> _shareUserProfile(UserProfile userPublicProfile) async {
@@ -43,6 +46,7 @@ class UserPublicProfileDetailsPage extends StatelessWidget {
 
           return MyPageScaffold(
               navigationBar: MyNavBar(
+                previousPageTitle: previousPageTitle,
                 middle: MyHeaderText(
                   userPublicProfile.displayName,
                 ),
