@@ -17,11 +17,12 @@ import 'package:sofie_ui/components/social/chat/chats_overview_page.dart';
 import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dart';
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart';
 import 'package:sofie_ui/components/timers/timers_page.dart';
-import 'package:sofie_ui/modules/circles/circles_page.dart';
+import 'package:sofie_ui/modules/circles_tab/circles_page.dart';
+import 'package:sofie_ui/modules/club/details_page/club_details_page.dart';
 import 'package:sofie_ui/modules/gym_profile/gym_profile_creator.dart';
 import 'package:sofie_ui/modules/gym_profile/gym_profiles_page.dart';
-import 'package:sofie_ui/modules/home/home_page.dart';
-import 'package:sofie_ui/modules/home/notifications_page.dart';
+import 'package:sofie_ui/modules/home_tab/home_page.dart';
+import 'package:sofie_ui/modules/home_tab/notifications_page.dart';
 import 'package:sofie_ui/modules/move/move_creator/custom_move_creator_page.dart';
 import 'package:sofie_ui/modules/move/move_details_page.dart';
 import 'package:sofie_ui/modules/profile/edit_profile_page.dart';
@@ -31,16 +32,15 @@ import 'package:sofie_ui/modules/profile/skills/skills_page.dart';
 import 'package:sofie_ui/modules/profile/social/social_links_page.dart';
 import 'package:sofie_ui/modules/sign_in_registration/unauthed_landing_page.dart';
 import 'package:sofie_ui/modules/calendar/calendar_page.dart';
-import 'package:sofie_ui/modules/studio/exercise_library_page.dart';
-import 'package:sofie_ui/modules/studio/studio_page.dart';
+import 'package:sofie_ui/modules/studio_tab/exercise_library_page.dart';
+import 'package:sofie_ui/modules/studio_tab/studio_page.dart';
 import 'package:sofie_ui/modules/training_plan/training_plans.dart';
-import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_creator_page.dart';
-import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/resistance_session_details_page.dart';
-import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_sessions_page.dart';
+import 'package:sofie_ui/modules/workouts/resistance_workout/details_page/resistance_workout_details_page.dart';
+import 'package:sofie_ui/modules/workouts/resistance_workout/resistance_workout_creator_page.dart';
+import 'package:sofie_ui/modules/workouts/resistance_workout/resistance_workouts_page.dart';
 import 'package:sofie_ui/pages/authed/progress/user_goals_page.dart';
 import 'package:sofie_ui/main.dart';
 import 'package:sofie_ui/modules/authed_routes_wrapper_page.dart';
-import 'package:sofie_ui/pages/authed/details_pages/club_details/club_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/collection_details_page.dart';
 import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_page.dart';
 import 'package:sofie_ui/pages/authed/landing_pages/club_invite_landing_page.dart';
@@ -79,8 +79,8 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
                 children: [
                   AutoRoute(path: '', page: StudioPage),
                   AutoRoute(
-                      path: 'resistance-sessions',
-                      page: ResistanceSessionsPage),
+                      path: 'resistance-workouts',
+                      page: ResistanceWorkoutsPage),
                   AutoRoute(path: 'training-plans', page: TrainingPlansPage),
                   AutoRoute(
                       path: 'exercise-library', page: ExerciseLibraryPage),
@@ -139,8 +139,8 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           AutoRoute(
               path: 'profile/:userId', page: UserPublicProfileDetailsPage),
 
-          //// Workout Session Details Pages ////
-          AutoRoute(path: 'resistance/:id', page: ResistanceSessionDetailsPage),
+          //// Workout Workout Details Pages ////
+          AutoRoute(path: 'resistance/:id', page: ResistanceWorkoutDetailsPage),
 
           // AutoRoute(path: 'workout/:id', page: WorkoutDetailsPage),
           // AutoRoute(path: 'workout-plan/:id', page: WorkoutPlanDetailsPage),
@@ -169,8 +169,8 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
               page: ScheduledWorkoutCreatorPage),
           AutoRoute(path: 'create/workout', page: WorkoutCreatorPage),
           AutoRoute(
-              path: 'create/resistance-session',
-              page: ResistanceSessionCreatorPage),
+              path: 'create/resistance-workout',
+              page: ResistanceWorkoutCreatorPage),
           AutoRoute(path: 'create/workout-plan', page: WorkoutPlanCreatorPage),
           AutoRoute(
               path: 'create/workout-plan-review',

@@ -1,0 +1,5 @@
+mutation updateResistanceWorkout($data: UpdateResistanceWorkoutInput!) {
+  updateResistanceWorkout(data: $data) {
+    ...ResistanceWorkoutData
+  }
+}

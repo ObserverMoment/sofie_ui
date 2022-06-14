@@ -1,0 +1,5 @@
+query userSavedResistanceWorkouts {
+  userSavedResistanceWorkouts {
+    ...ResistanceWorkoutData
+  }
+}

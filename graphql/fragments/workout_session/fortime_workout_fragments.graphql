@@ -1,0 +1,32 @@
+fragment ForTimeWorkout on ForTimeWorkout {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  repeats
+  # 0 is no timecap
+  timecapSeconds
+  # If forced rests are required between sections then add [rest:seconds].
+  # [ForTimeSectionId, rest:60, ForTimeSectionId]
+  childrenOrder
+}
+
+fragment ForTimeSection on ForTimeSection {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  childrenOrder
+}
+
+fragment ForTimeMove on ForTimeMove {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+}

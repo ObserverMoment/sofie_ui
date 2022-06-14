@@ -1,0 +1,29 @@
+fragment AmrapWorkout on AmrapWorkout {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  # If forced rests are required between sections then add [rest:seconds].
+  # [AMRAPSectionId, rest:60, AMRAPSection]
+  childrenOrder
+}
+
+fragment AmrapSection on AmrapSection {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  childrenOrder
+}
+
+fragment AmrapMove on AmrapMove {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+}

@@ -52,7 +52,7 @@ type AmrapSection {
   updatedAt: DateTime!
 }
 
-type AmrapSession {
+type AmrapWorkout {
   AmrapSections: [AmrapSection!]!
   childrenOrder: [String!]!
   createdAt: DateTime!
@@ -151,7 +151,7 @@ type CardioExercise {
   updatedAt: DateTime!
 }
 
-type CardioSession {
+type CardioWorkout {
   CardioExercises: [CardioExercise!]!
   childrenOrder: [String!]!
   createdAt: DateTime!
@@ -245,6 +245,13 @@ type ClubMembers {
   Members: [ClubMemberSummary!]!
   Owner: ClubMemberSummary!
   id: ID!
+}
+
+type ClubResistanceWorkout {
+  ResistanceWorkout: ResistanceWorkout!
+  coverImageUri: String
+  id: ID!
+  name: String!
 }
 
 type ClubSummary {
@@ -353,10 +360,10 @@ input CreateAmrapMoveInput {
 }
 
 input CreateAmrapSectionInput {
-  AmrapSession: ConnectRelationInput!
+  AmrapWorkout: ConnectRelationInput!
 }
 
-input CreateAmrapSessionInput {
+input CreateAmrapWorkoutInput {
   name: String!
 }
 
@@ -369,11 +376,11 @@ input CreateBodyTrackingEntryInput {
 }
 
 input CreateCardioExerciseInput {
-  CardioSession: ConnectRelationInput!
+  CardioWorkout: ConnectRelationInput!
   Move: ConnectRelationInput!
 }
 
-input CreateCardioSessionInput {
+input CreateCardioWorkoutInput {
   name: String!
 }
 
@@ -462,10 +469,10 @@ input CreateForTimeMoveInput {
 }
 
 input CreateForTimeSectionInput {
-  ForTimeSession: ConnectRelationInput!
+  ForTimeWorkout: ConnectRelationInput!
 }
 
-input CreateForTimeSessionInput {
+input CreateForTimeWorkoutInput {
   name: String!
 }
 
@@ -476,16 +483,16 @@ input CreateGymProfileInput {
 }
 
 input CreateIntervalExerciseInput {
-  IntervalSession: ConnectRelationInput!
-}
-
-input CreateIntervalSessionInput {
-  name: String!
+  IntervalWorkout: ConnectRelationInput!
 }
 
 input CreateIntervalSetInput {
   IntervalExercise: ConnectRelationInput!
   Move: ConnectRelationInput!
+}
+
+input CreateIntervalWorkoutInput {
+  name: String!
 }
 
 input CreateLoggedWorkoutInput {
@@ -529,7 +536,7 @@ input CreateLoggedWorkoutSetInLoggedWorkoutSectionInput {
   timeTakenSeconds: Int
 }
 
-input CreateMobilitySessionInput {
+input CreateMobilityWorkoutInput {
   name: String!
 }
 
@@ -548,12 +555,8 @@ input CreateMoveInput {
 }
 
 input CreateResistanceExerciseInput {
-  ResistanceSession: ConnectRelationInput!
   ResistanceSets: [CreateResistanceSetInExerciseInput!]!
-}
-
-input CreateResistanceSessionInput {
-  name: String!
+  ResistanceWorkout: ConnectRelationInput!
 }
 
 input CreateResistanceSetInExerciseInput {
@@ -566,6 +569,10 @@ input CreateResistanceSetInExerciseInput {
 input CreateResistanceSetInput {
   Move: ConnectRelationInput!
   ResistanceExercise: ConnectRelationInput!
+}
+
+input CreateResistanceWorkoutInput {
+  name: String!
 }
 
 input CreateScheduleForPlanEnrolmentInput {
@@ -896,7 +903,7 @@ type ForTimeSection {
   updatedAt: DateTime!
 }
 
-type ForTimeSession {
+type ForTimeWorkout {
   ForTimeSections: [ForTimeSection!]!
   childrenOrder: [String!]!
   createdAt: DateTime!
@@ -933,7 +940,16 @@ type IntervalExercise {
   updatedAt: DateTime!
 }
 
-type IntervalSession {
+type IntervalSet {
+  Equipment: Equipment
+  Move: Move!
+  createdAt: DateTime!
+  id: ID!
+  note: String
+  updatedAt: DateTime!
+}
+
+type IntervalWorkout {
   IntervalExercises: [IntervalExercise!]!
   audioUri: String
   childrenOrder: [String!]!
@@ -946,15 +962,6 @@ type IntervalSession {
   updatedAt: DateTime!
   videoThumbUri: String
   videoUri: String
-}
-
-type IntervalSet {
-  Equipment: Equipment
-  Move: Move!
-  createdAt: DateTime!
-  id: ID!
-  note: String
-  updatedAt: DateTime!
 }
 
 type InviteTokenError {
@@ -1055,7 +1062,7 @@ type MobilityMoveType {
   name: String!
 }
 
-type MobilitySession {
+type MobilityWorkout {
   MobilityMoves: [MobilityMove!]!
   audioUri: String
   childrenOrder: [String!]!
@@ -1123,6 +1130,7 @@ input MoveWorkoutPlanDayToAnotherDayInput {
 
 type Mutation {
   addDocumentToSkill(data: AddDocumentToSkillInput!): Skill!
+  addResistanceWorkoutToClub(clubId: ID!, workoutId: ID!): ResistanceWorkout!
   addUserToClubViaInviteToken(clubInviteTokenId: ID!, userId: ID!): ID!
   addWorkoutPlanToClub(clubId: ID!, workoutPlanId: ID!): ClubWorkoutPlans!
   addWorkoutPlanToCollection(
@@ -1140,12 +1148,12 @@ type Mutation {
   ): WorkoutPlanDay!
   createAmrapMove(data: CreateAmrapMoveInput!): AmrapMove!
   createAmrapSection(data: CreateAmrapSectionInput!): AmrapSection!
-  createAmrapSession(data: CreateAmrapSessionInput!): AmrapSession!
+  createAmrapWorkout(data: CreateAmrapWorkoutInput!): AmrapWorkout!
   createBodyTrackingEntry(
     data: CreateBodyTrackingEntryInput!
   ): BodyTrackingEntry!
   createCardioExercise(data: CreateCardioExerciseInput!): CardioExercise!
-  createCardioSession(data: CreateCardioSessionInput!): CardioSession!
+  createCardioWorkout(data: CreateCardioWorkoutInput!): CardioWorkout!
   createClub(data: CreateClubInput!): ClubSummary!
   createClubInviteToken(data: CreateClubInviteTokenInput!): ClubInviteTokens!
   createClubMemberNote(data: CreateClubMemberNoteInput!): ClubMemberNote!
@@ -1167,21 +1175,22 @@ type Mutation {
   ): FitnessBenchmarkWorkout!
   createForTimeMove(data: CreateForTimeMoveInput!): ForTimeMove!
   createForTimeSection(data: CreateForTimeSectionInput!): ForTimeSection!
-  createForTimeSession(data: CreateForTimeSessionInput!): ForTimeSession!
+  createForTimeWorkout(data: CreateForTimeWorkoutInput!): ForTimeWorkout!
   createGymProfile(data: CreateGymProfileInput!): GymProfile!
   createIntervalExercise(data: CreateIntervalExerciseInput!): IntervalExercise!
-  createIntervalSession(data: CreateIntervalSessionInput!): IntervalSession!
   createIntervalSet(data: CreateIntervalSetInput!): IntervalSet!
+  createIntervalWorkout(data: CreateIntervalWorkoutInput!): IntervalWorkout!
   createLoggedWorkout(data: CreateLoggedWorkoutInput!): LoggedWorkout!
-  createMobilitySession(data: CreateMobilitySessionInput!): MobilitySession!
+  createMobilityWorkout(data: CreateMobilityWorkoutInput!): MobilityWorkout!
   createMove(data: CreateMoveInput!): Move!
   createResistanceExercise(
     data: CreateResistanceExerciseInput!
   ): ResistanceExercise!
-  createResistanceSession(
-    data: CreateResistanceSessionInput!
-  ): ResistanceSession!
   createResistanceSet(data: CreateResistanceSetInput!): ResistanceSet!
+  createResistanceWorkout(
+    data: CreateResistanceWorkoutInput!
+  ): ResistanceWorkout!
+  createSavedResistanceWorkout(id: ID!): ResistanceWorkout!
   createScheduleForPlanEnrolment(
     data: CreateScheduleForPlanEnrolmentInput!
   ): WorkoutPlanEnrolment!
@@ -1218,10 +1227,10 @@ type Mutation {
   createWorkoutTag(data: CreateWorkoutTagInput!): WorkoutTag!
   deleteAmrapMove(id: ID!): ID!
   deleteAmrapSection(id: ID!): ID!
-  deleteAmrapSession(id: ID!): ID!
+  deleteAmrapWorkout(id: ID!): ID!
   deleteBodyTrackingEntryById(id: ID!): ID!
   deleteCardioExercise(id: ID!): ID!
-  deleteCardioSession(id: ID!): ID!
+  deleteCardioWorkout(id: ID!): ID!
   deleteClub(id: ID!): ID!
   deleteClubInviteToken(data: DeleteClubInviteTokenInput!): ClubInviteTokens!
   deleteClubMembersFeedPost(activityId: ID!): ID!
@@ -1234,17 +1243,18 @@ type Mutation {
   deleteFitnessBenchmarkWorkout(id: ID!): ID!
   deleteForTimeMove(id: ID!): ID!
   deleteForTimeSection(id: ID!): ID!
-  deleteForTimeSession(id: ID!): ID!
+  deleteForTimeWorkout(id: ID!): ID!
   deleteGymProfileById(id: ID!): ID
   deleteIntervalExercise(id: ID!): ID!
-  deleteIntervalSession(id: ID!): ID!
   deleteIntervalSet(id: ID!): ID!
+  deleteIntervalWorkout(id: ID!): ID!
   deleteLoggedWorkoutById(id: ID!): ID!
   deleteLoggedWorkoutMove(id: ID!): ID!
-  deleteMobilitySession(id: ID!): ID!
+  deleteMobilityWorkout(id: ID!): ID!
   deleteResistanceExercise(id: ID!): ID!
-  deleteResistanceSession(id: ID!): ID!
   deleteResistanceSet(id: ID!): ID!
+  deleteResistanceWorkout(id: ID!): ID!
+  deleteSavedResistanceWorkout(savedResistanceWorkoutId: ID!): ID!
   deleteScheduledWorkoutById(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
@@ -1260,19 +1270,19 @@ type Mutation {
   deleteWorkoutTagById(id: ID!): ID!
   duplicateAmrapMove(id: ID!): AmrapMove!
   duplicateAmrapSection(id: ID!): AmrapSection!
-  duplicateAmrapSession(id: ID!): AmrapSession!
+  duplicateAmrapWorkout(id: ID!): AmrapWorkout!
   duplicateCardioExercise(id: ID!): CardioExercise!
-  duplicateCardioSession(id: ID!): CardioSession!
+  duplicateCardioWorkout(id: ID!): CardioWorkout!
   duplicateForTimeMove(id: ID!): ForTimeMove!
   duplicateForTimeSection(id: ID!): ForTimeSection!
-  duplicateForTimeSession(id: ID!): ForTimeSession!
+  duplicateForTimeWorkout(id: ID!): ForTimeWorkout!
   duplicateIntervalExercise(id: ID!): IntervalExercise!
-  duplicateIntervalSession(id: ID!): IntervalSession!
   duplicateIntervalSet(id: ID!): IntervalSet!
-  duplicateMobilitySession(id: ID!): MobilitySession!
+  duplicateIntervalWorkout(id: ID!): IntervalWorkout!
+  duplicateMobilityWorkout(id: ID!): MobilityWorkout!
   duplicateResistanceExercise(id: ID!): [ResistanceExercise!]!
-  duplicateResistanceSession(id: ID!): ResistanceSession!
   duplicateResistanceSet(id: ID!): [ResistanceSet!]!
+  duplicateResistanceWorkout(id: ID!): ResistanceWorkout!
   duplicateWorkoutById(id: ID!): Workout!
   duplicateWorkoutMoveById(id: ID!): WorkoutMove!
   duplicateWorkoutSetById(id: ID!): WorkoutSet!
@@ -1285,6 +1295,10 @@ type Mutation {
   ): WorkoutPlanDay!
   removeDocumentFromSkill(data: RemoveDocumentFromSkillInput!): Skill!
   removeMemberAdminStatus(clubId: ID!, userId: ID!): ClubMembers!
+  removeResistanceWorkoutFromClub(
+    clubId: ID!
+    workoutId: ID!
+  ): ResistanceWorkout!
   removeUserFromClub(clubId: ID!, userToRemoveId: ID!): ClubMembers!
   removeWorkoutFromClub(clubId: ID!, workoutId: ID!): ClubWorkouts!
   removeWorkoutFromCollection(
@@ -1313,12 +1327,12 @@ type Mutation {
   unarchiveWorkoutPlanById(id: ID!): WorkoutPlan!
   updateAmrapMove(data: UpdateAmrapMoveInput!): AmrapMove!
   updateAmrapSection(data: UpdateAmrapSectionInput!): AmrapSection!
-  updateAmrapSession(data: UpdateAmrapSessionInput!): AmrapSession!
+  updateAmrapWorkout(data: UpdateAmrapWorkoutInput!): AmrapWorkout!
   updateBodyTrackingEntry(
     data: UpdateBodyTrackingEntryInput!
   ): BodyTrackingEntry!
   updateCardioExercise(data: UpdateCardioExerciseInput!): CardioExercise!
-  updateCardioSession(data: UpdateCardioSessionInput!): CardioSession!
+  updateCardioWorkout(data: UpdateCardioWorkoutInput!): CardioWorkout!
   updateClubInviteToken(data: UpdateClubInviteTokenInput!): ClubInviteTokens!
   updateClubMemberNote(data: UpdateClubMemberNoteInput!): ClubMemberNote!
   updateClubMetaDataAdmin(
@@ -1336,11 +1350,11 @@ type Mutation {
   ): FitnessBenchmarkWorkout!
   updateForTimeMove(data: UpdateForTimeMoveInput!): ForTimeMove!
   updateForTimeSection(data: UpdateForTimeSectionInput!): ForTimeSection!
-  updateForTimeSession(data: UpdateForTimeSessionInput!): ForTimeSession!
+  updateForTimeWorkout(data: UpdateForTimeWorkoutInput!): ForTimeWorkout!
   updateGymProfile(data: UpdateGymProfileInput!): GymProfile!
   updateIntervalExercise(data: UpdateIntervalExerciseInput!): IntervalExercise!
-  updateIntervalSession(data: UpdateIntervalSessionInput!): IntervalSession!
   updateIntervalSet(data: UpdateIntervalSetInput!): IntervalSet!
+  updateIntervalWorkout(data: UpdateIntervalWorkoutInput!): IntervalWorkout!
   updateLoggedWorkout(data: UpdateLoggedWorkoutInput!): LoggedWorkout!
   updateLoggedWorkoutMove(
     data: UpdateLoggedWorkoutMoveInput!
@@ -1349,15 +1363,15 @@ type Mutation {
     data: UpdateLoggedWorkoutSectionInput!
   ): LoggedWorkoutSection!
   updateLoggedWorkoutSet(data: UpdateLoggedWorkoutSetInput!): LoggedWorkoutSet!
-  updateMobilitySession(data: UpdateMobilitySessionInput!): MobilitySession!
+  updateMobilityWorkout(data: UpdateMobilityWorkoutInput!): MobilityWorkout!
   updateMove(data: UpdateMoveInput!): Move!
   updateResistanceExercise(
     data: UpdateResistanceExerciseInput!
   ): ResistanceExercise!
-  updateResistanceSession(
-    data: UpdateResistanceSessionInput!
-  ): ResistanceSession!
   updateResistanceSet(data: UpdateResistanceSetInput!): ResistanceSet!
+  updateResistanceWorkout(
+    data: UpdateResistanceWorkoutInput!
+  ): ResistanceWorkout!
   updateScheduledWorkout(data: UpdateScheduledWorkoutInput!): ScheduledWorkout!
   updateSkill(data: UpdateSkillInput!): Skill!
   updateUserEatWellLog(data: UpdateUserEatWellLogInput!): UserEatWellLog!
@@ -1455,7 +1469,7 @@ type Query {
   adminStandardFitnessBenchmarks: [FitnessBenchmark!]!
   announcementUpdates: [AnnouncementUpdate!]!
   bodyTrackingEntries: [BodyTrackingEntry!]!
-  cardioSessionById(id: ID!): CardioSession
+  cardioWorkoutById(id: ID!): CardioWorkout
   checkClubInviteToken(id: ID!): CheckClubInviteTokenResult!
   checkUniqueClubName(name: String!): Boolean!
   checkUniqueDisplayName(displayName: String!): Boolean!
@@ -1489,7 +1503,7 @@ type Query {
     filters: WorkoutFiltersInput
     take: Int
   ): [WorkoutSummary!]!
-  resistanceSessionById(id: ID!): ResistanceSession
+  resistanceWorkoutById(id: ID!): ResistanceWorkout
   textSearchUserNames(text: String!): [TextSearchResult!]
   textSearchUserProfiles(text: String!): [UserProfileSummary!]
   textSearchWorkoutNames(text: String!): [TextSearchResult!]
@@ -1505,6 +1519,7 @@ type Query {
   userAvatarById(id: ID!): UserAvatarData
   userAvatars(ids: [ID!]!): [UserAvatarData!]!
   userClubs: [ClubSummary!]!
+  userClubsResistanceWorkouts(cursor: ID, take: Int): [ClubResistanceWorkout!]!
   userCollectionById(id: ID!): Collection!
   userCollections: [Collection!]!
   userDayLogMoods: [UserDayLogMood!]!
@@ -1519,8 +1534,8 @@ type Query {
   userPublicWorkoutPlans(userId: ID!): [WorkoutPlanSummary!]!
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
-  userResistanceSessions: [ResistanceSession!]!
-  userSavedResistanceSessions: [ResistanceSession!]!
+  userResistanceWorkouts: [ResistanceWorkout!]!
+  userSavedResistanceWorkouts: [ResistanceWorkout!]!
   userScheduledWorkouts: [ScheduledWorkout!]!
   userSleepWellLogs: [UserSleepWellLog!]!
   userTrainingPlans: [TrainingPlanSummary!]!
@@ -1568,16 +1583,6 @@ type ResistanceExercise {
   updatedAt: DateTime!
 }
 
-type ResistanceSession {
-  ResistanceExercises: [ResistanceExercise!]!
-  User: UserAvatarData!
-  createdAt: DateTime!
-  id: ID!
-  name: String!
-  note: String
-  updatedAt: DateTime!
-}
-
 type ResistanceSet {
   Equipment: Equipment
   Move: Move!
@@ -1596,6 +1601,16 @@ enum ResistanceSetRepType {
   MINUTES
   REPS
   SECONDS
+}
+
+type ResistanceWorkout {
+  ResistanceExercises: [ResistanceExercise!]!
+  User: UserAvatarData!
+  createdAt: DateTime!
+  id: ID!
+  name: String!
+  note: String
+  updatedAt: DateTime!
 }
 
 type ScheduledWorkout {
@@ -1782,7 +1797,7 @@ input UpdateAmrapSectionInput {
   note: String
 }
 
-input UpdateAmrapSessionInput {
+input UpdateAmrapWorkoutInput {
   childrenOrder: [String!]
   id: ID!
   name: String
@@ -1809,7 +1824,7 @@ input UpdateCardioExerciseInput {
   timeUnit: TimeUnit
 }
 
-input UpdateCardioSessionInput {
+input UpdateCardioWorkoutInput {
   childrenOrder: [String!]
   id: ID!
   name: String
@@ -1911,7 +1926,7 @@ input UpdateForTimeSectionInput {
   note: String
 }
 
-input UpdateForTimeSessionInput {
+input UpdateForTimeWorkoutInput {
   childrenOrder: [String!]
   id: ID!
   name: String
@@ -1933,7 +1948,14 @@ input UpdateIntervalExerciseInput {
   note: String
 }
 
-input UpdateIntervalSessionInput {
+input UpdateIntervalSetInput {
+  Equipment: ConnectRelationInput
+  Move: ConnectRelationInput
+  id: ID!
+  note: String
+}
+
+input UpdateIntervalWorkoutInput {
   audioUri: String
   childrenOrder: [String!]
   id: ID!
@@ -1943,13 +1965,6 @@ input UpdateIntervalSessionInput {
   repeats: Int
   videoThumbUri: String
   videoUri: String
-}
-
-input UpdateIntervalSetInput {
-  Equipment: ConnectRelationInput
-  Move: ConnectRelationInput
-  id: ID!
-  note: String
 }
 
 input UpdateLoggedWorkoutInput {
@@ -1983,7 +1998,7 @@ input UpdateLoggedWorkoutSetInput {
   timeTakenSeconds: Int
 }
 
-input UpdateMobilitySessionInput {
+input UpdateMobilityWorkoutInput {
   MobilityMoves: [ConnectRelationInput!]
   audioUri: String
   childrenOrder: [String!]
@@ -2014,12 +2029,6 @@ input UpdateResistanceExerciseInput {
   note: String
 }
 
-input UpdateResistanceSessionInput {
-  id: ID!
-  name: String
-  note: String
-}
-
 input UpdateResistanceSetInput {
   Equipment: ConnectRelationInput
   Move: ConnectRelationInput
@@ -2027,6 +2036,12 @@ input UpdateResistanceSetInput {
   note: String
   repType: ResistanceSetRepType
   reps: [Int!]
+}
+
+input UpdateResistanceWorkoutInput {
+  id: ID!
+  name: String
+  note: String
 }
 
 input UpdateScheduledWorkoutInput {
@@ -2404,18 +2419,18 @@ type UserSleepWellLog {
 }
 
 type UserWorkoutSessions {
-  AmrapSessions: [AmrapSession!]!
-  CardioSessions: [CardioSession!]!
-  ForTimeSessions: [ForTimeSession!]!
-  IntervalSessions: [IntervalSession!]!
-  MobilitySessions: [MobilitySession!]!
-  ResistanceSessions: [ResistanceSession!]!
-  SavedAmrapSessions: [AmrapSession!]!
-  SavedCardioSessions: [CardioSession!]!
-  SavedForTimeSessions: [ForTimeSession!]!
-  SavedIntervalSessions: [IntervalSession!]!
-  SavedMobilitySessions: [MobilitySession!]!
-  SavedResistanceSessions: [ResistanceSession!]!
+  AmrapWorkouts: [AmrapWorkout!]!
+  CardioWorkouts: [CardioWorkout!]!
+  ForTimeWorkouts: [ForTimeWorkout!]!
+  IntervalWorkouts: [IntervalWorkout!]!
+  MobilityWorkouts: [MobilityWorkout!]!
+  ResistanceWorkouts: [ResistanceWorkout!]!
+  SavedAmrapWorkouts: [AmrapWorkout!]!
+  SavedCardioWorkouts: [CardioWorkout!]!
+  SavedForTimeWorkouts: [ForTimeWorkout!]!
+  SavedIntervalWorkouts: [IntervalWorkout!]!
+  SavedMobilityWorkouts: [MobilityWorkout!]!
+  SavedResistanceWorkouts: [ResistanceWorkout!]!
 }
 
 type WelcomeTodoItem {
@@ -2628,12 +2643,12 @@ type WorkoutSectionType {
 }
 
 type WorkoutSession {
-  AmrapSessions: [AmrapSession!]!
-  CardioSessions: [CardioSession!]!
-  ForTimeSessions: [ForTimeSession!]!
-  IntervalSessions: [IntervalSession!]!
-  MobilitySessions: [MobilitySession!]!
-  ResistanceSessions: [ResistanceSession!]!
+  AmrapWorkouts: [AmrapWorkout!]!
+  CardioWorkouts: [CardioWorkout!]!
+  ForTimeWorkouts: [ForTimeWorkout!]!
+  IntervalWorkouts: [IntervalWorkout!]!
+  MobilityWorkouts: [MobilityWorkout!]!
+  ResistanceWorkouts: [ResistanceWorkout!]!
   User: UserAvatarData!
   archived: Boolean!
   childrenOrder: [String!]!

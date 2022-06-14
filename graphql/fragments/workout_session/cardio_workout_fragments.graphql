@@ -1,0 +1,22 @@
+fragment CardioWorkout on CardioWorkout {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  childrenOrder
+}
+
+fragment CardioExercise on CardioExercise {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+  time
+  timeUnit
+  distance
+  distanceUnit
+  cardioZone
+}

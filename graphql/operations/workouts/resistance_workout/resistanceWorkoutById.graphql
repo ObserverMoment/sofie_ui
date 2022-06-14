@@ -1,0 +1,5 @@
+query resistanceWorkoutById($id: ID!) {
+  resistanceWorkoutById(id: $id) {
+    ...ResistanceWorkoutData
+  }
+}

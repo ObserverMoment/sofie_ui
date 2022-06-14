@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
-import 'package:sofie_ui/components/session_type_icons.dart';
+import 'package:sofie_ui/components/workout_type_icons.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
 import 'package:sofie_ui/env_config.dart';
@@ -17,34 +17,34 @@ import 'package:sofie_ui/services/utils.dart';
 class MainTabsPage extends StatelessWidget {
   const MainTabsPage({Key? key}) : super(key: key);
 
-  void _openSessionTypeSelector(BuildContext context) {
+  void _openWorkoutTypeSelector(BuildContext context) {
     openBottomSheetMenu(
         context: context,
         child: BottomSheetMenu(
             header: const BottomSheetMenuHeader(name: 'Select Type'),
             items: [
               BottomSheetMenuItem(
-                  text: 'Cardio', icon: SessionType.cardio, onPressed: () {}),
+                  text: 'Cardio', icon: WorkoutType.cardio, onPressed: () {}),
               BottomSheetMenuItem(
                   text: 'Resistance',
-                  icon: SessionType.resistance,
+                  icon: WorkoutType.resistance,
                   onPressed: () =>
-                      context.navigateTo(ResistanceSessionCreatorRoute())),
+                      context.navigateTo(ResistanceWorkoutCreatorRoute())),
               BottomSheetMenuItem(
                   text: 'Intervals',
-                  icon: SessionType.intervals,
+                  icon: WorkoutType.intervals,
                   onPressed: () => {}),
               BottomSheetMenuItem(
                   text: 'Mobility',
-                  icon: SessionType.stability,
+                  icon: WorkoutType.stability,
                   onPressed: () => {}),
               BottomSheetMenuItem(
                   text: 'AMRAP',
-                  icon: SessionType.stopwatch,
+                  icon: WorkoutType.stopwatch,
                   onPressed: () => {}),
               BottomSheetMenuItem(
                   text: 'For Time',
-                  icon: SessionType.stopwatch,
+                  icon: WorkoutType.stopwatch,
                   onPressed: () => {}),
             ]));
   }
@@ -132,7 +132,7 @@ class MainTabsPage extends StatelessWidget {
                                           icon: MyCustomIcons.dumbbell,
                                           text: 'Create a new Workout',
                                           onPressed: () =>
-                                              _openSessionTypeSelector(
+                                              _openWorkoutTypeSelector(
                                                   context)),
                                       BottomSheetMenuItem(
                                           icon: MyCustomIcons.plansIcon,

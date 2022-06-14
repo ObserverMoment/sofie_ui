@@ -1,0 +1,5 @@
+mutation removeResistanceWorkoutFromClub($clubId: ID!, $sessionId: ID!) {
+  removeResistanceWorkoutFromClub(clubId: $clubId, sessionId: $sessionId) {
+    ...ResistanceWorkoutData
+  }
+}

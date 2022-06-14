@@ -25,7 +25,6 @@ class WorkoutStructureModificationsBloc extends ChangeNotifier {
   late List<String> includedSectionIds;
 
   final List<String> typesInputRequired = [
-    kCustomSessionName,
     kLiftingName,
     kForTimeName,
     kAMRAPName

@@ -23,7 +23,6 @@ class WorkoutSectionInstructions extends StatelessWidget {
 
   String _buildInstructionText() {
     switch (typeName) {
-      case kCustomSessionName:
       case kEMOMName:
       case kHIITCircuitName:
       case kTabataName:

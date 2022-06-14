@@ -55,7 +55,7 @@ const kFitnessBenchmarkScoreTypename = 'FitnessBenchmarkScore';
 const kFitnessBenchmarkWorkoutTypename = 'FitnessBenchmarkWorkout';
 const kFitnessBenchmarkWorkoutScoreTypename = 'FitnessBenchmarkWorkoutScore';
 
-const kResistanceSessionTypeName = 'ResistanceSession';
+const kResistanceWorkoutTypeName = 'ResistanceWorkout';
 const kResistanceExerciseTypeName = 'ResistanceExercise';
 const kResistanceSetTypeName = 'ResistanceSet';
 
@@ -95,7 +95,7 @@ const kSkillTypeName = 'Skill';
 const kUserExerciseLoadTracker = 'UserExerciseLoadTracker';
 
 /// WorkoutSectionTypeNames
-const kCustomSessionName = 'Custom';
+const kCustomWorkoutName = 'Custom';
 const kHIITCircuitName = 'HIIT Circuit';
 const kLiftingName = 'Lifting';
 const kForTimeName = 'For Time';
@@ -109,7 +109,7 @@ const kSectionTypesWithFinishLine = [
   kHIITCircuitName,
   kEMOMName,
   kTabataName,
-  kCustomSessionName
+  kCustomWorkoutName
 ];
 
 /// BodyArea selector SVG viewbox sizes.

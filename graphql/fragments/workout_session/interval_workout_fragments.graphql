@@ -1,0 +1,35 @@
+fragment IntervalWorkout on IntervalWorkout {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  audioUri
+  videoUri
+  videoThumbUri
+  repeats
+  # For rest intervals add 'rest' to the array.
+  # E.g. [IntervalExerciseId, IntervalExerciseId, rest, IntervalExerciseId, IntervalExerciseId, rest]
+  childrenOrder
+  # Align with setOrder. Interval length in seconds.
+  # E.g [60, 60, 30, 60, 60, 30]
+  intervals
+}
+
+fragment IntervalExercise on IntervalExercise {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+  childrenOrder
+}
+
+fragment IntervalSet on IntervalSet {
+  __typename
+  id
+  createdAt
+  updatedAt
+  note
+}

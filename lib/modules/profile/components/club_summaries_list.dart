@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/modules/circles/components/circle_card-deprecated.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/modules/circles_tab/components/circle_card-deprecated.dart';
 import 'package:sofie_ui/router.gr.dart';
 
 class ClubSummariesList extends StatelessWidget {

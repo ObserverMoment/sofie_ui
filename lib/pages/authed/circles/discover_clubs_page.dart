@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:sofie_ui/modules/circles/components/circle_card-deprecated.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:json_annotation/json_annotation.dart' as json;
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:sofie_ui/modules/circles_tab/components/circle_card-deprecated.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
 

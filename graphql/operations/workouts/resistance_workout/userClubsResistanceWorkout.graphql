@@ -1,0 +1,10 @@
+query userClubsResistanceWorkouts($cursor: ID, $take: Int) {
+  userClubsResistanceWorkouts(cursor: $cursor, take: $take) {
+    id
+    name
+    coverImageUri
+    ResistanceWorkout {
+      ...ResistanceWorkoutData
+    }
+  }
+}

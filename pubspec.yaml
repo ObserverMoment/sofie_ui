@@ -149,7 +149,7 @@ flutter:
     - assets/other_app_icons/
     - assets/placeholder_images/
     - assets/workout_filters_icons/
-    - assets/workout_session_icons/
+    - assets/workout_icons/
     
   fonts:
   - family: Bauhaus
@@ -158,6 +158,6 @@ flutter:
   - family: MyCustomIcons
     fonts:
     - asset: fonts/MyCustomIcons.ttf
-  - family: SessionType
+  - family: WorkoutType
     fonts:
-    - asset: fonts/SessionType.ttf
+    - asset: fonts/WorkoutType.ttf

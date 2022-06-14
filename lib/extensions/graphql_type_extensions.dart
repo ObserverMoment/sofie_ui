@@ -22,7 +22,7 @@ extension MoveDataExtension on MoveData {
       selectableEquipments.any((e) => e.loadAdjustable);
 }
 
-extension ResistanceSessionExtension on ResistanceSession {
+extension ResistanceWorkoutExtension on ResistanceWorkout {
   List<Equipment> uniqueEquipments(MoveDataRepo moveDataRepo) {
     Set<Equipment> uniqueEquipments = {};
     for (final e in resistanceExercises) {
@@ -45,7 +45,7 @@ extension ResistanceSessionExtension on ResistanceSession {
     }).toList();
   }
 
-  List<MoveData> uniqueMovesInSession(MoveDataRepo moveDataRepo) {
+  List<MoveData> uniqueMovesInWorkout(MoveDataRepo moveDataRepo) {
     Set<String> moveIds = {};
     for (final e in resistanceExercises) {
       for (final s in e.resistanceSets) {

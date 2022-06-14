@@ -1,0 +1,5 @@
+mutation addResistanceWorkoutToClub($clubId: ID!, $sessionId: ID!) {
+  addResistanceWorkoutToClub(clubId: $clubId, sessionId: $sessionId) {
+    ...ResistanceWorkoutData
+  }
+}

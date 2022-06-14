@@ -204,7 +204,6 @@ class DoWorkoutBloc extends ChangeNotifier {
           onCompleteSection: () =>
               _onSectionComplete(workoutSection.sortPosition),
         );
-      case kCustomSessionName:
       case kLiftingName:
         return LiftingSectionController(
           workoutSection: workoutSection,

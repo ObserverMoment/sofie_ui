@@ -1,0 +1,12 @@
+fragment MobilityWorkout on MobilityWorkout {
+  __typename
+  id
+  createdAt
+  updatedAt
+  name
+  note
+  audioUri
+  videoUri
+  videoThumbUri
+  childrenOrder
+}

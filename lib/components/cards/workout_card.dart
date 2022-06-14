@@ -61,8 +61,7 @@ class WorkoutCard extends StatelessWidget {
     const infoFontColor = Styles.white;
 
     /// Don't show 'Custom' as a tag.
-    final sectionTagsToDisplay =
-        workout.sectionTypes.where((t) => t != kCustomSessionName).toList();
+    final sectionTagsToDisplay = workout.sectionTypes;
 
     final allBodyAreas = CoreDataRepo.bodyAreas;
     final targetedBodyAreas =

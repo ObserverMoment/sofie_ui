@@ -11,6 +11,7 @@
 // ignore_for_file: type=lint
 
 import 'package:auto_route/auto_route.dart' as _i45;
+import 'package:flutter/cupertino.dart' as _i53;
 import 'package:flutter/material.dart' as _i52;
 import 'package:sofie_ui/components/creators/body_tracking/body_tracking_entry_creator.dart'
     as _i26;
@@ -46,15 +47,17 @@ import 'package:sofie_ui/components/social/chat/clubs/club_members_chat_page.dar
 import 'package:sofie_ui/components/social/chat/friends/one_to_one_chat_page.dart'
     as _i6;
 import 'package:sofie_ui/components/timers/timers_page.dart' as _i18;
-import 'package:sofie_ui/generated/api/graphql_api.dart' as _i53;
+import 'package:sofie_ui/generated/api/graphql_api.dart' as _i54;
 import 'package:sofie_ui/main.dart' as _i2;
 import 'package:sofie_ui/modules/authed_routes_wrapper_page.dart' as _i3;
 import 'package:sofie_ui/modules/calendar/calendar_page.dart' as _i17;
-import 'package:sofie_ui/modules/circles/circles_page.dart' as _i44;
+import 'package:sofie_ui/modules/circles_tab/circles_page.dart' as _i44;
+import 'package:sofie_ui/modules/club/details_page/club_details_page.dart'
+    as _i22;
 import 'package:sofie_ui/modules/gym_profile/gym_profile_creator.dart' as _i30;
 import 'package:sofie_ui/modules/gym_profile/gym_profiles_page.dart' as _i51;
-import 'package:sofie_ui/modules/home/home_page.dart' as _i43;
-import 'package:sofie_ui/modules/home/notifications_page.dart' as _i15;
+import 'package:sofie_ui/modules/home_tab/home_page.dart' as _i43;
+import 'package:sofie_ui/modules/home_tab/notifications_page.dart' as _i15;
 import 'package:sofie_ui/modules/main_tabs/main_tabs_page.dart' as _i4;
 import 'package:sofie_ui/modules/move/move_creator/custom_move_creator_page.dart'
     as _i29;
@@ -67,17 +70,15 @@ import 'package:sofie_ui/modules/profile/skills/skills_page.dart' as _i13;
 import 'package:sofie_ui/modules/profile/social/social_links_page.dart' as _i14;
 import 'package:sofie_ui/modules/sign_in_registration/unauthed_landing_page.dart'
     as _i1;
-import 'package:sofie_ui/modules/studio/exercise_library_page.dart' as _i50;
-import 'package:sofie_ui/modules/studio/studio_page.dart' as _i47;
+import 'package:sofie_ui/modules/studio_tab/exercise_library_page.dart' as _i50;
+import 'package:sofie_ui/modules/studio_tab/studio_page.dart' as _i47;
 import 'package:sofie_ui/modules/training_plan/training_plans.dart' as _i49;
-import 'package:sofie_ui/modules/workout_session/resistance_session/details_page/resistance_session_details_page.dart'
+import 'package:sofie_ui/modules/workouts/resistance_workout/details_page/resistance_workout_details_page.dart'
     as _i25;
-import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_session_creator_page.dart'
+import 'package:sofie_ui/modules/workouts/resistance_workout/resistance_workout_creator_page.dart'
     as _i39;
-import 'package:sofie_ui/modules/workout_session/resistance_session/resistance_sessions_page.dart'
+import 'package:sofie_ui/modules/workouts/resistance_workout/resistance_workouts_page.dart'
     as _i48;
-import 'package:sofie_ui/pages/authed/details_pages/club_details/club_details_page.dart'
-    as _i22;
 import 'package:sofie_ui/pages/authed/details_pages/collection_details_page.dart'
     as _i9;
 import 'package:sofie_ui/pages/authed/details_pages/user_public_profile_details_page.dart'
@@ -248,14 +249,14 @@ class AppRouter extends _i45.RootStackRouter {
           child: _i24.UserPublicProfileDetailsPage(
               key: args.key, userId: args.userId));
     },
-    ResistanceSessionDetailsRoute.name: (routeData) {
+    ResistanceWorkoutDetailsRoute.name: (routeData) {
       final pathParams = routeData.inheritedPathParams;
-      final args = routeData.argsAs<ResistanceSessionDetailsRouteArgs>(
-          orElse: () => ResistanceSessionDetailsRouteArgs(
+      final args = routeData.argsAs<ResistanceWorkoutDetailsRouteArgs>(
+          orElse: () => ResistanceWorkoutDetailsRouteArgs(
               id: pathParams.getString('id')));
       return _i45.AdaptivePage<dynamic>(
           routeData: routeData,
-          child: _i25.ResistanceSessionDetailsPage(
+          child: _i25.ResistanceWorkoutDetailsPage(
               key: args.key,
               id: args.id,
               previousPageTitle: args.previousPageTitle));
@@ -379,13 +380,13 @@ class AppRouter extends _i45.RootStackRouter {
           routeData: routeData,
           child: _i38.WorkoutCreatorPage(key: args.key, workout: args.workout));
     },
-    ResistanceSessionCreatorRoute.name: (routeData) {
-      final args = routeData.argsAs<ResistanceSessionCreatorRouteArgs>(
-          orElse: () => const ResistanceSessionCreatorRouteArgs());
+    ResistanceWorkoutCreatorRoute.name: (routeData) {
+      final args = routeData.argsAs<ResistanceWorkoutCreatorRouteArgs>(
+          orElse: () => const ResistanceWorkoutCreatorRouteArgs());
       return _i45.AdaptivePage<dynamic>(
           routeData: routeData,
-          child: _i39.ResistanceSessionCreatorPage(
-              key: args.key, resistanceSession: args.resistanceSession));
+          child: _i39.ResistanceWorkoutCreatorPage(
+              key: args.key, resistanceWorkout: args.resistanceWorkout));
     },
     WorkoutPlanCreatorRoute.name: (routeData) {
       final args = routeData.argsAs<WorkoutPlanCreatorRouteArgs>(
@@ -429,12 +430,12 @@ class AppRouter extends _i45.RootStackRouter {
       return _i45.AdaptivePage<dynamic>(
           routeData: routeData, child: const _i47.StudioPage());
     },
-    ResistanceSessionsRoute.name: (routeData) {
-      final args = routeData.argsAs<ResistanceSessionsRouteArgs>(
-          orElse: () => const ResistanceSessionsRouteArgs());
+    ResistanceWorkoutsRoute.name: (routeData) {
+      final args = routeData.argsAs<ResistanceWorkoutsRouteArgs>(
+          orElse: () => const ResistanceWorkoutsRouteArgs());
       return _i45.AdaptivePage<dynamic>(
           routeData: routeData,
-          child: _i48.ResistanceSessionsPage(
+          child: _i48.ResistanceWorkoutsPage(
               key: args.key, previousPageTitle: args.previousPageTitle));
     },
     TrainingPlansRoute.name: (routeData) {
@@ -488,8 +489,8 @@ class AppRouter extends _i45.RootStackRouter {
                     children: [
                       _i45.RouteConfig(StudioRoute.name,
                           path: '', parent: StudioStack.name),
-                      _i45.RouteConfig(ResistanceSessionsRoute.name,
-                          path: 'resistance-sessions',
+                      _i45.RouteConfig(ResistanceWorkoutsRoute.name,
+                          path: 'resistance-workouts',
                           parent: StudioStack.name),
                       _i45.RouteConfig(TrainingPlansRoute.name,
                           path: 'training-plans', parent: StudioStack.name),
@@ -546,7 +547,7 @@ class AppRouter extends _i45.RootStackRouter {
               path: 'move/:id', parent: AuthedRouter.name),
           _i45.RouteConfig(UserPublicProfileDetailsRoute.name,
               path: 'profile/:userId', parent: AuthedRouter.name),
-          _i45.RouteConfig(ResistanceSessionDetailsRoute.name,
+          _i45.RouteConfig(ResistanceWorkoutDetailsRoute.name,
               path: 'resistance/:id', parent: AuthedRouter.name),
           _i45.RouteConfig(BodyTrackingEntryCreatorRoute.name,
               path: 'create/body-tracking', parent: AuthedRouter.name),
@@ -574,8 +575,8 @@ class AppRouter extends _i45.RootStackRouter {
               path: 'create/scheduled-workout', parent: AuthedRouter.name),
           _i45.RouteConfig(WorkoutCreatorRoute.name,
               path: 'create/workout', parent: AuthedRouter.name),
-          _i45.RouteConfig(ResistanceSessionCreatorRoute.name,
-              path: 'create/resistance-session', parent: AuthedRouter.name),
+          _i45.RouteConfig(ResistanceWorkoutCreatorRoute.name,
+              path: 'create/resistance-workout', parent: AuthedRouter.name),
           _i45.RouteConfig(WorkoutPlanCreatorRoute.name,
               path: 'create/workout-plan', parent: AuthedRouter.name),
           _i45.RouteConfig(WorkoutPlanReviewCreatorRoute.name,
@@ -637,7 +638,7 @@ class ChatsOverviewRoute extends _i45.PageRouteInfo<void> {
 /// generated route for
 /// [_i6.OneToOneChatPage]
 class OneToOneChatRoute extends _i45.PageRouteInfo<OneToOneChatRouteArgs> {
-  OneToOneChatRoute({_i52.Key? key, required String otherUserId})
+  OneToOneChatRoute({_i53.Key? key, required String otherUserId})
       : super(OneToOneChatRoute.name,
             path: 'chat',
             args: OneToOneChatRouteArgs(key: key, otherUserId: otherUserId));
@@ -648,7 +649,7 @@ class OneToOneChatRoute extends _i45.PageRouteInfo<OneToOneChatRouteArgs> {
 class OneToOneChatRouteArgs {
   const OneToOneChatRouteArgs({this.key, required this.otherUserId});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String otherUserId;
 
@@ -662,7 +663,7 @@ class OneToOneChatRouteArgs {
 /// [_i7.ClubMembersChatPage]
 class ClubMembersChatRoute
     extends _i45.PageRouteInfo<ClubMembersChatRouteArgs> {
-  ClubMembersChatRoute({_i52.Key? key, required String clubId})
+  ClubMembersChatRoute({_i53.Key? key, required String clubId})
       : super(ClubMembersChatRoute.name,
             path: 'club-chat',
             args: ClubMembersChatRouteArgs(key: key, clubId: clubId));
@@ -673,7 +674,7 @@ class ClubMembersChatRoute
 class ClubMembersChatRouteArgs {
   const ClubMembersChatRouteArgs({this.key, required this.clubId});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String clubId;
 
@@ -687,7 +688,7 @@ class ClubMembersChatRouteArgs {
 /// [_i8.ClubInviteLandingPage]
 class ClubInviteLandingRoute
     extends _i45.PageRouteInfo<ClubInviteLandingRouteArgs> {
-  ClubInviteLandingRoute({_i52.Key? key, required String id})
+  ClubInviteLandingRoute({_i53.Key? key, required String id})
       : super(ClubInviteLandingRoute.name,
             path: 'club-invite/:id',
             args: ClubInviteLandingRouteArgs(key: key, id: id),
@@ -699,7 +700,7 @@ class ClubInviteLandingRoute
 class ClubInviteLandingRouteArgs {
   const ClubInviteLandingRouteArgs({this.key, required this.id});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String id;
 
@@ -713,7 +714,7 @@ class ClubInviteLandingRouteArgs {
 /// [_i9.CollectionDetailsPage]
 class CollectionDetailsRoute
     extends _i45.PageRouteInfo<CollectionDetailsRouteArgs> {
-  CollectionDetailsRoute({_i52.Key? key, required String id})
+  CollectionDetailsRoute({_i53.Key? key, required String id})
       : super(CollectionDetailsRoute.name,
             path: 'collection/:id',
             args: CollectionDetailsRouteArgs(key: key, id: id),
@@ -725,7 +726,7 @@ class CollectionDetailsRoute
 class CollectionDetailsRouteArgs {
   const CollectionDetailsRouteArgs({this.key, required this.id});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String id;
 
@@ -740,9 +741,9 @@ class CollectionDetailsRouteArgs {
 class DoWorkoutWrapperRoute
     extends _i45.PageRouteInfo<DoWorkoutWrapperRouteArgs> {
   DoWorkoutWrapperRoute(
-      {_i52.Key? key,
+      {_i53.Key? key,
       required String id,
-      _i53.ScheduledWorkout? scheduledWorkout,
+      _i54.ScheduledWorkout? scheduledWorkout,
       String? workoutPlanDayWorkoutId,
       String? workoutPlanEnrolmentId})
       : super(DoWorkoutWrapperRoute.name,
@@ -766,11 +767,11 @@ class DoWorkoutWrapperRouteArgs {
       this.workoutPlanDayWorkoutId,
       this.workoutPlanEnrolmentId});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String id;
 
-  final _i53.ScheduledWorkout? scheduledWorkout;
+  final _i54.ScheduledWorkout? scheduledWorkout;
 
   final String? workoutPlanDayWorkoutId;
 
@@ -809,7 +810,7 @@ class SkillsRoute extends _i45.PageRouteInfo<void> {
 /// generated route for
 /// [_i14.SocialLinksPage]
 class SocialLinksRoute extends _i45.PageRouteInfo<SocialLinksRouteArgs> {
-  SocialLinksRoute({_i52.Key? key, required _i53.UserProfile profile})
+  SocialLinksRoute({_i53.Key? key, required _i54.UserProfile profile})
       : super(SocialLinksRoute.name,
             path: 'social-links',
             args: SocialLinksRouteArgs(key: key, profile: profile));
@@ -820,9 +821,9 @@ class SocialLinksRoute extends _i45.PageRouteInfo<SocialLinksRouteArgs> {
 class SocialLinksRouteArgs {
   const SocialLinksRouteArgs({this.key, required this.profile});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.UserProfile profile;
+  final _i54.UserProfile profile;
 
   @override
   String toString() {
@@ -851,7 +852,7 @@ class EditProfileRoute extends _i45.PageRouteInfo<void> {
 /// [_i17.CalendarPage]
 class CalendarRoute extends _i45.PageRouteInfo<CalendarRouteArgs> {
   CalendarRoute(
-      {_i52.Key? key, DateTime? openAtDate, String? previousPageTitle})
+      {_i53.Key? key, DateTime? openAtDate, String? previousPageTitle})
       : super(CalendarRoute.name,
             path: 'calendar',
             args: CalendarRouteArgs(
@@ -865,7 +866,7 @@ class CalendarRoute extends _i45.PageRouteInfo<CalendarRouteArgs> {
 class CalendarRouteArgs {
   const CalendarRouteArgs({this.key, this.openAtDate, this.previousPageTitle});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final DateTime? openAtDate;
 
@@ -914,7 +915,7 @@ class BodyTrackingRoute extends _i45.PageRouteInfo<void> {
 /// generated route for
 /// [_i22.ClubDetailsPage]
 class ClubDetailsRoute extends _i45.PageRouteInfo<ClubDetailsRouteArgs> {
-  ClubDetailsRoute({_i52.Key? key, required String id})
+  ClubDetailsRoute({_i53.Key? key, required String id})
       : super(ClubDetailsRoute.name,
             path: 'circle/:id',
             args: ClubDetailsRouteArgs(key: key, id: id),
@@ -926,7 +927,7 @@ class ClubDetailsRoute extends _i45.PageRouteInfo<ClubDetailsRouteArgs> {
 class ClubDetailsRouteArgs {
   const ClubDetailsRouteArgs({this.key, required this.id});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String id;
 
@@ -940,7 +941,7 @@ class ClubDetailsRouteArgs {
 /// [_i23.MoveDetailsPage]
 class MoveDetailsRoute extends _i45.PageRouteInfo<MoveDetailsRouteArgs> {
   MoveDetailsRoute(
-      {_i52.Key? key, required String id, String? previousPageTitle})
+      {_i53.Key? key, required String id, String? previousPageTitle})
       : super(MoveDetailsRoute.name,
             path: 'move/:id',
             args: MoveDetailsRouteArgs(
@@ -954,7 +955,7 @@ class MoveDetailsRouteArgs {
   const MoveDetailsRouteArgs(
       {this.key, required this.id, this.previousPageTitle});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String id;
 
@@ -970,7 +971,7 @@ class MoveDetailsRouteArgs {
 /// [_i24.UserPublicProfileDetailsPage]
 class UserPublicProfileDetailsRoute
     extends _i45.PageRouteInfo<UserPublicProfileDetailsRouteArgs> {
-  UserPublicProfileDetailsRoute({_i52.Key? key, required String userId})
+  UserPublicProfileDetailsRoute({_i53.Key? key, required String userId})
       : super(UserPublicProfileDetailsRoute.name,
             path: 'profile/:userId',
             args: UserPublicProfileDetailsRouteArgs(key: key, userId: userId),
@@ -982,7 +983,7 @@ class UserPublicProfileDetailsRoute
 class UserPublicProfileDetailsRouteArgs {
   const UserPublicProfileDetailsRouteArgs({this.key, required this.userId});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String userId;
 
@@ -993,25 +994,25 @@ class UserPublicProfileDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i25.ResistanceSessionDetailsPage]
-class ResistanceSessionDetailsRoute
-    extends _i45.PageRouteInfo<ResistanceSessionDetailsRouteArgs> {
-  ResistanceSessionDetailsRoute(
-      {_i52.Key? key, required String id, String? previousPageTitle})
-      : super(ResistanceSessionDetailsRoute.name,
+/// [_i25.ResistanceWorkoutDetailsPage]
+class ResistanceWorkoutDetailsRoute
+    extends _i45.PageRouteInfo<ResistanceWorkoutDetailsRouteArgs> {
+  ResistanceWorkoutDetailsRoute(
+      {_i53.Key? key, required String id, String? previousPageTitle})
+      : super(ResistanceWorkoutDetailsRoute.name,
             path: 'resistance/:id',
-            args: ResistanceSessionDetailsRouteArgs(
+            args: ResistanceWorkoutDetailsRouteArgs(
                 key: key, id: id, previousPageTitle: previousPageTitle),
             rawPathParams: {'id': id});
 
-  static const String name = 'ResistanceSessionDetailsRoute';
+  static const String name = 'ResistanceWorkoutDetailsRoute';
 }
 
-class ResistanceSessionDetailsRouteArgs {
-  const ResistanceSessionDetailsRouteArgs(
+class ResistanceWorkoutDetailsRouteArgs {
+  const ResistanceWorkoutDetailsRouteArgs(
       {this.key, required this.id, this.previousPageTitle});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String id;
 
@@ -1019,7 +1020,7 @@ class ResistanceSessionDetailsRouteArgs {
 
   @override
   String toString() {
-    return 'ResistanceSessionDetailsRouteArgs{key: $key, id: $id, previousPageTitle: $previousPageTitle}';
+    return 'ResistanceWorkoutDetailsRouteArgs{key: $key, id: $id, previousPageTitle: $previousPageTitle}';
   }
 }
 
@@ -1028,7 +1029,7 @@ class ResistanceSessionDetailsRouteArgs {
 class BodyTrackingEntryCreatorRoute
     extends _i45.PageRouteInfo<BodyTrackingEntryCreatorRouteArgs> {
   BodyTrackingEntryCreatorRoute(
-      {_i52.Key? key, _i53.BodyTrackingEntry? bodyTrackingEntry})
+      {_i53.Key? key, _i54.BodyTrackingEntry? bodyTrackingEntry})
       : super(BodyTrackingEntryCreatorRoute.name,
             path: 'create/body-tracking',
             args: BodyTrackingEntryCreatorRouteArgs(
@@ -1040,9 +1041,9 @@ class BodyTrackingEntryCreatorRoute
 class BodyTrackingEntryCreatorRouteArgs {
   const BodyTrackingEntryCreatorRouteArgs({this.key, this.bodyTrackingEntry});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.BodyTrackingEntry? bodyTrackingEntry;
+  final _i54.BodyTrackingEntry? bodyTrackingEntry;
 
   @override
   String toString() {
@@ -1053,7 +1054,7 @@ class BodyTrackingEntryCreatorRouteArgs {
 /// generated route for
 /// [_i27.ClubCreatorPage]
 class ClubCreatorRoute extends _i45.PageRouteInfo<ClubCreatorRouteArgs> {
-  ClubCreatorRoute({_i52.Key? key, _i53.ClubSummary? clubSummary})
+  ClubCreatorRoute({_i53.Key? key, _i54.ClubSummary? clubSummary})
       : super(ClubCreatorRoute.name,
             path: 'create/club',
             args: ClubCreatorRouteArgs(key: key, clubSummary: clubSummary));
@@ -1064,9 +1065,9 @@ class ClubCreatorRoute extends _i45.PageRouteInfo<ClubCreatorRouteArgs> {
 class ClubCreatorRouteArgs {
   const ClubCreatorRouteArgs({this.key, this.clubSummary});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.ClubSummary? clubSummary;
+  final _i54.ClubSummary? clubSummary;
 
   @override
   String toString() {
@@ -1079,9 +1080,9 @@ class ClubCreatorRouteArgs {
 class CollectionCreatorRoute
     extends _i45.PageRouteInfo<CollectionCreatorRouteArgs> {
   CollectionCreatorRoute(
-      {_i52.Key? key,
-      _i53.Collection? collection,
-      void Function(_i53.Collection)? onComplete})
+      {_i53.Key? key,
+      _i54.Collection? collection,
+      void Function(_i54.Collection)? onComplete})
       : super(CollectionCreatorRoute.name,
             path: 'create/collection',
             args: CollectionCreatorRouteArgs(
@@ -1094,11 +1095,11 @@ class CollectionCreatorRouteArgs {
   const CollectionCreatorRouteArgs(
       {this.key, this.collection, this.onComplete});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.Collection? collection;
+  final _i54.Collection? collection;
 
-  final void Function(_i53.Collection)? onComplete;
+  final void Function(_i54.Collection)? onComplete;
 
   @override
   String toString() {
@@ -1110,7 +1111,7 @@ class CollectionCreatorRouteArgs {
 /// [_i29.CustomMoveCreatorPage]
 class CustomMoveCreatorRoute
     extends _i45.PageRouteInfo<CustomMoveCreatorRouteArgs> {
-  CustomMoveCreatorRoute({_i52.Key? key, _i53.MoveData? move})
+  CustomMoveCreatorRoute({_i53.Key? key, _i54.MoveData? move})
       : super(CustomMoveCreatorRoute.name,
             path: 'create/custom-move',
             args: CustomMoveCreatorRouteArgs(key: key, move: move));
@@ -1121,9 +1122,9 @@ class CustomMoveCreatorRoute
 class CustomMoveCreatorRouteArgs {
   const CustomMoveCreatorRouteArgs({this.key, this.move});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.MoveData? move;
+  final _i54.MoveData? move;
 
   @override
   String toString() {
@@ -1135,7 +1136,7 @@ class CustomMoveCreatorRouteArgs {
 /// [_i30.GymProfileCreatorPage]
 class GymProfileCreatorRoute
     extends _i45.PageRouteInfo<GymProfileCreatorRouteArgs> {
-  GymProfileCreatorRoute({_i52.Key? key, _i53.GymProfile? gymProfile})
+  GymProfileCreatorRoute({_i53.Key? key, _i54.GymProfile? gymProfile})
       : super(GymProfileCreatorRoute.name,
             path: 'create/gym-profile',
             args: GymProfileCreatorRouteArgs(key: key, gymProfile: gymProfile));
@@ -1146,9 +1147,9 @@ class GymProfileCreatorRoute
 class GymProfileCreatorRouteArgs {
   const GymProfileCreatorRouteArgs({this.key, this.gymProfile});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.GymProfile? gymProfile;
+  final _i54.GymProfile? gymProfile;
 
   @override
   String toString() {
@@ -1160,7 +1161,7 @@ class GymProfileCreatorRouteArgs {
 /// [_i31.UserGoalCreatorPage]
 class UserGoalCreatorRoute
     extends _i45.PageRouteInfo<UserGoalCreatorRouteArgs> {
-  UserGoalCreatorRoute({_i52.Key? key, _i53.UserGoal? journalGoal})
+  UserGoalCreatorRoute({_i53.Key? key, _i54.UserGoal? journalGoal})
       : super(UserGoalCreatorRoute.name,
             path: 'create/goal',
             args: UserGoalCreatorRouteArgs(key: key, journalGoal: journalGoal));
@@ -1171,9 +1172,9 @@ class UserGoalCreatorRoute
 class UserGoalCreatorRouteArgs {
   const UserGoalCreatorRouteArgs({this.key, this.journalGoal});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.UserGoal? journalGoal;
+  final _i54.UserGoal? journalGoal;
 
   @override
   String toString() {
@@ -1186,8 +1187,8 @@ class UserGoalCreatorRouteArgs {
 class UserMeditationLogCreatorRoute
     extends _i45.PageRouteInfo<UserMeditationLogCreatorRouteArgs> {
   UserMeditationLogCreatorRoute(
-      {_i52.Key? key,
-      _i53.UserMeditationLog? userMeditationLog,
+      {_i53.Key? key,
+      _i54.UserMeditationLog? userMeditationLog,
       int? year,
       int? dayNumber})
       : super(UserMeditationLogCreatorRoute.name,
@@ -1205,9 +1206,9 @@ class UserMeditationLogCreatorRouteArgs {
   const UserMeditationLogCreatorRouteArgs(
       {this.key, this.userMeditationLog, this.year, this.dayNumber});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.UserMeditationLog? userMeditationLog;
+  final _i54.UserMeditationLog? userMeditationLog;
 
   final int? year;
 
@@ -1224,8 +1225,8 @@ class UserMeditationLogCreatorRouteArgs {
 class UserEatWellLogCreatorRoute
     extends _i45.PageRouteInfo<UserEatWellLogCreatorRouteArgs> {
   UserEatWellLogCreatorRoute(
-      {_i52.Key? key,
-      _i53.UserEatWellLog? userEatWellLog,
+      {_i53.Key? key,
+      _i54.UserEatWellLog? userEatWellLog,
       int? year,
       int? dayNumber})
       : super(UserEatWellLogCreatorRoute.name,
@@ -1243,9 +1244,9 @@ class UserEatWellLogCreatorRouteArgs {
   const UserEatWellLogCreatorRouteArgs(
       {this.key, this.userEatWellLog, this.year, this.dayNumber});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.UserEatWellLog? userEatWellLog;
+  final _i54.UserEatWellLog? userEatWellLog;
 
   final int? year;
 
@@ -1262,8 +1263,8 @@ class UserEatWellLogCreatorRouteArgs {
 class UserSleepWellLogCreatorRoute
     extends _i45.PageRouteInfo<UserSleepWellLogCreatorRouteArgs> {
   UserSleepWellLogCreatorRoute(
-      {_i52.Key? key,
-      _i53.UserSleepWellLog? userSleepWellLog,
+      {_i53.Key? key,
+      _i54.UserSleepWellLog? userSleepWellLog,
       int? year,
       int? dayNumber})
       : super(UserSleepWellLogCreatorRoute.name,
@@ -1281,9 +1282,9 @@ class UserSleepWellLogCreatorRouteArgs {
   const UserSleepWellLogCreatorRouteArgs(
       {this.key, this.userSleepWellLog, this.year, this.dayNumber});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.UserSleepWellLog? userSleepWellLog;
+  final _i54.UserSleepWellLog? userSleepWellLog;
 
   final int? year;
 
@@ -1300,8 +1301,8 @@ class UserSleepWellLogCreatorRouteArgs {
 class FeedPostCreatorRoute
     extends _i45.PageRouteInfo<FeedPostCreatorRouteArgs> {
   FeedPostCreatorRoute(
-      {_i52.Key? key,
-      _i53.CreateStreamFeedActivityInput? activityInput,
+      {_i53.Key? key,
+      _i54.CreateStreamFeedActivityInput? activityInput,
       void Function()? onComplete,
       String? title})
       : super(FeedPostCreatorRoute.name,
@@ -1319,9 +1320,9 @@ class FeedPostCreatorRouteArgs {
   const FeedPostCreatorRouteArgs(
       {this.key, this.activityInput, this.onComplete, this.title});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.CreateStreamFeedActivityInput? activityInput;
+  final _i54.CreateStreamFeedActivityInput? activityInput;
 
   final void Function()? onComplete;
 
@@ -1338,7 +1339,7 @@ class FeedPostCreatorRouteArgs {
 class ClubFeedPostCreatorRoute
     extends _i45.PageRouteInfo<ClubFeedPostCreatorRouteArgs> {
   ClubFeedPostCreatorRoute(
-      {_i52.Key? key,
+      {_i53.Key? key,
       required String clubId,
       required void Function() onSuccess})
       : super(ClubFeedPostCreatorRoute.name,
@@ -1353,7 +1354,7 @@ class ClubFeedPostCreatorRouteArgs {
   const ClubFeedPostCreatorRouteArgs(
       {this.key, required this.clubId, required this.onSuccess});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String clubId;
 
@@ -1370,9 +1371,9 @@ class ClubFeedPostCreatorRouteArgs {
 class ScheduledWorkoutCreatorRoute
     extends _i45.PageRouteInfo<ScheduledWorkoutCreatorRouteArgs> {
   ScheduledWorkoutCreatorRoute(
-      {_i52.Key? key,
-      _i53.ScheduledWorkout? scheduledWorkout,
-      _i53.WorkoutSummary? workout,
+      {_i53.Key? key,
+      _i54.ScheduledWorkout? scheduledWorkout,
+      _i54.WorkoutSummary? workout,
       DateTime? scheduleOn,
       String? workoutPlanEnrolmentId})
       : super(ScheduledWorkoutCreatorRoute.name,
@@ -1395,11 +1396,11 @@ class ScheduledWorkoutCreatorRouteArgs {
       this.scheduleOn,
       this.workoutPlanEnrolmentId});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.ScheduledWorkout? scheduledWorkout;
+  final _i54.ScheduledWorkout? scheduledWorkout;
 
-  final _i53.WorkoutSummary? workout;
+  final _i54.WorkoutSummary? workout;
 
   final DateTime? scheduleOn;
 
@@ -1414,7 +1415,7 @@ class ScheduledWorkoutCreatorRouteArgs {
 /// generated route for
 /// [_i38.WorkoutCreatorPage]
 class WorkoutCreatorRoute extends _i45.PageRouteInfo<WorkoutCreatorRouteArgs> {
-  WorkoutCreatorRoute({_i52.Key? key, _i53.Workout? workout})
+  WorkoutCreatorRoute({_i53.Key? key, _i54.Workout? workout})
       : super(WorkoutCreatorRoute.name,
             path: 'create/workout',
             args: WorkoutCreatorRouteArgs(key: key, workout: workout));
@@ -1425,9 +1426,9 @@ class WorkoutCreatorRoute extends _i45.PageRouteInfo<WorkoutCreatorRouteArgs> {
 class WorkoutCreatorRouteArgs {
   const WorkoutCreatorRouteArgs({this.key, this.workout});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.Workout? workout;
+  final _i54.Workout? workout;
 
   @override
   String toString() {
@@ -1436,29 +1437,29 @@ class WorkoutCreatorRouteArgs {
 }
 
 /// generated route for
-/// [_i39.ResistanceSessionCreatorPage]
-class ResistanceSessionCreatorRoute
-    extends _i45.PageRouteInfo<ResistanceSessionCreatorRouteArgs> {
-  ResistanceSessionCreatorRoute(
-      {_i52.Key? key, _i53.ResistanceSession? resistanceSession})
-      : super(ResistanceSessionCreatorRoute.name,
-            path: 'create/resistance-session',
-            args: ResistanceSessionCreatorRouteArgs(
-                key: key, resistanceSession: resistanceSession));
+/// [_i39.ResistanceWorkoutCreatorPage]
+class ResistanceWorkoutCreatorRoute
+    extends _i45.PageRouteInfo<ResistanceWorkoutCreatorRouteArgs> {
+  ResistanceWorkoutCreatorRoute(
+      {_i53.Key? key, _i54.ResistanceWorkout? resistanceWorkout})
+      : super(ResistanceWorkoutCreatorRoute.name,
+            path: 'create/resistance-workout',
+            args: ResistanceWorkoutCreatorRouteArgs(
+                key: key, resistanceWorkout: resistanceWorkout));
 
-  static const String name = 'ResistanceSessionCreatorRoute';
+  static const String name = 'ResistanceWorkoutCreatorRoute';
 }
 
-class ResistanceSessionCreatorRouteArgs {
-  const ResistanceSessionCreatorRouteArgs({this.key, this.resistanceSession});
+class ResistanceWorkoutCreatorRouteArgs {
+  const ResistanceWorkoutCreatorRouteArgs({this.key, this.resistanceWorkout});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.ResistanceSession? resistanceSession;
+  final _i54.ResistanceWorkout? resistanceWorkout;
 
   @override
   String toString() {
-    return 'ResistanceSessionCreatorRouteArgs{key: $key, resistanceSession: $resistanceSession}';
+    return 'ResistanceWorkoutCreatorRouteArgs{key: $key, resistanceWorkout: $resistanceWorkout}';
   }
 }
 
@@ -1466,7 +1467,7 @@ class ResistanceSessionCreatorRouteArgs {
 /// [_i40.WorkoutPlanCreatorPage]
 class WorkoutPlanCreatorRoute
     extends _i45.PageRouteInfo<WorkoutPlanCreatorRouteArgs> {
-  WorkoutPlanCreatorRoute({_i52.Key? key, _i53.WorkoutPlan? workoutPlan})
+  WorkoutPlanCreatorRoute({_i53.Key? key, _i54.WorkoutPlan? workoutPlan})
       : super(WorkoutPlanCreatorRoute.name,
             path: 'create/workout-plan',
             args: WorkoutPlanCreatorRouteArgs(
@@ -1478,9 +1479,9 @@ class WorkoutPlanCreatorRoute
 class WorkoutPlanCreatorRouteArgs {
   const WorkoutPlanCreatorRouteArgs({this.key, this.workoutPlan});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.WorkoutPlan? workoutPlan;
+  final _i54.WorkoutPlan? workoutPlan;
 
   @override
   String toString() {
@@ -1493,8 +1494,8 @@ class WorkoutPlanCreatorRouteArgs {
 class WorkoutPlanReviewCreatorRoute
     extends _i45.PageRouteInfo<WorkoutPlanReviewCreatorRouteArgs> {
   WorkoutPlanReviewCreatorRoute(
-      {_i52.Key? key,
-      _i53.WorkoutPlanReview? workoutPlanReview,
+      {_i53.Key? key,
+      _i54.WorkoutPlanReview? workoutPlanReview,
       required String parentWorkoutPlanId,
       required String parentWorkoutPlanEnrolmentId})
       : super(WorkoutPlanReviewCreatorRoute.name,
@@ -1515,9 +1516,9 @@ class WorkoutPlanReviewCreatorRouteArgs {
       required this.parentWorkoutPlanId,
       required this.parentWorkoutPlanEnrolmentId});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final _i53.WorkoutPlanReview? workoutPlanReview;
+  final _i54.WorkoutPlanReview? workoutPlanReview;
 
   final String parentWorkoutPlanId;
 
@@ -1579,28 +1580,28 @@ class StudioRoute extends _i45.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i48.ResistanceSessionsPage]
-class ResistanceSessionsRoute
-    extends _i45.PageRouteInfo<ResistanceSessionsRouteArgs> {
-  ResistanceSessionsRoute({_i52.Key? key, String? previousPageTitle})
-      : super(ResistanceSessionsRoute.name,
-            path: 'resistance-sessions',
-            args: ResistanceSessionsRouteArgs(
+/// [_i48.ResistanceWorkoutsPage]
+class ResistanceWorkoutsRoute
+    extends _i45.PageRouteInfo<ResistanceWorkoutsRouteArgs> {
+  ResistanceWorkoutsRoute({_i53.Key? key, String? previousPageTitle})
+      : super(ResistanceWorkoutsRoute.name,
+            path: 'resistance-workouts',
+            args: ResistanceWorkoutsRouteArgs(
                 key: key, previousPageTitle: previousPageTitle));
 
-  static const String name = 'ResistanceSessionsRoute';
+  static const String name = 'ResistanceWorkoutsRoute';
 }
 
-class ResistanceSessionsRouteArgs {
-  const ResistanceSessionsRouteArgs({this.key, this.previousPageTitle});
+class ResistanceWorkoutsRouteArgs {
+  const ResistanceWorkoutsRouteArgs({this.key, this.previousPageTitle});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String? previousPageTitle;
 
   @override
   String toString() {
-    return 'ResistanceSessionsRouteArgs{key: $key, previousPageTitle: $previousPageTitle}';
+    return 'ResistanceWorkoutsRouteArgs{key: $key, previousPageTitle: $previousPageTitle}';
   }
 }
 
@@ -1608,8 +1609,8 @@ class ResistanceSessionsRouteArgs {
 /// [_i49.TrainingPlansPage]
 class TrainingPlansRoute extends _i45.PageRouteInfo<TrainingPlansRouteArgs> {
   TrainingPlansRoute(
-      {_i52.Key? key,
-      void Function(_i53.WorkoutPlanSummary)? selectPlan,
+      {_i53.Key? key,
+      void Function(_i54.WorkoutPlanSummary)? selectPlan,
       bool showCreateButton = false,
       bool showDiscoverButton = false,
       String pageTitle = 'Plans',
@@ -1639,9 +1640,9 @@ class TrainingPlansRouteArgs {
       this.showJoined = true,
       this.showSaved = true});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
-  final void Function(_i53.WorkoutPlanSummary)? selectPlan;
+  final void Function(_i54.WorkoutPlanSummary)? selectPlan;
 
   final bool showCreateButton;
 
@@ -1663,7 +1664,7 @@ class TrainingPlansRouteArgs {
 /// [_i50.ExerciseLibraryPage]
 class ExerciseLibraryRoute
     extends _i45.PageRouteInfo<ExerciseLibraryRouteArgs> {
-  ExerciseLibraryRoute({_i52.Key? key, String? previousPageTitle})
+  ExerciseLibraryRoute({_i53.Key? key, String? previousPageTitle})
       : super(ExerciseLibraryRoute.name,
             path: 'exercise-library',
             args: ExerciseLibraryRouteArgs(
@@ -1675,7 +1676,7 @@ class ExerciseLibraryRoute
 class ExerciseLibraryRouteArgs {
   const ExerciseLibraryRouteArgs({this.key, this.previousPageTitle});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String? previousPageTitle;
 
@@ -1688,7 +1689,7 @@ class ExerciseLibraryRouteArgs {
 /// generated route for
 /// [_i51.GymProfilesPage]
 class GymProfilesRoute extends _i45.PageRouteInfo<GymProfilesRouteArgs> {
-  GymProfilesRoute({_i52.Key? key, String? previousPageTitle})
+  GymProfilesRoute({_i53.Key? key, String? previousPageTitle})
       : super(GymProfilesRoute.name,
             path: 'gym-profiles',
             args: GymProfilesRouteArgs(
@@ -1700,7 +1701,7 @@ class GymProfilesRoute extends _i45.PageRouteInfo<GymProfilesRouteArgs> {
 class GymProfilesRouteArgs {
   const GymProfilesRouteArgs({this.key, this.previousPageTitle});
 
-  final _i52.Key? key;
+  final _i53.Key? key;
 
   final String? previousPageTitle;
 
