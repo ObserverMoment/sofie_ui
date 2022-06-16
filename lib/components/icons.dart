@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
@@ -181,8 +182,8 @@ class NavBarActivityIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CupertinoActivityIndicator(
-      radius: 11,
+    return const LoadingSpinnerCircle(
+      size: 11,
     );
   }
 }

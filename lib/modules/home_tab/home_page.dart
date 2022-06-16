@@ -408,9 +408,9 @@ class _HomePageState extends State<HomePage> {
 //                         textAlign: TextAlign.center,
 //                       ),
 //                       firstPageProgressIndicatorBuilder: (c) =>
-//                           const CupertinoActivityIndicator(),
+//                           const LoadingSpinnerCircle(),
 //                       newPageProgressIndicatorBuilder: (c) =>
-//                           const CupertinoActivityIndicator(),
+//                           const LoadingSpinnerCircle(),
 //                       noItemsFoundIndicatorBuilder: (context) =>
 //                           ContentEmptyPlaceholder(
 //                               message: 'No posts yet',

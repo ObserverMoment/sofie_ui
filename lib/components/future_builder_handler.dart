@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/services/utils.dart';
@@ -41,7 +42,7 @@ class FutureBuilderHandler<T> extends StatelessWidget {
               const CupertinoPageScaffold(
                 child: SafeArea(
                   child: Center(
-                    child: CupertinoActivityIndicator(),
+                    child: LoadingSpinnerCircle(),
                   ),
                 ),
               );

@@ -1,3 +1,0 @@
-mutation deleteScheduledWorkoutById($id: ID!) {
-  deleteScheduledWorkoutById(id: $id)
-}

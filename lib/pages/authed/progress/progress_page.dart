@@ -5,6 +5,7 @@ import 'package:flutter/material.dart' as material;
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
 import 'package:sofie_ui/components/animated/loading_shimmers.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/card.dart';
@@ -29,7 +30,6 @@ import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/logged
 import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/logged_moods_container.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/logged_sessions_container.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_widget_containers/sleep_well_logs_container.dart';
-import 'package:sofie_ui/pages/authed/progress/progress_widgets/all_time_stats_summary.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_widgets/eat_well_logs.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_widgets/logged_meditations.dart';
 import 'package:sofie_ui/pages/authed/progress/progress_widgets/logged_moods.dart';
@@ -57,8 +57,8 @@ class ProgressPage extends StatelessWidget {
 
   double get _widgetHeight => 220.0;
   Widget get _widgetLoadingShimmer => const Center(
-          child: CupertinoActivityIndicator(
-        radius: 16,
+          child: LoadingSpinnerCircle(
+        size: 16,
       ));
   Widget get _fullScreenLoadingShimmer => const ShimmerCardList(
         cardHeight: 300,

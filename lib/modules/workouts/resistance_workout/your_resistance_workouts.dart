@@ -40,7 +40,7 @@ class YourResistanceWorkouts extends StatelessWidget {
                   ? ContentEmptyPlaceholder(
                       message: 'Nothing to display',
                       explainer:
-                          'Get creative by creating your own workout, or get involved in some Circles to discover the best workouts out there!',
+                          'Get creative and make your own workouts, or get involved in some Circles to discover the best workouts out there!',
                       actions: [
                           EmptyPlaceholderAction(
                               action: () => context

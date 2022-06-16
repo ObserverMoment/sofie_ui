@@ -37,7 +37,7 @@ CreateLoggedWorkoutInput createLoggedWorkoutInputFromLoggedWorkout(
     {ScheduledWorkout? scheduledWorkout,
     String? workoutPlanDayWorkoutId,
     String? workoutPlanEnrolmentId}) {
-  final gymProfile = loggedWorkout.gymProfile ?? scheduledWorkout?.gymProfile;
+  final gymProfile = loggedWorkout.gymProfile;
 
   return CreateLoggedWorkoutInput(
     name: loggedWorkout.name,

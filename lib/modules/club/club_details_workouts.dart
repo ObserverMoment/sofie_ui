@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:implicitly_animated_reorderable_list/implicitly_animated_reorderable_list.dart';
 import 'package:implicitly_animated_reorderable_list/transitions.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/cards/workout_card.dart';
@@ -211,10 +212,8 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
         firstPageErrorIndicatorBuilder: (c) =>
             const PageResultsErrorIndicator(),
         newPageErrorIndicatorBuilder: (c) => const PageResultsErrorIndicator(),
-        firstPageProgressIndicatorBuilder: (c) =>
-            const CupertinoActivityIndicator(),
-        newPageProgressIndicatorBuilder: (c) =>
-            const CupertinoActivityIndicator(),
+        firstPageProgressIndicatorBuilder: (c) => const LoadingSpinnerCircle(),
+        newPageProgressIndicatorBuilder: (c) => const LoadingSpinnerCircle(),
         noItemsFoundIndicatorBuilder: (c) => const Center(
           child: ContentEmptyPlaceholder(
               message: 'Nothing to display', actions: []),

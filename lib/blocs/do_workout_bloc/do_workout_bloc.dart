@@ -673,9 +673,9 @@ class DoWorkoutBloc extends ChangeNotifier {
       scheduledWorkout: scheduledWorkout != null
           ? ConnectRelationInput(id: scheduledWorkout!.id)
           : null,
-      gymProfile: scheduledWorkout?.gymProfile != null
-          ? ConnectRelationInput(id: scheduledWorkout!.gymProfile!.id)
-          : null,
+      // gymProfile: scheduledWorkout?.gymProfile != null
+      //     ? ConnectRelationInput(id: scheduledWorkout!.gymProfile!.id)
+      //     : null,
       name: activeWorkout.name,
       workout: ConnectRelationInput(id: activeWorkout.id),
       workoutPlanDayWorkout: workoutPlanDayWorkoutId != null

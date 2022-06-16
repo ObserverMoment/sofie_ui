@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/media/video/controls_overlay/play_pause_overlay.dart';
 import 'package:video_player/video_player.dart';
 
@@ -45,7 +46,7 @@ class _FileVideoPlayerState extends State<FileVideoPlayer> {
                 PlayPauseVideoControlOverlay(controller: _controller)
               ],
             )
-          : const CupertinoActivityIndicator(),
+          : const LoadingSpinnerCircle(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -91,8 +92,8 @@ class _ClubDetailsPageState extends State<ClubDetailsPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            CupertinoActivityIndicator(
-              radius: 12,
+            LoadingSpinnerCircle(
+              size: 12,
             ),
             SizedBox(height: 10),
             MyText('CHECKING MEMBERSHIP')

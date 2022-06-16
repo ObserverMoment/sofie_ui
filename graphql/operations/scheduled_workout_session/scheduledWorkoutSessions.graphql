@@ -1,0 +1,22 @@
+query userScheduledWorkouts($from: DateTime!, $to: DateTime!) {
+  userScheduledWorkouts(from: $from, to: $to) {
+    id
+    createdAt
+    scheduledAt
+    note
+    GymProfileInScheduledWorkout: GymProfile {
+      id
+      name
+    }
+    ResistanceWorkoutInScheduledWorkout: ResistanceWorkout {
+      id
+      name
+      note
+    }
+    CardioWorkoutInScheduledWorkout: CardioWorkout {
+      id
+      name
+      note
+    }
+  }
+}

@@ -1,0 +1,22 @@
+mutation updateScheduledWorkout($data: UpdateScheduledWorkoutInput!) {
+  updateScheduledWorkout(data: $data) {
+    id
+    createdAt
+    scheduledAt
+    note
+    GymProfileInScheduledWorkout: GymProfile {
+      id
+      name
+    }
+    ResistanceWorkoutInScheduledWorkout: ResistanceWorkout {
+      id
+      name
+      note
+    }
+    CardioWorkoutInScheduledWorkout: CardioWorkout {
+      id
+      name
+      note
+    }
+  }
+}

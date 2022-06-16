@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/do_workout_bloc/do_workout_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/do_workout/do_workout_do_workout_page.dart';
 import 'package:sofie_ui/components/future_builder_handler.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -72,8 +73,8 @@ class _DoWorkoutWrapperPageState extends State<DoWorkoutWrapperPage> {
               ),
               const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: CupertinoActivityIndicator(
-                  radius: 14,
+                child: LoadingSpinnerCircle(
+                  size: 14,
                 ),
               ),
             ],

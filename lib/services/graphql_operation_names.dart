@@ -47,9 +47,6 @@ class GQLOpNames {
 
   static String get userWorkoutPlans => UserWorkoutPlansQuery().operationName;
 
-  static String get userScheduledWorkouts =>
-      UserScheduledWorkoutsQuery().operationName;
-
   //// Workout Workout Related ////
   static String get userCreatedResistanceWorkouts =>
       UserCreatedResistanceWorkoutsQuery().operationName;

@@ -316,6 +316,7 @@ extension BuildContextExtension on BuildContext {
     ToastType toastType = ToastType.standard,
     TextAlign textAlign = TextAlign.center,
     FlushbarPosition flushbarPosition = FlushbarPosition.TOP,
+    VoidCallback? onComplete,
   }) {
     final contentColor = toastType == ToastType.destructive
         ? Styles.errorRed
@@ -334,7 +335,8 @@ extension BuildContextExtension on BuildContext {
             blockBackgroundInteraction: false,
             isDismissible: true,
             borderRadius: BorderRadius.circular(16))
-        .show(this);
+        .show(this)
+        .then((_) => onComplete?.call());
   }
 
   /// Toast + more text and a button for interactivity.

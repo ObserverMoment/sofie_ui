@@ -19,8 +19,8 @@ buildMainNavBar(GlobalKey<material.ScaffoldState> scaffoldKey) => MyNavBar(
       ),
       trailing: NavBarTrailingRow(
         children: [
-          const ChatsIconButton(),
-          const NotificationsIconButton(),
+          // const ChatsIconButton(),
+          // const NotificationsIconButton(),
           Padding(
             padding: const EdgeInsets.only(left: 6.0),
             child: CupertinoButton(

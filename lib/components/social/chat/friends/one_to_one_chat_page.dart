@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sofie_ui/blocs/auth_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
@@ -151,7 +152,7 @@ class _OneToOneChatChannelPageState extends State<OneToOneChatChannelPage> {
                     messageListController: _messageListController,
                     loadingBuilder: (context) {
                       return const Center(
-                        child: CupertinoActivityIndicator(),
+                        child: LoadingSpinnerCircle(),
                       );
                     },
                     errorBuilder: (context, err) {

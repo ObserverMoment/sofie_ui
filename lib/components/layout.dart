@@ -450,6 +450,7 @@ class ModalPageScaffold extends StatelessWidget {
     return MyPageScaffold(
       navigationBar: MyNavBar(
         customLeading: cancel != null ? NavBarCancelButton(cancel!) : null,
+        backgroundColor: context.theme.background,
         middle: NavBarTitle(title),
         trailing: loading
             ? const FadeIn(
@@ -460,7 +461,7 @@ class ModalPageScaffold extends StatelessWidget {
                 ),
               )
             : save != null && validToSave
-                ? FadeIn(child: NavBarTertiarySaveButton(save!))
+                ? FadeIn(child: NavBarSaveButton(save!))
                 : null,
       ),
       child: Padding(

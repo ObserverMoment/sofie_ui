@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
 import 'package:sofie_ui/components/animated/animated_rotation.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
-import 'package:sofie_ui/components/calendar.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
@@ -14,6 +14,53 @@ import 'package:table_calendar/table_calendar.dart';
 /// Determines which picker is open.
 /// https://www.idownloadblog.com/2021/06/09/apple-ios-15-wheel-time-picker/
 enum DateTimePickerMode { date, time }
+
+class CalendarUI {
+  // https://github.com/aleksanderwozniak/table_calendar/issues/498
+  static BoxDecoration kDefaultDecoration =
+      const BoxDecoration(shape: BoxShape.circle);
+
+  static CalendarStyle calendarStyle(BuildContext context) {
+    final primaryTextStyle = GoogleFonts.sourceSansPro(
+        textStyle:
+            TextStyle(color: context.theme.primary, height: 1, fontSize: 15));
+    return CalendarStyle(
+        markerDecoration: const BoxDecoration(
+            color: Styles.primaryAccent, shape: BoxShape.circle),
+        // https://github.com/aleksanderwozniak/table_calendar/issues/498
+        defaultDecoration: kDefaultDecoration,
+        weekendDecoration: kDefaultDecoration,
+        outsideDecoration: kDefaultDecoration,
+        disabledDecoration: kDefaultDecoration,
+        holidayDecoration: kDefaultDecoration,
+        selectedDecoration: BoxDecoration(
+          color: context.theme.primary,
+          shape: BoxShape.circle,
+        ),
+        todayDecoration: BoxDecoration(
+            border: Border.all(color: Styles.primaryAccent),
+            shape: BoxShape.circle),
+        weekendTextStyle: primaryTextStyle,
+        selectedTextStyle: primaryTextStyle.copyWith(
+            color: context.theme.cardBackground, fontWeight: FontWeight.bold),
+        todayTextStyle: primaryTextStyle,
+        defaultTextStyle: primaryTextStyle);
+  }
+
+  static DaysOfWeekStyle daysOfWeekStyle(BuildContext context) {
+    final primaryTextStyle = GoogleFonts.sourceSansPro(
+        textStyle: TextStyle(
+            color: context.theme.primary.withOpacity(0.7),
+            height: 1,
+            fontSize: 15));
+    return DaysOfWeekStyle(
+      dowTextFormatter: (date, locale) =>
+          DateFormat.E(locale).format(date).toUpperCase(),
+      weekdayStyle: primaryTextStyle,
+      weekendStyle: primaryTextStyle,
+    );
+  }
+}
 
 class DateTimePickerDisplay extends StatelessWidget {
   final String title;
@@ -151,7 +198,7 @@ class DateTimePicker extends StatefulWidget {
         super(key: key);
 
   @override
-  _DateTimePickerState createState() => _DateTimePickerState();
+  State<DateTimePicker> createState() => _DateTimePickerState();
 }
 
 class _DateTimePickerState extends State<DateTimePicker> {
@@ -252,7 +299,7 @@ class DatePickerCalendar extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DatePickerCalendarState createState() => _DatePickerCalendarState();
+  State<DatePickerCalendar> createState() => _DatePickerCalendarState();
 }
 
 class _DatePickerCalendarState extends State<DatePickerCalendar> {
@@ -392,7 +439,7 @@ class TimePicker extends StatefulWidget {
       : super(key: key);
 
   @override
-  _TimePickerState createState() => _TimePickerState();
+  State<TimePicker> createState() => _TimePickerState();
 }
 
 class _TimePickerState extends State<TimePicker> {
@@ -489,7 +536,7 @@ class DateRangePicker extends StatefulWidget {
       : super(key: key);
 
   @override
-  _DateRangePickerState createState() => _DateRangePickerState();
+  State<DateRangePicker> createState() => _DateRangePickerState();
 }
 
 class _DateRangePickerState extends State<DateRangePicker> {

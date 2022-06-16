@@ -330,12 +330,6 @@ type Collection {
   name: String!
 }
 
-type CompletedTrainingPlanDayWorkout {
-  id: ID!
-  loggedWorkoutId: ID!
-  workoutPlanDayWorkoutId: ID!
-}
-
 type CompletedWorkoutPlanDayWorkout {
   id: ID!
   loggedWorkoutId: ID!
@@ -349,11 +343,6 @@ input ConnectRelationInput {
 enum ContentAccessScope {
   PRIVATE
   PUBLIC
-}
-
-input CopyTrainingPlanDayToAnotherDayInput {
-  copyToDay: Int!
-  id: ID!
 }
 
 input CopyWorkoutPlanDayToAnotherDayInput {
@@ -423,12 +412,6 @@ input CreateClubMemberNoteInput {
 input CreateCollectionInput {
   description: String
   name: String!
-}
-
-input CreateCompletedTrainingPlanDayWorkoutInput {
-  loggedWorkoutId: ID!
-  workoutPlanDayWorkoutId: ID!
-  workoutPlanEnrolmentId: ID!
 }
 
 input CreateCompletedWorkoutPlanDayWorkoutInput {
@@ -598,10 +581,9 @@ input CreateScheduleForPlanEnrolmentInput {
 }
 
 input CreateScheduledWorkoutInput {
+  CardioWorkout: ConnectRelationInput
   GymProfile: ConnectRelationInput
-  Workout: ConnectRelationInput!
-  WorkoutPlanDayWorkout: ConnectRelationInput
-  WorkoutPlanEnrolment: ConnectRelationInput
+  ResistanceWorkout: ConnectRelationInput
   note: String
   scheduledAt: DateTime!
 }
@@ -628,30 +610,6 @@ input CreateStreamFeedActivityInput {
   extraData: CreateStreamFeedActivityExtraDataInput!
   object: String!
   verb: String!
-}
-
-input CreateTrainingPlanDayWithWorkoutInput {
-  TrainingPlan: ConnectRelationInput!
-  WorkoutSession: ConnectRelationInput!
-  dayNumber: Int!
-}
-
-input CreateTrainingPlanDayWorkoutInput {
-  TrainingPlanDay: ConnectRelationInput!
-  WorkoutSession: ConnectRelationInput!
-  note: String
-  sortPosition: Int!
-}
-
-input CreateTrainingPlanInput {
-  contentAccessScope: ContentAccessScope!
-  name: String!
-}
-
-input CreateTrainingPlanReviewInput {
-  TrainingPlan: ConnectRelationInput!
-  comment: String
-  score: Float!
 }
 
 input CreateUserDayLogMoodInput {
@@ -790,11 +748,6 @@ scalar DateTime
 input DeleteClubInviteTokenInput {
   clubId: ID!
   tokenId: ID!
-}
-
-input DeleteCompletedTrainingPlanDayWorkoutInput {
-  workoutPlanDayWorkoutId: ID!
-  workoutPlanEnrolmentId: ID!
 }
 
 input DeleteCompletedWorkoutPlanDayWorkoutInput {
@@ -1128,11 +1081,6 @@ enum MoveScope {
   STANDARD
 }
 
-input MoveTrainingPlanDayToAnotherDayInput {
-  id: ID!
-  moveToDay: Int!
-}
-
 type MoveType {
   description: String
   id: ID!
@@ -1205,11 +1153,13 @@ type Mutation {
   createResistanceWorkout(
     data: CreateResistanceWorkoutInput!
   ): ResistanceWorkout!
-  createSavedResistanceWorkout(id: ID!): ResistanceWorkout!
+  createSavedResistanceWorkout(resistanceWorkoutId: ID!): ResistanceWorkout!
   createScheduleForPlanEnrolment(
     data: CreateScheduleForPlanEnrolmentInput!
   ): WorkoutPlanEnrolment!
-  createScheduledWorkout(data: CreateScheduledWorkoutInput!): ScheduledWorkout!
+  createScheduledWorkouts(
+    data: [CreateScheduledWorkoutInput!]!
+  ): [ScheduledWorkout!]!
   createSkill(data: CreateSkillInput!): Skill!
   createUserDayLogMood(data: CreateUserDayLogMoodInput!): UserDayLogMood!
   createUserEatWellLog(data: CreateUserEatWellLogInput!): UserEatWellLog!
@@ -1269,8 +1219,8 @@ type Mutation {
   deleteResistanceExercise(id: ID!): ID!
   deleteResistanceSet(id: ID!): ID!
   deleteResistanceWorkout(id: ID!): ID!
-  deleteSavedResistanceWorkout(savedResistanceWorkoutId: ID!): ID!
-  deleteScheduledWorkoutById(id: ID!): ID!
+  deleteSavedResistanceWorkout(resistanceWorkoutId: ID!): ID!
+  deleteScheduledWorkout(id: ID!): ID!
   deleteSkillById(id: ID!): ID!
   deleteUserDayLogMood(id: ID!): ID!
   deleteUserExerciseLoadTracker(id: ID!): ID!
@@ -1527,9 +1477,6 @@ type Query {
   textSearchWorkoutPlanNames(text: String!): [TextSearchResult!]
   textSearchWorkoutPlans(text: String!): [WorkoutPlanSummary!]
   textSearchWorkouts(text: String!): [WorkoutSummary!]
-  trainingPlanById(id: ID!): TrainingPlan
-  trainingPlanEnrolmentById(id: ID!): TrainingPlanEnrolmentWithPlan
-  trainingPlanEnrolments: [TrainingPlanEnrolmentSummary!]!
   userArchivedCustomMoves: [Move!]!
   userArchivedWorkoutPlans: [WorkoutPlan!]!
   userArchivedWorkouts: [Workout!]!
@@ -1553,9 +1500,8 @@ type Query {
   userPublicWorkouts(userId: ID!): [WorkoutSummary!]!
   userRecentlyViewedObjects: [UserRecentlyViewedObject!]!
   userSavedResistanceWorkouts: [ResistanceWorkout!]!
-  userScheduledWorkouts: [ScheduledWorkout!]!
+  userScheduledWorkouts(from: DateTime!, to: DateTime!): [ScheduledWorkout!]!
   userSleepWellLogs: [UserSleepWellLog!]!
-  userTrainingPlans: [TrainingPlanSummary!]!
   userWorkoutPlans: [WorkoutPlanSummary!]!
   userWorkoutTags: [WorkoutTag!]!
   userWorkouts: [WorkoutSummary!]!
@@ -1631,16 +1577,13 @@ type ResistanceWorkout {
 }
 
 type ScheduledWorkout {
+  CardioWorkout: ResistanceWorkout
   GymProfile: GymProfile
-  Workout: WorkoutSummary
+  ResistanceWorkout: ResistanceWorkout
   createdAt: DateTime!
   id: ID!
-  loggedWorkoutId: ID
   note: String
   scheduledAt: DateTime!
-  workoutPlanDayWorkoutId: ID
-  workoutPlanEnrolmentId: ID
-  workoutPlanName: String
 }
 
 type Skill {
@@ -1718,86 +1661,6 @@ enum TimeUnit {
   HOURS
   MINUTES
   SECONDS
-}
-
-type TrainingPlan {
-  TrainingPlanDays: [TrainingPlanDay!]!
-  TrainingPlanEnrolments: [TrainingPlanEnrolment!]!
-  TrainingPlanReviews: [TrainingPlanReview!]!
-  User: UserAvatarData!
-  WorkoutTags: [WorkoutTag!]!
-  archived: Boolean!
-  coverImageUri: String
-  createdAt: DateTime!
-  daysPerWeek: Int!
-  description: String
-  id: ID!
-  introAudioUri: String
-  introVideoThumbUri: String
-  introVideoUri: String
-  lengthWeeks: Int!
-  name: String!
-  updatedAt: DateTime!
-}
-
-type TrainingPlanDay {
-  TrainingPlanDayWorkouts: [TrainingPlanDayWorkout!]!
-  dayNumber: Int!
-  id: ID!
-  note: String
-}
-
-type TrainingPlanDayWorkout {
-  WorkoutSession: WorkoutSession!
-  id: ID!
-  note: String
-  sortPosition: Int!
-}
-
-type TrainingPlanEnrolment {
-  CompletedTrainingPlanDayWorkouts: [CompletedTrainingPlanDayWorkout!]!
-  User: UserAvatarData!
-  id: ID!
-  startDate: DateTime
-}
-
-type TrainingPlanEnrolmentSummary {
-  TrainingPlan: TrainingPlanSummary!
-  completedWorkoutsCount: Int!
-  id: ID!
-  startDate: DateTime
-}
-
-type TrainingPlanEnrolmentWithPlan {
-  TrainingPlan: TrainingPlan!
-  TrainingPlanEnrolment: TrainingPlanEnrolment!
-}
-
-type TrainingPlanReview {
-  User: UserAvatarData!
-  comment: String
-  createdAt: DateTime!
-  id: ID!
-  score: Float!
-}
-
-type TrainingPlanSummary {
-  User: UserAvatarData!
-  archived: Boolean!
-  coverImageUri: String
-  createdAt: DateTime!
-  daysPerWeek: Int!
-  description: String
-  enrolmentsCount: Int!
-  goals: [WorkoutGoal!]!
-  id: ID!
-  lengthWeeks: Int!
-  name: String!
-  reviewCount: Int!
-  reviewScore: Float
-  tags: [String!]!
-  updatedAt: DateTime!
-  workoutsCount: Int!
 }
 
 input UpdateAmrapMoveInput {
@@ -2063,7 +1926,6 @@ input UpdateResistanceWorkoutInput {
 
 input UpdateScheduledWorkoutInput {
   GymProfile: ConnectRelationInput
-  LoggedWorkout: ConnectRelationInput
   id: ID!
   note: String
   scheduledAt: DateTime
@@ -2082,39 +1944,6 @@ input UpdateSkillInput {
 input UpdateSortPositionInput {
   id: ID!
   sortPosition: Int!
-}
-
-input UpdateTrainingPlanDayInput {
-  dayNumber: Int
-  id: ID!
-  note: String
-}
-
-input UpdateTrainingPlanDayWorkoutInput {
-  TrainingPlanDay: ConnectRelationInput
-  WorkoutSession: ConnectRelationInput
-  id: ID!
-  note: String
-}
-
-input UpdateTrainingPlanInput {
-  WorkoutTags: [ConnectRelationInput!]
-  contentAccessScope: ContentAccessScope
-  coverImageUri: String
-  daysPerWeek: Int
-  description: String
-  id: ID!
-  introAudioUri: String
-  introVideoThumbUri: String
-  introVideoUri: String
-  lengthWeeks: Int
-  name: String
-}
-
-input UpdateTrainingPlanReviewInput {
-  comment: String
-  id: ID!
-  score: Float
 }
 
 input UpdateUserEatWellLogInput {

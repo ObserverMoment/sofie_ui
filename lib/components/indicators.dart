@@ -142,7 +142,7 @@ class LoadingIndicator extends StatelessWidget {
   const LoadingIndicator({Key? key, this.color, this.size}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return CupertinoActivityIndicator(radius: size ?? 20);
+    return LoadingSpinnerCircle(size: size ?? 20);
   }
 }
 

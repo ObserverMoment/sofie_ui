@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/cards/card.dart';
 import 'package:sofie_ui/components/indicators.dart';
@@ -111,7 +112,7 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
             child: Stack(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 26),
+                  padding: const EdgeInsets.only(top: 18),
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () =>
@@ -121,6 +122,7 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
                     child: ResistanceWorkoutCard(
                       resistanceWorkout:
                           clubResistanceWorkout.resistanceWorkout,
+                      showUserAvatar: true,
                     ),
                   ),
                 ),
@@ -129,7 +131,7 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
                   onTap: () => context.navigateTo(
                       ClubDetailsRoute(id: clubResistanceWorkout.id)),
                   child: Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.topRight,
                     child: Card(
                       borderRadius: BorderRadius.circular(50),
                       padding: const EdgeInsets.symmetric(
@@ -140,7 +142,7 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
                         children: [
                           UserAvatar(
                             avatarUri: clubResistanceWorkout.coverImageUri,
-                            size: 30,
+                            size: 24,
                           ),
                           const SizedBox(width: 4),
                           MyText(
@@ -161,10 +163,8 @@ class _ClubsResistanceWorkoutsState extends State<ClubsResistanceWorkouts> {
         firstPageErrorIndicatorBuilder: (c) =>
             const PageResultsErrorIndicator(),
         newPageErrorIndicatorBuilder: (c) => const PageResultsErrorIndicator(),
-        firstPageProgressIndicatorBuilder: (c) =>
-            const CupertinoActivityIndicator(),
-        newPageProgressIndicatorBuilder: (c) =>
-            const CupertinoActivityIndicator(),
+        firstPageProgressIndicatorBuilder: (c) => const LoadingSpinnerCircle(),
+        newPageProgressIndicatorBuilder: (c) => const LoadingSpinnerCircle(),
         noItemsFoundIndicatorBuilder: (c) => const Center(
           child: ContentEmptyPlaceholder(
               message: 'Nothing to display',

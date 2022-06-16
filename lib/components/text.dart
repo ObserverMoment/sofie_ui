@@ -246,6 +246,7 @@ class NavBarTitle extends StatelessWidget {
       child: MyHeaderText(
         text,
         textAlign: TextAlign.center,
+        weight: FontWeight.normal,
       ),
     );
   }
@@ -268,6 +269,7 @@ class LeadingNavBarTitle extends StatelessWidget {
             text.toUpperCase(),
             size: fontSize,
             textAlign: TextAlign.center,
+            weight: FontWeight.normal,
           ),
         ],
       ),

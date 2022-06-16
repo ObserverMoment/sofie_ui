@@ -671,6 +671,7 @@ class TextButton extends StatelessWidget {
   final bool? underline;
   final FONTSIZE fontSize;
   final Color? color;
+  final FontWeight fontWeight;
 
   const TextButton(
       {Key? key,
@@ -684,7 +685,8 @@ class TextButton extends StatelessWidget {
       this.padding,
       this.color,
       this.fontSize = FONTSIZE.three,
-      this.underline = false})
+      this.underline = false,
+      this.fontWeight = FontWeight.bold})
       : assert(!(confirm && destructive)),
         super(key: key);
 
@@ -721,7 +723,7 @@ class TextButton extends StatelessWidget {
                     ),
                   MyText(text,
                       size: fontSize,
-                      weight: FontWeight.bold,
+                      weight: fontWeight,
                       decoration: underline! ? TextDecoration.underline : null,
                       color: _textolor),
                   if (suffix != null)
@@ -903,7 +905,7 @@ class NavBarTertiarySaveButton extends StatelessWidget {
     return AnimatedSwitcher(
       duration: kStandardAnimationDuration,
       child: loading
-          ? const CupertinoActivityIndicator(radius: 9)
+          ? const LoadingSpinnerCircle(size: 9)
           : TertiaryButton(
               backgroundColor: Styles.primaryAccent,
               textColor: Styles.white,

@@ -7,7 +7,6 @@ import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
-import 'package:sofie_ui/components/user_input/click_to_edit/tappable_row.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
@@ -19,48 +18,77 @@ class GymProfileSelectorDisplay extends StatelessWidget {
   final GymProfile? gymProfile;
   final void Function(GymProfile? gymProfile) selectGymProfile;
   final VoidCallback clearGymProfile;
+  final String title;
   const GymProfileSelectorDisplay({
     Key? key,
     required this.gymProfile,
     required this.selectGymProfile,
     required this.clearGymProfile,
+    this.title = 'Gym Profile',
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 46,
-      child: Row(
-        children: [
-          Expanded(
-            child: TappableRow(
-              onTap: () => context.push(
-                  child: GymProfileSelector(
-                selectedGymProfile: gymProfile,
-                selectGymProfile: selectGymProfile,
-              )),
-              title: 'Gym Profile',
-              display: gymProfile == null
-                  ? const Padding(
-                      padding: EdgeInsets.only(right: 8.0),
-                      child: MyText('Select'),
-                    )
-                  : ContentBox(child: MyText(gymProfile!.name)),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
+              child: MyText(title),
             ),
-          ),
-          if (gymProfile != null)
-            FadeIn(
-              child: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: clearGymProfile,
-                  child: const Icon(
-                    CupertinoIcons.clear_thick,
-                    color: Styles.errorRed,
-                    size: 20,
-                  )),
-            )
-        ],
-      ),
+            gymProfile != null
+                ? FadeIn(
+                    child: Row(
+                      children: [
+                        TextButton(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          text: 'Change',
+                          fontSize: FONTSIZE.two,
+                          onPressed: () => context.push(
+                              child: GymProfileSelector(
+                            selectedGymProfile: gymProfile,
+                            selectGymProfile: selectGymProfile,
+                          )),
+                        ),
+                        TextButton(
+                          text: 'Remove',
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          fontSize: FONTSIZE.two,
+                          onPressed: clearGymProfile,
+                        ),
+                      ],
+                    ),
+                  )
+                : FadeIn(
+                    child: TextButton(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      text: 'Select',
+                      fontWeight: FontWeight.normal,
+                      onPressed: () => context.push(
+                          child: GymProfileSelector(
+                        selectedGymProfile: gymProfile,
+                        selectGymProfile: selectGymProfile,
+                      )),
+                    ),
+                  )
+          ],
+        ),
+        if (gymProfile != null)
+          GrowIn(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: GymProfileCard(
+                  gymProfile: gymProfile!,
+                ),
+              ),
+            ],
+          ))
+      ],
     );
   }
 }
@@ -111,7 +139,7 @@ class _GymProfileSelectorState extends State<GymProfileSelector> {
           navigationBar: MyNavBar(
             customLeading: NavBarCancelButton(context.pop),
             middle: const NavBarTitle('Select Gym Profile'),
-            trailing: NavBarTertiarySaveButton(context.pop, text: 'Done'),
+            trailing: NavBarSaveButton(context.pop, text: 'Done'),
           ),
           child: gymProfiles.isEmpty
               ? Padding(
@@ -160,7 +188,7 @@ class _GymProfileSelectorState extends State<GymProfileSelector> {
                     ),
                     ...gymProfiles
                         .map((g) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
+                              padding: const EdgeInsets.only(bottom: 4.0),
                               child: GestureDetector(
                                 onTap: () => _handleSelection(g),
                                 child: SelectGymProfileItem(

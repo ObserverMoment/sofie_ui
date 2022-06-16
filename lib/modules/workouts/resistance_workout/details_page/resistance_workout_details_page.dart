@@ -24,6 +24,7 @@ import 'package:sofie_ui/services/graphql_operation_names.dart';
 import 'package:sofie_ui/services/sharing_and_linking.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';
 import 'package:sofie_ui/services/store/query_observer.dart';
+import 'package:json_annotation/json_annotation.dart' as json;
 
 class ResistanceWorkoutDetailsPage extends StatelessWidget {
   final String id;
@@ -31,6 +32,42 @@ class ResistanceWorkoutDetailsPage extends StatelessWidget {
   const ResistanceWorkoutDetailsPage(
       {Key? key, @PathParam('id') required this.id, this.previousPageTitle})
       : super(key: key);
+
+  /// Saving a workout == creating a saved workout.
+  Future<void> _createSavedWorkout(BuildContext context) async {
+    try {
+      await GraphQLStore.store.create(
+        mutation: CreateSavedResistanceWorkoutMutation(
+            variables:
+                CreateSavedResistanceWorkoutArguments(resistanceWorkoutId: id)),
+        addRefToQueries: [GQLOpNames.userSavedResistanceWorkouts],
+      );
+    } catch (e) {
+      context.showToast(
+          message: kDefaultErrorMessage, toastType: ToastType.destructive);
+    }
+  }
+
+  Future<void> _deleteSavedWorkout(BuildContext context) async {
+    try {
+      await GraphQLStore.store.mutate(
+        mutation: DeleteSavedResistanceWorkoutMutation(
+            variables:
+                DeleteSavedResistanceWorkoutArguments(resistanceWorkoutId: id)),
+        processResult: (DeleteSavedResistanceWorkout$Mutation result) {
+          /// Remove the resistance session from SavedResistanceSession query data.
+          final id = result.deleteSavedResistanceWorkout;
+
+          GraphQLStore.store.removeRefFromQueryData(
+              data: {'id': id, '__typename': kResistanceWorkoutTypeName},
+              queryIds: [GQLOpNames.userSavedResistanceWorkouts]);
+        },
+      );
+    } catch (e) {
+      context.showToast(
+          message: kDefaultErrorMessage, toastType: ToastType.destructive);
+    }
+  }
 
   Future<void> _handleDeleteWorkout(BuildContext context) async {
     context.showConfirmDeleteDialog(
@@ -79,142 +116,162 @@ class ResistanceWorkoutDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final query = ResistanceWorkoutByIdQuery(
+    final resistanceWorkoutByIdQuery = ResistanceWorkoutByIdQuery(
         variables: ResistanceWorkoutByIdArguments(id: id));
 
     return QueryObserver<ResistanceWorkoutById$Query,
             ResistanceWorkoutByIdArguments>(
-        key: Key('ResistanceWorkoutDetailsPage - ${query.operationName}-$id'),
-        query: query,
+        key: Key(
+            'ResistanceWorkoutDetailsPage - ${resistanceWorkoutByIdQuery.operationName}-$id'),
+        query: resistanceWorkoutByIdQuery,
         parameterizeQuery: true,
-        builder: (data) {
-          final resistanceWorkout = data.resistanceWorkoutById;
+        builder: (data) => QueryObserver<UserSavedResistanceWorkouts$Query,
+                json.JsonSerializable>(
+            key: Key(
+                'ResistanceWorkoutsPage - ${UserSavedResistanceWorkoutsQuery().operationName}'),
+            query: UserSavedResistanceWorkoutsQuery(),
+            fetchPolicy: QueryFetchPolicy.storeFirst,
+            builder: (saved) {
+              final resistanceWorkout = data.resistanceWorkoutById;
 
-          if (resistanceWorkout == null) {
-            return const ObjectNotFoundIndicator();
-          }
+              if (resistanceWorkout == null) {
+                return const ObjectNotFoundIndicator();
+              }
 
-          final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
-          final bool isOwner = resistanceWorkout.user.id == authedUserId;
+              final userHasSaved = saved.userSavedResistanceWorkouts
+                  .any((w) => w.id == resistanceWorkout.id);
 
-          return MyPageScaffold(
-              navigationBar: MyNavBar(
-                previousPageTitle: previousPageTitle,
-                middle: MyText(
-                  resistanceWorkout.name,
-                  weight: FontWeight.bold,
-                ),
-                trailing: NavBarIconButton(
-                  iconData: CupertinoIcons.ellipsis,
-                  onPressed: () => openBottomSheetMenu(
-                      context: context,
-                      child: BottomSheetMenu(
-                          header: BottomSheetMenuHeader(
-                            name: resistanceWorkout.name,
-                            subtitle: 'Resistance Workout',
-                          ),
-                          items: [
-                            if (!isOwner)
-                              BottomSheetMenuItem(
-                                  text: 'View creator',
-                                  icon: CupertinoIcons.profile_circled,
-                                  onPressed: () => context.navigateTo(
-                                      UserPublicProfileDetailsRoute(
-                                          userId: resistanceWorkout.user.id))),
-                            if (isOwner)
-                              BottomSheetMenuItem(
-                                  text: 'Share',
-                                  icon: CupertinoIcons.paperplane,
-                                  onPressed: _shareWorkout),
-                            if (isOwner)
-                              BottomSheetMenuItem(
-                                  text: 'Edit',
-                                  icon: CupertinoIcons.pencil,
-                                  onPressed: () => context.navigateTo(
-                                      ResistanceWorkoutCreatorRoute(
-                                          resistanceWorkout:
-                                              resistanceWorkout))),
-                            if (isOwner)
-                              BottomSheetMenuItem(
-                                  text: 'Duplicate',
-                                  icon: CupertinoIcons
-                                      .plus_rectangle_on_rectangle,
-                                  onPressed: () =>
-                                      _handleDuplicateWorkout(context)),
-                            if (isOwner)
-                              BottomSheetMenuItem(
-                                  text: 'Export',
-                                  icon: CupertinoIcons.download_circle,
-                                  onPressed: () => context.showAlertDialog(
-                                      title: 'Coming soon!')),
-                            if (isOwner)
-                              BottomSheetMenuItem(
-                                  text: 'Delete',
-                                  icon: CupertinoIcons.delete_simple,
-                                  isDestructive: true,
-                                  onPressed: () =>
-                                      _handleDeleteWorkout(context)),
-                          ])),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              final String? authedUserId = GetIt.I<AuthBloc>().authedUser?.id;
+              final bool isOwner = resistanceWorkout.user.id == authedUserId;
+
+              return MyPageScaffold(
+                  navigationBar: MyNavBar(
+                    previousPageTitle: previousPageTitle,
+                    middle: MyText(
+                      resistanceWorkout.name,
+                      weight: FontWeight.bold,
+                    ),
+                    trailing: NavBarIconButton(
+                      iconData: CupertinoIcons.ellipsis,
+                      onPressed: () => openBottomSheetMenu(
+                          context: context,
+                          child: BottomSheetMenu(
+                              header: BottomSheetMenuHeader(
+                                name: resistanceWorkout.name,
+                                subtitle: 'Resistance Workout',
+                              ),
+                              items: [
+                                if (!isOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'View creator',
+                                      icon: CupertinoIcons.profile_circled,
+                                      onPressed: () => context.navigateTo(
+                                          UserPublicProfileDetailsRoute(
+                                              userId:
+                                                  resistanceWorkout.user.id))),
+                                if (isOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Share',
+                                      icon: CupertinoIcons.paperplane,
+                                      onPressed: _shareWorkout),
+                                if (isOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Edit',
+                                      icon: CupertinoIcons.pencil,
+                                      onPressed: () => context.navigateTo(
+                                          ResistanceWorkoutCreatorRoute(
+                                              resistanceWorkout:
+                                                  resistanceWorkout))),
+                                if (isOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Duplicate',
+                                      icon: CupertinoIcons
+                                          .plus_rectangle_on_rectangle,
+                                      onPressed: () =>
+                                          _handleDuplicateWorkout(context)),
+                                if (isOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Export',
+                                      icon: CupertinoIcons.download_circle,
+                                      onPressed: () => context.showAlertDialog(
+                                          title: 'Coming soon!')),
+                                if (isOwner)
+                                  BottomSheetMenuItem(
+                                      text: 'Delete',
+                                      icon: CupertinoIcons.delete_simple,
+                                      isDestructive: true,
+                                      onPressed: () =>
+                                          _handleDeleteWorkout(context)),
+                              ])),
+                    ),
+                  ),
+                  child: Column(
                     children: [
-                      ActionIconButton(
-                        icon: const Icon(WorkoutType.resistance),
-                        label: 'Do It',
-                        onPressed: () {},
-                      ),
-                      ActionIconButton(
-                        icon: const Icon(CupertinoIcons.text_badge_checkmark),
-                        label: 'Log It',
-                        onPressed: () {},
-                      ),
-                      ActionIconButton(
-                        icon: const Icon(CupertinoIcons.calendar_badge_plus),
-                        label: 'Plan It',
-                        onPressed: () {},
-                      ),
-                      if (!isOwner)
-
-                        /// TODO:
-                        CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            Vibrate.feedback(FeedbackType.selection);
-                            print('save / unsave');
-                          },
-                          child: const ContentBox(
-                            child: AnimatedLikeHeart(active: false, size: 26),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ActionIconButton(
+                            icon: const Icon(WorkoutType.resistance),
+                            label: 'Do It',
+                            onPressed: () {},
                           ),
-                        ),
+                          ActionIconButton(
+                            icon:
+                                const Icon(CupertinoIcons.text_badge_checkmark),
+                            label: 'Log It',
+                            onPressed: () {},
+                          ),
+                          ActionIconButton(
+                              icon: const Icon(
+                                  CupertinoIcons.calendar_badge_plus),
+                              label: 'Plan It',
+                              onPressed: () => context.navigateTo(
+                                    ScheduledWorkoutCreatorRoute(
+                                        resistanceWorkout: resistanceWorkout),
+                                  )),
+                          if (!isOwner)
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () {
+                                Vibrate.feedback(FeedbackType.selection);
+                                if (userHasSaved) {
+                                  _deleteSavedWorkout(context);
+                                } else {
+                                  _createSavedWorkout(context);
+                                }
+                              },
+                              child: ContentBox(
+                                child: AnimatedLikeHeart(
+                                    active: userHasSaved, size: 26),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const HorizontalLine(
+                        verticalPadding: 8,
+                      ),
+                      Expanded(
+                        child: MyTabBarView(
+                            alignment: Alignment.center,
+                            tabs: const [
+                              'Details',
+                              'Equipment',
+                              'Body Areas'
+                            ],
+                            pages: [
+                              ResistanceWorkoutDetails(
+                                resistanceWorkout: resistanceWorkout,
+                              ),
+                              ResistanceWorkoutEquipment(
+                                resistanceWorkout: resistanceWorkout,
+                              ),
+                              ResistanceWorkoutBodyAreas(
+                                resistanceWorkout: resistanceWorkout,
+                              ),
+                            ]),
+                      )
                     ],
-                  ),
-                  const HorizontalLine(
-                    verticalPadding: 8,
-                  ),
-                  Expanded(
-                    child:
-                        MyTabBarView(alignment: Alignment.center, tabs: const [
-                      'Details',
-                      'Equipment',
-                      'Body Areas'
-                    ], pages: [
-                      ResistanceWorkoutDetails(
-                        resistanceWorkout: resistanceWorkout,
-                      ),
-                      ResistanceWorkoutEquipment(
-                        resistanceWorkout: resistanceWorkout,
-                      ),
-                      ResistanceWorkoutBodyAreas(
-                        resistanceWorkout: resistanceWorkout,
-                      ),
-                    ]),
-                  )
-                ],
-              ));
-        });
+                  ));
+            }));
   }
 }

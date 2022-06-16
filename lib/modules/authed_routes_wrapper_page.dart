@@ -37,13 +37,13 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
 
   bool _coreAppDataInitialized = false;
 
-  late chat.StreamChatClient _streamChatClient;
-  bool _chatInitialized = false;
+  // late chat.StreamChatClient _streamChatClient;
+  // bool _chatInitialized = false;
 
-  late feed.StreamFeedClient _streamFeedClient;
-  late NotificationFeed _notificationFeed;
-  late Subscription _feedSubscription;
-  bool _feedsInitialized = false;
+  // late feed.StreamFeedClient _streamFeedClient;
+  // late NotificationFeed _notificationFeed;
+  // late Subscription _feedSubscription;
+  // bool _feedsInitialized = false;
 
   late StreamSubscription _linkStreamSub;
   bool _incomingLinkStreamInitialized = false;
@@ -54,16 +54,16 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   void initState() {
     super.initState();
     _authedUser = GetIt.I<AuthBloc>().authedUser!;
-    _streamChatClient = _createStreamChatClient;
-    _streamFeedClient = _createStreamFeedClient;
+    // _streamChatClient = _createStreamChatClient;
+    // _streamFeedClient = _createStreamFeedClient;
 
     asyncInit();
   }
 
   Future<void> asyncInit() async {
     await _initCoreAppData();
-    await _connectUserToChat();
-    await _initFeeds();
+    // await _connectUserToChat();
+    // await _initFeeds();
     await _handleIncomingLinks();
     setState(() {});
 
@@ -86,7 +86,6 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
     final userLoggedWorkoutsQuery = UserLoggedWorkoutsQuery();
     final announcementUpdatesQuery = AnnouncementUpdatesQuery();
     final welcomeTodoItemsQuery = WelcomeTodoItemsQuery();
-    final userScheduledWorkoutsQuery = UserScheduledWorkoutsQuery();
 
     Future.wait([
       GraphQLStore.store.query(query: userProfileQuery),
@@ -97,7 +96,6 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
       /// Get data required to display the Feed page that the user lands on.
       GraphQLStore.store.query(query: announcementUpdatesQuery),
       GraphQLStore.store.query(query: welcomeTodoItemsQuery),
-      GraphQLStore.store.query(query: userScheduledWorkoutsQuery),
     ]);
 
     _coreAppDataInitialized = true;
@@ -113,45 +111,45 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
         logLevel: feed.Level.WARNING,
       );
 
-  Future<void> _connectUserToChat() async {
-    try {
-      await _streamChatClient.connectUser(
-        chat.User(id: _authedUser.id),
-        _authedUser.streamChatToken,
-      );
+  // Future<void> _connectUserToChat() async {
+  //   try {
+  //     await _streamChatClient.connectUser(
+  //       chat.User(id: _authedUser.id),
+  //       _authedUser.streamChatToken,
+  //     );
 
-      _chatInitialized = true;
-    } catch (e) {
-      printLog(e.toString());
-      context.showToast(message: e.toString());
-      context.showToast(message: "Oops, couldn't initialize chat! $e");
-    }
-  }
+  //     _chatInitialized = true;
+  //   } catch (e) {
+  //     printLog(e.toString());
+  //     context.showToast(message: e.toString());
+  //     context.showToast(message: "Oops, couldn't initialize chat! $e");
+  //   }
+  // }
 
-  Future<void> _initFeeds() async {
-    try {
-      /// Set the user on the feed client.
-      await _streamFeedClient.setUser(
-          feed.User(id: _authedUser.id),
-          feed.Token(
-            _authedUser.streamFeedToken,
-          ));
+  // Future<void> _initFeeds() async {
+  //   try {
+  //     /// Set the user on the feed client.
+  //     await _streamFeedClient.setUser(
+  //         feed.User(id: _authedUser.id),
+  //         feed.Token(
+  //           _authedUser.streamFeedToken,
+  //         ));
 
-      /// Set up the notification feed.
-      _notificationFeed = _streamFeedClient.notificationFeed(
-          kUserNotificationName, _authedUser.id);
+  //     /// Set up the notification feed.
+  //     _notificationFeed = _streamFeedClient.notificationFeed(
+  //         kUserNotificationName, _authedUser.id);
 
-      _feedSubscription = await _notificationFeed.subscribe((message) {
-        handleIncomingFeedNotifications(context, message);
-      });
+  //     _feedSubscription = await _notificationFeed.subscribe((message) {
+  //       handleIncomingFeedNotifications(context, message);
+  //     });
 
-      _feedsInitialized = true;
-    } catch (e) {
-      printLog(e.toString());
-      context.showToast(message: e.toString());
-      context.showToast(message: "Oops, couldn't initialize notifications! $e");
-    }
-  }
+  //     _feedsInitialized = true;
+  //   } catch (e) {
+  //     printLog(e.toString());
+  //     context.showToast(message: e.toString());
+  //     context.showToast(message: "Oops, couldn't initialize notifications! $e");
+  //   }
+  // }
 
   /// Handle incoming links - the ones that the app will recieve from the OS
   /// while already started.
@@ -201,37 +199,51 @@ class AuthedRoutesWrapperPageState extends State<AuthedRoutesWrapperPage> {
   @override
   Future<void> dispose() async {
     super.dispose();
-    _feedSubscription.cancel();
+    // _feedSubscription.cancel();
     // Cancel listening to incoming links.
     _linkStreamSub.cancel();
 
-    await _streamChatClient.disconnectUser();
-    await _streamChatClient.dispose();
+    // await _streamChatClient.disconnectUser();
+    // await _streamChatClient.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return _coreAppDataInitialized &&
-            _chatInitialized &&
-            _feedsInitialized &&
+            // _chatInitialized &&
+            // _feedsInitialized &&
             _incomingLinkStreamInitialized
-        ? chat.StreamChatCore(
-            client: _streamChatClient,
-            child: MultiProvider(
-              providers: [
-                ChangeNotifierProvider<MoveDataRepo>.value(
-                  value: _moveDataRepo,
-                ),
-                Provider<feed.StreamFeedClient>.value(
-                  value: _streamFeedClient,
-                ),
-                Provider<NotificationFeed>.value(
-                  value: _notificationFeed,
-                ),
-              ],
-              child: const AutoRouter(),
-            ),
+        ? MultiProvider(
+            providers: [
+              ChangeNotifierProvider<MoveDataRepo>.value(
+                value: _moveDataRepo,
+              ),
+              // Provider<feed.StreamFeedClient>.value(
+              //   value: _streamFeedClient,
+              // ),
+              // Provider<NotificationFeed>.value(
+              //   value: _notificationFeed,
+              // ),
+            ],
+            child: const AutoRouter(),
           )
+        // ? chat.StreamChatCore(
+        //     client: _streamChatClient,
+        //     child: MultiProvider(
+        //       providers: [
+        //         ChangeNotifierProvider<MoveDataRepo>.value(
+        //           value: _moveDataRepo,
+        //         ),
+        //         Provider<feed.StreamFeedClient>.value(
+        //           value: _streamFeedClient,
+        //         ),
+        //         Provider<NotificationFeed>.value(
+        //           value: _notificationFeed,
+        //         ),
+        //       ],
+        //       child: const AutoRouter(),
+        //     ),
+        //   )
         : const LoadingPage();
   }
 }

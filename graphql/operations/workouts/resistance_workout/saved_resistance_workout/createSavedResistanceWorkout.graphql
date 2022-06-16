@@ -1,0 +1,5 @@
+mutation createSavedResistanceWorkout($resistanceWorkoutId: ID!) {
+  createSavedResistanceWorkout(resistanceWorkoutId: $resistanceWorkoutId) {
+    ...ResistanceWorkoutData
+  }
+}

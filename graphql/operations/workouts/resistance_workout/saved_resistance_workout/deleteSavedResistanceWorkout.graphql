@@ -1,0 +1,3 @@
+mutation deleteSavedResistanceWorkout($resistanceWorkoutId: ID!) {
+  deleteSavedResistanceWorkout(resistanceWorkoutId: $resistanceWorkoutId)
+}

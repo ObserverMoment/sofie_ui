@@ -315,6 +315,7 @@ class GraphQLStore {
     /// Broadcast from the store - no network request made.
     List<String> broadcastQueryIds = const [],
     VoidCallback? onSuccess,
+    void Function(List<Object>? errors)? onFail,
   }) async {
     final response = await execute(mutation);
 
@@ -355,6 +356,11 @@ class GraphQLStore {
       processResult?.call(result.data as TData);
 
       onSuccess?.call();
+    } else {
+      result.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+      onFail?.call(result.errors);
     }
 
     return result;
@@ -533,22 +539,30 @@ class GraphQLStore {
   /////// No data saved to client side store //////////
   /////// Light wrappers around [execute] function ////
   Future<OperationResult<TData>>
-      networkOnlyOperation<TData, TVars extends json.JsonSerializable>(
-          {required GraphQLQuery<TData, TVars> operation,
-          Map<String, dynamic>? customVariablesMap}) async {
+      networkOnlyOperation<TData, TVars extends json.JsonSerializable>({
+    required GraphQLQuery<TData, TVars> operation,
+    Map<String, dynamic>? customVariablesMap,
+    void Function(TData resultData)? processResult,
+    void Function(List<Object>? errors)? onFail,
+  }) async {
     final response =
         await execute(operation, customVariablesMap: customVariablesMap);
 
-    final hasErrors = response.errors != null && response.errors!.isNotEmpty;
-
-    if (hasErrors) {
-      response.errors?.forEach((e) {
-        printLog(e.toString());
-      });
-    }
-
     final result = OperationResult<TData>(
         data: operation.parse(response.data ?? {}), errors: response.errors);
+
+    final hasErrors = result.errors != null && result.errors!.isNotEmpty;
+
+    if (hasErrors) {
+      result.errors?.forEach((e) {
+        printLog(e.toString());
+      });
+      onFail?.call(result.errors);
+    } else {
+      if (result.data != null) {
+        processResult?.call(result.data as TData);
+      }
+    }
 
     return result;
   }

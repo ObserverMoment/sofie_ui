@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
 import 'package:sofie_ui/router.gr.dart';
@@ -82,7 +83,7 @@ class _RecentlyViewedObjectsState extends State<RecentlyViewedObjects> {
     return !_initDataRetrieved
         ? const Padding(
             padding: EdgeInsets.all(32.0),
-            child: CupertinoActivityIndicator(),
+            child: LoadingSpinnerCircle(),
           )
         : _recents.isEmpty
             ? Padding(

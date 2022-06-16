@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
@@ -148,11 +149,11 @@ class _ClubDetailsMemberNotesState extends State<ClubDetailsMemberNotes> {
             ),
             firstPageProgressIndicatorBuilder: (c) => const Padding(
               padding: EdgeInsets.all(8.0),
-              child: CupertinoActivityIndicator(),
+              child: LoadingSpinnerCircle(),
             ),
             newPageProgressIndicatorBuilder: (c) => const Padding(
               padding: EdgeInsets.all(8.0),
-              child: CupertinoActivityIndicator(),
+              child: LoadingSpinnerCircle(),
             ),
             noItemsFoundIndicatorBuilder: (c) => Padding(
               padding: const EdgeInsets.all(8.0),

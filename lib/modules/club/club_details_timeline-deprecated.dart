@@ -260,9 +260,9 @@
 //               textAlign: TextAlign.center,
 //             ),
 //             firstPageProgressIndicatorBuilder: (c) =>
-//                 const CupertinoActivityIndicator(),
+//                 const LoadingSpinnerCircle(),
 //             newPageProgressIndicatorBuilder: (c) =>
-//                 const CupertinoActivityIndicator(),
+//                 const LoadingSpinnerCircle(),
 //             noItemsFoundIndicatorBuilder: (c) => Center(
 //               child: Column(
 //                 children: const [

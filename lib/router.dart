@@ -2,9 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:sofie_ui/components/creators/body_tracking/body_tracking_entry_creator.dart';
 import 'package:sofie_ui/components/creators/club_creator/club_creator.dart';
 import 'package:sofie_ui/components/creators/collection_creator.dart';
-import 'package:sofie_ui/components/creators/post_creator/club_feed_post_creator_page.dart';
-import 'package:sofie_ui/components/creators/post_creator/feed_post_creator_page.dart';
-import 'package:sofie_ui/components/creators/scheduled_workout_creator.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_eat_well_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_day_logs/user_sleep_well_log_creator_page.dart';
 import 'package:sofie_ui/components/creators/user_goal_creator_page.dart';
@@ -30,6 +27,7 @@ import 'package:sofie_ui/modules/profile/profile_page.dart';
 import 'package:sofie_ui/modules/profile/settings_page.dart';
 import 'package:sofie_ui/modules/profile/skills/skills_page.dart';
 import 'package:sofie_ui/modules/profile/social/social_links_page.dart';
+import 'package:sofie_ui/modules/scheduled_workout/scheduled_workout_creator_page.dart';
 import 'package:sofie_ui/modules/sign_in_registration/unauthed_landing_page.dart';
 import 'package:sofie_ui/modules/calendar/calendar_page.dart';
 import 'package:sofie_ui/modules/studio_tab/exercise_library_page.dart';
@@ -162,11 +160,10 @@ import 'package:sofie_ui/pages/authed/progress/progress_page.dart';
           AutoRoute(path: 'create/food-log', page: UserEatWellLogCreatorPage),
           AutoRoute(
               path: 'create/sleep-log', page: UserSleepWellLogCreatorPage),
-          AutoRoute(path: 'create/post', page: FeedPostCreatorPage),
-          AutoRoute(path: 'create/club-post', page: ClubFeedPostCreatorPage),
           AutoRoute(
               path: 'create/scheduled-workout',
               page: ScheduledWorkoutCreatorPage),
+
           AutoRoute(path: 'create/workout', page: WorkoutCreatorPage),
           AutoRoute(
               path: 'create/resistance-workout',

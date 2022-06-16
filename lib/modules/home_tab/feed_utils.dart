@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
-import 'package:sofie_ui/components/social/feeds_and_follows/model.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/generated/api/graphql_api.dart';
+import 'package:sofie_ui/modules/home_tab/model.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
 import 'package:sofie_ui/services/store/graphql_store.dart';

@@ -2,14 +2,15 @@ import 'package:auto_route/src/router/auto_router_x.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/my_custom_icons.dart';
-import 'package:sofie_ui/components/social/feeds_and_follows/feed_utils.dart';
 import 'package:sofie_ui/components/text.dart';
 import 'package:sofie_ui/constants.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/model/enum.dart';
+import 'package:sofie_ui/modules/home_tab/feed_utils.dart';
 import 'package:sofie_ui/router.gr.dart';
 import 'package:sofie_ui/services/utils.dart';
 import 'package:stream_feed/stream_feed.dart';
@@ -131,9 +132,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
             textAlign: TextAlign.center,
           ),
           firstPageProgressIndicatorBuilder: (c) =>
-              const CupertinoActivityIndicator(),
-          newPageProgressIndicatorBuilder: (c) =>
-              const CupertinoActivityIndicator(),
+              const LoadingSpinnerCircle(),
+          newPageProgressIndicatorBuilder: (c) => const LoadingSpinnerCircle(),
           noItemsFoundIndicatorBuilder: (c) => Center(
             child: Column(
               children: const [

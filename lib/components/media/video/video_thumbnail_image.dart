@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 /// Widget for creating video thumbnail image
@@ -86,7 +87,7 @@ class _VideoThumbnailImageState extends State<VideoThumbnailImage> {
                       );
                 }
                 if (!snapshot.hasData) {
-                  return const Center(child: CupertinoActivityIndicator());
+                  return const Center(child: LoadingSpinnerCircle());
                 }
                 return Stack(
                   alignment: Alignment.center,

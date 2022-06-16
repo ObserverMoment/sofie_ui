@@ -205,9 +205,9 @@
 //                     newPageErrorIndicatorBuilder: (c) =>
 //                         const PageResultsErrorIndicator(),
 //                     firstPageProgressIndicatorBuilder: (c) =>
-//                         const CupertinoActivityIndicator(),
+//                         const LoadingSpinnerCircle(),
 //                     newPageProgressIndicatorBuilder: (c) =>
-//                         const CupertinoActivityIndicator(),
+//                         const LoadingSpinnerCircle(),
 //                     noItemsFoundIndicatorBuilder: (c) => const Center(
 //                       child: NoResultsToDisplay(),
 //                     ),

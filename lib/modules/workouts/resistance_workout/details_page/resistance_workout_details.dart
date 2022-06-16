@@ -60,10 +60,11 @@ class ResistanceWorkoutDetails extends StatelessWidget {
             header: 'Notes',
             icon: CupertinoIcons.doc_text,
           ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 4),
         ...resistanceWorkout.resistanceExercises
             .map((e) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding:
+                      const EdgeInsets.only(left: 4, right: 4, bottom: 8.0),
                   child: ResistanceExerciseDisplay(
                     resistanceExercise: e,
                     openMoveInfoPageOnSetTap: true,

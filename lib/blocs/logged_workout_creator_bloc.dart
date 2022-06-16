@@ -331,11 +331,7 @@ class LoggedWorkoutCreatorBloc extends ChangeNotifier {
         .readDenomalized('$kScheduledWorkoutTypename:${scheduledWorkout.id}');
 
     final updated = ScheduledWorkout.fromJson(prevData);
-    updated.loggedWorkoutId = loggedWorkout.id;
-
-    GraphQLStore.store.writeDataToStore(
-        data: updated.toJson(),
-        broadcastQueryIds: [GQLOpNames.userScheduledWorkouts]);
+    // updated.loggedWorkoutId = loggedWorkout.id;
   }
 
   /// Refetches from the network the enrolments query (summaries) and the details query.

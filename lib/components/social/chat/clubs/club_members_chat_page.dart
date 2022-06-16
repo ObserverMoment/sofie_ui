@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/indicators.dart';
 import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/media/images/image_viewer.dart';
@@ -130,7 +131,7 @@ class _ClubMembersChatChannelPageState
                   messageListController: _messageListController,
                   loadingBuilder: (context) {
                     return const Center(
-                      child: CupertinoActivityIndicator(),
+                      child: LoadingSpinnerCircle(),
                     );
                   },
                   errorBuilder: (context, err) {

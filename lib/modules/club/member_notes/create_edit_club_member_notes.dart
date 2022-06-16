@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:sofie_ui/components/animated/loading_spinners.dart';
 import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
 import 'package:sofie_ui/components/layout.dart';
@@ -158,7 +159,7 @@ class _CreateEditMemberNoteState extends State<CreateEditMemberNote> {
             widget.clubMemberNote != null ? 'Edit Note' : 'Create Note'),
         trailing: _inputIsValid
             ? _loading
-                ? const FadeInUp(child: CupertinoActivityIndicator(radius: 10))
+                ? const FadeInUp(child: LoadingSpinnerCircle(size: 10))
                 : FadeInUp(
                     child: NavBarTertiarySaveButton(
                       widget.clubMemberNote != null ? _updateNote : _createNote,

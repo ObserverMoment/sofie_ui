@@ -65,8 +65,13 @@ class ResistanceSetDisplay extends StatelessWidget {
                 ),
               ],
             ),
-            RepsDisplay(
-              resistanceSet: resistanceSet,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: RepsDisplay(
+                  resistanceSet: resistanceSet,
+                ),
+              ),
             ),
           ],
         ),
