@@ -136,7 +136,7 @@ class WorkoutSetDurationPicker extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WorkoutSetDurationPickerState createState() =>
+  State<WorkoutSetDurationPicker> createState() =>
       _WorkoutSetDurationPickerState();
 }
 

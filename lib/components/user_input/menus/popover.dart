@@ -56,18 +56,32 @@ void showPopoverMenu(
       arrowWidth: 0,
     );
 
+class PopoverContainer extends StatelessWidget {
+  final Widget child;
+  final double width;
+  const PopoverContainer({Key? key, required this.child, this.width = 240.0})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: context.theme.primary.withOpacity(0.07)),
+      ),
+      child: child,
+    );
+  }
+}
+
 class PopoverMenuContainer extends StatelessWidget {
   final List<PopoverMenuItem> items;
   const PopoverMenuContainer({Key? key, required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 240,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.theme.primary.withOpacity(0.07)),
-      ),
+    return PopoverContainer(
       child: ListView.separated(
           padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),

@@ -1,34 +1,16 @@
-// import 'package:auto_route/auto_route.dart';
-// import 'package:collection/collection.dart';
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:intl/intl.dart';
-// import 'package:json_annotation/json_annotation.dart' as json;
-// import 'package:sofie_ui/blocs/theme_bloc.dart';
-// import 'package:sofie_ui/components/calendar.dart';
-// import 'package:sofie_ui/components/layout/fab_page/fab_page.dart';
-// import 'package:sofie_ui/components/layout.dart';
-// import 'package:sofie_ui/components/layout/fab_page/floating_icon_button.dart';
-// import 'package:sofie_ui/components/text.dart';
-// import 'package:sofie_ui/components/user_input/menus/bottom_sheet_menu.dart';
-// import 'package:sofie_ui/extensions/context_extensions.dart';
-// import 'package:sofie_ui/generated/api/graphql_api.dart';
-// import 'package:sofie_ui/model/toast_request.dart';
-// import 'package:sofie_ui/router.gr.dart';
-// import 'package:sofie_ui/services/store/query_observer.dart';
-// import 'package:table_calendar/table_calendar.dart';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:provider/provider.dart';
 import 'package:sofie_ui/blocs/theme_bloc.dart';
+import 'package:sofie_ui/components/animated/mounting.dart';
 import 'package:sofie_ui/components/buttons.dart';
+import 'package:sofie_ui/components/layout.dart';
 import 'package:sofie_ui/components/text.dart';
+import 'package:sofie_ui/components/user_input/menus/popover.dart';
 import 'package:sofie_ui/extensions/context_extensions.dart';
 import 'package:sofie_ui/extensions/type_extensions.dart';
 import 'package:sofie_ui/modules/calendar/calendar_bloc.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
 
 class CalendarPage extends StatefulWidget {
   final DateTime? openAtDate;
@@ -44,6 +26,29 @@ class _CalendarPageState extends State<CalendarPage> {
   final _days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', ' Sat'];
   final CalendarController _controller = CalendarController();
 
+  bool _showMonthYearPicker = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.view = CalendarView.month;
+  }
+
+  void _updateViewType(CalendarView view) => _controller.view = view;
+
+  void _toggleMonthYearPicker() {
+    /// TODO: If the date has changed then update the calendat controller.
+    setState(() {
+      _showMonthYearPicker = !_showMonthYearPicker;
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
@@ -57,18 +62,47 @@ class _CalendarPageState extends State<CalendarPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    MyText('Month Display'),
-                    Row(
-                      children: [
-                        TertiaryButton(text: 'View Picker', onPressed: () {}),
-                        TertiaryButton(text: 'Month Picker', onPressed: () {}),
-                      ],
-                    ),
+                    IconButton(
+                        iconData: CupertinoIcons.chevron_back,
+                        onPressed: () {}),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: TertiaryButton(
+                          text: 'June 2229',
+                          suffixIconData: CupertinoIcons.chevron_down,
+                          onPressed: _toggleMonthYearPicker),
+                    )
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: _days.map((d) => MyText(d)).toList(),
+                GrowInOut(
+                    show: _showMonthYearPicker,
+                    child: Container(
+                      color: context.theme.cardBackground,
+                      height: 240,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: CupertinoDatePicker(
+                            initialDateTime: DateTime.now(),
+                            mode: CupertinoDatePickerMode.date,
+                            onDateTimeChanged: (d) => print(d)),
+                      ),
+                    )),
+                Container(
+                  height: 40,
+                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 7,
+                    children: _days
+                        .map((d) => Center(
+                              child: MyText(
+                                d,
+                                subtext: true,
+                              ),
+                            ))
+                        .toList(),
+                  ),
                 ),
                 Expanded(
                   child: Padding(
@@ -77,7 +111,7 @@ class _CalendarPageState extends State<CalendarPage> {
                         controller: _controller,
                         headerHeight: 0,
                         initialSelectedDate: DateTime.now(),
-                        view: CalendarView.month,
+                        view: _controller.view ?? CalendarView.month,
                         backgroundColor: context.theme.barBackground,
                         viewHeaderHeight: 0,
                         initialDisplayDate:
@@ -88,7 +122,8 @@ class _CalendarPageState extends State<CalendarPage> {
                             numberOfWeeksInView: 5),
                         selectionDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: context.theme.primary),
+                          border: Border.all(
+                              color: context.theme.primary, width: 2),
                         ),
                         todayHighlightColor: context.theme.primary,
                         headerStyle: CalendarHeaderStyle(
@@ -134,7 +169,7 @@ class DayCell extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: isToday
                             ? context.theme.primary
-                            : Colors.transparent,
+                            : material.Colors.transparent,
                         borderRadius: BorderRadius.circular(50)),
                     height: 4,
                   ),
@@ -152,6 +187,18 @@ class DayCell extends StatelessWidget {
     );
   }
 }
+
+// extension CalendarViewExtension on CalendarView {
+//   String get display {
+//     switch (this) {
+//       case this.:
+//         break;
+//       default:
+//         throw Exception(
+//             'CalendarViewExtension.display: No branch specified for $this');
+//     }
+//   }
+// }
 
 // class CalendarPage extends StatefulWidget {
 //   final DateTime? openAtDate;

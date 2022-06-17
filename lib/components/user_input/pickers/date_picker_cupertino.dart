@@ -11,7 +11,7 @@ class DatePickerCupertino extends StatefulWidget {
       {Key? key, required this.saveDate, this.selectedDate, this.initialDate})
       : super(key: key);
   @override
-  _DatePickerCupertinoState createState() => _DatePickerCupertinoState();
+  State<DatePickerCupertino> createState() => _DatePickerCupertinoState();
 }
 
 class _DatePickerCupertinoState extends State<DatePickerCupertino> {
