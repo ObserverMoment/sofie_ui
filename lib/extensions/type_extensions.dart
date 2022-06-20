@@ -37,6 +37,7 @@ extension DateTimeExtension on DateTime {
   String get minimalDateStringYear => DateFormat('MMM d, yy').format(this);
   String get minimalDateString => DateFormat('MMM d').format(this);
   String get dateAndTime => '$minimalDateString, $timeString';
+  String get monthAndYear => DateFormat('MMM yyyy').format(this);
 
   String get monthAbbrev => DateFormat('MMM').format(this);
 

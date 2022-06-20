@@ -60,7 +60,6 @@ dependencies:
   loading_animation_widget: ^1.2.0+1
   meta: ^1.7.0
   native_device_orientation: ^1.1.2
-  # normalize: ^0.6.0+1
   package_info_plus: ^1.4.2
   path_drawing: ^1.0.0
   path_provider: ^2.0.10
